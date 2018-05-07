@@ -1,0 +1,23 @@
+PODS:
+  - Flurry-iOS-SDK/FlurryAds (8.3.1):
+    - Flurry-iOS-SDK/FlurrySDK
+  - Flurry-iOS-SDK/FlurrySDK (8.3.1)
+  - RMPZoomTransitionAnimator (1.0.3)
+  - SDWebImage (4.2.2):
+    - SDWebImage/Core (= 4.2.2)
+  - SDWebImage/Core (4.2.2)
+
+DEPENDENCIES:
+  - Flurry-iOS-SDK/FlurryAds
+  - Flurry-iOS-SDK/FlurrySDK
+  - RMPZoomTransitionAnimator
+  - SDWebImage (~> 4.0)
+
+SPEC CHECKSUMS:
+  Flurry-iOS-SDK: 912b3eb78bee559883feb3b13263437b185e8fe9
+  RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
+  SDWebImage: 89a9d32cd520bbb46eb14e541d5109b3564af198
+
+PODFILE CHECKSUM: 8a5614e0d2bdf3ecb991c149efea4d90abc1282e
+
+COCOAPODS: 1.3.1

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Activity Web View Controller-->
+        <scene sceneID="PyR-Su-ozn">
+            <objects>
+                <viewController storyboardIdentifier="ActivityWebViewController" id="JgD-Z1-fM9" customClass="ActivityWebViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ptX-Oa-kMz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G2B-cF-7fT">
+                                <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aZU-Cq-l2x">
+                                        <rect key="frame" x="8" y="6" width="42" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="42" id="QM3-AI-VID"/>
+                                            <constraint firstAttribute="width" constant="42" id="dva-gf-nUj"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <state key="normal" image="ic200_arrow_left_dark.png"/>
+                                        <connections>
+                                            <action selector="backBtnPressed:" destination="JgD-Z1-fM9" eventType="touchUpInside" id="0FH-KM-DSa"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="pinpinbox" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6bx-jE-Ojb">
+                                        <rect key="frame" x="144" y="16" width="86" height="22"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="aZU-Cq-l2x" secondAttribute="bottom" id="5Jg-wj-tbX"/>
+                                    <constraint firstItem="aZU-Cq-l2x" firstAttribute="leading" secondItem="G2B-cF-7fT" secondAttribute="leading" constant="8" id="9DZ-dm-Zsz"/>
+                                    <constraint firstItem="6bx-jE-Ojb" firstAttribute="centerX" secondItem="G2B-cF-7fT" secondAttribute="centerX" id="FmP-C0-WAR"/>
+                                    <constraint firstAttribute="height" constant="48" id="Yt5-jl-QxN"/>
+                                    <constraint firstItem="6bx-jE-Ojb" firstAttribute="centerY" secondItem="aZU-Cq-l2x" secondAttribute="centerY" id="wyj-JR-dP8"/>
+                                </constraints>
+                            </view>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NJz-Ep-JRa">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem title="Item" image="LeftArrow_WebView.png" id="zsf-6e-4ju">
+                                        <connections>
+                                            <action selector="backBarButton:" destination="JgD-Z1-fM9" id="Jla-uZ-hFp"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="tEu-Yp-bxv"/>
+                                    <barButtonItem title="Item" image="RightArrow_WebView.png" id="aoA-em-5Q5">
+                                        <connections>
+                                            <action selector="forwardBarButton:" destination="JgD-Z1-fM9" id="sJq-Cw-0Pa"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="G2B-cF-7fT" firstAttribute="top" secondItem="ptX-Oa-kMz" secondAttribute="top" constant="20" symbolic="YES" id="B3O-Lw-GXs"/>
+                            <constraint firstItem="NJz-Ep-JRa" firstAttribute="trailing" secondItem="OwU-zK-her" secondAttribute="trailing" id="Jxl-uy-5d0"/>
+                            <constraint firstItem="G2B-cF-7fT" firstAttribute="trailing" secondItem="OwU-zK-her" secondAttribute="trailing" id="PnB-fq-bdd"/>
+                            <constraint firstItem="NJz-Ep-JRa" firstAttribute="leading" secondItem="OwU-zK-her" secondAttribute="leading" id="SS3-aK-Icg"/>
+                            <constraint firstItem="NJz-Ep-JRa" firstAttribute="bottom" secondItem="OwU-zK-her" secondAttribute="bottom" id="vlJ-o6-1SU"/>
+                            <constraint firstItem="G2B-cF-7fT" firstAttribute="leading" secondItem="OwU-zK-her" secondAttribute="leading" id="y54-8Z-V5F"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="OwU-zK-her"/>
+                    </view>
+                    <connections>
+                        <outlet property="navBarHeight" destination="Yt5-jl-QxN" id="1V8-A1-adI"/>
+                        <outlet property="navBarView" destination="G2B-cF-7fT" id="mtd-Zi-ipg"/>
+                        <outlet property="titleLabel" destination="6bx-jE-Ojb" id="br7-uL-3nX"/>
+                        <outlet property="toolBar" destination="NJz-Ep-JRa" id="Yvq-bw-kHp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kYI-7K-yNx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-874.39999999999998" y="-988.15592203898063"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="LeftArrow_WebView.png" width="25" height="25"/>
+        <image name="RightArrow_WebView.png" width="25" height="25"/>
+        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
+    </resources>
+</document>

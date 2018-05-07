@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Recent Browsing View Controller-->
+        <scene sceneID="czA-pe-sRL">
+            <objects>
+                <viewController storyboardIdentifier="RecentBrowsingViewController" hidesBottomBarWhenPushed="YES" id="fY1-so-GT3" customClass="RecentBrowsingViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="AO8-JE-NTu">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="69" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Tmf-N9-6l7">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="72" id="bJv-iB-8DN" customClass="RecentBrowsingTableViewCell">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="72"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bJv-iB-8DN" id="aZJ-aB-EMd">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="71.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gF3-IN-a10" customClass="AsyncImageView">
+                                                    <rect key="frame" x="8" y="8" width="56" height="56"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g5g-KY-wIC">
+                                                    <rect key="frame" x="72" y="8" width="240" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="MeTab" translatesAutoresizingMaskIntoConstraints="NO" id="Ntz-QD-Gyx">
+                                                    <rect key="frame" x="72" y="47" width="16" height="16"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="albumImageView" destination="gF3-IN-a10" id="RTQ-8n-hbx"/>
+                                            <outlet property="albumNameLabel" destination="g5g-KY-wIC" id="N5p-7Z-59D"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="fY1-so-GT3" id="JuW-JJ-x5a"/>
+                                    <outlet property="delegate" destination="fY1-so-GT3" id="xRW-zu-zkP"/>
+                                </connections>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yZg-Uq-4JG">
+                                <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XpU-X3-CcV">
+                                        <rect key="frame" x="8" y="6" width="42" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="42" id="BUr-tL-lZn"/>
+                                            <constraint firstAttribute="width" constant="42" id="zO0-fw-g6P"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <state key="normal" image="ic200_arrow_left_dark.png"/>
+                                        <connections>
+                                            <action selector="back:" destination="fY1-so-GT3" eventType="touchUpInside" id="H83-wb-n6H"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="XpU-X3-CcV" secondAttribute="bottom" id="VrA-F5-V8a"/>
+                                    <constraint firstItem="XpU-X3-CcV" firstAttribute="leading" secondItem="yZg-Uq-4JG" secondAttribute="leading" constant="8" id="Z2L-s3-cqg"/>
+                                    <constraint firstAttribute="height" constant="48" id="gqb-7J-4Li"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="yZg-Uq-4JG" firstAttribute="top" secondItem="AO8-JE-NTu" secondAttribute="top" constant="20" symbolic="YES" id="8FA-7I-byS"/>
+                            <constraint firstItem="YKR-7x-v47" firstAttribute="bottom" secondItem="Tmf-N9-6l7" secondAttribute="bottom" id="K8f-tR-HU4"/>
+                            <constraint firstItem="Tmf-N9-6l7" firstAttribute="top" secondItem="AO8-JE-NTu" secondAttribute="top" constant="20" symbolic="YES" id="Nub-Ew-Sal"/>
+                            <constraint firstItem="YKR-7x-v47" firstAttribute="trailing" secondItem="Tmf-N9-6l7" secondAttribute="trailing" id="Z7V-h1-CJQ"/>
+                            <constraint firstItem="Tmf-N9-6l7" firstAttribute="leading" secondItem="YKR-7x-v47" secondAttribute="leading" id="azy-3V-DRo"/>
+                            <constraint firstItem="yZg-Uq-4JG" firstAttribute="leading" secondItem="YKR-7x-v47" secondAttribute="leading" id="eAT-Rp-Emh"/>
+                            <constraint firstItem="YKR-7x-v47" firstAttribute="trailing" secondItem="yZg-Uq-4JG" secondAttribute="trailing" id="q46-f2-NXE"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="YKR-7x-v47"/>
+                    </view>
+                    <connections>
+                        <outlet property="navBarHeight" destination="gqb-7J-4Li" id="TKN-hb-Bg1"/>
+                        <outlet property="navBarView" destination="yZg-Uq-4JG" id="nVC-L0-1um"/>
+                        <outlet property="tableView" destination="Tmf-N9-6l7" id="DYT-Tg-A2R"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cOU-ve-IL6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="318" y="2265"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="MeTab" width="25" height="25"/>
+        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
+    </resources>
+</document>

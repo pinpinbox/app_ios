@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>en</key>
+	<array>
+		<string>e四處旅遊</string>
+		<string>e就愛攝影</string>
+		<string>e美食享受</string>
+		<string>e唱歌跳舞</string>
+		<string>e崇尚自然</string>
+		<string>e喜愛寵物</string>
+		<string>e就愛追星</string>
+		<string>e時尚潮流</string>
+		<string>e美妝造型</string>
+		<string>e料理烘焙</string>
+		<string>e模型改造</string>
+		<string>e花草園藝</string>
+		<string>e熱愛3C</string>
+		<string>e藝術創作</string>
+		<string>e影音欣賞</string>
+		<string>e運動休閒</string>
+	</array>
+	<key>zh-TW</key>
+	<array>
+		<string>四處旅遊</string>
+		<string>就愛攝影</string>
+		<string>美食享受</string>
+		<string>唱歌跳舞</string>
+		<string>崇尚自然</string>
+		<string>喜愛寵物</string>
+		<string>就愛追星</string>
+		<string>時尚潮流</string>
+		<string>美妝造型</string>
+		<string>料理烘焙</string>
+		<string>模型改造</string>
+		<string>花草園藝</string>
+		<string>熱愛3C</string>
+		<string>藝術創作</string>
+		<string>影音欣賞</string>
+		<string>運動休閒</string>
+	</array>
+</dict>
+</plist>

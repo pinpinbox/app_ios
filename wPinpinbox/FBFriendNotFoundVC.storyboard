@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Friend Not Found View Controller-->
+        <scene sceneID="NHl-75-rP0">
+            <objects>
+                <viewController storyboardIdentifier="FBFriendNotFoundViewController" id="067-UZ-cKO" customClass="FBFriendNotFoundViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Haq-4g-Mgh">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YOd-9W-nCF">
+                                <rect key="frame" x="0.0" y="587" width="375" height="80"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R5k-9c-pT7">
+                                        <rect key="frame" x="125" y="16" width="125" height="48"/>
+                                        <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="125" id="APm-u9-Dkf"/>
+                                            <constraint firstAttribute="height" constant="48" id="yGC-nW-Z12"/>
+                                        </constraints>
+                                        <state key="normal" title="下一步">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="nextBtnPress:" destination="067-UZ-cKO" eventType="touchUpInside" id="JbM-OE-qKj"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="R5k-9c-pT7" firstAttribute="centerX" secondItem="YOd-9W-nCF" secondAttribute="centerX" id="O0j-9U-O8P"/>
+                                    <constraint firstItem="R5k-9c-pT7" firstAttribute="centerY" secondItem="YOd-9W-nCF" secondAttribute="centerY" id="WqA-fh-5bm"/>
+                                    <constraint firstAttribute="height" constant="80" id="dQW-x9-QfF"/>
+                                </constraints>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg200_inviteFBFriend.png" translatesAutoresizingMaskIntoConstraints="NO" id="DHU-UA-8AU">
+                                <rect key="frame" x="59.5" y="36" width="256" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="256" id="20E-ea-D48"/>
+                                    <constraint firstAttribute="height" constant="128" id="XLv-Bh-HY4"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qth-87-Hmd">
+                                <rect key="frame" x="57" y="353" width="260" height="120"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Zc-nY-nG6">
+                                        <rect key="frame" x="23" y="8" width="224" height="104"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <attributedString key="attributedText">
+                                            <fragment content="目前還沒有朋友在使用或者正在使用的朋友你已經關注過了">
+                                                <attributes>
+                                                    <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <font key="NSFont" size="17" name=".PingFangTC-Regular"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="10" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="120" id="TCR-J2-5mB"/>
+                                    <constraint firstAttribute="width" constant="260" id="XCR-0J-cmk"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="qth-87-Hmd" firstAttribute="centerX" secondItem="Haq-4g-Mgh" secondAttribute="centerX" id="6VQ-u3-t2B"/>
+                            <constraint firstItem="DHU-UA-8AU" firstAttribute="centerX" secondItem="Haq-4g-Mgh" secondAttribute="centerX" id="GKZ-4m-eXZ"/>
+                            <constraint firstItem="ZI3-OW-3CX" firstAttribute="trailing" secondItem="YOd-9W-nCF" secondAttribute="trailing" id="ODN-Rz-HkC"/>
+                            <constraint firstItem="ZI3-OW-3CX" firstAttribute="bottom" secondItem="YOd-9W-nCF" secondAttribute="bottom" id="QIj-Ff-XEg"/>
+                            <constraint firstItem="DHU-UA-8AU" firstAttribute="top" secondItem="ZI3-OW-3CX" secondAttribute="top" constant="16" id="bP0-s9-Lyt"/>
+                            <constraint firstItem="YOd-9W-nCF" firstAttribute="leading" secondItem="ZI3-OW-3CX" secondAttribute="leading" id="iX9-n2-mJk"/>
+                            <constraint firstItem="qth-87-Hmd" firstAttribute="top" secondItem="DHU-UA-8AU" secondAttribute="bottom" constant="189" id="xhN-tI-ZkW"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ZI3-OW-3CX"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Bgg-Sh-eGf"/>
+                    <connections>
+                        <outlet property="messageContainerView" destination="qth-87-Hmd" id="Ohs-LI-y5h"/>
+                        <outlet property="nextBtn" destination="R5k-9c-pT7" id="aLP-Hs-j7f"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BgG-hH-QEa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="577.5" y="-4176.7605633802814"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="bg200_inviteFBFriend.png" width="128" height="128"/>
+    </resources>
+</document>

@@ -1,0 +1,180 @@
+
+/* Class = "UILabel"; text = "購 買 Ｐ 點"; ObjectID = "13K-Bd-vbx"; */
+"13K-Bd-vbx.text" = "購 買 Ｐ 點";
+
+/* Class = "UILabel"; text = "1"; ObjectID = "1ft-xN-3hz"; */
+"1ft-xN-3hz.text" = "1";
+
+/* Class = "UIButton"; normalTitle = "返回"; ObjectID = "3tk-YH-4Bl"; */
+"3tk-YH-4Bl.normalTitle" = "返回";
+
+/* Class = "UILabel"; text = "會 員 條 款"; ObjectID = "5Hk-7L-EPU"; */
+"5Hk-7L-EPU.text" = "會 員 條 款";
+
+/* Class = "UITextField"; placeholder = "密 碼"; ObjectID = "5jV-pE-h8g"; */
+"5jV-pE-h8g.placeholder" = "密 碼";
+
+/* Class = "UILabel"; text = "NT  600"; ObjectID = "5u7-pv-xgJ"; */
+"5u7-pv-xgJ.text" = "NT  600";
+
+/* Class = "UILabel"; text = "建立相本"; ObjectID = "5x9-IK-vUc"; */
+"5x9-IK-vUc.text" = "建立相本";
+
+/* Class = "UILabel"; text = "我的收藏"; ObjectID = "851-9x-NU5"; */
+"851-9x-NU5.text" = "我的收藏";
+
+/* Class = "UITextField"; placeholder = "暱 稱"; ObjectID = "9Ok-Fi-3Nr"; */
+"9Ok-Fi-3Nr.placeholder" = "暱 稱";
+
+/* Class = "UILabel"; text = "建立相本"; ObjectID = "BpN-Ok-WQ0"; */
+"BpN-Ok-WQ0.text" = "建立相本";
+
+/* Class = "UILabel"; text = "目前擁有P點"; ObjectID = "Cgv-MG-tQu"; */
+"Cgv-MG-tQu.text" = "目前擁有P點";
+
+/* Class = "UILabel"; text = "1"; ObjectID = "ECd-Ks-FkQ"; */
+"ECd-Ks-FkQ.text" = "1";
+
+/* Class = "UITextField"; placeholder = "個人專區網址"; ObjectID = "Ekv-mi-w1z"; */
+"Ekv-mi-w1z.placeholder" = "個人專區網址";
+
+/* Class = "UILabel"; text = "搜尋"; ObjectID = "G3p-Jp-mjd"; */
+"G3p-Jp-mjd.text" = "搜尋";
+
+/* Class = "UILabel"; text = "排行榜"; ObjectID = "G4b-EQ-Cvr"; */
+"G4b-EQ-Cvr.text" = "排行榜";
+
+/* Class = "UILabel"; text = "註  冊"; ObjectID = "HGh-fO-42X"; */
+"HGh-fO-42X.text" = "註  冊";
+
+/* Class = "UILabel"; text = "會員中心"; ObjectID = "HJW-Ow-pd4"; */
+"HJW-Ow-pd4.text" = "會員中心";
+
+/* Class = "UILabel"; text = "同 意 會 員 條 款"; ObjectID = "Hyn-fQ-4cN"; */
+"Hyn-fQ-4cN.text" = "同 意 會 員 條 款";
+
+/* Class = "UILabel"; text = "Flower Banana Ice-Cream"; ObjectID = "JOM-As-U4u"; */
+"JOM-As-U4u.text" = "Flower Banana Ice-Cream";
+
+/* Class = "UITextField"; placeholder = "密 碼"; ObjectID = "LaX-wK-jcL"; */
+"LaX-wK-jcL.placeholder" = "密 碼";
+
+/* Class = "UILabel"; text = "台灣+886"; ObjectID = "NGC-4t-OQq"; */
+"NGC-4t-OQq.text" = "台灣+886";
+
+/* Class = "UITextField"; placeholder = "個人專區網址"; ObjectID = "PT4-dC-8t3"; */
+"PT4-dC-8t3.placeholder" = "個人專區網址";
+
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "PyJ-gF-VEo"; */
+"PyJ-gF-VEo.placeholder" = "Email";
+
+/* Class = "UILabel"; text = "Ashley"; ObjectID = "REx-OY-bO0"; */
+"REx-OY-bO0.text" = "Ashley";
+
+/* Class = "UILabel"; text = "會 員 條 款"; ObjectID = "Rlh-vo-ZLi"; */
+"Rlh-vo-ZLi.text" = "會 員 條 款";
+
+/* Class = "UILabel"; text = "至少一項，最多三項"; ObjectID = "S43-JL-OeR"; */
+"S43-JL-OeR.text" = "至少一項，最多三項";
+
+/* Class = "UIButton"; normalTitle = "使用Facebook 登入"; ObjectID = "SKX-Vm-ScK"; */
+"SKX-Vm-ScK.normalTitle" = "使用Facebook 登入";
+
+/* Class = "UILabel"; text = "0"; ObjectID = "U30-aY-ibS"; */
+"U30-aY-ibS.text" = "0";
+
+/* Class = "UILabel"; text = "請稍候驗證碼簡訊寄送至你的手機，若等待時間過長，可回到前步驟再做確認以重新取的驗證碼．"; ObjectID = "UHR-5j-k5W"; */
+"UHR-5j-k5W.text" = "請稍候驗證碼簡訊寄送至你的手機，若等待時間過長，可回到前步驟再做確認以重新取的驗證碼．";
+
+/* Class = "UILabel"; text = "選 擇 照 片"; ObjectID = "UiK-OT-JDU"; */
+"UiK-OT-JDU.text" = "選 擇 照 片";
+
+/* Class = "UILabel"; text = "首頁"; ObjectID = "Vto-T5-MQ0"; */
+"Vto-T5-MQ0.text" = "首頁";
+
+/* Class = "UILabel"; text = "台北・台灣"; ObjectID = "Woh-0A-N0R"; */
+"Woh-0A-N0R.text" = "台北・台灣";
+
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "Xhz-MF-HHd"; */
+"Xhz-MF-HHd.placeholder" = "Email";
+
+/* Class = "UITextField"; placeholder = "暱 稱"; ObjectID = "Z1f-dC-2eX"; */
+"Z1f-dC-2eX.placeholder" = "暱 稱";
+
+/* Class = "UILabel"; text = "同 意 會 員 條 款"; ObjectID = "aQ3-jA-1Kc"; */
+"aQ3-jA-1Kc.text" = "同 意 會 員 條 款";
+
+/* Class = "UILabel"; text = "選 擇 照 片"; ObjectID = "aiF-Qu-SYr"; */
+"aiF-Qu-SYr.text" = "選 擇 照 片";
+
+/* Class = "UIButton"; normalTitle = "新成員註冊"; ObjectID = "bfC-YC-Q8D"; */
+"bfC-YC-Q8D.normalTitle" = "新成員註冊";
+
+/* Class = "UITextField"; placeholder = "行 動 電 話"; ObjectID = "cs7-cG-Hzd"; */
+"cs7-cG-Hzd.placeholder" = "行 動 電 話";
+
+/* Class = "UIButton"; normalTitle = "確認"; ObjectID = "e0C-Wf-pKt"; */
+"e0C-Wf-pKt.normalTitle" = "確認";
+
+/* Class = "UILabel"; text = "註  冊"; ObjectID = "g7E-V7-sE2"; */
+"g7E-V7-sE2.text" = "註  冊";
+
+/* Class = "UILabel"; text = "100 P"; ObjectID = "hVB-sj-af7"; */
+"hVB-sj-af7.text" = "100 P";
+
+/* Class = "UITextField"; placeholder = "手 機 驗 證 碼"; ObjectID = "hb4-bi-3OD"; */
+"hb4-bi-3OD.placeholder" = "手 機 驗 證 碼";
+
+/* Class = "UILabel"; text = "忘記密碼"; ObjectID = "lDN-Ug-afr"; */
+"lDN-Ug-afr.text" = "忘記密碼";
+
+/* Class = "UILabel"; text = "註  冊"; ObjectID = "mcM-0c-7wP"; */
+"mcM-0c-7wP.text" = "註  冊";
+
+/* Class = "UILabel"; text = "www.pinpinbox /"; ObjectID = "mrL-ZS-Ffp"; */
+"mrL-ZS-Ffp.text" = "www.pinpinbox /";
+
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "o2u-cv-KWi"; */
+"o2u-cv-KWi.placeholder" = "Email";
+
+/* Class = "UILabel"; text = "www.pinpinbox /"; ObjectID = "oIz-Md-zZp"; */
+"oIz-Md-zZp.text" = "www.pinpinbox /";
+
+/* Class = "UITextField"; placeholder = "確 認 密 碼"; ObjectID = "oyO-XK-48k"; */
+"oyO-XK-48k.placeholder" = "確 認 密 碼";
+
+/* Class = "UILabel"; text = "註  冊"; ObjectID = "p0h-La-KyA"; */
+"p0h-La-KyA.text" = "註  冊";
+
+/* Class = "UILabel"; text = "12分鐘前"; ObjectID = "rKG-F2-uyJ"; */
+"rKG-F2-uyJ.text" = "12分鐘前";
+
+/* Class = "UILabel"; text = " 選 擇 興 趣 "; ObjectID = "rkg-uB-WJP"; */
+"rkg-uB-WJP.text" = " 選 擇 興 趣 ";
+
+/* Class = "UILabel"; text = "台灣+886"; ObjectID = "sh2-Rj-irb"; */
+"sh2-Rj-irb.text" = "台灣+886";
+
+/* Class = "UIButton"; normalTitle = "註  冊"; ObjectID = "t38-eS-WNw"; */
+"t38-eS-WNw.normalTitle" = "註  冊";
+
+/* Class = "UIButton"; normalTitle = "輸出圖片"; ObjectID = "tQI-ku-Erm"; */
+"tQI-ku-Erm.normalTitle" = "輸出圖片";
+
+/* Class = "UIButton"; normalTitle = "忘 記 密 碼"; ObjectID = "tW7-Gh-SvF"; */
+"tW7-Gh-SvF.normalTitle" = "忘 記 密 碼";
+
+/* Class = "UITextField"; placeholder = "行 動 電 話"; ObjectID = "tiF-mj-LO9"; */
+"tiF-mj-LO9.placeholder" = "行 動 電 話";
+
+/* Class = "UIButton"; normalTitle = "使用Facebook 登入"; ObjectID = "uJr-O4-C67"; */
+"uJr-O4-C67.normalTitle" = "使用Facebook 登入";
+
+/* Class = "UIButton"; normalTitle = "登  入"; ObjectID = "wvp-t6-q9z"; */
+"wvp-t6-q9z.normalTitle" = "登  入";
+
+/* Class = "UIButton"; normalTitle = " 確 認 選 取（ 1 / 34 ）"; ObjectID = "xL3-9A-vOt"; */
+"xL3-9A-vOt.normalTitle" = " 確 認 選 取（ 1 / 34 ）";
+
+/* Class = "UIButton"; normalTitle = "<--"; ObjectID = "xya-Nd-fzr"; */
+"xya-Nd-fzr.normalTitle" = "<--";

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--About Pinpin Box View Controller-->
+        <scene sceneID="Mmh-ZX-tdU">
+            <objects>
+                <viewController storyboardIdentifier="AboutPinpinBoxViewController" id="y6g-qJ-VJ1" customClass="AboutPinpinBoxViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Xhu-A7-dEe">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AbQ-H2-cTX">
+                                <rect key="frame" x="0.0" y="603" width="375" height="64"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FYS-7c-sJP">
+                                        <rect key="frame" x="8" y="16" width="121" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="121" id="2ix-YY-oIn"/>
+                                            <constraint firstAttribute="height" constant="32" id="UqG-eB-uTf"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="返 回 設 定"/>
+                                        <connections>
+                                            <action selector="backBtnPress:" destination="y6g-qJ-VJ1" eventType="touchUpInside" id="bUN-vT-IIP"/>
+                                        </connections>
+                                    </button>
+                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="4jW-tN-Wqg">
+                                        <rect key="frame" x="277" y="14" width="82" height="37"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="82" id="1aX-KY-4cs"/>
+                                            <constraint firstAttribute="height" constant="37" id="InX-nI-0cF"/>
+                                        </constraints>
+                                        <color key="pageIndicatorTintColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="currentPageIndicatorTintColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </pageControl>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="FYS-7c-sJP" firstAttribute="centerY" secondItem="4jW-tN-Wqg" secondAttribute="centerY" id="0BW-1U-WbL"/>
+                                    <constraint firstItem="FYS-7c-sJP" firstAttribute="centerY" secondItem="AbQ-H2-cTX" secondAttribute="centerY" id="LGV-wq-PHb"/>
+                                    <constraint firstAttribute="height" constant="64" id="oF7-aI-cQr"/>
+                                    <constraint firstAttribute="trailing" secondItem="4jW-tN-Wqg" secondAttribute="trailing" constant="16" id="sFh-n5-4z8"/>
+                                    <constraint firstItem="FYS-7c-sJP" firstAttribute="leading" secondItem="AbQ-H2-cTX" secondAttribute="leading" constant="8" id="tei-cq-1jY"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="AbQ-H2-cTX" firstAttribute="bottom" secondItem="NXu-OG-rqe" secondAttribute="bottom" id="Ltw-rE-LxV"/>
+                            <constraint firstItem="NXu-OG-rqe" firstAttribute="trailing" secondItem="AbQ-H2-cTX" secondAttribute="trailing" id="NG0-VB-KYb"/>
+                            <constraint firstItem="AbQ-H2-cTX" firstAttribute="leading" secondItem="NXu-OG-rqe" secondAttribute="leading" id="fhx-pq-oxE"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="NXu-OG-rqe"/>
+                    </view>
+                    <connections>
+                        <outlet property="backBtn" destination="FYS-7c-sJP" id="bHU-XG-GCg"/>
+                        <outlet property="navBarView" destination="AbQ-H2-cTX" id="4T2-PN-7tL"/>
+                        <outlet property="pageControl" destination="4jW-tN-Wqg" id="Jlb-oU-gax"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nOv-eO-jsI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1715" y="2290"/>
+        </scene>
+    </scenes>
+</document>

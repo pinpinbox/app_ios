@@ -1,0 +1,216 @@
+/*
+  Localizable.strings
+  wPinpinbox
+
+  Created by Angus on 2016/5/23.
+  Copyright © 2016年 Angus. All rights reserved.
+*/
+
+// 版本更新
+"Version-Update" = "有新版本囉，快去更新!";
+
+// 網路連線
+"Connection-Timeout" = "目前網路不穩定，請確認網路品質再繼續使用pinpinbox!";
+
+"TimeOut-OKBtnTitle" = "再試一次";
+"TimeOut-CancelBtnTitle" = "取消";
+"TimeOut-CloseBtnTitle" = "關閉";
+"Host-NotAvailable" = "網路不通";
+"Host-NotAvailable" = "很抱歉，發生不明錯誤";
+
+//共用
+"GeneralText-ok" = "確認";
+"GeneralText-email" ="信 箱";
+"GeneralText-pwd" ="密 碼";
+"GeneralText-nickName" ="暱稱";
+"GeneralText-homePage" ="封面";
+"GeneralText-search" ="搜尋";
+"GeneralText-createAlbum" ="建立作品";
+"GeneralText-fav" ="我的收藏";
+"GeneralText-rank" ="排行榜";
+"GeneralText-profile" ="會員中心";
+"GeneralText-send" ="送出";
+"GeneralText-cellphone" ="行動電話";
+"GeneralText-vaildPhone" ="手機驗證碼";
+"GeneralText-modify" ="變更";
+"GeneralText-yes" ="是";
+"GeneralText-no" ="否";
+"GeneralText-del" ="刪除";
+
+//登入頁
+"LoginText-login" ="登 入";
+"LoginText-FBlogin" ="facebook\n登入";
+"LoginText-Reg" ="新成員註冊";
+"LoginText-forgetPwd" ="忘 記 密 碼";
+"LoginText-tipEmail" ="請輸入帳號";
+"LoginText-tipPwd" ="請輸入密碼";
+
+//忘記密碼
+"ForgetPwdText-forgetPwd" ="忘記密碼";
+"ForgetPwdText-pwdSent" ="密碼已傳送到手機";
+
+//註冊
+"RegText-tipPwd" ="請輸入密碼 (8-18字元)";
+"RegText-confirmPwd" ="確認密碼 (8-18字元)";
+"RegText-reg" ="註 冊";
+"RegText-FBreg" ="使用Facebook註冊";
+"RegText-applyAccount" ="帳號申請";
+"RegText-tipAgreement" ="成功註冊表示同意 pinpinbox 的 ";
+"RegText-tipAgreementTitle" ="平台規範";
+"RegText-finishedReg" ="完成註冊";
+"RegText-tipSMS" ="請稍候驗證碼簡訊送至你的手機，若等待時間過長，可回到前步驟再做確認以重新取得驗證碼";
+"RegText-empPwd" ="還沒設定密碼";
+"RegText-empEmail" ="信箱好像還沒填";
+"RegText-wrongEmail" ="信箱格式出了點問題";
+"RegText-wrongPwd" ="密碼至少8個字元唷";
+"RegText-empNickname" ="暱稱好像還沒填";
+"RegText-diffPwd" ="兩次密碼輸入不符";
+"RegText-empData" ="輸入值為空";
+"RegText-successSent" ="發送成功";
+"RegText-tip" ="請填手機號碼";
+"RegText-tipSMSPwd" ="記得輸入驗證碼";
+"RegText-tipHobby" ="選擇興趣";
+"RegText-tipHobby2" ="至少一項,最多五項";
+"RegText_tipAgreementMemberTitle"="會員條款";
+//P幣
+"StoreText-buyP" ="購買Ｐ幣";
+"StoreText-currentP" ="目 前 擁 有 P 點";
+/*多語系圖片->購買ＯＫ*/
+
+
+//首頁
+"HomeText-daysAgo" ="日前";
+"HomeText-hoursAgo" ="小時前";
+"HomeText-minsAgo" ="分鐘前";
+/*多語系圖片->關注更多*/
+
+//關注更多
+"AttentionText-more" ="關注更多";
+"AttentionText-searchFB" ="搜尋Facebook朋友";
+"AttentionText-syncContacts" ="連線至通訊錄";
+"AttentionText-recommendPRO" ="推薦職人";
+"AttentionText-mayuKnow" ="你可能認識的用戶";
+/*多語系圖片->關注、關注全部*/
+
+//搜尋
+"SearchText-works" ="作品";
+"SearchText-PRO" ="職人";
+"SearchText-keySearch" ="關鍵字搜尋";
+"SearchText-scanSearch" ="掃描搜尋";
+"SearchText-createDate" ="加入時間";
+/*多語系圖片->關注(注意！顏色和關注更多不同)*/
+
+//會員中心
+"ProfileText-zone" ="會員專區";
+"ProfileText-reqP" ="P點查詢";
+"ProfileText-about" ="自我介紹";
+"ProfileText-sex" ="性別";
+"ProfileText-birthday" ="生日";
+"ProfileText-male" ="男生";
+"ProfileText-female" ="女生";
+"ProfileText-none" ="未選擇";
+"ProfileText-changePwd" ="變更密碼";
+"ProfileText-currentPwd" ="目前密碼";
+"ProfileText-confirmPwd" ="變更密碼確認";
+"ProfileText-tipCurrentPwd" ="請輸入目前密碼";
+"ProfileText-tipNewPwd" ="請輸入變更密碼";
+"ProfileText-tipNewPwd2" ="請輸入密碼變更確認";
+"ProfileText-samePwd" = "新密碼與舊密碼相同";
+"ProfileText-diffPwd" ="密碼兩次輸入不同";
+"ProfileText-changeFail" ="更新失敗";
+"ProfileText-successSent" ="驗證碼已傳送到手機";
+"ProfileText-empData" ="輸入值為空";
+"ProfileText-changeSuccess" ="變更成功";
+"ProfileText-SMSvaild" ="簡訊認證";
+"ProfileText-tipNewCellPhone" ="請輸入欲變更手機號碼";
+"ProfileText-getVaildCode" ="取得驗證碼";
+
+"ProfileText-validateSocialLink" = "此連結不是正確的網址";
+
+//我的收藏
+"FavText-tipCreateNow" ="趕緊建立自己的作品吧！";
+"FavText-tipFindFavProducts" ="以下的方式都能找到喜歡的作品喔";
+"FavText-tipInvite" ="進入編輯器後，點選邀請共用(如圖所示)，";
+"FavText-tipInvite2" ="就可以邀請好友一起建立喔！";
+"FavText-myWorks" ="我上傳的作品";
+"FavText-otherFav" ="其他收藏";
+"FavText-publicFav" ="共用收藏";
+
+
+//排行榜
+"RankText-hot" ="熱門下載";
+"RankText-free" ="免費下載";
+"RankText-sponsor" ="贊助下載";
+
+
+//作品介紹
+"Works-desc" ="作品介紹";
+"Works-report" ="檢舉";
+"Works-share" ="分享";
+"Works-freeGet" ="收藏";
+"Works-viewAlbum" ="開啟";
+"Works-payForGet" ="贊助收藏";
+"Works-tipAskP" ="P點不足無法贊助是否前往購買？";
+"Works-tipConfirmGetIt" ="確定收藏？";
+"Works-tipRpSuccess" ="回報成功";
+
+//作者專區
+"AuthorText-inAtt" ="取消關注";
+"AuthorText-att" ="關注";
+
+
+//相片選擇
+"PicText-selPicture" ="選 擇 相 片";
+"PicText-confirm" ="確 認 選 取";
+"PicText-tipAccessPrivacy" ="請在iPhone的設置 - 隱私 - 相機選項中，允許Pinpinbox 訪問您的功能";
+"PicText-tipLessPic" ="至少選擇一張照片";
+"PicText-tipLimit" ="已達最大上限";
+
+//影片選擇
+"VideoText-selVideo" ="選 擇 影 片";
+"VideoText-tipLessVideo" ="至少選擇一張照片";
+
+//建立相本
+"CreateAlbumText-create" ="建立作品";
+"CreateAlbumText-hot" ="熱門";
+"CreateAlbumText-free" ="免費";
+"CreateAlbumText-sponsor" ="贊助";
+"CreateAlbumText-own" ="已取得";
+"CreateAlbumText-applyTemplate" ="套 用 版 型";
+"CreateAlbumText-askP" ="你的P點不足，是否購買？";
+"CreateAlbumText-askPay" ="確定購買";
+"CreateAlbumText-authorTemps" ="作者其他版型";
+"CreateAlbumText-tempSample" ="版型製作範例";
+"CreateAlbumText-quickBuild" ="快 速 建 立";
+"CreateAlbumText-createAlbum" ="版 型 建 立";
+"CreateAlbumText-tipLimit" ="已超過不可新增";
+"CreateAlbumText-tipConfirmDel" ="確定刪除此相片?";
+"CreateAlbumText-tipConfirmDelVideo" ="確定刪除此影片?";
+"CreateAlbumText-tipPermissions" ="權限不足";
+"CreateAlbumText-createGroup" ="建 立 編 輯 相 本 群 組";
+"CreateAlbumText-owner" ="建立者";
+"CreateAlbumText-inviteMore" ="   搜 尋 邀 請";
+"CreateAlbumText-admin" ="管理者";
+"CreateAlbumText-admin2" ="副管理者";
+"CreateAlbumText-sharer" ="共用者";
+"CreateAlbumText-viewer" ="預覽者";
+"CreateAlbumText-tipAssignRole" ="請選擇權限";
+"CreateAlbumText-tipGoEditor" ="是否進入編輯器做編輯照片?";
+"CreateAlbumText-productInfo" ="作品資料";
+"CreateAlbumText-pName" ="作品名稱";
+"CreateAlbumText-pDesc" ="作品介紹";
+"CreateAlbumText-pLoc" ="拍攝地點";
+"CreateAlbumText-pCate" ="主類別";
+"CreateAlbumText-pCate2" ="子類別";
+"CreateAlbumText-pMusic" ="設定音樂";
+"CreateAlbumText-pIndex" ="序號索引";
+"CreateAlbumText-backToEditor" ="返回作品編輯器";
+"CreateAlbumText-tipAlbumName" ="請輸入作品名稱";
+"CreateAlbumText-tipAlbumDesc" ="請輸入作品介紹";
+"CreateAlbumText-tipAlbumCate" ="請選擇主類別";
+"CreateAlbumText-tipAlbumCate2" ="請選擇子類別";
+"CreateAlbumText-pDate" ="建立日期";
+"CreateAlbumText-weather" ="天氣";
+"CreateAlbumText-mood" = "心情";
+
+"CreateAlbumText-canNotEditOthers" = "僅可 編輯/刪除 自己上傳的內容";

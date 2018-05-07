@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Activity Detail View Controller-->
+        <scene sceneID="In7-xP-LIX">
+            <objects>
+                <viewController storyboardIdentifier="ActivityDetailViewController" id="Y1y-W2-H4L" customClass="ActivityDetailViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="O9D-Fy-9UQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="最 新 活 動" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SWu-8A-MH0">
+                                <rect key="frame" x="16" y="145.5" width="343" height="38.5"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="32"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                        <real key="value" value="64"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                        <real key="value" value="16"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                        <real key="value" value="32"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fBc-3M-ByI">
+                                <rect key="frame" x="148" y="386" width="80" height="34"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="我知道了!">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="dimissBtnPressed:" destination="Y1y-W2-H4L" eventType="touchUpInside" id="ZpX-g8-RnY"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Voy-Hp-BuN">
+                                <rect key="frame" x="0.0" y="200" width="375" height="142"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="142" id="z8L-ZR-PMy"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="LRQ-Z0-pX7" firstAttribute="bottom" secondItem="fBc-3M-ByI" secondAttribute="bottom" constant="247" id="HrM-79-Bko"/>
+                            <constraint firstItem="SWu-8A-MH0" firstAttribute="leading" secondItem="LRQ-Z0-pX7" secondAttribute="leading" constant="16" id="Jc0-Mg-KI1"/>
+                            <constraint firstItem="Voy-Hp-BuN" firstAttribute="trailing" secondItem="LRQ-Z0-pX7" secondAttribute="trailing" id="SYD-Yw-PBf"/>
+                            <constraint firstItem="Voy-Hp-BuN" firstAttribute="top" secondItem="SWu-8A-MH0" secondAttribute="bottom" constant="16" id="Sbo-3u-eCG"/>
+                            <constraint firstItem="fBc-3M-ByI" firstAttribute="centerX" secondItem="O9D-Fy-9UQ" secondAttribute="centerX" id="Ysp-A4-XdY"/>
+                            <constraint firstItem="Voy-Hp-BuN" firstAttribute="leading" secondItem="LRQ-Z0-pX7" secondAttribute="leading" id="dCx-5F-4dA"/>
+                            <constraint firstItem="fBc-3M-ByI" firstAttribute="top" secondItem="Voy-Hp-BuN" secondAttribute="bottom" constant="44" id="jPZ-ld-LOZ"/>
+                            <constraint firstItem="LRQ-Z0-pX7" firstAttribute="trailing" secondItem="SWu-8A-MH0" secondAttribute="trailing" constant="16" id="uUN-QE-HG3"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="LRQ-Z0-pX7"/>
+                    </view>
+                    <connections>
+                        <outlet property="dimissBtn" destination="fBc-3M-ByI" id="Itr-vp-Ou7"/>
+                        <outlet property="imageView" destination="Voy-Hp-BuN" id="SO6-aa-b3T"/>
+                        <outlet property="topicLabel" destination="SWu-8A-MH0" id="6wK-Ik-hge"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nuV-F4-xXY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-452" y="-988.15592203898063"/>
+        </scene>
+    </scenes>
+</document>

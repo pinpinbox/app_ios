@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oGU-bx-jQI">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Exchange List View Controller-->
+        <scene sceneID="wFD-wi-k8j">
+            <objects>
+                <viewController storyboardIdentifier="ExchangeListViewController" id="oGU-bx-jQI" customClass="ExchangeListViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mOD-eM-jDc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m66-7J-ESF">
+                                <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mr1-r7-IUN">
+                                        <rect key="frame" x="8" y="6" width="42" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="42" id="8MG-Mj-dhV"/>
+                                            <constraint firstAttribute="height" constant="42" id="Um6-wm-hXF"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <state key="normal" image="ic200_arrow_left_dark.png"/>
+                                        <connections>
+                                            <action selector="backBtnPress:" destination="oGU-bx-jQI" eventType="touchUpInside" id="Zgb-s4-SbK"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FUy-wV-3l2">
+                                        <rect key="frame" x="166" y="13.5" width="42" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="FUy-wV-3l2" firstAttribute="centerY" secondItem="m66-7J-ESF" secondAttribute="centerY" id="GRu-CK-GWR"/>
+                                    <constraint firstAttribute="bottom" secondItem="Mr1-r7-IUN" secondAttribute="bottom" id="jyW-eV-lg2"/>
+                                    <constraint firstItem="Mr1-r7-IUN" firstAttribute="leading" secondItem="m66-7J-ESF" secondAttribute="leading" constant="8" id="nvt-u4-OdC"/>
+                                    <constraint firstItem="FUy-wV-3l2" firstAttribute="centerX" secondItem="m66-7J-ESF" secondAttribute="centerX" id="tKD-k4-d1e"/>
+                                    <constraint firstAttribute="height" constant="48" id="vhC-gz-qBJ"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="m66-7J-ESF" firstAttribute="leading" secondItem="mEq-R4-vFM" secondAttribute="leading" id="1Td-wa-BRE"/>
+                            <constraint firstItem="m66-7J-ESF" firstAttribute="trailing" secondItem="mEq-R4-vFM" secondAttribute="trailing" id="a4L-tS-GJl"/>
+                            <constraint firstItem="m66-7J-ESF" firstAttribute="top" secondItem="mOD-eM-jDc" secondAttribute="top" constant="20" symbolic="YES" id="zgd-7E-c02"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="mEq-R4-vFM"/>
+                    </view>
+                    <connections>
+                        <outlet property="navBarHeight" destination="vhC-gz-qBJ" id="7vh-qJ-9I3"/>
+                        <outlet property="navBarView" destination="m66-7J-ESF" id="a26-Sl-BYJ"/>
+                        <outlet property="titleLabel" destination="FUy-wV-3l2" id="pi7-Tq-u4i"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vvh-gl-XFV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-234" y="200"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
+    </resources>
+</document>
