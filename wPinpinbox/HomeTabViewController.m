@@ -1258,7 +1258,7 @@
                         newEventPostVC.title = data[@"data"][@"event"][@"title"];
                         newEventPostVC.imageUrl = data[@"data"][@"event"][@"image"];
                         newEventPostVC.urlString = data[@"data"][@"event"][@"url"];
-                        newEventPostVC.templateArray = data[@"data"][@"event_templatejoin"];                        
+                        newEventPostVC.templateArray =  data[@"data"][@"event_templatejoin"];
                         newEventPostVC.eventId = eventId;
                         newEventPostVC.contributionNumber = [data[@"data"][@"event"][@"contribution"] integerValue];
                         newEventPostVC.popularityNumber = [data[@"data"][@"event"][@"popularity"] integerValue];
@@ -1271,6 +1271,9 @@
                         
                     } else if ([data[@"result"] intValue] == 2) {
                         NSLog(@"result is 2");
+                        
+                        NSLog(@"event_templatejoin: %@", data[@"data"][@"event_templatejoin"]);
+                        
                         NewEventPostViewController *newEventPostVC = [[UIStoryboard storyboardWithName: @"NewEventPostVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewEventPostViewController"];
                         newEventPostVC.name = data[@"data"][@"event"][@"name"];
                         newEventPostVC.title = data[@"data"][@"event"][@"title"];
@@ -1625,6 +1628,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)tapDetectedForURL:(NSInteger)page {
     NSLog(@"tapDetectedForURL");
     NSLog(@"page: %ld", (long)page);
+    
+    NSLog(@"adArray[page]: %@", adArray[page]);
     
     NSString *album = adArray[page][@"album"];
     NSString *event = adArray[page][@"event"];

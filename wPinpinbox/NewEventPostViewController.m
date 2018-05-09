@@ -74,7 +74,12 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self getExistedAlbum];
+    
+    if (self.eventFinished) {
+        [self initialValueSetup];
+    } else {
+        [self getExistedAlbum];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -92,6 +97,12 @@
 }
 
 - (IBAction)goVotingBtnPress:(id)sender {
+    VotingViewController *votingVC = [[UIStoryboard storyboardWithName: @"VotingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"VotingViewController"];
+    votingVC.eventId = self.eventId;
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate.myNav pushViewController: votingVC animated: YES];
+    
+    /*
     if (!self.eventFinished) {
         VotingViewController *votingVC = [[UIStoryboard storyboardWithName: @"VotingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"VotingViewController"];
         votingVC.eventId = self.eventId;
@@ -103,6 +114,7 @@
         [alert addAction: okBtn];
         [self presentViewController: alert animated: YES completion: nil];
     }
+     */
 }
 
 - (void)goVotingHighlight: (UIButton *)sender {
@@ -139,10 +151,28 @@
     self.customPostActionSheet.delegate = self;
     self.customPostActionSheet.topicStr = @"請選擇投稿方式";
     
-    self.eventPostBtn.layer.cornerRadius = kCornerRadius;
+    if (self.eventFinished) {
+        self.eventPostBtn.layer.cornerRadius = kCornerRadius;
+        [self.eventPostBtn setTitle: @"活動已結束" forState: UIControlStateNormal];
+        [self.eventPostBtn setTitleColor: [UIColor thirdGrey] forState: UIControlStateNormal];
+        self.eventPostBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
+        self.eventPostBtn.layer.borderWidth = 1.0;
+        self.eventPostBtn.backgroundColor = [UIColor clearColor];
+        
+        self.eventPostBtn.userInteractionEnabled = NO;
+    } else {
+        [self.eventPostBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
+        self.eventPostBtn.layer.borderColor = [UIColor clearColor].CGColor;
+        self.eventPostBtn.layer.borderWidth = 0;
+        self.eventPostBtn.backgroundColor = [UIColor firstMain];
+        
+        self.eventPostBtn.userInteractionEnabled = YES;
+    }
+    
     self.toolBarView.backgroundColor = [UIColor barColor];
     self.toolBarView.myLeftMargin = self.toolBarView.myRightMargin = 0;
     self.toolBarView.myBottomMargin = 0;
+    
     
     // Image W:H 18:14
     UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 268.8)];
@@ -363,9 +393,9 @@
                 [wTools HideMBProgressHUD];
             } @catch (NSException *exception) {
                 // Print exception information
-                NSLog( @"NSException caught" );
+                NSLog( @"NSException caught");
                 NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
+                NSLog( @"Reason: %@", exception.reason);
                 return;
             }
             
@@ -385,11 +415,11 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     NSLog(@"getcalbumlist");
-                    //NSLog(@"dic: %@", dic);
+//                    NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] boolValue]) {
                         NSArray *array = dic[@"data"];
-                        //NSLog(@"array: %@", array);
+                        NSLog(@"array: %@", array);
                         //NSLog(@"array.count: %lu", (unsigned long)array.count);
                         
                         for (int i = 0; i < array.count; i++) {
@@ -402,6 +432,7 @@
                             
                             if (([act isEqualToString: @"open"]) && (zipped == 1)) {
                                 //NSLog(@"act isEqualToString open && zipped == 1");
+                                NSLog(@"self.templateArray: %@", self.templateArray);
                                 
                                 for (int j = 0; j < self.templateArray.count; j++) {
                                     //NSLog(@"templateArray: %@", [self.templateArray[j] stringValue]);
@@ -421,6 +452,8 @@
                                         
                                         NSArray *eventArray = [[NSArray alloc] init];
                                         eventArray = array[i][@"event"];
+                                        NSLog(@"eventArray: %@", eventArray);
+                                        NSLog(@"eventArray.count: %lu", (unsigned long)eventArray.count);
                                         
                                         NSMutableArray *eventArrayData = [[NSMutableArray alloc] init];
                                         

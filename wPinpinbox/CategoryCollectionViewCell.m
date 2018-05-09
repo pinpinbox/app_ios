@@ -13,7 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.albumImageView.layer.cornerRadius = kCornerRadius;
-    self.albumImageView.layer.masksToBounds = YES;
+    self.albumImageView.layer.masksToBounds = YES;    
     self.albumNameLabel.font = [UIFont boldSystemFontOfSize: 14];
     
     // UserInfoView Setting

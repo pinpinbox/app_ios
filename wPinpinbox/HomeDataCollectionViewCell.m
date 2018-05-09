@@ -42,6 +42,7 @@
     self.btn3.userInteractionEnabled = NO;
     
     // Album
+    self.albumNameLabel.font = [UIFont boldSystemFontOfSize: 12.0];
     self.albumNameLabel.textColor = [UIColor firstGrey];
     self.albumNameLabel.numberOfLines = 3;
 }
