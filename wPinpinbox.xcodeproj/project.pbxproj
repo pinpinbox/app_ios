@@ -158,6 +158,9 @@
 		54E232B51FA6DB9E00D95FD5 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54E232B31FA6DB9D00D95FD5 /* Crashlytics.framework */; };
 		54E232B61FA6DB9E00D95FD5 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54E232B41FA6DB9D00D95FD5 /* Fabric.framework */; };
 		54E612BD2012F24400EA773B /* QRCodeVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54E612BC2012F24400EA773B /* QRCodeVC.storyboard */; };
+		54E6EA7920A0508500DA7D99 /* FollowFromListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E6EA7820A0508500DA7D99 /* FollowFromListViewController.m */; };
+		54E6EA7B20A0509500DA7D99 /* FollowFromListVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54E6EA7A20A0509500DA7D99 /* FollowFromListVC.storyboard */; };
+		54E6EA7F20A050CB00DA7D99 /* FollowFromListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E6EA7E20A050CB00DA7D99 /* FollowFromListTableViewCell.m */; };
 		54F2CBFD200B898E0091AA86 /* FollowListsVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54F2CBFC200B898E0091AA86 /* FollowListsVC.storyboard */; };
 		54F2CC00200B93EC0091AA86 /* FollowListsCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F2CBFF200B93EC0091AA86 /* FollowListsCollectionReusableView.m */; };
 		54F2CC27200CA0DA0091AA86 /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54F2CC26200CA0DA0091AA86 /* CategoryViewController.m */; };
@@ -1316,6 +1319,11 @@
 		54E232B31FA6DB9D00D95FD5 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		54E232B41FA6DB9D00D95FD5 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		54E612BC2012F24400EA773B /* QRCodeVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = QRCodeVC.storyboard; sourceTree = "<group>"; };
+		54E6EA7720A0508500DA7D99 /* FollowFromListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FollowFromListViewController.h; sourceTree = "<group>"; };
+		54E6EA7820A0508500DA7D99 /* FollowFromListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FollowFromListViewController.m; sourceTree = "<group>"; };
+		54E6EA7A20A0509500DA7D99 /* FollowFromListVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FollowFromListVC.storyboard; sourceTree = "<group>"; };
+		54E6EA7D20A050CB00DA7D99 /* FollowFromListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FollowFromListTableViewCell.h; sourceTree = "<group>"; };
+		54E6EA7E20A050CB00DA7D99 /* FollowFromListTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FollowFromListTableViewCell.m; sourceTree = "<group>"; };
 		54F2CBFC200B898E0091AA86 /* FollowListsVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FollowListsVC.storyboard; sourceTree = "<group>"; };
 		54F2CBFE200B93EC0091AA86 /* FollowListsCollectionReusableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FollowListsCollectionReusableView.h; sourceTree = "<group>"; };
 		54F2CBFF200B93EC0091AA86 /* FollowListsCollectionReusableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FollowListsCollectionReusableView.m; sourceTree = "<group>"; };
@@ -3101,6 +3109,18 @@
 			name = MapShowingVC;
 			sourceTree = "<group>";
 		};
+		54E6EA7C20A0509B00DA7D99 /* FollowFromListVC */ = {
+			isa = PBXGroup;
+			children = (
+				54E6EA7720A0508500DA7D99 /* FollowFromListViewController.h */,
+				54E6EA7820A0508500DA7D99 /* FollowFromListViewController.m */,
+				54E6EA7D20A050CB00DA7D99 /* FollowFromListTableViewCell.h */,
+				54E6EA7E20A050CB00DA7D99 /* FollowFromListTableViewCell.m */,
+				54E6EA7A20A0509500DA7D99 /* FollowFromListVC.storyboard */,
+			);
+			name = FollowFromListVC;
+			sourceTree = "<group>";
+		};
 		54F0AB801FC2BD7D00DE1D51 /* RecentBrowsing Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -3339,6 +3359,7 @@
 				6308C4501EAC9ADD00F99AC0 /* MeTabViewController.h */,
 				6308C4511EAC9ADD00F99AC0 /* MeTabViewController.m */,
 				54331A9B1FE4EDF8005E6ACE /* MeTab.storyboard */,
+				54E6EA7C20A0509B00DA7D99 /* FollowFromListVC */,
 				544FBEE6208D98B700681097 /* SponsorList */,
 				630E1A5D1EC00F14003FE76A /* Me Cell */,
 				540DE2AF20283ADC0090F584 /* InfoEdit */,
@@ -6524,6 +6545,7 @@
 				926E3BCB1CE5C45F00724B56 /* icon_activity@2x.png in Resources */,
 				638F88CC1E02999600316123 /* icon_create_template_grey800.png in Resources */,
 				63052BE01E9CD44A00B6214B /* ic200_select_light.png in Resources */,
+				54E6EA7B20A0509500DA7D99 /* FollowFromListVC.storyboard in Resources */,
 				92CBCC811BD7606100F1F27A /* button_pull@2x.png in Resources */,
 				922D92B71BD9CDB400640639 /* SearchViewController.xib in Resources */,
 				92D64DA31C3E070F001312E4 /* 4-13black_bg@2x.png in Resources */,
@@ -6662,6 +6684,7 @@
 				630A83DC1EB1D07300AC8479 /* MyBaseLayout.m in Sources */,
 				92F6CCEC1B79FA45002E547C /* NewAlbumsViewController.m in Sources */,
 				632082251EC2F59C003CE1CE /* NotifTabTableViewCell.m in Sources */,
+				54E6EA7F20A050CB00DA7D99 /* FollowFromListTableViewCell.m in Sources */,
 				6319A36E1DABB60C001CB8BD /* JCViewController.m in Sources */,
 				922557421BDF594E00CD4E9B /* CalbumlistCollectionViewCell.m in Sources */,
 				54A32A081F5EAD8900CECE58 /* BFPaperButton.m in Sources */,
@@ -6726,6 +6749,7 @@
 				63301DE11EF69EB0002C082A /* OtherCollectionTableViewCell.m in Sources */,
 				92CBCC711BD746B700F1F27A /* MemberBtnTableViewCell.m in Sources */,
 				6305440A1E5FE5E200B0CB6D /* UIView+Toast.m in Sources */,
+				54E6EA7920A0508500DA7D99 /* FollowFromListViewController.m in Sources */,
 				5498BF751FC7200A007BD033 /* ActivityDetailViewController.m in Sources */,
 				92A155971C3389CC00E83EC5 /* Taoban1TableViewCell.m in Sources */,
 				929C79331BD8AA000093E65E /* HomeTableViewCell.m in Sources */,

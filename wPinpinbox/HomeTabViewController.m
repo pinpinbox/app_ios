@@ -535,7 +535,7 @@
                 // Print exception information
                 NSLog( @"NSException caught" );
                 NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
+                NSLog( @"Reason: %@", exception.reason);
                 return;
             }
             

@@ -399,6 +399,12 @@ static NSString *version = @"";
                         token:(NSString *)token
                        userId:(NSString *)userId;
 
+#pragma mark - Get Follow From List
+// 113
++ (NSString *)getFollowFromList:(NSString *)token
+                         userId:(NSString *)userId
+                          limit:(NSString *)limit;
+
 //測試sign
 +(NSString *)testsign;
 

@@ -1,33 +1,29 @@
 //
-//  SponsorListTableViewCell.m
+//  FollowFromListTableViewCell.m
 //  wPinpinbox
 //
-//  Created by David on 23/04/2018.
+//  Created by David on 07/05/2018.
 //  Copyright © 2018 Angus. All rights reserved.
 //
 
-#import "SponsorListTableViewCell.h"
+#import "FollowFromListTableViewCell.h"
 #import "UIColor+Extensions.h"
 #import "GlobalVars.h"
-//#import "MyLayout.h"
 
-@implementation SponsorListTableViewCell
+@implementation FollowFromListTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code    
+    // Initialization code
     self.userNameLabel.textColor = [UIColor firstGrey];
-    self.userNameLabel.font = [UIFont systemFontOfSize: 16.0];    
-    
-    self.pPointLabel.textColor = [UIColor firstGrey];
-    self.pPointLabel.font = [UIFont boldSystemFontOfSize: 16.0];
+    self.userNameLabel.font = [UIFont systemFontOfSize: 16.0];        
     
     self.messageBtn.layer.cornerRadius = kCornerRadius;
     self.messageBtn.backgroundColor = [UIColor thirdGrey];
     [self.messageBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
     self.messageBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0];
     [self.messageBtn addTarget: self action: @selector(showMessageBoard:) forControlEvents: UIControlEventTouchUpInside];
-        
+    
     self.followBtn.layer.cornerRadius = kCornerRadius;
     self.followBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0];
     [self.followBtn addTarget: self action: @selector(callFollowAPI:) forControlEvents: UIControlEventTouchUpInside];

@@ -147,8 +147,7 @@
     }
 }
 
-- (void)getFollowToList
-{
+- (void)getFollowToList {
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {

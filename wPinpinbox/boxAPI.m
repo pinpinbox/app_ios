@@ -2118,6 +2118,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                             limit:(NSString *)limit
 {
     NSLog(@"");
+    NSLog(@"boxAPI");
     NSLog(@"getMessageBoardList");
     
     NSString *returnStr = @"";
@@ -2436,6 +2437,21 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject: userId forKey: @"user_id"];
     
     returnStr = [self boxAPI: dic URL: @"/slotphotousefor/2.0"];
+    
+    return returnStr;
+}
+
+// 113
++ (NSString *)getFollowFromList:(NSString *)token
+                         userId:(NSString *)userId
+                          limit:(NSString *)limit {
+    NSString *returnStr = @"";
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    [dic setObject: token forKey: @"token"];
+    [dic setObject: userId forKey: @"user_id"];
+    [dic setObject: limit forKey: @"limit"];
+    
+    returnStr = [self boxAPI: dic URL: @"/getfollowfromlist/2.0"];
     
     return returnStr;
 }

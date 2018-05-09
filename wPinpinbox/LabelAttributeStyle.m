@@ -28,6 +28,8 @@
 }
 
 + (NSInteger)checkTagString:(NSString *)searchedString {
+    NSLog(@"");
+    NSLog(@"checkTagString");
     NSRange searchedRange = NSMakeRange(0, searchedString.length);
     
     // Regular Expression Setting
@@ -42,12 +44,14 @@
                                         range: searchedRange];
     
     NSLog(@"searchedString: %@", searchedString);
-    NSLog(@"matches: %@", matches);
+//    NSLog(@"matches: %@", matches);
     
     return matches.count;
 }
 
 + (NSMutableAttributedString *)convertToTagString:(NSString *)searchedString {
+    NSLog(@"");
+    NSLog(@"convertToTagString");
     NSRange searchedRange = NSMakeRange(0, searchedString.length);
     
     // Regular Expression Setting
@@ -62,8 +66,7 @@
                                         range: searchedRange];
     
     NSLog(@"searchedString: %@", searchedString);
-    NSLog(@"matches: %@", matches);
-    
+//    NSLog(@"matches: %@", matches);
     
     // Array for Tag Info
     NSMutableArray *tagArray = [[NSMutableArray alloc] init];
@@ -71,13 +74,15 @@
     // Loop for getting Tag Info
     for (NSTextCheckingResult *match in matches) {
         // Tag Name Filtering ex: [userId: userName]
+        NSLog(@"match.range: %@", NSStringFromRange(match.range));
+        
         NSString *matchText = [searchedString substringWithRange: [match range]];
         NSLog(@"matchText: %@", matchText);
         
         // Getting range for highlighting text
-        NSRange range = [searchedString rangeOfString: matchText];
-        NSLog(@"range.length: %lu", (unsigned long)range.length);
-        NSLog(@"range.location: %lu", (unsigned long)range.location);
+//        NSRange range = [searchedString rangeOfString: matchText];
+        NSLog(@"range.length: %lu", (unsigned long)match.range.length);
+        NSLog(@"range.location: %lu", (unsigned long)match.range.location);
         
         // String Filtering
         NSArray *array = [matchText componentsSeparatedByString: @":"];
@@ -98,13 +103,13 @@
         [tagDic setObject: userName forKey: @"userName"];
         [tagDic setObject: userId forKey: @"userId"];
         [tagDic setObject: matchText forKey: @"sendingType"];
-        [tagDic setObject: [NSNumber numberWithUnsignedInteger: range.location] forKey: @"location"];
-        [tagDic setObject: [NSNumber numberWithUnsignedInteger: range.length] forKey: @"length"];
+        [tagDic setObject: [NSNumber numberWithUnsignedInteger: match.range.location] forKey: @"location"];
+        [tagDic setObject: [NSNumber numberWithUnsignedInteger: match.range.length] forKey: @"length"];
         
         [tagArray addObject: tagDic];
     }
     
-    NSLog(@"tagArray: %@", tagArray);
+//    NSLog(@"tagArray: %@", tagArray);
     
     // Record tag string origin
     NSInteger strOrigin = 0;
@@ -130,7 +135,8 @@
         [dic setObject: [NSNumber numberWithUnsignedInteger: length - userId.length - 3] forKey: @"length"];
     }
     NSLog(@"searchedString: %@", searchedString);
-    NSLog(@"tagArray: %@", tagArray);
+    
+//    NSLog(@"tagArray: %@", tagArray);
     
 //    NSMutableAttributedString *mutableStr = [[NSMutableAttributedString alloc] initWithString: searchedString];
     
@@ -141,17 +147,20 @@
     //[attDic setValue:[UIColor firstMain] forKey:NSBackgroundColorAttributeName];    // 设置字体背景色
     NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString: searchedString attributes:attDic];
     
+    NSLog(@"");
+    NSLog(@"LabelAttributeStyle");
     NSLog(@"tagArray: %@", tagArray);
     
     // Setting Text Highlighted Color
     for (int i = 0; i < tagArray.count; i++) {
+        NSLog(@"");
+        NSLog(@"Setting Text Highlighted Color");
+        NSLog(@"i: %d", i);
         NSMutableDictionary *dic = [tagArray objectAtIndex: i];
         [attStr addAttribute: NSForegroundColorAttributeName
                        value: [UIColor firstMain]
                        range: NSMakeRange([[dic objectForKey: @"location"] integerValue], [[dic objectForKey: @"length"] integerValue])];
     }
-    
-    
     
 //    return mutableStr;
     return attStr;

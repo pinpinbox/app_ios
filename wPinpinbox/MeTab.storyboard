@@ -189,7 +189,7 @@
                                                         </label>
                                                     </subviews>
                                                 </stackView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Gos-5N-GGJ">
+                                                <stackView opaque="NO" tag="102" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Gos-5N-GGJ">
                                                     <rect key="frame" x="104" y="0.0" width="40" height="67"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b33-Ld-qCP">
@@ -219,7 +219,7 @@
                                                         </label>
                                                     </subviews>
                                                 </stackView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qVO-nT-4cI">
+                                                <stackView opaque="NO" tag="103" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qVO-nT-4cI">
                                                     <rect key="frame" x="208" y="0.0" width="40" height="67"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ha9-5R-Z26">
@@ -473,6 +473,7 @@
                                         <outlet property="creativeNameLabel" destination="6yg-Za-RNf" id="9D3-Ix-I5e"/>
                                         <outlet property="creativeNameLabelBottomConstraint" destination="ME5-VB-0Be" id="v1C-MZ-mPr"/>
                                         <outlet property="fbBtn" destination="aCg-nM-9pw" id="adr-o8-b6q"/>
+                                        <outlet property="followStackView" destination="Gos-5N-GGJ" id="em1-kG-Ffd"/>
                                         <outlet property="googlePlusBtn" destination="Nd9-mw-HFA" id="5Ag-Bf-uhl"/>
                                         <outlet property="horzLineView" destination="vCk-O4-0ud" id="tca-C6-ns4"/>
                                         <outlet property="igBtn" destination="sSH-xn-clI" id="3xu-XY-J2n"/>

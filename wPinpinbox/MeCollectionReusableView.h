@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^StackViewTouch)(BOOL selected);
+typedef void(^StackViewTouch)(BOOL selected, NSInteger tag);
 
 @interface MeCollectionReusableView : UICollectionReusableView
 @property (weak, nonatomic) IBOutlet UIImageView *coverImageView;
@@ -28,6 +28,7 @@ typedef void(^StackViewTouch)(BOOL selected);
 @property (weak, nonatomic) IBOutlet UILabel *likeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sponsoredLabel;
 
+@property (weak, nonatomic) IBOutlet UIStackView *followStackView;
 @property (weak, nonatomic) IBOutlet UIStackView *sponsorStackView;
 @property (copy, nonatomic) StackViewTouch customBlock;
 

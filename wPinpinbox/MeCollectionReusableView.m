@@ -40,6 +40,9 @@
     self.likeLabel.textColor = [UIColor firstGrey];
     self.sponsoredLabel.textColor = [UIColor firstGrey];
     
+    UITapGestureRecognizer *followTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleTapFromStackView:)];
+    [self.followStackView addGestureRecognizer: followTap];
+    
     UITapGestureRecognizer *sponsorTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleTapFromStackView:)];
     [self.sponsorStackView addGestureRecognizer: sponsorTap];
     
@@ -53,7 +56,9 @@
 - (void)handleTapFromStackView:(UITapGestureRecognizer *)gestureRecognizer {
     NSLog(@"handleTapFromStackView");
     if (self.customBlock) {
-        self.customBlock(YES);
+//        self.customBlock(YES);
+        self.customBlock(YES, gestureRecognizer.view.tag);
+        NSLog(@"gestureRecognizer.view.tag: %ld", gestureRecognizer.view.tag);
     }
 }
 

@@ -43,6 +43,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 
 #import "ExchangeListViewController.h"
+#import "FollowFromListViewController.h"
 #import "SponsorListViewController.h"
 
 #import "MessageboardViewController.h"
@@ -891,10 +892,21 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     MeCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
     
-    headerView.customBlock = ^(BOOL selected) {
-        SponsorListViewController *sponsorListVC = [[UIStoryboard storyboardWithName: @"SponsorListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"SponsorListViewController"];
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav pushViewController: sponsorListVC animated: YES];
+    headerView.customBlock = ^(BOOL selected, NSInteger tag) {
+        if (tag == 102) {
+            NSLog(@"tag == 102");
+            NSLog(@"To FollowFromListViewController");
+            FollowFromListViewController *followFromListVC = [[UIStoryboard storyboardWithName: @"FollowFromListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"FollowFromListViewController"];
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav pushViewController: followFromListVC animated: YES];
+        }
+        if (tag == 103) {
+            NSLog(@"tag == 103");
+            NSLog(@"To SponsorListViewController");
+            SponsorListViewController *sponsorListVC = [[UIStoryboard storyboardWithName: @"SponsorListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"SponsorListViewController"];
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav pushViewController: sponsorListVC animated: YES];
+        }
     };
     
     [LabelAttributeStyle changeGapString: headerView.albumCollectionLabel content: headerView.albumCollectionLabel.text];

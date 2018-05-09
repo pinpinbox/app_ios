@@ -185,7 +185,6 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] boolValue]) {
@@ -200,7 +199,6 @@
                         
                         for (NSMutableDictionary *messageData in [dic objectForKey: @"data"]) {
                             s++;
-                            
                             [messageArray addObject: messageData];
                         }
                         
@@ -224,6 +222,7 @@
                         
                         NSLog(@"");
                         NSLog(@"isSlided: %d", isSlided);
+                        
                         if (!isSlided) {
                             NSLog(@"self slideIn");
                             
@@ -234,8 +233,8 @@
                             isSlided = YES;
                         }
                         
+                        NSLog(@"");
                         NSLog(@"check messageArray.count");
-                        
                         NSLog(@"self.tableView: %@", self.tableView);
                         
                         if (![self.tableView isEqual: [NSNull null]] || self.tableView != nil) {
@@ -248,8 +247,8 @@
                             // Set userInteractionEnabled to YES for scrolling
                             self.tableView.userInteractionEnabled = YES;
                         }
-                        NSLog(@"messageArray.count: %lu", (unsigned long)messageArray.count);
-                        NSLog(@"messageArray: %@", messageArray);
+//                        NSLog(@"messageArray.count: %lu", (unsigned long)messageArray.count);
+//                        NSLog(@"messageArray: %@", messageArray);
                     } else {
                         if (![self.tableView isEqual: [NSNull null]] || self.tableView != nil) {
                             self.tableView.userInteractionEnabled = YES;
@@ -426,6 +425,7 @@
     NSString *imageUrl = dic[@"user"][@"picture"];
     NSString *nameStr = dic[@"user"][@"name"];
     NSString *contentStr = dic[@"pinpinboard"][@"text"];
+    NSLog(@"contentStr: %@", contentStr);
     NSString *inserTime = [self hourCalculation: dic[@"pinpinboard"][@"inserttime"]];
     
     MessageTableViewCell *cell = (MessageTableViewCell *)[tableView dequeueReusableCellWithIdentifier: cellIdentifier];
@@ -499,18 +499,23 @@
     return cell;
 }
 
-#pragma mark - UITableViewDelegate Methods
-- (void)tableView:(UITableView *)tableView
-  willDisplayCell:(UITableViewCell *)cell
-forRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"willDisplayCell");
+#pragma mark - UIScrollViewDelegate Methods
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"scrollViewDidScroll");
     
-    if (indexPath.item == (messageArray.count - 1)) {
+    // getting the scroll offset
+    CGFloat bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height;
+    NSLog(@"bottomEdge: %f", bottomEdge);
+    NSLog(@"scrollView.contentSize.height: %f", scrollView.contentSize.height);
+    
+    NSLog(@"isLoading: %d", isLoading);
+    
+    if (bottomEdge > scrollView.contentSize.height) {
+        NSLog(@"We are at the bottom");
         [self getMessage];
     }
 }
 
-#pragma mark - 
 
 #pragma mark - Custom ActionSheet Methods
 - (void)slideIn {
@@ -824,8 +829,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                                       options: 0
                                         range: searchedRange];
     
-    NSLog(@"searchedString: %@", searchedString);
-    NSLog(@"matches: %@", matches);
+//    NSLog(@"searchedString: %@", searchedString);
+//    NSLog(@"matches: %@", matches);
     
     // Array for Tag Info
     NSMutableArray *tagArray = [[NSMutableArray alloc] init];
@@ -979,6 +984,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)setupCollectionView {
+    NSLog(@"");
     NSLog(@"setupCollectionView");
     
     // collectionView setting
@@ -1001,6 +1007,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)setupActionSheetView {
+    NSLog(@"");
     NSLog(@"setupActionSheetView");
     self.actionSheetView.myLeftMargin = self.actionSheetView.myRightMargin = 0;
     self.actionSheetView.myBottomMargin = 0;
@@ -1049,6 +1056,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)createMessageInputView {
+    NSLog(@"");
     NSLog(@"createMessageInputView");
     [self setupContentLayoutCornerRadius];
     
@@ -1188,6 +1196,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark -
 - (void)setupContentLayoutCornerRadius {
+    NSLog(@"");
     NSLog(@"setupContentLayoutCornerRadius");
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: self.contentLayout.bounds byRoundingCorners: (UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii: CGSizeMake(16, 16)];
     CAShapeLayer *maskLayer = [CAShapeLayer layer];
@@ -1197,6 +1206,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)addHorizontalLine {
+    NSLog(@"");
     NSLog(@"addHorizontalLine");
     UIView *horizontalLineView = [UIView new];
     horizontalLineView.backgroundColor = [UIColor thirdGrey];
@@ -1486,7 +1496,7 @@ shouldChangeTextInRange:(NSRange)range
     NSArray *matches = [regex matchesInString: textView.text
                                       options: 0
                                         range: searchedRange];
-    NSLog(@"matches: %@", matches);
+//    NSLog(@"matches: %@", matches);
     
     for (NSTextCheckingResult *match in matches) {
         matchResult = match;
