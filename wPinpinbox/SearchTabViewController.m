@@ -166,7 +166,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     // JCCollectionViewWaterfallLayout
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.collectionView.collectionViewLayout;
-    self.jccLayout.headerHeight = 270;
+    self.jccLayout.headerHeight = 250;
     
     // Search View
     self.searchView.layer.cornerRadius = 8;

@@ -341,70 +341,72 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // ScrollView contentInset Top is navigationBar Height 64
     
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.collectionView.collectionViewLayout;
+    NSLog(@"self.jccLayout.headerHeight: %f", self.jccLayout.headerHeight);
+
     
-    NSInteger headshotHeight = 96;
-    NSInteger gapToNameSection = 32;
-    NSInteger gapToName;
-    NSInteger gapToSponsorLabel;
-    NSInteger gapToDescription;
-    NSInteger gapToLinkLabel;
-    NSInteger gapToLinkView;
-    NSInteger gapToAlbumSection = 32;
-    NSInteger albumSectionHeight = 22;
-    
-    NSString *creativeNameStr = userDic[@"creative_name"];
-    CGSize creativeNameStrSize;
-    
-    NSString *nameStr = userDic[@"name"];
-    CGSize nameStrSize;
-    
-    if ([creativeNameStr isEqualToString: @""]) {
-        NSLog(@"creativeNameStr: %@", creativeNameStr);
-        
-        if (![nameStr isEqualToString: @""]) {
-            NSLog(@"nameStr: %@", nameStr);
-            creativeNameStrSize = [nameStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 32]} context: nil].size;
-            
-            gapToName = 0;
-            nameStrSize = CGSizeZero;
-        } else {
-            creativeNameStrSize = CGSizeMake(296, 31);
-            gapToName = 0;
-            nameStrSize = CGSizeZero;
-        }
-    } else {
-        creativeNameStrSize = [creativeNameStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 32]} context: nil].size;
-        
-        if ([nameStr isEqualToString: @""]) {
-            gapToName = 0;
-            nameStrSize = CGSizeZero;
-        } else {
-            gapToName = 8;
-            nameStrSize = [nameStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 18]} context: nil].size;
-        }
-    }
-    
-    CGSize sponsorStrSize;
-    
-    if (sponsorInt == 0) {
-        gapToSponsorLabel = 0;
-        sponsorStrSize = CGSizeZero;
-    } else {
-        gapToSponsorLabel = 8;
-        NSString *sponsorStr = [NSString stringWithFormat: @"已 接 受 %ld 次 贊 助", (long)sponsorInt];
-        sponsorStrSize = [sponsorStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize:18]} context: nil].size;
-    }
-    
-    NSString *descriptionStr = userDic[@"description"];
-    CGSize descriptionStrSize;
-    
-    if ([descriptionStr isEqualToString: @""]) {
-        gapToDescription = 0;
-        descriptionStrSize = CGSizeZero;
-    } else {
-        gapToDescription = 8;
-        descriptionStrSize = [descriptionStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize:18]} context: nil].size;
-    }
+//    NSInteger headshotHeight = 96;
+//    NSInteger gapToNameSection = 32;
+//    NSInteger gapToName;
+//    NSInteger gapToSponsorLabel;
+//    NSInteger gapToDescription;
+//    NSInteger gapToLinkLabel;
+//    NSInteger gapToLinkView;
+//    NSInteger gapToAlbumSection = 32;
+//    NSInteger albumSectionHeight = 22;
+//
+//    NSString *creativeNameStr = userDic[@"creative_name"];
+//    CGSize creativeNameStrSize;
+//
+//    NSString *nameStr = userDic[@"name"];
+//    CGSize nameStrSize;
+//
+//    if ([creativeNameStr isEqualToString: @""]) {
+//        NSLog(@"creativeNameStr: %@", creativeNameStr);
+//
+//        if (![nameStr isEqualToString: @""]) {
+//            NSLog(@"nameStr: %@", nameStr);
+//            creativeNameStrSize = [nameStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 32]} context: nil].size;
+//
+//            gapToName = 0;
+//            nameStrSize = CGSizeZero;
+//        } else {
+//            creativeNameStrSize = CGSizeMake(296, 31);
+//            gapToName = 0;
+//            nameStrSize = CGSizeZero;
+//        }
+//    } else {
+//        creativeNameStrSize = [creativeNameStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 32]} context: nil].size;
+//
+//        if ([nameStr isEqualToString: @""]) {
+//            gapToName = 0;
+//            nameStrSize = CGSizeZero;
+//        } else {
+//            gapToName = 8;
+//            nameStrSize = [nameStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 18]} context: nil].size;
+//        }
+//    }
+//
+//    CGSize sponsorStrSize;
+//
+//    if (sponsorInt == 0) {
+//        gapToSponsorLabel = 0;
+//        sponsorStrSize = CGSizeZero;
+//    } else {
+//        gapToSponsorLabel = 8;
+//        NSString *sponsorStr = [NSString stringWithFormat: @"已 接 受 %ld 次 贊 助", (long)sponsorInt];
+//        sponsorStrSize = [sponsorStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize:18]} context: nil].size;
+//    }
+//
+//    NSString *descriptionStr = userDic[@"description"];
+//    CGSize descriptionStrSize;
+//
+//    if ([descriptionStr isEqualToString: @""]) {
+//        gapToDescription = 0;
+//        descriptionStrSize = CGSizeZero;
+//    } else {
+//        gapToDescription = 8;
+//        descriptionStrSize = [descriptionStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize:18]} context: nil].size;
+//    }
     
     // Social Link
     NSLog(@"socialLink: %@", userDic[@"sociallink"]);
@@ -432,44 +434,45 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
     
-    CGSize linkStrSize;
-    CGSize linkView;
-    
-    if (socialLinkInt != 0) {
-        gapToLinkLabel = 32;
-        NSString *linkStr = [NSString stringWithFormat: @"%@的連結", userDic[@"name"]];
-        linkStrSize = [linkStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize:18]} context: nil].size;
-        
-        gapToLinkView = 8;
-        linkView = CGSizeMake(296, 32);
-    } else {
-        gapToLinkLabel = 0;
-        linkStrSize = CGSizeZero;
-        
-        gapToLinkView = 0;
-        linkView = CGSizeZero;
-    }
+//    CGSize linkStrSize;
+//    CGSize linkView;
+//
+//    if (socialLinkInt != 0) {
+//        gapToLinkLabel = 32;
+//        NSString *linkStr = [NSString stringWithFormat: @"%@的連結", userDic[@"name"]];
+//        linkStrSize = [linkStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize:18]} context: nil].size;
+//
+//        gapToLinkView = 8;
+//        linkView = CGSizeMake(296, 32);
+//    } else {
+//        gapToLinkLabel = 0;
+//        linkStrSize = CGSizeZero;
+//
+//        gapToLinkView = 0;
+//        linkView = CGSizeZero;
+//    }
     
     //self.jccLayout.headerHeight = headshotHeight + gapToNameSection + creativeNameStrSize.height + gapToName + nameStrSize.height + gapToDescription + descriptionStrSize.height + gapToLinkLabel + linkStrSize.height + gapToLinkView + linkView.height + gapToAlbumSection + albumSectionHeight + 8;
     
-    self.jccLayout.headerHeight = headshotHeight + gapToNameSection + creativeNameStrSize.height + gapToName + nameStrSize.height + gapToSponsorLabel + sponsorStrSize.height + gapToDescription + descriptionStrSize.height + gapToLinkLabel + linkStrSize.height + gapToLinkView + linkView.height + gapToAlbumSection * 2 + albumSectionHeight + 50;
-    
-    NSLog(@"");
-    NSLog(@"headshotHeight: %ld", (long)headshotHeight);
-    NSLog(@"gapToNameSection: %ld", (long)gapToNameSection);
-    NSLog(@"creativeNameStrSize.height: %ld", (long)creativeNameStrSize.height);
-    NSLog(@"gapToName: %ld", (long)gapToName);
-    NSLog(@"nameStrSize.height: %f", nameStrSize.height);
-    NSLog(@"gapToDescription: %ld", (long)gapToDescription);
-    NSLog(@"descriptionStrSize.height: %f", descriptionStrSize.height);
-    NSLog(@"gapToLinkLabel: %ld", (long)gapToLinkLabel);
-    NSLog(@"linkStrSize.height: %f", linkStrSize.height);
-    NSLog(@"gapToLinkView: %ld", (long)gapToLinkView);
-    NSLog(@"linkView.height: %f", linkView.height);
-    NSLog(@"gapToAlbumSection: %ld", (long)gapToAlbumSection);
-    NSLog(@"albumSectionHeight: %ld", (long)albumSectionHeight);
-    NSLog(@"");
-    NSLog(@"self.jccLayout.headerHeight: %f", self.jccLayout.headerHeight);
+//    self.jccLayout.headerHeight = headshotHeight + gapToNameSection + creativeNameStrSize.height + gapToName + nameStrSize.height + gapToSponsorLabel + sponsorStrSize.height + gapToDescription + descriptionStrSize.height + gapToLinkLabel + linkStrSize.height + gapToLinkView + linkView.height + gapToAlbumSection + albumSectionHeight + 50;
+//
+//    NSLog(@"");
+//    NSLog(@"headshotHeight: %ld", (long)headshotHeight);
+//    NSLog(@"gapToNameSection: %ld", (long)gapToNameSection);
+//    NSLog(@"creativeNameStrSize.height: %ld", (long)creativeNameStrSize.height);
+//    NSLog(@"gapToName: %ld", (long)gapToName);
+//    NSLog(@"nameStrSize.height: %f", nameStrSize.height);
+//    NSLog(@"gapToDescription: %ld", (long)gapToDescription);
+//    NSLog(@"descriptionStrSize.height: %f", descriptionStrSize.height);
+//    NSLog(@"gapToLinkLabel: %ld", (long)gapToLinkLabel);
+//    NSLog(@"linkStrSize.height: %f", linkStrSize.height);
+//    NSLog(@"gapToLinkView: %ld", (long)gapToLinkView);
+//    NSLog(@"linkView.height: %f", linkView.height);
+//    NSLog(@"gapToAlbumSection: %ld", (long)gapToAlbumSection);
+//    NSLog(@"albumSectionHeight: %ld", (long)albumSectionHeight);
+//    NSLog(@"");
+
+    self.jccLayout.headerHeight = 300;
     
     //self.jccLayout.headerHeight = 500.0f;
     //self.jccLayout.footerHeight = 0.0f;
@@ -517,7 +520,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     } else {
         NSLog(@"userDic socialLink: %@", userDic[@"sociallink"]);
     }
-    headerHeight += 1 + 32 + 26.5 + 16;
+//    headerHeight += 1 + 32 + 26.5 + 16;
+    headerHeight += 1 + 26.5 + 16;
     
     // Add 20 for banner doesn't look to be compressed
     headerHeight += 20;

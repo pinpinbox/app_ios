@@ -846,7 +846,16 @@ static NSString *autoPlayStr = @"&autoplay=1";
     } else {
         NSLog(@"self.userDic socialLink: %@", self.userDic[@"sociallink"]);
     }
-    headerHeight += 1 + 32 + 26.5 + 16;
+    
+    // 32: Gap between horziontal line and 作品集
+    // 26.5: Height of 作品集 Label
+    // 16: Gap between 作品集 and the bottom of HeaderView
+    
+//    headerHeight += 1 + 32 + 26.5 + 16;
+    headerHeight += 1 + 26.5 + 16;
+    
+    // Add 20 for banner doesn't look to be compressed
+    headerHeight += 20;
     
     return headerHeight;
 }
