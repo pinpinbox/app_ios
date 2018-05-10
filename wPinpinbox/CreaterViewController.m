@@ -490,17 +490,18 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (CGFloat)headerHeightCalculation {
     CGFloat headerHeight = 0;
     //headerHeight += coverImageHeight + 32 * 3 + creativeNameLabelHeight + 32 + 67 + 32;
-    headerHeight += coverImageHeight + 32 + 24 * 2;
+    headerHeight += coverImageHeight + 32 + 32 * 2;
     
-    // Creative Name Label
-    if ([userDic[@"creative_name"] isEqualToString: @""]) {
-        
-    } else if ([userDic[@"creative_name"] isEqual: [NSNull null]]) {
-        
-    } else {
-        NSLog(@"creative_name: %@", userDic[@"creative_name"]);
-        headerHeight += creativeNameLabelHeight + 32;
-    }        
+//    // Creative Name Label
+//    if ([userDic[@"creative_name"] isEqualToString: @""]) {
+//
+//    } else if ([userDic[@"creative_name"] isEqual: [NSNull null]]) {
+//
+//    } else {
+//        NSLog(@"creative_name: %@", userDic[@"creative_name"]);
+//        headerHeight += creativeNameLabelHeight + 32;
+//    }
+    
     if (![userDic[@"sociallink"] isEqual: [NSNull null]]) {
         if (socialLinkInt != 0) {
             NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
@@ -533,10 +534,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"number: %ld", (long)number);
     NSString *numberStr;
     
-    if (number >= 10000000) {
-        number = number / 1000000;
+    if (number >= 1000000) {
+        number = number / 100000;
         numberStr = [NSString stringWithFormat: @"%ldM", (long)number];
-    } else if (number >= 10000) {
+    } else if (number >= 1000) {
         number = number / 1000;
         numberStr = [NSString stringWithFormat: @"%ldK", (long)number];
     } else {
