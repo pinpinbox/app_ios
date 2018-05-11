@@ -47,6 +47,7 @@
 #import "SponsorListViewController.h"
 
 #import "MessageboardViewController.h"
+#import "UIColor+HexString.h"
 
 #define kStatusHeight 20;
 #define kTopGapToHeashot 44
@@ -928,8 +929,26 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog(@"cocer is not null");
         [headerView.coverImageView sd_setImageWithURL: [NSURL URLWithString: self.userDic[@"cover"]]];
     }
-    headerView.coverImageHeightConstraint.constant = [self coverImageHeightCalculation];
-    coverImageHeight = headerView.coverImageHeightConstraint.constant;
+//    headerView.coverImageHeightConstraint.constant = [self coverImageHeightCalculation];
+//    coverImageHeight = headerView.coverImageHeightConstraint.constant;
+    headerView.coverImageBgVHeightConstraint.constant = [self coverImageHeightCalculation];
+    coverImageHeight = headerView.coverImageBgVHeightConstraint.constant;
+    
+    if (headerView.gradientView.layer.sublayers.count > 0) {
+        for (CALayer *layer in headerView.gradientView.layer.sublayers) {
+            [layer removeFromSuperlayer];
+        }
+    }
+    
+    // Graident Effect for Gradient View
+    CAGradientLayer *gradientLayer;
+    gradientLayer = [CAGradientLayer layer];
+    gradientLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, coverImageHeight);
+    gradientLayer.colors = @[(id)[UIColor colorFromHexString: @"#32000000"].CGColor, (id)[UIColor colorFromHexString: @"#000000"].CGColor];
+    [headerView.gradientView.layer insertSublayer: gradientLayer atIndex: 0];
+    headerView.gradientView.alpha = 0.5;
+    
+    NSLog(@"headerView.gradientView.layer.sublayers: %@", headerView.gradientView.layer.sublayers);
     
     // User Picture ImageView
     headerView.userPictureImageView.backgroundColor = [UIColor thirdGrey];
@@ -962,31 +981,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [LabelAttributeStyle changeGapString: headerView.userNameLabel content: self.userDic[@"name"]];
     }
     
-    CGSize creativeNameSize;
-    
-    if ([self.userDic[@"creative_name"] isEqualToString: @""]) {
-        NSLog(@"creative_name is empty");
-        headerView.creativeNameLabelHeight.constant = 0;
-        headerView.creativeNameLabelBottomConstraint.constant = 0;
-    } else if ([self.userDic[@"creative_name"] isEqual: [NSNull null]]) {
-        NSLog(@"creative_name is equal to null");
-        headerView.creativeNameLabelHeight.constant = 0;
-        headerView.creativeNameLabelBottomConstraint.constant = 0;
-    } else {
-        NSLog(@"creative_name is not equal to null");
-        headerView.creativeNameLabel.text = self.userDic[@"creative_name"];
-        
+    // Creative Name Label
+    if (![self.userDic[@"creative_name"] isEqual: [NSNull null]]) {
+        headerView.creativeNameLabel.text = self.userDic[@"creative_name"];        
         [LabelAttributeStyle changeGapString: headerView.creativeNameLabel content: self.userDic[@"creative_name"]];
-        
-        creativeNameSize = [headerView.creativeNameLabel.text boundingRectWithSize: CGSizeMake(headerView.frame.size.width, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 28]} context: nil].size;
-        
-        creativeNameLabelHeight = creativeNameSize.height;
-        headerView.creativeNameLabelHeight.constant = creativeNameLabelHeight;
-        headerView.creativeNameLabelBottomConstraint.constant = 32;
     }
-    NSLog(@"headerView.creativeNameLabelHeight.constant: %f", headerView.creativeNameLabelHeight.constant);
-    NSLog(@"headerView.creativeNameLabel.frame.size.height: %f", headerView.creativeNameLabel.frame.size.height);
-    NSLog(@"headerView.creativeNameLabelBottomConstraint.constant: %f", headerView.creativeNameLabelBottomConstraint.constant);
     
     // Number Section
     if (![self.userDic[@"viewed"] isEqual: [NSNull null]]) {

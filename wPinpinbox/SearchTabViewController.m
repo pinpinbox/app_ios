@@ -1113,8 +1113,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - Method Only Called Once
-- (void)addNoInfoViewOnHorizontalCollectionView:(NSString *)msg
-{
+- (void)addNoInfoViewOnHorizontalCollectionView:(NSString *)msg {
     NSLog(@"addNoInfoViewOnHorizontalCollectionView");
     
     if (!isNoInfoHorzViewCreate) {
@@ -1137,12 +1136,11 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
     isNoInfoHorzViewCreate = YES;
 }
 
-- (void)addNoInfoViewOnVerticalCollectionView:(NSString *)msg
-{
+- (void)addNoInfoViewOnVerticalCollectionView:(NSString *)msg {
     NSLog(@"addNoInfoViewOnVerticalCollectionView");
     
     if (!isNoInfoVertViewCreate) {
-        noInfoVertView = [[UIView alloc] initWithFrame: CGRectMake(16, 219, self.view.bounds.size.width - 32, 100)];
+        noInfoVertView = [[UIView alloc] initWithFrame: CGRectMake(16, 260, self.view.bounds.size.width - 32, 100)];
         noInfoVertView.backgroundColor = [UIColor secondGrey];
         noInfoVertView.layer.cornerRadius = 32;
         noInfoVertView.clipsToBounds = YES;

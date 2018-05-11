@@ -22,9 +22,9 @@
     self.userNameLabel.textColor = [UIColor firstGrey];
     self.userNameLabel.font = [UIFont boldSystemFontOfSize: 18];
     
-    self.creativeNameLabel.textColor = [UIColor firstGrey];
-    self.creativeNameLabel.font = [UIFont boldSystemFontOfSize: 28];
-    self.creativeNameLabel.numberOfLines = 0;
+    self.creativeNameLabel.textColor = [UIColor whiteColor];
+    self.creativeNameLabel.font = [UIFont boldSystemFontOfSize: 24.0];
+    self.creativeNameLabel.numberOfLines = 2;
     
     self.viewedNumberLabel.textColor = [UIColor firstGrey];
     self.likeNumberLabel.textColor = [UIColor firstGrey];

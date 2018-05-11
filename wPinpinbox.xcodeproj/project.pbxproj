@@ -3148,6 +3148,17 @@
 			name = OtherCollectionTableViewCell;
 			sourceTree = "<group>";
 		};
+		54F46D5720A54ADD0048B0A9 /* CreaterVC */ = {
+			isa = PBXGroup;
+			children = (
+				6308C45D1EACD1AA00F99AC0 /* CreaterViewController.h */,
+				6308C45E1EACD1AA00F99AC0 /* CreaterViewController.m */,
+				541B0D38200125D200890879 /* CreaterVC.storyboard */,
+				63C375BA1EB9B735000C7FC1 /* Creator Cell */,
+			);
+			name = CreaterVC;
+			sourceTree = "<group>";
+		};
 		6304182A1EF9158C00132CE1 /* SetupMusicVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -3332,10 +3343,7 @@
 				540DE2BF20283BDD0090F584 /* AlbumDetail */,
 				540DE2C020283BF20090F584 /* NewMessageBoard */,
 				633BC3921EE0F97B006FB6F8 /* Parallax */,
-				6308C45D1EACD1AA00F99AC0 /* CreaterViewController.h */,
-				6308C45E1EACD1AA00F99AC0 /* CreaterViewController.m */,
-				541B0D38200125D200890879 /* CreaterVC.storyboard */,
-				63C375BA1EB9B735000C7FC1 /* Creator Cell */,
+				54F46D5720A54ADD0048B0A9 /* CreaterVC */,
 			);
 			name = "HomeTab Related";
 			sourceTree = "<group>";

@@ -13,6 +13,10 @@ typedef void(^StackViewTouch)(BOOL selected, NSInteger tag);
 @interface MeCollectionReusableView : UICollectionReusableView
 @property (weak, nonatomic) IBOutlet UIImageView *coverImageView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *coverImageHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *coverImageBgVHeightConstraint;
+
+@property (weak, nonatomic) IBOutlet UIView *gradientView;
+
 @property (weak, nonatomic) IBOutlet UIButton *changeBtn;
 
 @property (weak, nonatomic) IBOutlet UIImageView *userPictureImageView;

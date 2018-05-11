@@ -13,6 +13,9 @@
 @interface CreatorCollectionReusableView : UICollectionReusableView
 @property (weak, nonatomic) IBOutlet UIImageView *coverImageView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *coverImageHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *coverImageBgVHeightConstraint;
+
+@property (weak, nonatomic) IBOutlet UIView *gradientView;
 
 @property (weak, nonatomic) IBOutlet UIImageView *userPictureImageView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
