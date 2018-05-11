@@ -635,8 +635,7 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
     
     NSLog(@"%ld", (long)collectionView.tag);
@@ -648,7 +647,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog(@"");
         NSLog(@"self.collectionView");
         //NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
-        cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
+//        cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
         //NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
         
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];

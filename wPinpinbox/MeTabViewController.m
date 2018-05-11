@@ -902,6 +902,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     MeCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
     
+    [LabelAttributeStyle changeGapString: headerView.viewedLabel content: headerView.viewedLabel.text];
+    [LabelAttributeStyle changeGapString: headerView.likeLabel content: headerView.likeLabel.text];
+    [LabelAttributeStyle changeGapString: headerView.sponsoredLabel content: headerView.sponsoredLabel.text];
+    
     headerView.customBlock = ^(BOOL selected, NSInteger tag) {
         if (tag == 102) {
             NSLog(@"tag == 102");
@@ -1205,7 +1209,7 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
     
-    cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
+//    cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
     
     return YES;
 }

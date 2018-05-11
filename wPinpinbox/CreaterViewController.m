@@ -579,6 +579,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     CreatorCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
     
+    [LabelAttributeStyle changeGapString: headerView.viewedLabel content: headerView.viewedLabel.text];
+    [LabelAttributeStyle changeGapString: headerView.likeLabel content: headerView.likeLabel.text];
+    [LabelAttributeStyle changeGapString: headerView.sponsoredLabel content: headerView.sponsoredLabel.text];
+    
     // Cover Image
     if ([userDic[@"cover"] isEqual: [NSNull null]]) {
         NSLog(@"cover is null");
@@ -635,6 +639,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // User Name Label
     if (![userDic[@"name"] isEqual: [NSNull null]]) {
         headerView.userNameLabel.text = userDic[@"name"];
+        [LabelAttributeStyle changeGapString: headerView.userNameLabel content: userDic[@"name"]];
     }
     
     // Creative Name Label
@@ -849,6 +854,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // AlbumNameLabel Setting
     if (![data[@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"name"];
+        [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"name"]];
     }
     
     return cell;
