@@ -34,7 +34,7 @@
     
     NSInteger nextId;
     NSMutableArray *messageArray;
-    NSMutableArray *rowHeightArray;
+//    NSMutableArray *rowHeightArray;
     
     NSString *tempStr;
     
@@ -116,7 +116,7 @@
     nextId = 0;
     isLoading = NO;
     messageArray = [NSMutableArray new];
-    rowHeightArray = [NSMutableArray new];
+//    rowHeightArray = [NSMutableArray new];
     userData = [NSMutableArray new];
     
     searchStr = [[NSMutableString alloc] init];
@@ -326,7 +326,7 @@
                         // If response from server is TRUE
                         // then reset array
                         messageArray = [NSMutableArray new];
-                        rowHeightArray = [NSMutableArray new];
+//                        rowHeightArray = [NSMutableArray new];
                         
                         // After resetting array, tableView has to reload data to reset indexPath.row to 0
                         // Otherwise, the program will crash when adding data to indexPath.row bigger than 0
@@ -484,15 +484,18 @@
     if (![inserTime isEqual: [NSNull null]]) {
         cell.insertTimeLabel.text = inserTime;
     }
+    
     CGSize nameStrSize = [nameStr boundingRectWithSize: CGSizeMake(260, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 14]} context: nil].size;
     
-    CGSize contentStrSize = [contentStr boundingRectWithSize: CGSizeMake(260, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 14]} context: nil].size;
+    CGSize contentStrSize = [cell.contentLabel.text boundingRectWithSize: CGSizeMake(cell.contentLabel.bounds.size.width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 14]} context: nil].size;    
+    
+    NSLog(@"cell.contentLabel.text: %@", cell.contentLabel.text);
+    NSLog(@"contentStrSize.height: %f", contentStrSize.height);
     
     CGSize insertTimeSize = [inserTime boundingRectWithSize: CGSizeMake(260, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 14]} context: nil].size;
     
     CGFloat rowHeight = 16 + nameStrSize.height + 4 + contentStrSize.height + 4 + insertTimeSize.height + 8;
-
-    [rowHeightArray insertObject: [NSNumber numberWithFloat: rowHeight] atIndex: indexPath.row];
+//    [rowHeightArray insertObject: [NSNumber numberWithFloat: rowHeight] atIndex: indexPath.row];
     
     tableView.rowHeight = rowHeight;
     

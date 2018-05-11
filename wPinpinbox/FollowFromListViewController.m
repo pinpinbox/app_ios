@@ -289,7 +289,6 @@
     
     if (![name isEqual: [NSNull null]]) {
         cell.userNameLabel.text = name;
-        
         [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
     }
     
@@ -317,6 +316,21 @@
 }
 
 #pragma mark - UITableViewDelegate Methods
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"didSelectRowAtIndexPath");
+    
+    NSDictionary *dic = [followFromListArray[indexPath.row] copy];
+    NSInteger userId = [dic[@"user"][@"user_id"] integerValue];
+    
+    CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+    cVC.userId = [NSString stringWithFormat: @"%ld", (long)userId];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: cVC animated: YES];
+    
+    [tableView deselectRowAtIndexPath: indexPath animated: YES];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 70;
