@@ -17,6 +17,8 @@
     self.subContentLayout.myRightMargin = 0;
     
     self.pictureImageView.layer.cornerRadius = self.pictureImageView.bounds.size.width / 2;
+    self.pictureImageView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.pictureImageView.layer.borderWidth = 0.5;
     
     self.nameLabel.textColor = [UIColor firstGrey];
     self.nameLabel.font = [UIFont boldSystemFontOfSize: 14];

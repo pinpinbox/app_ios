@@ -282,7 +282,7 @@
     NSInteger point = [dic[@"user"][@"point"] integerValue];
     NSInteger userId = [dic[@"user"][@"user_id"] integerValue];    
     
-    cell.headshotImageView.layer.cornerRadius = cell.headshotImageView.frame.size.height / 2;
+//    cell.headshotImageView.layer.cornerRadius = cell.headshotImageView.frame.size.height / 2;
     
     if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
         cell.headshotImageView.image = [UIImage imageNamed: @"member_back_head.png"];

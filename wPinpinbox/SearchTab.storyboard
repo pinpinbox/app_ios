@@ -42,6 +42,10 @@
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="N9v-qK-vod">
                                                             <rect key="frame" x="0.0" y="0.0" width="152" height="136"/>
                                                         </imageView>
+                                                        <view alpha="0.10000000000000001" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="si5-gF-yJM">
+                                                            <rect key="frame" x="0.0" y="0.0" width="152" height="136"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </view>
                                                         <view alpha="0.80000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zcV-ls-n2D" customClass="MyLinearLayout">
                                                             <rect key="frame" x="60" y="100" width="84" height="28"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
@@ -72,9 +76,13 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
+                                                        <constraint firstAttribute="bottom" secondItem="si5-gF-yJM" secondAttribute="bottom" id="AK4-kp-CTt"/>
                                                         <constraint firstItem="N9v-qK-vod" firstAttribute="leading" secondItem="GEY-FQ-QvU" secondAttribute="leading" id="FBt-1R-PUC"/>
                                                         <constraint firstItem="N9v-qK-vod" firstAttribute="top" secondItem="GEY-FQ-QvU" secondAttribute="top" id="SSM-aN-Ifb"/>
                                                         <constraint firstAttribute="trailing" secondItem="N9v-qK-vod" secondAttribute="trailing" id="T8w-Hf-yCq"/>
+                                                        <constraint firstItem="si5-gF-yJM" firstAttribute="leading" secondItem="GEY-FQ-QvU" secondAttribute="leading" id="WCN-rG-QgX"/>
+                                                        <constraint firstAttribute="trailing" secondItem="si5-gF-yJM" secondAttribute="trailing" id="dQM-fP-EDc"/>
+                                                        <constraint firstItem="si5-gF-yJM" firstAttribute="top" secondItem="GEY-FQ-QvU" secondAttribute="top" id="eWw-gG-7OP"/>
                                                         <constraint firstAttribute="bottom" secondItem="N9v-qK-vod" secondAttribute="bottom" id="fOD-ai-amg"/>
                                                     </constraints>
                                                 </view>
@@ -97,6 +105,7 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="albumNameLabel" destination="NMy-Jh-N0O" id="k16-23-p9y"/>
+                                            <outlet property="alphaView" destination="si5-gF-yJM" id="JNz-3b-ll9"/>
                                             <outlet property="btn1" destination="vXE-A8-Td1" id="3yL-Ph-HMb"/>
                                             <outlet property="btn2" destination="Fv1-9P-lkc" id="9Uj-XN-G7m"/>
                                             <outlet property="btn3" destination="Az1-IO-ld5" id="3jj-q4-RQy"/>

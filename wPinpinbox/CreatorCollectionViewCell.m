@@ -24,6 +24,11 @@
     self.coverImageView.layer.cornerRadius = kCornerRadius;
     self.coverImageView.layer.masksToBounds = YES;
     
+    self.alphaView.alpha = 0.05;
+    self.alphaView.backgroundColor = [UIColor firstGrey];
+    self.alphaView.layer.cornerRadius = kCornerRadius;
+    self.alphaView.layer.masksToBounds = YES;
+    
     // UserInfoView Setting
     self.userInfoView.wrapContentWidth = YES;
     self.userInfoView.gravity = MyMarginGravity_Horz_Right;

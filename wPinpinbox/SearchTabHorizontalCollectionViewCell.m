@@ -7,13 +7,15 @@
 //
 
 #import "SearchTabHorizontalCollectionViewCell.h"
+#import "UIColor+Extensions.h"
 
 @implementation SearchTabHorizontalCollectionViewCell
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
     [super awakeFromNib];
     
     self.userPictureImageView.layer.cornerRadius = self.userPictureImageView.bounds.size.width / 2;
     self.userPictureImageView.clipsToBounds = YES;
+    self.userPictureImageView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.userPictureImageView.layer.borderWidth = 0.5;
 }
 @end

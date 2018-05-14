@@ -11,8 +11,7 @@
 #import "GlobalVars.h"
 
 @implementation MeCollectionReusableView
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
     [super awakeFromNib];
     NSLog(@"MeCollectionReusableView");
     NSLog(@"awakeFromNib");
@@ -26,6 +25,8 @@
     
     self.userPictureImageView.layer.cornerRadius = self.userPictureImageView.bounds.size.height / 2;
     self.userPictureImageView.layer.masksToBounds = YES;
+    self.userPictureImageView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.userPictureImageView.layer.borderWidth = 0.5;
     
     self.userNameLabel.textColor = [UIColor firstGrey];
     self.userNameLabel.font = [UIFont boldSystemFontOfSize: 18];

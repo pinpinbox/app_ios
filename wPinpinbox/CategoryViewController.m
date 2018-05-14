@@ -383,6 +383,9 @@
         //imageView.myTopMargin = imageView.myBottomMargin = 0;
         imageView.layer.cornerRadius = imageView.frame.size.width / 2;
         imageView.clipsToBounds = YES;
+        imageView.layer.borderColor = [UIColor thirdGrey].CGColor;
+        imageView.layer.borderWidth = 0.5;
+        
         [self.userLayout addSubview: imageView];
     }
 }

@@ -627,6 +627,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     nameImgView.layer.cornerRadius = 9;
     nameImgView.layer.masksToBounds = YES;
+    nameImgView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    nameImgView.layer.borderWidth = 0.5;
+    
     [horzNameLayout addSubview: nameImgView];
     
     UILabel *nameLabel = [UILabel new];

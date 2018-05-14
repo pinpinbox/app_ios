@@ -41,6 +41,10 @@
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="GTq-cz-l3s">
                                                             <rect key="frame" x="0.0" y="0.0" width="152" height="136"/>
                                                         </imageView>
+                                                        <view alpha="0.10000000000000001" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="2uP-Mz-nhE">
+                                                            <rect key="frame" x="0.0" y="0.0" width="152" height="136"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </view>
                                                         <view alpha="0.80000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pfo-qr-yR1" customClass="MyLinearLayout">
                                                             <rect key="frame" x="60" y="100" width="84" height="28"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
@@ -71,10 +75,14 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
+                                                        <constraint firstItem="2uP-Mz-nhE" firstAttribute="leading" secondItem="47g-ln-Deo" secondAttribute="leading" id="5v1-yJ-fqe"/>
+                                                        <constraint firstItem="2uP-Mz-nhE" firstAttribute="top" secondItem="47g-ln-Deo" secondAttribute="top" id="LIG-Le-m88"/>
                                                         <constraint firstAttribute="trailing" secondItem="GTq-cz-l3s" secondAttribute="trailing" id="PMe-LV-umR"/>
                                                         <constraint firstItem="GTq-cz-l3s" firstAttribute="leading" secondItem="47g-ln-Deo" secondAttribute="leading" id="guJ-7S-cGv"/>
+                                                        <constraint firstAttribute="trailing" secondItem="2uP-Mz-nhE" secondAttribute="trailing" id="q7W-Zb-1j3"/>
                                                         <constraint firstItem="GTq-cz-l3s" firstAttribute="top" secondItem="47g-ln-Deo" secondAttribute="top" id="qgZ-Qm-SYG"/>
                                                         <constraint firstAttribute="bottom" secondItem="GTq-cz-l3s" secondAttribute="bottom" id="w3L-e2-LLP"/>
+                                                        <constraint firstAttribute="bottom" secondItem="2uP-Mz-nhE" secondAttribute="bottom" id="xtX-wh-zeC"/>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" verticalCompressionResistancePriority="500" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="az8-am-Fmu">
@@ -96,6 +104,7 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="albumNameLabel" destination="az8-am-Fmu" id="2Uv-Qy-PBf"/>
+                                            <outlet property="alphaView" destination="2uP-Mz-nhE" id="Qeq-lG-BQ4"/>
                                             <outlet property="btn1" destination="wo7-CY-O0e" id="WbV-Fh-UMK"/>
                                             <outlet property="btn2" destination="oqp-Yr-Nvr" id="6Py-dA-cjQ"/>
                                             <outlet property="btn3" destination="9GS-ML-8eF" id="eYB-8i-Kcf"/>

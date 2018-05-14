@@ -357,6 +357,8 @@
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
                 
                 cell.headshotImaveView.layer.cornerRadius = cell.headshotImaveView.bounds.size.width / 2;
+                cell.headshotImaveView.layer.borderColor = [UIColor thirdGrey].CGColor;
+                cell.headshotImaveView.layer.borderWidth = 0.5;
                 
                 if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
                     [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
@@ -373,6 +375,8 @@
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
                 
                 cell.headshotImaveView.layer.cornerRadius = cell.headshotImaveView.bounds.size.width / 2;
+                cell.headshotImaveView.layer.borderColor = [UIColor thirdGrey].CGColor;
+                cell.headshotImaveView.layer.borderWidth = 0.5;
                 
                 if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
                     [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];

@@ -41,6 +41,10 @@
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="4h8-kG-Xlu">
                                                             <rect key="frame" x="0.0" y="0.0" width="152" height="136"/>
                                                         </imageView>
+                                                        <view alpha="0.10000000000000001" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="cpL-Jb-fbA">
+                                                            <rect key="frame" x="0.0" y="0.0" width="152" height="136"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </view>
                                                         <view alpha="0.80000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1h9-KM-Rov" customClass="MyLinearLayout">
                                                             <rect key="frame" x="60" y="100" width="84" height="28"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
@@ -71,10 +75,14 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
+                                                        <constraint firstItem="cpL-Jb-fbA" firstAttribute="leading" secondItem="xFQ-9B-ipc" secondAttribute="leading" id="8W5-zg-Tle"/>
                                                         <constraint firstItem="4h8-kG-Xlu" firstAttribute="top" secondItem="xFQ-9B-ipc" secondAttribute="top" id="JOT-XB-Dyw"/>
                                                         <constraint firstItem="4h8-kG-Xlu" firstAttribute="leading" secondItem="xFQ-9B-ipc" secondAttribute="leading" id="bRu-hE-1p2"/>
                                                         <constraint firstAttribute="bottom" secondItem="4h8-kG-Xlu" secondAttribute="bottom" id="dVg-ae-pm9"/>
+                                                        <constraint firstItem="cpL-Jb-fbA" firstAttribute="top" secondItem="xFQ-9B-ipc" secondAttribute="top" id="mcB-EX-TAU"/>
+                                                        <constraint firstAttribute="bottom" secondItem="cpL-Jb-fbA" secondAttribute="bottom" id="pug-eO-L6x"/>
                                                         <constraint firstAttribute="trailing" secondItem="4h8-kG-Xlu" secondAttribute="trailing" id="q7c-gl-8Yg"/>
+                                                        <constraint firstAttribute="trailing" secondItem="cpL-Jb-fbA" secondAttribute="trailing" id="shR-Or-n9o"/>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" verticalCompressionResistancePriority="500" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pvb-el-TvT">
@@ -96,6 +104,7 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="albumNameLabel" destination="pvb-el-TvT" id="H2i-5C-gh1"/>
+                                            <outlet property="alphaView" destination="cpL-Jb-fbA" id="ldq-z6-dGM"/>
                                             <outlet property="btn1" destination="6W1-Xg-TTL" id="wzn-WO-WBr"/>
                                             <outlet property="btn2" destination="0rM-oS-7sI" id="hgE-kD-WuO"/>
                                             <outlet property="btn3" destination="PnL-md-eKm" id="P2T-uq-cHd"/>

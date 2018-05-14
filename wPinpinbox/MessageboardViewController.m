@@ -118,9 +118,7 @@
     messageArray = [NSMutableArray new];
 //    rowHeightArray = [NSMutableArray new];
     userData = [NSMutableArray new];
-    
     searchStr = [[NSMutableString alloc] init];
-    
     tagArray = [[NSMutableArray alloc] init];
     
     self.textAttributes = @{NSForegroundColorAttributeName :[UIColor blackColor], NSFontAttributeName: [UIFont systemFontOfSize: 14.0], NSKernAttributeName: @1};
@@ -1102,6 +1100,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
     headshotImageView.layer.cornerRadius = 18;
     headshotImageView.clipsToBounds = YES;
+    headshotImageView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    headshotImageView.layer.borderWidth = 0.5;
+    
     [horzLayout1 addSubview: headshotImageView];
     
     // inputTextView

@@ -15,7 +15,12 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code    
+    // Initialization code
+    self.headshotImageView.layer.cornerRadius = self.headshotImageView.bounds.size.width / 2;
+    self.headshotImageView.clipsToBounds = YES;
+    self.headshotImageView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.headshotImageView.layer.borderWidth = 0.5;
+    
     self.userNameLabel.textColor = [UIColor firstGrey];
     self.userNameLabel.font = [UIFont systemFontOfSize: 16.0];    
     

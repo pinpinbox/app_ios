@@ -41,6 +41,10 @@
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="zt7-Ir-h0r">
                                                             <rect key="frame" x="0.0" y="0.0" width="152" height="136"/>
                                                         </imageView>
+                                                        <view alpha="0.10000000000000001" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="Vbl-Fg-Mjm">
+                                                            <rect key="frame" x="0.0" y="0.0" width="152" height="136"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </view>
                                                         <view alpha="0.80000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Hw-ES-xNl" customClass="MyLinearLayout">
                                                             <rect key="frame" x="60" y="100" width="84" height="28"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
@@ -72,8 +76,12 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="zt7-Ir-h0r" secondAttribute="bottom" id="5y9-AL-lAs"/>
+                                                        <constraint firstItem="Vbl-Fg-Mjm" firstAttribute="top" secondItem="xnv-ZT-Ui4" secondAttribute="top" id="HyU-rd-VQl"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Vbl-Fg-Mjm" secondAttribute="trailing" id="WTP-Ay-Wjr"/>
                                                         <constraint firstItem="zt7-Ir-h0r" firstAttribute="leading" secondItem="xnv-ZT-Ui4" secondAttribute="leading" id="bPC-gd-Z8H"/>
                                                         <constraint firstItem="zt7-Ir-h0r" firstAttribute="top" secondItem="xnv-ZT-Ui4" secondAttribute="top" id="cGh-8O-Qe8"/>
+                                                        <constraint firstItem="Vbl-Fg-Mjm" firstAttribute="leading" secondItem="xnv-ZT-Ui4" secondAttribute="leading" id="hz5-ZN-oqv"/>
+                                                        <constraint firstAttribute="bottom" secondItem="Vbl-Fg-Mjm" secondAttribute="bottom" id="uAm-oz-gq8"/>
                                                         <constraint firstAttribute="trailing" secondItem="zt7-Ir-h0r" secondAttribute="trailing" id="w3r-V1-ZKr"/>
                                                     </constraints>
                                                 </view>
@@ -97,6 +105,7 @@
                                         <size key="customSize" width="152" height="163"/>
                                         <connections>
                                             <outlet property="albumNameLabel" destination="fcC-Ss-BNY" id="xDL-FV-y0u"/>
+                                            <outlet property="alphaView" destination="Vbl-Fg-Mjm" id="H0v-Sm-tVL"/>
                                             <outlet property="btn1" destination="dMR-5N-Sl1" id="wKo-Gu-aKe"/>
                                             <outlet property="btn2" destination="8eu-o1-jBt" id="xXu-Rg-Thm"/>
                                             <outlet property="btn3" destination="r8p-oU-mJe" id="iVv-d3-cEI"/>
