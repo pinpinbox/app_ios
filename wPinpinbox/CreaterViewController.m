@@ -134,7 +134,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             case 2436:
                 printf("iPhone X");
                 self.navBarHeight.constant = navBarHeightConstant;
-                self.collectionView.contentInset = UIEdgeInsetsMake(50, 0, 0, 0);
+                self.collectionView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
                 break;
             default:
                 printf("unknown");
@@ -646,6 +646,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
     if (![userDic[@"creative_name"] isEqual: [NSNull null]]) {
         headerView.creativeNameLabel.text = userDic[@"creative_name"];
         [LabelAttributeStyle changeGapString: headerView.creativeNameLabel content: userDic[@"creative_name"]];
+        
+        if ([userDic[@"creative_name"] isEqualToString: @""]) {
+            headerView.gradientView.hidden = YES;
+        } else {
+            headerView.gradientView.hidden = NO;
+        }
+    } else {
+        headerView.gradientView.hidden = YES;
     }
     
     // Number Section

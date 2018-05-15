@@ -34,7 +34,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0.7</string>
+	<string>1.0.11</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -79,6 +79,8 @@
 	<string>您的麥克風將作為作品內容用途</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>您的相簿將作為作品內容用途</string>
+	<key>UIAppFonts</key>
+	<array/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

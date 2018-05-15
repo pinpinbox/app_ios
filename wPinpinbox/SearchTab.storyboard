@@ -120,7 +120,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="創作人推薦" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nlo-PE-MhI">
-                                            <rect key="frame" x="16" y="16" width="343" height="29"/>
+                                            <rect key="frame" x="16" y="16" width="122" height="29"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="29" id="7xO-9w-dso"/>
                                             </constraints>
@@ -128,6 +128,13 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FgH-MK-6gi">
+                                            <rect key="frame" x="154" y="30" width="205" height="1"/>
+                                            <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="0.5" id="W9Z-7l-9qs"/>
+                                            </constraints>
+                                        </view>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="200" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="jdU-ns-cfB">
                                             <rect key="frame" x="0.0" y="53" width="375" height="140"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -196,17 +203,19 @@
                                         </view>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="FgH-MK-6gi" firstAttribute="leading" secondItem="nlo-PE-MhI" secondAttribute="trailing" constant="16" id="18p-Xp-yfn"/>
+                                        <constraint firstItem="FgH-MK-6gi" firstAttribute="centerY" secondItem="nlo-PE-MhI" secondAttribute="centerY" id="3WU-uX-81F"/>
                                         <constraint firstItem="WdP-8C-vhl" firstAttribute="leading" secondItem="nlo-PE-MhI" secondAttribute="leading" id="ASz-E8-l5Y"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="WdP-8C-vhl" secondAttribute="bottom" constant="8" id="Dhr-0e-gat"/>
                                         <constraint firstItem="7B3-rl-NfW" firstAttribute="leading" secondItem="WdP-8C-vhl" secondAttribute="trailing" constant="16" id="Moy-Gr-f4e"/>
                                         <constraint firstItem="7B3-rl-NfW" firstAttribute="centerY" secondItem="WdP-8C-vhl" secondAttribute="centerY" id="PfN-uZ-y5J"/>
                                         <constraint firstAttribute="trailing" secondItem="7B3-rl-NfW" secondAttribute="trailing" constant="16" id="Qvl-vf-cyM"/>
                                         <constraint firstItem="jdU-ns-cfB" firstAttribute="leading" secondItem="ph2-mJ-u03" secondAttribute="leading" id="YdE-V2-jnz"/>
+                                        <constraint firstAttribute="trailing" secondItem="FgH-MK-6gi" secondAttribute="trailing" constant="16" id="eTi-6L-gCO"/>
                                         <constraint firstItem="nlo-PE-MhI" firstAttribute="leading" secondItem="ph2-mJ-u03" secondAttribute="leading" constant="16" id="hAS-ti-fTE"/>
                                         <constraint firstItem="jdU-ns-cfB" firstAttribute="top" secondItem="nlo-PE-MhI" secondAttribute="bottom" constant="8" id="ihB-s5-Mz2"/>
                                         <constraint firstItem="nlo-PE-MhI" firstAttribute="top" secondItem="ph2-mJ-u03" secondAttribute="top" constant="16" id="pnj-XF-d2g"/>
                                         <constraint firstAttribute="trailing" secondItem="jdU-ns-cfB" secondAttribute="trailing" id="tzN-Lg-HTa"/>
-                                        <constraint firstAttribute="trailing" secondItem="nlo-PE-MhI" secondAttribute="trailing" constant="16" id="zz1-T3-UfM"/>
                                     </constraints>
                                     <connections>
                                         <outlet property="albumRecommendationLabel" destination="WdP-8C-vhl" id="sck-44-BvD"/>

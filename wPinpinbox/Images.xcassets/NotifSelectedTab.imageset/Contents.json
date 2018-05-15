@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "NotifSelectedTab@1x.png",
+      "filename" : "notice_dark.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "NotifSelectedTab@2x.png",
+      "filename" : "notice_dark-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "NotifSelectedTab@3x.png",
+      "filename" : "notice_dark-2.png",
       "scale" : "3x"
     }
   ],

@@ -173,7 +173,15 @@
 - (void)viewDidLoad {
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
-    // Do any additional setup after loading the view.        
+    // Do any additional setup after loading the view.
+    for (NSString *family in [UIFont familyNames]) {
+        NSLog(@"family: %@", family);
+        
+        for (NSString *name in [UIFont fontNamesForFamilyName: family]) {
+            NSLog(@"name: %@", name);
+        }
+    }
+    
     NSLog(@"getUserID: %@", [wTools getUserID]);
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];

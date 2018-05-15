@@ -3159,6 +3159,13 @@
 			name = CreaterVC;
 			sourceTree = "<group>";
 		};
+		54F777D120A96BBF00A6E195 /* Font Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Font Resources";
+			sourceTree = "<group>";
+		};
 		6304182A1EF9158C00132CE1 /* SetupMusicVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -4657,6 +4664,7 @@
 				9276DFAD1B72FDC000E6ACC9 /* Main.storyboard */,
 				63066ACB1E00F58B00014673 /* Home.storyboard */,
 				630848F51E4978D500CA40AF /* beep.mp3 */,
+				54F777D120A96BBF00A6E195 /* Font Resources */,
 				638F88B91E02458500316123 /* Image Resources */,
 				9276DFB01B72FDC000E6ACC9 /* Images.xcassets */,
 				9276DFB21B72FDC000E6ACC9 /* LaunchScreen.xib */,

@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "MeTab@1x.png",
+      "filename" : "ic200_user_light.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "MeTab@2x.png",
+      "filename" : "ic200_user_light-1.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "MeTab@3x.png",
+      "filename" : "ic200_user_light-2.png",
       "scale" : "3x"
     }
   ],
