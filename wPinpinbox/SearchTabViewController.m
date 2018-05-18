@@ -603,14 +603,14 @@ static NSString *hostURL = @"www.pinpinbox.com";
         SearchTabHorizontalCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"horizontalCell" forIndexPath: indexPath];
         
         cell.contentView.backgroundColor = nil;
-        
-        cell.userPictureImageView.imageURL = nil;
+//        cell.userPictureImageView.imageURL = nil;
         
         if (![userDic isKindOfClass: [NSNull class]]) {
             if ([userDic[@"picture"] isEqual: [NSNull null]]) {
                 cell.userPictureImageView.image = [UIImage imageNamed: @"member_back_head.png"];
             } else {
-                [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"picture"]]];
+                [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"picture"]]
+                                             placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];                
             }
             cell.userNameLabel.text = userDic[@"name"];
             [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];

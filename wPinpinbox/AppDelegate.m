@@ -822,14 +822,24 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSString *dataType = userInfo[@"data"][@"type"];
     NSLog(@"dataType: %@", dataType);
     
-    NSString *typeId;
+    // typeId
+    NSInteger typeIdInt;
+    NSString *typeIdStr;
     
-    if ([userInfo[@"data"][@"type_id"] isEqual: [NSNull null]]) {
-        typeId = userInfo[@"data"][@"type_id"];
-    } else {
-        typeId = [userInfo[@"data"][@"type_id"] stringValue];
+    //    if ([userInfo[@"data"][@"type_id"] isEqual: [NSNull null]]) {
+    //        typeId = userInfo[@"data"][@"type_id"];
+    //    } else {
+    //        typeId = [userInfo[@"data"][@"type_id"] stringValue];
+    //    }
+    
+    if (![userInfo[@"data"][@"type_id"] isEqual: [NSNull null]]) {
+        typeIdInt = [userInfo[@"data"][@"type_id"] integerValue];
+        typeIdStr = [NSString stringWithFormat: @"%ld", (long)typeIdInt];
     }
     
+    NSLog(@"typeIdStr: %@", typeIdStr);
+    
+    // urlStr
     NSString *urlStr = userInfo[@"data"][@"url"];
     NSLog(@"urlStr: %@", urlStr);
     
@@ -861,7 +871,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             if ([dataType isEqualToString: @"user"]) {
                 NSLog(@"[dataType isEqualToString: user");
                 CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-                cVC.userId = typeId;
+                cVC.userId = typeIdStr;
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
@@ -870,8 +880,8 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             if ([dataType isEqualToString: @"albumqueue"]) {
                 NSLog(@"dataType isEqualToString: albumqueue");
                 AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                NSLog(@"typeId: %@", typeId);
-                aDVC.albumId = typeId;
+                NSLog(@"typeIdStr: %@", typeIdStr);
+                aDVC.albumId = typeIdStr;
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
@@ -880,7 +890,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
                 NSLog(@"dataType isEqualToString: albumqueue@messageboard");
                 AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                aDVC.albumId = typeId;
+                aDVC.albumId = typeIdStr;
                 aDVC.getMessagePush = YES;
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -890,7 +900,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             if ([dataType isEqualToString: @"user@messageboard"]) {
                 NSLog(@"dataType isEqualToString: user@messageboard");
                 CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-                cVC.userId = typeId;
+                cVC.userId = typeIdStr;
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
@@ -900,12 +910,12 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 NSLog(@"dataType isEqualToString: event");
                 AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                 [self popToMyTabBarVC: appDelegate];
-                [self checkVCAndShowEventVC: appDelegate typeId: typeId];
+                [self checkVCAndShowEventVC: appDelegate typeId: typeIdStr];
             }
             if ([dataType isEqualToString: @"categoryarea"]) {
                 NSLog(@"dataType isEqualToString: categoryArea");
                 CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
-                categoryVC.categoryAreaId = typeId;
+                categoryVC.categoryAreaId = typeIdStr;
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
@@ -917,7 +927,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         NSLog(@"state is foreground and active");
         NSLog(@"alertStr: %@", alertDic);
         NSLog(@"dataType: %@", dataType);
-        NSLog(@"typeId: %@", typeId);
+        NSLog(@"typeIdStr: %@", typeIdStr);
         
         if ([alertDic isEqual: [NSNull null]]) {
             NSLog(@"empty alertStr");
@@ -933,7 +943,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 NSLog(@"dataType isEqualToString user");
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-                    cVC.userId = typeId;
+                    cVC.userId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
@@ -941,11 +951,11 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 }];
             } else if ([dataType isEqualToString: @"albumqueue"]) {
                 NSLog(@"dataType isEqualToString albumqueue");
-                NSLog(@"typeId: %@", typeId);
+                NSLog(@"typeIdStr: %@", typeIdStr);
                 
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                    aDVC.albumId = typeId;
+                    aDVC.albumId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
@@ -954,7 +964,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             } else if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                    aDVC.albumId = typeId;
+                    aDVC.albumId = typeIdStr;
                     aDVC.getMessagePush = YES;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -964,7 +974,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             } else if ([dataType isEqualToString: @"user@messageboard"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-                    cVC.userId = typeId;
+                    cVC.userId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
@@ -974,12 +984,12 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     [self popToMyTabBarVC: appDelegate];
-                    [self checkVCAndShowEventVC: appDelegate typeId: typeId];
+                    [self checkVCAndShowEventVC: appDelegate typeId: typeIdStr];
                 }];
             } else if ([dataType isEqualToString: @"categoryarea"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
-                    categoryVC.categoryAreaId = typeId;
+                    categoryVC.categoryAreaId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];

@@ -42,6 +42,8 @@
 #import "NewEventPostViewController.h"
 #import "LabelAttributeStyle.h"
 
+#import <SDWebImage/UIImageView+WebCache.h>
+
 //#import "FXBlurView.h"
 
 //static NSString *sharingLink = @"http://www.pinpinbox.com/index/album/content/?album_id=%@%@";
@@ -605,18 +607,20 @@ static NSString *autoPlayStr = @"&autoplay=1";
     horzNameLayout.wrapContentHeight = YES;
     [rootLayout addSubview: horzNameLayout];
     
-    //UIImageView *nameImgView = [UIImageView new];
-    AsyncImageView *nameImgView = [AsyncImageView new];
-    nameImgView.showActivityIndicator = NO;
-    nameImgView.imageURL = nil;
-    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: nameImgView];
+    UIImageView *nameImgView = [UIImageView new];
+//    AsyncImageView *nameImgView = [AsyncImageView new];
+//    nameImgView.showActivityIndicator = NO;
+//    nameImgView.imageURL = nil;
+//    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: nameImgView];
     NSLog(@"user picture: %@", self.data[@"user"][@"picture"]);
     
     if ([self.data[@"user"][@"picture"] isEqual: [NSNull null]]) {
         NSLog(@"self.data user picture is equal to null");
         nameImgView.image = [UIImage imageNamed: @"member_back_head.png"];
     } else {
-        nameImgView.imageURL = [NSURL URLWithString: self.data[@"user"][@"picture"]];
+//        nameImgView.imageURL = [NSURL URLWithString: self.data[@"user"][@"picture"]];
+        [nameImgView sd_setImageWithURL: [NSURL URLWithString: self.data[@"user"][@"picture"]]
+                       placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
     }
     
     //nameImgView.image = [UIImage imageNamed: @"MeTab"];

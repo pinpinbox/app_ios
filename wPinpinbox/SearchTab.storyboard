@@ -155,7 +155,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="96" height="120"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
-                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="W5J-gc-Qnq" customClass="AsyncImageView">
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="W5J-gc-Qnq">
                                                                 <rect key="frame" x="12" y="10" width="72" height="72"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="72" id="0N8-wF-4fQ"/>
@@ -179,7 +179,7 @@
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="userNameLabel" destination="7RB-hd-c8W" id="BSS-bt-PHo"/>
-                                                        <outlet property="userPictureImageView" destination="W5J-gc-Qnq" id="69q-eV-h5f"/>
+                                                        <outlet property="userPictureImageView" destination="W5J-gc-Qnq" id="nci-4j-LFT"/>
                                                     </connections>
                                                 </collectionViewCell>
                                             </cells>

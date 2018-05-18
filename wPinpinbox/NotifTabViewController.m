@@ -316,7 +316,7 @@
     NSString *target2type = dic[@"pushqueue"][@"target2type"];
     NSLog(@"target2type: %@", target2type);
     
-    cell.headshotImaveView.showActivityIndicator = NO;
+//    cell.headshotImaveView.showActivityIndicator = NO;
     cell.headshotImaveView.backgroundColor = [UIColor thirdGrey];
     
     cell.messageLabel.text = message;
@@ -342,13 +342,36 @@
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyAlbumBackground];
                 
                 if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
-                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
                 } else {
-                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
+                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
+                                              placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
                 }
-            } else if ([target2type isEqualToString: @"albumqueue@messageboard"] || [target2type isEqualToString: @"user@messageboard"]) {
+            } else if ([target2type isEqualToString: @"albumqueue@messageboard"]) {
+                cell.targetTypeLabel.text = @"創作人互動";
+                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"創作人互動"];
+                
+                //cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_white"];
+                cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_small_white"];
+                cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
+                
+                cell.headshotImaveView.layer.cornerRadius = kCornerRadius;
+//                cell.headshotImaveView.layer.borderColor = [UIColor thirdGrey].CGColor;
+//                cell.headshotImaveView.layer.borderWidth = 0.5;
+                
+                if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+                    cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_user_default"];
+                } else {
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+//                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
+                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
+                                              placeholderImage: [UIImage imageNamed: @"bg200_user_default"]];
+                }
+            } else if ([target2type isEqualToString: @"user@messageboard"]) {
                 cell.targetTypeLabel.text = @"創作人互動";
                 [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"創作人互動"];
                 
@@ -360,13 +383,15 @@
                 cell.headshotImaveView.layer.borderColor = [UIColor thirdGrey].CGColor;
                 cell.headshotImaveView.layer.borderWidth = 0.5;
                 
-                if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
-                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
-                    cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_user_default"];
-                } else {
-                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
-                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
-                }
+                cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
+                
+//                if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+//                    cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_user_default"];
+//                } else {
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+//                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
+//                }
             } else if ([target2type isEqualToString: @"user"]) {
                 cell.targetTypeLabel.text = @"創作人互動";
                 [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"創作人互動"];
@@ -379,11 +404,13 @@
                 cell.headshotImaveView.layer.borderWidth = 0.5;
                 
                 if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
-                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_user_default"];
                 } else {
-                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
-                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+//                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
+                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
+                                              placeholderImage: [UIImage imageNamed: @"bg200_user_default"]];
                 }
             } else if ([target2type isEqualToString: @"albumcooperation"]) {
                 cell.targetTypeLabel.text = @"共用邀請";
@@ -393,11 +420,13 @@
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyUserInteractiveBackground];
                 
                 if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
-                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_user_default"];
                 } else {
-                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
-                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
+//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
+                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
+                                              placeholderImage: [UIImage imageNamed: @"bg200_user_default"]];
+//                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
                 }
             } else if ([target2type isEqualToString: @"event"]) {
                 cell.targetTypeLabel.text = @"系統發布";

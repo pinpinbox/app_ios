@@ -10,6 +10,6 @@
 #import "AsyncImageView.h"
 
 @interface SearchTabHorizontalCollectionViewCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet AsyncImageView *userPictureImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *userPictureImageView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @end

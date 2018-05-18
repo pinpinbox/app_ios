@@ -458,7 +458,9 @@
     
     if (![imageUrl isKindOfClass: [NSNull class]]) {
         if (![imageUrl isEqualToString: @""]) {
-            [cell.pictureImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
+//            [cell.pictureImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
+            [cell.pictureImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
+                                     placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
         }
     } else {
         NSLog(@"imageUrl is nil");

@@ -29,7 +29,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="74"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7wf-qg-Wnl" customClass="AsyncImageView">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7wf-qg-Wnl">
                                                     <rect key="frame" x="16" y="8" width="56" height="56"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="56" id="UE5-oO-ocG"/>
@@ -90,7 +90,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="headshotImaveView" destination="7wf-qg-Wnl" id="xNE-6Z-mKC"/>
+                                            <outlet property="headshotImaveView" destination="7wf-qg-Wnl" id="TN7-fl-gLK"/>
                                             <outlet property="insertTimeLabel" destination="kZS-PV-p6a" id="5Bt-kr-2WP"/>
                                             <outlet property="messageLabel" destination="SDZ-4h-qB1" id="JAu-ie-VAq"/>
                                             <outlet property="targetTypeImageView" destination="Rcc-Tb-Wqa" id="znJ-MG-2ve"/>
