@@ -17,5 +17,4 @@
 @property (weak, nonatomic) IBOutlet HorzAlbumCollectionView *collectionView;
 
 - (void)setCollectionViewDataSourceDelegate:(id<UICollectionViewDataSource, UICollectionViewDelegate>)dataSourceDelegate indexPath:(NSIndexPath *)indexPath;
-
 @end

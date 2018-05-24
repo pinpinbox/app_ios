@@ -2296,7 +2296,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject: token forKey: @"token"];
     [dic setObject: userId forKey: @"user_id"];
     
-    returnStr = [self boxAPI: dic URL: @"/getcategoryarea/2.0"];
+    returnStr = [self boxAPI: dic URL: @"/getcategoryarea/2.1"];
     
     return returnStr;
 }
@@ -2311,7 +2311,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject: token forKey: @"token"];
     [dic setObject: userId forKey: @"user_id"];
     
-    returnStr = [self boxAPI: dic URL: @"/getthemearea/2.0"];
+    returnStr = [self boxAPI: dic URL: @"/getthemearea/2.1"];
     
     return returnStr;
 }

@@ -24,7 +24,9 @@
 
 @interface SettingViewController () <TouchDetectedScrollViewDelegate>
 @property (nonatomic) BOOL isAudioPlayedAutomatically;
+@property (nonatomic) BOOL isVideoPlayedAutomatically;
 @property (nonatomic) UIView *audioSelectedView;
+@property (nonatomic) UIView *videoSelectedView;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 
@@ -94,6 +96,7 @@
     UILabel *topicLabel = [UILabel new];
     topicLabel.myTopMargin = topicLabel.myBottomMargin = 16;
     topicLabel.myLeftMargin = 16;
+    topicLabel.myBottomMargin = kCellGap;
     topicLabel.font = [UIFont boldSystemFontOfSize: 48];
     topicLabel.text = @"設定";
     [LabelAttributeStyle changeGapString: topicLabel content: topicLabel.text];
@@ -104,7 +107,7 @@
     
     // Line View
     UIView *lineView2 = [UIView new];
-    lineView2.myTopMargin = 0;
+    lineView2.myTopMargin = kCellGap;
     lineView2.myLeftMargin = lineView2.myRightMargin = 0;
     lineView2.myBottomMargin = 0;
     lineView2.backgroundColor = [UIColor secondGrey];
@@ -123,7 +126,7 @@
     
     UILabel *audioPlayLabel = [UILabel new];
     audioPlayLabel.myLeftMargin = 16;
-    audioPlayLabel.text = @"自動播放音效";
+    audioPlayLabel.text = @"自動播放音效 (作品)";
     [LabelAttributeStyle changeGapString: audioPlayLabel content: audioPlayLabel.text];
     audioPlayLabel.textColor = [UIColor firstGrey];
     audioPlayLabel.font = [UIFont boldSystemFontOfSize: 17];
@@ -155,23 +158,74 @@
     [audioPlayLayout addSubview: self.audioSelectedView];
     
     [audioPlayLayout addGestureRecognizer: singleTap];
-     
+    
     UIView *lineView3 = [UIView new];
     lineView3.myTopMargin = 0;
     lineView3.myLeftMargin = lineView3.myRightMargin = 0;
-    lineView3.myBottomMargin = 20;
+    lineView3.myBottomMargin = 0;
     lineView3.backgroundColor = [UIColor secondGrey];
     lineView3.myHeight = kLineHeight;
     [self.vertLayout addSubview: lineView3];
-     
-    // Line View
+    
+    // Video Playing Section
+    MyLinearLayout *videoPlayLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
+    videoPlayLayout.myTopMargin = 0;
+    videoPlayLayout.myLeftMargin = videoPlayLayout.myRightMargin = 0;
+    videoPlayLayout.myBottomMargin = 0;
+    videoPlayLayout.myHeight = kLayoutHeight;
+    videoPlayLayout.tag = 3;
+    videoPlayLayout.userInteractionEnabled = YES;
+    [self.vertLayout addSubview: videoPlayLayout];
+    
+    UILabel *videoPlayLabel = [UILabel new];
+    videoPlayLabel.myLeftMargin = 16;
+    videoPlayLabel.text = @"自動播放影片 (分類輪播)";
+    [LabelAttributeStyle changeGapString: videoPlayLabel content: videoPlayLabel.text];
+    videoPlayLabel.textColor = [UIColor firstGrey];
+    videoPlayLabel.font = [UIFont boldSystemFontOfSize: 17];
+    [videoPlayLabel sizeToFit];
+    videoPlayLabel.myCenterYOffset = 0;
+    [videoPlayLayout addSubview: videoPlayLabel];
+    
+    //UIView *audioSelectedView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 25, 25)];
+    self.videoSelectedView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 25, 25)];
+    self.videoSelectedView.myRightMargin = 16;
+    self.videoSelectedView.myLeftMargin = 0.5;
+    self.videoSelectedView.myCenterYOffset = 0;
+    
+    self.isVideoPlayedAutomatically = [[defaults objectForKey: @"isVideoPlayedAutomatically"] boolValue];
+        
+    NSLog(@"self.isVideoPlayedAutomatically: %d", self.isVideoPlayedAutomatically);
+    
+    if (self.isVideoPlayedAutomatically) {
+        self.videoSelectedView.backgroundColor = [UIColor thirdMain];
+    } else {
+        self.videoSelectedView.backgroundColor = [UIColor clearColor];
+    }
+    
+    self.videoSelectedView.layer.cornerRadius = kCornerRadius;
+    self.videoSelectedView.layer.borderColor = [UIColor secondGrey].CGColor;
+    self.videoSelectedView.layer.borderWidth = 0.5;
+    [videoPlayLayout addSubview: self.videoSelectedView];
+    
+    [videoPlayLayout addGestureRecognizer: singleTap];
+    
     UIView *lineView4 = [UIView new];
-    lineView4.myTopMargin = 16;
+    lineView4.myTopMargin = 0;
     lineView4.myLeftMargin = lineView4.myRightMargin = 0;
-    lineView4.myBottomMargin = 0;
+    lineView4.myBottomMargin = kCellGap;
     lineView4.backgroundColor = [UIColor secondGrey];
     lineView4.myHeight = kLineHeight;
     [self.vertLayout addSubview: lineView4];
+    
+    // Line View
+    UIView *lineView5 = [UIView new];
+    lineView5.myTopMargin = kCellGap;
+    lineView5.myLeftMargin = lineView5.myRightMargin = 0;
+    lineView5.myBottomMargin = 0;
+    lineView5.backgroundColor = [UIColor secondGrey];
+    lineView5.myHeight = kLineHeight;
+    [self.vertLayout addSubview: lineView5];
     
     // PlatformRule Section
     MyLinearLayout *platformRuleLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
@@ -179,7 +233,7 @@
     platformRuleLayout.myLeftMargin = platformRuleLayout.myRightMargin = 0;
     platformRuleLayout.myBottomMargin = 0;
     platformRuleLayout.myHeight = kLayoutHeight;
-    platformRuleLayout.tag = 3;
+    platformRuleLayout.tag = 4;
     platformRuleLayout.userInteractionEnabled = YES;
     [self.vertLayout addSubview: platformRuleLayout];
     
@@ -194,19 +248,19 @@
     
     [platformRuleLayout addSubview: platformRuleLabel];
     [platformRuleLayout addGestureRecognizer: singleTap];
-
-//    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget: self action: @selector(handleLongPress:)];
-//    longPress.numberOfTouchesRequired = 1;
-//    longPress.minimumPressDuration = 3;
-//    [platformRuleLayout addGestureRecognizer: longPress];
     
-    UIView *lineView5 = [UIView new];
-    lineView5.myTopMargin = 0;
-    lineView5.myLeftMargin = lineView5.myRightMargin = 0;
-    lineView5.myBottomMargin = 0;
-    lineView5.backgroundColor = [UIColor secondGrey];
-    lineView5.myHeight = kLineHeight;
-    [self.vertLayout addSubview: lineView5];
+    //    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget: self action: @selector(handleLongPress:)];
+    //    longPress.numberOfTouchesRequired = 1;
+    //    longPress.minimumPressDuration = 3;
+    //    [platformRuleLayout addGestureRecognizer: longPress];
+    
+    UIView *lineView6 = [UIView new];
+    lineView6.myTopMargin = 0;
+    lineView6.myLeftMargin = lineView6.myRightMargin = 0;
+    lineView6.myBottomMargin = 0;
+    lineView6.backgroundColor = [UIColor secondGrey];
+    lineView6.myHeight = kLineHeight;
+    [self.vertLayout addSubview: lineView6];
     
     // About Section
     MyLinearLayout *aboutLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
@@ -214,7 +268,7 @@
     aboutLayout.myLeftMargin = aboutLayout.myRightMargin = 0;
     aboutLayout.myBottomMargin = 0;
     aboutLayout.myHeight = kLayoutHeight;
-    aboutLayout.tag = 4;
+    aboutLayout.tag = 5;
     aboutLayout.userInteractionEnabled = YES;
     [self.vertLayout addSubview: aboutLayout];
     
@@ -230,21 +284,21 @@
     aboutLabel.myCenterYOffset = 0;
     [aboutLayout addSubview: aboutLabel];
     
-    UIView *lineView6 = [UIView new];
-    lineView6.myTopMargin = 0;
-    lineView6.myLeftMargin = lineView6.myRightMargin = 0;
-    lineView6.myBottomMargin = kCellGap;
-    lineView6.backgroundColor = [UIColor secondGrey];
-    lineView6.myHeight = kLineHeight;
-    [self.vertLayout addSubview: lineView6];
-    
     UIView *lineView7 = [UIView new];
-    lineView7.myTopMargin = kCellGap;
+    lineView7.myTopMargin = 0;
     lineView7.myLeftMargin = lineView7.myRightMargin = 0;
-    lineView7.myBottomMargin = 0;
+    lineView7.myBottomMargin = kCellGap;
     lineView7.backgroundColor = [UIColor secondGrey];
     lineView7.myHeight = kLineHeight;
     [self.vertLayout addSubview: lineView7];
+    
+    UIView *lineView8 = [UIView new];
+    lineView8.myTopMargin = kCellGap;
+    lineView8.myLeftMargin = lineView8.myRightMargin = 0;
+    lineView8.myBottomMargin = 0;
+    lineView8.backgroundColor = [UIColor secondGrey];
+    lineView8.myHeight = kLineHeight;
+    [self.vertLayout addSubview: lineView8];
     
     // Log Out Section
     // About Section
@@ -253,7 +307,7 @@
     logOutLayout.myLeftMargin = logOutLayout.myRightMargin = 0;
     logOutLayout.myBottomMargin = 0;
     logOutLayout.myHeight = kLayoutHeight;
-    logOutLayout.tag = 5;
+    logOutLayout.tag = 6;
     logOutLayout.userInteractionEnabled = YES;
     [self.vertLayout addSubview: logOutLayout];
     
@@ -269,13 +323,13 @@
     logOutLabel.myCenterYOffset = 0;
     [logOutLayout addSubview: logOutLabel];
     
-    UIView *lineView8 = [UIView new];
-    lineView8.myTopMargin = 0;
-    lineView8.myLeftMargin = lineView8.myRightMargin = 0;
-    lineView8.myBottomMargin = 0;
-    lineView8.backgroundColor = [UIColor secondGrey];
-    lineView8.myHeight = kLineHeight;
-    [self.vertLayout addSubview: lineView8];
+    UIView *lineView9 = [UIView new];
+    lineView9.myTopMargin = 0;
+    lineView9.myLeftMargin = lineView9.myRightMargin = 0;
+    lineView9.myBottomMargin = 0;
+    lineView9.backgroundColor = [UIColor secondGrey];
+    lineView9.myHeight = kLineHeight;
+    [self.vertLayout addSubview: lineView9];
     
     self.vertLayout.wrapContentHeight = YES;
     
@@ -287,7 +341,35 @@
     }];
     
     self.scrollView.detectedDelegate = self;
-    self.scrollView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
+    
+    CGFloat top = 0;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                top = 44;
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                top = 44;
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                top = 44;
+                break;
+            case 2436:
+                printf("iPhone X");
+                top = 74;
+                break;
+            default:
+                printf("unknown");
+                top = 44;
+                break;
+        }
+    }
+    
+    self.scrollView.contentInset = UIEdgeInsetsMake(top, 0, 0, 0);
     self.scrollView.contentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, h);
     self.scrollView.backgroundColor = [UIColor clearColor];
     NSLog(@"self.scrollView.contentSize: %@", NSStringFromCGSize(self.scrollView.contentSize));
@@ -310,23 +392,25 @@
         gesture.view.backgroundColor = [UIColor clearColor];
         
         switch (gesture.view.tag) {
-            case 3:
+            case 4:
             {
                 [self toPlatformRulePage: @"https://www.pinpinbox.com/index/index/terms/"];
             }
                 break;
-            case 4:
+            case 5:
             {
                 NSLog(@"To aboutView");
                 [self toAboutVC];
             }
-            case 5:
+                break;
+            case 6:
             {
                 NSLog(@"deleteAllCoreData");
                 [wTools deleteAllCoreData];
                 NSLog(@"Log Out");
                 [wTools logOut];
             }
+                break;
             default:
                 break;
         }
@@ -420,7 +504,18 @@
             if (CGRectContainsPoint(touch.view.bounds, location)) {
                 NSLog(@"in the touch.view.tag == 3");
                 
-                [self toPlatformRulePage: @"https://www.pinpinbox.com/index/index/terms/"];
+                self.isVideoPlayedAutomatically = !self.isVideoPlayedAutomatically;
+                
+                if (self.isVideoPlayedAutomatically) {
+                    self.videoSelectedView.backgroundColor = [UIColor thirdMain];
+                } else {
+                    self.videoSelectedView.backgroundColor = [UIColor clearColor];
+                }
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                [defaults setObject: [NSNumber numberWithBool: self.isVideoPlayedAutomatically] forKey: @"isVideoPlayedAutomatically"];
+                [defaults synchronize];
+                
+                NSLog(@"isVideoPlayedAutomatically: %d", [[defaults objectForKey: @"isVideoPlayedAutomatically"] boolValue]);
             } else {
                 NSLog(@"outside the touch.view.tag == 3");
             }
@@ -428,12 +523,13 @@
             break;
         case 4:
         {
+            NSLog(@"case 4");
             if (CGRectContainsPoint(touch.view.bounds, location)) {
-                NSLog(@"in the touch.view.tag == 4");
+                NSLog(@"in the touch.view.tag == 3");
                 
-                [self toAboutVC];
+                [self toPlatformRulePage: @"https://www.pinpinbox.com/index/index/terms/"];
             } else {
-                NSLog(@"outside the touch.view.tag == 4");
+                NSLog(@"outside the touch.view.tag == 3");
             }
         }
             break;
@@ -441,16 +537,26 @@
         {
             if (CGRectContainsPoint(touch.view.bounds, location)) {
                 NSLog(@"in the touch.view.tag == 5");
-                [wTools deleteAllCoreData];
-                [wTools logOut];
+                
+                [self toAboutVC];
             } else {
                 NSLog(@"outside the touch.view.tag == 5");
             }
         }
             break;
+        case 6:
+        {
+            if (CGRectContainsPoint(touch.view.bounds, location)) {
+                NSLog(@"in the touch.view.tag == 6");
+                [wTools deleteAllCoreData];
+                [wTools logOut];
+            } else {
+                NSLog(@"outside the touch.view.tag == 6");
+            }
+        }
         default:
             break;
-    }        
+    }
 }
 
 - (IBAction)backBtnPress:(id)sender {

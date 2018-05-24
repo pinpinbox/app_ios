@@ -14,6 +14,8 @@
 #import "UserCollectionViewCell.h"
 #import "CreaterViewController.h"
 
+#import "BannerCollectionViewCell.h"
+
 #import "UIColor+Extensions.h"
 #import "wTools.h"
 #import "boxAPI.h"
@@ -25,12 +27,16 @@
 #import "UIColor+HexString.h"
 #import "LabelAttributeStyle.h"
 #import "UIView+Toast.h"
+#import <SafariServices/SafariServices.h>
 
 //#define kUserImageViewNumber 6
 
-@interface CategoryViewController () <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
+@interface CategoryViewController () <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate>
 {
     //NSMutableArray *albumExploreArray;
+    UICollectionView *collectionView;
+    UIPageControl *pageControl;
+    MyLinearLayout *bannerVertLayout;
 }
 //@property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (nonatomic, strong) NSString *categoryName;
@@ -42,6 +48,9 @@
 @property (strong, nonatomic) NSMutableArray *horzAlbumArray;
 @property (strong, nonatomic) NSMutableArray *albumExploreArray;
 @property (strong, nonatomic) NSMutableArray *categoryAreaArray;
+@property (strong, nonatomic) NSMutableArray *categoryareaStyleArray;
+@property (strong, nonatomic) NSMutableArray *bannerDataArray;
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSMutableDictionary *contentOffsetDictionary;
 
@@ -66,6 +75,7 @@
     // Do any additional setup after loading the view.
     //NSLog(@"self.categoryName: %@", self.categoryName);
     NSLog(@"CategoryViewController");
+    NSLog(@"viewDidLoad");
     
     [self initialValueSetup];
 }
@@ -76,6 +86,7 @@
 }
 
 - (void)initialValueSetup {
+    NSLog(@"initialValueSetup");
     self.navBarView.backgroundColor = [UIColor barColor];
     self.tableView.showsVerticalScrollIndicator = NO;
 //    self.navBarView.myLeftMargin = self.navBarView.myRightMargin = 0;
@@ -104,9 +115,13 @@
     self.horzAlbumArray = [[NSMutableArray alloc] init];
     self.albumExploreArray = [[NSMutableArray alloc] init];
     self.categoryAreaArray = [[NSMutableArray alloc] init];
+    self.categoryareaStyleArray = [[NSMutableArray alloc] init];
+    self.bannerDataArray = [[NSMutableArray alloc] init];
+    
     self.tableView.hidden = YES;
-    self.tableView.contentInset = UIEdgeInsetsMake(70, 0, 0, 0);
+    self.tableView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
     self.tableView.separatorColor = [UIColor clearColor];
+    NSLog(@"self.tableView.contentOffset.y: %f", self.tableView.contentOffset.y);
     //self.tableView.backgroundColor = [UIColor redColor];
     
     self.contentOffsetDictionary = [NSMutableDictionary dictionary];
@@ -120,6 +135,8 @@
     
     [LabelAttributeStyle changeGapString: self.creatorLabel content: @"創作人推薦"];
     [self.closeBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
+    
+    NSLog(@"self.categoryAreaId: %@", self.categoryAreaId);
     
     if ([self.categoryAreaId isEqualToString: @"-1"]) {
         NSLog(@"self.categoryAreaId isEqualToString: -1");
@@ -236,6 +253,7 @@
 }
 
 - (void)getCategoryArea {
+    NSLog(@"");
     NSLog(@"getCategoryArea");
     
     @try {
@@ -248,7 +266,9 @@
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI getCategoryArea: self.categoryAreaId token: [wTools getUserToken] userId: [wTools getUserID]];
+        NSString *response = [boxAPI getCategoryArea: self.categoryAreaId
+                                               token: [wTools getUserToken]
+                                              userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -281,15 +301,39 @@
                         NSLog(@"dic data: %@", dic[@"data"]);
                         NSLog(@"dic data categoryarea: %@", dic[@"data"][@"categoryarea"]);
                         
-                        if (![dic[@"data"][@"categoryarea"][@"categoryarea"][@"name"] isEqual: [NSNull null]]) {
-                            self.categoryName = dic[@"data"][@"categoryarea"][@"categoryarea"][@"name"];
-                            NSLog(@"\n\nself.categoryName: %@", self.categoryName);
+//                        if (![dic[@"data"][@"categoryarea"][@"categoryarea"][@"name"] isEqual: [NSNull null]]) {
+//                            self.categoryName = dic[@"data"][@"categoryarea"][@"categoryarea"][@"name"];
+//                            NSLog(@"\n\nself.categoryName: %@", self.categoryName);
+//                        }
+                        
+                        if (![dic[@"data"][@"categoryarea"][@"name"] isEqual: [NSNull null]]) {
+                            self.categoryName = dic[@"data"][@"categoryarea"][@"name"];
                         }
                         
-                        if (![dic[@"data"][@"categoryarea"][@"user"] isEqual: [NSNull null]]) {
-                            self.categoryAreaArray = [NSMutableArray arrayWithArray: dic[@"data"][@"categoryarea"][@"user"]];
-                            [self addUserView];
+                        if (![dic[@"data"][@"categoryarea_style"] isEqual: [NSNull null]]) {
+                            self.categoryareaStyleArray = [NSMutableArray arrayWithArray: dic[@"data"][@"categoryarea_style"]];
                         }
+                        NSLog(@"self.categoryareaStyleArray: %@", self.categoryareaStyleArray);
+                        
+                        if (self.categoryareaStyleArray.count > 0) {
+                            for (NSDictionary *styleDic1 in self.categoryareaStyleArray) {
+                                NSLog(@"styleDic1: %@", styleDic1);
+                                
+                                if ([styleDic1[@"banner_type"] isEqualToString: @"creative"]) {
+                                    NSLog(@"styleDic1 banner_type_data: %@", styleDic1[@"banner_type_data"]);
+                                    self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
+                                    [self addUserView];
+                                } else {
+                                    [self.bannerDataArray addObject: styleDic1];
+                                }
+                            }
+                        }
+                        
+//                        if (![dic[@"data"][@"categoryarea"][@"user"] isEqual: [NSNull null]]) {
+//                            self.categoryAreaArray = [NSMutableArray arrayWithArray: dic[@"data"][@"categoryarea"][@"user"]];
+//                            NSLog(@"self.categoryAreaArray: %@", self.categoryAreaArray);
+//                            [self addUserView];
+//                        }
                         
                         if (![dic[@"data"][@"albumexplore"] isEqual: [NSNull null]]) {
                             self.albumArray = [NSMutableArray arrayWithArray: dic[@"data"][@"albumexplore"]];
@@ -310,10 +354,10 @@
                             NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
                             
                             self.tableView.hidden = NO;
-                            [self.tableView reloadData];
-                            
-                            [self.userCollectionView reloadData];
                         }
+                        
+                        [self.tableView reloadData];
+                        [self.userCollectionView reloadData];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -391,15 +435,15 @@
 }
 
 #pragma mark - UITableViewDatasource Methods
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    NSLog(@"");
     NSLog(@"numberOfSectionsInTableView");
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
-{
+ numberOfRowsInSection:(NSInteger)section {
+    NSLog(@"");
     NSLog(@"numberOfRowsInSection");
     NSLog(@"self.albumExploreArray.count: %lu", (unsigned long)self.albumExploreArray.count);
     
@@ -407,8 +451,8 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"");
     NSLog(@"cellForRowAtIndexPath");
     
     CategoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"CategoryCell" forIndexPath: indexPath];
@@ -424,8 +468,9 @@
 #pragma mark - UITableViewDelegate Methods
 - (void)tableView:(UITableView *)tableView
   willDisplayCell:(CategoryTableViewCell *)cell
-forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"");
+    NSLog(@"willDisplayCell");
     [cell setCollectionViewDataSourceDelegate: self indexPath: indexPath];
     NSInteger index = cell.collectionView.indexPath.row;
     
@@ -435,20 +480,77 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (CGFloat)tableView:(UITableView *)tableView
 heightForHeaderInSection:(NSInteger)section {
-    // Set the value to avoid the gap between header is different
-    return 45;
+    NSLog(@"");
+    NSLog(@"heightForHeaderInSection");
+    
+    if (self.bannerDataArray.count > 0) {
+        return 150;
+    } else {
+        return 45;
+    }
+    
+    // Without BannerCollectionView
+//    return 45;
+    
+    // With BannerCollectionView
+    return 150;
 }
 
 - (UIView *)tableView:(UITableView *)tableView
-viewForHeaderInSection:(NSInteger)section
-{
+viewForHeaderInSection:(NSInteger)section {
+    NSLog(@"");
     NSLog(@"viewForHeaderInSection");
-//    MyLinearLayout *headerHozLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
+    MyLinearLayout *bannerVertLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
+    bannerVertLayout.myTopMargin = 0;
+    bannerVertLayout.myLeftMargin = bannerVertLayout.myRightMargin = 0;
+    bannerVertLayout.myBottomMargin = 0;
+//    bannerVertLayout.backgroundColor = [UIColor blueColor];
+//    bannerVertLayout.wrapContentHeight = YES;
+    
+    // The height should be the same as heightForHeaderInSection
+    
+    if (self.bannerDataArray.count > 0) {
+        bannerVertLayout.heightDime.max(150);
+        
+        // Horizontal CollectionView Setting
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        layout.itemSize = CGSizeMake(self.view.bounds.size.width, 200);
+        layout.minimumLineSpacing = 0;
+        
+        collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, 200) collectionViewLayout: layout];
+        collectionView.myTopMargin = 0;
+        collectionView.myBottomMargin = 8;
+        collectionView.myLeftMargin = collectionView.myRightMargin = 0;
+        collectionView.dataSource = self;
+        collectionView.delegate = self;
+        collectionView.tag = 3;
+        collectionView.pagingEnabled = YES;
+        
+        [collectionView registerNib: [UINib nibWithNibName: @"BannerImageView" bundle: [NSBundle mainBundle]] forCellWithReuseIdentifier: @"BannerCell"];
+        [collectionView registerNib: [UINib nibWithNibName: @"YoutubePlayer" bundle: [NSBundle mainBundle]] forCellWithReuseIdentifier: @"YoutubeCell"];
+        
+        collectionView.backgroundColor = [UIColor clearColor];
+        collectionView.showsHorizontalScrollIndicator = NO;
+        [bannerVertLayout addSubview: collectionView];
+        
+        pageControl = [[UIPageControl alloc] init];
+        pageControl.myTopMargin = pageControl.myBottomMargin = 8;
+        pageControl.numberOfPages = self.bannerDataArray.count;
+        pageControl.pageIndicatorTintColor = [UIColor secondGrey];
+        pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
+        pageControl.userInteractionEnabled = NO;
+        [bannerVertLayout addSubview: pageControl];
+    } else {
+        bannerVertLayout.heightDime.max(45);
+    }
+    
     MyRelativeLayout *headerHorzLayout = [MyRelativeLayout new];
+    headerHorzLayout.myTopMargin = 8;
     headerHorzLayout.myLeftMargin = headerHorzLayout.myRightMargin = 0;
     headerHorzLayout.myBottomMargin = 32;
-    //headerHorzLayout.backgroundColor = [UIColor greenColor];
     headerHorzLayout.wrapContentHeight = YES;
+//    headerHorzLayout.backgroundColor = [UIColor redColor];
     
     UILabel *topicLabel = [UILabel new];
     topicLabel.myTopMargin = 0;
@@ -465,6 +567,7 @@ viewForHeaderInSection:(NSInteger)section
     [topicLabel sizeToFit];
     [headerHorzLayout addSubview: topicLabel];
     
+    /*
     if (![self.categoryAreaId isEqualToString: @"-1"]) {
         UIButton *btn = [UIButton buttonWithType: UIButtonTypeCustom];
         [btn setTitle: @"全部" forState: UIControlStateNormal];
@@ -480,26 +583,39 @@ viewForHeaderInSection:(NSInteger)section
         //[btn sizeToFit];
         [headerHorzLayout addSubview: btn];
     }
+     */
     
     [headerHorzLayout sizeToFit];
-    self.tableView.tableHeaderView = headerHorzLayout;
+//    self.tableView.tableHeaderView = headerHorzLayout;
+//    return headerHorzLayout;
     
-    return headerHorzLayout;
+    [bannerVertLayout addSubview: headerHorzLayout];
+    [bannerVertLayout sizeToFit];
+    
+    self.tableView.tableHeaderView = bannerVertLayout;
+    return bannerVertLayout;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView
-heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"");
+    NSLog(@"heightForRowAtIndexPath");
     return 280.0;
 }
 
 #pragma mark - UICollectionViewDatasource Methods
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
+    NSLog(@"");
+    NSLog(@"numberOfItemsInSection");
+    
+    // BannerCollectionView
     if (collectionView.tag == 1) {
         NSArray *collectionViewArray = self.horzAlbumArray[[(HorzAlbumCollectionView *)collectionView indexPath].row];
         return collectionViewArray.count;
+    } else if (collectionView.tag == 3) {
+        NSLog(@"self.bannerDataArray.count: %lu", (unsigned long)self.bannerDataArray.count);
+        return self.bannerDataArray.count;
     } else {
         NSLog(@"self.categoryAreaArray.count: %lu", (unsigned long)self.categoryAreaArray.count);
         return self.categoryAreaArray.count;
@@ -507,15 +623,18 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"");
     NSLog(@"cellForItemAtIndexPath");
     
 //    NSLog(@"self.tableView.tableHeaderView.bounds.size.height: %f", self.tableView.tableHeaderView.bounds.size.height);
     
     if (collectionView.tag == 1) {
+        NSLog(@"collectionView.tag == 1");
         CategoryCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"HorzAlbumCell" forIndexPath: indexPath];
+        NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
         NSArray *collectionViewArray = self.horzAlbumArray[[(HorzAlbumCollectionView *)collectionView indexPath].row];
+        NSLog(@"collectionViewArray: %@", collectionViewArray);
         
         NSDictionary *dic = collectionViewArray[indexPath.item];
         NSLog(@"dic: %@", dic);
@@ -590,8 +709,47 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
             cell.userInfoView.frame = rect;
         }
         return cell;
+    } else if (collectionView.tag == 3) {
+        NSLog(@"collectionView.tag == 3");
+        BannerCollectionViewCell *cell;
+        NSLog(@"self.bannerDataArray: %@", self.bannerDataArray);
+        
+        if (self.bannerDataArray.count > 0) {
+            NSDictionary *bannerDic = self.bannerDataArray[indexPath.row];
+            NSString *bannerType = bannerDic[@"banner_type"];
+            NSString *videoUrl = bannerDic[@"banner_type_data"][@"url"];
+            NSString *imageUrl = bannerDic[@"image"];
+            
+            if ([bannerType isEqualToString: @"video"]) {
+                cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"YoutubeCell" forIndexPath: indexPath];
+                NSDictionary *playerVars = @{@"playsinline" : @1};
+                [cell.playerView loadWithVideoId: videoUrl playerVars: playerVars];
+                cell.playerView.delegate = self;
+            } else if ([bannerType isEqualToString: @"image"]) {
+                cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"BannerCell" forIndexPath: indexPath];
+                [cell.bannerImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
+                                        placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+            }
+        }
+        
+//        if (indexPath.row == 0) {
+//            cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"YoutubeCell" forIndexPath: indexPath];
+//            NSDictionary *playerVars = @{@"playsinline" : @1};
+//            [cell.playerView loadWithVideoId: @"U0gqIXmLIKk" playerVars: playerVars];
+//        } else if (indexPath.row == 1) {
+//            cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"YoutubeCell" forIndexPath: indexPath];
+//            NSDictionary *playerVars = @{@"playsinline" : @1};
+//            [cell.playerView loadWithVideoId: @"WXmdVEkJKGg" playerVars: playerVars];
+//        } else if (indexPath.row == 2) {
+//            cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"BannerCell" forIndexPath: indexPath];
+//            cell.bannerImageView.image = [UIImage imageNamed: @"05"];
+//        }
+        return cell;
     } else {
+        NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
+        
         UserCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"UserCell" forIndexPath: indexPath];
+        NSLog(@"self.categoryAreaArray: %@", self.categoryAreaArray);
         NSDictionary *pictureDic = self.categoryAreaArray[indexPath.row];
         
         if ([pictureDic[@"picture"] isEqual: [NSNull null]]) {
@@ -611,23 +769,20 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     cell.contentView.layer.cornerRadius = kCornerRadius;
     //cell.contentView.backgroundColor = [UIColor thirdMain];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.backgroundColor = nil;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (collectionView.tag == 1) {
         NSArray *collectionViewArray = self.horzAlbumArray[[(HorzAlbumCollectionView *)collectionView indexPath].row];
         NSDictionary *dic = collectionViewArray[indexPath.item];
@@ -649,6 +804,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [appDelegate.myNav pushViewController: aDVC animated: NO];
+    } else if (collectionView.tag == 3) {
+        NSDictionary *bannerDic = self.bannerDataArray[indexPath.row];
+        NSString *bannerType = bannerDic[@"banner_type"];
+        NSString *videoUrl = bannerDic[@"banner_type_data"][@"url"];
+        
+        if ([bannerType isEqualToString: @"image"]) {
+            SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: videoUrl] entersReaderIfAvailable: NO];
+            safariVC.delegate = self;
+            safariVC.preferredBarTintColor = [UIColor whiteColor];
+            [self presentViewController: safariVC animated: YES completion: nil];
+        }
     } else {
         NSDictionary *pictureDic = self.categoryAreaArray[indexPath.row];
         
@@ -656,6 +822,39 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         cVC.userId = pictureDic[@"user_id"];
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [appDelegate.myNav pushViewController: cVC animated: YES];
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"scrollViewDidScroll");
+    NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
+    
+    BannerCollectionViewCell *cell = collectionView.visibleCells[0];
+    
+    if (scrollView.contentOffset.y != -48) {
+        [cell.playerView stopVideo];
+    }
+    
+    if (scrollView == collectionView) {
+        pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+    }
+}
+
+// Play Video when Scroll Banner
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    NSLog(@"scrollViewDidEndDecelerating");
+    
+    if (scrollView == collectionView) {
+        BannerCollectionViewCell *cell = collectionView.visibleCells[0];
+        [cell.playerView stopVideo];
+        [cell.playerView playVideo];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        // Check video setting
+        if (![[defaults objectForKey: @"isVideoPlayedAutomatically"] boolValue]) {
+            [cell.playerView stopVideo];
+        }
     }
 }
 
@@ -669,9 +868,42 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [appDelegate.myNav pushViewController: cDVC animated: YES];
 }
 
+#pragma mark - YTPlayerView Delegate Methods
+- (void)playerViewDidBecomeReady:(YTPlayerView *)playerView {
+    NSLog(@"playerViewDidBecomeReady");
+    [playerView playVideo];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    // Check video setting
+    if (![[defaults objectForKey: @"isVideoPlayedAutomatically"] boolValue]) {
+        [playerView stopVideo];
+    }
+}
+
+- (void)playerView:(YTPlayerView *)playerView didChangeToState:(YTPlayerState)state {
+    NSLog(@"didChangeToState");
+    NSLog(@"state: %ld", (long)state);
+    
+    NSLog(@"self.tableView.contentOffset.y: %f", self.tableView.contentOffset.y);
+    
+    if (state == 2) {
+        if (self.tableView.contentOffset.y > -72) {
+            [playerView stopVideo];
+        }
+    }
+}
+
+- (void)playerView:(YTPlayerView *)playerView didChangeToQuality:(YTPlaybackQuality)quality {
+    NSLog(@"didChangeToQuality");
+}
+
+- (void)playerView:(YTPlayerView *)playerView receivedError:(YTPlayerError)error {
+    NSLog(@"receivedError");
+}
+
 #pragma mark - Custom Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg  {
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
     [errorAlertView setContainerView: [self createErrorContainerView: msg]];
     

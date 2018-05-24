@@ -994,7 +994,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.itemSize = CGSizeMake(80, 90);
-    collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, tagBackgroundView.bounds.size.width, tagBackgroundView.bounds.size.height) collectionViewLayout: layout];;
+    collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, tagBackgroundView.bounds.size.width, tagBackgroundView.bounds.size.height) collectionViewLayout: layout];
     collectionView.dataSource = self;
     collectionView.delegate = self;
     [collectionView registerNib: [UINib nibWithNibName: @"TagCollectionViewCell" bundle: [NSBundle mainBundle]] forCellWithReuseIdentifier: @"Cell"];

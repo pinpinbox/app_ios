@@ -31,6 +31,9 @@
 		54262AED1FA86D38008ED59B /* VotingCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54262AEC1FA86D38008ED59B /* VotingCollectionReusableView.m */; };
 		5427BBD31F4FE237000B438D /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 5427BBD21F4FE237000B438D /* UIColor+HexString.m */; };
 		542DD9952019ECDB00289565 /* TestReadBookVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 542DD9942019ECDB00289565 /* TestReadBookVC.storyboard */; };
+		543043CE20B2A4F500018AF4 /* YoutubePlayer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 543043CD20B2A4F400018AF4 /* YoutubePlayer.xib */; };
+		543043D020B2A4FB00018AF4 /* BannerImageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 543043CF20B2A4FB00018AF4 /* BannerImageView.xib */; };
+		543043D320B2A5F600018AF4 /* BannerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 543043D120B2A5F500018AF4 /* BannerCollectionViewCell.m */; };
 		54331A9A1FE4ED90005E6ACE /* NotifTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54331A991FE4ED90005E6ACE /* NotifTab.storyboard */; };
 		54331A9C1FE4EDF8005E6ACE /* MeTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54331A9B1FE4EDF8005E6ACE /* MeTab.storyboard */; };
 		54331A9E1FE4F1F1005E6ACE /* SearchTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54331A9D1FE4F1F1005E6ACE /* SearchTab.storyboard */; };
@@ -870,6 +873,10 @@
 		5427BBD11F4FE237000B438D /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		5427BBD21F4FE237000B438D /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		542DD9942019ECDB00289565 /* TestReadBookVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TestReadBookVC.storyboard; sourceTree = "<group>"; };
+		543043CD20B2A4F400018AF4 /* YoutubePlayer.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YoutubePlayer.xib; sourceTree = "<group>"; };
+		543043CF20B2A4FB00018AF4 /* BannerImageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BannerImageView.xib; sourceTree = "<group>"; };
+		543043D120B2A5F500018AF4 /* BannerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BannerCollectionViewCell.m; sourceTree = "<group>"; };
+		543043D220B2A5F600018AF4 /* BannerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BannerCollectionViewCell.h; sourceTree = "<group>"; };
 		54331A991FE4ED90005E6ACE /* NotifTab.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NotifTab.storyboard; sourceTree = "<group>"; };
 		54331A9B1FE4EDF8005E6ACE /* MeTab.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MeTab.storyboard; sourceTree = "<group>"; };
 		54331A9D1FE4F1F1005E6ACE /* SearchTab.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SearchTab.storyboard; sourceTree = "<group>"; };
@@ -2227,6 +2234,7 @@
 				5451457A200EE2DB00332E9A /* CategoryCollectionViewCell.m */,
 				5466A49A200FAADF003F901A /* UserCollectionViewCell.h */,
 				5466A49B200FAADF003F901A /* UserCollectionViewCell.m */,
+				543043D420B2A5FB00018AF4 /* BannerCollectionView */,
 			);
 			name = Category;
 			sourceTree = "<group>";
@@ -2273,6 +2281,17 @@
 				54262AEC1FA86D38008ED59B /* VotingCollectionReusableView.m */,
 			);
 			name = "Voting Cell";
+			sourceTree = "<group>";
+		};
+		543043D420B2A5FB00018AF4 /* BannerCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				543043D220B2A5F600018AF4 /* BannerCollectionViewCell.h */,
+				543043D120B2A5F500018AF4 /* BannerCollectionViewCell.m */,
+				543043CF20B2A4FB00018AF4 /* BannerImageView.xib */,
+				543043CD20B2A4F400018AF4 /* YoutubePlayer.xib */,
+			);
+			name = BannerCollectionView;
 			sourceTree = "<group>";
 		};
 		543B11A12056197C00111102 /* MBProgressHUD */ = {
@@ -2558,13 +2577,6 @@
 				63C375BA1EB9B735000C7FC1 /* Creator Cell */,
 			);
 			name = CreaterVC;
-			sourceTree = "<group>";
-		};
-		54F777D120A96BBF00A6E195 /* Font Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Font Resources";
 			sourceTree = "<group>";
 		};
 		6304182A1EF9158C00132CE1 /* SetupMusicVC */ = {
@@ -3767,7 +3779,6 @@
 				9276DFAD1B72FDC000E6ACC9 /* Main.storyboard */,
 				63066ACB1E00F58B00014673 /* Home.storyboard */,
 				630848F51E4978D500CA40AF /* beep.mp3 */,
-				54F777D120A96BBF00A6E195 /* Font Resources */,
 				638F88B91E02458500316123 /* Image Resources */,
 				9276DFB21B72FDC000E6ACC9 /* LaunchScreen.xib */,
 				9276DFA31B72FDC000E6ACC9 /* Supporting Files */,
@@ -5068,6 +5079,7 @@
 				9222B2211BEC797400DF2CAD /* BookViewController.xib in Resources */,
 				92F89AFF1BBE73D400565908 /* render_3_3.png in Resources */,
 				54F777F820ABF1B600A6E195 /* Template.xcassets in Resources */,
+				543043D020B2A4FB00018AF4 /* BannerImageView.xib in Resources */,
 				922557841BDF7F7E00CD4E9B /* icon_uploadphoto@2x.png in Resources */,
 				927824031C45FC190063F82D /* 4-19icon_p.png in Resources */,
 				92D362F51BE06A640084C746 /* button_play@2x.png in Resources */,
@@ -5262,6 +5274,7 @@
 				92511A101CF5B2D0002D4678 /* button_track_zh-TW@2x.png in Resources */,
 				924A92D91BD4D8EB00E3D610 /* icon_phone@2x.png in Resources */,
 				927410661BD0DF2C0031460B /* icon_sep-up-photo@2x.png in Resources */,
+				543043CE20B2A4F500018AF4 /* YoutubePlayer.xib in Resources */,
 				9274104E1BD0B3DA0031460B /* icon_arrow@2x.png in Resources */,
 				637929E11D7BDBA100A26CA4 /* icon_selectcontribute_white_60x60.png in Resources */,
 				9200B1DB1C5B483A00996358 /* P02.png in Resources */,
@@ -5631,6 +5644,7 @@
 				6308C4521EAC9ADD00F99AC0 /* MeTabViewController.m in Sources */,
 				92CBCCA31BD78D5500F1F27A /* EditTopimageTableViewCell.m in Sources */,
 				5427BBD31F4FE237000B438D /* UIColor+HexString.m in Sources */,
+				543043D320B2A5F600018AF4 /* BannerCollectionViewCell.m in Sources */,
 				63B340E81EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m in Sources */,
 				92AE20ED1C0575DB0033C298 /* YoutubeViewController.m in Sources */,
 				63C8DA661E30F03A00AFBC2B /* RecentBrowseTableViewController.m in Sources */,
