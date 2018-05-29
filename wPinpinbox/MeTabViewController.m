@@ -49,6 +49,8 @@
 #import "MessageboardViewController.h"
 #import "UIColor+HexString.h"
 
+#import "CropImageViewController.h"
+
 #define kStatusHeight 20;
 #define kTopGapToHeashot 44
 #define kHeadhotHeight 96
@@ -59,7 +61,7 @@
 //static NSString *userIdSharingLink = @"http://www.pinpinbox.com/index/creative/content/?user_id=%@%@";
 static NSString *autoPlayStr = @"&autoplay=1";
 
-@interface MeTabViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, InfoEditViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MessageboardViewControllerDelegate>
+@interface MeTabViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, InfoEditViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MessageboardViewControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
     NSMutableArray *pictures;
     BOOL isLoading;
@@ -132,8 +134,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     //[self loadData];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     NSLog(@"");
     NSLog(@"MeTabViewController viewWillAppear");
     
@@ -149,12 +150,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
     BOOL isAlbumCreated = [[defaults objectForKey: @"createAlbum"] boolValue];
     BOOL isAlbumModified = [[defaults objectForKey: @"modifyAlbum"] boolValue];
     BOOL isAlbumPrivacyStatusChange = [[defaults objectForKey: @"privacyStatusChange"] boolValue];
+    BOOL isSetUserCover = [[defaults objectForKey: @"setUserCover"] boolValue];
     NSLog(@"isAlbumDeleted: %d", isAlbumDeleted);
     NSLog(@"isAlbumCreated: %d", isAlbumCreated);
     NSLog(@"isAlbumModified: %d", isAlbumModified);
     NSLog(@"isAlbumPrivacyStatusChange: %d", isAlbumPrivacyStatusChange);
+    NSLog(@"isSetUserCover: %d", isSetUserCover);
     
-    if (isAlbumDeleted || isAlbumCreated || isAlbumModified || isAlbumPrivacyStatusChange) {
+    if (isAlbumDeleted || isAlbumCreated || isAlbumModified || isAlbumPrivacyStatusChange || isSetUserCover) {
         [self refresh];
     } else {
         [self loadData];
@@ -931,7 +934,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
         headerView.coverImageView.image = [UIImage imageNamed: @"bg200_user_default"];
     } else {
         NSLog(@"cocer is not null");
-        [headerView.coverImageView sd_setImageWithURL: [NSURL URLWithString: self.userDic[@"cover"]]];
+//        [headerView.coverImageView sd_setImageWithURL: [NSURL URLWithString: self.userDic[@"cover"]]];
+        [headerView.coverImageView sd_setImageWithURL: [NSURL URLWithString: self.userDic[@"cover"]]
+                                     placeholderImage: [UIImage imageNamed: @"bg200_user_default"]];
     }
 //    headerView.coverImageHeightConstraint.constant = [self coverImageHeightCalculation];
 //    coverImageHeight = headerView.coverImageHeightConstraint.constant;
@@ -1401,8 +1406,29 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 //    NSLog(@"scrollView.contentSize.height: %f", scrollView.contentSize.height);
 //
 //    NSLog(@"isLoading: %d", isLoading);
-    
-    
+}
+
+- (IBAction)changeBannerBtnPressed:(id)sender {
+    NSLog(@"changeBannerBtnPressed");
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePicker.sourceType = sourceType;
+    imagePicker.delegate = self;
+    [self presentViewController: imagePicker animated: YES completion: nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    UIImage *toCropImage = info[UIImagePickerControllerOriginalImage];
+    [self cropImage: toCropImage];
+    [picker dismissViewControllerAnimated: YES completion: nil];
+}
+
+- (void)cropImage: (UIImage *)image {
+    CropImageViewController *cropImageViewController = [[CropImageViewController alloc] initWithNibName: @"CropImageViewController" bundle: nil];
+    cropImageViewController.image = image;
+    cropImageViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController: cropImageViewController animated: YES];
 }
 
 #pragma mark - IBAction Methods

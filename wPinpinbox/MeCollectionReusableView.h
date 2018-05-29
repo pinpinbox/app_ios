@@ -17,7 +17,7 @@ typedef void(^StackViewTouch)(BOOL selected, NSInteger tag);
 
 @property (weak, nonatomic) IBOutlet UIView *gradientView;
 
-@property (weak, nonatomic) IBOutlet UIButton *changeBtn;
+@property (weak, nonatomic) IBOutlet UIButton *changeBannerBtn;
 
 @property (weak, nonatomic) IBOutlet UIImageView *userPictureImageView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;

@@ -16,12 +16,11 @@
     NSLog(@"MeCollectionReusableView");
     NSLog(@"awakeFromNib");
     
-    self.changeBtn.hidden = YES;
-    
-    self.changeBtn.layer.cornerRadius = kCornerRadius;
-    self.changeBtn.layer.masksToBounds = YES;
-    [self.changeBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
-    self.changeBtn.backgroundColor = [UIColor thirdGrey];
+    self.changeBannerBtn.hidden = NO;
+    self.changeBannerBtn.layer.cornerRadius = kCornerRadius;
+    self.changeBannerBtn.layer.masksToBounds = YES;
+    [self.changeBannerBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
+    self.changeBannerBtn.backgroundColor = [UIColor thirdGrey];
     
     self.userPictureImageView.layer.cornerRadius = self.userPictureImageView.bounds.size.height / 2;
     self.userPictureImageView.layer.masksToBounds = YES;

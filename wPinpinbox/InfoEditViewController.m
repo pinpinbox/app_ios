@@ -804,7 +804,6 @@
                 return;
             }
             
-            
             if (response != nil) {
                 NSLog(@"response from updateProfilePic");
                 
@@ -855,6 +854,13 @@
     NSLog(@"presentViewController");
 }
 
+#pragma mark - PhotoViewsController Delegate Method
+- (void)imageCropViewController:(PhotosViewController *)controller Image:(UIImage *)Image
+{
+    selectImage = Image;
+    self.headshotImageView.image = selectImage;
+}
+
 #pragma mark - checkPointTask
 - (void)checkPointTask
 {
@@ -884,13 +890,6 @@
         [defaults setObject: editProfile forKey: @"editProfile"];
         [defaults synchronize];
     }
-}
-
-#pragma mark - PhotoViewsController Delegate Method
-- (void)imageCropViewController:(PhotosViewController *)controller Image:(UIImage *)Image
-{
-    selectImage = Image;
-    self.headshotImageView.image = selectImage;
 }
 
 #pragma mark -
@@ -957,7 +956,6 @@ shouldChangeTextInRange:(NSRange)range
 }
 
 #pragma mark - UITextField Delegate Methods
-
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     NSLog(@"textFieldDidBeginEditing");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];

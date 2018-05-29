@@ -346,6 +346,11 @@ static NSString *version = @"";
              token:(NSString *)token
             userId:(NSString *)userId;
 
+// 101
++ (NSString *)setUserCover:(UIImage *)image
+                     token:(NSString *)token
+                    userId:(NSString *)userId;
+
 #pragma mark - Get CategoryArea
 // 102
 + (NSString *)getCategoryArea:(NSString *)categoryAreaId

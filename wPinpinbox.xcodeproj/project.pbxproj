@@ -34,6 +34,11 @@
 		543043CE20B2A4F500018AF4 /* YoutubePlayer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 543043CD20B2A4F400018AF4 /* YoutubePlayer.xib */; };
 		543043D020B2A4FB00018AF4 /* BannerImageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 543043CF20B2A4FB00018AF4 /* BannerImageView.xib */; };
 		543043D320B2A5F600018AF4 /* BannerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 543043D120B2A5F500018AF4 /* BannerCollectionViewCell.m */; };
+		5430446420B8121900018AF4 /* TKImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5430446320B8121900018AF4 /* TKImageView.m */; };
+		5430446C20B8129600018AF4 /* CropImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5430446620B8129200018AF4 /* CropImageViewController.xib */; };
+		5430446D20B8129600018AF4 /* CropResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5430446820B8129300018AF4 /* CropResultViewController.m */; };
+		5430446E20B8129600018AF4 /* CropImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5430446920B8129400018AF4 /* CropImageViewController.m */; };
+		5430446F20B8129600018AF4 /* CropResultViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5430446A20B8129500018AF4 /* CropResultViewController.xib */; };
 		54331A9A1FE4ED90005E6ACE /* NotifTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54331A991FE4ED90005E6ACE /* NotifTab.storyboard */; };
 		54331A9C1FE4EDF8005E6ACE /* MeTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54331A9B1FE4EDF8005E6ACE /* MeTab.storyboard */; };
 		54331A9E1FE4F1F1005E6ACE /* SearchTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54331A9D1FE4F1F1005E6ACE /* SearchTab.storyboard */; };
@@ -877,6 +882,14 @@
 		543043CF20B2A4FB00018AF4 /* BannerImageView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BannerImageView.xib; sourceTree = "<group>"; };
 		543043D120B2A5F500018AF4 /* BannerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BannerCollectionViewCell.m; sourceTree = "<group>"; };
 		543043D220B2A5F600018AF4 /* BannerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BannerCollectionViewCell.h; sourceTree = "<group>"; };
+		5430446220B8121800018AF4 /* TKImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TKImageView.h; sourceTree = "<group>"; };
+		5430446320B8121900018AF4 /* TKImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TKImageView.m; sourceTree = "<group>"; };
+		5430446620B8129200018AF4 /* CropImageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CropImageViewController.xib; sourceTree = "<group>"; };
+		5430446720B8129200018AF4 /* CropResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CropResultViewController.h; sourceTree = "<group>"; };
+		5430446820B8129300018AF4 /* CropResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CropResultViewController.m; sourceTree = "<group>"; };
+		5430446920B8129400018AF4 /* CropImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CropImageViewController.m; sourceTree = "<group>"; };
+		5430446A20B8129500018AF4 /* CropResultViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CropResultViewController.xib; sourceTree = "<group>"; };
+		5430446B20B8129600018AF4 /* CropImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CropImageViewController.h; sourceTree = "<group>"; };
 		54331A991FE4ED90005E6ACE /* NotifTab.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NotifTab.storyboard; sourceTree = "<group>"; };
 		54331A9B1FE4EDF8005E6ACE /* MeTab.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MeTab.storyboard; sourceTree = "<group>"; };
 		54331A9D1FE4F1F1005E6ACE /* SearchTab.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SearchTab.storyboard; sourceTree = "<group>"; };
@@ -2294,6 +2307,35 @@
 			name = BannerCollectionView;
 			sourceTree = "<group>";
 		};
+		5430446520B8122600018AF4 /* TKImageView */ = {
+			isa = PBXGroup;
+			children = (
+				5430446220B8121800018AF4 /* TKImageView.h */,
+				5430446320B8121900018AF4 /* TKImageView.m */,
+			);
+			name = TKImageView;
+			sourceTree = "<group>";
+		};
+		543A03F920BBEE1900CD1CA4 /* CropImageVC */ = {
+			isa = PBXGroup;
+			children = (
+				5430446B20B8129600018AF4 /* CropImageViewController.h */,
+				5430446920B8129400018AF4 /* CropImageViewController.m */,
+				5430446620B8129200018AF4 /* CropImageViewController.xib */,
+			);
+			name = CropImageVC;
+			sourceTree = "<group>";
+		};
+		543A03FA20BBEE2500CD1CA4 /* CropResultVC */ = {
+			isa = PBXGroup;
+			children = (
+				5430446720B8129200018AF4 /* CropResultViewController.h */,
+				5430446820B8129300018AF4 /* CropResultViewController.m */,
+				5430446A20B8129500018AF4 /* CropResultViewController.xib */,
+			);
+			name = CropResultVC;
+			sourceTree = "<group>";
+		};
 		543B11A12056197C00111102 /* MBProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -2643,6 +2685,8 @@
 				6308C4501EAC9ADD00F99AC0 /* MeTabViewController.h */,
 				6308C4511EAC9ADD00F99AC0 /* MeTabViewController.m */,
 				54331A9B1FE4EDF8005E6ACE /* MeTab.storyboard */,
+				543A03F920BBEE1900CD1CA4 /* CropImageVC */,
+				543A03FA20BBEE2500CD1CA4 /* CropResultVC */,
 				630E1A5D1EC00F14003FE76A /* Me Cell */,
 				54E6EA7C20A0509B00DA7D99 /* FollowFromListVC */,
 				544FBEE6208D98B700681097 /* SponsorList */,
@@ -4091,6 +4135,7 @@
 				54E00F121FF39B6D007881ED /* customLayout.m */,
 				54A857542008BC3400D87843 /* LabelAttributeStyle.h */,
 				54A857532008BC3200D87843 /* LabelAttributeStyle.m */,
+				5430446520B8122600018AF4 /* TKImageView */,
 				54933AD6207F4A30001582C3 /* MintAnnotationView */,
 				543B11A4205619A900111102 /* ZOZolaZoomTransition */,
 				54AFF4441F84918C00222CEF /* FLAnimatedImage */,
@@ -5273,6 +5318,7 @@
 				636349121F33D12400B17183 /* DDAUIActionSheetViewController.xib in Resources */,
 				92511A101CF5B2D0002D4678 /* button_track_zh-TW@2x.png in Resources */,
 				924A92D91BD4D8EB00E3D610 /* icon_phone@2x.png in Resources */,
+				5430446F20B8129600018AF4 /* CropResultViewController.xib in Resources */,
 				927410661BD0DF2C0031460B /* icon_sep-up-photo@2x.png in Resources */,
 				543043CE20B2A4F500018AF4 /* YoutubePlayer.xib in Resources */,
 				9274104E1BD0B3DA0031460B /* icon_arrow@2x.png in Resources */,
@@ -5379,6 +5425,7 @@
 				925119721CEF0001002D4678 /* CalbumV2.xib in Resources */,
 				927410511BD0B3DA0031460B /* icon_password@2x.png in Resources */,
 				54F777E220ABE38100A6E195 /* AlbumDetail.xcassets in Resources */,
+				5430446C20B8129600018AF4 /* CropImageViewController.xib in Resources */,
 				925119121CEAF63E002D4678 /* TERMSViewController.xib in Resources */,
 				9222B22E1BEC887200DF2CAD /* 3-10bg@2x.png in Resources */,
 				925119ED1CF57E99002D4678 /* Hobby_lang.plist in Resources */,
@@ -5431,9 +5478,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh",
+				"${PODS_ROOT}/PEPhotoCropEditor/Resources/PEPhotoCropEditor.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -5506,6 +5556,7 @@
 				630D31E51E531C42001506EE /* NSMutableArray+Reverse.m in Sources */,
 				6308C44C1EAC9AC300F99AC0 /* SearchTabViewController.m in Sources */,
 				6318800E1EC4135B00B8CB4F /* SearchTabCollectionViewCell.m in Sources */,
+				5430446E20B8129600018AF4 /* CropImageViewController.m in Sources */,
 				63378A401E012DB600532443 /* MyTabBarController.m in Sources */,
 				54B783B0200DA6A600122CBE /* CategoryTableViewCell.m in Sources */,
 				54C198F81F6EBFED0063F7D6 /* FRHyperLabel.m in Sources */,
@@ -5693,6 +5744,7 @@
 				9276DFA91B72FDC000E6ACC9 /* AppDelegate.m in Sources */,
 				929C79471BD8D6C70093E65E /* RecommendViewController.m in Sources */,
 				92F6CCDE1B79AB9F002E547C /* RSKImageCropViewController.m in Sources */,
+				5430446D20B8129600018AF4 /* CropResultViewController.m in Sources */,
 				6308C4331EAB4AE700F99AC0 /* HomeTabViewController.m in Sources */,
 				922A4B131BD645FB006D5A36 /* MemberTextTableViewCell.m in Sources */,
 				630BE4791E8A8D2A007C4810 /* YTVimeoURLParser.m in Sources */,
@@ -5744,6 +5796,7 @@
 				9204B6191C75CF32005C6E82 /* BookedtQRViewController.m in Sources */,
 				6381289B1DFFCEAF00605466 /* MKDropdownMenu.m in Sources */,
 				634B60411F3484AD00C776E0 /* FXBlurView.m in Sources */,
+				5430446420B8121900018AF4 /* TKImageView.m in Sources */,
 				635775DA1ED3ECFB00637914 /* RecentBrowsingViewController.m in Sources */,
 				92A384A01CFD786A00C1CDBC /* OfflineViewController.m in Sources */,
 				92F68D061BE9BCD80085D748 /* SHViewPagerController.m in Sources */,

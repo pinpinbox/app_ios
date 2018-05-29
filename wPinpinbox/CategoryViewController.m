@@ -484,16 +484,10 @@ heightForHeaderInSection:(NSInteger)section {
     NSLog(@"heightForHeaderInSection");
     
     if (self.bannerDataArray.count > 0) {
-        return 150;
+        return 180;
     } else {
         return 45;
     }
-    
-    // Without BannerCollectionView
-//    return 45;
-    
-    // With BannerCollectionView
-    return 150;
 }
 
 - (UIView *)tableView:(UITableView *)tableView
@@ -503,22 +497,22 @@ viewForHeaderInSection:(NSInteger)section {
     MyLinearLayout *bannerVertLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
     bannerVertLayout.myTopMargin = 0;
     bannerVertLayout.myLeftMargin = bannerVertLayout.myRightMargin = 0;
-    bannerVertLayout.myBottomMargin = 0;
+//    bannerVertLayout.myBottomMargin = 0;
 //    bannerVertLayout.backgroundColor = [UIColor blueColor];
 //    bannerVertLayout.wrapContentHeight = YES;
     
     // The height should be the same as heightForHeaderInSection
     
     if (self.bannerDataArray.count > 0) {
-        bannerVertLayout.heightDime.max(150);
+        bannerVertLayout.heightDime.max(180);
         
         // Horizontal CollectionView Setting
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        layout.itemSize = CGSizeMake(self.view.bounds.size.width, 200);
+        layout.itemSize = CGSizeMake(self.view.bounds.size.width, 180);
         layout.minimumLineSpacing = 0;
         
-        collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, 200) collectionViewLayout: layout];
+        collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, 180) collectionViewLayout: layout];
         collectionView.myTopMargin = 0;
         collectionView.myBottomMargin = 8;
         collectionView.myLeftMargin = collectionView.myRightMargin = 0;
@@ -534,7 +528,8 @@ viewForHeaderInSection:(NSInteger)section {
         collectionView.showsHorizontalScrollIndicator = NO;
         [bannerVertLayout addSubview: collectionView];
         
-        pageControl = [[UIPageControl alloc] init];
+        pageControl = [[UIPageControl alloc] initWithFrame: CGRectMake(0, 0, 50, 30)];
+        pageControl.myCenterXOffset = 0;
         pageControl.myTopMargin = pageControl.myBottomMargin = 8;
         pageControl.numberOfPages = self.bannerDataArray.count;
         pageControl.pageIndicatorTintColor = [UIColor secondGrey];
@@ -548,7 +543,7 @@ viewForHeaderInSection:(NSInteger)section {
     MyRelativeLayout *headerHorzLayout = [MyRelativeLayout new];
     headerHorzLayout.myTopMargin = 8;
     headerHorzLayout.myLeftMargin = headerHorzLayout.myRightMargin = 0;
-    headerHorzLayout.myBottomMargin = 32;
+    headerHorzLayout.myBottomMargin = 0;
     headerHorzLayout.wrapContentHeight = YES;
 //    headerHorzLayout.backgroundColor = [UIColor redColor];
     

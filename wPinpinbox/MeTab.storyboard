@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="a7l-EA-aN9">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="a7l-EA-aN9">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -162,6 +162,9 @@
                                             <state key="normal" title="變更">
                                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
+                                            <connections>
+                                                <action selector="changeBannerBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="fMG-u5-EPD"/>
+                                            </connections>
                                         </button>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="KSw-hv-jjS">
                                             <rect key="frame" x="116.5" y="208" width="87" height="32"/>
@@ -493,7 +496,7 @@
                                     </constraints>
                                     <connections>
                                         <outlet property="albumCollectionLabel" destination="sjY-y2-MQD" id="4tb-dm-Gdy"/>
-                                        <outlet property="changeBtn" destination="8hF-a8-3jh" id="CHH-NX-gEc"/>
+                                        <outlet property="changeBannerBtn" destination="8hF-a8-3jh" id="qRd-my-w2V"/>
                                         <outlet property="coverImageBgVHeightConstraint" destination="wac-0W-lgr" id="tkr-X6-d6I"/>
                                         <outlet property="coverImageView" destination="LSg-tj-4LZ" id="yXp-Wy-UEX"/>
                                         <outlet property="creativeNameLabel" destination="Lg3-xL-gqM" id="8U8-Y7-QjZ"/>

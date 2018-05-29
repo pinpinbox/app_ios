@@ -2285,6 +2285,132 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnStr;
 }
 
+// 101
+#pragma mark - Set User Cover
+#pragma mark  updataimage
++ (NSString *)setUserCover:(UIImage *)image
+                     token:(NSString *)token
+                    userId:(NSString *)userId
+{
+    NSLog(@"");
+    NSLog(@"setUserCover");
+    NSLog(@"userId: %@", userId);
+    
+    // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
+    NSMutableDictionary *_params = [[NSMutableDictionary alloc] init];
+    [_params setObject: userId forKey:@"user_id"];
+    [_params setObject: token forKey:@"token"];
+    [_params setObject: [self signGenerator2:_params] forKey:@"sign"];
+    
+    // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
+    NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
+    
+    // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
+    NSString* FileParamConstant = @"file";
+    
+    // the server url to which the image (or the media) is uploaded. Use your server url here
+    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/setusercover",@"/2.0"]];
+    
+    // create request
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval: [kTimeOut floatValue]];
+    [request setHTTPMethod:@"POST"];
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    
+    NSLog(@"_params: %@", _params);
+    
+    // add params (all params are strings)
+    for (NSString *param in _params) {
+        NSLog(@"");
+        NSLog(@"param: %@", param);
+        
+        // start tag
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", param] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        // end tag
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [_params objectForKey:param]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    // add image data
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+    
+    if (imageData) {
+        // start tag
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"image.jpg\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:imageData];
+        
+        // end tag
+        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    // close form
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // setting the body of the post to the reqeust
+    [request setHTTPBody:body];
+    
+    // set the content-length
+    NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+    
+    // set HTTP_ACCEPT_LANGUAGE in HTTP Header
+    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
+    
+    // set URL
+    [request setURL:requestURL];
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block NSString *str;
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.timeoutIntervalForRequest = 60;
+    config.timeoutIntervalForResource = 60;
+    NSURLSession *session = [NSURLSession sessionWithConfiguration: config];
+    
+    NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        NSLog(@"setusercover");
+        
+        if (error == nil) {
+            str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+            NSLog(@"str: %@", str);
+        } else {
+            NSLog(@"error: %@", error);
+            NSLog(@"error.userInfo: %@", error.userInfo);
+            NSLog(@"error.localizedDescription: %@", error.localizedDescription);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+        }
+        
+        /*
+         if (data) {
+         str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
+         
+         NSLog(@"str: %@", str);
+         } else {
+         NSLog(@"error :%@", error);
+         }
+         */
+        dispatch_semaphore_signal(semaphore);
+    }];
+    NSLog(@"task resume");
+    [task resume];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return str;
+}
+
 #pragma mark - Get Category Area
 + (NSString *)getCategoryArea:(NSString *)categoryAreaId
                         token:(NSString *)token
@@ -2477,7 +2603,9 @@ static NSString *hostURL = @"www.pinpinbox.com";
 }
 
 #pragma mark  updataimage
-+ (NSString *)updateProfilePic:(NSString *)userId token:(NSString *)token image:(UIImage *)image
++ (NSString *)updateProfilePic:(NSString *)userId
+                         token:(NSString *)token
+                         image:(UIImage *)image
 {
     NSLog(@"");
     NSLog(@"updateProfilePic");
