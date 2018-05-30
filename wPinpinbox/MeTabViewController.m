@@ -214,6 +214,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 self.navBarHeight.constant = 48;
                 self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
                 break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                self.navBarHeight.constant = 48;
+                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+                break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 self.navBarHeight.constant = 48;
@@ -309,7 +314,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [data setValue: limit forKey: @"limit"];
     [data setObject: [wTools getUserID] forKey: @"authorid"];
     
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI getcreative:[wTools getUserID]
                                            token:[wTools getUserToken]
                                             data:data];
@@ -425,7 +430,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         return;
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getprofile: [userPrefs objectForKey: @"id"] token: [userPrefs objectForKey: @"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -569,7 +574,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         return;
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
         NSString *response = [boxAPI doTask1: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_edit_profile" platform: @"apple"];
         
@@ -659,7 +664,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         return;
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
                                            token: [userPrefs objectForKey:@"token"]];
         

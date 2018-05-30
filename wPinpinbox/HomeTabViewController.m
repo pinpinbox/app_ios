@@ -239,7 +239,38 @@
     
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.collectionView.collectionViewLayout;
     
-    self.jccLayout.headerHeight = 362.0f;
+    CGFloat headerHeight = 0;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                headerHeight = 350.0f;
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                headerHeight = 380.0f;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                headerHeight = 380.0f;
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                headerHeight = 380.0f;
+                break;
+            case 2436:
+                printf("iPhone X");
+                headerHeight = 370.0f;
+                break;
+            default:
+                printf("unknown");
+                headerHeight = 380.0f;
+                break;
+        }
+    }
+    
+    self.jccLayout.headerHeight = headerHeight;
     self.jccLayout.footerHeight = 0.0f;
     
     // Central Button
@@ -1337,6 +1368,13 @@
     NSLog(@"viewForSupplementaryElementOfKind");
     
     HomeDataCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
+
+//    NSLog(@"headerView.homeBannerCollectionView.bounds.size.width: %f", headerView.homeBannerCollectionView.bounds.size.width);
+//    NSLog(@"headerView.homeBannerCollectionView.bounds.size.height: %f", headerView.homeBannerCollectionView.bounds.size.height);
+//    
+//    headerView.homeBannerCollectionViewHeight.constant = headerView.homeBannerCollectionView.bounds.size.height * (380 / 992);
+//    NSLog(@"headerView.homeBannerCollectionViewHeight: %f", headerView.homeBannerCollectionViewHeight.constant);
+//    NSLog(@"headerView.homeBannerCollectionView.bounds.size.height: %f", headerView.homeBannerCollectionView.bounds.size.height);
     
     self.pageControl = headerView.pageControl;
     
@@ -1853,7 +1891,10 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
         return finalSize;
     } else if (collectionView.tag == 2){
         CGFloat bannerWidth = [UIScreen mainScreen].bounds.size.width - 32;
-        return CGSizeMake(bannerWidth, 142);
+        NSLog(@"bannerWidth: %f", bannerWidth);
+        CGFloat bannerHeight = bannerWidth * 380 / 960;
+        NSLog(@"bannerHeight: %f", bannerHeight);
+        return CGSizeMake(bannerWidth, bannerHeight);
     } else {
         return CGSizeMake(112.0, 48.0);
     }

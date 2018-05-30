@@ -11,7 +11,6 @@
 @interface HomeDataCollectionReusableView : UICollectionReusableView
 
 @property (weak, nonatomic) IBOutlet UICollectionView *homeBannerCollectionView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *homeBannerCollectionViewHeight;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) IBOutlet UICollectionView *categoryCollectionView;
 

@@ -956,6 +956,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 printf("iPhone 6/6S/7/8");
                 topMargin = 20;
                 break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                topMargin = 20;
+                break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 topMargin = 20;

@@ -126,6 +126,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 self.navBarHeight.constant = 48;
                 self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
                 break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                self.navBarHeight.constant = 48;
+                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+                break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 self.navBarHeight.constant = 48;

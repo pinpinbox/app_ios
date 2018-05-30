@@ -2386,10 +2386,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
             str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
             NSLog(@"str: %@", str);
         } else {
+            str = [NSString stringWithFormat: @"%d", error.code];
             NSLog(@"error: %@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%d", error.code]);
         }
         
         /*
@@ -2691,7 +2692,6 @@ static NSString *hostURL = @"www.pinpinbox.com";
     NSURLSession *session = [NSURLSession sessionWithConfiguration: config];
     
     NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
         NSLog(@"updateProfilePic");
         
         if (error == nil) {
@@ -2701,7 +2701,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
             NSLog(@"error: %@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%d", error.code]);
         }
         
         /*

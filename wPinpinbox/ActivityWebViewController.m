@@ -82,6 +82,11 @@
                     offset = 60;
                     webViewHeight = frame.size.height - 60;
                     break;
+                case 1920:
+                    printf("iPhone 6+/6S+/7+/8+");
+                    offset = 60;
+                    webViewHeight = frame.size.height - 60;
+                    break;
                 case 2208:
                     printf("iPhone 6+/6S+/7+/8+");
                     offset = 60;

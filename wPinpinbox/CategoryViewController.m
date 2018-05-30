@@ -37,6 +37,8 @@
     UICollectionView *collectionView;
     UIPageControl *pageControl;
     MyLinearLayout *bannerVertLayout;
+    
+    CGFloat bannerHeight;
 }
 //@property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (nonatomic, strong) NSString *categoryName;
@@ -87,6 +89,11 @@
 
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");
+    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+    NSLog(@"screenWidth: %f", screenWidth);
+    bannerHeight = screenWidth * 540 / 960;
+    NSLog(@"bannerHeight: %f", bannerHeight);
+    
     self.navBarView.backgroundColor = [UIColor barColor];
     self.tableView.showsVerticalScrollIndicator = NO;
 //    self.navBarView.myLeftMargin = self.navBarView.myRightMargin = 0;
@@ -231,6 +238,9 @@
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
                 break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
@@ -482,11 +492,45 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 heightForHeaderInSection:(NSInteger)section {
     NSLog(@"");
     NSLog(@"heightForHeaderInSection");
+    NSLog(@"bannerHeight: %f", bannerHeight);
+    
+    CGFloat heightForHeader = 0;
+    
+    NSLog(@"[[UIScreen mainScreen] nativeBounds].size.height: %f", [[UIScreen mainScreen] nativeBounds].size.height);
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                heightForHeader = 150;
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                heightForHeader = 160;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                heightForHeader = 175;
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                heightForHeader = 175;
+                break;
+            case 2436:
+                printf("iPhone X");
+                heightForHeader = 165;
+                break;
+            default:
+                printf("unknown");
+                heightForHeader = 175;
+                break;
+        }
+    }
     
     if (self.bannerDataArray.count > 0) {
-        return 180;
+        return heightForHeader;
     } else {
-        return 45;
+        return 40;
     }
 }
 
@@ -495,24 +539,24 @@ viewForHeaderInSection:(NSInteger)section {
     NSLog(@"");
     NSLog(@"viewForHeaderInSection");
     MyLinearLayout *bannerVertLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
+    bannerVertLayout.wrapContentHeight = YES;
     bannerVertLayout.myTopMargin = 0;
     bannerVertLayout.myLeftMargin = bannerVertLayout.myRightMargin = 0;
-//    bannerVertLayout.myBottomMargin = 0;
-//    bannerVertLayout.backgroundColor = [UIColor blueColor];
-//    bannerVertLayout.wrapContentHeight = YES;
+    bannerVertLayout.myBottomMargin = 0;
     
-    // The height should be the same as heightForHeaderInSection
+    NSLog(@"bannerHeight: %f", bannerHeight);
     
     if (self.bannerDataArray.count > 0) {
-        bannerVertLayout.heightDime.max(180);
+        NSLog(@"bannerHeight: %f", bannerHeight);
+        bannerVertLayout.heightDime.max(160);
         
         // Horizontal CollectionView Setting
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        layout.itemSize = CGSizeMake(self.view.bounds.size.width, 180);
+        layout.itemSize = CGSizeMake(self.view.bounds.size.width, bannerHeight);
         layout.minimumLineSpacing = 0;
         
-        collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, 180) collectionViewLayout: layout];
+        collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, bannerHeight) collectionViewLayout: layout];
         collectionView.myTopMargin = 0;
         collectionView.myBottomMargin = 8;
         collectionView.myLeftMargin = collectionView.myRightMargin = 0;
@@ -528,29 +572,22 @@ viewForHeaderInSection:(NSInteger)section {
         collectionView.showsHorizontalScrollIndicator = NO;
         [bannerVertLayout addSubview: collectionView];
         
-        pageControl = [[UIPageControl alloc] initWithFrame: CGRectMake(0, 0, 50, 30)];
+        pageControl = [[UIPageControl alloc] initWithFrame: CGRectMake(0, 0, 50, 10)];
         pageControl.myCenterXOffset = 0;
-        pageControl.myTopMargin = pageControl.myBottomMargin = 8;
+        pageControl.myTopMargin = 4;
+        pageControl.myBottomMargin = 16;
         pageControl.numberOfPages = self.bannerDataArray.count;
         pageControl.pageIndicatorTintColor = [UIColor secondGrey];
         pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
         pageControl.userInteractionEnabled = NO;
         [bannerVertLayout addSubview: pageControl];
     } else {
-        bannerVertLayout.heightDime.max(45);
+        bannerVertLayout.heightDime.max(40);
     }
-    
-    MyRelativeLayout *headerHorzLayout = [MyRelativeLayout new];
-    headerHorzLayout.myTopMargin = 8;
-    headerHorzLayout.myLeftMargin = headerHorzLayout.myRightMargin = 0;
-    headerHorzLayout.myBottomMargin = 0;
-    headerHorzLayout.wrapContentHeight = YES;
-//    headerHorzLayout.backgroundColor = [UIColor redColor];
     
     UILabel *topicLabel = [UILabel new];
     topicLabel.myTopMargin = 0;
     topicLabel.myLeftMargin = 16;
-    topicLabel.myRightMargin = 0.5;
     
     if (self.categoryName == nil) {
         self.categoryName = @"";
@@ -560,34 +597,11 @@ viewForHeaderInSection:(NSInteger)section {
     [LabelAttributeStyle changeGapString: topicLabel content: self.categoryName];
     topicLabel.font = [UIFont boldSystemFontOfSize: 48];
     [topicLabel sizeToFit];
-    [headerHorzLayout addSubview: topicLabel];
+    [bannerVertLayout addSubview: topicLabel];
     
-    /*
-    if (![self.categoryAreaId isEqualToString: @"-1"]) {
-        UIButton *btn = [UIButton buttonWithType: UIButtonTypeCustom];
-        [btn setTitle: @"全部" forState: UIControlStateNormal];
-        [LabelAttributeStyle changeGapString: btn.titleLabel content: @"全部"];
-        btn.titleLabel.font = [UIFont boldSystemFontOfSize: 18];
-        [btn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
-        btn.myRightMargin = 16;
-        btn.frame = CGRectMake(0, 0, 40, 40);
-        btn.bottomPos.equalTo(topicLabel.bottomPos);
-        
-        [btn addTarget: self action: @selector(toCategoryDetailVC) forControlEvents: UIControlEventTouchUpInside];
-        //btn.backgroundColor = [UIColor greenColor];
-        //[btn sizeToFit];
-        [headerHorzLayout addSubview: btn];
-    }
-     */
-    
-    [headerHorzLayout sizeToFit];
-//    self.tableView.tableHeaderView = headerHorzLayout;
-//    return headerHorzLayout;
-    
-    [bannerVertLayout addSubview: headerHorzLayout];
     [bannerVertLayout sizeToFit];
-    
     self.tableView.tableHeaderView = bannerVertLayout;
+    
     return bannerVertLayout;
 }
 
@@ -826,7 +840,38 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     BannerCollectionViewCell *cell = collectionView.visibleCells[0];
     
-    if (scrollView.contentOffset.y != -48) {
+    CGFloat yAxis = 0;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                yAxis = -48;
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                yAxis = -48;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                yAxis = -48;
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                yAxis = -48;
+                break;
+            case 2436:
+                printf("iPhone X");
+                yAxis = -72;
+                break;
+            default:
+                printf("unknown");
+                yAxis = -48;
+                break;
+        }
+    }
+    
+    if (scrollView.contentOffset.y != yAxis) {
         [cell.playerView stopVideo];
     }
     
@@ -876,14 +921,57 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
-- (void)playerView:(YTPlayerView *)playerView didChangeToState:(YTPlayerState)state {
+- (void)playerView:(YTPlayerView *)playerView
+  didChangeToState:(YTPlayerState)state {
     NSLog(@"didChangeToState");
     NSLog(@"state: %ld", (long)state);
     
     NSLog(@"self.tableView.contentOffset.y: %f", self.tableView.contentOffset.y);
     
+//    kYTPlayerStateUnstarted,
+//    kYTPlayerStateEnded,
+//    kYTPlayerStatePlaying,
+//    kYTPlayerStatePaused,
+//    kYTPlayerStateBuffering,
+//    kYTPlayerStateQueued,
+//    kYTPlayerStateUnknown
+    
+    // state == 2 -> kYTPlayerStatePlaying
     if (state == 2) {
-        if (self.tableView.contentOffset.y > -72) {
+        CGFloat yAxis = 0;
+        
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+                case 1136:
+                    printf("iPhone 5 or 5S or 5C");
+                    yAxis = -48;
+                    break;
+                case 1334:
+                    printf("iPhone 6/6S/7/8");
+                    yAxis = -48;
+                    break;
+                case 1920:
+                    printf("iPhone 6+/6S+/7+/8+");
+                    yAxis = -48;
+                    break;
+                case 2208:
+                    printf("iPhone 6+/6S+/7+/8+");
+                    yAxis = -48;
+                    break;
+                case 2436:
+                    printf("iPhone X");
+                    yAxis = -72;
+                    break;
+                default:
+                    printf("unknown");
+                    yAxis = -48;
+                    break;
+            }
+        }
+        
+        // Meaning user scrolls down, video will be stopped
+        // Video only plays when y axis is the original value
+        if (self.tableView.contentOffset.y > yAxis) {
             [playerView stopVideo];
         }
     }

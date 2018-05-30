@@ -72,32 +72,7 @@
     NSLog(@"selectArray: %@", selectArray);
     
     //self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
-    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    
-//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-//            case 1136:
-//                printf("iPhone 5 or 5S or 5C");
-//                self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-//                break;
-//            case 1334:
-//                printf("iPhone 6/6S/7/8");
-//                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
-//                break;
-//            case 2208:
-//                printf("iPhone 6+/6S+/7+/8+");
-//                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
-//                break;
-//            case 2436:
-//                printf("iPhone X");
-//                self.collectionView.contentInset = UIEdgeInsetsMake(50, 0, 0, 0);
-//                break;
-//            default:
-//                printf("unknown");
-//                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
-//                break;
-//        }
-//    }
+    self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);    
     
     [self getHobbyList];
 }

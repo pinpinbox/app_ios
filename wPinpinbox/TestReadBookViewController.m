@@ -419,50 +419,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-/*
-- (void)setupFrameForDifferentDevice {
-    NSLog(@"setupFrameForDifferentDevice");
-    NSLog(@"Screen Bounds: %@", NSStringFromCGRect([UIScreen mainScreen].bounds));
-    NSLog(@"showview: %@", showview);
-    NSLog(@"self.mySV: %@", self.mySV);
-    
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-            case 1136:
-                printf("iPhone 5 or 5S or 5C");
-                self.textAndImageVertLayout.myBottomMargin = 0;
-                break;
-            case 1334:
-                printf("iPhone 6/6S/7/8");
-                self.textAndImageVertLayout.myBottomMargin = 0;
-                break;
-            case 2208:
-                printf("iPhone 6+/6S+/7+/8+");
-                self.textAndImageVertLayout.myBottomMargin = 0;
-                break;
-            case 2436:
-            {
-                printf("iPhone X");
-                
-                showview.frame = CGRectMake(0, 20, 375, 758);
-                self.mySV.frame = CGRectMake(0, 0, 375, 758);
-                
-                CGSize oldSize = self.mySV.contentSize;
-                oldSize.height = 647;
-                self.mySV.contentSize = oldSize;
-                
-                self.textAndImageVertLayout.myBottomMargin = 40;
-            }
-                break;
-            default:
-                printf("unknown");
-                self.textAndImageVertLayout.myBottomMargin = 0;
-                break;
-        }
-    }
-}
-*/
-
 #pragma mark - View Related Methods
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -4423,6 +4379,10 @@ replacementString:(NSString *)string
                 printf("iPhone 6/6S/7/8");
                 self.textAndImageVertLayout.myBottomMargin = 0;
                 break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                self.textAndImageVertLayout.myBottomMargin = 0;
+                break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 self.textAndImageVertLayout.myBottomMargin = 0;
@@ -6257,6 +6217,10 @@ replacementString:(NSString *)string
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
+                screenViewHeight -= x;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
                 screenViewHeight -= x;
                 break;
             case 2208:

@@ -112,7 +112,7 @@
     UIImage *image = [self imageWithImage: [_tkImageView currentCroppedImage] scaledToSize: CGSizeMake(960.0, 450.0) compressionQuality: 0.1];
     NSLog(@"image: %@", image);
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI setUserCover: image
                                             token: [wTools getUserToken]
                                            userId: [wTools getUserID]];
@@ -305,8 +305,8 @@
         
         if (buttonIndex == 0) {
         } else {
-            if ([protocolName isEqualToString: @""]) {
-                
+            if ([protocolName isEqualToString: @"setUserCover"]) {
+                [weakSelf setUserCover];
             }
         }
     }];

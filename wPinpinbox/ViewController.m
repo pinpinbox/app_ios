@@ -193,6 +193,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 printf("iPhone 6/6S/7/8");
                 image = [UIImage imageNamed: @"BlankImage4.7"];
                 break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                image = [UIImage imageNamed: @"BlankImage5.5"];
+                break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 image = [UIImage imageNamed: @"BlankImage5.5"];

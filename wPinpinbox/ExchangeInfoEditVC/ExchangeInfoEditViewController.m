@@ -127,6 +127,10 @@
                 printf("iPhone 6/6S/7/8");
                 bottomPadding = 68.0;
                 break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                bottomPadding = 68.0;
+                break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 bottomPadding = 68.0;
@@ -385,6 +389,10 @@
                 printf("iPhone 6/6S/7/8");
                 navBarHeight = 64.0;
                 break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                navBarHeight = 64.0;
+                break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 navBarHeight = 64.0;
@@ -454,6 +462,10 @@
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
+                bottomBarHeight = 68.0;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
                 bottomBarHeight = 68.0;
                 break;
             case 2208:
@@ -1161,6 +1173,10 @@
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
+                bottomPadding = 68.0;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
                 bottomPadding = 68.0;
                 break;
             case 2208:

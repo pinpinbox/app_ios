@@ -216,6 +216,9 @@
             case 1334:
                 printf("iPhone 6/6S/7/8");
                 break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 break;
