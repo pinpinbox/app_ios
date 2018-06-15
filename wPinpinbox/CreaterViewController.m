@@ -588,13 +588,16 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [LabelAttributeStyle changeGapString: headerView.likeLabel content: headerView.likeLabel.text];
     [LabelAttributeStyle changeGapString: headerView.sponsoredLabel content: headerView.sponsoredLabel.text];
     
+    NSLog(@"cover: %@", userDic[@"cover"]);
+    
     // Cover Image
     if ([userDic[@"cover"] isEqual: [NSNull null]]) {
         NSLog(@"cover is null");
         headerView.coverImageView.image = [UIImage imageNamed: @"bg200_user_default"];
     } else {
         NSLog(@"cocer is not null");
-        [headerView.coverImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"cover"]]];
+        [headerView.coverImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"cover"]]
+                                     placeholderImage: [UIImage imageNamed: @"bg200_user_default"]];
     }
 //    headerView.coverImageHeightConstraint.constant = [self coverImageHeightCalculation];
 //    coverImageHeight = headerView.coverImageHeightConstraint.constant;

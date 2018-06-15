@@ -245,27 +245,27 @@
         switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
             case 1136:
                 printf("iPhone 5 or 5S or 5C");
-                headerHeight = 350.0f;
+                headerHeight = 420.0f;
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
-                headerHeight = 380.0f;
+                headerHeight = 450.0f;
                 break;
             case 1920:
                 printf("iPhone 6+/6S+/7+/8+");
-                headerHeight = 380.0f;
+                headerHeight = 450.0f;
                 break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
-                headerHeight = 380.0f;
+                headerHeight = 450.0f;
                 break;
             case 2436:
                 printf("iPhone X");
-                headerHeight = 370.0f;
+                headerHeight = 430.0f;
                 break;
             default:
                 printf("unknown");
-                headerHeight = 380.0f;
+                headerHeight = 450.0f;
                 break;
         }
     }
@@ -1892,7 +1892,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
     } else if (collectionView.tag == 2){
         CGFloat bannerWidth = [UIScreen mainScreen].bounds.size.width - 32;
         NSLog(@"bannerWidth: %f", bannerWidth);
-        CGFloat bannerHeight = bannerWidth * 380 / 960;
+        CGFloat bannerHeight = bannerWidth * 540 / 960;
         NSLog(@"bannerHeight: %f", bannerHeight);
         return CGSizeMake(bannerWidth, bannerHeight);
     } else {
