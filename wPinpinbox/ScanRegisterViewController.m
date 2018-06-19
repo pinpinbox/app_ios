@@ -73,10 +73,19 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [locationManager startUpdatingLocation];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self startReading];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
 }
 
 - (void)didReceiveMemoryWarning {

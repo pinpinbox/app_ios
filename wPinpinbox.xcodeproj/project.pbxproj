@@ -49,6 +49,7 @@
 		543B11A7205619A900111102 /* ZOZolaZoomTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 543B11A5205619A900111102 /* ZOZolaZoomTransition.m */; };
 		543B11AA20561ACA00111102 /* ExchangeStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 543B11A920561ACA00111102 /* ExchangeStuff.m */; };
 		543D649B1F9F4DE10092AF2F /* SendingPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 543D649A1F9F4DE10092AF2F /* SendingPhoto.m */; };
+		5440836720D8EFAA00A5F645 /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5440836620D8EFAA00A5F645 /* SystemImages.xcassets */; };
 		544DA7C41F4B271C00E80C45 /* MapShowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 544DA7C21F4B271C00E80C45 /* MapShowingViewController.m */; };
 		544DA7C51F4B271C00E80C45 /* MapShowingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 544DA7C31F4B271C00E80C45 /* MapShowingViewController.xib */; };
 		544FBEE2208D988800681097 /* SponsorListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 544FBEE1208D988800681097 /* SponsorListViewController.m */; };
@@ -90,7 +91,6 @@
 		54AB130020AD7C3E00C7CC1A /* Social Image.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54AB12FF20AD7C3E00C7CC1A /* Social Image.xcassets */; };
 		54AB130620AD829200C7CC1A /* SignUp.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54AB130520AD829200C7CC1A /* SignUp.xcassets */; };
 		54AB130820AD82AE00C7CC1A /* Login.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54AB130720AD82AE00C7CC1A /* Login.xcassets */; };
-		54AB130C20AD885900C7CC1A /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54AB130B20AD885900C7CC1A /* SystemImages.xcassets */; };
 		54AB130E20AD917F00C7CC1A /* OldImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54AB130D20AD917F00C7CC1A /* OldImages.xcassets */; };
 		54AE99692016522C0003D060 /* ChooseHobbyVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54AE99682016522C0003D060 /* ChooseHobbyVC.storyboard */; };
 		54AE997320170BA50003D060 /* VotingVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54AE997220170BA50003D060 /* VotingVC.storyboard */; };
@@ -903,6 +903,7 @@
 		543B11A920561ACA00111102 /* ExchangeStuff.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExchangeStuff.m; sourceTree = "<group>"; };
 		543D64991F9F4DE10092AF2F /* SendingPhoto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendingPhoto.h; sourceTree = "<group>"; };
 		543D649A1F9F4DE10092AF2F /* SendingPhoto.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SendingPhoto.m; sourceTree = "<group>"; };
+		5440836620D8EFAA00A5F645 /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SystemImages.xcassets; sourceTree = "<group>"; };
 		544DA7C11F4B271C00E80C45 /* MapShowingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapShowingViewController.h; sourceTree = "<group>"; };
 		544DA7C21F4B271C00E80C45 /* MapShowingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapShowingViewController.m; sourceTree = "<group>"; };
 		544DA7C31F4B271C00E80C45 /* MapShowingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapShowingViewController.xib; sourceTree = "<group>"; };
@@ -969,7 +970,6 @@
 		54AB12FF20AD7C3E00C7CC1A /* Social Image.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Social Image.xcassets"; path = "Image Resources/Social Image.xcassets"; sourceTree = "<group>"; };
 		54AB130520AD829200C7CC1A /* SignUp.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SignUp.xcassets; path = "Image Resources/SignUp.xcassets"; sourceTree = "<group>"; };
 		54AB130720AD82AE00C7CC1A /* Login.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Login.xcassets; path = "Image Resources/Login.xcassets"; sourceTree = "<group>"; };
-		54AB130B20AD885900C7CC1A /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SystemImages.xcassets; path = "Image Resources/SystemImages.xcassets"; sourceTree = "<group>"; };
 		54AB130D20AD917F00C7CC1A /* OldImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = OldImages.xcassets; path = "Image Resources/OldImages.xcassets"; sourceTree = "<group>"; };
 		54AE99682016522C0003D060 /* ChooseHobbyVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChooseHobbyVC.storyboard; sourceTree = "<group>"; };
 		54AE997220170BA50003D060 /* VotingVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VotingVC.storyboard; sourceTree = "<group>"; };
@@ -2534,14 +2534,14 @@
 			path = "UIImage-categories";
 			sourceTree = "<group>";
 		};
-		54C137EE1F80835500CC12BC /* Setting Related VC */ = {
+		54C137EE1F80835500CC12BC /* AboutPinpinBoxVC */ = {
 			isa = PBXGroup;
 			children = (
 				54C137F21F80FE5900CC12BC /* AboutPinpinBoxViewController.h */,
 				54C137F31F80FE5900CC12BC /* AboutPinpinBoxViewController.m */,
 				54B9F49F1FE6CB3300A694E4 /* AboutPinpinBoxVC.storyboard */,
 			);
-			name = "Setting Related VC";
+			name = AboutPinpinBoxVC;
 			sourceTree = "<group>";
 		};
 		54DC76241FB40D81005F3252 /* Collection Related */ = {
@@ -2700,7 +2700,6 @@
 				540DE2B620283B510090F584 /* Settings */,
 				540473331FB080090075BBD8 /* PointCalculation */,
 				540635BF204E7E9A004C9F21 /* ExchangeListVC */,
-				54C137EE1F80835500CC12BC /* Setting Related VC */,
 			);
 			name = "MeTab Related";
 			sourceTree = "<group>";
@@ -3004,7 +3003,7 @@
 				54AB12D020AD7A0400C7CC1A /* CustomAlertViewImages.xcassets */,
 				54AB130520AD829200C7CC1A /* SignUp.xcassets */,
 				54AB130720AD82AE00C7CC1A /* Login.xcassets */,
-				54AB130B20AD885900C7CC1A /* SystemImages.xcassets */,
+				5440836620D8EFAA00A5F645 /* SystemImages.xcassets */,
 				63060C9D1E821B42005B2462 /* icon_select_pink500_120x120.png */,
 				54AB130D20AD917F00C7CC1A /* OldImages.xcassets */,
 				549A189E20AD9F2200532E1E /* TabBar Images.xcassets */,
@@ -3566,6 +3565,7 @@
 			children = (
 				9276DFAA1B72FDC000E6ACC9 /* ViewController.h */,
 				9276DFAB1B72FDC000E6ACC9 /* ViewController.m */,
+				54C137EE1F80835500CC12BC /* AboutPinpinBoxVC */,
 				54DCA6091F7E447F001B6FB1 /* ScanRegisterViewController.h */,
 				54DCA60A1F7E447F001B6FB1 /* ScanRegisterViewController.m */,
 				54C964BD2015ED0900F995DF /* ScanRegisterVC.storyboard */,
@@ -5063,7 +5063,6 @@
 				630BE4741E8A8D2A007C4810 /* Info-iOS.plist in Resources */,
 				92F89B261BBE79CF00565908 /* install_03.png in Resources */,
 				928348A41C62FD4F002DBC6A /* 3-01icon_line.png in Resources */,
-				54AB130C20AD885900C7CC1A /* SystemImages.xcassets in Resources */,
 				927410411BD0A6FC0031460B /* icon_art_click@2x.png in Resources */,
 				92CBCCB31BD79DBF00F1F27A /* DateSelectBarViewController.xib in Resources */,
 				92D362F21BE06A5D0084C746 /* loading@2x.png in Resources */,
@@ -5366,6 +5365,7 @@
 				D76F5E3D1D73F682008567D8 /* EventPostViewController.xib in Resources */,
 				922D92D01BD9D3DF00640639 /* top_menu@2x.png in Resources */,
 				925119831CF2D494002D4678 /* pic_b.png in Resources */,
+				5440836720D8EFAA00A5F645 /* SystemImages.xcassets in Resources */,
 				9200B1DD1C5B483A00996358 /* P04.png in Resources */,
 				92F89B0E1BBE73D400565908 /* render_3_18.png in Resources */,
 				6315B2E61EE7E13600EE67C5 /* NewMessageBoardViewController.xib in Resources */,

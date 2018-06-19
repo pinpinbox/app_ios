@@ -62,12 +62,49 @@
     contentStrArray = [NSArray arrayWithObjects: contentStr1, contentStr2, contentStr3, nil];
 }
 
-- (void)scrollViewSetup
-{
+- (void)scrollViewSetup {
     NSLog(@"scrollViewSetup");
     
+    CGFloat y = 0;
+    CGFloat bottomMargin = 0;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                y = 0;
+                bottomMargin = 100;
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                y = 0;
+                bottomMargin = 100;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                y = 0;
+                bottomMargin = 100;
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                y = 0;
+                bottomMargin = 100;
+                break;
+            case 2436:
+                printf("iPhone X");
+                y = -20;
+                bottomMargin = 150;
+                break;
+            default:
+                printf("unknown");
+                y = 0;
+                bottomMargin = 100;
+                break;
+        }
+    }
+    
     // UIScrollView Setting
-    mySV = [[UIScrollView alloc] initWithFrame: CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    mySV = [[UIScrollView alloc] initWithFrame: CGRectMake(0, y, self.view.frame.size.width, self.view.frame.size.height)];
     mySV.delegate = self;
     mySV.showsHorizontalScrollIndicator = NO;
     mySV.contentSize = CGSizeMake(self.view.frame.size.width * imageArray.count, self.view.frame.size.height);
@@ -94,7 +131,7 @@
         MyLinearLayout *vertLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
         vertLayout.myLeftMargin = 0;
         vertLayout.myRightMargin = 0;
-        vertLayout.myBottomMargin = 100;
+        vertLayout.myBottomMargin = bottomMargin;
         vertLayout.wrapContentHeight = YES;
         vertLayout.wrapContentWidth = YES;
         

@@ -10,8 +10,8 @@
 
 @interface ViewController : UIViewController
 {
-    __weak IBOutlet UITextField *email;
-    __weak IBOutlet UITextField *pwd;
+//    __weak IBOutlet UITextField *email;
+//    __weak IBOutlet UITextField *pwd;
 }
 
 - (void)setTimerForUrlScheme: (NSString *)BUID;

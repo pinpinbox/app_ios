@@ -141,7 +141,7 @@
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FwR-5B-vfQ" customClass="FLAnimatedImageView">
-                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="193"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="375" height="193"/>
                                                             </imageView>
                                                         </subviews>
                                                     </view>

@@ -31,6 +31,8 @@
 #import "GlobalVars.h"
 
 #import "FBFriendsListViewController.h"
+#import "AboutPinpinBoxViewController.h"
+#import "UIColor+HexString.h"
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
@@ -43,12 +45,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     UITextField *selectText;
     
     FBBlock _alertOkHandler;
-    
-    __weak IBOutlet UIButton *createAccountBtn;
-    __weak IBOutlet UIButton *btn_login;
-    __weak IBOutlet UIButton *facebooklogin;
-    __weak IBOutlet UIButton *btn_reg;
-    __weak IBOutlet UIButton *btn_forgetpwd;
     
     NSString *tokenStr;
     NSString *idStr;
@@ -64,6 +60,22 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     UIImageView *bg;
 }
+@property (weak, nonatomic) IBOutlet UIButton *createAccountBtn;
+@property (weak, nonatomic) IBOutlet UIButton *facebookLoginBtn;
+
+
+@property (weak, nonatomic) IBOutlet UIView *horizontalLineView1;
+@property (weak, nonatomic) IBOutlet UILabel *middleTextLabel;
+@property (weak, nonatomic) IBOutlet UIView *horizontalLineView2;
+
+
+@property (weak, nonatomic) IBOutlet UITextField *emailTextField;
+@property (weak, nonatomic) IBOutlet UIView *emailTextBgView;
+@property (weak, nonatomic) IBOutlet UITextField *pwdTextField;
+@property (weak, nonatomic) IBOutlet UIView *pwdTextBgView;
+
+@property (weak, nonatomic) IBOutlet UIButton *loginBtn;
+@property (weak, nonatomic) IBOutlet UIButton *aboutBtn;
 @end
 
 @implementation ViewController
@@ -95,20 +107,69 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     [locationManager startUpdatingLocation];
     
-    createAccountBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
-    [createAccountBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
-    btn_login.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
-    [btn_login setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
-    btn_login.layer.cornerRadius = 16;
-    btn_login.layer.masksToBounds = YES;
-    [btn_login setTitle:NSLocalizedString(@"LoginText-login", @"") forState:UIControlStateNormal];
+    self.horizontalLineView1.backgroundColor = [UIColor secondGrey];
+    self.middleTextLabel.textColor = [UIColor secondGrey];
+    self.horizontalLineView2.backgroundColor = [UIColor secondGrey];
     
-    facebooklogin.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [facebooklogin setTitle:NSLocalizedString(@"LoginText-FBlogin", @"") forState:UIControlStateNormal];
-    [btn_reg setTitle:NSLocalizedString(@"LoginText-Reg", @"") forState:UIControlStateNormal];
-    [btn_forgetpwd setTitle:NSLocalizedString(@"LoginText-forgetPwd", @"") forState:UIControlStateNormal];
+    [self faceBookLoginBtnSetup];
+    [self createAccountBtnSetup];
+    [self emailTextFieldAndViewSetup];
+    [self pwdTextFieldAndViewSetup];
+    [self loginBtnSetup];
+    [self aboutBtnSetup];
     
     [self redirectionCheck];
+}
+
+- (void)faceBookLoginBtnSetup {
+    self.facebookLoginBtn.layer.cornerRadius = kCornerRadius;
+    self.facebookLoginBtn.backgroundColor = [UIColor colorFromHexString: @"3b5998"];
+    self.facebookLoginBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
+//    [self.facebookLoginBtn setTitle:NSLocalizedString(@"LoginText-FBlogin", @"") forState:UIControlStateNormal];
+    self.facebookLoginBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    [self.facebookLoginBtn setTitle: @"Facebook" forState: UIControlStateNormal];
+    [self.facebookLoginBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+}
+
+- (void)createAccountBtnSetup {
+    self.createAccountBtn.layer.cornerRadius = kCornerRadius;
+    self.createAccountBtn.backgroundColor = [UIColor thirdGrey];
+    self.createAccountBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    [self.createAccountBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
+}
+
+- (void)emailTextFieldAndViewSetup {
+    self.emailTextField.textColor = [UIColor firstGrey];
+    self.emailTextBgView.layer.cornerRadius = kCornerRadius;
+    self.emailTextBgView.layer.masksToBounds = YES;
+}
+
+- (void)pwdTextFieldAndViewSetup {
+    self.pwdTextField.textColor = [UIColor firstGrey];
+    self.pwdTextBgView.layer.cornerRadius = kCornerRadius;
+    self.pwdTextBgView.layer.masksToBounds = YES;
+}
+
+- (void)loginBtnSetup {
+    self.loginBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    self.loginBtn.layer.cornerRadius = kCornerRadius;
+    self.loginBtn.layer.masksToBounds = YES;
+    [self.loginBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+    self.loginBtn.backgroundColor = [UIColor firstMain];
+    [self.loginBtn setTitle: NSLocalizedString(@"LoginText-login", @"") forState: UIControlStateNormal];
+}
+
+- (void)aboutBtnSetup {
+    self.aboutBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    self.aboutBtn.layer.cornerRadius = kCornerRadius;
+    self.aboutBtn.layer.masksToBounds = YES;
+    [self.aboutBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
+    self.aboutBtn.backgroundColor = [UIColor clearColor];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -116,6 +177,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     NSLog(@"");
     NSLog(@"ViewController viewWillAppear");
+    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
     [self addKeyboardNotification];
     
@@ -361,6 +423,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - IBAction - Login Related
+- (IBAction)toAboutVC:(id)sender {
+    AboutPinpinBoxViewController *aboutVC = [[UIStoryboard storyboardWithName: @"AboutPinpinBoxVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AboutPinpinBoxViewController"];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: aboutVC animated: YES];
+}
+
 - (IBAction)cameraBtnPress:(id)sender {
     ScanRegisterViewController *scanRegisterVC = [[UIStoryboard storyboardWithName: @"ScanRegisterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ScanRegisterViewController"];
     [self.navigationController pushViewController: scanRegisterVC animated: YES];
@@ -374,8 +442,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     //NSString *msg = @"";
     
     // If Email Field is empty then message got data
-    if ([email.text isEqualToString: @""]) {
-        NSLog(@"email.text: %@", email.text);
+    if ([self.emailTextField.text isEqualToString: @""]) {
+        NSLog(@"self.emailTextField.text: %@", self.emailTextField.text);
         
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];
@@ -389,7 +457,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     }
     
     // If Password Field is empty then message got data
-    if ([pwd.text isEqualToString: @""]) {
+    if ([self.pwdTextField.text isEqualToString: @""]) {
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];
         style.backgroundColor = [UIColor thirdPink];
@@ -416,10 +484,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         return;
     }
         
-    NSLog(@"pwd.text: %@", pwd.text);
+    NSLog(@"self.pwdTextField.text: %@", self.pwdTextField.text);
     
-    NSString *emailStr = email.text;
-    NSString *pwdStr = pwd.text;
+    NSString *emailStr = self.emailTextField.text;
+    NSString *pwdStr = self.pwdTextField.text;
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *respone = [boxAPI LoginAccount: emailStr Pwd: pwdStr];
@@ -986,10 +1054,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         [userPrefs setObject: tokenStr forKey:@"token"];
         [userPrefs setObject: idStr forKey:@"id"];
-        [userPrefs setObject: pwd.text forKey: @"pwd"];
+        [userPrefs setObject: self.pwdTextField.text forKey: @"pwd"];
         
         NSLog(@"idStr: %@", idStr);
-        NSLog(@"pwd.text: %@", pwd.text);
+        NSLog(@"self.pwdTextField.text: %@", self.pwdTextField.text);
         
         NSLog(@"userPrefs: %@", userPrefs);
         
@@ -1382,8 +1450,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 #pragma mark -
 
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
+- (void)keyboardWasShown:(NSNotification*)aNotification {
     NSLog(@"keyboardWasShown");
     
     NSDictionary* info = [aNotification userInfo];
@@ -1396,11 +1463,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSLog(@"kbSize: %@", NSStringFromCGSize(kbSize));
     
     //float textfy = [selectText superview].frame.origin.y;
-    float textfy = selectText.frame.origin.y;
+    float textfy = selectText.superview.frame.origin.y;
     NSLog(@"textfy: %f", textfy);
     
     //float textfh = [selectText superview].frame.size.height;
-    float textfh = selectText.frame.size.height;
+    float textfh = selectText.superview.frame.size.height;
     NSLog(@"textfh: %f", textfh);
     
     float h = self.view.frame.size.height;
@@ -1431,8 +1498,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 // Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
     NSLog(@"keyboardWillBeHidden");
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -1442,7 +1508,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - UITextField Delegate Methods
-
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     NSLog(@"textFieldDidBeginEditing");
     selectText = textField;
@@ -1465,8 +1530,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     NSInteger nextTag = textField.tag + 1;
     
+    NSLog(@"nextTag: %ld", (long)nextTag);
+    
     // Try to find next responder
-    UIResponder *nextResponder = [textField.superview viewWithTag: nextTag];
+    UIResponder *nextResponder = [textField.superview.superview viewWithTag: nextTag];
+    
+    NSLog(@"nextResponder: %@", nextResponder);
     
     if (nextResponder) {
         // Found next responder, so set it.
