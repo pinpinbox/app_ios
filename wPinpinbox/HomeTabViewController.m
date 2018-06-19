@@ -1890,7 +1890,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
         
         return finalSize;
     } else if (collectionView.tag == 2){
-        CGFloat bannerWidth = [UIScreen mainScreen].bounds.size.width - 32;
+        CGFloat bannerWidth = [UIScreen mainScreen].bounds.size.width;
         NSLog(@"bannerWidth: %f", bannerWidth);
         CGFloat bannerHeight = bannerWidth * 540 / 960;
         NSLog(@"bannerHeight: %f", bannerHeight);
@@ -1935,7 +1935,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     if (collectionView.tag == 1) {
         return 16.0f;
     } else if (collectionView.tag == 2) {
-        return 32.0f;
+        return 0.0f;
     } else {
         return 16.0f;
     }
@@ -1946,7 +1946,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         insetForSectionAtIndex:(NSInteger)section
 {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
-    return itemInset;;
+    
+    if (collectionView.tag == 2) {
+        itemInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        return itemInset;
+    } else {
+        itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
+        return itemInset;
+    }
 }
 
 #pragma mark - JCCollectionViewWaterfallLayoutDelegate

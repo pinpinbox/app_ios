@@ -14,7 +14,7 @@
     [super awakeFromNib];
     NSLog(@"awakeFromNib");
     
-    self.bannerImageView.layer.cornerRadius = kCornerRadius;
+//    self.bannerImageView.layer.cornerRadius = kCornerRadius;
     self.bannerImageView.layer.masksToBounds = YES;
 }
 @end
