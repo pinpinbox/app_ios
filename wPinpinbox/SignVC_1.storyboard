@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8fM-Qo-Anu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8fM-Qo-Anu">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -36,12 +36,6 @@
                                     <action selector="back:" destination="8fM-Qo-Anu" eventType="touchUpInside" id="fVG-hj-dsG"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="成功註冊表示同意 pinpinbox 的 " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gc2-3i-D6A">
-                                <rect key="frame" x="86" y="532" width="203" height="17"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ISA-sp-8qX">
                                 <rect key="frame" x="16" y="213" width="343" height="48"/>
                                 <subviews>
@@ -211,27 +205,27 @@
                                     <constraint firstAttribute="height" constant="30" id="mjc-Jv-Oig"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zCo-6M-Xx8">
+                                <rect key="frame" x="16" y="617" width="343" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="成功註冊表示同意 pinpinbox 平台規範">
+                                    <color key="titleColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="TERMSbtn:" destination="8fM-Qo-Anu" eventType="touchUpInside" id="sfs-kH-y0w"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6PJ-Af-FDj">
-                                <rect key="frame" x="247" y="469" width="112" height="48"/>
+                                <rect key="frame" x="16" y="553" width="343" height="48"/>
                                 <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="C1V-uy-RxV"/>
-                                    <constraint firstAttribute="width" constant="112" id="qLB-E6-We3"/>
                                 </constraints>
                                 <state key="normal" title="下一步">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="signbtn:" destination="8fM-Qo-Anu" eventType="touchUpInside" id="Fst-Gp-dya"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zCo-6M-Xx8">
-                                <rect key="frame" x="297" y="525" width="62" height="30"/>
-                                <state key="normal" title="平台規範">
-                                    <color key="titleColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="TERMSbtn:" destination="8fM-Qo-Anu" eventType="touchUpInside" id="sfs-kH-y0w"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -244,22 +238,22 @@
                             <constraint firstItem="sGC-uL-fT1" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="BD5-S7-jlb"/>
                             <constraint firstItem="PZm-Ti-lCS" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="8" id="PYE-wU-sAa"/>
                             <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="bXy-YG-bh4" secondAttribute="trailing" constant="16" id="U0h-qZ-5Ax"/>
+                            <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="6PJ-Af-FDj" secondAttribute="trailing" constant="16" id="U29-aE-YHb"/>
                             <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="xBT-aI-k40" secondAttribute="trailing" constant="16" id="UB9-26-csr"/>
+                            <constraint firstItem="6PJ-Af-FDj" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="Uj1-uM-uXx"/>
                             <constraint firstItem="ISA-sp-8qX" firstAttribute="top" secondItem="xBT-aI-k40" secondAttribute="bottom" constant="16" id="WPD-5g-acC"/>
-                            <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="zCo-6M-Xx8" secondAttribute="trailing" constant="16" id="WhZ-lF-8E9"/>
                             <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="sGC-uL-fT1" secondAttribute="trailing" constant="16" id="XzG-uW-4jE"/>
+                            <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="zCo-6M-Xx8" secondAttribute="trailing" constant="16" id="ZXg-qx-ZLR"/>
                             <constraint firstItem="buF-ps-MLo" firstAttribute="top" secondItem="sGC-uL-fT1" secondAttribute="bottom" constant="16" id="cZJ-mt-iQF"/>
-                            <constraint firstItem="zCo-6M-Xx8" firstAttribute="top" secondItem="6PJ-Af-FDj" secondAttribute="bottom" constant="8" id="dKq-a9-6KP"/>
+                            <constraint firstItem="01I-Kg-iio" firstAttribute="bottom" secondItem="zCo-6M-Xx8" secondAttribute="bottom" constant="16" id="ckj-6e-D9B"/>
                             <constraint firstItem="ISA-sp-8qX" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="gdl-0D-HxI"/>
-                            <constraint firstItem="Gc2-3i-D6A" firstAttribute="baseline" secondItem="zCo-6M-Xx8" secondAttribute="baseline" id="gfJ-ui-Gcc"/>
                             <constraint firstItem="PZm-Ti-lCS" firstAttribute="top" secondItem="2b6-4Q-Oxz" secondAttribute="bottom" constant="8" id="gi0-wI-hdg"/>
-                            <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="6PJ-Af-FDj" secondAttribute="trailing" constant="16" id="iFT-4c-Rg8"/>
                             <constraint firstItem="2b6-4Q-Oxz" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="k3a-v7-mCU"/>
-                            <constraint firstItem="6PJ-Af-FDj" firstAttribute="top" secondItem="bXy-YG-bh4" secondAttribute="bottom" constant="16" id="kzk-8O-1V5"/>
                             <constraint firstItem="bXy-YG-bh4" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="mTM-BF-ap0"/>
+                            <constraint firstItem="zCo-6M-Xx8" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="nzO-gs-Zs8"/>
+                            <constraint firstItem="zCo-6M-Xx8" firstAttribute="top" secondItem="6PJ-Af-FDj" secondAttribute="bottom" constant="16" id="o9F-bn-alG"/>
                             <constraint firstItem="buF-ps-MLo" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="p1I-f8-DXx"/>
                             <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="ISA-sp-8qX" secondAttribute="trailing" constant="16" id="u7b-UK-ReH"/>
-                            <constraint firstItem="zCo-6M-Xx8" firstAttribute="leading" secondItem="Gc2-3i-D6A" secondAttribute="trailing" constant="8" id="vJq-UY-wNs"/>
                             <constraint firstItem="sGC-uL-fT1" firstAttribute="top" secondItem="ISA-sp-8qX" secondAttribute="bottom" constant="16" id="x3U-kd-3Ac"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="01I-Kg-iio"/>
@@ -270,7 +264,6 @@
                         <outlet property="email" destination="Ux5-BS-Mey" id="0cH-Rs-nqS"/>
                         <outlet property="emailBtn" destination="GBi-nc-Sgy" id="zrf-3N-ykU"/>
                         <outlet property="emailView" destination="sGC-uL-fT1" id="ZsX-R6-yGd"/>
-                        <outlet property="labtip" destination="Gc2-3i-D6A" id="t6h-bZ-3Rs"/>
                         <outlet property="name" destination="mKU-Ug-s5b" id="TYA-Pw-sYy"/>
                         <outlet property="navBackBtn" destination="PZm-Ti-lCS" id="yCt-Vd-X4T"/>
                         <outlet property="nextBtn" destination="6PJ-Af-FDj" id="ktK-7V-0S6"/>

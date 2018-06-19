@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -37,10 +37,9 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EcD-zM-gZL">
-                                <rect key="frame" x="140" y="373" width="96" height="48"/>
+                                <rect key="frame" x="16" y="587" width="343" height="48"/>
                                 <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="96" id="KcR-cK-TIY"/>
                                     <constraint firstAttribute="height" constant="48" id="ZIl-NX-Jfk"/>
                                 </constraints>
                                 <state key="normal" title="保 存">
@@ -219,16 +218,18 @@
                             <constraint firstItem="0l4-t9-YZ6" firstAttribute="leading" secondItem="fGM-cw-tjN" secondAttribute="leading" id="7VH-m0-oC6"/>
                             <constraint firstItem="1C7-AQ-RXv" firstAttribute="trailing" secondItem="fGM-cw-tjN" secondAttribute="trailing" id="EoU-7A-H6f"/>
                             <constraint firstItem="EcD-zM-gZL" firstAttribute="centerX" secondItem="HEi-ef-IWU" secondAttribute="centerX" id="KKS-yQ-Yjb"/>
+                            <constraint firstItem="fGM-cw-tjN" firstAttribute="trailing" secondItem="EcD-zM-gZL" secondAttribute="trailing" constant="16" id="LYh-ab-BP4"/>
                             <constraint firstItem="1C7-AQ-RXv" firstAttribute="top" secondItem="dPQ-G0-Y2p" secondAttribute="bottom" constant="16" id="MnS-rH-b6m"/>
                             <constraint firstItem="iaX-wy-b3i" firstAttribute="top" secondItem="fGM-cw-tjN" secondAttribute="top" constant="32" id="SnA-cI-NaZ"/>
                             <constraint firstItem="Hvp-Jl-Oz9" firstAttribute="leading" secondItem="fGM-cw-tjN" secondAttribute="leading" constant="16" id="b3D-QB-sTA"/>
-                            <constraint firstItem="EcD-zM-gZL" firstAttribute="top" secondItem="1C7-AQ-RXv" secondAttribute="bottom" constant="47" id="brh-j9-qrq"/>
                             <constraint firstItem="dPQ-G0-Y2p" firstAttribute="top" secondItem="0l4-t9-YZ6" secondAttribute="bottom" id="ern-w7-vEj"/>
                             <constraint firstItem="dPQ-G0-Y2p" firstAttribute="leading" secondItem="fGM-cw-tjN" secondAttribute="leading" id="fR9-Oe-4nX"/>
                             <constraint firstItem="WEr-Lx-2ov" firstAttribute="top" secondItem="Hvp-Jl-Oz9" secondAttribute="bottom" constant="32" id="gBa-MQ-RTb"/>
+                            <constraint firstItem="EcD-zM-gZL" firstAttribute="leading" secondItem="fGM-cw-tjN" secondAttribute="leading" constant="16" id="jgO-t1-rFD"/>
                             <constraint firstItem="fGM-cw-tjN" firstAttribute="trailing" secondItem="dPQ-G0-Y2p" secondAttribute="trailing" id="msG-1I-8Oz"/>
                             <constraint firstItem="WEr-Lx-2ov" firstAttribute="trailing" secondItem="fGM-cw-tjN" secondAttribute="trailing" id="qpa-yJ-yKy"/>
                             <constraint firstItem="Hvp-Jl-Oz9" firstAttribute="top" secondItem="fGM-cw-tjN" secondAttribute="top" constant="32" id="rW5-Kv-pXu"/>
+                            <constraint firstItem="fGM-cw-tjN" firstAttribute="bottom" secondItem="EcD-zM-gZL" secondAttribute="bottom" constant="32" id="s4g-9U-fOT"/>
                             <constraint firstItem="1C7-AQ-RXv" firstAttribute="leading" secondItem="fGM-cw-tjN" secondAttribute="leading" id="scH-TQ-uVM"/>
                             <constraint firstItem="WEr-Lx-2ov" firstAttribute="leading" secondItem="fGM-cw-tjN" secondAttribute="leading" id="yWq-w5-wx4"/>
                         </constraints>

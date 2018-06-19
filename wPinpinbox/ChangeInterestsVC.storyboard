@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -23,13 +23,13 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="510-cR-bCg">
                                     <size key="itemSize" width="97" height="94"/>
-                                    <size key="headerReferenceSize" width="50" height="281"/>
+                                    <size key="headerReferenceSize" width="50" height="174"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="20" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="hobbyCell" id="BYq-Vt-i3d" customClass="ChangeInterestsCollectionViewCell">
-                                        <rect key="frame" x="0.0" y="301" width="97" height="94"/>
+                                        <rect key="frame" x="0.0" y="194" width="97" height="94"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="97" height="94"/>
@@ -75,30 +75,30 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="headerId" id="TFe-gk-OKh" customClass="ChangeInterestsCollectionReusableView">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="281"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="174"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="至少一項，最多三項" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I7J-ys-qDr">
-                                            <rect key="frame" x="16" y="236" width="382" height="31"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" placeholderIntrinsicWidth="343" placeholderIntrinsicHeight="115" text="對哪種類型的資訊感興趣呢?" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kv2-fL-zl0">
+                                            <rect key="frame" x="16" y="56" width="382" height="50"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" placeholderIntrinsicWidth="343" placeholderIntrinsicHeight="115" text="對哪種類型的資訊感興趣呢?" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6XM-of-LBM">
-                                            <rect key="frame" x="16" y="49" width="382" height="179"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="48"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                             <color key="textColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="wrapContentHeight" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="至少一項，最多三項" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yqq-cO-nQa">
+                                            <rect key="frame" x="16" y="126" width="382" height="19"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <connections>
-                                        <outlet property="infoLabel" destination="I7J-ys-qDr" id="osX-Qc-myX"/>
-                                        <outlet property="topicLabel" destination="6XM-of-LBM" id="dHL-RT-LX5"/>
+                                        <outlet property="infoLabel" destination="yqq-cO-nQa" id="bcI-5X-Z6u"/>
+                                        <outlet property="topicLabel" destination="Kv2-fL-zl0" id="nWJ-zo-ux2"/>
                                     </connections>
                                 </collectionReusableView>
                                 <connections>
@@ -110,11 +110,10 @@
                                 <rect key="frame" x="0.0" y="672" width="414" height="64"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8XI-VJ-vjY">
-                                        <rect key="frame" x="151" y="8" width="112" height="48"/>
+                                        <rect key="frame" x="16" y="8" width="382" height="48"/>
                                         <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="7DN-bf-eEs"/>
-                                            <constraint firstAttribute="width" constant="112" id="AdP-bu-uvH"/>
                                         </constraints>
                                         <state key="normal" title="送出">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -126,7 +125,8 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="64" id="5rJ-Bg-9X4"/>
-                                    <constraint firstItem="8XI-VJ-vjY" firstAttribute="centerX" secondItem="KU6-jm-gDy" secondAttribute="centerX" id="AfM-oi-UBM"/>
+                                    <constraint firstAttribute="trailing" secondItem="8XI-VJ-vjY" secondAttribute="trailing" constant="16" id="K4y-N4-bf1"/>
+                                    <constraint firstItem="8XI-VJ-vjY" firstAttribute="leading" secondItem="KU6-jm-gDy" secondAttribute="leading" constant="16" id="fnr-Cf-jRg"/>
                                     <constraint firstItem="8XI-VJ-vjY" firstAttribute="centerY" secondItem="KU6-jm-gDy" secondAttribute="centerY" id="iH4-dC-jCX"/>
                                 </constraints>
                             </view>
@@ -177,7 +177,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pFp-uQ-zIF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2956.875" y="-3434.1549295774648"/>
+            <point key="canvasLocation" x="2956.521739130435" y="-3434.5108695652175"/>
         </scene>
     </scenes>
     <resources>

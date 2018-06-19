@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -140,11 +140,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tv4-lo-U6H">
-                                <rect key="frame" x="247" y="484" width="112" height="48"/>
+                                <rect key="frame" x="16" y="603" width="343" height="48"/>
                                 <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="2bZ-XX-0mU"/>
-                                    <constraint firstAttribute="width" constant="112" id="zCH-Yw-Wc6"/>
                                 </constraints>
                                 <state key="normal" title="完 成 註 冊">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -156,14 +155,15 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="tv4-lo-U6H" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="12f-28-qG0"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="s3r-BM-IqJ" secondAttribute="trailing" constant="16" id="3ib-LV-i7U"/>
                             <constraint firstItem="75z-Ky-l1r" firstAttribute="top" secondItem="bCj-Ac-4oq" secondAttribute="top" id="7Uh-Xr-W2b"/>
                             <constraint firstItem="wpI-gE-vI2" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="8" id="Fcg-7c-Lvb"/>
+                            <constraint firstItem="Wx2-i6-Grc" firstAttribute="bottom" secondItem="tv4-lo-U6H" secondAttribute="bottom" constant="16" id="GWJ-Fa-0fs"/>
                             <constraint firstItem="cTP-Wh-Ica" firstAttribute="top" secondItem="Wx2-i6-Grc" secondAttribute="top" constant="16" id="PWm-mB-vBp"/>
                             <constraint firstItem="75z-Ky-l1r" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="QcU-eb-CZx"/>
                             <constraint firstItem="ZQ7-2v-rud" firstAttribute="baseline" secondItem="vDk-8o-Si0" secondAttribute="baseline" id="QlK-YY-RCN"/>
                             <constraint firstItem="vDk-8o-Si0" firstAttribute="leading" secondItem="ZQ7-2v-rud" secondAttribute="trailing" constant="8" id="RDs-SV-CCw"/>
-                            <constraint firstItem="tv4-lo-U6H" firstAttribute="top" secondItem="UGa-jd-z1j" secondAttribute="bottom" id="S5A-2y-Q9Z"/>
                             <constraint firstItem="vDk-8o-Si0" firstAttribute="top" secondItem="bCj-Ac-4oq" secondAttribute="bottom" constant="8" id="VRW-sZ-wmB"/>
                             <constraint firstItem="UGa-jd-z1j" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="ZlF-93-mq9"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="UGa-jd-z1j" secondAttribute="trailing" constant="16" id="aeq-oM-0Qw"/>
@@ -173,11 +173,11 @@
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="oho-14-CJv" secondAttribute="trailing" constant="16" id="fO3-ah-U1O"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="vDk-8o-Si0" secondAttribute="trailing" constant="16" id="gUI-VX-fC0"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="bCj-Ac-4oq" secondAttribute="trailing" constant="16" id="p9W-id-FdG"/>
+                            <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="tv4-lo-U6H" secondAttribute="trailing" constant="16" id="pMm-Ws-09L"/>
                             <constraint firstItem="cTP-Wh-Ica" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="pb5-BM-SJX"/>
                             <constraint firstItem="wpI-gE-vI2" firstAttribute="top" secondItem="cTP-Wh-Ica" secondAttribute="bottom" constant="8" id="qDR-KR-O4L"/>
                             <constraint firstItem="UGa-jd-z1j" firstAttribute="top" secondItem="oho-14-CJv" secondAttribute="bottom" constant="8" symbolic="YES" id="v9C-tH-p18"/>
                             <constraint firstItem="oho-14-CJv" firstAttribute="top" secondItem="vDk-8o-Si0" secondAttribute="bottom" constant="32" id="vBS-NQ-VWt"/>
-                            <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="tv4-lo-U6H" secondAttribute="trailing" constant="16" id="wdu-6K-STX"/>
                             <constraint firstItem="bCj-Ac-4oq" firstAttribute="top" secondItem="s3r-BM-IqJ" secondAttribute="bottom" constant="8" symbolic="YES" id="xgU-TM-aw6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Wx2-i6-Grc"/>

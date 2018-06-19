@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -111,11 +111,10 @@
                                 <rect key="frame" x="0.0" y="603" width="375" height="64"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YbY-hY-rZ0">
-                                        <rect key="frame" x="75.5" y="8" width="224" height="48"/>
+                                        <rect key="frame" x="16" y="8" width="343" height="48"/>
                                         <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="96r-n5-bwL"/>
-                                            <constraint firstAttribute="width" constant="224" id="9x9-PP-WH2"/>
                                         </constraints>
                                         <state key="normal" title="選好了，開始使用 pinpinbox">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -126,7 +125,8 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="YbY-hY-rZ0" firstAttribute="centerX" secondItem="0xi-a8-Dkr" secondAttribute="centerX" id="H9R-xg-Bb6"/>
+                                    <constraint firstAttribute="trailing" secondItem="YbY-hY-rZ0" secondAttribute="trailing" constant="16" id="DRS-i0-pI2"/>
+                                    <constraint firstItem="YbY-hY-rZ0" firstAttribute="leading" secondItem="0xi-a8-Dkr" secondAttribute="leading" constant="16" id="dbH-ci-8Ux"/>
                                     <constraint firstItem="YbY-hY-rZ0" firstAttribute="centerY" secondItem="0xi-a8-Dkr" secondAttribute="centerY" id="ei4-8b-9wf"/>
                                     <constraint firstAttribute="height" constant="64" id="sU8-AA-3GW"/>
                                 </constraints>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qmt-MG-xMH">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qmt-MG-xMH">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -69,7 +69,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" verticalCompressionResistancePriority="500" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p5A-sd-pRc">
-                                                    <rect key="frame" x="0.0" y="173" width="120" height="15"/>
+                                                    <rect key="frame" x="0.0" y="173" width="120" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -142,10 +142,9 @@
                                 <rect key="frame" x="0.0" y="504" width="320" height="64"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PM9-qN-eoX">
-                                        <rect key="frame" x="104.5" y="8.5" width="112" height="48"/>
+                                        <rect key="frame" x="16" y="8.5" width="288" height="48"/>
                                         <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="112" id="Nq9-nQ-37X"/>
                                             <constraint firstAttribute="height" constant="48" id="k5C-z7-KmW"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
@@ -158,7 +157,8 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="PM9-qN-eoX" firstAttribute="centerX" secondItem="DYP-Cp-w5C" secondAttribute="centerX" id="6Py-gF-n9c"/>
+                                    <constraint firstAttribute="trailing" secondItem="PM9-qN-eoX" secondAttribute="trailing" constant="16" id="0v9-p2-yhW"/>
+                                    <constraint firstItem="PM9-qN-eoX" firstAttribute="leading" secondItem="DYP-Cp-w5C" secondAttribute="leading" constant="16" id="3gs-OL-tDw"/>
                                     <constraint firstItem="PM9-qN-eoX" firstAttribute="centerY" secondItem="DYP-Cp-w5C" secondAttribute="centerY" id="UHH-uQ-99l"/>
                                     <constraint firstAttribute="height" constant="64" id="hBT-l4-e7p"/>
                                 </constraints>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1514,10 +1514,9 @@
                                 <rect key="frame" x="0.0" y="599" width="375" height="68"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p8I-tA-gAj">
-                                        <rect key="frame" x="131.5" y="10" width="112" height="48"/>
+                                        <rect key="frame" x="16" y="10" width="343" height="48"/>
                                         <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="112" id="Dlu-HT-4sg"/>
                                             <constraint firstAttribute="height" constant="48" id="a93-16-Z9x"/>
                                         </constraints>
                                         <state key="normal" title="保存">
@@ -1537,9 +1536,10 @@
                                     </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="p8I-tA-gAj" firstAttribute="leading" secondItem="jhK-g0-UgQ" secondAttribute="leading" constant="16" id="9U1-7I-CgO"/>
                                     <constraint firstAttribute="height" constant="68" id="GnK-LE-k6k"/>
                                     <constraint firstItem="p8I-tA-gAj" firstAttribute="centerY" secondItem="jhK-g0-UgQ" secondAttribute="centerY" id="UzO-8Y-wrE"/>
-                                    <constraint firstItem="p8I-tA-gAj" firstAttribute="centerX" secondItem="jhK-g0-UgQ" secondAttribute="centerX" id="ibb-QX-wbI"/>
+                                    <constraint firstAttribute="trailing" secondItem="p8I-tA-gAj" secondAttribute="trailing" constant="16" id="xVC-Ye-qzM"/>
                                 </constraints>
                             </view>
                         </subviews>

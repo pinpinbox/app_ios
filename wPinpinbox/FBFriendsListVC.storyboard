@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -90,11 +90,10 @@
                                 </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cfA-bt-w2c">
-                                <rect key="frame" x="111.5" y="603" width="152" height="48"/>
+                                <rect key="frame" x="16" y="603" width="343" height="48"/>
                                 <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="fe9-NR-yOE"/>
-                                    <constraint firstAttribute="width" constant="152" id="vVB-vK-d4z"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <state key="normal" title="下一步">
@@ -124,6 +123,8 @@
                             <constraint firstItem="7V0-dS-MuR" firstAttribute="top" secondItem="wcj-Vc-4jP" secondAttribute="top" constant="20" symbolic="YES" id="LWX-Jf-cyM"/>
                             <constraint firstItem="nSB-j4-Le2" firstAttribute="bottom" secondItem="aJV-Wu-Muq" secondAttribute="bottom" id="LoP-yC-jW3"/>
                             <constraint firstItem="aJV-Wu-Muq" firstAttribute="bottom" secondItem="cfA-bt-w2c" secondAttribute="bottom" constant="16" id="Mpz-xH-KVW"/>
+                            <constraint firstItem="cfA-bt-w2c" firstAttribute="leading" secondItem="aJV-Wu-Muq" secondAttribute="leading" constant="16" id="Nyj-4c-CT3"/>
+                            <constraint firstItem="aJV-Wu-Muq" firstAttribute="trailing" secondItem="cfA-bt-w2c" secondAttribute="trailing" constant="16" id="Qbx-lY-SC1"/>
                             <constraint firstItem="cfA-bt-w2c" firstAttribute="top" secondItem="7V0-dS-MuR" secondAttribute="bottom" constant="16" id="UcW-wg-NAh"/>
                             <constraint firstItem="7V0-dS-MuR" firstAttribute="leading" secondItem="aJV-Wu-Muq" secondAttribute="leading" id="XjG-0z-ykQ"/>
                             <constraint firstItem="nSB-j4-Le2" firstAttribute="leading" secondItem="aJV-Wu-Muq" secondAttribute="leading" id="a88-N0-2I7"/>

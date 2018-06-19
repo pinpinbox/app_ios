@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,13 +31,13 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="我們將幫你找到 facebook 上有使用 pinpinbox 的好友，要關注他們嗎?" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="85P-G9-XDN">
-                                <rect key="frame" x="16" y="248" width="343" height="86"/>
+                                <rect key="frame" x="16" y="248" width="343" height="118"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <color key="textColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="被關注的用戶作品會更容易出現在你的動態牆上唷！" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZlE-kh-Dz9">
-                                <rect key="frame" x="16" y="365" width="343" height="62"/>
+                                <rect key="frame" x="16" y="397" width="343" height="62"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="62" id="saW-N3-L1X"/>
                                 </constraints>
@@ -46,13 +46,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="pFF-Sz-xTy">
-                                <rect key="frame" x="111" y="491" width="152" height="112"/>
+                                <rect key="frame" x="16" y="523" width="343" height="112"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQr-jF-yjs">
-                                        <rect key="frame" x="0.0" y="0.0" width="152" height="48"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="48"/>
                                         <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="152" id="Sfw-d6-nwg"/>
                                             <constraint firstAttribute="height" constant="48" id="UB6-mH-ikd"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
@@ -64,10 +63,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fCV-Vs-sG0">
-                                        <rect key="frame" x="0.0" y="64" width="152" height="48"/>
+                                        <rect key="frame" x="0.0" y="64" width="343" height="48"/>
                                         <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="152" id="2Sb-9g-rNB"/>
                                             <constraint firstAttribute="height" constant="48" id="dZY-pN-yzB"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -83,11 +81,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="zml-KX-3Sv" firstAttribute="trailing" secondItem="pFF-Sz-xTy" secondAttribute="trailing" constant="16" id="9zF-jN-rkr"/>
                             <constraint firstItem="85P-G9-XDN" firstAttribute="leading" secondItem="zml-KX-3Sv" secondAttribute="leading" constant="16" id="Ifa-ta-uHo"/>
                             <constraint firstItem="zml-KX-3Sv" firstAttribute="trailing" secondItem="85P-G9-XDN" secondAttribute="trailing" constant="16" id="QRF-fQ-0cL"/>
                             <constraint firstItem="pFF-Sz-xTy" firstAttribute="centerX" secondItem="ZlE-kh-Dz9" secondAttribute="centerX" id="SJ1-kz-oM3"/>
+                            <constraint firstItem="pFF-Sz-xTy" firstAttribute="leading" secondItem="zml-KX-3Sv" secondAttribute="leading" constant="16" id="TOI-DM-lXI"/>
                             <constraint firstItem="7g6-xb-VK4" firstAttribute="top" secondItem="zml-KX-3Sv" secondAttribute="top" constant="16" id="Tgs-9w-PSK"/>
-                            <constraint firstItem="zml-KX-3Sv" firstAttribute="bottom" secondItem="pFF-Sz-xTy" secondAttribute="bottom" constant="64" id="Wxs-3c-ftI"/>
+                            <constraint firstItem="zml-KX-3Sv" firstAttribute="bottom" secondItem="pFF-Sz-xTy" secondAttribute="bottom" constant="32" id="Wxs-3c-ftI"/>
                             <constraint firstItem="pFF-Sz-xTy" firstAttribute="top" secondItem="ZlE-kh-Dz9" secondAttribute="bottom" constant="64" id="ZVZ-Ag-i9W"/>
                             <constraint firstItem="zml-KX-3Sv" firstAttribute="trailing" secondItem="ZlE-kh-Dz9" secondAttribute="trailing" constant="16" id="ZZt-cB-Ib5"/>
                             <constraint firstItem="ZlE-kh-Dz9" firstAttribute="leading" secondItem="zml-KX-3Sv" secondAttribute="leading" constant="16" id="alY-TZ-Onz"/>

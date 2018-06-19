@@ -56,7 +56,8 @@
 "RegText-FBreg" ="使用Facebook註冊";
 "RegText-applyAccount" ="帳號申請";
 "RegText-tipAgreement" ="成功註冊表示同意 pinpinbox 的 ";
-"RegText-tipAgreementTitle" ="平台規範";
+"RegText-tipAgreementTitle" ="成功註冊表示同意pinpinbox平台規範";
+
 "RegText-finishedReg" ="完成註冊";
 "RegText-tipSMS" ="請稍候驗證碼簡訊送至你的手機，若等待時間過長，可回到前步驟再做確認以重新取得驗證碼";
 "RegText-empPwd" ="還沒設定密碼";

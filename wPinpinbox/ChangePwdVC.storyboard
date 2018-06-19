@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -189,11 +189,10 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZXf-oD-vS2">
-                                <rect key="frame" x="247" y="485" width="112" height="48"/>
+                                <rect key="frame" x="16" y="603" width="343" height="48"/>
                                 <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="AMR-F5-Ma4"/>
-                                    <constraint firstAttribute="width" constant="112" id="P5h-1P-3ZK"/>
                                 </constraints>
                                 <state key="normal" title="送出">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -216,25 +215,26 @@
                             <constraint firstItem="53s-Kj-bf5" firstAttribute="top" secondItem="Umz-rR-hlK" secondAttribute="bottom" constant="8" id="17u-HT-JYe"/>
                             <constraint firstItem="sP6-1C-UTe" firstAttribute="trailing" secondItem="rOp-0a-zPl" secondAttribute="trailing" constant="16" id="2wg-rr-Tht"/>
                             <constraint firstItem="53s-Kj-bf5" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="3IS-2o-5UY"/>
+                            <constraint firstItem="sP6-1C-UTe" firstAttribute="bottom" secondItem="ZXf-oD-vS2" secondAttribute="bottom" constant="16" id="HWd-ym-zUn"/>
                             <constraint firstItem="sP6-1C-UTe" firstAttribute="trailing" secondItem="2VK-8T-HTy" secondAttribute="trailing" constant="16" id="HxC-9R-dv2"/>
                             <constraint firstItem="Umz-rR-hlK" firstAttribute="top" secondItem="2VK-8T-HTy" secondAttribute="bottom" constant="16" id="JYy-zs-PAQ"/>
                             <constraint firstItem="rOp-0a-zPl" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="JZZ-Fp-bgD"/>
                             <constraint firstItem="Ytr-IH-4l1" firstAttribute="top" secondItem="1Ym-Ir-zh9" secondAttribute="bottom" constant="16" id="PfJ-WX-Baa"/>
                             <constraint firstItem="1Ym-Ir-zh9" firstAttribute="top" secondItem="Y0X-Cl-SkS" secondAttribute="top" constant="20" symbolic="YES" id="QWO-wz-AFp"/>
                             <constraint firstItem="1Ym-Ir-zh9" firstAttribute="trailing" secondItem="sP6-1C-UTe" secondAttribute="trailing" id="Uvc-cC-02J"/>
-                            <constraint firstItem="sP6-1C-UTe" firstAttribute="trailing" secondItem="ZXf-oD-vS2" secondAttribute="trailing" constant="16" id="VWz-7J-lB3"/>
                             <constraint firstItem="1Ym-Ir-zh9" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" id="WEN-41-Iux"/>
                             <constraint firstItem="Ytr-IH-4l1" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="dfw-K7-Yce"/>
                             <constraint firstItem="Umz-rR-hlK" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="iIh-nl-yV8"/>
                             <constraint firstItem="2VK-8T-HTy" firstAttribute="top" secondItem="FKv-wO-eh1" secondAttribute="bottom" constant="8" id="ibj-NX-edI"/>
                             <constraint firstItem="WKk-Tw-w1A" firstAttribute="top" secondItem="Ytr-IH-4l1" secondAttribute="bottom" constant="40" id="ifr-3W-QkT"/>
-                            <constraint firstItem="ZXf-oD-vS2" firstAttribute="top" secondItem="53s-Kj-bf5" secondAttribute="bottom" constant="16" id="jRP-Md-HWR"/>
                             <constraint firstItem="2VK-8T-HTy" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="kcR-Od-6mF"/>
                             <constraint firstItem="WKk-Tw-w1A" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="mtE-45-YlS"/>
                             <constraint firstItem="FKv-wO-eh1" firstAttribute="top" secondItem="rOp-0a-zPl" secondAttribute="bottom" constant="16" id="p7D-5Y-yFK"/>
+                            <constraint firstItem="ZXf-oD-vS2" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="qmI-AM-FSJ"/>
                             <constraint firstItem="rOp-0a-zPl" firstAttribute="top" secondItem="WKk-Tw-w1A" secondAttribute="bottom" constant="8" id="umR-lZ-WEu"/>
                             <constraint firstItem="FKv-wO-eh1" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="uu0-HY-h56"/>
                             <constraint firstItem="sP6-1C-UTe" firstAttribute="trailing" secondItem="53s-Kj-bf5" secondAttribute="trailing" constant="16" id="yOL-gY-a7b"/>
+                            <constraint firstItem="sP6-1C-UTe" firstAttribute="trailing" secondItem="ZXf-oD-vS2" secondAttribute="trailing" constant="16" id="zRv-ao-r7B"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="sP6-1C-UTe"/>
                     </view>

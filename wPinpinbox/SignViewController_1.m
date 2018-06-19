@@ -105,7 +105,7 @@ typedef void (^FBBlock)(void);
     
     
     
-    labtip.text = NSLocalizedString(@"RegText-tipAgreement", @"");
+//    labtip.text = NSLocalizedString(@"RegText-tipAgreement", @"");
     [btn_btntip setTitle: NSLocalizedString(@"RegText-tipAgreementTitle", @"")
                 forState: UIControlStateNormal];
     
@@ -141,7 +141,7 @@ typedef void (^FBBlock)(void);
 
 #pragma mark - UI Setup
 - (void)nextBtnSetup {
-    nextBtn.layer.cornerRadius = 16;
+    nextBtn.layer.cornerRadius = 8;
     nextBtn.backgroundColor = [UIColor firstMain];
 }
 
