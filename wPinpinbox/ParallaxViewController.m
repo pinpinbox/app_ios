@@ -157,8 +157,7 @@
 
 
 #pragma mark UIScrollView Delegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"");
     NSLog(@"ParallaxViewController");
     NSLog(@"scrollViewDidScroll");

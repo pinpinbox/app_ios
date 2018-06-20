@@ -26,6 +26,7 @@
 #import "GlobalVars.h"
 
 #import "UIView+Toast.h"
+#import <SafariServices/SafariServices.h>
 
 @interface QrcordViewController () <AVCaptureMetadataOutputObjectsDelegate, UIGestureRecognizerDelegate>
 {
@@ -297,10 +298,19 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                         waitUntilDone: NO];
                 }
             } else {
-                NSLog(@"strArray.count is not bigger than 1");
-                [self performSelectorOnMainThread: @selector(showError:)
-                                       withObject: @"作品不存在"
-                                    waitUntilDone: NO];
+                if ([strArray[0] containsString: @"http"]) {
+                    NSLog(@"contains http");
+                    NSString *urlString = strArray[0];
+                    
+                    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
+                    safariVC.preferredBarTintColor = [UIColor whiteColor];
+                    [self presentViewController: safariVC animated: YES completion: nil];
+                } else {
+                    NSLog(@"strArray.count is not bigger than 1");
+                    [self performSelectorOnMainThread: @selector(showError:)
+                                           withObject: @"作品不存在"
+                                        waitUntilDone: NO];
+                }
             }
             
             //NSLog(@"QR-%@", sv);

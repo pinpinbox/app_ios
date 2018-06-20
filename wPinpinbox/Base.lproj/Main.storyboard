@@ -1639,6 +1639,7 @@
                         <outlet property="middleTextLabel" destination="stO-wp-BHQ" id="fFL-Ko-Rqm"/>
                         <outlet property="pwdTextBgView" destination="G1b-2V-s3N" id="Wq5-Ii-j5e"/>
                         <outlet property="pwdTextField" destination="CHs-O4-gNa" id="LIf-Nb-ZHw"/>
+                        <outlet property="scanBtn" destination="j9x-oX-A5o" id="BtV-jt-99l"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AXj-pb-W9c" userLabel="First Responder" sceneMemberID="firstResponder"/>

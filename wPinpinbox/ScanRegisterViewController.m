@@ -203,7 +203,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate method implementation
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+- (void)captureOutput:(AVCaptureOutput *)captureOutput
+didOutputMetadataObjects:(NSArray *)metadataObjects
+       fromConnection:(AVCaptureConnection *)connection
 {
     NSLog(@"didOutputMetadataObjects");
     
@@ -232,16 +234,31 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
             NSArray *strArray = [sv componentsSeparatedByString: @"?"];
             NSLog(@"strArray: %@", strArray);
             
-            if (!([strArray[1] rangeOfString: @"businessuser_id"].location == NSNotFound)) {
-                NSLog(@"strArray[1] rangeOfString is businessuser_id");
-                strArray = [strArray[1] componentsSeparatedByString: @"businessuser_id="];
-                NSLog(@"strArray: %@", strArray);
-                
-                businessUserId = strArray[1];
-                [self Facebookbtn: nil];
+            if (strArray.count > 1) {
+                if (!([strArray[1] rangeOfString: @"businessuser_id"].location == NSNotFound)) {
+                    NSLog(@"strArray[1] rangeOfString is businessuser_id");
+                    strArray = [strArray[1] componentsSeparatedByString: @"businessuser_id="];
+                    NSLog(@"strArray: %@", strArray);
+                    
+                    businessUserId = strArray[1];
+                    [self Facebookbtn: nil];
+                } else {
+                    [self performSelectorOnMainThread: @selector(showError:)
+                                           withObject: @"本次掃描無效"
+                                        waitUntilDone: NO];
+                }
+            } else {
+                [self performSelectorOnMainThread: @selector(showError:)
+                                       withObject: @"本次掃描無效"
+                                    waitUntilDone: NO];
             }
         }
     }
+}
+
+- (void)showError:(NSString *)msg {
+    NSLog(@"msg: %@", msg);
+    [self showCustomErrorAlert: msg];
 }
 
 //Facebook
@@ -837,6 +854,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [weakErrorAlertView close];
+        
+        if (buttonIndex == 0) {
+            [self startReading];
+        }
     }];
     [errorAlertView setUseMotionEffects: YES];
     [errorAlertView show];

@@ -56,6 +56,8 @@
 //#import "ChooseHobbyViewController.h"
 #import "FBFriendsFindingViewController.h"
 
+#import "BuyPPointViewController.h"
+
 #define kAdHeight 142
 #define kBtnWidth 78
 #define kBtnGap 16
@@ -1766,16 +1768,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                     } else {
                         SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
                         safariVC.preferredBarTintColor = [UIColor whiteColor];
-                        [self presentViewController: safariVC animated: YES completion: nil];
-                        
-                        /*
-                        ActivityWebViewController *activityWebVC = [[UIStoryboard storyboardWithName: @"ActivityWebVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ActivityWebViewController"];
-                        activityWebVC.eventURL = urlString;
-                        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        [appDelegate.myNav pushViewController: activityWebVC animated: YES];
-                         */
+                        [self presentViewController: safariVC animated: YES completion: nil];                                                
                     }
                 }
+            } else if ([[url path] isEqualToString: @"/index/user/point"]) {
+                BuyPPointViewController *bPPVC = [[UIStoryboard storyboardWithName: @"BuyPointVC" bundle: nil] instantiateViewControllerWithIdentifier: @"BuyPPointViewController"];
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                [appDelegate.myNav pushViewController: bPPVC animated: YES];
             } else {
                 SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
                 safariVC.preferredBarTintColor = [UIColor whiteColor];

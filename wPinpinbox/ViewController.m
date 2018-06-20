@@ -60,14 +60,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     UIImageView *bg;
 }
+@property (weak, nonatomic) IBOutlet UIButton *scanBtn;
+
 @property (weak, nonatomic) IBOutlet UIButton *createAccountBtn;
 @property (weak, nonatomic) IBOutlet UIButton *facebookLoginBtn;
-
 
 @property (weak, nonatomic) IBOutlet UIView *horizontalLineView1;
 @property (weak, nonatomic) IBOutlet UILabel *middleTextLabel;
 @property (weak, nonatomic) IBOutlet UIView *horizontalLineView2;
-
 
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UIView *emailTextBgView;
@@ -88,6 +88,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     NSLog(@"");
     NSLog(@"ViewController viewDidLoad");
+    
+    // For temporary
+//    self.scanBtn.hidden = YES;
     
     self.navigationController.navigationBar.hidden = YES;
     

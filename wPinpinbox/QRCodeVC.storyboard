@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,8 +19,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pbu-uw-c9V">
-                                <rect key="frame" x="28" y="50" width="320" height="568"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="595"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scan-frame.png" translatesAutoresizingMaskIntoConstraints="NO" id="8vR-eU-hUU">
@@ -47,12 +47,33 @@
                                     <constraint firstAttribute="height" constant="64" id="eyr-SI-TiF"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GAY-Wd-pQU">
+                                <rect key="frame" x="0.0" y="603" width="375" height="64"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinpin_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="BBv-GY-6X0">
+                                        <rect key="frame" x="67.5" y="8" width="240" height="48"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="240" id="ONI-DZ-IzU"/>
+                                            <constraint firstAttribute="height" constant="48" id="lA8-54-aHp"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="BBv-GY-6X0" firstAttribute="centerY" secondItem="GAY-Wd-pQU" secondAttribute="centerY" id="Io4-xa-mQu"/>
+                                    <constraint firstItem="BBv-GY-6X0" firstAttribute="centerX" secondItem="GAY-Wd-pQU" secondAttribute="centerX" id="kUW-Lm-JTV"/>
+                                    <constraint firstAttribute="height" constant="64" id="xQY-hG-bPx"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="DWz-xA-7nE" firstAttribute="trailing" secondItem="YUi-c0-fge" secondAttribute="trailing" id="37K-51-W4a"/>
+                            <constraint firstItem="GAY-Wd-pQU" firstAttribute="leading" secondItem="DWz-xA-7nE" secondAttribute="leading" id="CY3-yu-Oxj"/>
+                            <constraint firstItem="GAY-Wd-pQU" firstAttribute="bottom" secondItem="DWz-xA-7nE" secondAttribute="bottom" id="cms-it-1bG"/>
                             <constraint firstItem="8vR-eU-hUU" firstAttribute="centerX" secondItem="fhZ-CN-CWL" secondAttribute="centerX" id="dKZ-ho-e14"/>
                             <constraint firstItem="YUi-c0-fge" firstAttribute="leading" secondItem="DWz-xA-7nE" secondAttribute="leading" id="e9Z-MC-LBl"/>
+                            <constraint firstItem="GAY-Wd-pQU" firstAttribute="trailing" secondItem="DWz-xA-7nE" secondAttribute="trailing" id="rVm-4B-hVA"/>
                             <constraint firstItem="YUi-c0-fge" firstAttribute="top" secondItem="fhZ-CN-CWL" secondAttribute="top" constant="20" symbolic="YES" id="sD6-FF-Buh"/>
                             <constraint firstItem="8vR-eU-hUU" firstAttribute="centerY" secondItem="fhZ-CN-CWL" secondAttribute="centerY" id="wRq-XA-8e1"/>
                         </constraints>
@@ -75,12 +96,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nnv-aj-SUY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="106.875" y="341.19718309859155"/>
+            <point key="canvasLocation" x="106.40000000000001" y="340.47976011994007"/>
         </scene>
     </scenes>
     <resources>
         <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
         <image name="icon_back_white_120x120.png" width="120" height="120"/>
+        <image name="pinpin_logo.png" width="16" height="16"/>
         <image name="scan-frame.png" width="350" height="350"/>
     </resources>
 </document>

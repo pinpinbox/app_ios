@@ -87,12 +87,12 @@ static NSString *hostURL = @"www.pinpinbox.com";
     //[self showAlbumRecommendedList];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     NSLog(@"");
     NSLog(@"SearchTabViewController viewWillAppear");
     
-    [super viewWillAppear:animated];
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
@@ -102,6 +102,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     [self.collectionView reloadData];
     [collectionView2 reloadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -137,8 +142,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
 }
 
 #pragma mark -
-- (void)initialValueSetup
-{
+- (void)initialValueSetup {
     //UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
     //[self.view addGestureRecognizer:tap];
     
@@ -311,8 +315,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     });
 }
 
-- (void)showAlbumRecommendedList
-{
+- (void)showAlbumRecommendedList {
     NSLog(@"showAlbumRecommendedList");
     albumRecommendationLabel.text = @"人氣精選";
     
@@ -413,28 +416,24 @@ static NSString *hostURL = @"www.pinpinbox.com";
     //[self showAlbumRecommendedList];
 }
 
-- (void)cancelButtonNormal: (UIButton *)sender
-{
+- (void)cancelButtonNormal: (UIButton *)sender {
     NSLog(@"cancelButtonNormal");
     sender.backgroundColor = [UIColor clearColor];
 }
 
-- (void)scanButtonHighlight: (UIButton *)sender
-{
+- (void)scanButtonHighlight: (UIButton *)sender {
     NSLog(@"scanButtonHighlight");
     sender.backgroundColor = [UIColor thirdMain];
 }
 
-- (void)scanButtonNormal: (UIButton *)sender
-{
+- (void)scanButtonNormal: (UIButton *)sender {
     NSLog(@"scanButtonNormal");
     sender.backgroundColor = [UIColor clearColor];
 }
 
 #pragma mark - UICollectionViewDataSource Methods
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
     NSLog(@"");
     NSLog(@"");
     NSLog(@"numberOfItemsInSection");
@@ -456,8 +455,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
            viewForSupplementaryElementOfKind:(NSString *)kind
-                                 atIndexPath:(NSIndexPath *)indexPath
-{
+                                 atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"viewForSupplementaryElementOfKind");
     
@@ -627,8 +625,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
 #pragma mark - UICollectionViewDelegate Methods
 
 - (BOOL)collectionView:(UICollectionView *)collectionView
-shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
     
@@ -686,8 +683,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)collectionView:(UICollectionView *)collectionView
        willDisplayCell:(UICollectionViewCell *)cell
-    forItemAtIndexPath:(NSIndexPath *)indexPath
-{
+    forItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"willDisplayCell");
     NSLog(@"indexPath.item: %ld", (long)indexPath.item);
     
@@ -699,8 +695,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
     
@@ -778,20 +773,26 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 // Horizontal Cell Spacing
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(UICollectionView *)collectionView
+                   layout:(UICollectionViewLayout *)collectionViewLayout
+minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
     
     return 16.0f;
 }
 
 // Vertical Cell Spacing
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(UICollectionView *)collectionView
+                   layout:(UICollectionViewLayout *)collectionViewLayout
+minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumLineSpacingForSectionAtIndex");
     
     return 24.0f;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+        insetForSectionAtIndex:(NSInteger)section
 {
 //    NSLog(@"insetForSectionAtIndex");
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
@@ -799,7 +800,9 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - JCCollectionViewWaterfallLayoutDelegate
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout heightForHeaderInSection:(NSInteger)section
+- (CGFloat)collectionView:(UICollectionView *)collectionView
+                   layout:(UICollectionViewLayout *)collectionViewLayout
+ heightForHeaderInSection:(NSInteger)section
 {
 //    NSLog(@"heightForHeaderInSection");
     return self.jccLayout.headerHeight;
@@ -849,7 +852,9 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
     return YES;
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string
 {
     NSLog(@"shouldChangeCharactersInRange");
     NSString *resultString = [textField.text stringByReplacingCharactersInRange: range
@@ -1192,8 +1197,6 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (IBAction)toScanCode:(id)sender {
     QrcordViewController *qVC = [[UIStoryboard storyboardWithName: @"QRCodeVC" bundle: nil] instantiateViewControllerWithIdentifier: @"QrcordViewController"];
-    //[self.navigationController pushViewController: qVC animated: YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: qVC animated: YES];
     /*
