@@ -64,6 +64,12 @@
 		5476620B20131F90009D475F /* BuyPointVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5476620A20131F90009D475F /* BuyPointVC.storyboard */; };
 		547BC6D21F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 547BC6D11F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m */; };
 		54877CF11F905B030050C077 /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877CF01F905B030050C077 /* GlobalVars.m */; };
+		54885DB120DA854500644A82 /* LikeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54885DB020DA854500644A82 /* LikeListViewController.m */; };
+		54885DB320DA856200644A82 /* LikeListVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54885DB220DA856200644A82 /* LikeListVC.storyboard */; };
+		54885DBA20DB413E00644A82 /* AlbumSponsorListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54885DB920DB413E00644A82 /* AlbumSponsorListViewController.m */; };
+		54885DBC20DB415F00644A82 /* AlbumSponsorVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54885DBB20DB415F00644A82 /* AlbumSponsorVC.storyboard */; };
+		54885DBF20DB419800644A82 /* LikeListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54885DBE20DB419800644A82 /* LikeListTableViewCell.m */; };
+		54885DC220DB442100644A82 /* AlbumSponsorListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54885DC120DB442100644A82 /* AlbumSponsorListTableViewCell.m */; };
 		548A9D691F7A438F009E269E /* NewExistingAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 548A9D681F7A438F009E269E /* NewExistingAlbumViewController.m */; };
 		548ACE501F81DC2F0063C5A1 /* ic200_scancamera_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 548ACE4D1F81DC2F0063C5A1 /* ic200_scancamera_white.png */; };
 		548D69AE20561E7A0081EC7E /* ExchangeInfoEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 548D69AD20561E7A0081EC7E /* ExchangeInfoEditViewController.m */; };
@@ -929,6 +935,16 @@
 		5484D58D1FC43BB000177DD6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		54877CEF1F905B030050C077 /* GlobalVars.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalVars.h; sourceTree = "<group>"; };
 		54877CF01F905B030050C077 /* GlobalVars.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalVars.m; sourceTree = "<group>"; };
+		54885DAF20DA854500644A82 /* LikeListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LikeListViewController.h; sourceTree = "<group>"; };
+		54885DB020DA854500644A82 /* LikeListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LikeListViewController.m; sourceTree = "<group>"; };
+		54885DB220DA856200644A82 /* LikeListVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LikeListVC.storyboard; sourceTree = "<group>"; };
+		54885DB820DB413E00644A82 /* AlbumSponsorListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumSponsorListViewController.h; sourceTree = "<group>"; };
+		54885DB920DB413E00644A82 /* AlbumSponsorListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumSponsorListViewController.m; sourceTree = "<group>"; };
+		54885DBB20DB415F00644A82 /* AlbumSponsorVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AlbumSponsorVC.storyboard; sourceTree = "<group>"; };
+		54885DBD20DB419800644A82 /* LikeListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LikeListTableViewCell.h; sourceTree = "<group>"; };
+		54885DBE20DB419800644A82 /* LikeListTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LikeListTableViewCell.m; sourceTree = "<group>"; };
+		54885DC020DB442100644A82 /* AlbumSponsorListTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumSponsorListTableViewCell.h; sourceTree = "<group>"; };
+		54885DC120DB442100644A82 /* AlbumSponsorListTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumSponsorListTableViewCell.m; sourceTree = "<group>"; };
 		548A9D671F7A438F009E269E /* NewExistingAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewExistingAlbumViewController.h; sourceTree = "<group>"; };
 		548A9D681F7A438F009E269E /* NewExistingAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewExistingAlbumViewController.m; sourceTree = "<group>"; };
 		548ACE4D1F81DC2F0063C5A1 /* ic200_scancamera_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic200_scancamera_white.png; sourceTree = "<group>"; };
@@ -2473,6 +2489,30 @@
 			name = GHContextMenu;
 			sourceTree = "<group>";
 		};
+		54885DAD20DA83E200644A82 /* LikeListVC */ = {
+			isa = PBXGroup;
+			children = (
+				54885DAF20DA854500644A82 /* LikeListViewController.h */,
+				54885DB020DA854500644A82 /* LikeListViewController.m */,
+				54885DBD20DB419800644A82 /* LikeListTableViewCell.h */,
+				54885DBE20DB419800644A82 /* LikeListTableViewCell.m */,
+				54885DB220DA856200644A82 /* LikeListVC.storyboard */,
+			);
+			name = LikeListVC;
+			sourceTree = "<group>";
+		};
+		54885DB720DAA7FF00644A82 /* AlbumSponsorList */ = {
+			isa = PBXGroup;
+			children = (
+				54885DB820DB413E00644A82 /* AlbumSponsorListViewController.h */,
+				54885DB920DB413E00644A82 /* AlbumSponsorListViewController.m */,
+				54885DC020DB442100644A82 /* AlbumSponsorListTableViewCell.h */,
+				54885DC120DB442100644A82 /* AlbumSponsorListTableViewCell.m */,
+				54885DBB20DB415F00644A82 /* AlbumSponsorVC.storyboard */,
+			);
+			name = AlbumSponsorList;
+			sourceTree = "<group>";
+		};
 		548D69AB20561E060081EC7E /* CheckExchangeCollectionViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2661,6 +2701,8 @@
 				540DE2BF20283BDD0090F584 /* AlbumDetail */,
 				540DE2C020283BF20090F584 /* NewMessageBoard */,
 				633BC3921EE0F97B006FB6F8 /* Parallax */,
+				54885DAD20DA83E200644A82 /* LikeListVC */,
+				54885DB720DAA7FF00644A82 /* AlbumSponsorList */,
 				54F46D5720A54ADD0048B0A9 /* CreaterVC */,
 			);
 			name = "HomeTab Related";
@@ -5389,6 +5431,7 @@
 				922557711BDF765C00CD4E9B /* wbutton_message_click@2x.png in Resources */,
 				922A4B051BD63F9D006D5A36 /* MemberViewController.xib in Resources */,
 				926E3BC71CE5C05100724B56 /* button_like@2x.png in Resources */,
+				54885DBC20DB415F00644A82 /* AlbumSponsorVC.storyboard in Resources */,
 				925119621CEEE8C9002D4678 /* button_首頁.png in Resources */,
 				92F89AFA1BBE73D400565908 /* pinpin_7.png in Resources */,
 				54331AAE1FE6BF1B005E6ACE /* PointCalculationVC.storyboard in Resources */,
@@ -5398,6 +5441,7 @@
 				920279A31C449D8500A63027 /* CoopTopTableViewCell.xib in Resources */,
 				920279A81C449F7400A63027 /* CopperatiocTableViewCell.xib in Resources */,
 				926E3BCB1CE5C45F00724B56 /* icon_activity@2x.png in Resources */,
+				54885DB320DA856200644A82 /* LikeListVC.storyboard in Resources */,
 				54E6EA7B20A0509500DA7D99 /* FollowFromListVC.storyboard in Resources */,
 				92CBCC811BD7606100F1F27A /* button_pull@2x.png in Resources */,
 				922D92B71BD9CDB400640639 /* SearchViewController.xib in Resources */,
@@ -5567,6 +5611,7 @@
 				927AADE41BE21E120088CDB9 /* FastViewController.m in Sources */,
 				630A83E01EB1D07300AC8479 /* MyFrameLayout.m in Sources */,
 				921156391C4F644A00F9200A /* TaobannameTableViewCell.m in Sources */,
+				54885DB120DA854500644A82 /* LikeListViewController.m in Sources */,
 				D76F5E3A1D73E776008567D8 /* EventPostViewController.m in Sources */,
 				540636292050DEAB004C9F21 /* CheckExchangeViewController.m in Sources */,
 				63C375BD1EB9E44A000C7FC1 /* CreatorCollectionReusableView.m in Sources */,
@@ -5700,6 +5745,7 @@
 				92AE20ED1C0575DB0033C298 /* YoutubeViewController.m in Sources */,
 				63C8DA661E30F03A00AFBC2B /* RecentBrowseTableViewController.m in Sources */,
 				92C4D50C1B74578000504B57 /* SignViewController_1.m in Sources */,
+				54885DBA20DB413E00644A82 /* AlbumSponsorListViewController.m in Sources */,
 				54FA3EF3202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.m in Sources */,
 				54933AE0207F4A30001582C3 /* MintAnnotationChatView.m in Sources */,
 				92CD63BF1C0810F6000A2279 /* ModeTableViewCell.m in Sources */,
@@ -5806,10 +5852,12 @@
 				63A574181DE7FA7D00C9EFAF /* GHContextMenuView.m in Sources */,
 				92CBCC761BD756D500F1F27A /* MemberPointTableViewCell.m in Sources */,
 				63090C8F1EAE828600788DA6 /* HomeDataCollectionViewCell.m in Sources */,
+				54885DBF20DB419800644A82 /* LikeListTableViewCell.m in Sources */,
 				9295A3B81C22528400317FEA /* wShowImageList.m in Sources */,
 				631768CE1EA0B5270047BAB7 /* CustomIOSAlertView.m in Sources */,
 				927823FE1C45FB280063F82D /* CooperationAddTableViewCell.m in Sources */,
 				63C375B91EB9B72F000C7FC1 /* CreatorCollectionViewCell.m in Sources */,
+				54885DC220DB442100644A82 /* AlbumSponsorListTableViewCell.m in Sources */,
 				63419E341EFB33EF00EB3829 /* TouchDetectedScrollView.m in Sources */,
 				6308C4651EACF80A00F99AC0 /* AlbumCreationViewController.m in Sources */,
 				54B2C3A3206AB05200ABEC76 /* UIImage+RoundedCorner.m in Sources */,

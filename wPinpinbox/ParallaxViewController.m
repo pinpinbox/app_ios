@@ -8,11 +8,12 @@
 
 #import "ParallaxViewController.h"
 #import "UIColor+HexString.h"
+#import "UIColor+Extensions.h"
 #import "wTools.h"
 
 #define HEADER_IMAGE_HEIGHT  300;
 
-@interface ParallaxViewController ()<UIScrollViewDelegate>
+@interface ParallaxViewController () <UIScrollViewDelegate>
 
 
 /**
@@ -88,9 +89,14 @@
     [self.gradientView.layer insertSublayer: headerBgVGradient atIndex: 0];
     self.gradientView.alpha = 0.5;
     
+    
+    [self likeViewSetup];
+    [self messageViewSetup];
+    [self sponsorViewSetup];
+    
     // Label Setting
-    self.headerLikedNumberLabel.font = [UIFont systemFontOfSize: 28];
-    self.headerViewedNumberLabel.font = [UIFont systemFontOfSize: 16];
+//    self.headerLikedNumberLabel.font = [UIFont systemFontOfSize: 28];
+//    self.headerViewedNumberLabel.font = [UIFont systemFontOfSize: 16];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -124,13 +130,80 @@
     }
 }
 
+- (void)likeViewSetup {
+    // likeView Setting
+    self.likeView.backgroundColor = [UIColor whiteColor];
+    
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: self.likeView.bounds byRoundingCorners: (UIRectCornerTopLeft | UIRectCornerBottomLeft) cornerRadii: CGSizeMake(16, 16)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.likeView.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.likeView.layer.mask = maskLayer;
+    
+    self.headerLikedNumberLabel.textColor = [UIColor secondGrey];
+    self.headerLikedNumberLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    
+    UITapGestureRecognizer *likeViewTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(likeViewTapped:)];
+    [self.likeView addGestureRecognizer: likeViewTap];
+}
+
+- (void)messageViewSetup {
+    // messageView Setting
+    self.messageView.backgroundColor = [UIColor whiteColor];
+    
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: self.messageView.bounds byRoundingCorners: (UIRectCornerTopLeft | UIRectCornerBottomLeft) cornerRadii: CGSizeMake(16, 16)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.messageView.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.messageView.layer.mask = maskLayer;
+    
+    self.headerMessageNumberLabel.textColor = [UIColor secondGrey];
+    self.headerMessageNumberLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    
+    UITapGestureRecognizer *messageViewTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(messageViewTapped:)];
+    [self.messageView addGestureRecognizer: messageViewTap];        
+}
+
+- (void)sponsorViewSetup {
+    // messageView Setting
+    self.sponsorView.backgroundColor = [UIColor whiteColor];
+    
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: self.sponsorView.bounds byRoundingCorners: (UIRectCornerTopLeft | UIRectCornerBottomLeft) cornerRadii: CGSizeMake(16, 16)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.sponsorView.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.sponsorView.layer.mask = maskLayer;
+    
+    self.sponsorNumberLabel.textColor = [UIColor secondGrey];
+    self.sponsorNumberLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    
+    UITapGestureRecognizer *sponsorViewTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(sponsorViewTapped:)];
+    [self.sponsorView addGestureRecognizer: sponsorViewTap];
+    
+    self.sponsorView.hidden = YES;
+}
+
+- (void)likeViewTapped:(UITapGestureRecognizer *)gesturerecognizer {
+    NSLog(@"ParallaxVC");
+    NSLog(@"likeViewTapped");
+}
+
+- (void)messageViewTapped:(UITapGestureRecognizer *)gesturerecognizer {
+    NSLog(@"ParallaxVC");
+    NSLog(@"messageViewTapped");
+}
+
+- (void)sponsorViewTapped:(UITapGestureRecognizer *)gesturerecognizer {
+    NSLog(@"ParallaxVC");
+    NSLog(@"sponsorViewTapped");
+}
+
 - (void)tapDetected:(UITapGestureRecognizer *)gesturerecognizer {
     NSLog(@"tapDetected");
-    
     NSLog(@"gesturerecognizer view: %@", [gesturerecognizer view]);
 }
 
--(void)adjustContentViewHeight{
+- (void)adjustContentViewHeight{
     self.bottomViewTopConstraint.constant = self.headerImageViewHeight.constant;
     self.contentViewHeight.constant = [UIScreen mainScreen].bounds.size.height -  self.headerImageViewHeight.constant;
 }
@@ -138,6 +211,11 @@
 - (IBAction)headerImgBtnPress:(id)sender {
     NSLog(@"ParallaxVC");
     NSLog(@"headerImgBtnPress");
+}
+
+- (IBAction)horzLikeBtnPress:(id)sender {
+    NSLog(@"ParallaxVC");
+    NSLog(@"horzLikeBtnPress");
 }
 
 - (void)didReceiveMemoryWarning {

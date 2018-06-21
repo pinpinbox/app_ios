@@ -1,13 +1,13 @@
 //
-//  SponsorListViewController.m
+//  AlbumSponsorListViewController.m
 //  wPinpinbox
 //
-//  Created by David on 23/04/2018.
+//  Created by David on 2018/6/21.
 //  Copyright © 2018 Angus. All rights reserved.
 //
 
-#import "SponsorListViewController.h"
-#import "SponsorListTableViewCell.h"
+#import "AlbumSponsorListViewController.h"
+#import "AlbumSponsorListTableViewCell.h"
 #import "MyLayout.h"
 #import "GlobalVars.h"
 #import "boxAPI.h"
@@ -22,11 +22,11 @@
 #import "MessageboardViewController.h"
 #import "CreaterViewController.h"
 
-@interface SponsorListViewController () <UITableViewDataSource, UITableViewDelegate, MessageboardViewControllerDelegate> {
+@interface AlbumSponsorListViewController () <UITableViewDataSource, UITableViewDelegate, MessageboardViewControllerDelegate> {
     BOOL isLoading;
     BOOL isReloading;
     NSInteger nextId;
-    NSMutableArray *sponsorArray;
+    NSMutableArray *albumSponsorArray;
 }
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -37,7 +37,7 @@
 @property (nonatomic) UIVisualEffectView *effectView;
 @end
 
-@implementation SponsorListViewController
+@implementation AlbumSponsorListViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -89,7 +89,7 @@
     isLoading = NO;
     isReloading = NO;
     
-    sponsorArray = [[NSMutableArray alloc] init];
+    albumSponsorArray = [[NSMutableArray alloc] init];
     self.titleLabel.text = @"贊助你的人";
     
     self.navBarView.backgroundColor = [UIColor barColor];
@@ -140,9 +140,11 @@
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI getSponsorList: [wTools getUserToken]
-                                             userId: [wTools getUserID]
-                                              limit: limit];
+        NSString *response = [boxAPI getAlbumSponsorList: self.albumId
+                                                   limit: limit
+                                                   token: [wTools getUserToken]
+                                                  userId: [wTools getUserID]];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             
@@ -163,15 +165,13 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"SYSTEM_OK");
-                        
+                        NSLog(@"SYSTEM_OK");                        
                         NSLog(@"dic data: %@", dic[@"data"]);
-                        
                         NSLog(@"Before");
                         NSLog(@"nextId: %ld", (long)nextId);
                         
                         if (nextId == 0) {
-                            sponsorArray = [[NSMutableArray alloc] init];
+                            albumSponsorArray = [[NSMutableArray alloc] init];
                         }
                         
                         // s for counting how much data is loaded
@@ -180,11 +180,12 @@
                         for (NSMutableDictionary *sponsorDic in [dic objectForKey: @"data"]) {
                             NSLog(@"sponsorDic: %@", sponsorDic);
                             s++;
-                            [sponsorArray addObject: sponsorDic];
+                            [albumSponsorArray addObject: sponsorDic];
+                            
 //                            NSLog(@"point value: %d", [sponsorDic[@"user"][@"point"] intValue]);
 //                            if ([sponsorDic[@"user"][@"point"] intValue] > 0) {
 //                                NSLog(@"sponsorArray addObject");
-//                                [sponsorArray addObject: sponsorDic];
+//                                [albumSponsorArray addObject: sponsorDic];
 //                            }
                         }
                         
@@ -269,28 +270,28 @@
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
-    return sponsorArray.count;
+    return albumSponsorArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForRowAtIndexPath");
-    NSLog(@"sponsorArray: %@", sponsorArray);
+    NSLog(@"albumSponsorArray: %@", albumSponsorArray);
     
-    __weak SponsorListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"Cell" forIndexPath: indexPath];
-    NSDictionary *dic = [sponsorArray[indexPath.row] copy];
+    __weak AlbumSponsorListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"Cell" forIndexPath: indexPath];
+    NSDictionary *dic = [albumSponsorArray[indexPath.row] copy];
     
-    NSString *imageUrl = dic[@"user"][@"picture"];        
+    NSString *imageUrl = dic[@"user"][@"picture"];
     NSString *name = dic[@"user"][@"name"];
     NSInteger point = [dic[@"user"][@"point"] integerValue];
-    NSInteger userId = [dic[@"user"][@"user_id"] integerValue];    
+    NSInteger userId = [dic[@"user"][@"user_id"] integerValue];
     
-//    cell.headshotImageView.layer.cornerRadius = cell.headshotImageView.frame.size.height / 2;
+    //    cell.headshotImageView.layer.cornerRadius = cell.headshotImageView.frame.size.height / 2;
     
     if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
         cell.headshotImageView.image = [UIImage imageNamed: @"member_back_head.png"];
     } else {
-//        [cell.headshotImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
+        //        [cell.headshotImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
         [cell.headshotImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl] placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
     }
     
@@ -302,7 +303,7 @@
     cell.pPointLabel.text = [NSString stringWithFormat: @"%ld P", (long)point];
     
     NSLog(@"user is_follow: %d", [dic[@"user"][@"is_follow"] boolValue]);
-//    cell.isFollow = [dic[@"user"][@"is_follow"] boolValue];
+    //    cell.isFollow = [dic[@"user"][@"is_follow"] boolValue];
     
     [self updateFollowBtnStatus: cell.followBtn isFollow: [dic[@"user"][@"is_follow"] boolValue]];
     
@@ -335,7 +336,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath: indexPath animated: YES];
     
     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-    cVC.userId = sponsorArray[indexPath.row][@"user"][@"user_id"];
+    cVC.userId = albumSponsorArray[indexPath.row][@"user"][@"user_id"];
     
     //[self.navigationController pushViewController: cVC animated: YES];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -389,7 +390,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - Call Server For Follow Function
 - (void)followBtnPress:(NSInteger)userId
-                  cell:(SponsorListTableViewCell *)cell {
+                  cell:(AlbumSponsorListTableViewCell *)cell {
     
     [wTools ShowMBProgressHUD];
     NSString *userIdStr = [NSString stringWithFormat: @"%ld", (long)userId];
@@ -417,7 +418,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CreaterViewController");
                     NSLog(@"followBtnPress");
-
+                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"followBtnPress"
                                           userId: userId
@@ -566,7 +567,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                         userId: (NSInteger)userId
-                          cell: (SponsorListTableViewCell *)cell
+                          cell: (AlbumSponsorListTableViewCell *)cell
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
@@ -678,7 +679,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return contentView;
 }
-                       
+
 /*
 #pragma mark - Navigation
 

@@ -10,9 +10,15 @@
 
 @interface ParallaxViewController : UIViewController
 
-
+@property (weak, nonatomic) IBOutlet UIView *likeView;
 @property (weak, nonatomic) IBOutlet UILabel *headerLikedNumberLabel;
-@property (weak, nonatomic) IBOutlet UILabel *headerViewedNumberLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *headerViewedNumberLabel;
+
+@property (weak, nonatomic) IBOutlet UIView *messageView;
+@property (weak, nonatomic) IBOutlet UILabel *headerMessageNumberLabel;
+
+@property (weak, nonatomic) IBOutlet UIView *sponsorView;
+@property (weak, nonatomic) IBOutlet UILabel *sponsorNumberLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *headerBgView;
 @property (weak, nonatomic) IBOutlet UIButton *headerImgBtn;
@@ -48,9 +54,10 @@
  @method adjustContentViewHeight
  @description this will adjust content view height
  */
--(void)adjustContentViewHeight;
-
+- (void)adjustContentViewHeight;
 - (IBAction)headerImgBtnPress:(id)sender;
 
-
+- (void)likeViewTapped:(UITapGestureRecognizer *)gesturerecognizer;
+- (void)messageViewTapped:(UITapGestureRecognizer *)gesturerecognizer;
+- (void)sponsorViewTapped:(UITapGestureRecognizer *)gesturerecognizer;
 @end

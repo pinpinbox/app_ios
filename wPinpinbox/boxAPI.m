@@ -2459,6 +2459,24 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnStr;
 }
 
+#pragma mark - Get Album2Likes List
+// 105
++ (NSString *)getAlbum2LikesList:(NSString *)albumId
+                           limit:(NSString *)limit
+                           token:(NSString *)token
+                          userId:(NSString *)userId {
+    NSString *returnStr = @"";
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    [dic setObject: albumId forKey: @"album_id"];
+    [dic setObject: limit forKey: @"limit"];
+    [dic setObject: token forKey: @"token"];
+    [dic setObject: userId forKey: @"user_id"];
+    
+    returnStr = [self boxAPI: dic URL: @"/getalbum2likeslist/2.0"];
+    
+    return returnStr;
+}
+
 #pragma mark - Gain Photo Use For User
 + (NSString *)gainPhotoUseForUser:(NSString *)param
                 photoUseForUserId:(NSString *)photoUseForUserId
@@ -2579,6 +2597,24 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject: limit forKey: @"limit"];
     
     returnStr = [self boxAPI: dic URL: @"/getfollowfromlist/2.0"];
+    
+    return returnStr;
+}
+
+#pragma mark - Get AlbumSponsor List
+// 114
++ (NSString *)getAlbumSponsorList:(NSString *)albumId
+                            limit:(NSString *)limit
+                            token:(NSString *)token
+                           userId:(NSString *)userId {
+    NSString *returnStr = @"";
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    [dic setObject: albumId forKey: @"album_id"];
+    [dic setObject: limit forKey: @"limit"];
+    [dic setObject: token forKey: @"token"];
+    [dic setObject: userId forKey: @"user_id"];
+    
+    returnStr = [self boxAPI: dic URL: @"/getalbumsponsorlist/2.1"];
     
     return returnStr;
 }

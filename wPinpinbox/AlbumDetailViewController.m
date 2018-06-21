@@ -44,6 +44,12 @@
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
+#import "LikeListViewController.h"
+
+#import "AlbumSponsorListViewController.h"
+
+#import <QuartzCore/QuartzCore.h>
+
 //#import "FXBlurView.h"
 
 //static NSString *sharingLink = @"http://www.pinpinbox.com/index/album/content/?album_id=%@%@";
@@ -70,15 +76,15 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     BOOL isLikes;
     NSUInteger likesInt;
-    
     NSUInteger messageInt;
+    NSUInteger sponsorInt;
     
     NSInteger albumPoint;
     BOOL isCollected;
     
     //NewMessageBoardViewController *newMessageBoardVC;
     
-    UITapGestureRecognizer *tapGR;
+//    UITapGestureRecognizer *tapGR;
     
     OldCustomAlertView *alertGetPointView;
     
@@ -88,6 +94,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     BOOL isViewed;
     BOOL isPosting;
+    
+    CGPoint initialTouchPoint;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
@@ -97,9 +105,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 @property (weak, nonatomic) IBOutlet UIButton *likeBtn;
 @property (weak, nonatomic) IBOutlet UIButton *moreBtn;
 @property (weak, nonatomic) IBOutlet UIButton *checkContentBtn;
-
-@property (weak, nonatomic) IBOutlet UILabel *likeNumberLabel;
-@property (weak, nonatomic) IBOutlet UILabel *messageNumberLabel;
 
 @property (nonatomic) DDAUIActionSheetViewController *customMoreActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
@@ -111,6 +116,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
 //@property (strong, nonatomic) UIViewController *dimVC;
 //@property (strong, nonatomic) UIViewController *modal;
 @property (weak, nonatomic) IBOutlet UIButton *headerImageBtn;
+
+@property (weak, nonatomic) IBOutlet UIView *creatorView;
+@property (weak, nonatomic) IBOutlet UIImageView *creatorHeadshotImageView;
+@property (weak, nonatomic) IBOutlet UILabel *creatorNameLabel;
 
 @end
 
@@ -162,6 +171,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // Do any additional setup after loading the view.
     NSLog(@"AlbumDetailViewController");
     NSLog(@"viewDidLoad");
+    self.creatorNameLabel.text = @"";
     
     NSLog(@"");
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -201,6 +211,41 @@ static NSString *autoPlayStr = @"&autoplay=1";
     isViewed = NO;
     
     [self checkAlbumId: self.albumId];
+    
+    initialTouchPoint = CGPointMake(0, 0);
+    
+    UIPanGestureRecognizer *pgr = [[UIPanGestureRecognizer alloc] initWithTarget: self action: @selector(panGestureRecognizerHandler:)];
+//    pgr.delegate = self;
+    [self.view addGestureRecognizer: pgr];
+}
+
+- (void)panGestureRecognizerHandler:(UIPanGestureRecognizer *)gestureRecognizer {
+    CGPoint touchPoint = [gestureRecognizer translationInView: gestureRecognizer.view];
+    NSLog(@"touchPoint: %@", NSStringFromCGPoint(touchPoint));
+    
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        initialTouchPoint = touchPoint;
+    } else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+        if ((touchPoint.y - initialTouchPoint.y) > 0) {
+            self.view.frame = CGRectMake(0, touchPoint.y - initialTouchPoint.y, self.view.frame.size.width, self.view.frame.size.height);
+        }
+    } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded || gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+        if ((touchPoint.y - initialTouchPoint.y) > 100) {
+            CATransition *transition = [CATransition animation];
+            transition.duration = 0.5;
+            transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+            transition.type = kCATransitionReveal;
+            transition.subtype = kCATransitionFromBottom;
+            [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
+            //[self.navigationController popViewControllerAnimated: NO];
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav popViewControllerAnimated: NO];
+        } else {
+            [UIView animateWithDuration: 0.3 animations:^{
+                self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+            }];
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -213,16 +258,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     
     [self retrieveAlbum];
-    
-    @try {
-        [self setBtnBackgroundColorToClear];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
+    [self setBtnBackgroundColorToClear];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -331,13 +367,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)parallaxViewSetup {
     NSLog(@"parallaxViewSetup");
     
-    tapGR = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(imageViewTap)];
-    tapGR.numberOfTapsRequired = 1;
-    tapGR.delegate = self;
-    
-    //[self.view addGestureRecognizer: tapGR];
-    //[self.headerImageView addGestureRecognizer: tapGR];
-    
     self.useBlurForPopup = YES;
     
     isCollected = [self.data[@"album"][@"own"] boolValue];
@@ -357,22 +386,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     }
     
-    // Message Section
-    messageInt = [self.data[@"albumstatistics"][@"messageboard"] integerValue];
+    NSLog(@"userId: %@", self.data[@"user"][@"user_id"]);
+    NSInteger albumUserId = [self.data[@"user"][@"user_id"] integerValue];
+    NSInteger systemUserId = [[wTools getUserID] integerValue];
     
-    self.messageNumberLabel.textColor = [UIColor secondGrey];
-    
-    if (messageInt >= 100000) {
-        messageInt = messageInt / 10000;
-        self.messageNumberLabel.text = [NSString stringWithFormat: @"%ldM", (long)messageInt];
-        [LabelAttributeStyle changeGapString: self.messageNumberLabel content: [NSString stringWithFormat: @"%ldM", (long)messageInt]];
-    } else if (messageInt >= 10000) {
-        messageInt = messageInt / 1000;
-        self.messageNumberLabel.text = [NSString stringWithFormat: @"%ldK", (long)messageInt];
-        [LabelAttributeStyle changeGapString: self.messageNumberLabel content: [NSString stringWithFormat: @"%ldK", (long)messageInt]];
+    if (albumUserId == systemUserId) {
+        self.sponsorView.hidden = NO;
     } else {
-        self.messageNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)messageInt];
-        [LabelAttributeStyle changeGapString: self.messageNumberLabel content: [NSString stringWithFormat: @"%ld", (long)messageInt]];
+        self.sponsorView.hidden = YES;
     }
     
     // Likes Section
@@ -385,24 +406,56 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_dark"] forState: UIControlStateNormal];
     }
     
-    self.likeNumberLabel.textColor = [UIColor secondGrey];
+    self.headerLikedNumberLabel.textColor = [UIColor secondGrey];
     
     if (likesInt >= 100000) {
         likesInt = likesInt / 10000;
-        //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ldM", (long)likesInt];
         self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ldM", (long)likesInt];
         [LabelAttributeStyle changeGapString: self.headerLikedNumberLabel content: [NSString stringWithFormat: @"%ldM", (long)likesInt]];
     } else if (messageInt >= 10000) {
         likesInt = likesInt / 1000;
-        //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ldK", (long)likesInt];
         self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ldK", (long)likesInt];
         [LabelAttributeStyle changeGapString: self.headerLikedNumberLabel content: [NSString stringWithFormat: @"%ldK", (long)likesInt]];
     } else {
-        //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
         self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
         [LabelAttributeStyle changeGapString: self.headerLikedNumberLabel content: [NSString stringWithFormat: @"%ld", (long)likesInt]];
     }
-    //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
+    
+    // Message Section
+    messageInt = [self.data[@"albumstatistics"][@"messageboard"] integerValue];
+    
+    self.headerMessageNumberLabel.textColor = [UIColor secondGrey];
+    
+    if (messageInt >= 100000) {
+        messageInt = messageInt / 10000;
+        self.headerMessageNumberLabel.text = [NSString stringWithFormat: @"%ldM", (long)messageInt];
+        [LabelAttributeStyle changeGapString: self.headerMessageNumberLabel content: [NSString stringWithFormat: @"%ldM", (long)messageInt]];
+    } else if (messageInt >= 10000) {
+        messageInt = messageInt / 1000;
+        self.headerMessageNumberLabel.text = [NSString stringWithFormat: @"%ldK", (long)messageInt];
+        [LabelAttributeStyle changeGapString: self.headerMessageNumberLabel content: [NSString stringWithFormat: @"%ldK", (long)messageInt]];
+    } else {
+        self.headerMessageNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)messageInt];
+        [LabelAttributeStyle changeGapString: self.headerMessageNumberLabel content: [NSString stringWithFormat: @"%ld", (long)messageInt]];
+    }
+    
+    // Sponsor Section
+    sponsorInt = [self.data[@"albumstatistics"][@"exchange"] integerValue];
+    
+    self.sponsorNumberLabel.textColor = [UIColor secondGrey];
+    
+    if (sponsorInt >= 100000) {
+        sponsorInt = sponsorInt / 10000;
+        self.sponsorNumberLabel.text = [NSString stringWithFormat: @"%ldM", (long)sponsorInt];
+        [LabelAttributeStyle changeGapString: self.sponsorNumberLabel content: [NSString stringWithFormat: @"%ldM", (long)sponsorInt]];
+    } else if (sponsorInt >= 10000) {
+        sponsorInt = sponsorInt / 1000;
+        self.sponsorNumberLabel.text = [NSString stringWithFormat: @"%ldK", (long)sponsorInt];
+        [LabelAttributeStyle changeGapString: self.sponsorNumberLabel content: [NSString stringWithFormat: @"%ldK", (long)sponsorInt]];
+    } else {
+        self.sponsorNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)sponsorInt];
+        [LabelAttributeStyle changeGapString: self.sponsorNumberLabel content: [NSString stringWithFormat: @"%ld", (long)sponsorInt]];
+    }
     
     // Check whether there is any subViews of self.contentView
     // If so, then remove it from superView
@@ -424,40 +477,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     rootLayout.myLeftMargin = rootLayout.myRightMargin = 0;
     [self.contentView addSubview: rootLayout];
     
-    //UITapGestureRecognizer *contentTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleContentTap)];
-    //[rootLayout addGestureRecognizer: contentTap];
-    
     // Info Layout
     MyLinearLayout *horzInfoLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
     horzInfoLayout.myRightMargin = 16;
-    
     [rootLayout addSubview: horzInfoLayout];
-    
-    //UILabel *viewedNumberLabel = [UILabel new];
-    
-    NSInteger viewedNumber = [self.data[@"albumstatistics"][@"viewed"] integerValue];
-    
-    if (viewedNumber >= 100000) {
-        viewedNumber = viewedNumber / 10000;
-        //viewedNumberLabel.text = [NSString stringWithFormat: @"%ldM次觀看", (long)viewedNumber];
-        self.headerViewedNumberLabel.text = [NSString stringWithFormat: @"%ldM次瀏覽", (long)viewedNumber];
-        [LabelAttributeStyle changeGapString: self.headerViewedNumberLabel content: [NSString stringWithFormat: @"%ldM次瀏覽", (long)viewedNumber]];
-    } else if (viewedNumber >= 10000) {
-        viewedNumber = viewedNumber / 1000;
-        //viewedNumberLabel.text = [NSString stringWithFormat: @"%ldK次觀看", (long)viewedNumber];
-        self.headerViewedNumberLabel.text = [NSString stringWithFormat: @"%ldK次瀏覽", (long)viewedNumber];
-        [LabelAttributeStyle changeGapString: self.headerViewedNumberLabel content: [NSString stringWithFormat: @"%ldK次瀏覽", (long)viewedNumber]];
-    } else {
-        //viewedNumberLabel.text = [NSString stringWithFormat: @"%ld次觀看", (long)viewedNumber];
-        self.headerViewedNumberLabel.text = [NSString stringWithFormat: @"%ld次瀏覽", (long)viewedNumber];
-        [LabelAttributeStyle changeGapString: self.headerViewedNumberLabel content: [NSString stringWithFormat: @"%ld次瀏覽", (long)viewedNumber]];
-    }
-    
-//    viewedNumberLabel.textColor = [UIColor secondGrey];
-//    viewedNumberLabel.font = [UIFont systemFontOfSize: 16];
-//    [viewedNumberLabel sizeToFit];
-//    viewedNumberLabel.myRightMargin = 2;
-    //[horzInfoLayout addSubview: viewedNumberLabel];
     
     NSLog(@"self.data: %@", self.data);
     
@@ -480,7 +503,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     if (gotAudio) {
         NSLog(@"gotAudio");
-        //[self addInfoTextToLayout: horzInfoLayout];
         [self addAudioImageToLayout: horzInfoLayout];
         
         if (gotVideo) {
@@ -499,8 +521,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     } else if (gotVideo) {
         NSLog(@"gotVideo");
-        
-        //[self addInfoTextToLayout: horzInfoLayout];
         [self addVideoImageToLayout: horzInfoLayout];
         
         if (gotExchange || gotSlot) {
@@ -511,24 +531,17 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     } else if (gotExchange || gotSlot) {
         NSLog(@"gotExchange || gotSlot");
-        
-        //[self addInfoTextToLayout: horzInfoLayout];
         [self addGiftImageToLayout: horzInfoLayout];
     }
-    
-    height = 20;
-    NSLog(@"After adding InfoLayout Height");
-    NSLog(@"height: %f", height);
-    
     // Content Layout
     MyLinearLayout *vertLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
     vertLayout.myTopMargin = 16;
     vertLayout.myLeftMargin = vertLayout.myRightMargin = 0;
     
+    // Topic Label
     UILabel *topicLabel = [UILabel new];
     topicLabel.text = self.data[@"album"][@"name"];
     topicLabel.textColor = [UIColor firstGrey];
-    //topicLabel.font = [UIFont systemFontOfSize: 28];
     topicLabel.font = [UIFont boldSystemFontOfSize: 28];
     topicLabel.numberOfLines = 0;
     [topicLabel sizeToFit];
@@ -538,22 +551,38 @@ static NSString *autoPlayStr = @"&autoplay=1";
     topicLabel.wrapContentHeight = YES;
     [vertLayout addSubview: topicLabel];
     
-    CGSize topicSize = [topicLabel.text boundingRectWithSize: CGSizeMake(288, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize: 28]}context: nil].size;
-    NSLog(@"topicSize.height: %f", topicSize.height);
     
-    height += topicSize.height;
-    NSLog(@"After adding topicLabel Height");
-    NSLog(@"height: %f", height);
+    // Viewed Number Label
+    UILabel *viewedNumberLabel = [UILabel new];
+    NSInteger viewedNumber = [self.data[@"albumstatistics"][@"viewed"] integerValue];
     
-    
-    //UILabel *descriptionLabel = [UILabel new];
-    //descriptionLabel.text = self.data[@"album"][@"description"];
+    if (viewedNumber >= 100000) {
+        viewedNumber = viewedNumber / 10000;
+        viewedNumberLabel.text = [NSString stringWithFormat: @"%ldM次瀏覽", (long)viewedNumber];
+        [LabelAttributeStyle changeGapString: viewedNumberLabel content: [NSString stringWithFormat: @"%ldM次瀏覽", (long)viewedNumber]];
+    } else if (viewedNumber >= 10000) {
+        viewedNumber = viewedNumber / 1000;
+        viewedNumberLabel.text = [NSString stringWithFormat: @"%ldK次瀏覽", (long)viewedNumber];
+        [LabelAttributeStyle changeGapString: viewedNumberLabel content: [NSString stringWithFormat: @"%ldK次瀏覽", (long)viewedNumber]];
+    } else {
+        viewedNumberLabel.text = [NSString stringWithFormat: @"%ld次瀏覽", (long)viewedNumber];
+        [LabelAttributeStyle changeGapString: viewedNumberLabel content: [NSString stringWithFormat: @"%ld次瀏覽", (long)viewedNumber]];
+    }
+    viewedNumberLabel.textColor = [UIColor secondGrey];
+    viewedNumberLabel.font = [UIFont systemFontOfSize: 12];
+    viewedNumberLabel.numberOfLines = 0;
+    [viewedNumberLabel sizeToFit];
+    viewedNumberLabel.myTopMargin = 8;
+    viewedNumberLabel.myLeftMargin = viewedNumberLabel.myRightMargin = 16;
+    viewedNumberLabel.wrapContentHeight = YES;
+    [vertLayout addSubview: viewedNumberLabel];
     
     FRHyperLabel *descriptionLabel = [FRHyperLabel new];
     
     // Step 1: Define a normal attributed string for non-link texts
     NSString *string = self.data[@"album"][@"description"];
-    NSDictionary *attributes = @{NSForegroundColorAttributeName :[UIColor blackColor], NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]};
+    NSLog(@"description string: %@", string);
+//    NSDictionary *attributes = @{NSForegroundColorAttributeName :[UIColor blackColor], NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]};
     //descriptionLabel.attributedText = [[NSAttributedString alloc] initWithString: string attributes: attributes];
     [LabelAttributeStyle changeGapString: descriptionLabel content: string];
     descriptionLabel.textColor = [UIColor firstGrey];
@@ -583,51 +612,59 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"array: %@", array);
     
     [descriptionLabel setLinksForSubstrings: array withLinkHandler: handler];
-    
     [rootLayout addSubview: vertLayout];
-    
-    CGSize descriptionSize = [descriptionLabel.text boundingRectWithSize: CGSizeMake(288, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize: 16]}context: nil].size;
-    NSLog(@"descriptionSize.height: %f", descriptionSize.height);
-    height += descriptionSize.height;
-    
-    NSLog(@"After adding descriptionLabel Height");
-    NSLog(@"height: %f", height);
     
     UIView *horzLineView = [UIView new];
     horzLineView.myLeftMargin = horzLineView.myRightMargin = 0;
     horzLineView.myTopMargin = horzLineView.myBottomMargin = 32;
     horzLineView.myHeight = 0.5;
     horzLineView.backgroundColor = [UIColor thirdGrey];
-    
     [rootLayout addSubview: horzLineView];
     
-    height += horzLineView.myHeight;
+    // Creator Setting
+    self.creatorView.backgroundColor = [UIColor whiteColor];
+    self.creatorView.layer.cornerRadius = self.creatorView.bounds.size.height / 2;
     
+    // Shadow Setting
+    self.creatorView.layer.shadowColor = [UIColor firstGrey].CGColor;
+    self.creatorView.layer.shadowOpacity = 0.5;
+    self.creatorView.layer.shadowRadius = 10;
+    self.creatorView.layer.shadowOffset = CGSizeMake(5.0f, 5.0f);
+
+    self.creatorHeadshotImageView.layer.cornerRadius = self.creatorHeadshotImageView.bounds.size.width / 2;
+    self.creatorHeadshotImageView.layer.masksToBounds = YES;
+    self.creatorHeadshotImageView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.creatorHeadshotImageView.layer.borderWidth = 0.5;
+    
+    if ([self.data[@"user"][@"picture"] isEqual: [NSNull null]]) {
+        NSLog(@"self.data user picture is equal to null");
+        self.creatorHeadshotImageView.image = [UIImage imageNamed: @"member_back_head.png"];
+    } else {
+        [self.creatorHeadshotImageView sd_setImageWithURL: [NSURL URLWithString: self.data[@"user"][@"picture"]] placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
+    }
+    self.creatorNameLabel.text = self.data[@"user"][@"name"];
+    [self.creatorView sizeToFit];
+    
+    UITapGestureRecognizer *nameTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleNameTap)];
+    [self.creatorView addGestureRecognizer: nameTap];
+    
+    /*
     // Horizontal Name Layout
     MyLinearLayout *horzNameLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
-    //horzNameLayout.myTopMargin = 16;
     horzNameLayout.myLeftMargin = horzNameLayout.myRightMargin = 0;
-    //horzNameLayout.myBottomMargin = 13;
     horzNameLayout.wrapContentHeight = YES;
     [rootLayout addSubview: horzNameLayout];
     
     UIImageView *nameImgView = [UIImageView new];
-//    AsyncImageView *nameImgView = [AsyncImageView new];
-//    nameImgView.showActivityIndicator = NO;
-//    nameImgView.imageURL = nil;
-//    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: nameImgView];
     NSLog(@"user picture: %@", self.data[@"user"][@"picture"]);
     
     if ([self.data[@"user"][@"picture"] isEqual: [NSNull null]]) {
         NSLog(@"self.data user picture is equal to null");
         nameImgView.image = [UIImage imageNamed: @"member_back_head.png"];
     } else {
-//        nameImgView.imageURL = [NSURL URLWithString: self.data[@"user"][@"picture"]];
         [nameImgView sd_setImageWithURL: [NSURL URLWithString: self.data[@"user"][@"picture"]]
                        placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
     }
-    
-    //nameImgView.image = [UIImage imageNamed: @"MeTab"];
     nameImgView.myLeftMargin = 16;
     nameImgView.myRightMargin = 2;
     nameImgView.myWidth = 18;
@@ -654,12 +691,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     UITapGestureRecognizer *nameTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleNameTap)];
     [horzNameLayout addGestureRecognizer: nameTap];
-    
-    CGSize nameSize = [nameLabel.text boundingRectWithSize: CGSizeMake(288, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize: 16]}context: nil].size;
-    height += nameSize.height;
-    
-    NSLog(@"After adding nameLabel Height");
-    NSLog(@"height: %f", height);
+     */
     
     if ([self.data[@"album"][@"location"] isEqualToString: @""]) {
         NSLog(@"no location data");
@@ -691,12 +723,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         locLabel.weight = 1.0;
         locLabel.wrapContentHeight = YES;
         [horzLocLayout addSubview: locLabel];
-        
-        CGSize locSize = [locLabel.text boundingRectWithSize: CGSizeMake(288, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize: 16]}context: nil].size;
-        height += locSize.height;
-        
-        NSLog(@"After adding locationLabel Height");
-        NSLog(@"height: %f", height);
     }
     
     NSLog(@"Check Event Layout");
@@ -728,11 +754,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
             eventLabel1.myBottomMargin = 8;
             [vertEventLayout addSubview: eventLabel1];
             
-            //h += 16 * 2;
-            
-            CGSize eventSize1 = [eventLabel1.text boundingRectWithSize: CGSizeMake(288, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize: 16]}context: nil].size;
-            height += eventSize1.height;
-            
             UILabel *eventLabel2 = [UILabel new];
             eventLabel2.text = self.data[@"event"][@"name"];
             eventLabel2.textColor = [UIColor firstMain];
@@ -746,12 +767,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
             [vertEventLayout addSubview: eventLabel2];
             
             [rootLayout addSubview: vertEventLayout];
-            
-            //h += 8;
-            
-            CGSize eventSize2 = [eventLabel2.text boundingRectWithSize: CGSizeMake(288, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize: 16]}context: nil].size;
-            height += eventSize2.height;
-            //h += 16;
         }
     }
     
@@ -834,10 +849,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
 }
 
-- (void)handleNameTap
-{
+- (void)handleNameTap {
     NSLog(@"handleNameTap");
-    
     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
     cVC.userId = self.data[@"user"][@"user_id"];
     
@@ -863,70 +876,53 @@ static NSString *autoPlayStr = @"&autoplay=1";
      */
 }
 
-- (void)handleContentTap
-{
+- (void)handleContentTap {
     NSLog(@"handleContentTap");
 }
 
-- (void)imageViewTap
-{
-    NSLog(@"imageViewTap");
-    
-    [self toReadBookVC];
-}
-
 #pragma mark - Button Action Methods
-- (void)arrowBtnHighLight: (UIButton *)sender
-{
+- (void)arrowBtnHighLight: (UIButton *)sender {
     NSLog(@"arrowBtnTouchDown");
     sender.backgroundColor = [UIColor thirdMain];
 }
 
-- (void)arrowBtnNormal: (UIButton *)sender
-{
+- (void)arrowBtnNormal: (UIButton *)sender {
     NSLog(@"arrowBtnTouchUpOutside");
     sender.backgroundColor = [UIColor clearColor];
 }
 
-- (void)messageBtnHighLight: (UIButton *)sender
-{
+- (void)messageBtnHighLight: (UIButton *)sender {
     NSLog(@"messageBtnTouchDown");
     sender.backgroundColor = [UIColor thirdMain];
 }
 
-- (void)messageBtnNormal: (UIButton *)sender
-{
+- (void)messageBtnNormal: (UIButton *)sender {
     NSLog(@"messageBtnTouchUpOutside");
     sender.backgroundColor = [UIColor clearColor];
 }
 
-- (void)likeBtnHighLight: (UIButton *)sender
-{
+- (void)likeBtnHighLight: (UIButton *)sender {
     NSLog(@"likeBtnTouchDown");
     sender.backgroundColor = [UIColor thirdMain];
 }
 
-- (void)likeBtnNormal: (UIButton *)sender
-{
+- (void)likeBtnNormal: (UIButton *)sender {
     NSLog(@"likeBtnTouchUpOutside");
     sender.backgroundColor = [UIColor clearColor];
 }
 
-- (void)moreBtnHighlight: (UIButton *)sender
-{
+- (void)moreBtnHighlight: (UIButton *)sender {
     NSLog(@"moreBtnHighlight");
     sender.backgroundColor = [UIColor thirdMain];
 }
 
-- (void)moreBtnNormal: (UIButton *)sender
-{
+- (void)moreBtnNormal: (UIButton *)sender {
     NSLog(@"moreBtnNormal");
     sender.backgroundColor = [UIColor clearColor];
 }
 
 #pragma mark - Get Event Methods
-- (void)getEventData: (NSString *)eventId
-{
+- (void)getEventData: (NSString *)eventId {
     NSLog(@"getEventData");
     
     @try {
@@ -1027,8 +1023,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 #pragma mark -
 
-- (void)checkTaskComplete
-{
+- (void)checkTaskComplete {
     NSLog(@"checkTaskComplete");
     
     @try {
@@ -2392,7 +2387,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         likesInt++;
                         
                         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_main"] forState: UIControlStateNormal];
-                        self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
+                        self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
                         
                         isLikes = !isLikes;
                         NSLog(@"isLikes: %d", isLikes);
@@ -2462,7 +2457,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         likesInt--;
                         
                         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_dark"] forState: UIControlStateNormal];
-                        self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
+                        self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
                         
                         isLikes = !isLikes;
                         
@@ -2814,7 +2809,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
      */
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event
 {
     NSLog(@"touchesBegan");
     
@@ -2831,14 +2827,41 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
 }
 
-- (void)headerImgBtnPress:(id)sender
-{
+#pragma mark - Methods for Pressing
+- (void)headerImgBtnPress:(id)sender {
     NSLog(@"AlbumDetailVC");
     NSLog(@"headerImgBtnPress");
     
     [self checkContentBtnPress: nil];
 }
 
+- (void)likeViewTapped:(UITapGestureRecognizer *)gesturerecognizer {
+    NSLog(@"AlbumDetailVC");
+    NSLog(@"likeViewTapped");
+    NSLog(@"gesturerecognizer.view.tag: %ld", gesturerecognizer.view.tag);
+    
+    LikeListViewController *likesListVC = [[UIStoryboard storyboardWithName: @"LikeListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"LikeListViewController"];
+    likesListVC.albumId = self.albumId;
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app.myNav pushViewController: likesListVC animated: YES];
+}
+
+- (void)messageViewTapped:(UITapGestureRecognizer *)gesturerecognizer {
+    NSLog(@"AlbumDetailVC");
+    NSLog(@"messageViewTapped");
+    NSLog(@"gesturerecognizer.view.tag: %ld", gesturerecognizer.view.tag);
+    [self showCustomMessageActionSheet];
+}
+
+- (void)sponsorViewTapped:(UITapGestureRecognizer *)gesturerecognizer {
+    NSLog(@"AlbumDetailVC");
+    NSLog(@"sponsorViewTapped");
+    NSLog(@"gesturerecognizer.view.tag: %ld", gesturerecognizer.view.tag);
+    AlbumSponsorListViewController *albumSponsorListVC = [[UIStoryboard storyboardWithName: @"AlbumSponsorVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSponsorListViewController"];
+    albumSponsorListVC.albumId = self.albumId;
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: albumSponsorListVC animated: YES];
+}
 
 #pragma mark - TestReadBookViewControllerDelegate Method
 - (void)testReadBookViewControllerViewWillDisappear:(TestReadBookViewController *)controller likeNumber:(NSUInteger)likeNumber isLike:(BOOL)isLike

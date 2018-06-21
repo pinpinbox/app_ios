@@ -925,7 +925,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         if (tag == 103) {
             NSLog(@"tag == 103");
             NSLog(@"To SponsorListViewController");
-            SponsorListViewController *sponsorListVC = [[UIStoryboard storyboardWithName: @"SponsorListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"SponsorListViewController"];
+            SponsorListViewController *sponsorListVC = [[UIStoryboard storyboardWithName: @"SponsorListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"SponsorListViewController"];            
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [appDelegate.myNav pushViewController: sponsorListVC animated: YES];
         }

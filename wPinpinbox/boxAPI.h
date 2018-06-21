@@ -367,6 +367,12 @@ static NSString *version = @"";
                       userId:(NSString *)userId
                        limit:(NSString *)limit;
 
+// 105
++ (NSString *)getAlbum2LikesList:(NSString *)albumId
+                           limit:(NSString *)limit
+                           token:(NSString *)token
+                          userId:(NSString *)userId;
+
 #pragma mark - Gain Photo Use For User
 + (NSString *)gainPhotoUseForUser:(NSString *)param
                 photoUseForUserId:(NSString *)photoUseForUserId
@@ -409,6 +415,13 @@ static NSString *version = @"";
 + (NSString *)getFollowFromList:(NSString *)token
                          userId:(NSString *)userId
                           limit:(NSString *)limit;
+
+#pragma mark - Get AlbumSponsor List
+// 114
++ (NSString *)getAlbumSponsorList:(NSString *)albumId
+                            limit:(NSString *)limit
+                            token:(NSString *)token
+                           userId:(NSString *)userId;
 
 //測試sign
 +(NSString *)testsign;
