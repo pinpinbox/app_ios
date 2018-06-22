@@ -31,7 +31,7 @@
 
 //#define kUserImageViewNumber 6
 
-@interface CategoryViewController () <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate>
+@interface CategoryViewController () <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate, UIGestureRecognizerDelegate>
 {
     //NSMutableArray *albumExploreArray;
     UICollectionView *collectionView;
@@ -79,7 +79,23 @@
     NSLog(@"CategoryViewController");
     NSLog(@"viewDidLoad");
     
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    
     [self initialValueSetup];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,6 +105,7 @@
 
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");
+    
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     NSLog(@"screenWidth: %f", screenWidth);
     bannerHeight = screenWidth * 540 / 960;
@@ -311,11 +328,6 @@
                         NSLog(@"dic data: %@", dic[@"data"]);
                         NSLog(@"dic data categoryarea: %@", dic[@"data"][@"categoryarea"]);
                         
-//                        if (![dic[@"data"][@"categoryarea"][@"categoryarea"][@"name"] isEqual: [NSNull null]]) {
-//                            self.categoryName = dic[@"data"][@"categoryarea"][@"categoryarea"][@"name"];
-//                            NSLog(@"\n\nself.categoryName: %@", self.categoryName);
-//                        }
-                        
                         if (![dic[@"data"][@"categoryarea"][@"name"] isEqual: [NSNull null]]) {
                             self.categoryName = dic[@"data"][@"categoryarea"][@"name"];
                         }
@@ -331,7 +343,10 @@
                                 
                                 if ([styleDic1[@"banner_type"] isEqualToString: @"creative"]) {
                                     NSLog(@"styleDic1 banner_type_data: %@", styleDic1[@"banner_type_data"]);
-                                    self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
+                                    
+                                    if (styleDic1[@"banner_type"] == nil) {
+                                        self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
+                                    }
                                     [self addUserView];
                                 } else {
                                     [self.bannerDataArray addObject: styleDic1];
@@ -464,15 +479,160 @@
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"cellForRowAtIndexPath");
+    NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
     
     CategoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"CategoryCell" forIndexPath: indexPath];
     cell.albumExploreLabel.text = self.albumExploreArray[indexPath.row][@"name"];
     [LabelAttributeStyle changeGapString: cell.albumExploreLabel content: self.albumExploreArray[indexPath.row][@"name"]];
     NSLog(@"cell.albumExploreLabel.text: %@", cell.albumExploreLabel.text);
     
+    NSLog(@"indexPath.row: %ld", (long)indexPath.row);
+    cell.strData = self.albumExploreArray[indexPath.row][@"url"];
+    NSLog(@"cell.strData: %@", cell.strData);
+    
+    if (!cell.strData || [cell.strData isKindOfClass: [NSNull class]]) {
+        cell.moreBtn.hidden = YES;
+    } else {
+        cell.moreBtn.hidden = NO;
+    }
+    
+    cell.customBlock = ^(NSString *strData) {
+        NSLog(@"cell.customBlock");
+        NSLog(@"strData: %@", strData);
+        [self checkStrDataAndNavigate: strData];
+    };
+    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
+}
+
+- (void)checkStrDataAndNavigate:(NSString *)strData {
+    if ([strData containsString: @"http://"] || [strData containsString: @"https://"]) {
+        NSArray *strArray = [strData componentsSeparatedByString: @"?"];
+        NSLog(@"strArray: %@", strArray);
+        
+        if (strArray.count > 1) {
+            if ([strData containsString: @"categoryarea_id"] && [strData containsString: @"category_id"]) {
+                NSLog(@"strData contains string categoryarea_id && categoryarea_id");
+                NSLog(@"strArray: %@", strArray);
+                
+                strArray = [strArray[1] componentsSeparatedByString: @"&"];
+                NSLog(@"strArray: %@", strArray);
+                
+                NSString *categoryAreaIdStr;
+                NSString *categoryIdStr;
+                
+                for (int i = 0; i < strArray.count; i++) {
+                    NSString *s = strArray[i];
+                    NSLog(@"s: %@", s);
+                    
+                    if ([s containsString: @"categoryarea_id"]) {
+                        NSLog(@"s containsString categoryarea_id");
+                        NSArray *array = [s componentsSeparatedByString: @"="];
+                        NSLog(@"array: %@", array);
+                        
+                        if ([array[0] isEqualToString: @"categoryarea_id"]) {
+                            categoryAreaIdStr = array[1];
+                        }
+                    } else if ([s containsString: @"category_id"]) {
+                        NSLog(@"s containsString category_id");
+                        NSArray *array = [s componentsSeparatedByString: @"="];
+                        NSLog(@"array: %@", array);
+                        
+                        if ([array[0] isEqualToString: @"category_id"]) {
+                            categoryIdStr = array[1];
+                        }
+                    }
+                }
+                NSLog(@"categoryAreaIdStr: %@", categoryAreaIdStr);
+                NSLog(@"categoryIdStr: %@", categoryIdStr);
+                
+                if (categoryAreaIdStr != nil && categoryIdStr == nil) {
+                    NSLog(@"categoryAreaIdStr != nil && categoryIdStr == nil");
+                    
+                    if ([strArray containsObject: @"explore"]) {
+                        CategoryDetailViewController *cDVC = [[UIStoryboard storyboardWithName: @"CategoryDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryDetailViewController"];
+                        cDVC.categoryAreaId = [categoryAreaIdStr intValue];
+                        cDVC.categoryName = self.categoryName;
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav pushViewController: cDVC animated: YES];
+                    } else {
+                        CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
+                        categoryVC.categoryAreaId = categoryAreaIdStr;
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav pushViewController: categoryVC animated: YES];
+                    }
+                } else {
+                    [self toSafariWebVC: strData];
+                }
+            } else {
+                if (!([strArray[1] rangeOfString: @"categoryarea_id"].location == NSNotFound)) {
+                    NSLog(@"strArray[1] rangeOfString: categoryarea_id");
+                    strArray = [strArray[1] componentsSeparatedByString: @"="];
+                    NSLog(@"strArray: %@", strArray);
+                    
+                    if ([strArray[0] isEqualToString: @"categoryarea_id"]) {
+                        CategoryDetailViewController *cDVC = [[UIStoryboard storyboardWithName: @"CategoryDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryDetailViewController"];
+                        cDVC.categoryAreaId = [strArray[1] intValue];
+                        cDVC.categoryName = self.categoryName;
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav pushViewController: cDVC animated: YES];
+                    } else {
+                        [self toSafariWebVC: strData];
+                    }
+                } else if (!([strArray[1] rangeOfString: @"user_id"].location == NSNotFound)) {
+                    NSLog(@"strArray[1] rangeOfString: user_id");
+                    strArray = [strArray[1] componentsSeparatedByString: @"="];
+                    NSLog(@"strArray: %@", strArray);
+                    
+                    if ([strArray[0] isEqualToString: @"user_id"]) {
+                        CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+                        cVC.userId = strArray[1];
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav pushViewController: cVC animated: YES];
+                    } else {
+                        [self toSafariWebVC: strData];
+                    }
+                } else if (!([strArray[1] rangeOfString: @"album_id"].location == NSNotFound)) {
+                    NSLog(@"strArray[1] rangeOfString: album_id");
+                    strArray = [strArray[1] componentsSeparatedByString: @"="];
+                    NSLog(@"strArray: %@", strArray);
+                    
+                    if ([strArray[0] isEqualToString: @"album_id"]) {
+                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+                        aDVC.albumId = strArray[1];
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav pushViewController: aDVC animated: YES];
+                    } else {
+                        [self toSafariWebVC: strData];
+                    }
+                } else {
+                    [self toSafariWebVC: strData];
+                }
+            }
+        } else {
+            [self toSafariWebVC: strData];
+        }
+    } else {
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor thirdPink];
+        
+        [self.view makeToast: NSLocalizedString(@"ProfileText-validateSocialLink", @"")
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+    }
+}
+
+- (void)toSafariWebVC:(NSString *)urlString {
+    NSLog(@"toSafariWebVC");
+    NSLog(@"urlString: %@", urlString);
+    NSURL *url = [NSURL URLWithString: urlString];    
+    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
+    safariVC.preferredBarTintColor = [UIColor whiteColor];
+    [self presentViewController: safariVC animated: YES completion: nil];
 }
 
 #pragma mark - UITableViewDelegate Methods

@@ -36,6 +36,17 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vEL-jO-zvp">
+                                                    <rect key="frame" x="263" y="12.5" width="96" height="36"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="96" id="NgV-M1-C32"/>
+                                                        <constraint firstAttribute="height" constant="36" id="cL1-dp-HYK"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Button"/>
+                                                    <connections>
+                                                        <action selector="moreBtnPressed:" destination="PSG-zx-QIm" eventType="touchUpInside" id="j5r-AQ-wZP"/>
+                                                    </connections>
+                                                </button>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kLv-ht-fdj" customClass="HorzAlbumCollectionView">
                                                     <rect key="frame" x="0.0" y="53" width="375" height="214.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -113,17 +124,21 @@
                                                 </collectionView>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="vEL-jO-zvp" firstAttribute="centerY" secondItem="f1Z-HQ-ghW" secondAttribute="centerY" id="2Kj-0c-N8R"/>
                                                 <constraint firstAttribute="bottom" secondItem="kLv-ht-fdj" secondAttribute="bottom" constant="32" id="3tV-2i-QAd"/>
                                                 <constraint firstItem="f1Z-HQ-ghW" firstAttribute="leading" secondItem="SPE-nW-KgP" secondAttribute="leading" constant="16" id="Kqa-6S-0Rx"/>
                                                 <constraint firstItem="f1Z-HQ-ghW" firstAttribute="top" secondItem="SPE-nW-KgP" secondAttribute="top" constant="16" id="VDy-Fl-jSL"/>
                                                 <constraint firstItem="kLv-ht-fdj" firstAttribute="leading" secondItem="SPE-nW-KgP" secondAttribute="leading" id="XNj-Mc-9UX"/>
+                                                <constraint firstAttribute="trailing" secondItem="vEL-jO-zvp" secondAttribute="trailing" constant="16" id="hDk-94-Jdh"/>
                                                 <constraint firstItem="kLv-ht-fdj" firstAttribute="top" secondItem="f1Z-HQ-ghW" secondAttribute="bottom" constant="8" id="il6-hV-MyR"/>
+                                                <constraint firstItem="vEL-jO-zvp" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="f1Z-HQ-ghW" secondAttribute="trailing" constant="4" id="o9O-15-bnJ"/>
                                                 <constraint firstAttribute="trailing" secondItem="kLv-ht-fdj" secondAttribute="trailing" id="w4M-CV-Sav"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="albumExploreLabel" destination="f1Z-HQ-ghW" id="O50-Ok-UWo"/>
                                             <outlet property="collectionView" destination="kLv-ht-fdj" id="0eV-cp-8Rs"/>
+                                            <outlet property="moreBtn" destination="vEL-jO-zvp" id="eqY-z9-Gyl"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

@@ -22,7 +22,7 @@
 #import "MessageboardViewController.h"
 #import "CreaterViewController.h"
 
-@interface LikeListViewController () <UITableViewDataSource, UITableViewDelegate, MessageboardViewControllerDelegate> {
+@interface LikeListViewController () <UITableViewDataSource, UITableViewDelegate, MessageboardViewControllerDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
     BOOL isReloading;
     NSInteger nextId;
@@ -43,8 +43,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    
     [self initialValueSetup];
     [self loadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)viewDidLayoutSubviews {

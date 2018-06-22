@@ -8,6 +8,7 @@
 
 #import "CategoryTableViewCell.h"
 #import "UIColor+Extensions.h"
+#import "GlobalVars.h"
 
 @implementation HorzAlbumCollectionView
 
@@ -19,6 +20,10 @@
     [super awakeFromNib];
     // Initialization code
     self.albumExploreLabel.textColor = [UIColor firstGrey];
+    self.moreBtn.backgroundColor = [UIColor thirdGrey];
+    self.moreBtn.layer.cornerRadius = kCornerRadius;
+    [self.moreBtn setTitle: @"更 多" forState: UIControlStateNormal];
+    [self.moreBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -34,6 +39,11 @@
     [self.collectionView setContentOffset:self.collectionView.contentOffset animated:NO];
     
     [self.collectionView reloadData];
+}
+- (IBAction)moreBtnPressed:(id)sender {    
+    if (self.customBlock) {
+        self.customBlock(self.strData);
+    }
 }
 
 @end

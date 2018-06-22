@@ -59,7 +59,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 #define animateConstant 0.1
 
-@interface AlbumDetailViewController () <FBSDKSharingDelegate, SelectBarDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIScrollViewDelegate, TestReadBookViewControllerDelegate, UITextViewDelegate, NewMessageBoardViewControllerDelegate, MessageboardViewControllerDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate, AlbumSettingViewControllerDelegate>
+@interface AlbumDetailViewController () <FBSDKSharingDelegate, SelectBarDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIScrollViewDelegate, TestReadBookViewControllerDelegate, UITextViewDelegate, NewMessageBoardViewControllerDelegate, MessageboardViewControllerDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate, AlbumSettingViewControllerDelegate, ParallaxViewControllerDelegate>
 {
     // For Showing Message of Getting Point
     NSString *missionTopicStr;
@@ -120,6 +120,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
 @property (weak, nonatomic) IBOutlet UIView *creatorView;
 @property (weak, nonatomic) IBOutlet UIImageView *creatorHeadshotImageView;
 @property (weak, nonatomic) IBOutlet UILabel *creatorNameLabel;
+
+@property (nonatomic, assign) BOOL isViewMoved;
+@property (strong, nonatomic) NSString *scrollDirection;
+@property (assign, nonatomic) CGFloat yOffset;
 
 @end
 
@@ -215,35 +219,63 @@ static NSString *autoPlayStr = @"&autoplay=1";
     initialTouchPoint = CGPointMake(0, 0);
     
     UIPanGestureRecognizer *pgr = [[UIPanGestureRecognizer alloc] initWithTarget: self action: @selector(panGestureRecognizerHandler:)];
-//    pgr.delegate = self;
+    pgr.delegate = self;
     [self.view addGestureRecognizer: pgr];
+    
+    self.delegate = self;
 }
 
 - (void)panGestureRecognizerHandler:(UIPanGestureRecognizer *)gestureRecognizer {
     CGPoint touchPoint = [gestureRecognizer translationInView: gestureRecognizer.view];
     NSLog(@"touchPoint: %@", NSStringFromCGPoint(touchPoint));
     
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        initialTouchPoint = touchPoint;
-    } else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
-        if ((touchPoint.y - initialTouchPoint.y) > 0) {
-            self.view.frame = CGRectMake(0, touchPoint.y - initialTouchPoint.y, self.view.frame.size.width, self.view.frame.size.height);
-        }
-    } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded || gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
-        if ((touchPoint.y - initialTouchPoint.y) > 100) {
-            CATransition *transition = [CATransition animation];
-            transition.duration = 0.5;
-            transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-            transition.type = kCATransitionReveal;
-            transition.subtype = kCATransitionFromBottom;
-            [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
-            //[self.navigationController popViewControllerAnimated: NO];
-            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            [appDelegate.myNav popViewControllerAnimated: NO];
-        } else {
-            [UIView animateWithDuration: 0.3 animations:^{
-                self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-            }];
+    NSLog(@"self.yOffset: %f", self.yOffset);
+    NSLog(@"self.scrollDirection: %@", self.scrollDirection);
+    NSLog(@"self.isViewMoved: %d", self.isViewMoved);
+    
+    if (self.yOffset == 0) {
+        if ([self.scrollDirection isEqualToString: @"ScrollUp"] || self.scrollDirection == nil) {
+            if (!self.isViewMoved) {
+                if (touchPoint.y < 0) {
+                    return;
+                }
+            }
+            NSLog(@"Activate Dragging Function");
+    
+            if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+                initialTouchPoint = touchPoint;
+            } else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+                NSLog(@"gestureRecognizer.state == UIGestureRecognizerStateChanged");
+                NSLog(@"touchPoint.y - initialTouchPoint.y: %f", touchPoint.y - initialTouchPoint.y);
+                
+                self.isViewMoved = YES;
+                
+                if ((touchPoint.y - initialTouchPoint.y) > 0) {
+                    self.view.frame = CGRectMake(0, touchPoint.y - initialTouchPoint.y, self.view.frame.size.width, self.view.frame.size.height);
+                }
+            } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded || gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+                NSLog(@"gestureRecognizer.state == UIGestureRecognizerStateEnded || gestureRecognizer.state == UIGestureRecognizerStateCancelled");
+                NSLog(@"touchPoint.y - initialTouchPoint.y: %f", touchPoint.y - initialTouchPoint.y);
+                
+                self.isViewMoved = NO;
+                self.bottomScroll.scrollEnabled = YES;
+                
+                if ((touchPoint.y - initialTouchPoint.y) > 100) {
+                    CATransition *transition = [CATransition animation];
+                    transition.duration = 0.5;
+                    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+                    transition.type = kCATransitionReveal;
+                    transition.subtype = kCATransitionFromBottom;
+                    [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
+                    //[self.navigationController popViewControllerAnimated: NO];
+                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                    [appDelegate.myNav popViewControllerAnimated: NO];
+                } else {
+                    [UIView animateWithDuration: 0.3 animations:^{
+                        self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+                    }];
+                }
+            }
         }
     }
 }
@@ -251,14 +283,19 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSLog(@"AlbumDetailViewController viewWillAppear");
+    self.isViewMoved = NO;
     
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = YES;
     }
     
-    [self retrieveAlbum];
     [self setBtnBackgroundColorToClear];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self retrieveAlbum];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -575,6 +612,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     viewedNumberLabel.myTopMargin = 8;
     viewedNumberLabel.myLeftMargin = viewedNumberLabel.myRightMargin = 16;
     viewedNumberLabel.wrapContentHeight = YES;
+    viewedNumberLabel.myBottomMargin = 16;
     [vertLayout addSubview: viewedNumberLabel];
     
     FRHyperLabel *descriptionLabel = [FRHyperLabel new];
@@ -596,6 +634,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     // Step 2: Define a selection handler block
     void(^handler)(FRHyperLabel *label, NSString *substring) = ^(FRHyperLabel *label, NSString *substring){
+        NSLog(@"FRHyperLabel block");
         NSURL *url = [NSURL URLWithString: substring];
         SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
         safariVC.preferredBarTintColor = [UIColor whiteColor];
@@ -614,12 +653,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [descriptionLabel setLinksForSubstrings: array withLinkHandler: handler];
     [rootLayout addSubview: vertLayout];
     
-    UIView *horzLineView = [UIView new];
-    horzLineView.myLeftMargin = horzLineView.myRightMargin = 0;
-    horzLineView.myTopMargin = horzLineView.myBottomMargin = 32;
-    horzLineView.myHeight = 0.5;
-    horzLineView.backgroundColor = [UIColor thirdGrey];
-    [rootLayout addSubview: horzLineView];
     
     // Creator Setting
     self.creatorView.backgroundColor = [UIColor whiteColor];
@@ -630,7 +663,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     self.creatorView.layer.shadowOpacity = 0.5;
     self.creatorView.layer.shadowRadius = 10;
     self.creatorView.layer.shadowOffset = CGSizeMake(5.0f, 5.0f);
-
+    
+    // CreatorHeadshotImageView Setting
     self.creatorHeadshotImageView.layer.cornerRadius = self.creatorHeadshotImageView.bounds.size.width / 2;
     self.creatorHeadshotImageView.layer.masksToBounds = YES;
     self.creatorHeadshotImageView.layer.borderColor = [UIColor thirdGrey].CGColor;
@@ -642,62 +676,29 @@ static NSString *autoPlayStr = @"&autoplay=1";
     } else {
         [self.creatorHeadshotImageView sd_setImageWithURL: [NSURL URLWithString: self.data[@"user"][@"picture"]] placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
     }
+    // CreatorNameLabel Setting
     self.creatorNameLabel.text = self.data[@"user"][@"name"];
     [self.creatorView sizeToFit];
     
     UITapGestureRecognizer *nameTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleNameTap)];
     [self.creatorView addGestureRecognizer: nameTap];
     
-    /*
-    // Horizontal Name Layout
-    MyLinearLayout *horzNameLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
-    horzNameLayout.myLeftMargin = horzNameLayout.myRightMargin = 0;
-    horzNameLayout.wrapContentHeight = YES;
-    [rootLayout addSubview: horzNameLayout];
     
-    UIImageView *nameImgView = [UIImageView new];
-    NSLog(@"user picture: %@", self.data[@"user"][@"picture"]);
+    // horzLineView Setting
+    UIView *horzLineView = [UIView new];
+    horzLineView.myLeftMargin = horzLineView.myRightMargin = 0;
+    horzLineView.myTopMargin = horzLineView.myBottomMargin = 16;
+    horzLineView.myHeight = 0.5;
+    horzLineView.backgroundColor = [UIColor thirdGrey];
+    [rootLayout addSubview: horzLineView];
+
     
-    if ([self.data[@"user"][@"picture"] isEqual: [NSNull null]]) {
-        NSLog(@"self.data user picture is equal to null");
-        nameImgView.image = [UIImage imageNamed: @"member_back_head.png"];
-    } else {
-        [nameImgView sd_setImageWithURL: [NSURL URLWithString: self.data[@"user"][@"picture"]]
-                       placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
-    }
-    nameImgView.myLeftMargin = 16;
-    nameImgView.myRightMargin = 2;
-    nameImgView.myWidth = 18;
-    nameImgView.myHeight = 18;
-    
-    nameImgView.layer.cornerRadius = 9;
-    nameImgView.layer.masksToBounds = YES;
-    nameImgView.layer.borderColor = [UIColor thirdGrey].CGColor;
-    nameImgView.layer.borderWidth = 0.5;
-    
-    [horzNameLayout addSubview: nameImgView];
-    
-    UILabel *nameLabel = [UILabel new];
-    nameLabel.text = self.data[@"user"][@"name"];
-    nameLabel.textColor = [UIColor firstGrey];
-    nameLabel.font = [UIFont boldSystemFontOfSize: 16];
-    [nameLabel sizeToFit];
-    nameLabel.numberOfLines = 0;
-    nameLabel.myLeftMargin = 2;
-    nameLabel.myRightMargin = 16;
-    nameLabel.weight = 1.0;
-    nameLabel.wrapContentHeight = YES;
-    [horzNameLayout addSubview: nameLabel];
-    
-    UITapGestureRecognizer *nameTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleNameTap)];
-    [horzNameLayout addGestureRecognizer: nameTap];
-     */
-    
+    // Location Setting
     if ([self.data[@"album"][@"location"] isEqualToString: @""]) {
         NSLog(@"no location data");
     } else {
         NSLog(@"got location data");
-        // Horizontal Localtion Layout
+        // Horizontal location Layout
         MyLinearLayout *horzLocLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
         horzLocLayout.myTopMargin = 13;
         horzLocLayout.myLeftMargin = horzLocLayout.myRightMargin = 0;
@@ -769,13 +770,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
             [rootLayout addSubview: vertEventLayout];
         }
     }
-    
     self.headerImageViewHeight.constant = 300;
     [self adjustContentViewHeight];
-    
     [rootLayout sizeToFit];
-    
-    //self.contentViewHeight.constant = height;
     self.contentViewHeight.constant = rootLayout.frame.size.height + 100;
 }
 
@@ -3248,6 +3245,33 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)dealloc {
     NSLog(@"AlbumDetailViewController");
     NSLog(@"dealloc");
+}
+
+// UIGestureRecognizerDelegate Method
+// Delegate method allow gestureRecognizer works when there is a scrollView
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+- (void)checkYOffset:(CGFloat)yOffset
+     scrollDirection:(NSString *)scrollDirection {
+    NSLog(@"AlbumDetailVC");
+    NSLog(@"checkYOffset scrollDirection");
+    NSLog(@"yOffset: %f", yOffset);
+    self.yOffset = yOffset;
+    
+    NSLog(@"scrollDirection: %@", scrollDirection);
+    self.scrollDirection = scrollDirection;
+    NSLog(@"self.scrollDirection: %@", self.scrollDirection);
+    
+    NSLog(@"self.isViewMoved: %d", self.isViewMoved);
+    
+    if (self.isViewMoved) {
+        self.bottomScroll.scrollEnabled = NO;
+    } else {
+        self.bottomScroll.scrollEnabled = YES;
+    }
 }
 
 @end

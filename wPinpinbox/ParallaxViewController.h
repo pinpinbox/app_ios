@@ -8,7 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol ParallaxViewControllerDelegate <NSObject>
+- (void)checkYOffset:(CGFloat)yOffset scrollDirection:(NSString *)scrollDirection;
+@end
+
 @interface ParallaxViewController : UIViewController
+
+@property (weak, nonatomic) id <ParallaxViewControllerDelegate> delegate;
 
 @property (weak, nonatomic) IBOutlet UIView *likeView;
 @property (weak, nonatomic) IBOutlet UILabel *headerLikedNumberLabel;
@@ -23,6 +29,19 @@
 @property (weak, nonatomic) IBOutlet UIView *headerBgView;
 @property (weak, nonatomic) IBOutlet UIButton *headerImgBtn;
 @property (weak, nonatomic) IBOutlet UIView *gradientView;
+
+/**
+ @property bottomScroll
+ @description UIScrollView place at bottom of View holding labels and text and other controls one want to place on it
+ */
+@property(nonatomic, weak) IBOutlet UIScrollView *bottomScroll;
+
+/**
+ @property topScroll
+ @description UIScrollView place at top of View holding post image
+ */
+@property(nonatomic, weak) IBOutlet UIScrollView *topScroll;
+
 
 /**
  @property contentViewHeight

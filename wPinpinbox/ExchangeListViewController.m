@@ -23,7 +23,7 @@
 
 #import "UIView+Toast.h"
 
-@interface ExchangeListViewController () <CAPSPageMenuDelegate, CheckExchangeViewControllerDelegate, UIViewControllerTransitioningDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, ExchangeInfoEditViewControllerDelegate>
+@interface ExchangeListViewController () <CAPSPageMenuDelegate, CheckExchangeViewControllerDelegate, UIViewControllerTransitioningDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, ExchangeInfoEditViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -47,8 +47,24 @@
         NSLog(@"vc: %@", vc);
     }
     
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    
     [self initialValueSetup];
     [self createPageMenu];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

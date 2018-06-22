@@ -22,7 +22,7 @@
 #define kLayoutHeight 48
 #define kCellGap 20
 
-@interface SettingViewController () <TouchDetectedScrollViewDelegate>
+@interface SettingViewController () <TouchDetectedScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic) BOOL isAudioPlayedAutomatically;
 @property (nonatomic) BOOL isVideoPlayedAutomatically;
 @property (nonatomic) UIView *audioSelectedView;
@@ -40,6 +40,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     [self initialValueSetup];
 }
 
@@ -51,6 +53,20 @@
         btn.hidden = YES;
     }
 }
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

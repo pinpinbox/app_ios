@@ -25,12 +25,14 @@
 
 #import "UIImage+Resize.h"
 
+#import "AppDelegate.h"
+
 #define kFontSize 18
 
 #define kFontSizeForUploading 18
 #define kFontSizeForConnection 16
 
-@interface PhotosViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,RSKImageCropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface PhotosViewController () <UICollectionViewDataSource,UICollectionViewDelegate,RSKImageCropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, UIGestureRecognizerDelegate>
 {
     __weak IBOutlet UICustomLineLabel *titlelab;
     NSMutableArray *imageArray;
@@ -85,6 +87,9 @@
     // Do any additional setup after loading the view.
     NSLog(@"PhotosViewController");
     NSLog(@"viewDidLoad");
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     // Default Value set to 1.0 for original
     //self.compressionData = 1.0;
@@ -155,10 +160,23 @@
     [self updateCache];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     NSLog(@"viewWillDisappear");
 //    [self.queue removeObserver: self forKeyPath: @"operations" context: NULL];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)dealloc {

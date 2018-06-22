@@ -15,7 +15,7 @@
 #import "MyLinearLayout.h"
 #import "AppDelegate.h"
 
-@interface PointCalculationViewController ()
+@interface PointCalculationViewController () <UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet TouchDetectedScrollView *scrollView;
@@ -44,6 +44,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     NSLog(@"PointCalculationViewController viewDidLoad");
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    
     [self initialValueSetup];
 }
 
@@ -54,6 +57,19 @@
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = YES;
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

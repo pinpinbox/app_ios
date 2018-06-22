@@ -8,12 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^ButtonTouch)(NSString *strData);
+
 @interface HorzAlbumCollectionView : UICollectionView
 @property (nonatomic, strong) NSIndexPath *indexPath;
 @end
 
 @interface CategoryTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *albumExploreLabel;
+@property (weak, nonatomic) IBOutlet UIButton *moreBtn;
+
+@property (strong, nonatomic) NSString *strData;
+@property (copy, nonatomic) ButtonTouch customBlock;
+
 @property (weak, nonatomic) IBOutlet HorzAlbumCollectionView *collectionView;
 
 - (void)setCollectionViewDataSourceDelegate:(id<UICollectionViewDataSource, UICollectionViewDelegate>)dataSourceDelegate indexPath:(NSIndexPath *)indexPath;

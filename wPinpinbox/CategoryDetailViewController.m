@@ -25,8 +25,7 @@
 #import "customLayout.h"
 #import "LabelAttributeStyle.h"
 
-@interface CategoryDetailViewController () <customLayoutDelegate>
-{
+@interface CategoryDetailViewController () <customLayoutDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
     NSInteger nextId;
     NSMutableArray *categoryArray;
@@ -48,6 +47,9 @@
     // Do any additional setup after loading the view.
     NSLog(@"CategoryDetailViewController");
     
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    
     [self initialValueSetup];
     [self loadData];
 }
@@ -55,6 +57,20 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     //[self.collectionView reloadData];
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

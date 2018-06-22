@@ -37,7 +37,7 @@ typedef void (^FBBlock)(void);
 
 //static NSString *pinpinbox = @"https://www.pinpinbox.com/";
 
-@interface SignViewController_1 () <UITextFieldDelegate>
+@interface SignViewController_1 () <UITextFieldDelegate, UIGestureRecognizerDelegate>
 {
 //    __weak IBOutlet UICustomLineLabel *titlelab;
     
@@ -82,10 +82,12 @@ typedef void (^FBBlock)(void);
 
 #pragma mark - View Related Method
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"SignViewController_1");
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     [self navBarBtnSetup];
     [self nextBtnSetup];
@@ -128,9 +130,22 @@ typedef void (^FBBlock)(void);
     NextView = NO;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self removeKeyboardNotification];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 #pragma mark -

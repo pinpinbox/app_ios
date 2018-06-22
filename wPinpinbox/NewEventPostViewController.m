@@ -30,7 +30,7 @@
 
 #define kFontSize 18
 
-@interface NewEventPostViewController () <DDAUIActionSheetViewControllerDelegate>
+@interface NewEventPostViewController () <DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate>
 {
     Setup2ViewController *s2VC;
     ChooseTemplateViewController *chooseTemplateVC;
@@ -67,19 +67,12 @@
     NSLog(@"self.contributionNumber: %ld", (long)self.contributionNumber);
     NSLog(@"self.specialUrl: %@", self.specialUrl);
     
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    
     self.toolBarView.hidden = YES;
     
     //[self initialValueSetup];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    if (self.eventFinished) {
-        [self initialValueSetup];
-    } else {
-        [self getExistedAlbum];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -89,6 +82,25 @@
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = YES;
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+    
+    if (self.eventFinished) {
+        [self initialValueSetup];
+    } else {
+        [self getExistedAlbum];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

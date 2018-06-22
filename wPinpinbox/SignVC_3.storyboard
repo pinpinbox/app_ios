@@ -31,7 +31,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="tintColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="返 回 登 入"/>
+                                <state key="normal" title="返 回 註 冊"/>
                                 <connections>
                                     <action selector="back:" destination="iWg-Wp-sHH" eventType="touchUpInside" id="4kr-bf-rsz"/>
                                 </connections>

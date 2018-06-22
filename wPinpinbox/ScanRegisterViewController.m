@@ -56,6 +56,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    
     self.navBarView.backgroundColor = [UIColor clearColor];
     
     timeStamp = [NSString stringWithFormat: @"%f", [[NSDate date] timeIntervalSince1970] * 1000];
@@ -80,12 +83,22 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+    
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

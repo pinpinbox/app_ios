@@ -15,18 +15,6 @@
 
 @interface ParallaxViewController () <UIScrollViewDelegate>
 
-
-/**
- @property bottomScroll
- @description UIScrollView place at bottom of View holding labels and text and other controls one want to place on it
- */
-@property(nonatomic, weak) IBOutlet UIScrollView *bottomScroll;
-
-/**
- @property topScroll
- @description UIScrollView place at top of View holding post image
- */
-@property(nonatomic, weak) IBOutlet UIScrollView *topScroll;
 /**
  @property scrollDirectionValue
  @description holding value to determine scroll direction
@@ -51,7 +39,7 @@
  */
 @property(nonatomic, weak) IBOutlet NSLayoutConstraint *bottomViewTopConstraint;
 
-
+@property (nonatomic, assign) CGFloat lastContentOffset;
 
 @end
 
@@ -240,8 +228,34 @@
     NSLog(@"ParallaxViewController");
     NSLog(@"scrollViewDidScroll");
     
+    NSString *scrollDirection;
+    
+    NSLog(@"self.lastContentOffset: %f", self.lastContentOffset);
+    NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
+    
+    if (self.lastContentOffset > scrollView.contentOffset.y) {
+        NSLog(@"scroll up");
+        scrollDirection = @"ScrollUp";
+    } else if (self.lastContentOffset < scrollView.contentOffset.y) {
+        NSLog(@"scroll down");
+        scrollDirection = @"ScrollDown";
+    } else if (self.lastContentOffset == scrollView.contentOffset.y) {
+        NSLog(@"scroll up");
+        scrollDirection = @"ScrollUp";
+    }
+    NSLog(@"scrollDirection: %@", scrollDirection);
+    
     CGFloat offset = scrollView.contentOffset.y;
     NSLog(@"offset: %f", offset);
+    
+    if ([self.delegate respondsToSelector: @selector(checkYOffset:scrollDirection:)]) {
+        [self.delegate checkYOffset: offset scrollDirection: scrollDirection];
+    }
+    
+    self.lastContentOffset = scrollView.contentOffset.y;
+    if (self.lastContentOffset < 0) {
+        self.lastContentOffset = 0;
+    }
     
     CGFloat percentage = offset / self.headerImageViewHeight.constant;
     NSLog(@"self.headerImageViewHeight.constant: %f", self.headerImageViewHeight.constant);

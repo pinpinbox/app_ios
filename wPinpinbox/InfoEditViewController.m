@@ -33,7 +33,7 @@
 #define kWidthForUpload 720
 #define kHeightForUpload 960
 
-@interface InfoEditViewController () <UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PhotosViewDelegate>
+@interface InfoEditViewController () <UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate>
 {
     NSDictionary *myData;
     
@@ -131,6 +131,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     NSLog(@"InfoEditViewController viewDidLoad");
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    
     [self initialValueSetup];
     [self userInterfaceSetup];
 }
@@ -145,9 +148,22 @@
     [self addKeyboardNotification];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self removeKeyboardNotification];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 #pragma mark - UI Setup Section

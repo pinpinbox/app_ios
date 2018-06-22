@@ -18,7 +18,7 @@
 
 #import "AppDelegate.h"
 
-@interface BuyPPointViewController () <SFSafariViewControllerDelegate>
+@interface BuyPPointViewController () <SFSafariViewControllerDelegate, UIGestureRecognizerDelegate>
 {
     NSString *pointstr;
     NSDictionary *pointlist;
@@ -69,12 +69,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     [self initialValueSetup];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     for (UIView *v in self.tabBarController.view.subviews) {
@@ -85,12 +86,20 @@
     [self getPointStore];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
     
     // Force view to dislay portrait mode
     [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey: @"orientation"];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 #pragma mark -

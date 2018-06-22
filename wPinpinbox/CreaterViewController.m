@@ -86,6 +86,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"viewDidLoad");
     NSLog(@"self.userId: %@", self.userId);
     
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    
     [self initialValueSetup];
     [self loadData];
 }
@@ -102,6 +105,19 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     NSLog(@"[self.collectionView reloadData]");
     //[self.collectionView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

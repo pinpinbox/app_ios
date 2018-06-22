@@ -22,8 +22,7 @@
 #import "GlobalVars.h"
 #import "AppDelegate.h"
 
-@interface SignViewController_3 ()<UITextFieldDelegate, SelectBarDelegate>
-{
+@interface SignViewController_3 ()<UITextFieldDelegate, SelectBarDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectText;
     __weak IBOutlet UITextField *keylab;
     __weak IBOutlet UITextField *phone;
@@ -48,6 +47,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     [self viewSetup];
     [self navBarBtnSetup];
@@ -76,9 +78,24 @@
     [self addKeyboardNotification];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+    
+    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self removeKeyboardNotification];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)viewSetup

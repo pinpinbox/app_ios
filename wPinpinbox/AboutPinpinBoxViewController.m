@@ -11,7 +11,7 @@
 #import "UIColor+Extensions.h"
 #import "AppDelegate.h"
 
-@interface AboutPinpinBoxViewController () <UIScrollViewDelegate>
+@interface AboutPinpinBoxViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 {
     NSArray *imageArray;
     NSArray *topicStrArray;
@@ -29,7 +29,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     [self initialValueSetup];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

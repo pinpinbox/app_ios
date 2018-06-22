@@ -83,7 +83,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface TestReadBookViewController () <MyScrollViewDataSource1, UIScrollViewDelegate, SFSafariViewControllerDelegate, UITextViewDelegate, FBSDKSharingDelegate, NewMessageBoardViewControllerDelegate, AlbumInfoViewControllerDelegate, BuyPPointViewControllerDelegate, UITextFieldDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, ExchangeInfoEditViewControllerDelegate>
+@interface TestReadBookViewController () <MyScrollViewDataSource1, UIScrollViewDelegate, SFSafariViewControllerDelegate, UITextViewDelegate, FBSDKSharingDelegate, NewMessageBoardViewControllerDelegate, AlbumInfoViewControllerDelegate, BuyPPointViewControllerDelegate, UITextFieldDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, ExchangeInfoEditViewControllerDelegate, UIGestureRecognizerDelegate>
 {
     UITapGestureRecognizer *tapGR;
     BOOL isNavBarHidden;
@@ -422,9 +422,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - View Related Methods
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     NSLog(@"TestReadBookViewController viewDidLoad");
     NSLog(@"self.eventId: %@", self.eventId);
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     self.collectionView.pagingEnabled = NO;
     isGiftScrollViewScrolling = NO;
@@ -547,9 +549,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+    
     [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 0.0]];
     
     [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

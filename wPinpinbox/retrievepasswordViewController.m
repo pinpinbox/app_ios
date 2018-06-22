@@ -19,10 +19,11 @@
 #import "MBProgressHUD.h"
 #import "CustomIOSAlertView.h"
 #import "NSString+emailValidation.h"
+#import "AppDelegate.h"
 
 #import "GlobalVars.h"
 
-@interface retrievepasswordViewController () <UITextFieldDelegate, SelectBarDelegate>
+@interface retrievepasswordViewController () <UITextFieldDelegate, SelectBarDelegate, UIGestureRecognizerDelegate>
 {
     UITextField *selectText;
     NSArray *country;
@@ -43,6 +44,8 @@
 #pragma mark - View Related Methods
 - (void)viewDidLoad {
     [super viewDidLoad];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     [self viewSetup];
     [self navBarBtnSetup];
@@ -78,9 +81,22 @@
     [self addKeyboardNotification];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self removeKeyboardNotification];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)viewSetup
