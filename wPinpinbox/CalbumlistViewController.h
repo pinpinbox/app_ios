@@ -9,14 +9,19 @@
 #import <UIKit/UIKit.h>
 
 @protocol CalbumlistViewControllerDelegate <NSObject>
-- (void)editPhoto:(NSString *)albumId templateId:(NSString *)templateId shareCollection:(BOOL)shareCollection hasImage:(BOOL)hasImage;
-- (void)editCooperation: (NSString *)albumId identity:(NSString *)identity;
+- (void)editPhoto:(NSString *)albumId
+       templateId:(NSString *)templateId
+  shareCollection:(BOOL)shareCollection
+         hasImage:(BOOL)hasImage;
+- (void)editCooperation:(NSString *)albumId
+               identity:(NSString *)identity;
 
 - (void)toReadBookController: (NSString *)albumId;
-- (void)shareLink:(NSString *)sharingStr albumId:(NSString *)albumId;
+- (void)shareLink:(NSString *)sharingStr
+          albumId:(NSString *)albumId;
 @end
 
-@interface CalbumlistViewController : UIViewController{
+@interface CalbumlistViewController : UIViewController {
     __weak IBOutlet UILabel *wtitle;
 }
 @property (weak, nonatomic) IBOutlet UICollectionView *collectioview;

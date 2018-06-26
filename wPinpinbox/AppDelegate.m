@@ -708,7 +708,7 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
             NSLog(@"album_id is not nil");
             //[wTools ToRetrievealbumpViewControlleralbumid: pairs[@"album_id"]];
             AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-            aDVC.albumId = pairs[@"album_id"];
+            aDVC.albumId = pairs[@"album_id"];            
             
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [appDelegate.myNav pushViewController: aDVC animated: NO];

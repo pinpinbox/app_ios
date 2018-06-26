@@ -709,6 +709,15 @@ static wTools *instance =nil;
     return dateContent;        
 }
 
++ (UIImage *)normalSnapshotImage:(UIView *)view {
+    UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return snapshotImage;
+}
+
 #pragma mark - Custom Error Alert Method
 + (void)showCustomErrorAlert: (NSString *)msg
 {

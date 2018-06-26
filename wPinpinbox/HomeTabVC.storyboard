@@ -292,7 +292,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="shc-87-aIy"/>
                     <connections>
-                        <outlet property="collectionView" destination="Ul4-mK-9EM" id="lyz-oK-WtX"/>
+                        <outlet property="homeCollectionView" destination="Ul4-mK-9EM" id="4nw-8t-aJY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1p4-xf-ru7" userLabel="First Responder" sceneMemberID="firstResponder"/>

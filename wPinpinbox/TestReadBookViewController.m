@@ -847,9 +847,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.messageBtn addTarget: self action: @selector(messageBtnNormal:) forControlEvents: UIControlEventTouchUpOutside];
     
     if (isLikes) {
-        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_main.png"] forState: UIControlStateNormal];
+        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
     } else {
-        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_light.png"] forState: UIControlStateNormal];
+        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_white"] forState: UIControlStateNormal];
     }
     
     self.likeBtn.layer.cornerRadius = 8;
@@ -1073,7 +1073,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     if ([dic[@"result"] boolValue]) {
                         likesInt++;
                         
-                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_main"] forState: UIControlStateNormal];
+                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
                         //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
                         
                         isLikes = !isLikes;
@@ -1142,7 +1142,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     if ([dic[@"result"] boolValue]) {
                         likesInt--;
                         
-                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_light"] forState: UIControlStateNormal];
+                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_white"] forState: UIControlStateNormal];
                         //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
                         
                         isLikes = !isLikes;

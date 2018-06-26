@@ -795,7 +795,7 @@
         self.mainCategoryRequiredLabel.hidden = YES;
         self.subCategoryRequiredLabel.hidden = YES;
     } else {
-        [self.privacyBtn setImage: [UIImage imageNamed: @"ic200_act_open_light"] forState: UIControlStateNormal];
+        [self.privacyBtn setImage: [UIImage imageNamed: @"ic200_act_open_white"] forState: UIControlStateNormal];
         self.privacyLabel.textColor = [UIColor firstMain];
         self.privacyLabel.text = @"當前隱私權為開啟";
         
@@ -1138,7 +1138,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             self.mainCategoryRequiredLabel.hidden = YES;
             self.subCategoryRequiredLabel.hidden = YES;
         } else {
-            [self.privacyBtn setImage: [UIImage imageNamed: @"ic200_act_open_light"] forState: UIControlStateNormal];
+            [self.privacyBtn setImage: [UIImage imageNamed: @"ic200_act_open_white"] forState: UIControlStateNormal];
             self.privacyLabel.textColor = [UIColor firstMain];
             self.privacyLabel.text = @"當前隱私權為開啟";
             

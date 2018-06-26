@@ -58,7 +58,7 @@
                                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tdJ-FU-b5F">
                                                                 <rect key="frame" x="27" y="27" width="36" height="36"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                <state key="normal" title="Button" image="ic200_camara_dark.png"/>
+                                                                <state key="normal" title="Button" image="ic200_camera_dark"/>
                                                                 <connections>
                                                                     <action selector="changeHeadshotImage:" destination="F7N-fX-J4g" eventType="touchUpInside" id="rPl-Mt-Ufv"/>
                                                                 </connections>
@@ -1621,7 +1621,7 @@
     <resources>
         <image name="05.png" width="1920" height="862"/>
         <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
-        <image name="ic200_camara_dark.png" width="144" height="144"/>
+        <image name="ic200_camera_dark" width="144" height="144"/>
         <image name="icon_2_0_0_link_facebook.png" width="120" height="120"/>
         <image name="icon_2_0_0_link_google.png" width="120" height="120"/>
         <image name="icon_2_0_0_link_home.png" width="120" height="120"/>

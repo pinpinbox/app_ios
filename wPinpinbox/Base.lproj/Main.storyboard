@@ -916,8 +916,7 @@
                                             <constraint firstAttribute="height" constant="36" id="OkH-Ip-GOW"/>
                                             <constraint firstAttribute="width" constant="36" id="U2j-w8-Obi"/>
                                         </constraints>
-                                        <inset key="imageEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
-                                        <state key="normal" image="ic200_act_close_pink.png"/>
+                                        <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
                                                 <real key="value" value="16"/>
@@ -1475,7 +1474,7 @@
                                 <rect key="frame" x="16" y="312" width="288" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="信箱" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wFk-YN-BdR">
-                                        <rect key="frame" x="44" y="8" width="236" height="32"/>
+                                        <rect key="frame" x="41" y="8" width="239" height="32"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
@@ -1484,10 +1483,10 @@
                                         </connections>
                                     </textField>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_mail_dark" translatesAutoresizingMaskIntoConstraints="NO" id="BT6-Hv-Ba8">
-                                        <rect key="frame" x="8" y="12" width="23" height="23"/>
+                                        <rect key="frame" x="8" y="13.5" width="20" height="20"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="23" id="jHX-9G-Q1j"/>
-                                            <constraint firstAttribute="height" constant="23" id="q51-Hh-VK7"/>
+                                            <constraint firstAttribute="width" constant="20" id="jHX-9G-Q1j"/>
+                                            <constraint firstAttribute="height" constant="20" id="q51-Hh-VK7"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -1507,7 +1506,7 @@
                                 <rect key="frame" x="16" y="376" width="288" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="密碼" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CHs-O4-gNa">
-                                        <rect key="frame" x="44" y="8" width="196" height="32"/>
+                                        <rect key="frame" x="41" y="8" width="199" height="32"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
@@ -1516,10 +1515,10 @@
                                         </connections>
                                     </textField>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_password_normal_dark" translatesAutoresizingMaskIntoConstraints="NO" id="qxk-eg-vqJ">
-                                        <rect key="frame" x="8" y="13" width="23" height="23"/>
+                                        <rect key="frame" x="8" y="16" width="20" height="20"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="23" id="JhF-kh-vIg"/>
-                                            <constraint firstAttribute="height" constant="23" id="avc-7V-qld"/>
+                                            <constraint firstAttribute="width" constant="20" id="JhF-kh-vIg"/>
+                                            <constraint firstAttribute="height" constant="20" id="avc-7V-qld"/>
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bOh-Y0-eIk">
@@ -2959,7 +2958,6 @@
         <image name="button_video_recording_120x120.png" width="120" height="120"/>
         <image name="downbutton.png" width="270" height="72"/>
         <image name="frame_click.png" width="142" height="70"/>
-        <image name="ic200_act_close_pink.png" width="144" height="144"/>
         <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
         <image name="ic200_arrow_left_light.png" width="144" height="144"/>
         <image name="ic200_ask_light" width="144" height="144"/>

@@ -2862,7 +2862,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [self.view addSubview: self.customAddActionSheet.view];
     [self.customAddActionSheet viewWillAppear: NO];
     
-    [self.customAddActionSheet addSelectItem: @"ic200_camara_dark" title: @"相片" btnStr: @"" tagInt: 1 identifierStr: @"photo"];
+    [self.customAddActionSheet addSelectItem: @"ic200_camera_dark" title: @"相片" btnStr: @"" tagInt: 1 identifierStr: @"photo"];
     [self.customAddActionSheet addSelectItem: @"ic200_videomake_dark" title: @"影片" btnStr: @"" tagInt: 2 identifierStr: @"video"];
     
     __weak typeof(self) weakSelf = self;

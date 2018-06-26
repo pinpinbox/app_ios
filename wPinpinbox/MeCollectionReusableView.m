@@ -19,6 +19,7 @@
     self.changeBannerBtn.hidden = NO;
     self.changeBannerBtn.layer.cornerRadius = kCornerRadius;
     self.changeBannerBtn.layer.masksToBounds = YES;
+    self.changeBannerBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 14.0];
     [self.changeBannerBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
     self.changeBannerBtn.backgroundColor = [UIColor thirdGrey];
     

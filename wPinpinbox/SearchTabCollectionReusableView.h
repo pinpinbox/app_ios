@@ -12,7 +12,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *userRecommendationLabel;
 @property (weak, nonatomic) IBOutlet UILabel *albumRecommendationLabel;
 
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView2;
+@property (weak, nonatomic) IBOutlet UICollectionView *userCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *horzLineView;
 
 @end

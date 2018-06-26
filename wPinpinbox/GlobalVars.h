@@ -35,6 +35,7 @@ extern NSString *wwwFlurryAPIKey;
 extern NSString *w3FlurryAPIKey;
 
 extern CGFloat navBarHeightConstant;
+extern CGFloat kBtnInset;
 
 @interface GlobalVars : NSObject
 

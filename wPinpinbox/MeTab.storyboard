@@ -540,14 +540,14 @@
                                             <constraint firstAttribute="height" constant="42" id="ACT-Wo-dVo"/>
                                             <constraint firstAttribute="width" constant="42" id="XyU-8l-oXt"/>
                                         </constraints>
-                                        <inset key="imageEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
+                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" title="Button" image="ic200_menu_dark.png"/>
                                         <connections>
                                             <action selector="showActionSheet:" destination="YhI-lD-jqk" eventType="touchUpInside" id="srn-Q5-ogN"/>
                                         </connections>
                                     </button>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="UeV-OH-gpb">
-                                        <rect key="frame" x="144" y="6" width="168" height="42"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="UeV-OH-gpb">
+                                        <rect key="frame" x="120" y="6" width="192" height="42"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x5m-Li-kvA">
                                                 <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
@@ -555,38 +555,38 @@
                                                     <constraint firstAttribute="width" constant="42" id="EIj-Ch-ER5"/>
                                                     <constraint firstAttribute="height" constant="42" id="STb-bL-dEY"/>
                                                 </constraints>
-                                                <inset key="imageEdgeInsets" minX="9" minY="9" maxX="9" maxY="9"/>
+                                                <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" title="Button" image="ic200_message_dark.png"/>
                                                 <connections>
                                                     <action selector="messageBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="NOc-ne-kfe"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lva-mz-Q9N">
-                                                <rect key="frame" x="42" y="0.0" width="42" height="42"/>
+                                                <rect key="frame" x="50" y="0.0" width="42" height="42"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="42" id="KJT-eh-SCt"/>
                                                     <constraint firstAttribute="height" constant="42" id="nvZ-Hv-Ft5"/>
                                                 </constraints>
-                                                <inset key="imageEdgeInsets" minX="9" minY="9" maxX="9" maxY="9"/>
+                                                <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" title="Button" image="ic200_user_about_dark.png"/>
                                                 <connections>
                                                     <action selector="myPageBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="oUp-Ju-OhQ"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d9F-Yn-W3n">
-                                                <rect key="frame" x="84" y="0.0" width="42" height="42"/>
+                                                <rect key="frame" x="100" y="0.0" width="42" height="42"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="42" id="1u6-qc-GGq"/>
                                                     <constraint firstAttribute="width" constant="42" id="ehH-jC-euw"/>
                                                 </constraints>
-                                                <inset key="imageEdgeInsets" minX="9" minY="9" maxX="9" maxY="9"/>
+                                                <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" title="Button" image="ic200_chart_dark.png"/>
                                                 <connections>
                                                     <action selector="pointCalculationBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="hG4-fb-2DZ"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pH7-gt-I90">
-                                                <rect key="frame" x="126" y="0.0" width="42" height="42"/>
+                                                <rect key="frame" x="150" y="0.0" width="42" height="42"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="42" id="9d2-Ph-mpj"/>
                                                     <constraint firstAttribute="width" constant="42" id="K9s-Aq-Mlw"/>

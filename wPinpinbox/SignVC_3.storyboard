@@ -36,13 +36,6 @@
                                     <action selector="back:" destination="iWg-Wp-sHH" eventType="touchUpInside" id="4kr-bf-rsz"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinpin_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="s3r-BM-IqJ">
-                                <rect key="frame" x="243" y="210" width="116" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="g0W-5k-PSf"/>
-                                    <constraint firstAttribute="width" constant="116" id="raM-qd-Y1g"/>
-                                </constraints>
-                            </imageView>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="75z-Ky-l1r">
                                 <rect key="frame" x="16" y="248" width="77" height="48"/>
                                 <subviews>
@@ -103,7 +96,7 @@
                                 <rect key="frame" x="16" y="384" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="輸 入 驗 證 碼" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sPt-sC-RBr">
-                                        <rect key="frame" x="46" y="8" width="289" height="32"/>
+                                        <rect key="frame" x="41" y="8" width="294" height="32"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <textInputTraits key="textInputTraits" keyboardType="alphabet" returnKeyType="done"/>
@@ -112,10 +105,10 @@
                                         </connections>
                                     </textField>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_sms_dark.png" translatesAutoresizingMaskIntoConstraints="NO" id="jBx-w4-7u3">
-                                        <rect key="frame" x="8" y="12" width="25" height="25"/>
+                                        <rect key="frame" x="8" y="14.5" width="20" height="20"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="25" id="Cys-rH-8yY"/>
-                                            <constraint firstAttribute="height" constant="25" id="tzt-to-hgg"/>
+                                            <constraint firstAttribute="width" constant="20" id="Cys-rH-8yY"/>
+                                            <constraint firstAttribute="height" constant="20" id="tzt-to-hgg"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -156,10 +149,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="tv4-lo-U6H" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="12f-28-qG0"/>
-                            <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="s3r-BM-IqJ" secondAttribute="trailing" constant="16" id="3ib-LV-i7U"/>
                             <constraint firstItem="75z-Ky-l1r" firstAttribute="top" secondItem="bCj-Ac-4oq" secondAttribute="top" id="7Uh-Xr-W2b"/>
                             <constraint firstItem="wpI-gE-vI2" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="8" id="Fcg-7c-Lvb"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="bottom" secondItem="tv4-lo-U6H" secondAttribute="bottom" constant="16" id="GWJ-Fa-0fs"/>
+                            <constraint firstItem="75z-Ky-l1r" firstAttribute="top" secondItem="wpI-gE-vI2" secondAttribute="bottom" constant="114" id="I9T-Zf-0nI"/>
                             <constraint firstItem="cTP-Wh-Ica" firstAttribute="top" secondItem="Wx2-i6-Grc" secondAttribute="top" constant="16" id="PWm-mB-vBp"/>
                             <constraint firstItem="75z-Ky-l1r" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="QcU-eb-CZx"/>
                             <constraint firstItem="ZQ7-2v-rud" firstAttribute="baseline" secondItem="vDk-8o-Si0" secondAttribute="baseline" id="QlK-YY-RCN"/>
@@ -168,7 +161,6 @@
                             <constraint firstItem="UGa-jd-z1j" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="ZlF-93-mq9"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="UGa-jd-z1j" secondAttribute="trailing" constant="16" id="aeq-oM-0Qw"/>
                             <constraint firstItem="oho-14-CJv" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="bAg-Dv-ZgM"/>
-                            <constraint firstItem="s3r-BM-IqJ" firstAttribute="top" secondItem="Wx2-i6-Grc" secondAttribute="top" constant="190" id="d28-56-3g7"/>
                             <constraint firstItem="bCj-Ac-4oq" firstAttribute="leading" secondItem="75z-Ky-l1r" secondAttribute="trailing" constant="14" id="dqg-sR-pmH"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="oho-14-CJv" secondAttribute="trailing" constant="16" id="fO3-ah-U1O"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="vDk-8o-Si0" secondAttribute="trailing" constant="16" id="gUI-VX-fC0"/>
@@ -178,7 +170,6 @@
                             <constraint firstItem="wpI-gE-vI2" firstAttribute="top" secondItem="cTP-Wh-Ica" secondAttribute="bottom" constant="8" id="qDR-KR-O4L"/>
                             <constraint firstItem="UGa-jd-z1j" firstAttribute="top" secondItem="oho-14-CJv" secondAttribute="bottom" constant="8" symbolic="YES" id="v9C-tH-p18"/>
                             <constraint firstItem="oho-14-CJv" firstAttribute="top" secondItem="vDk-8o-Si0" secondAttribute="bottom" constant="32" id="vBS-NQ-VWt"/>
-                            <constraint firstItem="bCj-Ac-4oq" firstAttribute="top" secondItem="s3r-BM-IqJ" secondAttribute="bottom" constant="8" symbolic="YES" id="xgU-TM-aw6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Wx2-i6-Grc"/>
                     </view>
@@ -203,6 +194,5 @@
     </scenes>
     <resources>
         <image name="ic200_sms_dark.png" width="144" height="144"/>
-        <image name="pinpin_logo.png" width="401" height="82"/>
     </resources>
 </document>

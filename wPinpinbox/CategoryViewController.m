@@ -31,7 +31,7 @@
 
 //#define kUserImageViewNumber 6
 
-@interface CategoryViewController () <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate, UIGestureRecognizerDelegate>
+@interface CategoryViewController () <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SFSafariViewControllerDelegate, YTPlayerViewDelegate, UIGestureRecognizerDelegate>
 {
     //NSMutableArray *albumExploreArray;
     UICollectionView *collectionView;
@@ -602,8 +602,17 @@
                     if ([strArray[0] isEqualToString: @"album_id"]) {
                         AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
                         aDVC.albumId = strArray[1];
+                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+                        
+                        CATransition *transition = [CATransition animation];
+                        transition.duration = 0.5;
+                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+                        transition.type = kCATransitionMoveIn;
+                        transition.subtype = kCATransitionFromTop;
+                        
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: aDVC animated: YES];
+                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+                        [appDelegate.myNav pushViewController: aDVC animated: NO];
                     } else {
                         [self toSafariWebVC: strData];
                     }
@@ -899,20 +908,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                 [cell.bannerImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
                                         placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
             }
-        }
-        
-//        if (indexPath.row == 0) {
-//            cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"YoutubeCell" forIndexPath: indexPath];
-//            NSDictionary *playerVars = @{@"playsinline" : @1};
-//            [cell.playerView loadWithVideoId: @"U0gqIXmLIKk" playerVars: playerVars];
-//        } else if (indexPath.row == 1) {
-//            cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"YoutubeCell" forIndexPath: indexPath];
-//            NSDictionary *playerVars = @{@"playsinline" : @1};
-//            [cell.playerView loadWithVideoId: @"WXmdVEkJKGg" playerVars: playerVars];
-//        } else if (indexPath.row == 2) {
-//            cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"BannerCell" forIndexPath: indexPath];
-//            cell.bannerImageView.image = [UIImage imageNamed: @"05"];
-//        }
+        }        
         return cell;
     } else {
         NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
@@ -962,16 +958,16 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             NSLog(@"album_id: %@", dic[@"album"][@"album_id"]);
             aDVC.albumId = [dic[@"album"][@"album_id"] stringValue];
         }
+        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
         
         CATransition *transition = [CATransition animation];
         transition.duration = 0.5;
         transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionFade;
+        transition.type = kCATransitionMoveIn;
         transition.subtype = kCATransitionFromTop;
-        [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
-        //[self.navigationController pushViewController: aDVC animated: NO];
         
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
         [appDelegate.myNav pushViewController: aDVC animated: NO];
     } else if (collectionView.tag == 3) {
         NSDictionary *bannerDic = self.bannerDataArray[indexPath.row];
@@ -994,6 +990,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
+#pragma mark - UICollectionViewDelegateFlowLayout Methods
+- (CGFloat)collectionView:(UICollectionView *)collectionView
+                   layout:(UICollectionViewLayout *)collectionViewLayout
+minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    NSLog(@"minimumLineSpacingForSectionAtIndex");
+    return 16.0f;
+}
+
+#pragma mark - UIScrollViewDelegate Methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidScroll");
     NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);

@@ -229,8 +229,16 @@
         AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
         aDVC.albumId = type_id;
         aDVC.getMessagePush = YES;
+        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+        
+        CATransition *transition = [CATransition animation];
+        transition.duration = 0.5;
+        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+        transition.type = kCATransitionMoveIn;
+        transition.subtype = kCATransitionFromTop;
         
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
         [appDelegate.myNav pushViewController: aDVC animated: NO];
     }
     if ([type isEqualToString: @"albumcooperation"]) {

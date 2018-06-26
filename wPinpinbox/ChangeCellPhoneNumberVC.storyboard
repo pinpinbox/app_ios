@@ -111,14 +111,14 @@
                                 <rect key="frame" x="16" y="368" width="343" height="48"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_sms_dark.png" translatesAutoresizingMaskIntoConstraints="NO" id="SeP-X2-h2q">
-                                        <rect key="frame" x="16" y="11" width="25" height="25"/>
+                                        <rect key="frame" x="16" y="13.5" width="20" height="20"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="25" id="jxm-wa-lra"/>
-                                            <constraint firstAttribute="height" constant="25" id="v1X-WW-dhS"/>
+                                            <constraint firstAttribute="width" constant="20" id="jxm-wa-lra"/>
+                                            <constraint firstAttribute="height" constant="20" id="v1X-WW-dhS"/>
                                         </constraints>
                                     </imageView>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="輸 入 驗 證 碼" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="73y-j8-tYL">
-                                        <rect key="frame" x="54" y="8" width="281" height="32"/>
+                                        <rect key="frame" x="49" y="8" width="286" height="32"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <textInputTraits key="textInputTraits" keyboardType="alphabet" returnKeyType="done"/>

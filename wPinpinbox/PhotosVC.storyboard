@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -111,7 +111,7 @@
                                             <constraint firstAttribute="height" constant="42" id="hZV-fr-dEK"/>
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
-                                        <state key="normal" title="Button" image="ic200_camara_dark.png"/>
+                                        <state key="normal" title="Button" image="ic200_camera_dark"/>
                                         <connections>
                                             <action selector="cameraBtnPress:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="8Uc-iv-oLJ"/>
                                         </connections>
@@ -351,7 +351,7 @@
         <image name="button_take-photo.png" width="128" height="128"/>
         <image name="camera.png" width="60" height="54"/>
         <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
-        <image name="ic200_camara_dark.png" width="144" height="144"/>
+        <image name="ic200_camera_dark" width="144" height="144"/>
         <image name="ic200_circle_select_alpha.png" width="144" height="144"/>
         <image name="ic200_photosize_light.png" width="144" height="144"/>
     </resources>

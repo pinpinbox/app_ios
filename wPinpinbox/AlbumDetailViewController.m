@@ -96,6 +96,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     BOOL isPosting;
     
     CGPoint initialTouchPoint;
+    
+    BOOL isMessageShowing;
 }
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
@@ -175,6 +177,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // Do any additional setup after loading the view.
     NSLog(@"AlbumDetailViewController");
     NSLog(@"viewDidLoad");
+    isMessageShowing = NO;
+    
     self.creatorNameLabel.text = @"";
     
     NSLog(@"");
@@ -221,7 +225,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     UIPanGestureRecognizer *pgr = [[UIPanGestureRecognizer alloc] initWithTarget: self action: @selector(panGestureRecognizerHandler:)];
     pgr.delegate = self;
     [self.view addGestureRecognizer: pgr];
-    
     self.delegate = self;
 }
 
@@ -233,51 +236,83 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"self.scrollDirection: %@", self.scrollDirection);
     NSLog(@"self.isViewMoved: %d", self.isViewMoved);
     
-    if (self.yOffset == 0) {
-        if ([self.scrollDirection isEqualToString: @"ScrollUp"] || self.scrollDirection == nil) {
-            if (!self.isViewMoved) {
-                if (touchPoint.y < 0) {
-                    return;
+    if (!isMessageShowing) {
+        if (self.yOffset == 0) {
+            if ([self.scrollDirection isEqualToString: @"ScrollUp"] || self.scrollDirection == nil) {
+                if (!self.isViewMoved) {
+                    if (touchPoint.y < 0) {
+                        return;
+                    }
                 }
-            }
-            NSLog(@"Activate Dragging Function");
-    
-            if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-                initialTouchPoint = touchPoint;
-            } else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
-                NSLog(@"gestureRecognizer.state == UIGestureRecognizerStateChanged");
-                NSLog(@"touchPoint.y - initialTouchPoint.y: %f", touchPoint.y - initialTouchPoint.y);
+                NSLog(@"Activate Dragging Function");
                 
-                self.isViewMoved = YES;
-                
-                if ((touchPoint.y - initialTouchPoint.y) > 0) {
-                    self.view.frame = CGRectMake(0, touchPoint.y - initialTouchPoint.y, self.view.frame.size.width, self.view.frame.size.height);
-                }
-            } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded || gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
-                NSLog(@"gestureRecognizer.state == UIGestureRecognizerStateEnded || gestureRecognizer.state == UIGestureRecognizerStateCancelled");
-                NSLog(@"touchPoint.y - initialTouchPoint.y: %f", touchPoint.y - initialTouchPoint.y);
-                
-                self.isViewMoved = NO;
-                self.bottomScroll.scrollEnabled = YES;
-                
-                if ((touchPoint.y - initialTouchPoint.y) > 100) {
-                    CATransition *transition = [CATransition animation];
-                    transition.duration = 0.5;
-                    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                    transition.type = kCATransitionReveal;
-                    transition.subtype = kCATransitionFromBottom;
-                    [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
-                    //[self.navigationController popViewControllerAnimated: NO];
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [appDelegate.myNav popViewControllerAnimated: NO];
-                } else {
-                    [UIView animateWithDuration: 0.3 animations:^{
-                        self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-                    }];
+                if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+                    initialTouchPoint = touchPoint;
+                } else if (gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+                    NSLog(@"gestureRecognizer.state == UIGestureRecognizerStateChanged");
+                    NSLog(@"touchPoint.y - initialTouchPoint.y: %f", touchPoint.y - initialTouchPoint.y);
+                    
+                    self.isViewMoved = YES;
+                    
+                    if ((touchPoint.y - initialTouchPoint.y) > 0) {
+                        self.bView.frame = CGRectMake(0, touchPoint.y - initialTouchPoint.y, self.bView.frame.size.width, self.bView.frame.size.height);
+                        
+                        CGFloat alphaValue = 1 - 0.01 * self.bView.frame.origin.y;
+                        [self changeAlphaValue: alphaValue];
+                         
+//                        self.view.frame = CGRectMake(0, touchPoint.y - initialTouchPoint.y, self.bView.frame.size.width, self.bView.frame.size.height);
+//                        CGFloat alphaValue = 1 - 0.01 * self.view.frame.origin.y;
+//                        [self changeAlphaValue: alphaValue];
+                    }
+                } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded || gestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+                    NSLog(@"gestureRecognizer.state == UIGestureRecognizerStateEnded || gestureRecognizer.state == UIGestureRecognizerStateCancelled");
+                    NSLog(@"touchPoint.y - initialTouchPoint.y: %f", touchPoint.y - initialTouchPoint.y);
+                    
+                    self.isViewMoved = NO;
+                    self.bottomScroll.scrollEnabled = YES;
+                    
+                    if ((touchPoint.y - initialTouchPoint.y) > 100) {
+//                        CATransition *transition = [CATransition animation];
+//                        transition.duration = 0.5;
+//                        transition.timingFunction = transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+//                        transition.type = kCATransitionReveal;
+//                        transition.subtype = kCATransitionFromBottom;
+//                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+//                        [appDelegate.myNav popViewControllerAnimated: NO];
+                        
+                        // To Avoid popViewController more than once
+                        gestureRecognizer.enabled = NO;
+                        
+                        [UIView animateWithDuration: 0.3 animations:^{
+                            self.bView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height, self.bView.frame.size.width, self.bView.frame.size.height);
+                            
+                            CGFloat alphaValue = 1 - 0.01 * self.bView.frame.origin.y;
+                            [self changeAlphaValue: alphaValue];
+                        } completion:^(BOOL finished) {
+                            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                            [appDelegate.myNav popViewControllerAnimated: NO];
+                        }];
+                        
+                    } else {
+                        [UIView animateWithDuration: 0.3 animations:^{
+                            self.bView.frame = CGRectMake(0, 0, self.bView.frame.size.width, self.bView.frame.size.height);
+//                            self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+                            [self changeAlphaValue: 1];
+                        }];
+                    }
                 }
             }
         }
-    }
+    }        
+}
+
+- (void)changeAlphaValue:(CGFloat)alphaValue {
+    self.creatorView.alpha = alphaValue;
+    self.toolBarView.alpha = alphaValue;
+    self.likeView.alpha = alphaValue;
+    self.messageView.alpha = alphaValue;
+    self.sponsorView.alpha = alphaValue;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -334,6 +369,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 break;
         }
     }
+    self.snapshotImageView.image = self.snapShotImage;
 }
 
 - (void)setBtnBackgroundColorToClear {
@@ -371,9 +407,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     
     if (isLikes) {
-        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_main.png"] forState: UIControlStateNormal];
+        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
     } else {
-        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_dark.png"] forState: UIControlStateNormal];
+        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_dark"] forState: UIControlStateNormal];
     }
     self.likeBtn.backgroundColor = [UIColor clearColor];
     self.likeBtn.layer.cornerRadius = kCornerRadius;
@@ -438,9 +474,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     likesInt = [self.data[@"albumstatistics"][@"likes"] integerValue];
     
     if ([self.data[@"album"][@"is_likes"] boolValue]) {
-        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_main"] forState: UIControlStateNormal];
+        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
     } else {
-        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_dark"] forState: UIControlStateNormal];
+        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_dark"] forState: UIControlStateNormal];
     }
     
     self.headerLikedNumberLabel.textColor = [UIColor secondGrey];
@@ -2029,6 +2065,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (void)showCustomMessageActionSheet {
     NSLog(@"showCustomMessageActionSheet");
+    isMessageShowing = YES;
+    
     self.messageBtn.backgroundColor = [UIColor clearColor];
     
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
@@ -2276,6 +2314,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"self: %@", self);
     NSLog(@"DDAUIActionSheetViewController");
     NSLog(@"actionSheetViewDidSlideOut");
+    isMessageShowing = NO;
+    
     //[self.fxBlurView removeFromSuperview];
     [self.effectView removeFromSuperview];
     self.effectView = nil;
@@ -2383,7 +2423,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     if ([dic[@"result"] boolValue]) {
                         likesInt++;
                         
-                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_main"] forState: UIControlStateNormal];
+                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
                         self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
                         
                         isLikes = !isLikes;
@@ -2453,7 +2493,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     if ([dic[@"result"] boolValue]) {
                         likesInt--;
                         
-                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_like_dark"] forState: UIControlStateNormal];
+                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_dark"] forState: UIControlStateNormal];
                         self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
                         
                         isLikes = !isLikes;

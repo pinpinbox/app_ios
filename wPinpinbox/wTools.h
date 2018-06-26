@@ -78,4 +78,7 @@
 // Remaining Time Calculation
 + (NSString *)remainingTimeCalculation:(NSMutableDictionary *)dic;
 
+// Get Snapshot Image
++ (UIImage *)normalSnapshotImage:(UIView *)view;
+
 @end

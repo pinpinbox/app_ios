@@ -391,23 +391,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
     //aDVC.data = [dic[@"data"] mutableCopy];
     aDVC.albumId = albumId;
+    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
     
     CATransition *transition = [CATransition animation];
     transition.duration = 0.5;
     transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionFade;
+    transition.type = kCATransitionMoveIn;
     transition.subtype = kCATransitionFromTop;
-    [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
-    //[self.navigationController pushViewController: aDVC animated: NO];
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
     [appDelegate.myNav pushViewController: aDVC animated: NO];
-    
-    //NSDictionary *data = pictures[indexPath.row];
-    
-    //NSString *albumId = [data[@"album"][@"album_id"] stringValue];
-    
-    //[self ToRetrievealbumpViewControlleralbumid: albumId];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView

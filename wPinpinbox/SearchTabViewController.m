@@ -43,7 +43,6 @@ static NSString *hostURL = @"www.pinpinbox.com";
     NSMutableArray *albumData;
     NSMutableArray *userData;
     
-    UICollectionView *collectionView2;
     UILabel *userRecommendationLabel;
     UILabel *albumRecommendationLabel;
     
@@ -67,8 +66,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
 @property (nonatomic, strong) JCCollectionViewWaterfallLayout *jccLayout;
 
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-
+@property (weak, nonatomic) IBOutlet UICollectionView *albumCollectionView;
+@property (weak, nonatomic) UICollectionView *userCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *searchView;
 @property (weak, nonatomic) IBOutlet UITextField *searchTextField;
 @property (weak, nonatomic) IBOutlet UIButton *cancelTextBtn;
@@ -91,8 +90,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [super viewWillAppear:animated];
     NSLog(@"");
     NSLog(@"SearchTabViewController viewWillAppear");
-    
-    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
+//    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
@@ -100,13 +98,13 @@ static NSString *hostURL = @"www.pinpinbox.com";
     }
     self.scanBtn.backgroundColor = [UIColor thirdGrey];
     
-    [self.collectionView reloadData];
-    [collectionView2 reloadData];
+    [self.albumCollectionView reloadData];
+    [self.userCollectionView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
+//    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -146,8 +144,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
     //UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
     //[self.view addGestureRecognizer:tap];
     
-    self.collectionView.contentInset = UIEdgeInsetsMake(50, 0, 0, 0);
-    self.collectionView.showsVerticalScrollIndicator = NO;
+    self.albumCollectionView.contentInset = UIEdgeInsetsMake(50, 0, 0, 0);
+    self.albumCollectionView.showsVerticalScrollIndicator = NO;
     
     columnCount = 2;
     miniInteriorSpacing = 16;
@@ -172,7 +170,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     self.navBarView.backgroundColor = [UIColor barColor];
     
     // JCCollectionViewWaterfallLayout
-    self.jccLayout = (JCCollectionViewWaterfallLayout *)self.collectionView.collectionViewLayout;
+    self.jccLayout = (JCCollectionViewWaterfallLayout *)self.albumCollectionView.collectionViewLayout;
     self.jccLayout.headerHeight = 250;
     
     // Search View
@@ -297,7 +295,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                         
 //                        NSLog(@"userData: %@", userData);
                         
-                        [collectionView2 reloadData];
+                        [self.userCollectionView reloadData];
                         
                         [self showAlbumRecommendedList];
                     } else {
@@ -384,7 +382,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                         nextAlbumId = albumData.count;
                         
 //                        NSLog(@"albumData: %@", albumData);
-                        [self.collectionView reloadData];
+                        [self.albumCollectionView reloadData];
                     } else {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
@@ -459,9 +457,9 @@ static NSString *hostURL = @"www.pinpinbox.com";
     NSLog(@"");
     NSLog(@"viewForSupplementaryElementOfKind");
     
-    SearchTabCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
+    SearchTabCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"SearchHeaderId" forIndexPath: indexPath];
     
-    collectionView2 = headerView.collectionView2;
+    self.userCollectionView = headerView.userCollectionView;
     
     userRecommendationLabel = headerView.userRecommendationLabel;
     [LabelAttributeStyle changeGapString: userRecommendationLabel content: userRecommendationLabel.text];
@@ -469,7 +467,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     albumRecommendationLabel = headerView.albumRecommendationLabel;
     [LabelAttributeStyle changeGapString: albumRecommendationLabel content: albumRecommendationLabel.text];
     
-    [self.collectionView.collectionViewLayout invalidateLayout];
+    [self.albumCollectionView.collectionViewLayout invalidateLayout];
     
     return headerView;
 }
@@ -640,12 +638,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSLog(@"%ld", (long)collectionView.tag);
     
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     
     if (collectionView.tag == 1) {
         NSLog(@"");
         NSLog(@"");
-        NSLog(@"self.collectionView");
+        NSLog(@"self.albumCollectionView");
         //NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
 //        cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
         //NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
@@ -658,7 +656,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     } else {
         NSLog(@"");
         NSLog(@"");
-        NSLog(@"collectionView2");
+        NSLog(@"self.userCollectionView");
         
         //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
         //cell.contentView.backgroundColor = [UIColor thirdMain];
@@ -751,7 +749,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
         return finalSize;
         //return CGSizeMake(finalSize.width, finalSize.height * scale);
     } else {
-        NSLog(@"self.collectionView.frame: %@", NSStringFromCGRect(self.collectionView.frame));
+        NSLog(@"self.albumCollectionView.frame: %@", NSStringFromCGRect(self.albumCollectionView.frame));
         return CGSizeMake(96, 130);
     }
 }
@@ -813,13 +811,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [selectTextField resignFirstResponder];
     
-    if (self.collectionView.tag == 1) {
+    if (self.albumCollectionView.tag == 1) {
         if (isAlbumLoading) {
             NSLog(@"isLoading: %d", isAlbumLoading);
             return;
         }
     }
-    if (self.collectionView.tag == 200) {
+    if (self.albumCollectionView.tag == 200) {
         if (isUserLoading) {
             NSLog(@"isLoading: %d", isUserLoading);
             return;
@@ -827,27 +825,16 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
 }
 
-
 #pragma mark - UITextField Delegate Methods
-
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-//    NSLog(@"textFieldDidBeginEditing");
-//    NSLog(@"textField.text: %@", textField.text);
-    
     selectTextField = textField;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-//    NSLog(@"textFieldDidEndEditing");
-//    NSLog(@"textField.text: %@", textField.text);
-    
     selectTextField = nil;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-//    NSLog(@"textFieldShouldReturn");
-//    NSLog(@"textField.text: %@", textField.text);
-    
     [textField resignFirstResponder];
     return YES;
 }
@@ -858,8 +845,7 @@ replacementString:(NSString *)string
 {
     NSLog(@"shouldChangeCharactersInRange");
     NSString *resultString = [textField.text stringByReplacingCharactersInRange: range
-                                                                     withString: string];
-    
+                                                                     withString: string];    
 //    NSLog(@"textField.text: %@", textField.text);
 //    NSLog(@"resultString: %@", resultString);
     
@@ -880,22 +866,9 @@ replacementString:(NSString *)string
 }
 
 #pragma mark - Search Session
-
 - (void)callProtocol: (NSString *)text {
     NSLog(@"callProtocol");
     NSLog(@"text: %@", text);
-    /*
-    [session getTasksWithCompletionHandler:^(NSArray<NSURLSessionDataTask *> * _Nonnull dataTasks, NSArray<NSURLSessionUploadTask *> * _Nonnull uploadTasks, NSArray<NSURLSessionDownloadTask *> * _Nonnull downloadTasks) {
-        
-        if (!dataTasks || !dataTasks.count) {
-            return;
-        }
-        for (NSURLSessionDataTask *task in dataTasks) {
-            [task cancel];
-        }
-    }];
-    */
-    
     NSLog(@"dataTaskArray.count: %lu", (unsigned long)dataTaskArray.count);
     
     if (dataTaskArray.count > 0) {
@@ -1002,7 +975,7 @@ replacementString:(NSString *)string
                             noInfoHorzView.hidden = YES;
                         }
                         
-                        [collectionView2 reloadData];
+                        [self.userCollectionView reloadData];
                         
                         [self filterAlbumContentForSearchText: text];
                     } else {
@@ -1103,7 +1076,7 @@ replacementString:(NSString *)string
                             noInfoVertView.hidden = YES;
                         }
                         
-                        [self.collectionView reloadData];
+                        [self.albumCollectionView reloadData];
                     } else {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
@@ -1130,8 +1103,8 @@ replacementString:(NSString *)string
         noInfoHorzView.clipsToBounds = YES;
         noInfoHorzView.hidden = YES;
         
-        [collectionView2 addSubview: noInfoHorzView];
-        [collectionView2 bringSubviewToFront: noInfoHorzView];
+        [self.userCollectionView addSubview: noInfoHorzView];
+        [self.userCollectionView bringSubviewToFront: noInfoHorzView];
         
         MyFrameLayout *frameLayout = [self createFrameLayout];
         [noInfoHorzView addSubview: frameLayout];
@@ -1153,8 +1126,8 @@ replacementString:(NSString *)string
         noInfoVertView.clipsToBounds = YES;
         noInfoVertView.hidden = YES;
         
-        [self.collectionView addSubview: noInfoVertView];
-        [self.collectionView bringSubviewToFront: noInfoVertView];
+        [self.albumCollectionView addSubview: noInfoVertView];
+        [self.albumCollectionView bringSubviewToFront: noInfoVertView];
         
         MyFrameLayout *frameLayout = [self createFrameLayout];
         [noInfoVertView addSubview: frameLayout];
@@ -1266,16 +1239,16 @@ replacementString:(NSString *)string
                         AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
                         aDVC.data = [dic[@"data"] mutableCopy];
                         aDVC.albumId = albumid;
+                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
                         
                         CATransition *transition = [CATransition animation];
                         transition.duration = 0.5;
                         transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                        transition.type = kCATransitionFade;
+                        transition.type = kCATransitionMoveIn;
                         transition.subtype = kCATransitionFromTop;
-                        [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
-                        //[self.navigationController pushViewController: aDVC animated: NO];
                         
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
                         [appDelegate.myNav pushViewController: aDVC animated: NO];
                     } else {
                         NSLog(@"失敗： %@", dic[@"message"]);

@@ -767,14 +767,16 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
     aDVC.albumId = albumId;
     aDVC.fromVC = @"VotingVC";
+    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
     
     CATransition *transition = [CATransition animation];
     transition.duration = 0.5;
     transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionFade;
+    transition.type = kCATransitionMoveIn;
     transition.subtype = kCATransitionFromTop;
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
     [appDelegate.myNav pushViewController: aDVC animated: NO];
 }
 

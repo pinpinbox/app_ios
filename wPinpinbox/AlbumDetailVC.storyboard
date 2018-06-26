@@ -46,8 +46,8 @@
                                                     <constraint firstAttribute="width" constant="42" id="eu5-Nn-StT"/>
                                                     <constraint firstAttribute="height" constant="42" id="yrS-PC-JUe"/>
                                                 </constraints>
-                                                <inset key="imageEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
-                                                <state key="normal" image="ic200_arrow_2_down_dark.png"/>
+                                                <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                                                <state key="normal" image="ic200_arrow_down_dark"/>
                                                 <connections>
                                                     <action selector="backBtnPress:" destination="Ja5-HS-H21" eventType="touchUpInside" id="Xsc-M6-gFW"/>
                                                 </connections>
@@ -58,7 +58,7 @@
                                                     <constraint firstAttribute="width" constant="42" id="Xfg-8O-G9m"/>
                                                     <constraint firstAttribute="height" constant="42" id="z2o-Uo-LL7"/>
                                                 </constraints>
-                                                <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                                <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" image="ic200_message_dark.png"/>
                                                 <connections>
                                                     <action selector="messageBtnPress:" destination="Ja5-HS-H21" eventType="touchUpInside" id="G6F-uC-Gwx"/>
@@ -70,8 +70,8 @@
                                                     <constraint firstAttribute="width" constant="42" id="6ra-h5-bzs"/>
                                                     <constraint firstAttribute="height" constant="42" id="6x1-5D-zQh"/>
                                                 </constraints>
-                                                <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
-                                                <state key="normal" image="ic200_like_dark.png"/>
+                                                <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                                                <state key="normal" image="ic200_ding_dark"/>
                                                 <connections>
                                                     <action selector="likeBtnPress:" destination="Ja5-HS-H21" eventType="touchUpInside" id="F4N-v3-D4m"/>
                                                 </connections>
@@ -82,7 +82,7 @@
                                                     <constraint firstAttribute="height" constant="42" id="Qeo-3N-s51"/>
                                                     <constraint firstAttribute="width" constant="42" id="fDu-PK-6XT"/>
                                                 </constraints>
-                                                <inset key="imageEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                                <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" image="ic200_more_dark.png"/>
                                                 <connections>
                                                     <action selector="moreBtnPress:" destination="Ja5-HS-H21" eventType="touchUpInside" id="QsR-HX-Rvm"/>
@@ -162,8 +162,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_2_down_dark.png" width="144" height="144"/>
-        <image name="ic200_like_dark.png" width="144" height="144"/>
+        <image name="ic200_arrow_down_dark" width="144" height="144"/>
+        <image name="ic200_ding_dark" width="144" height="144"/>
         <image name="ic200_message_dark.png" width="144" height="144"/>
         <image name="ic200_more_dark.png" width="128" height="128"/>
     </resources>

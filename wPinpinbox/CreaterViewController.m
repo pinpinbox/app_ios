@@ -114,8 +114,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
+    [super viewDidDisappear:animated];    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -1137,7 +1136,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         [followBtn setTitle: @"關注" forState: UIControlStateNormal];
         [followBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
         
-        followBtn.backgroundColor = [UIColor firstMain];
+        followBtn.backgroundColor = [UIColor firstPink];
         
         followBtn.layer.cornerRadius = kCornerRadius;
         followBtn.clipsToBounds = YES;
@@ -1277,7 +1276,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                             [followBtn setTitle:NSLocalizedString(@"AuthorText-att", @"") forState:UIControlStateNormal];
                             // _button.hidden=NO;
                             
-                            followBtn.backgroundColor = [UIColor firstMain];
+                            followBtn.backgroundColor = [UIColor firstPink];
                             
                             followBtn.layer.cornerRadius = kCornerRadius;
                             followBtn.clipsToBounds = YES;
@@ -1356,16 +1355,16 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
                         aDVC.data = [dic[@"data"] mutableCopy];
                         aDVC.albumId = albumid;
+                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
                         
                         CATransition *transition = [CATransition animation];
                         transition.duration = 0.5;
                         transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                        transition.type = kCATransitionFade;
+                        transition.type = kCATransitionMoveIn;
                         transition.subtype = kCATransitionFromTop;
-                        [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
-                        //[self.navigationController pushViewController: aDVC animated: NO];
                         
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
                         [appDelegate.myNav pushViewController: aDVC animated: NO];
                     }
                     else {

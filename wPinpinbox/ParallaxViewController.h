@@ -13,6 +13,8 @@
 @end
 
 @interface ParallaxViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UIImageView *snapshotImageView;
+@property (weak, nonatomic) IBOutlet UIView *bView;
 
 @property (weak, nonatomic) id <ParallaxViewControllerDelegate> delegate;
 

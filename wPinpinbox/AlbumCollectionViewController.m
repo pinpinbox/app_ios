@@ -32,7 +32,7 @@
 
 #import "DDAUIActionSheetViewController.h"
 
-@interface AlbumCollectionViewController () <CAPSPageMenuDelegate, MyAlbumCollectionViewControllerDelegate, OtherCollectionViewControllerDelegate, CalbumlistViewControllerDelegate, DDAUIActionSheetViewControllerDelegate>
+@interface AlbumCollectionViewController () <CAPSPageMenuDelegate, MyAlbumCollectionViewControllerDelegate, OtherCollectionViewControllerDelegate, CalbumlistViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic) CAPSPageMenu *pageMenu;
 //@property (nonatomic) UIView *navBarView;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -57,6 +57,9 @@
     NSLog(@"");
     NSLog(@"AlbumCollectionViewController");
     NSLog(@"viewDidLoad");
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     // CustomActionSheet
     self.customEditActionSheet = [[DDAUIActionSheetViewController alloc] init];
@@ -85,6 +88,18 @@
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = YES;
     }        
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -57,7 +57,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -472,7 +471,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         followBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
         followBtn.layer.borderWidth = 0.5;
     } else {
-        followBtn.backgroundColor = [UIColor firstMain];
+        followBtn.backgroundColor = [UIColor firstPink];
         [followBtn setTitle: @"關注" forState:UIControlStateNormal];
         [followBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
         followBtn.layer.borderColor = [UIColor clearColor].CGColor;

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="1QH-ax-UCd">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="1QH-ax-UCd">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -115,7 +115,7 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
-                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="headerId" id="ph2-mJ-u03" customClass="SearchTabCollectionReusableView">
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SearchHeaderId" id="ph2-mJ-u03" customClass="SearchTabCollectionReusableView">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="260"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
@@ -219,8 +219,8 @@
                                     </constraints>
                                     <connections>
                                         <outlet property="albumRecommendationLabel" destination="WdP-8C-vhl" id="sck-44-BvD"/>
-                                        <outlet property="collectionView2" destination="jdU-ns-cfB" id="zeV-WW-bqy"/>
                                         <outlet property="horzLineView" destination="7B3-rl-NfW" id="TBL-Cu-oP8"/>
+                                        <outlet property="userCollectionView" destination="jdU-ns-cfB" id="n4q-AL-Jm3"/>
                                         <outlet property="userRecommendationLabel" destination="nlo-PE-MhI" id="FGh-EP-2za"/>
                                     </connections>
                                 </collectionReusableView>
@@ -242,7 +242,7 @@
                                                     <constraint firstAttribute="width" constant="36" id="lJK-66-y3A"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
-                                                <state key="normal" image="SearchSelectedTab"/>
+                                                <state key="normal" image="ic200_search_dark"/>
                                             </button>
                                             <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" placeholderIntrinsicWidth="107" placeholderIntrinsicHeight="30" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WOT-bT-t4z">
                                                 <rect key="frame" x="36" y="0.0" width="219" height="36"/>
@@ -318,8 +318,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="82b-iS-Fop"/>
                     <connections>
+                        <outlet property="albumCollectionView" destination="lUQ-ga-GLg" id="bWC-SF-Kzz"/>
                         <outlet property="cancelTextBtn" destination="zzP-fq-3WQ" id="Ind-79-szW"/>
-                        <outlet property="collectionView" destination="lUQ-ga-GLg" id="2dl-nJ-78U"/>
                         <outlet property="navBarHeight" destination="KkD-J2-eRG" id="50v-q4-XkJ"/>
                         <outlet property="navBarView" destination="WWc-ef-0hk" id="q1a-KK-epg"/>
                         <outlet property="scanBtn" destination="jZw-F5-WGW" id="78E-7D-RhW"/>
@@ -367,5 +367,6 @@
         <image name="SearchTab" width="25" height="25"/>
         <image name="ic200_cancel_light.png" width="144" height="144"/>
         <image name="ic200_scancamera_dark.png" width="144" height="144"/>
+        <image name="ic200_search_dark" width="144" height="144"/>
     </resources>
 </document>

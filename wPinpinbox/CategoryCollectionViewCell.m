@@ -27,9 +27,9 @@
     self.btn2.tintColor = [UIColor blackColor];
     self.btn3.tintColor = [UIColor blackColor];
     
-    self.btn1.imageEdgeInsets = UIEdgeInsetsMake(4, 4, 4, 4);
-    self.btn2.imageEdgeInsets = UIEdgeInsetsMake(4, 4, 4, 4);
-    self.btn3.imageEdgeInsets = UIEdgeInsetsMake(4, 4, 4, 4);
+    self.btn1.imageEdgeInsets = UIEdgeInsetsMake(kBtnInset, kBtnInset, kBtnInset, kBtnInset);
+    self.btn2.imageEdgeInsets = UIEdgeInsetsMake(kBtnInset, kBtnInset, kBtnInset, kBtnInset);
+    self.btn3.imageEdgeInsets = UIEdgeInsetsMake(kBtnInset, kBtnInset, kBtnInset, kBtnInset);
     
     self.btn1.userInteractionEnabled = NO;
     self.btn2.userInteractionEnabled = NO;

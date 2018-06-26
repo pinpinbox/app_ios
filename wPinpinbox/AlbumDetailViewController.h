@@ -16,4 +16,6 @@
 @property (strong, nonatomic) NSString *albumId;
 @property (nonatomic) BOOL getMessagePush;
 @property (nonatomic) NSString *fromVC;
+
+@property (nonatomic) UIImage *snapShotImage;
 @end

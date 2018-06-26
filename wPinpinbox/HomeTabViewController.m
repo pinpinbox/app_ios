@@ -118,9 +118,9 @@
 }
 @property (nonatomic, strong) JCCollectionViewWaterfallLayout *jccLayout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) UICollectionView *collectionView2;
-@property (weak, nonatomic) UICollectionView *collectionView3;
+@property (weak, nonatomic) IBOutlet UICollectionView *homeCollectionView;
+@property (weak, nonatomic) UICollectionView *bannerCollectionView;
+@property (weak, nonatomic) UICollectionView *categoryCollectionView;
 @property (weak, nonatomic) UIPageControl *pageControl;
 @property (weak, nonatomic) UIImageView *zoomView;
 
@@ -129,14 +129,12 @@
 @implementation HomeTabViewController
 
 #pragma mark - Notificaiton Setting for Gif
-- (void)addNotification
-{
+- (void)addNotification {
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(appEnterBackground:) name: UIApplicationDidEnterBackgroundNotification object: nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(appEnterForeground:) name: UIApplicationWillEnterForegroundNotification object: nil];
 }
 
-- (void)removeNotification
-{
+- (void)removeNotification {
     @try {
         [[NSNotificationCenter defaultCenter] removeObserver: self name: UIApplicationDidEnterBackgroundNotification object: nil];
         [[NSNotificationCenter defaultCenter] removeObserver: self name: UIApplicationWillEnterForegroundNotification object: nil];
@@ -149,16 +147,14 @@
     }
 }
 
-- (void)appEnterBackground: (NSNotification *)notif
-{
+- (void)appEnterBackground: (NSNotification *)notif {
     NSLog(@"");
     NSLog(@"HomeTabVC");
     NSLog(@"appEnterBackground");
     [flaImageView stopAnimating];
 }
 
-- (void)appEnterForeground: (NSNotification *)notif
-{
+- (void)appEnterForeground: (NSNotification *)notif {
     NSLog(@"");
     NSLog(@"HomeTabVC");
     NSLog(@"appEnterForeground");
@@ -176,16 +172,6 @@
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
     // Do any additional setup after loading the view.
-    for (NSString *family in [UIFont familyNames]) {
-        NSLog(@"family: %@", family);
-        
-        for (NSString *name in [UIFont fontNamesForFamilyName: family]) {
-            NSLog(@"name: %@", name);
-        }
-    }
-    
-    NSLog(@"getUserID: %@", [wTools getUserID]);
-    
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     CGFloat screenScale = [[UIScreen mainScreen] scale];
     CGSize screenSize = CGSizeMake(screenBounds.size.width * screenScale, screenBounds.size.height * screenScale);
@@ -227,8 +213,7 @@
 ////    [appDelegate.myNav pushViewController: chooseHobbyVC animated: YES];
 //}
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     NSLog(@"");
     NSLog(@"HomeTabViewController viewWillAppear");
     
@@ -239,7 +224,7 @@
     [self removeNotification];
     [self addNotification];
     
-    self.jccLayout = (JCCollectionViewWaterfallLayout *)self.collectionView.collectionViewLayout;
+    self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
     
     CGFloat headerHeight = 0;
     
@@ -279,11 +264,10 @@
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = NO;
-    }    
+    }
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
     [self removeNotification];
@@ -429,8 +413,7 @@
     [self loadData];
 }
 
-- (void)initialValueSetup
-{
+- (void)initialValueSetup {
     NSLog(@"initialValueSetup");
     isScrollingDown = NO;
     
@@ -446,7 +429,7 @@
     [self.refreshControl addTarget: self
                             action: @selector(refresh)
                   forControlEvents: UIControlEventValueChanged];
-    [self.collectionView addSubview: self.refreshControl];
+    [self.homeCollectionView addSubview: self.refreshControl];
     
     columnCount = 2;
     miniInteriorSpacing = 16;
@@ -462,24 +445,24 @@
     imageView.contentMode = self.zoomView.contentMode;
     imageView.clipsToBounds = YES;
     imageView.userInteractionEnabled = NO;
-    imageView.frame = [self.zoomView convertRect: self.zoomView.frame toView: self.collectionView.superview];
+    imageView.frame = [self.zoomView convertRect: self.zoomView.frame toView: self.homeCollectionView.superview];
     return imageView;
 }
 
 - (UIColor *)transitionSourceBackgroundColor {
-    return self.collectionView.backgroundColor;
+    return self.homeCollectionView.backgroundColor;
 }
 
 - (CGRect)transitionDestinationImageViewFrame {
-    CGRect frameInSuperView = [self.zoomView convertRect: self.zoomView.frame toView: self.collectionView.superview];
+    CGRect frameInSuperView = [self.zoomView convertRect: self.zoomView.frame toView: self.homeCollectionView.superview];
     return frameInSuperView;
 }
 
 #pragma mark - <UIViewControllerTransitioningDelegate>
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
-                                                                  presentingController:(UIViewController *)presenting
-                                                                      sourceController:(UIViewController *)source
+presentingController:(UIViewController *)presenting
+sourceController:(UIViewController *)source
 {
     id <RMPZoomTransitionAnimating, RMPZoomTransitionDelegate> sourceTransition = (id<RMPZoomTransitionAnimating, RMPZoomTransitionDelegate>)source;
     id <RMPZoomTransitionAnimating, RMPZoomTransitionDelegate> destinationTransition = (id<RMPZoomTransitionAnimating, RMPZoomTransitionDelegate>)presented;
@@ -523,7 +506,7 @@
         
         // Reset data before loading new data
         pictures = nil;
-        [self.collectionView reloadData];
+        [self.homeCollectionView reloadData];
         
         [self loadData];
     }
@@ -623,7 +606,7 @@
                         
                         // If data keeps loading then the nextId is accumulating
                         nextId = nextId + s;
-
+                        
                         NSLog(@"After");
                         NSLog(@"nextId: %ld", (long)nextId);
                         NSLog(@"s: %d", s);
@@ -638,8 +621,8 @@
                             isLoading = YES;
                         }
                         
-                        [self.refreshControl endRefreshing];                        
-                        [self.collectionView reloadData];
+                        [self.refreshControl endRefreshing];
+                        [self.homeCollectionView reloadData];
                         
                         isReloading = NO;
                         
@@ -729,7 +712,7 @@
                         NSLog(@"adArray: %@", adArray);
                         NSLog(@"adArray.count: %lu", (unsigned long)adArray.count);
                         
-                        [self.collectionView2 reloadData];
+                        [self.bannerCollectionView reloadData];
                         self.pageControl.numberOfPages = adArray.count;
                         self.pageControl.hidden = NO;
                         
@@ -751,8 +734,7 @@
     });
 }
 
-- (void)getCategoryList
-{
+- (void)getCategoryList {
     NSLog(@"getCategoryList");
     
     @try {
@@ -789,7 +771,7 @@
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"retrievecatgeorylist"
                                          eventId: @""];
-                     
+                    
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -804,7 +786,7 @@
                         recommendationLabel.hidden = NO;
                         recommendationHorzView.hidden = NO;
                         
-                        //[self.collectionView3 reloadData];
+                        //[self.categoryCollectionView reloadData];
                         
                         [self getTheMeArea];
                     } else {
@@ -894,7 +876,7 @@
                         NSLog(@"After");
                         NSLog(@"categoryArray: %@", categoryArray);
                         
-                        [self.collectionView3 reloadData];
+                        [self.categoryCollectionView reloadData];
                         
                         [self checkFirstTimeLogin];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
@@ -934,8 +916,7 @@
 }
 
 #pragma mark - Custom AlertView for Getting Point
-- (void)showAlertView
-{
+- (void)showAlertView {
     // Custom AlertView shows up when getting the point
     alertView = [[OldCustomAlertView alloc] init];
     [alertView setContainerView: [self createPointView]];
@@ -945,8 +926,7 @@
     [alertView show];
 }
 
-- (UIView *)createPointView
-{
+- (UIView *)createPointView {
     NSLog(@"createPointView");
     
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
@@ -1010,8 +990,7 @@
     return pointView;
 }
 
-- (void)showTheActivityPage
-{
+- (void)showTheActivityPage {
     NSLog(@"showTheActivityPage");
     
     //NSString *activityLink = @"http://www.apple.com";
@@ -1030,8 +1009,7 @@
 }
 
 #pragma mark - SFSafariViewController delegate methods
-- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller
-{
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
     // Done button pressed
     
     NSLog(@"show");
@@ -1039,8 +1017,7 @@
 }
 
 #pragma mark - Check Point Task
-- (void)checkFirstTimeLogin
-{
+- (void)checkFirstTimeLogin {
     // Check whether getting login point or not
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL firsttime_login = [[defaults objectForKey: @"firsttime_login"] boolValue];
@@ -1137,7 +1114,7 @@
         NSLog( @"Name: %@", exception.name);
         NSLog( @"Reason: %@", exception.reason );
         return;
-    }    
+    }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
@@ -1271,7 +1248,7 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-                        
+            
             if (response != nil) {
                 NSLog(@"getEvent Response");
                 //NSLog(@"response: %@", response);
@@ -1288,7 +1265,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
                     
-                    NSLog(@"data: %@", data);                
+                    NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 1) {
                         NSLog(@"result is 1");
@@ -1346,14 +1323,12 @@
 }
 
 #pragma mark - UICollectionViewDataSource Methods
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
     if (collectionView.tag == 1) {
         return pictures.count;
     } else if (collectionView.tag == 2) {
@@ -1370,18 +1345,10 @@
     NSLog(@"viewForSupplementaryElementOfKind");
     
     HomeDataCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
-
-//    NSLog(@"headerView.homeBannerCollectionView.bounds.size.width: %f", headerView.homeBannerCollectionView.bounds.size.width);
-//    NSLog(@"headerView.homeBannerCollectionView.bounds.size.height: %f", headerView.homeBannerCollectionView.bounds.size.height);
-//    
-//    headerView.homeBannerCollectionViewHeight.constant = headerView.homeBannerCollectionView.bounds.size.height * (380 / 992);
-//    NSLog(@"headerView.homeBannerCollectionViewHeight: %f", headerView.homeBannerCollectionViewHeight.constant);
-//    NSLog(@"headerView.homeBannerCollectionView.bounds.size.height: %f", headerView.homeBannerCollectionView.bounds.size.height);
-    
     self.pageControl = headerView.pageControl;
     
-    self.collectionView2 = headerView.homeBannerCollectionView;
-    self.collectionView3 = headerView.categoryCollectionView;
+    self.bannerCollectionView = headerView.homeBannerCollectionView;
+    self.categoryCollectionView = headerView.categoryCollectionView;
     
     exploreLabel = headerView.exploreLabel;
     [LabelAttributeStyle changeGapString: exploreLabel content: exploreLabel.text];
@@ -1393,7 +1360,7 @@
     
     recommendationHorzView = headerView.recommendationHorzView;
     
-    [self.collectionView.collectionViewLayout invalidateLayout];
+    [self.homeCollectionView.collectionViewLayout invalidateLayout];
     
     return headerView;
 }
@@ -1427,8 +1394,7 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"cellForItemAtIndexPath");
     
@@ -1547,23 +1513,12 @@
                 });
             } else {
                 NSLog(@"adData ad image: %@", [NSURL URLWithString: adData[@"ad"][@"image"]]);
-                /*
-                NSURL *urlImage = [NSURL URLWithString: adData[@"ad"][@"image"]];
-                NSData *data = [NSData dataWithContentsOfURL: urlImage];
-                cell.bannerImageView.image = [UIImage imageWithData: data];
-                [self checkToPresentViewOrNot: indexPath
-                                         cell: cell];
-                */
-                
-                //[cell.bannerImageView sd_setImageWithURL: [NSURL URLWithString: adData[@"ad"][@"image"]]];
-                
                 [cell.bannerImageView sd_setImageWithURL: [NSURL URLWithString: adData[@"ad"][@"image"]] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                     [self checkToPresentViewOrNot: indexPath
                                              cell: cell];
                 }];
             }
         }
-        
         return cell;
     } else {
         HomeCategoryCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
@@ -1586,13 +1541,9 @@
 #pragma mark - UICollectionViewDelegate Methods
 
 - (BOOL)collectionView:(UICollectionView *)collectionView
-shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
-    
-    //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    
     return YES;
 }
 
@@ -1632,19 +1583,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         //[self ToRetrievealbumpViewControlleralbumid: albumId];
         
         AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-        //aDVC.data = [dic[@"data"] mutableCopy];
         aDVC.albumId = albumId;
-        //    aDVC.headerImageHeight = headerImageHeight;
+        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
         
-//        CATransition *transition = [CATransition animation];
-//        transition.duration = 0.5;
-//        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-//        transition.type = kCATransitionFade;
-//        transition.subtype = kCATransitionFromTop;
-//        [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
-        //[self.navigationController pushViewController: aDVC animated: NO];
+        CATransition *transition = [CATransition animation];
+        transition.duration = 0.5;
+        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+        transition.type = kCATransitionMoveIn;
+        transition.subtype = kCATransitionFromTop;
         
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
         [appDelegate.myNav pushViewController: aDVC animated: NO];
         //[appDelegate.myNav pushViewController: testVC animated: YES];
     } else if (collectionView.tag == 2) {
@@ -1654,11 +1603,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"data: %@", data);
         NSLog(@"categoryarea: %@", data[@"categoryarea"]);
         NSLog(@"categoryarea_id: %@", [data[@"categoryarea"][@"categoryarea_id"] stringValue]);
-//        NSLog(@"categoryName: %@", data[@"categoryarea"][@"name"]);
         
         [self toCategoryVC: [data[@"categoryarea"][@"categoryarea_id"] stringValue]];
     }
 }
+
+//- (UIImage *)normalSnapshotImage {
+//    UIGraphicsBeginImageContextWithOptions(self.view.frame.size, NO, [UIScreen mainScreen].scale);
+//    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//
+//    return snapshotImage;
+//}
 
 - (void)toCategoryVC:(NSString *)categoryAreaId {
     CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
@@ -1768,7 +1725,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                     } else {
                         SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
                         safariVC.preferredBarTintColor = [UIColor whiteColor];
-                        [self presentViewController: safariVC animated: YES completion: nil];                                                
+                        [self presentViewController: safariVC animated: YES completion: nil];
                     }
                 }
             } else if ([[url path] isEqualToString: @"/index/user/point"]) {
@@ -1781,10 +1738,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 [self presentViewController: safariVC animated: YES completion: nil];
                 
                 /*
-                ActivityWebViewController *activityWebVC = [[UIStoryboard storyboardWithName: @"ActivityWebVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ActivityWebViewController"];
-                activityWebVC.eventURL = urlString;
-                AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                [appDelegate.myNav pushViewController: activityWebVC animated: YES];
+                 ActivityWebViewController *activityWebVC = [[UIStoryboard storyboardWithName: @"ActivityWebVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ActivityWebViewController"];
+                 activityWebVC.eventURL = urlString;
+                 AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                 [appDelegate.myNav pushViewController: activityWebVC animated: YES];
                  */
             }
         } else if ([urlString isEqualToString: @""]) {
@@ -1802,17 +1759,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.backgroundColor = nil;
     //cell.contentView.subviews[0].backgroundColor = nil;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
        willDisplayCell:(UICollectionViewCell *)cell
-    forItemAtIndexPath:(NSIndexPath *)indexPath
-{
+    forItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"willDisplayCell");
     NSLog(@"indexPath.item: %ld", (long)indexPath.item);
     NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
@@ -1828,8 +1783,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
     
@@ -1942,8 +1896,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
-        insetForSectionAtIndex:(NSInteger)section
-{
+        insetForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
     
     if (collectionView.tag == 2) {
@@ -1958,8 +1911,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - JCCollectionViewWaterfallLayoutDelegate
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(UICollectionViewLayout *)collectionViewLayout
- heightForHeaderInSection:(NSInteger)section
-{
+ heightForHeaderInSection:(NSInteger)section {
     return self.jccLayout.headerHeight;
 }
 
@@ -1967,32 +1919,31 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     //NSLog(@"scrollViewDidScroll");
     
-    if (scrollView == self.collectionView2) {
-        //NSLog(@"scrollView == self.collectionView2");
+    if (scrollView == self.bannerCollectionView) {
+        //NSLog(@"scrollView == self.bannerCollectionView");
         self.pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
     }
-//    if ([scrollView isKindOfClass: [MyScrollView class]]) {
-//        NSLog(@"scrollView isKindOfClass MyScrollView");
-//        pageControl.currentPage = mySV.contentOffset.x / mySV.frame.size.width;
-//    }
+    //    if ([scrollView isKindOfClass: [MyScrollView class]]) {
+    //        NSLog(@"scrollView isKindOfClass MyScrollView");
+    //        pageControl.currentPage = mySV.contentOffset.x / mySV.frame.size.width;
+    //    }
     if (isLoading) {
         //NSLog(@"isLoading: %d", isLoading);
         return;
     }
     
     /*
-    if (scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2) {
-        [self loadData];
-    }
+     if (scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2) {
+     [self loadData];
+     }
      */
 }
 
 #pragma mark -
 
-- (NSString *)translateToTimeStr: (NSString *)diffTime
-{
+- (NSString *)translateToTimeStr: (NSString *)diffTime {
     NSArray *timeArray = [diffTime componentsSeparatedByString: @","];
-//    NSLog(@"timeArray: %@", timeArray);
+    //    NSLog(@"timeArray: %@", timeArray);
     
     NSString *timeDiffStr;
     
@@ -2023,13 +1974,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             }
         }
     }
-//    NSLog(@"timeDiffStr: %@", timeDiffStr);
+    //    NSLog(@"timeDiffStr: %@", timeDiffStr);
     
     return timeDiffStr;
 }
 
-- (void)addTestBtn
-{
+- (void)addTestBtn {
     UIButton *testBtn = [UIButton buttonWithType: UIButtonTypeCustom];
     [testBtn addTarget: self action: @selector(startAnimating) forControlEvents: UIControlEventTouchUpInside];
     testBtn.frame = CGRectMake(self.view.bounds.origin.x + 260, self.view.bounds.origin.y + 300, 50, 50);
@@ -2048,20 +1998,18 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     [testBtn1 setImage: [UIImage imageNamed: @"icon_teal500_circle_plus"] forState: UIControlStateNormal];
     [testBtn1 setImage: [UIImage imageNamed: @"icon_teal500_circle_plus_press"]
-             forState: UIControlStateSelected | UIControlStateHighlighted];
+              forState: UIControlStateSelected | UIControlStateHighlighted];
     
     [self.view addSubview: testBtn];
     [self.view addSubview: testBtn1];
 }
 
-- (void)startAnimating
-{
+- (void)startAnimating {
     NSLog(@"startAnimating");
     [flaImageView startAnimating];
 }
 
-- (void)stopAnimating
-{
+- (void)stopAnimating {
     NSLog(@"stopAnimating");
     [flaImageView stopAnimating];
 }
@@ -2202,8 +2150,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
     [errorAlertView setContainerView: [self createErrorContainerView: msg]];
     
@@ -2221,8 +2168,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [errorAlertView show];
 }
 
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
+- (UIView *)createErrorContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     //textView.text = @"帳號已經存在，請使用另一個";
@@ -2299,8 +2245,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       eventId: (NSString *)eventId
-{
+                       eventId: (NSString *)eventId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     
@@ -2350,8 +2295,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
