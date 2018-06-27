@@ -36,7 +36,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fUn-4t-HMr">
                                         <rect key="frame" x="5" y="16" width="40" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" image="ic200_arrow_left_dark.png"/>
                                         <connections>
                                             <action selector="back:" destination="qhH-eM-Hb6" eventType="touchUpInside" id="PRG-1i-aVo"/>

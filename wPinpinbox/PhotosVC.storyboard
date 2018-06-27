@@ -84,7 +84,7 @@
                                             <constraint firstAttribute="width" constant="42" id="R5c-Vd-YE3"/>
                                             <constraint firstAttribute="height" constant="42" id="dNZ-v0-6j5"/>
                                         </constraints>
-                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" image="ic200_arrow_left_dark.png">
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
@@ -98,7 +98,7 @@
                                             <constraint firstAttribute="height" constant="42" id="JNy-xs-aq8"/>
                                             <constraint firstAttribute="width" constant="42" id="YuK-G8-sEf"/>
                                         </constraints>
-                                        <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" image="ic200_photosize_light.png"/>
                                         <connections>
                                             <action selector="compressionBtnPress:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="Cgg-c2-rgH"/>
@@ -110,7 +110,7 @@
                                             <constraint firstAttribute="width" constant="42" id="Y90-NM-EyS"/>
                                             <constraint firstAttribute="height" constant="42" id="hZV-fr-dEK"/>
                                         </constraints>
-                                        <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" title="Button" image="ic200_camera_dark"/>
                                         <connections>
                                             <action selector="cameraBtnPress:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="8Uc-iv-oLJ"/>

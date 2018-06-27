@@ -106,7 +106,7 @@
                                             <constraint firstAttribute="height" constant="42" id="bT3-cJ-dNM"/>
                                             <constraint firstAttribute="width" constant="42" id="grN-Pm-7Xm"/>
                                         </constraints>
-                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" image="ic200_arrow_left_dark.png"/>
                                         <connections>
                                             <action selector="backBtnPress:" destination="Qmt-MG-xMH" eventType="touchUpInside" id="Y89-Pc-DTq"/>

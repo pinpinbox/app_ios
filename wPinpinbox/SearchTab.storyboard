@@ -259,7 +259,7 @@
                                                     <constraint firstAttribute="height" constant="36" id="0Qz-f5-lRu"/>
                                                     <constraint firstAttribute="width" constant="36" id="mEk-iy-tXE"/>
                                                 </constraints>
-                                                <inset key="imageEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                                <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" title="Button" image="ic200_cancel_light.png"/>
                                             </button>
                                         </subviews>
@@ -285,7 +285,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="36" id="Pmn-bq-Jxc"/>
                                         </constraints>
-                                        <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" image="ic200_scancamera_dark.png"/>
                                         <connections>
                                             <action selector="toScanCode:" destination="wuA-pA-1f6" eventType="touchUpInside" id="yIu-XX-PYe"/>

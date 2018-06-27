@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,7 +27,7 @@
                                             <constraint firstAttribute="height" constant="42" id="Lag-05-f5k"/>
                                             <constraint firstAttribute="width" constant="42" id="NU9-zS-68q"/>
                                         </constraints>
-                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" image="ic200_arrow_left_dark.png"/>
                                         <connections>
                                             <action selector="backBtnPress:" destination="zap-Ke-wb3" eventType="touchUpInside" id="aaG-9R-1eL"/>
@@ -64,7 +64,7 @@
                                                     <constraint firstAttribute="height" constant="45" id="Ivx-O7-fda"/>
                                                     <constraint firstAttribute="width" constant="45" id="K32-cb-nGq"/>
                                                 </constraints>
-                                                <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                                <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" image="ic200_refresh_dark.png"/>
                                                 <connections>
                                                     <action selector="reload:" destination="zap-Ke-wb3" eventType="touchUpInside" id="ZlD-QI-tud"/>
@@ -76,7 +76,7 @@
                                                     <constraint firstAttribute="height" constant="45" id="N3N-wS-a3K"/>
                                                     <constraint firstAttribute="width" constant="45" id="UPS-ua-jLF"/>
                                                 </constraints>
-                                                <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                                <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" image="ic200_cooperation_dark.png"/>
                                                 <connections>
                                                     <action selector="coppertation:" destination="zap-Ke-wb3" eventType="touchUpInside" id="qeb-0z-xFH"/>
@@ -88,7 +88,7 @@
                                                     <constraint firstAttribute="width" constant="45" id="Wik-Y5-40T"/>
                                                     <constraint firstAttribute="height" constant="45" id="mYM-Z3-bzu"/>
                                                 </constraints>
-                                                <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                                <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" image="ic200_setting_dark.png"/>
                                                 <connections>
                                                     <action selector="settingBtnPress:" destination="zap-Ke-wb3" eventType="touchUpInside" id="D9f-9Q-KpS"/>

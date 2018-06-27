@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +13,6 @@
         <!--Choose Template View Controller-->
         <scene sceneID="EeM-9J-LtZ">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="c0P-lW-b5v" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="ChooseTemplateViewController" id="QGT-x9-MjU" customClass="ChooseTemplateViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iIu-KA-tUV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -70,7 +69,7 @@
                                             <constraint firstAttribute="width" constant="42" id="5gE-ZA-m0d"/>
                                             <constraint firstAttribute="height" constant="42" id="KKy-SW-ftM"/>
                                         </constraints>
-                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" image="ic200_arrow_left_dark.png"/>
                                         <connections>
                                             <action selector="backBtnPress:" destination="QGT-x9-MjU" eventType="touchUpInside" id="ddL-0w-w1L"/>
@@ -110,6 +109,7 @@
                         <outlet property="titleLabel" destination="on1-L9-XSo" id="7Ch-0M-N2G"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c0P-lW-b5v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-4231.1999999999998" y="-1804.0479760119943"/>
         </scene>

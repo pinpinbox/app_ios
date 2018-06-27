@@ -36,7 +36,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <view clipsSubviews="YES" tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rOp-0a-zPl">
-                                <rect key="frame" x="16" y="219" width="343" height="48"/>
+                                <rect key="frame" x="16" y="337" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oz7-XO-sdl">
                                         <rect key="frame" x="8" y="8" width="327" height="32"/>
@@ -58,7 +58,7 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2VK-8T-HTy">
-                                <rect key="frame" x="16" y="320" width="343" height="48"/>
+                                <rect key="frame" x="16" y="438" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="密 碼 ( 最 少 八 位 英 數 字 )" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="f4b-0d-377">
                                         <rect key="frame" x="8" y="8" width="293" height="32"/>
@@ -92,7 +92,7 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="53s-Kj-bf5">
-                                <rect key="frame" x="16" y="421" width="343" height="48"/>
+                                <rect key="frame" x="16" y="539" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="再 輸 入 一 次 密 碼 確 認" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="b0W-8Z-On2">
                                         <rect key="frame" x="8" y="8" width="293" height="32"/>
@@ -125,7 +125,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="再確認一次" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Umz-rR-hlK">
-                                <rect key="frame" x="16" y="384" width="122" height="29"/>
+                                <rect key="frame" x="16" y="502" width="122" height="29"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -139,7 +139,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="要變更為" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKv-wO-eh1">
-                                <rect key="frame" x="16" y="283" width="98" height="29"/>
+                                <rect key="frame" x="16" y="401" width="98" height="29"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -153,7 +153,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="當前密碼" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WKk-Tw-w1A">
-                                <rect key="frame" x="16" y="182" width="98" height="29"/>
+                                <rect key="frame" x="16" y="300" width="98" height="29"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -175,7 +175,7 @@
                                             <constraint firstAttribute="height" constant="42" id="OEn-Qu-nhC"/>
                                             <constraint firstAttribute="width" constant="42" id="SyK-Qu-yD9"/>
                                         </constraints>
-                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" image="ic200_arrow_left_dark.png"/>
                                         <connections>
                                             <action selector="backbtnPress:" destination="CvJ-ee-edl" eventType="touchUpInside" id="xpm-gR-Ong"/>
@@ -226,13 +226,13 @@
                             <constraint firstItem="Ytr-IH-4l1" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="dfw-K7-Yce"/>
                             <constraint firstItem="Umz-rR-hlK" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="iIh-nl-yV8"/>
                             <constraint firstItem="2VK-8T-HTy" firstAttribute="top" secondItem="FKv-wO-eh1" secondAttribute="bottom" constant="8" id="ibj-NX-edI"/>
-                            <constraint firstItem="WKk-Tw-w1A" firstAttribute="top" secondItem="Ytr-IH-4l1" secondAttribute="bottom" constant="40" id="ifr-3W-QkT"/>
                             <constraint firstItem="2VK-8T-HTy" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="kcR-Od-6mF"/>
                             <constraint firstItem="WKk-Tw-w1A" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="mtE-45-YlS"/>
                             <constraint firstItem="FKv-wO-eh1" firstAttribute="top" secondItem="rOp-0a-zPl" secondAttribute="bottom" constant="16" id="p7D-5Y-yFK"/>
                             <constraint firstItem="ZXf-oD-vS2" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="qmI-AM-FSJ"/>
                             <constraint firstItem="rOp-0a-zPl" firstAttribute="top" secondItem="WKk-Tw-w1A" secondAttribute="bottom" constant="8" id="umR-lZ-WEu"/>
                             <constraint firstItem="FKv-wO-eh1" firstAttribute="leading" secondItem="sP6-1C-UTe" secondAttribute="leading" constant="16" id="uu0-HY-h56"/>
+                            <constraint firstItem="ZXf-oD-vS2" firstAttribute="top" secondItem="53s-Kj-bf5" secondAttribute="bottom" constant="16" id="vaD-yr-3hh"/>
                             <constraint firstItem="sP6-1C-UTe" firstAttribute="trailing" secondItem="53s-Kj-bf5" secondAttribute="trailing" constant="16" id="yOL-gY-a7b"/>
                             <constraint firstItem="sP6-1C-UTe" firstAttribute="trailing" secondItem="ZXf-oD-vS2" secondAttribute="trailing" constant="16" id="zRv-ao-r7B"/>
                         </constraints>

@@ -490,14 +490,16 @@
 
 #pragma mark -
 
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
+- (void)keyboardWasShown:(NSNotification*)aNotification {
     NSLog(@"keyboardWasShown");
     
     NSDictionary* info = [aNotification userInfo];
     NSLog(@"info: %@", info);
     
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    // in iOS 11, the height of size of UIKeyboardFrameBeginUserInfoKey will be zero in second time
+    // when keyboardWasshown method called
+    //CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     NSLog(@"kbSize: %@", NSStringFromCGSize(kbSize));
     
     float textfy = [selectTextField superview].frame.origin.y;
@@ -527,8 +529,7 @@
 }
 
 // Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
     NSLog(@"keyboardWillBeHidden");
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -537,8 +538,7 @@
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
     [errorAlertView setContainerView: [self createErrorContainerView: msg]];
     
@@ -556,8 +556,7 @@
     [errorAlertView show];
 }
 
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
+- (UIView *)createErrorContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     //textView.text = @"帳號已經存在，請使用另一個";

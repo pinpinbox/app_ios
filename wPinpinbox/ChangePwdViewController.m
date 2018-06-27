@@ -270,14 +270,16 @@ replacementString:(NSString *)string
 
 #pragma mark -
 
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
+- (void)keyboardWasShown:(NSNotification*)aNotification {
     NSLog(@"keyboardWasShown");
     
     NSDictionary* info = [aNotification userInfo];
     NSLog(@"info: %@", info);
     
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    // in iOS 11, the height of size of UIKeyboardFrameBeginUserInfoKey will be zero in second time
+    // when keyboardWasshown method called
+    //CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     NSLog(@"kbSize: %@", NSStringFromCGSize(kbSize));
     
     float textfy = [selectText superview].frame.origin.y;
@@ -307,10 +309,8 @@ replacementString:(NSString *)string
 }
 
 // Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
     NSLog(@"keyboardWillBeHidden");
-    
     [UIView animateWithDuration:0.3 animations:^{
         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     }];
