@@ -10,5 +10,6 @@
 
 @interface CategoryViewController : UIViewController
 @property (nonatomic, strong) NSString *categoryAreaId;
+@property (nonatomic, strong) NSString *categoryNameStr;
 @property (nonatomic, strong) NSDictionary *dic;
 @end

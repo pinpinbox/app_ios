@@ -58,6 +58,12 @@
 
 #import "BuyPPointViewController.h"
 
+#import "SearchTabCollectionViewCell.h"
+#import "SearchTabHorizontalCollectionViewCell.h"
+#import "SearchTabCollectionReusableView.h"
+#import "NSString+MD5.h"
+#import  <SystemConfiguration/SCNetworkReachability.h>
+
 #define kAdHeight 142
 #define kBtnWidth 78
 #define kBtnGap 16
@@ -109,18 +115,27 @@
     NSMutableArray *categoryArray;
     NSMutableArray *getTheMeAreaArray;
     
-    UILabel *exploreLabel;
-    UIView *exploreHorzView;
+    UILabel *followUserLabel;
+    UIView *followUserHorzView;
+    UILabel *followAlbumLabel;
+    UIView *followAlbumHorzView;
+    
     UILabel *recommendationLabel;
     UIView *recommendationHorzView;
     
     NSDictionary *getTheMeAreaDic;
+    
+    NSMutableArray *followUserData;
+    NSMutableArray *followAlbumData;
 }
 @property (nonatomic, strong) JCCollectionViewWaterfallLayout *jccLayout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UICollectionView *homeCollectionView;
 @property (weak, nonatomic) UICollectionView *bannerCollectionView;
 @property (weak, nonatomic) UICollectionView *categoryCollectionView;
+@property (weak, nonatomic) UICollectionView *followUserCollectionView;
+@property (weak, nonatomic) UICollectionView *followAlbumCollectionView;
+
 @property (weak, nonatomic) UIPageControl *pageControl;
 @property (weak, nonatomic) UIImageView *zoomView;
 
@@ -232,31 +247,30 @@
         switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
             case 1136:
                 printf("iPhone 5 or 5S or 5C");
-                headerHeight = 420.0f;
+                headerHeight = 900.0f;
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
-                headerHeight = 450.0f;
+                headerHeight = 940.0f;
                 break;
             case 1920:
                 printf("iPhone 6+/6S+/7+/8+");
-                headerHeight = 450.0f;
+                headerHeight = 950.0f;
                 break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
-                headerHeight = 450.0f;
+                headerHeight = 950.0f;
                 break;
             case 2436:
                 printf("iPhone X");
-                headerHeight = 430.0f;
+                headerHeight = 920.0f;
                 break;
             default:
                 printf("unknown");
-                headerHeight = 450.0f;
+                headerHeight = 940.0f;
                 break;
         }
     }
-    
     self.jccLayout.headerHeight = headerHeight;
     self.jccLayout.footerHeight = 0.0f;
     
@@ -781,8 +795,11 @@ sourceController:(UIViewController *)source
                         NSLog(@"dic data: %@", dic[@"data"]);
                         categoryArray = [NSMutableArray arrayWithArray: dic[@"data"]];
                         
-                        exploreLabel.hidden = NO;
-                        exploreHorzView.hidden = NO;
+                        followUserLabel.hidden = NO;
+                        followUserHorzView.hidden = NO;
+                        followAlbumLabel.hidden = NO;
+                        followAlbumHorzView.hidden = NO;
+                        
                         recommendationLabel.hidden = NO;
                         recommendationHorzView.hidden = NO;
                         
@@ -820,15 +837,7 @@ sourceController:(UIViewController *)source
         NSString *response = [boxAPI getTheMeArea: [wTools getUserToken] userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [wTools HideMBProgressHUD];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
+            [wTools HideMBProgressHUD];
             
             if (response != nil) {
                 NSLog(@"response from getTheMeArea");
@@ -859,12 +868,13 @@ sourceController:(UIViewController *)source
                         
                         NSString *colorHexStr = dic[@"data"][@"themearea"][@"colorhex"];
                         NSString *nameStr = dic[@"data"][@"themearea"][@"name"];
+                        NSString *imageStr = dic[@"data"][@"themearea"][@"image_360x360"];
                         
                         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
                         [dic setObject: [NSNumber numberWithInteger: -1] forKey: @"categoryarea_id"];
                         [dic setObject: colorHexStr forKey: @"colorhex"];
                         [dic setObject: nameStr forKey: @"name"];
-                        
+                        [dic setObject: imageStr forKey: @"image_360x360"];
                         NSLog(@"dic: %@", dic);
                         
                         NSMutableDictionary *dicData = [[NSMutableDictionary alloc] init];
@@ -878,7 +888,8 @@ sourceController:(UIViewController *)source
                         
                         [self.categoryCollectionView reloadData];
                         
-                        [self checkFirstTimeLogin];
+                        [self showUserRecommendedList];
+//                        [self checkFirstTimeLogin];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -913,6 +924,108 @@ sourceController:(UIViewController *)source
 
 - (void)logOut {
     [wTools logOut];
+}
+
+#pragma mark - Get Recommended User List
+- (void)showUserRecommendedList {
+    [wTools ShowMBProgressHUD];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = @"";
+        NSMutableDictionary *data = [NSMutableDictionary new];
+        [data setObject: @"user" forKey: @"type"];
+        [data setObject: @"0, 16" forKey: @"limit"];
+        
+        response = [boxAPI getRecommendedList: [wTools getUserID]
+                                        token: [wTools getUserToken]
+                                         data: data];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+            if (response != nil) {
+                NSLog(@"showUserRecommendedList");
+                NSLog(@"response from getRecommendedList");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"HomeTabViewController");
+                    NSLog(@"showUserRecommendedList");
+                    
+//                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+//                                    protocolName: @"showUserRecommendedList"
+//                                            text: @""
+//                                         albumId: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    if (![dic[@"result"] boolValue]) {
+                        return ;
+                    }
+                    
+                    followUserData = [NSMutableArray arrayWithArray: dic[@"data"]];
+                    NSLog(@"followUserData: %@", followUserData);
+                    [self.followUserCollectionView reloadData];
+                    
+                    [self showAlbumRecommendedList];
+                }
+            }
+        });
+    });
+}
+
+- (void)showAlbumRecommendedList {
+    [wTools ShowMBProgressHUD];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = @"";
+        NSMutableDictionary *data = [NSMutableDictionary new];
+        [data setObject: @"album" forKey: @"type"];
+        [data setObject: @"0,16" forKey: @"limit"];
+        
+        response = [boxAPI getRecommendedList: [wTools getUserID]
+                                        token: [wTools getUserToken]
+                                         data: data];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+            
+            if (response != nil) {
+                NSLog(@"showAlbumRecommendedList");
+                NSLog(@"response from getRecommendedList");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"HomeTabViewController");
+                    NSLog(@"showAlbumRecommendedList");
+                    
+//                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+//                                    protocolName: @"showAlbumRecommendedList"
+//                                            text: @""
+//                                         albumId: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic =  (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    NSLog(@"dic: %@", dic);
+                    
+                    if (![dic[@"result"] boolValue]) {
+                        return ;
+                    }
+                    
+                    //判斷目前table和 搜尋結果是否相同
+                    if (![data[@"type"] isEqualToString: @"album"]) {
+                        return;
+                    }
+                    
+                    followAlbumData = [NSMutableArray arrayWithArray: dic[@"data"]];
+                    NSLog(@"followAlbumData.count: %lu", (unsigned long)followAlbumData.count);
+                    [self.followAlbumCollectionView reloadData];
+                    
+                    [self checkFirstTimeLogin];
+                }
+            }
+        });
+    });
 }
 
 #pragma mark - Custom AlertView for Getting Point
@@ -1333,8 +1446,12 @@ sourceController:(UIViewController *)source
         return pictures.count;
     } else if (collectionView.tag == 2) {
         return adArray.count;
-    } else {
+    } else if (collectionView.tag == 3) {
         return categoryArray.count;
+    } else if (collectionView.tag == 4) {
+        return followUserData.count;
+    } else {
+        return followAlbumData.count;
     }
 }
 
@@ -1349,11 +1466,16 @@ sourceController:(UIViewController *)source
     
     self.bannerCollectionView = headerView.homeBannerCollectionView;
     self.categoryCollectionView = headerView.categoryCollectionView;
+    self.followUserCollectionView = headerView.followUserCollectionView;
+    self.followAlbumCollectionView = headerView.followAlbumCollectionView;
     
-    exploreLabel = headerView.exploreLabel;
-    [LabelAttributeStyle changeGapString: exploreLabel content: exploreLabel.text];
+    followUserLabel = headerView.followUserLabel;
+    [LabelAttributeStyle changeGapString: followUserLabel content: followUserLabel.text];
+    followUserHorzView = headerView.followUserHorzView;
     
-    exploreHorzView = headerView.exploreHorzView;
+    followAlbumLabel = headerView.followAlbumLabel;
+    [LabelAttributeStyle changeGapString: followAlbumLabel content: followAlbumLabel.text];
+    followAlbumHorzView = headerView.followAlbumHorzView;
     
     recommendationLabel = headerView.recommendationLabel;
     [LabelAttributeStyle changeGapString: recommendationLabel content: recommendationLabel.text];
@@ -1520,9 +1642,17 @@ sourceController:(UIViewController *)source
             }
         }
         return cell;
-    } else {
+    } else if (collectionView.tag == 3) {
         HomeCategoryCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
         NSDictionary *dic = categoryArray[indexPath.row][@"categoryarea"];
+        NSLog(@"dic: %@", dic);
+        NSLog(@"dic name: %@", dic[@"name"]);
+        NSLog(@"dic image_360x360: %@", dic[@"image_360x360"]);
+        
+        if (![dic[@"image_360x360"] isEqual: [NSNull null]]) {
+            [cell.categoryImageView sd_setImageWithURL: [NSURL URLWithString: dic[@"image_360x360"]]
+                                      placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+        }
         
         if (![dic[@"name"] isEqual:[NSNull null]]) {
             cell.categoryNameLabel.text = dic[@"name"];
@@ -1533,6 +1663,108 @@ sourceController:(UIViewController *)source
             NSLog(@"colorhex: %@", dic[@"colorhex"]);
             cell.categoryBgView.backgroundColor = [UIColor colorFromHexString: dic[@"colorhex"]];
         }
+        return cell;
+    } else if (collectionView.tag == 4) {
+        NSDictionary *userDic = followUserData[indexPath.row][@"user"];        
+        
+        SearchTabHorizontalCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"horizontalCell" forIndexPath: indexPath];
+        
+        if (![userDic isKindOfClass: [NSNull class]]) {
+            if ([userDic[@"picture"] isEqual: [NSNull null]]) {
+                cell.userPictureImageView.image = [UIImage imageNamed: @"member_back_head.png"];
+            } else {
+                [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"picture"]]
+                                             placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
+            }
+            cell.userNameLabel.text = userDic[@"name"];
+            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        } else {
+            NSLog(@"userData is nil");
+        }
+        return cell;
+    } else {
+        SearchTabCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"SearchCell" forIndexPath: indexPath];
+        NSDictionary *albumDic = followAlbumData[indexPath.row][@"album"];
+        NSLog(@"albumDic: %@", albumDic);
+        
+        if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
+            cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        } else {
+            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]];
+        }
+        // UserForView Info Setting
+        BOOL gotAudio = [albumDic[@"usefor"][@"audio"] boolValue];
+        BOOL gotVideo = [albumDic[@"usefor"][@"video"] boolValue];
+        BOOL gotExchange = [albumDic[@"usefor"][@"exchange"] boolValue];
+        BOOL gotSlot = [albumDic[@"usefor"][@"slot"] boolValue];
+        
+        [cell.btn1 setImage: nil forState: UIControlStateNormal];
+        [cell.btn2 setImage: nil forState: UIControlStateNormal];
+        [cell.btn3 setImage: nil forState: UIControlStateNormal];
+        
+        cell.userInfoView.hidden = YES;
+        
+        if (gotAudio) {
+            cell.userInfoView.hidden = NO;
+            [cell.btn3 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
+            
+            CGRect rect = cell.userInfoView.frame;
+            rect.size.width = 28 * 1;
+            cell.userInfoView.frame = rect;
+            
+            if (gotVideo) {
+                [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
+                [cell.btn2 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
+                
+                CGRect rect = cell.userInfoView.frame;
+                rect.size.width = 28 * 2;
+                cell.userInfoView.frame = rect;
+                
+                if (gotExchange || gotSlot) {
+                    [cell.btn1 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
+                    [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
+                    [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
+                    
+                    CGRect rect = cell.userInfoView.frame;
+                    rect.size.width = 28 * 3;
+                    cell.userInfoView.frame = rect;
+                }
+            }
+        } else if (gotVideo) {
+            cell.userInfoView.hidden = NO;
+            [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
+            
+            CGRect rect = cell.userInfoView.frame;
+            rect.size.width = 28 * 1;
+            cell.userInfoView.frame = rect;
+            
+            if (gotExchange || gotSlot) {
+                [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
+                [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
+                
+                CGRect rect = cell.userInfoView.frame;
+                rect.size.width = 28 * 2;
+                cell.userInfoView.frame = rect;
+            }
+        } else if (gotExchange || gotSlot) {
+            NSLog(@"gotExchange or gotSlot");
+            
+            cell.userInfoView.hidden = NO;
+            [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
+            
+            CGRect rect = cell.userInfoView.frame;
+            rect.size.width = 28 * 1;
+            cell.userInfoView.frame = rect;
+        }
+        
+        // AlbumNameLabel Setting
+        if (![albumDic[@"name"] isEqual: [NSNull null]]) {
+            cell.albumNameLabel.text = albumDic[@"name"];
+            cell.albumNameLabel.numberOfLines = 1;
+            [LabelAttributeStyle changeGapString: cell.albumNameLabel content: cell.albumNameLabel.text];
+        }
+        NSLog(@"cell.albumNameLabel.text: %@", cell.albumNameLabel.text);
+        NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
         
         return cell;
     }
@@ -1598,32 +1830,50 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         //[appDelegate.myNav pushViewController: testVC animated: YES];
     } else if (collectionView.tag == 2) {
         [self tapDetectedForURL: indexPath.row];
-    } else {
+    } else if (collectionView.tag == 3) {
         NSDictionary *data = categoryArray[indexPath.row];
         NSLog(@"data: %@", data);
         NSLog(@"categoryarea: %@", data[@"categoryarea"]);
         NSLog(@"categoryarea_id: %@", [data[@"categoryarea"][@"categoryarea_id"] stringValue]);
         
-        [self toCategoryVC: [data[@"categoryarea"][@"categoryarea_id"] stringValue]];
+        NSDictionary *categoryareaDic = categoryArray[indexPath.row][@"categoryarea"];
+        
+        [self toCategoryVC: [data[@"categoryarea"][@"categoryarea_id"] stringValue]
+           categoryNameStr: categoryareaDic[@"name"]];
+    } else if (collectionView.tag == 4) {
+        NSDictionary *userDic = followUserData[indexPath.row][@"user"];
+        CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+        cVC.userId = userDic[@"user_id"];
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav pushViewController: cVC animated: YES];
+    } else {
+        NSString *albumId = [followAlbumData[indexPath.row][@"album"][@"album_id"] stringValue];
+        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+        aDVC.albumId = albumId;
+        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+        
+        CATransition *transition = [CATransition animation];
+        transition.duration = 0.5;
+        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+        transition.type = kCATransitionMoveIn;
+        transition.subtype = kCATransitionFromTop;
+        
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+        [appDelegate.myNav pushViewController: aDVC animated: NO];
     }
 }
 
-//- (UIImage *)normalSnapshotImage {
-//    UIGraphicsBeginImageContextWithOptions(self.view.frame.size, NO, [UIScreen mainScreen].scale);
-//    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
-//    UIImage *snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//
-//    return snapshotImage;
-//}
-
-- (void)toCategoryVC:(NSString *)categoryAreaId {
+- (void)toCategoryVC:(NSString *)categoryAreaId
+     categoryNameStr:(NSString *)categoryNameStr {
     CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
     categoryVC.categoryAreaId = categoryAreaId;
+    
     NSLog(@"categoryAreaId: %@", categoryAreaId);
     
     if ([categoryAreaId isEqualToString: @"-1"]) {
         categoryVC.dic = getTheMeAreaDic;
+        categoryVC.categoryNameStr = categoryNameStr;
     }
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -1842,14 +2092,18 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"size :%@",NSStringFromCGSize(finalSize));
         
         return finalSize;
-    } else if (collectionView.tag == 2){
+    } else if (collectionView.tag == 2) {
         CGFloat bannerWidth = [UIScreen mainScreen].bounds.size.width;
         NSLog(@"bannerWidth: %f", bannerWidth);
         CGFloat bannerHeight = bannerWidth * 540 / 960;
         NSLog(@"bannerHeight: %f", bannerHeight);
         return CGSizeMake(bannerWidth, bannerHeight);
+    } else if (collectionView.tag == 3) {
+        return CGSizeMake(112.0, 112.0);
+    } else if (collectionView.tag == 4) {
+        return CGSizeMake(120, 144);
     } else {
-        return CGSizeMake(112.0, 48.0);
+        return CGSizeMake(128.0, 160.0);
     }
 }
 
@@ -1889,6 +2143,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         return 16.0f;
     } else if (collectionView.tag == 2) {
         return 0.0f;
+    } else if (collectionView.tag == 3) {
+        return 16.0f;
+    } else if (collectionView.tag == 4) {
+        return 24.0f;
     } else {
         return 16.0f;
     }

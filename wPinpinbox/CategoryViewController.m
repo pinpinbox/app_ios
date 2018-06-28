@@ -172,7 +172,7 @@
 }
 
 - (void)setupData {
-    self.categoryName = @"拼星聞";
+    self.categoryName = self.categoryNameStr;
     self.albumArray = [NSMutableArray arrayWithArray: self.dic[@"data"][@"albumexplore"]];
     NSLog(@"self.albumArray: %@", self.albumArray);
     

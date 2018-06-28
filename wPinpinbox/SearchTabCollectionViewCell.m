@@ -18,6 +18,8 @@
     
     // Background View For Image
     self.imgBgView.backgroundColor = [UIColor firstGrey];
+    self.imgBgView.layer.cornerRadius = kCornerRadius;
+    self.imgBgView.layer.masksToBounds = YES;
     
     // CoverImage
     self.coverImageView.alpha = 0.95;
