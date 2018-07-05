@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="wVY-sW-UDf">
-                                <rect key="frame" x="0.0" y="20" width="375" height="575"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="590"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="wIv-F5-uJV">
                                     <size key="itemSize" width="97" height="94"/>
@@ -108,10 +108,10 @@
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0xi-a8-Dkr">
-                                <rect key="frame" x="0.0" y="603" width="375" height="64"/>
+                                <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YbY-hY-rZ0">
-                                        <rect key="frame" x="16" y="8" width="343" height="48"/>
+                                        <rect key="frame" x="16" y="2" width="343" height="48"/>
                                         <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="96r-n5-bwL"/>
@@ -125,10 +125,10 @@
                                     </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="YbY-hY-rZ0" firstAttribute="top" secondItem="0xi-a8-Dkr" secondAttribute="top" constant="2" id="CsC-Hg-IjG"/>
                                     <constraint firstAttribute="trailing" secondItem="YbY-hY-rZ0" secondAttribute="trailing" constant="16" id="DRS-i0-pI2"/>
                                     <constraint firstItem="YbY-hY-rZ0" firstAttribute="leading" secondItem="0xi-a8-Dkr" secondAttribute="leading" constant="16" id="dbH-ci-8Ux"/>
-                                    <constraint firstItem="YbY-hY-rZ0" firstAttribute="centerY" secondItem="0xi-a8-Dkr" secondAttribute="centerY" id="ei4-8b-9wf"/>
-                                    <constraint firstAttribute="height" constant="64" id="sU8-AA-3GW"/>
+                                    <constraint firstAttribute="height" constant="49" id="sU8-AA-3GW"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -147,7 +147,9 @@
                     <connections>
                         <outlet property="collectionView" destination="wVY-sW-UDf" id="KOQ-rT-SSt"/>
                         <outlet property="startUsingPinpinboxBtn" destination="YbY-hY-rZ0" id="r4r-el-uSZ"/>
+                        <outlet property="startUsingPinpinboxBtnHeight" destination="96r-n5-bwL" id="MSF-p3-PV2"/>
                         <outlet property="startUsingPinpinboxView" destination="0xi-a8-Dkr" id="jCG-Ga-Rgk"/>
+                        <outlet property="toolBarViewHeight" destination="sU8-AA-3GW" id="h84-1a-F33"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XmM-kf-0zR" userLabel="First Responder" sceneMemberID="firstResponder"/>

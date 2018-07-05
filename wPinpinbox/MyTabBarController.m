@@ -36,12 +36,12 @@ const CGFloat kBarHeight = 56;
 
 - (void)toHomeTab {
     NSLog(@"toHomeTab");
-    self.selectedIndex = 0;
+    self.selectedIndex = kHomeTabIndex;
 }
 
 - (void)toMeTab {
     NSLog(@"toMeTab");
-    self.selectedIndex = 3;
+    self.selectedIndex = kMeTabIndex;
 }
 
 - (void)checkBadge {
@@ -55,7 +55,7 @@ const CGFloat kBarHeight = 56;
             NSLog(@"vc: %@", vc);
             if ([vc isKindOfClass: [MyTabBarController class]]) {
                 MyTabBarController *myTabBarC = (MyTabBarController *)vc;
-                [[myTabBarC.viewControllers objectAtIndex: 4] tabBarItem].badgeValue = @"N";
+                [[myTabBarC.viewControllers objectAtIndex: kNotifTabIndex] tabBarItem].badgeValue = @"N";
             }
         }
     }
@@ -86,7 +86,7 @@ const CGFloat kBarHeight = 56;
     self.tabBar.barTintColor = [UIColor whiteColor];
     self.tabBar.clipsToBounds = YES;
     
-    //[[self.viewControllers objectAtIndex: 4] tabBarItem].badgeValue = @"N";
+    //[[self.viewControllers objectAtIndex: 3] tabBarItem].badgeValue = @"N";
     /*
     UIViewController *vc = [self.viewControllers objectAtIndex: 2];
     vc.tabBarItem = [[UITabBarItem alloc] initWithTitle: @""

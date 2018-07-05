@@ -51,10 +51,10 @@
                                 <rect key="frame" x="0.0" y="603" width="375" height="64"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinpin_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="BBv-GY-6X0">
-                                        <rect key="frame" x="67.5" y="8" width="240" height="48"/>
+                                        <rect key="frame" x="67.5" y="9.5" width="240" height="45"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="240" id="ONI-DZ-IzU"/>
-                                            <constraint firstAttribute="height" constant="48" id="lA8-54-aHp"/>
+                                            <constraint firstAttribute="height" constant="45" id="lA8-54-aHp"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -91,6 +91,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="toolBarViewHeight" destination="xQY-hG-bPx" id="Cx7-uw-GEx"/>
                         <outlet property="viewPreview" destination="Pbu-uw-c9V" id="9mu-K2-jmp"/>
                     </connections>
                 </viewController>

@@ -49,6 +49,7 @@
 		543B11A7205619A900111102 /* ZOZolaZoomTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 543B11A5205619A900111102 /* ZOZolaZoomTransition.m */; };
 		543B11AA20561ACA00111102 /* ExchangeStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 543B11A920561ACA00111102 /* ExchangeStuff.m */; };
 		543D649B1F9F4DE10092AF2F /* SendingPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 543D649A1F9F4DE10092AF2F /* SendingPhoto.m */; };
+		543FC4F920EB24320090DF43 /* MoreTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 543FC4F820EB24320090DF43 /* MoreTabViewController.m */; };
 		5440836720D8EFAA00A5F645 /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5440836620D8EFAA00A5F645 /* SystemImages.xcassets */; };
 		544DA7C41F4B271C00E80C45 /* MapShowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 544DA7C21F4B271C00E80C45 /* MapShowingViewController.m */; };
 		544DA7C51F4B271C00E80C45 /* MapShowingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 544DA7C31F4B271C00E80C45 /* MapShowingViewController.xib */; };
@@ -89,6 +90,7 @@
 		549EC78D1F7B466600260EB0 /* ChooseTemplateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549EC78C1F7B466600260EB0 /* ChooseTemplateViewController.m */; };
 		54A2645A201873760066DD09 /* SetupMusicVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54A26459201873760066DD09 /* SetupMusicVC.storyboard */; };
 		54A2645C20187B230066DD09 /* PreviewPageSetupVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54A2645B20187B230066DD09 /* PreviewPageSetupVC.storyboard */; };
+		54A2810120EB6CBA00D1C95B /* MoreTabVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54A2810020EB6CBA00D1C95B /* MoreTabVC.storyboard */; };
 		54A32A081F5EAD8900CECE58 /* BFPaperButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A32A071F5EAD8900CECE58 /* BFPaperButton.m */; };
 		54A857552008BC3500D87843 /* LabelAttributeStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 54A857532008BC3200D87843 /* LabelAttributeStyle.m */; };
 		54AB12CD20AD3EA900C7CC1A /* AlbumCreation.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54AB12CC20AD3EA900C7CC1A /* AlbumCreation.xcassets */; };
@@ -909,6 +911,8 @@
 		543B11A920561ACA00111102 /* ExchangeStuff.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExchangeStuff.m; sourceTree = "<group>"; };
 		543D64991F9F4DE10092AF2F /* SendingPhoto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendingPhoto.h; sourceTree = "<group>"; };
 		543D649A1F9F4DE10092AF2F /* SendingPhoto.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SendingPhoto.m; sourceTree = "<group>"; };
+		543FC4F720EB24320090DF43 /* MoreTabViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MoreTabViewController.h; sourceTree = "<group>"; };
+		543FC4F820EB24320090DF43 /* MoreTabViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoreTabViewController.m; sourceTree = "<group>"; };
 		5440836620D8EFAA00A5F645 /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SystemImages.xcassets; sourceTree = "<group>"; };
 		544DA7C11F4B271C00E80C45 /* MapShowingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapShowingViewController.h; sourceTree = "<group>"; };
 		544DA7C21F4B271C00E80C45 /* MapShowingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapShowingViewController.m; sourceTree = "<group>"; };
@@ -976,6 +980,7 @@
 		549EC78C1F7B466600260EB0 /* ChooseTemplateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseTemplateViewController.m; sourceTree = "<group>"; };
 		54A26459201873760066DD09 /* SetupMusicVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SetupMusicVC.storyboard; sourceTree = "<group>"; };
 		54A2645B20187B230066DD09 /* PreviewPageSetupVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PreviewPageSetupVC.storyboard; sourceTree = "<group>"; };
+		54A2810020EB6CBA00D1C95B /* MoreTabVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MoreTabVC.storyboard; sourceTree = "<group>"; };
 		54A32A061F5EAD8900CECE58 /* BFPaperButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFPaperButton.h; sourceTree = "<group>"; };
 		54A32A071F5EAD8900CECE58 /* BFPaperButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFPaperButton.m; sourceTree = "<group>"; };
 		54A857532008BC3200D87843 /* LabelAttributeStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelAttributeStyle.m; sourceTree = "<group>"; };
@@ -2397,6 +2402,16 @@
 			path = ExchangeStuff;
 			sourceTree = "<group>";
 		};
+		543FC4F620EB23E60090DF43 /* MoreTab Related */ = {
+			isa = PBXGroup;
+			children = (
+				543FC4F720EB24320090DF43 /* MoreTabViewController.h */,
+				543FC4F820EB24320090DF43 /* MoreTabViewController.m */,
+				54A2810020EB6CBA00D1C95B /* MoreTabVC.storyboard */,
+			);
+			name = "MoreTab Related";
+			sourceTree = "<group>";
+		};
 		544FBEE6208D98B700681097 /* SponsorList */ = {
 			isa = PBXGroup;
 			children = (
@@ -2679,6 +2694,7 @@
 				63090C8A1EAE81DE00788DA6 /* MeTab Related */,
 				63090C8B1EAE81F400788DA6 /* NotifTab Related */,
 				63090C8C1EAE820700788DA6 /* CenterButton Related */,
+				543FC4F620EB23E60090DF43 /* MoreTab Related */,
 			);
 			name = NewTabViewController;
 			sourceTree = "<group>";
@@ -5478,6 +5494,7 @@
 				9274103A1BD0A6FC0031460B /* icon_food@2x.png in Resources */,
 				54AB130E20AD917F00C7CC1A /* OldImages.xcassets in Resources */,
 				929C793C1BD8D5150093E65E /* 1-02a1bg_darkgray@2x.png in Resources */,
+				54A2810120EB6CBA00D1C95B /* MoreTabVC.storyboard in Resources */,
 				92A384AD1CFEC34600C1CDBC /* gift_00003.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5843,6 +5860,7 @@
 				6381289B1DFFCEAF00605466 /* MKDropdownMenu.m in Sources */,
 				634B60411F3484AD00C776E0 /* FXBlurView.m in Sources */,
 				5430446420B8121900018AF4 /* TKImageView.m in Sources */,
+				543FC4F920EB24320090DF43 /* MoreTabViewController.m in Sources */,
 				635775DA1ED3ECFB00637914 /* RecentBrowsingViewController.m in Sources */,
 				92A384A01CFD786A00C1CDBC /* OfflineViewController.m in Sources */,
 				92F68D061BE9BCD80085D748 /* SHViewPagerController.m in Sources */,

@@ -200,7 +200,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 #pragma mark -
 - (void)initialValueSetup {
-    NSLog(@"initialValueSetup");
+    NSLog(@"initialValueSetup");        
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
@@ -1605,7 +1605,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
         } else if ([identifierStr isEqualToString: @"albumManagement"]) {
             NSLog(@"albumManagementButtonPress");
             AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
-            
             AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             [app.myNav pushViewController: albumCollectionVC animated: YES];
         } else if ([identifierStr isEqualToString: @"followList"]) {

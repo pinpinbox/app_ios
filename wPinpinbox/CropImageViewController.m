@@ -19,7 +19,10 @@
 @interface CropImageViewController ()
 @property (weak, nonatomic) IBOutlet TKImageView *tkImageView;
 @property (weak, nonatomic) IBOutlet UIButton *cropBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *cropBtnHeight;
 @property (weak, nonatomic) IBOutlet UIButton *exitBtn;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
 
 @end
 

@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="yQZ-ga-YCX">
-                                <rect key="frame" x="0.0" y="20" width="320" height="476"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="491"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="h5v-o5-zBY">
                                     <size key="itemSize" width="120" height="210"/>
@@ -139,13 +139,13 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DYP-Cp-w5C">
-                                <rect key="frame" x="0.0" y="504" width="320" height="64"/>
+                                <rect key="frame" x="0.0" y="519" width="320" height="49"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PM9-qN-eoX">
-                                        <rect key="frame" x="16" y="8.5" width="288" height="48"/>
+                                        <rect key="frame" x="16" y="2.5" width="288" height="45"/>
                                         <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="48" id="k5C-z7-KmW"/>
+                                            <constraint firstAttribute="height" constant="45" id="k5C-z7-KmW"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <state key="normal" title="建立新作品">
@@ -159,8 +159,8 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="PM9-qN-eoX" secondAttribute="trailing" constant="16" id="0v9-p2-yhW"/>
                                     <constraint firstItem="PM9-qN-eoX" firstAttribute="leading" secondItem="DYP-Cp-w5C" secondAttribute="leading" constant="16" id="3gs-OL-tDw"/>
-                                    <constraint firstItem="PM9-qN-eoX" firstAttribute="centerY" secondItem="DYP-Cp-w5C" secondAttribute="centerY" id="UHH-uQ-99l"/>
-                                    <constraint firstAttribute="height" constant="64" id="hBT-l4-e7p"/>
+                                    <constraint firstAttribute="height" constant="49" id="hBT-l4-e7p"/>
+                                    <constraint firstItem="PM9-qN-eoX" firstAttribute="top" secondItem="DYP-Cp-w5C" secondAttribute="top" constant="2" id="nf5-33-lMt"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -182,10 +182,12 @@
                     <connections>
                         <outlet property="collectionView" destination="yQZ-ga-YCX" id="ej3-63-gX4"/>
                         <outlet property="createNewAlbumBtn" destination="PM9-qN-eoX" id="lyC-gH-6Mg"/>
+                        <outlet property="createNewAlbumBtnHeight" destination="k5C-z7-KmW" id="cwI-12-wNA"/>
                         <outlet property="currentAlbumLabel" destination="5jX-OG-05a" id="P43-II-07G"/>
                         <outlet property="navBarHeight" destination="OJz-2f-7In" id="uOb-C1-lSG"/>
                         <outlet property="navBarView" destination="Day-g1-m9o" id="n8a-TC-uDI"/>
                         <outlet property="onlyForPublicLabel" destination="Dap-6G-71g" id="8ZW-R8-Oac"/>
+                        <outlet property="toolBarViewHeight" destination="hBT-l4-e7p" id="ecx-eO-yNI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GmT-uV-A9o" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,13 +19,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="th5-7T-rQz">
-                                <rect key="frame" x="0.0" y="680" width="413.66666666666669" height="56"/>
+                                <rect key="frame" x="0.0" y="687" width="413.66666666666669" height="49"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XR3-jW-ub1">
-                                        <rect key="frame" x="285.66666666666669" y="8" width="112" height="41"/>
+                                        <rect key="frame" x="285.66666666666669" y="2" width="112" height="45"/>
                                         <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="41" id="YyQ-OL-kIf"/>
+                                            <constraint firstAttribute="height" constant="45" id="YyQ-OL-kIf"/>
                                             <constraint firstAttribute="width" constant="112" id="boa-fq-Krp"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
@@ -38,7 +37,7 @@
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="wAC-20-0lw">
-                                        <rect key="frame" x="16" y="8" width="180" height="42"/>
+                                        <rect key="frame" x="16" y="3.6666666666666288" width="180" height="42"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tk3-uc-Lx7">
                                                 <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
@@ -93,16 +92,15 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="XR3-jW-ub1" firstAttribute="top" secondItem="th5-7T-rQz" secondAttribute="top" constant="2" id="0jk-im-lbH"/>
+                                    <constraint firstItem="wAC-20-0lw" firstAttribute="centerY" secondItem="XR3-jW-ub1" secondAttribute="centerY" id="7yY-kw-yhI"/>
                                     <constraint firstItem="wAC-20-0lw" firstAttribute="leading" secondItem="th5-7T-rQz" secondAttribute="leading" constant="16" id="apo-nG-p55"/>
-                                    <constraint firstAttribute="height" constant="56" id="bM9-Dg-AoJ"/>
+                                    <constraint firstAttribute="height" constant="49" id="bM9-Dg-AoJ"/>
                                     <constraint firstAttribute="trailing" secondItem="XR3-jW-ub1" secondAttribute="trailing" constant="16" id="iZg-uR-WRL"/>
-                                    <constraint firstItem="XR3-jW-ub1" firstAttribute="top" secondItem="th5-7T-rQz" secondAttribute="top" constant="8" id="k61-yG-8b9"/>
-                                    <constraint firstItem="XR3-jW-ub1" firstAttribute="top" secondItem="th5-7T-rQz" secondAttribute="topMargin" id="udq-wF-k6R"/>
-                                    <constraint firstItem="wAC-20-0lw" firstAttribute="top" secondItem="th5-7T-rQz" secondAttribute="top" constant="8" id="ySj-WE-pUc"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BhE-XK-veE">
-                                <rect key="frame" x="131.66666666666666" y="624" width="150.99999999999997" height="48"/>
+                                <rect key="frame" x="131.66666666666666" y="631" width="150.99999999999997" height="48"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Zmg-jH-f8w">
                                         <rect key="frame" x="32" y="8" width="87" height="32"/>
@@ -145,6 +143,7 @@
                     </view>
                     <connections>
                         <outlet property="checkContentBtn" destination="XR3-jW-ub1" id="HXu-xu-fbq"/>
+                        <outlet property="checkContentBtnHeight" destination="YyQ-OL-kIf" id="UG3-hP-F4X"/>
                         <outlet property="creatorHeadshotImageView" destination="kjZ-c2-F8I" id="fmp-HA-AUX"/>
                         <outlet property="creatorNameLabel" destination="cg4-l6-0YC" id="EYW-MR-9J9"/>
                         <outlet property="creatorView" destination="BhE-XK-veE" id="24T-Vr-7qg"/>

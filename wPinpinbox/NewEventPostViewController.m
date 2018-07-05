@@ -45,7 +45,9 @@
     CGFloat imageHeight;
 }
 @property (weak, nonatomic) IBOutlet UIButton *eventPostBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *eventPostBtnHeight;
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet MyLinearLayout *vertLayout;
 
@@ -180,7 +182,7 @@
         
         self.eventPostBtn.userInteractionEnabled = YES;
     }
-    
+    self.eventPostBtnHeight.constant = kToolBarButtonHeight;
     self.toolBarView.backgroundColor = [UIColor barColor];
     self.toolBarView.myLeftMargin = self.toolBarView.myRightMargin = 0;
     self.toolBarView.myBottomMargin = 0;
@@ -342,6 +344,35 @@
                 NSLog(@"v2.accessibilityIdentifier: %@", v2.accessibilityIdentifier);
                 NSLog(@"v2: %@", v2);
             }
+        }
+    }
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
+            case 2436:
+                printf("iPhone X");
+                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
+                break;
+            default:
+                printf("unknown");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
         }
     }
 }

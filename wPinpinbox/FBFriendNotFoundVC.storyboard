@@ -90,6 +90,8 @@
                     <connections>
                         <outlet property="messageContainerView" destination="qth-87-Hmd" id="Ohs-LI-y5h"/>
                         <outlet property="nextBtn" destination="R5k-9c-pT7" id="aLP-Hs-j7f"/>
+                        <outlet property="nextBtnHeight" destination="yGC-nW-Z12" id="Xq5-46-mQ2"/>
+                        <outlet property="toolBarViewHeight" destination="dQW-x9-QfF" id="7pm-bo-aX2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BgG-hH-QEa" userLabel="First Responder" sceneMemberID="firstResponder"/>

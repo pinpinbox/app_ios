@@ -100,13 +100,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
     BOOL isMessageShowing;
 }
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
 @property (weak, nonatomic) IBOutlet UIButton *downArrowBtn;
 @property (weak, nonatomic) IBOutlet UIButton *messageBtn;
 @property (weak, nonatomic) IBOutlet UIButton *likeBtn;
 @property (weak, nonatomic) IBOutlet UIButton *moreBtn;
 @property (weak, nonatomic) IBOutlet UIButton *checkContentBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *checkContentBtnHeight;
 
 @property (nonatomic) DDAUIActionSheetViewController *customMoreActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
@@ -345,27 +346,27 @@ static NSString *autoPlayStr = @"&autoplay=1";
         switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
             case 1136:
                 printf("iPhone 5 or 5S or 5C");
-                self.toolBarViewHeight.constant = 56;
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
-                self.toolBarViewHeight.constant = 56;
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 1920:
                 printf("iPhone 6+/6S+/7+/8+");
-                self.toolBarViewHeight.constant = 56;
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
-                self.toolBarViewHeight.constant = 56;
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 2436:
                 printf("iPhone X");
-                self.toolBarViewHeight.constant = 90;
+                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
                 break;
             default:
                 printf("unknown");
-                self.toolBarViewHeight.constant = 56;
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
         }
     }
@@ -395,16 +396,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)btnSetup {
     self.downArrowBtn.backgroundColor = [UIColor clearColor];
     self.downArrowBtn.layer.cornerRadius = kCornerRadius;
-    [self.downArrowBtn addTarget: self action: @selector(arrowBtnHighLight:) forControlEvents: UIControlEventTouchDown];
-    [self.downArrowBtn addTarget: self action: @selector(arrowBtnNormal:) forControlEvents: UIControlEventTouchUpInside];
-    [self.downArrowBtn addTarget: self action: @selector(arrowBtnNormal:) forControlEvents: UIControlEventTouchUpOutside];
     
     self.messageBtn.backgroundColor = [UIColor clearColor];
     self.messageBtn.layer.cornerRadius = kCornerRadius;
-    [self.messageBtn addTarget: self action: @selector(messageBtnHighLight:) forControlEvents: UIControlEventTouchDown];
-    [self.messageBtn addTarget: self action: @selector(messageBtnNormal:) forControlEvents: UIControlEventTouchUpInside];
-    [self.messageBtn addTarget: self action: @selector(messageBtnNormal:) forControlEvents: UIControlEventTouchUpOutside];
-    
     
     if (isLikes) {
         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
@@ -413,19 +407,12 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     self.likeBtn.backgroundColor = [UIColor clearColor];
     self.likeBtn.layer.cornerRadius = kCornerRadius;
-    [self.likeBtn addTarget: self action: @selector(likeBtnHighLight:) forControlEvents: UIControlEventTouchDown];
-    [self.likeBtn addTarget: self action: @selector(likeBtnNormal:) forControlEvents: UIControlEventTouchUpInside];
-    [self.likeBtn addTarget: self action: @selector(likeBtnNormal:) forControlEvents: UIControlEventTouchUpOutside];
     
     self.moreBtn.backgroundColor = [UIColor clearColor];
     self.moreBtn.layer.cornerRadius = kCornerRadius;
-    [self.moreBtn addTarget: self action: @selector(moreBtnHighlight:) forControlEvents: UIControlEventTouchDown];
-    [self.moreBtn addTarget: self action: @selector(moreBtnNormal:) forControlEvents: UIControlEventTouchUpInside];
-    [self.moreBtn addTarget: self action: @selector(moreBtnNormal:) forControlEvents: UIControlEventTouchUpOutside];
     
     self.checkContentBtn.layer.cornerRadius = kCornerRadius;
-    //[self.checkContentBtn addTarget: self action: @selector(checkContent) forControlEvents: UIControlEventTouchUpInside];
-    //[self.checkContentBtn addTarget: self action: @selector(checkContent) forControlEvents: UIControlEventTouchUpOutside];
+    self.checkContentBtnHeight.constant = kToolBarButtonHeight;
     
     NSLog(@"self.getMessagePush: %d", self.getMessagePush);
     
@@ -911,47 +898,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (void)handleContentTap {
     NSLog(@"handleContentTap");
-}
-
-#pragma mark - Button Action Methods
-- (void)arrowBtnHighLight: (UIButton *)sender {
-    NSLog(@"arrowBtnTouchDown");
-    sender.backgroundColor = [UIColor thirdMain];
-}
-
-- (void)arrowBtnNormal: (UIButton *)sender {
-    NSLog(@"arrowBtnTouchUpOutside");
-    sender.backgroundColor = [UIColor clearColor];
-}
-
-- (void)messageBtnHighLight: (UIButton *)sender {
-    NSLog(@"messageBtnTouchDown");
-    sender.backgroundColor = [UIColor thirdMain];
-}
-
-- (void)messageBtnNormal: (UIButton *)sender {
-    NSLog(@"messageBtnTouchUpOutside");
-    sender.backgroundColor = [UIColor clearColor];
-}
-
-- (void)likeBtnHighLight: (UIButton *)sender {
-    NSLog(@"likeBtnTouchDown");
-    sender.backgroundColor = [UIColor thirdMain];
-}
-
-- (void)likeBtnNormal: (UIButton *)sender {
-    NSLog(@"likeBtnTouchUpOutside");
-    sender.backgroundColor = [UIColor clearColor];
-}
-
-- (void)moreBtnHighlight: (UIButton *)sender {
-    NSLog(@"moreBtnHighlight");
-    sender.backgroundColor = [UIColor thirdMain];
-}
-
-- (void)moreBtnNormal: (UIButton *)sender {
-    NSLog(@"moreBtnNormal");
-    sender.backgroundColor = [UIColor clearColor];
 }
 
 #pragma mark - Get Event Methods
@@ -2051,9 +1997,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (IBAction)messageBtnPress:(id)sender {
     NSLog(@"messageBtnPress");
     
-    UIButton *btn = (UIButton *)sender;
-    btn.backgroundColor = [UIColor thirdMain];
-    
     [self showCustomMessageActionSheet];
     
 //    NewMessageBoardViewController *nMBC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"NewMessageBoardViewController"];
@@ -2108,10 +2051,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (IBAction)moreBtnPress:(id)sender {
     NSLog(@"moreBtnPress");
-    
-    UIButton *btn = (UIButton *)sender;
-    btn.backgroundColor = [UIColor thirdMain];
-    
     [self showCustomMoreActionSheet];
     //[self showMoreActionSheet];
 }

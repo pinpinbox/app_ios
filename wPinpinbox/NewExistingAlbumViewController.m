@@ -55,7 +55,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *onlyForPublicLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIButton *createNewAlbumBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *createNewAlbumBtnHeight;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
 @end
 
 @implementation NewExistingAlbumViewController 
@@ -92,6 +94,7 @@
     
     self.createNewAlbumBtn.layer.masksToBounds = YES;
     self.createNewAlbumBtn.layer.cornerRadius = kCornerRadius;
+    self.createNewAlbumBtnHeight.constant = kToolBarButtonHeight;
     [LabelAttributeStyle changeGapString: self.createNewAlbumBtn.titleLabel content: self.createNewAlbumBtn.titleLabel.text];
     
     [LabelAttributeStyle changeGapString: self.currentAlbumLabel content: self.currentAlbumLabel.text];
@@ -109,22 +112,28 @@
         switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
             case 1136:
                 printf("iPhone 5 or 5S or 5C");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 1920:
                 printf("iPhone 6+/6S+/7+/8+");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 2436:
                 printf("iPhone X");
                 self.navBarHeight.constant = navBarHeightConstant;
+                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
                 break;
             default:
                 printf("unknown");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
         }
     }

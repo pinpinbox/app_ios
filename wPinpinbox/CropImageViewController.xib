@@ -13,8 +13,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CropImageViewController">
             <connections>
                 <outlet property="cropBtn" destination="USs-iT-qY5" id="dMO-Hn-Ums"/>
+                <outlet property="cropBtnHeight" destination="ox8-Mb-gJD" id="hVL-dZ-Ocn"/>
                 <outlet property="exitBtn" destination="dG8-k7-T78" id="JGf-QX-CsX"/>
                 <outlet property="tkImageView" destination="sQE-03-Pq7" id="Y0J-V4-pM9"/>
+                <outlet property="toolBarViewHeight" destination="JgO-Up-eNd" id="dbZ-kl-eN8"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -24,20 +26,20 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QyG-qt-87l">
-                    <rect key="frame" x="0.0" y="607" width="375" height="60"/>
+                    <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dG8-k7-T78">
-                            <rect key="frame" x="16" y="15" width="31" height="30"/>
+                            <rect key="frame" x="16" y="9.5" width="31" height="30"/>
                             <state key="normal" title="離開"/>
                             <connections>
                                 <action selector="cancelBtn:" destination="-1" eventType="touchUpInside" id="uVZ-am-YdG"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="USs-iT-qY5">
-                            <rect key="frame" x="131" y="6" width="112" height="48"/>
+                            <rect key="frame" x="131" y="2" width="112" height="45"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="112" id="5C2-tU-nTF"/>
-                                <constraint firstAttribute="height" constant="48" id="ox8-Mb-gJD"/>
+                                <constraint firstAttribute="height" constant="45" id="ox8-Mb-gJD"/>
                             </constraints>
                             <state key="normal" title="剪裁"/>
                             <connections>
@@ -47,15 +49,15 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="USs-iT-qY5" firstAttribute="centerY" secondItem="QyG-qt-87l" secondAttribute="centerY" id="6As-IR-kCd"/>
                         <constraint firstItem="dG8-k7-T78" firstAttribute="centerY" secondItem="QyG-qt-87l" secondAttribute="centerY" id="Dpl-lY-JIm"/>
-                        <constraint firstAttribute="height" constant="60" id="JgO-Up-eNd"/>
+                        <constraint firstAttribute="height" constant="49" id="JgO-Up-eNd"/>
                         <constraint firstItem="dG8-k7-T78" firstAttribute="leading" secondItem="QyG-qt-87l" secondAttribute="leading" constant="16" id="doB-8k-bP2"/>
+                        <constraint firstItem="USs-iT-qY5" firstAttribute="top" secondItem="QyG-qt-87l" secondAttribute="top" constant="2" id="fRR-QX-EMS"/>
                         <constraint firstItem="USs-iT-qY5" firstAttribute="centerX" secondItem="QyG-qt-87l" secondAttribute="centerX" id="m1C-wa-fLU"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sQE-03-Pq7" customClass="TKImageView">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="599"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="610"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>

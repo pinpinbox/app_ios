@@ -27,6 +27,8 @@
 #import "CategoryViewController.h"
 #import "HomeTabViewController.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 @interface NotifTabViewController () <UITableViewDataSource, UITableViewDelegate, SFSafariViewControllerDelegate>
 {
     NSMutableArray *notificationData;
@@ -81,7 +83,7 @@
         NSLog(@"vc: %@", vc);
         if ([vc isKindOfClass: [MyTabBarController class]]) {
             MyTabBarController *myTabBarC = (MyTabBarController *)vc;
-            [[myTabBarC.viewControllers objectAtIndex: 4] tabBarItem].badgeValue = nil;
+            [[myTabBarC.viewControllers objectAtIndex: kNotifTabIndex] tabBarItem].badgeValue = nil;
         }
     }
 }
@@ -245,7 +247,7 @@
                             NSLog(@"vc: %@", vc);
                             if ([vc isKindOfClass: [MyTabBarController class]]) {
                                 MyTabBarController *myTabBarC = (MyTabBarController *)vc;
-                                [[myTabBarC.viewControllers objectAtIndex: 4] tabBarItem].badgeValue = nil;
+                                [[myTabBarC.viewControllers objectAtIndex: kNotifTabIndex] tabBarItem].badgeValue = nil;
                             }
                         }
                     } else {
@@ -289,7 +291,6 @@
 }
 
 #pragma mark - UITableViewDataSource Methods
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
@@ -464,7 +465,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *pushDic = notificationData[indexPath.row][@"pushqueue"];
     NSString *type = pushDic[@"target2type"];
     NSLog(@"type: %@", type);
-    NSString *type_id;
+    NSString *type_id;    
     
     // Check target2type_id whether is null or not
     if ([pushDic[@"target2type_id"] isEqual: [NSNull null]]) {

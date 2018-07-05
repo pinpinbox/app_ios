@@ -9,6 +9,7 @@
 #import "NotifTabTableViewCell.h"
 #import "UIColor+Extensions.h"
 #import "MyLayout.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation NotifTabTableViewCell
 
@@ -27,6 +28,12 @@
     self.targetTypeLabel.textColor = [UIColor secondGrey];
 
     self.insertTimeLabel.textColor = [UIColor secondGrey];
+    
+    // Change Cell Selection Color
+    UIView *bgColorView = [[UIView alloc] init];
+    [bgColorView setBackgroundColor:[UIColor thirdMain]];
+//    bgColorView.layer.cornerRadius = 10;
+    [self setSelectedBackgroundView:bgColorView];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

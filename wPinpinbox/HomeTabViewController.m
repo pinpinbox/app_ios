@@ -63,12 +63,13 @@
 #import "SearchTabCollectionReusableView.h"
 #import "NSString+MD5.h"
 #import  <SystemConfiguration/SCNetworkReachability.h>
+#import "QrcordViewController.h"
 
 #define kAdHeight 142
 #define kBtnWidth 78
 #define kBtnGap 16
 
-@interface HomeTabViewController () <UICollectionViewDataSource, UICollectionViewDelegate, JCCollectionViewWaterfallLayoutDelegate, UICollectionViewDelegateFlowLayout, SFSafariViewControllerDelegate, UIGestureRecognizerDelegate, RMPZoomTransitionAnimating, UIViewControllerTransitioningDelegate>
+@interface HomeTabViewController () <UICollectionViewDataSource, UICollectionViewDelegate, JCCollectionViewWaterfallLayoutDelegate, UICollectionViewDelegateFlowLayout, SFSafariViewControllerDelegate, UIGestureRecognizerDelegate, RMPZoomTransitionAnimating, UIViewControllerTransitioningDelegate, UITextFieldDelegate>
 {
     BOOL isLoading;
     BOOL isReloading;
@@ -115,6 +116,9 @@
     NSMutableArray *categoryArray;
     NSMutableArray *getTheMeAreaArray;
     
+    CGFloat headerHeight;
+    CGFloat topContentOffset;
+    
     UILabel *followUserLabel;
     UIView *followUserHorzView;
     UILabel *followAlbumLabel;
@@ -127,6 +131,36 @@
     
     NSMutableArray *followUserData;
     NSMutableArray *followAlbumData;
+    
+    // For Search
+    BOOL isSearchTextFieldSelected;
+    
+    BOOL isAlbumLoading;
+    BOOL isAlbumReloading;
+    NSInteger nextAlbumId;
+    
+    BOOL isUserLoading;
+    BOOL isUserReloading;
+    NSInteger nextUserId;
+    
+    NSMutableArray *albumData;
+    NSMutableArray *userData;
+    
+    UILabel *userRecommendationLabel;
+    UILabel *albumRecommendationLabel;
+    
+    UITextField *selectTextField;
+    
+    UIView *noInfoVertView;
+    UIView *noInfoHorzView;
+    
+//    BOOL isSearching;
+    BOOL isNoInfoVertViewCreate;
+    BOOL isNoInfoHorzViewCreate;
+    
+    CGFloat oldNavBarViewYValue;
+    
+    BOOL isViewLoading;
 }
 @property (nonatomic, strong) JCCollectionViewWaterfallLayout *jccLayout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
@@ -138,6 +172,19 @@
 
 @property (weak, nonatomic) UIPageControl *pageControl;
 @property (weak, nonatomic) UIImageView *zoomView;
+
+// For Search
+@property (nonatomic, strong) JCCollectionViewWaterfallLayout *jccLayout1;
+
+@property (weak, nonatomic) IBOutlet UIView *navBarView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
+@property (weak, nonatomic) IBOutlet UICollectionView *albumCollectionView;
+@property (weak, nonatomic) UICollectionView *userCollectionView;
+@property (weak, nonatomic) IBOutlet UIView *searchView;
+@property (weak, nonatomic) IBOutlet UITextField *searchTextField;
+@property (weak, nonatomic) IBOutlet UIButton *scanBtn;
+
+@property (nonatomic, assign) CGFloat lastContentOffset;
 
 @end
 
@@ -187,6 +234,18 @@
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
     // Do any additional setup after loading the view.
+    [self settingSizeBasedOnDevice];
+    
+    isSearchTextFieldSelected = NO;
+    self.albumCollectionView.hidden = YES;
+    isViewLoading = YES;    
+    
+    self.searchView.layer.cornerRadius = 8;
+    self.scanBtn.layer.cornerRadius = kCornerRadius;
+    
+    oldNavBarViewYValue = self.navBarView.frame.origin.y;
+    NSLog(@"self.navBarView.frame.origin.y: %f", self.navBarView.frame.origin.y);
+    
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     CGFloat screenScale = [[UIScreen mainScreen] scale];
     CGSize screenSize = CGSizeMake(screenBounds.size.width * screenScale, screenBounds.size.height * screenScale);
@@ -231,48 +290,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"");
     NSLog(@"HomeTabViewController viewWillAppear");
-    
     [super viewWillAppear:animated];
-    
     NSLog(@"status bar height: %f", [UIApplication sharedApplication].statusBarFrame.size.height);
     
     [self removeNotification];
     [self addNotification];
-    
-    self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
-    
-    CGFloat headerHeight = 0;
-    
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-            case 1136:
-                printf("iPhone 5 or 5S or 5C");
-                headerHeight = 900.0f;
-                break;
-            case 1334:
-                printf("iPhone 6/6S/7/8");
-                headerHeight = 940.0f;
-                break;
-            case 1920:
-                printf("iPhone 6+/6S+/7+/8+");
-                headerHeight = 950.0f;
-                break;
-            case 2208:
-                printf("iPhone 6+/6S+/7+/8+");
-                headerHeight = 950.0f;
-                break;
-            case 2436:
-                printf("iPhone X");
-                headerHeight = 920.0f;
-                break;
-            default:
-                printf("unknown");
-                headerHeight = 940.0f;
-                break;
-        }
-    }
-    self.jccLayout.headerHeight = headerHeight;
-    self.jccLayout.footerHeight = 0.0f;
     
     // Central Button
     for (UIView *view in self.tabBarController.view.subviews) {
@@ -283,13 +305,66 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
     [self removeNotification];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)settingSizeBasedOnDevice {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                headerHeight = 900.0f;
+                self.navBarHeight.constant = 48;
+                topContentOffset = 48;
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                headerHeight = 940.0f;
+                self.navBarHeight.constant = 48;
+                topContentOffset = 48;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                headerHeight = 950.0f;
+                self.navBarHeight.constant = 48;
+                topContentOffset = 48;
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                headerHeight = 950.0f;
+                self.navBarHeight.constant = 48;
+                topContentOffset = 48;
+                break;
+            case 2436:
+                printf("iPhone X");
+                headerHeight = 920.0f;
+                self.navBarHeight.constant = navBarHeightConstant;
+                topContentOffset = 28;
+                break;
+            default:
+                printf("unknown");
+                headerHeight = 940.0f;
+                self.navBarHeight.constant = 48;
+                topContentOffset = 48;
+                break;
+        }
+    }
+    
+    self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
+    self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
+    self.jccLayout1 = (JCCollectionViewWaterfallLayout *)self.albumCollectionView.collectionViewLayout;
+    
+    self.jccLayout.headerHeight = headerHeight;
+    self.jccLayout.footerHeight = 0.0f;
+    
+    self.jccLayout1.headerHeight = 250;
+    
+    self.albumCollectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
 }
 
 #pragma mark - Push Notification Setting
@@ -347,7 +422,8 @@
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"checkVersion"
-                                         eventId: @""];
+                                         eventId: @""
+                                            text: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSLog(@"response from checkVersion");
@@ -422,6 +498,8 @@
 }
 
 - (void)initApp {
+    isViewLoading = NO;
+    
     [self initialValueSetup];
     //[self addCategoryBtn];
     [self loadData];
@@ -449,6 +527,61 @@
     miniInteriorSpacing = 16;
     
     self.pageControl.hidden = YES;
+    
+    // For Search
+    self.navBarView.backgroundColor = [UIColor barColor];
+    
+    // Search TextField
+    self.searchTextField.textColor = [UIColor blackColor];
+    
+    UIToolbar *numberToolBar = [[UIToolbar alloc] initWithFrame: CGRectMake(0, 0, 320, 40)];
+    numberToolBar.barStyle = UIBarStyleDefault;
+    numberToolBar.items = [NSArray arrayWithObjects:
+                           //[[UIBarButtonItem alloc] initWithTitle: @"取消" style: UIBarButtonItemStylePlain target: self action: @selector(cancelNumberPad)],
+                           [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemFlexibleSpace target: nil action: nil],
+                           [[UIBarButtonItem alloc] initWithTitle: @"完成" style: UIBarButtonItemStyleDone target: self action: @selector(dismissKeyboard)], nil];
+    
+    self.searchTextField.inputAccessoryView = numberToolBar;
+    
+    
+//    [self.scanBtn addTarget: self
+//                     action: @selector(scanButtonHighlight:)
+//           forControlEvents: UIControlEventTouchDown];
+//    [self.scanBtn addTarget: self
+//                     action: @selector(scanButtonNormal:)
+//           forControlEvents: UIControlEventTouchUpInside];
+//    [self.scanBtn addTarget: self
+//                     action: @selector(scanButtonNormal:)
+//           forControlEvents: UIControlEventTouchUpOutside];
+}
+
+- (void)dismissKeyboard {
+    [self.view endEditing:YES];
+}
+
+//- (void)scanButtonHighlight: (UIButton *)sender {
+//    NSLog(@"scanButtonHighlight");
+//    sender.backgroundColor = [UIColor thirdMain];
+//}
+//
+//- (void)scanButtonNormal: (UIButton *)sender {
+//    NSLog(@"scanButtonNormal");
+//    sender.backgroundColor = [UIColor thirdGrey];
+//}
+
+- (IBAction)toScanCode:(id)sender {
+    if (isSearchTextFieldSelected) {
+        UIButton *btn = (UIButton *)sender;
+        [btn setImage: [UIImage imageNamed: @"ic200_scancamera_dark"] forState: UIControlStateNormal];
+        [self dismissKeyboard];
+        self.searchTextField.text = @"";
+        isSearchTextFieldSelected = NO;
+        self.homeCollectionView.hidden = NO;
+    } else {
+        QrcordViewController *qVC = [[UIStoryboard storyboardWithName: @"QRCodeVC" bundle: nil] instantiateViewControllerWithIdentifier: @"QrcordViewController"];
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav pushViewController: qVC animated: YES];
+    }
 }
 
 #pragma mark - <RMPZoomTransitionAnimating>
@@ -543,15 +676,17 @@ sourceController:(UIViewController *)source
     NSLog(@"");
     NSLog(@"updateList");
     
-    @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught");
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
+    [wTools ShowMBProgressHUD];
+    
+//    @try {
+//        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+//    } @catch (NSException *exception) {
+//        // Print exception information
+//        NSLog( @"NSException caught");
+//        NSLog( @"Name: %@", exception.name);
+//        NSLog( @"Reason: %@", exception.reason );
+//        return;
+//    }
     
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
@@ -567,15 +702,16 @@ sourceController:(UIViewController *)source
                                            rank: rankType];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason);
-                return;
-            }
+            [wTools HideMBProgressHUD];
+//            @try {
+//                [MBProgressHUD hideHUDForView: self.view animated: YES];
+//            } @catch (NSException *exception) {
+//                // Print exception information
+//                NSLog( @"NSException caught" );
+//                NSLog( @"Name: %@", exception.name);
+//                NSLog( @"Reason: %@", exception.reason);
+//                return;
+//            }
             
             if (response != nil) {
                 NSLog(@"response from updateList");
@@ -588,7 +724,8 @@ sourceController:(UIViewController *)source
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"updatelist"
-                                         eventId: @""];
+                                         eventId: @""
+                                            text: @""];
                     [self.refreshControl endRefreshing];
                     isReloading = NO;
                     
@@ -712,7 +849,8 @@ sourceController:(UIViewController *)source
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getAdList"
-                                         eventId: @""];
+                                         eventId: @""
+                                            text: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     
@@ -784,7 +922,8 @@ sourceController:(UIViewController *)source
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"retrievecatgeorylist"
-                                         eventId: @""];
+                                         eventId: @""
+                                            text: @""];
                     
                 } else {
                     NSLog(@"Get Real Response");
@@ -849,7 +988,8 @@ sourceController:(UIViewController *)source
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getTheMeArea"
-                                         eventId: @""];
+                                         eventId: @""
+                                            text: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSLog(@"Get response from getTheMeArea");
@@ -951,10 +1091,10 @@ sourceController:(UIViewController *)source
                     NSLog(@"HomeTabViewController");
                     NSLog(@"showUserRecommendedList");
                     
-//                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-//                                    protocolName: @"showUserRecommendedList"
-//                                            text: @""
-//                                         albumId: @""];
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"showUserRecommendedList"
+                                         eventId: @""
+                                            text: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -997,11 +1137,11 @@ sourceController:(UIViewController *)source
                     NSLog(@"Time Out Message Return");
                     NSLog(@"HomeTabViewController");
                     NSLog(@"showAlbumRecommendedList");
-                    
-//                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-//                                    protocolName: @"showAlbumRecommendedList"
-//                                            text: @""
-//                                         albumId: @""];
+
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"showAlbumRecommendedList"
+                                         eventId: @""
+                                            text: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic =  (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -1167,7 +1307,8 @@ sourceController:(UIViewController *)source
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"doTask1"
-                                         eventId: @""];
+                                         eventId: @""
+                                            text: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     
@@ -1254,7 +1395,8 @@ sourceController:(UIViewController *)source
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"geturpoints"
-                                         eventId: @""];
+                                         eventId: @""
+                                            text: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -1373,7 +1515,8 @@ sourceController:(UIViewController *)source
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getEvent"
-                                         eventId: eventId];
+                                         eventId: eventId
+                                            text: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
@@ -1450,8 +1593,12 @@ sourceController:(UIViewController *)source
         return categoryArray.count;
     } else if (collectionView.tag == 4) {
         return followUserData.count;
-    } else {
+    } else if (collectionView.tag == 5) {
         return followAlbumData.count;
+    } else if (collectionView.tag == 6) {
+        return albumData.count;
+    } else {
+        return userData.count;
     }
 }
 
@@ -1461,30 +1608,49 @@ sourceController:(UIViewController *)source
     NSLog(@"");
     NSLog(@"viewForSupplementaryElementOfKind");
     
-    HomeDataCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
-    self.pageControl = headerView.pageControl;
+    NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
     
-    self.bannerCollectionView = headerView.homeBannerCollectionView;
-    self.categoryCollectionView = headerView.categoryCollectionView;
-    self.followUserCollectionView = headerView.followUserCollectionView;
-    self.followAlbumCollectionView = headerView.followAlbumCollectionView;
-    
-    followUserLabel = headerView.followUserLabel;
-    [LabelAttributeStyle changeGapString: followUserLabel content: followUserLabel.text];
-    followUserHorzView = headerView.followUserHorzView;
-    
-    followAlbumLabel = headerView.followAlbumLabel;
-    [LabelAttributeStyle changeGapString: followAlbumLabel content: followAlbumLabel.text];
-    followAlbumHorzView = headerView.followAlbumHorzView;
-    
-    recommendationLabel = headerView.recommendationLabel;
-    [LabelAttributeStyle changeGapString: recommendationLabel content: recommendationLabel.text];
-    
-    recommendationHorzView = headerView.recommendationHorzView;
-    
-    [self.homeCollectionView.collectionViewLayout invalidateLayout];
-    
-    return headerView;
+    if (collectionView.tag == 1) {
+        HomeDataCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
+        self.pageControl = headerView.pageControl;
+        
+        self.bannerCollectionView = headerView.homeBannerCollectionView;
+        self.categoryCollectionView = headerView.categoryCollectionView;
+        self.followUserCollectionView = headerView.followUserCollectionView;
+        self.followAlbumCollectionView = headerView.followAlbumCollectionView;
+        
+        followUserLabel = headerView.followUserLabel;
+        [LabelAttributeStyle changeGapString: followUserLabel content: followUserLabel.text];
+        followUserHorzView = headerView.followUserHorzView;
+        
+        followAlbumLabel = headerView.followAlbumLabel;
+        [LabelAttributeStyle changeGapString: followAlbumLabel content: followAlbumLabel.text];
+        followAlbumHorzView = headerView.followAlbumHorzView;
+        
+        recommendationLabel = headerView.recommendationLabel;
+        [LabelAttributeStyle changeGapString: recommendationLabel content: recommendationLabel.text];
+        
+        recommendationHorzView = headerView.recommendationHorzView;
+        
+        [self.homeCollectionView.collectionViewLayout invalidateLayout];
+        
+        return headerView;
+    } else {
+        NSLog(@"SearchTabCollectionReusableView *headerView");
+        SearchTabCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"SearchHeaderId" forIndexPath: indexPath];
+        
+        self.userCollectionView = headerView.userCollectionView;
+        
+        userRecommendationLabel = headerView.userRecommendationLabel;
+        [LabelAttributeStyle changeGapString: userRecommendationLabel content: userRecommendationLabel.text];
+        
+        albumRecommendationLabel = headerView.albumRecommendationLabel;
+        [LabelAttributeStyle changeGapString: albumRecommendationLabel content: albumRecommendationLabel.text];
+        
+        [self.albumCollectionView.collectionViewLayout invalidateLayout];
+        
+        return headerView;
+    }
 }
 
 - (void)checkToPresentViewOrNot:(NSIndexPath *)indexPath
@@ -1519,8 +1685,10 @@ sourceController:(UIViewController *)source
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"cellForItemAtIndexPath");
+    NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
     
     if (collectionView.tag == 1) {
+        NSLog(@"collectionView.tag == 1");
         HomeDataCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"HomeDataCell" forIndexPath: indexPath];
         NSDictionary *data = pictures[indexPath.row];
         
@@ -1599,6 +1767,7 @@ sourceController:(UIViewController *)source
         
         return cell;
     } else if (collectionView.tag == 2) {
+        NSLog(@"collectionView.tag == 2");
         HomeBannerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"HomeBannerCell" forIndexPath: indexPath];
         NSLog(@"adArray: %@", adArray);
         
@@ -1643,6 +1812,7 @@ sourceController:(UIViewController *)source
         }
         return cell;
     } else if (collectionView.tag == 3) {
+        NSLog(@"collectionView.tag == 3");
         HomeCategoryCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
         NSDictionary *dic = categoryArray[indexPath.row][@"categoryarea"];
         NSLog(@"dic: %@", dic);
@@ -1665,6 +1835,7 @@ sourceController:(UIViewController *)source
         }
         return cell;
     } else if (collectionView.tag == 4) {
+        NSLog(@"collectionView.tag == 4");
         NSDictionary *userDic = followUserData[indexPath.row][@"user"];        
         
         SearchTabHorizontalCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"horizontalCell" forIndexPath: indexPath];
@@ -1682,7 +1853,8 @@ sourceController:(UIViewController *)source
             NSLog(@"userData is nil");
         }
         return cell;
-    } else {
+    } else if (collectionView.tag == 5) {
+        NSLog(@"collectionView.tag == 5");
         SearchTabCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"SearchCell" forIndexPath: indexPath];
         NSDictionary *albumDic = followAlbumData[indexPath.row][@"album"];
         NSLog(@"albumDic: %@", albumDic);
@@ -1767,6 +1939,137 @@ sourceController:(UIViewController *)source
         NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
         
         return cell;
+    } else if (collectionView.tag == 6) {
+        NSLog(@"collectionView.tag == 6");
+//        NSLog(@"isSearching: %d", isSearching);
+        albumRecommendationLabel.text = @"找到的作品";
+        [LabelAttributeStyle changeGapString: albumRecommendationLabel content: albumRecommendationLabel.text];
+        
+        NSLog(@"SearchTabCollectionViewCell *cell");
+        SearchTabCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"SearchCell" forIndexPath: indexPath];
+        cell.contentView.subviews[0].backgroundColor = nil;
+        
+        NSLog(@"albumData.count: %lu", (unsigned long)albumData.count);
+        
+        if (albumData.count == 0) {
+            noInfoVertView.hidden = NO;
+        } else if (albumData.count > 0) {
+            noInfoVertView.hidden = YES;
+        }
+        
+        NSDictionary *albumDic = albumData[indexPath.row][@"album"];
+        NSLog(@"albumDic: %@", albumDic);
+        
+        if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
+            cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        } else {
+            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]];
+        }
+        
+        // UserForView Info Setting
+        BOOL gotAudio = [albumDic[@"usefor"][@"audio"] boolValue];
+        BOOL gotVideo = [albumDic[@"usefor"][@"video"] boolValue];
+        BOOL gotExchange = [albumDic[@"usefor"][@"exchange"] boolValue];
+        BOOL gotSlot = [albumDic[@"usefor"][@"slot"] boolValue];
+        
+        [cell.btn1 setImage: nil forState: UIControlStateNormal];
+        [cell.btn2 setImage: nil forState: UIControlStateNormal];
+        [cell.btn3 setImage: nil forState: UIControlStateNormal];
+        
+        cell.userInfoView.hidden = YES;
+        
+        if (gotAudio) {
+            cell.userInfoView.hidden = NO;
+            [cell.btn3 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
+            
+            CGRect rect = cell.userInfoView.frame;
+            rect.size.width = 28 * 1;
+            cell.userInfoView.frame = rect;
+            
+            if (gotVideo) {
+                [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
+                [cell.btn2 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
+                
+                CGRect rect = cell.userInfoView.frame;
+                rect.size.width = 28 * 2;
+                cell.userInfoView.frame = rect;
+                
+                if (gotExchange || gotSlot) {
+                    [cell.btn1 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
+                    [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
+                    [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
+                    
+                    CGRect rect = cell.userInfoView.frame;
+                    rect.size.width = 28 * 3;
+                    cell.userInfoView.frame = rect;
+                }
+            }
+        } else if (gotVideo) {
+            cell.userInfoView.hidden = NO;
+            [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
+            
+            CGRect rect = cell.userInfoView.frame;
+            rect.size.width = 28 * 1;
+            cell.userInfoView.frame = rect;
+            
+            if (gotExchange || gotSlot) {
+                [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
+                [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
+                
+                CGRect rect = cell.userInfoView.frame;
+                rect.size.width = 28 * 2;
+                cell.userInfoView.frame = rect;
+            }
+        } else if (gotExchange || gotSlot) {
+            NSLog(@"gotExchange or gotSlot");
+            
+            cell.userInfoView.hidden = NO;
+            [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
+            
+            CGRect rect = cell.userInfoView.frame;
+            rect.size.width = 28 * 1;
+            cell.userInfoView.frame = rect;
+        }
+        
+        // AlbumNameLabel Setting
+        if (![albumDic[@"name"] isEqual: [NSNull null]]) {
+            cell.albumNameLabel.text = albumDic[@"name"];
+            [LabelAttributeStyle changeGapString: cell.albumNameLabel content: cell.albumNameLabel.text];
+        }
+        NSLog(@"cell.albumNameLabel.text: %@", cell.albumNameLabel.text);        
+        NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
+        
+        return cell;
+    } else {
+        NSLog(@"collectionView.tag == 7");
+        userRecommendationLabel.text = @"找到的創作人";
+        [LabelAttributeStyle changeGapString: userRecommendationLabel content: userRecommendationLabel.text];
+        
+        if (userData.count == 0) {
+            noInfoHorzView.hidden = NO;
+        } else if (userData.count > 0) {
+            noInfoHorzView.hidden = YES;
+        }
+        NSDictionary *userDic = userData[indexPath.row][@"user"];
+        
+        SearchTabHorizontalCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"horizontalCell" forIndexPath: indexPath];
+        
+        cell.contentView.backgroundColor = nil;
+        //        cell.userPictureImageView.imageURL = nil;
+        
+        if (![userDic isKindOfClass: [NSNull class]]) {
+            if ([userDic[@"picture"] isEqual: [NSNull null]]) {
+                cell.userPictureImageView.image = [UIImage imageNamed: @"member_back_head.png"];
+            } else {
+                [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"picture"]]
+                                             placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
+            }
+            cell.userNameLabel.text = userDic[@"name"];
+            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        } else {
+            NSLog(@"userData is nil");
+        }
+        return cell;
     }
 }
 
@@ -1814,20 +2117,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         //[self ToRetrievealbumpViewControlleralbumid: albumId];
         
-        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-        aDVC.albumId = albumId;
-        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-        
-        CATransition *transition = [CATransition animation];
-        transition.duration = 0.5;
-        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionMoveIn;
-        transition.subtype = kCATransitionFromTop;
-        
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-        [appDelegate.myNav pushViewController: aDVC animated: NO];
-        //[appDelegate.myNav pushViewController: testVC animated: YES];
+        [self toAlbumDetailVC: albumId];
     } else if (collectionView.tag == 2) {
         [self tapDetectedForURL: indexPath.row];
     } else if (collectionView.tag == 3) {
@@ -1842,26 +2132,40 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
            categoryNameStr: categoryareaDic[@"name"]];
     } else if (collectionView.tag == 4) {
         NSDictionary *userDic = followUserData[indexPath.row][@"user"];
-        CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-        cVC.userId = userDic[@"user_id"];
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav pushViewController: cVC animated: YES];
-    } else {
+        [self toCreatorVC: userDic[@"user_id"]];
+    } else if (collectionView.tag == 5) {
         NSString *albumId = [followAlbumData[indexPath.row][@"album"][@"album_id"] stringValue];
-        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-        aDVC.albumId = albumId;
-        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-        
-        CATransition *transition = [CATransition animation];
-        transition.duration = 0.5;
-        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionMoveIn;
-        transition.subtype = kCATransitionFromTop;
-        
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-        [appDelegate.myNav pushViewController: aDVC animated: NO];
+        [self toAlbumDetailVC: albumId];
+    } else if (collectionView.tag == 6) {
+        NSDictionary *albumDic = albumData[indexPath.row][@"album"];
+        [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue]];
+    } else {
+        NSDictionary *userDic = userData[indexPath.row][@"user"];
+        [self toCreatorVC: userDic[@"user_id"]];
     }
+}
+
+- (void)toAlbumDetailVC:(NSString *)albumId {
+    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+    aDVC.albumId = albumId;
+    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+    
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.5;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionMoveIn;
+    transition.subtype = kCATransitionFromTop;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+    [appDelegate.myNav pushViewController: aDVC animated: NO];
+}
+
+- (void)toCreatorVC:(NSString *)userId {
+    CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+    cVC.userId = userId;
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: cVC animated: YES];
 }
 
 - (void)toCategoryVC:(NSString *)categoryAreaId
@@ -2037,12 +2341,8 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
     
-    NSDictionary *data = pictures[indexPath.row];
-    NSLog(@"album name: %@", data[@"album"][@"name"]);
-    
     if (collectionView.tag == 1) {
-        CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
-        
+        CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);        
         NSDictionary *data = pictures[indexPath.row];
         
         // Check Width & Height return value is nil or not
@@ -2099,11 +2399,62 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"bannerHeight: %f", bannerHeight);
         return CGSizeMake(bannerWidth, bannerHeight);
     } else if (collectionView.tag == 3) {
-        return CGSizeMake(112.0, 112.0);
+        return CGSizeMake(96.0, 96.0);
     } else if (collectionView.tag == 4) {
-        return CGSizeMake(120, 144);
-    } else {
+        return CGSizeMake(96.0, 144.0);
+    } else if (collectionView.tag == 5) {
         return CGSizeMake(128.0, 160.0);
+    } else if (collectionView.tag == 6) {
+        CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
+        NSDictionary *data = albumData[indexPath.row][@"album"];
+        
+        NSLog(@"data: %@", data);
+        NSLog(@"data name: %@", data[@"name"]);
+        
+        // Check Width & Height return value is nil or not
+        NSNumber *coverWidth = data[@"cover_width"];
+        NSNumber *coverHeight = data[@"cover_height"];
+        
+        NSInteger resultWidth;
+        NSInteger resultHeight;
+        
+        if ([coverWidth isEqual: [NSNull null]]) {
+            resultWidth = (self.view.bounds.size.width - 48) / 2;
+        } else {
+            resultWidth = [coverWidth integerValue];
+        }
+        
+        if ([coverHeight isEqual: [NSNull null]]) {
+            resultHeight = resultWidth;
+        } else {
+            resultHeight = [coverHeight integerValue];
+        }
+        
+        CGFloat scale = [UIScreen mainScreen].scale;
+        
+        CGFloat widthForCoverImg = (self.view.bounds.size.width - 48) / 2;
+        CGFloat heightForCoverImg = (resultHeight * widthForCoverImg) / resultWidth;
+        
+        if (heightForCoverImg < (36 * scale)) {
+            heightForCoverImg = 36 * scale;
+        }
+        
+        CGSize finalSize = CGSizeMake(widthForCoverImg, heightForCoverImg);
+        finalSize = CGSizeMake(itemWidth, floorf(finalSize.height * itemWidth / finalSize.width));
+        
+        NSString *albumNameStr;
+        
+        if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
+            albumNameStr = data[@"album"][@"name"];
+        }
+        
+        finalSize = CGSizeMake(finalSize.width, finalSize.height + [self calculateHeightForLbl: albumNameStr width: itemWidth - 16] * 2);
+        
+        NSLog(@"size: %@",NSStringFromCGSize(finalSize));
+        
+        return finalSize;
+    } else {
+        return CGSizeMake(96, 130);
     }
 }
 
@@ -2146,9 +2497,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     } else if (collectionView.tag == 3) {
         return 16.0f;
     } else if (collectionView.tag == 4) {
+        return 16.0f;
+    } else if (collectionView.tag == 5) {
+        return 16.0f;
+    } else if (collectionView.tag == 6) {
         return 24.0f;
     } else {
-        return 16.0f;
+        return 24.0f;
     }
 }
 
@@ -2170,21 +2525,58 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(UICollectionViewLayout *)collectionViewLayout
  heightForHeaderInSection:(NSInteger)section {
-    return self.jccLayout.headerHeight;
+    if (collectionView.tag == 1) {
+        return self.jccLayout.headerHeight;
+    } else {
+        return self.jccLayout1.headerHeight;
+    }
 }
 
 #pragma mark - UIScrollViewDelegate Methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [selectTextField resignFirstResponder];
     //NSLog(@"scrollViewDidScroll");
     
     if (scrollView == self.bannerCollectionView) {
         //NSLog(@"scrollView == self.bannerCollectionView");
         self.pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
     }
-    //    if ([scrollView isKindOfClass: [MyScrollView class]]) {
-    //        NSLog(@"scrollView isKindOfClass MyScrollView");
-    //        pageControl.currentPage = mySV.contentOffset.x / mySV.frame.size.width;
-    //    }
+    
+    if (scrollView == self.homeCollectionView) {
+        NSLog(@"scrollView == self.homeCollectionView");
+        
+        NSLog(@"self.lastContentOffset: %f", self.lastContentOffset);
+        NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
+        
+        if (!isViewLoading) {
+            if (self.lastContentOffset > scrollView.contentOffset.y) {
+                NSLog(@"Scroll Up");
+                [UIView animateWithDuration: 0.5 animations:^{
+//                    self.navBarHeight.constant = navBarHeightConstant;
+                    [self settingSizeBasedOnDevice];
+                    [self.navBarView layoutIfNeeded];
+                    //                CGRect rect = self.navBarView.frame;
+                    //                rect.origin.y = oldNavBarViewYValue;
+                    //                self.navBarView.frame = rect;
+                }];
+            } else {
+                NSLog(@"Scroll Down");
+                [UIView animateWithDuration: 0.5 animations:^{
+                    self.navBarHeight.constant = -10;
+                    [self.navBarView layoutIfNeeded];
+                    //                CGRect rect = self.navBarView.frame;
+                    //                rect.origin.y = oldNavBarViewYValue - 48;
+                    //                self.navBarView.frame = rect;
+                }];
+            }
+        }
+    }
+    
+    self.lastContentOffset = scrollView.contentOffset.y;
+    if (self.lastContentOffset < 0) {
+        self.lastContentOffset = 0;
+    }
+    
     if (isLoading) {
         //NSLog(@"isLoading: %d", isLoading);
         return;
@@ -2281,6 +2673,337 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
  // Pass the selected object to the new view controller.
  }
  */
+
+#pragma mark - UITextField Delegate Methods
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    selectTextField = textField;
+    self.homeCollectionView.hidden = YES;
+    
+    isSearchTextFieldSelected = YES;
+    [self.scanBtn setImage: [UIImage imageNamed: @"ic200_cancel_dark"]
+                  forState: UIControlStateNormal];
+    
+//    if ([textField.text isEqualToString: @""]) {
+//        self.albumCollectionView.hidden = YES;
+//    } else {
+//        self.albumCollectionView.hidden = NO;
+//    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    selectTextField = nil;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string {
+    NSLog(@"shouldChangeCharactersInRange");
+    NSString *resultString = [textField.text stringByReplacingCharactersInRange: range
+                                                                     withString: string];
+    
+    if ([resultString isEqualToString: @""]) {
+        NSLog(@"no text");
+        
+        noInfoHorzView.hidden = YES;
+        noInfoVertView.hidden = YES;
+    } else {
+        NSLog(@"has text");
+    }
+    [self callProtocol: resultString];
+    
+    return YES;
+}
+
+#pragma mark - Search Session
+- (void)callProtocol: (NSString *)text {
+    NSLog(@"callProtocol");
+    NSLog(@"text: %@", text);
+    self.albumCollectionView.hidden = NO;
+    [self filterUserContentForSearchText: text];
+    
+//    if ([text isEqualToString: @""]) {
+//        isSearching = NO;
+//        self.albumCollectionView.hidden = YES;
+//    } else {
+//        isSearching = YES;
+//        self.albumCollectionView.hidden = NO;
+        
+        //[self filterAlbumContentForSearchText: text];
+//    }
+//    NSLog(@"isSearching: %d", isSearching);
+}
+
+- (void)filterUserContentForSearchText: (NSString *)text {
+    NSLog(@"filterUserContentForSearchText");
+    NSLog(@"text: %@", text);
+    
+    NSString *string = text;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        isUserLoading = YES;
+        
+        NSString *response = @"";
+        
+        NSMutableDictionary *data = [NSMutableDictionary new];
+        [data setObject: @"user" forKey: @"searchtype"];
+        [data setObject: string forKey: @"searchkey"];
+        [data setObject: @"0,32" forKey: @"limit"];
+        /*
+         response = [self search: [wTools getUserID]
+         token: [wTools getUserToken]
+         data: data];
+         */
+        response = [boxAPI search: [wTools getUserID]
+                            token: [wTools getUserToken]
+                             data: data];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (response != nil) {
+                NSLog(@"filterUserContentForSearchText");
+                NSLog(@"response from search");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"SearchTableViewController");
+                    NSLog(@"filterUserContentForSearchText");
+                    
+                    [self dismissKeyboard];
+                    
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"filterUserContentForSearchText"
+                                         eventId: @""
+                                            text: text];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    
+                    if (![dic[@"result"] boolValue]) {
+                        return ;
+                    }
+                    //判斷回傳是否一樣
+                    if (![text isEqualToString:string]) {
+                        return;
+                    }
+                    //判斷目前table和 搜尋結果是否相同
+                    if (![data[@"searchtype"] isEqualToString: @"user"]) {
+                        return;
+                    }
+                    
+                    if ([dic[@"result"] boolValue]) {
+                        NSLog(@"dic result boolValue is 1");
+                        
+                        if (nextUserId >= 0) {
+                            isUserLoading = NO;
+                        } else {
+                            isUserLoading = YES;
+                        }
+                        
+                        NSLog(@"");
+                        NSLog(@"");
+                        
+                        userData = [NSMutableArray arrayWithArray:dic[@"data"]];
+                        nextUserId = userData.count;
+                        
+                        //                        NSLog(@"userData: %@", userData);
+                        NSLog(@"userData.count: %lu", (unsigned long)userData.count);
+                        
+                        if (userData.count == 0) {
+                            if (!isNoInfoHorzViewCreate) {
+                                [self addNoInfoViewOnHorizontalCollectionView: @"沒有符合關鍵字的創作人"];
+                            }
+                            noInfoHorzView.hidden = NO;
+                        } else if (userData.count > 0) {
+                            noInfoHorzView.hidden = YES;
+                        }
+                        [self.userCollectionView reloadData];
+                        [self filterAlbumContentForSearchText: text];
+                    } else {
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [self showCustomErrorAlert: msg];
+                    }
+                }
+            }
+        });
+    });
+}
+
+- (void)filterAlbumContentForSearchText: (NSString *)text {
+    NSLog(@"filterAlbumContentForSearchText");
+    NSLog(@"text: %@", text);
+    NSString *string = text;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        isAlbumLoading = YES;
+        
+        NSString *response = @"";
+        
+        NSMutableDictionary *data = [NSMutableDictionary new];
+        [data setObject: @"album" forKey: @"searchtype"];
+        [data setObject: string forKey: @"searchkey"];
+        [data setObject: @"0,32" forKey: @"limit"];
+        
+        response = [boxAPI search: [wTools getUserID]
+                            token: [wTools getUserToken]
+                             data: data];
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (response != nil) {
+                NSLog(@"filterAlbumContentForSearchText");
+                NSLog(@"response from search");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"SearchTableViewController");
+                    NSLog(@"filterAlbumContentForSearchText");
+                    
+                    [self dismissKeyboard];
+                    
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"filterAlbumContentForSearchText"
+                                         eventId: @""
+                                            text: text];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    if (![dic[@"result"] boolValue]) {
+                        return ;
+                    }
+                    //判斷回傳是否一樣
+                    if (![text isEqualToString:string]) {
+                        return;
+                    }
+                    //判斷目前table和 搜尋結果是否相同
+                    if (![data[@"searchtype"] isEqualToString: @"album"]) {
+                        return;
+                    }
+                    
+                    if ([dic[@"result"] boolValue]) {
+                        NSLog(@"dic result boolValue is 1");
+                        
+                        if (nextAlbumId >= 0) {
+                            isAlbumLoading = NO;
+                        } else {
+                            isAlbumLoading = YES;
+                        }
+                        
+                        NSLog(@"");
+                        NSLog(@"");
+                        
+                        albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
+                        nextAlbumId = albumData.count;
+                        
+                        //                        NSLog(@"albumData: %@", albumData);
+                        //                        NSLog(@"albumData.count: %lu", (unsigned long)albumData.count);
+                        
+                        if (albumData.count == 0) {
+                            if (!isNoInfoVertViewCreate) {
+                                [self addNoInfoViewOnVerticalCollectionView: @"沒有符合關鍵字的作品"];
+                            }
+                            noInfoVertView.hidden = NO;
+                        } else if (albumData.count > 0) {
+                            noInfoVertView.hidden = YES;
+                        }
+                        
+                        [self.albumCollectionView reloadData];
+                    } else {
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [self showCustomErrorAlert: msg];
+                    }
+                }
+            }
+        });
+    });
+}
+
+#pragma mark - Method Only Called Once
+- (void)addNoInfoViewOnHorizontalCollectionView:(NSString *)msg {
+    NSLog(@"addNoInfoViewOnHorizontalCollectionView");
+    
+    if (!isNoInfoHorzViewCreate) {
+        noInfoHorzView = [[UIView alloc] initWithFrame: CGRectMake(16, 20, self.view.bounds.size.width - 32, 100)];
+        noInfoHorzView.backgroundColor = [UIColor secondGrey];
+        noInfoHorzView.layer.cornerRadius = 32;
+        noInfoHorzView.clipsToBounds = YES;
+        noInfoHorzView.hidden = YES;
+        
+        [self.userCollectionView addSubview: noInfoHorzView];
+        [self.userCollectionView bringSubviewToFront: noInfoHorzView];
+        
+        MyFrameLayout *frameLayout = [self createFrameLayout];
+        [noInfoHorzView addSubview: frameLayout];
+        
+        UILabel *label = [self createLabel: msg];
+        [frameLayout addSubview: label];
+    }
+    
+    isNoInfoHorzViewCreate = YES;
+}
+
+- (void)addNoInfoViewOnVerticalCollectionView:(NSString *)msg {
+    NSLog(@"addNoInfoViewOnVerticalCollectionView");
+    
+    if (!isNoInfoVertViewCreate) {
+        noInfoVertView = [[UIView alloc] initWithFrame: CGRectMake(16, 260, self.view.bounds.size.width - 32, 100)];
+        noInfoVertView.backgroundColor = [UIColor secondGrey];
+        noInfoVertView.layer.cornerRadius = 32;
+        noInfoVertView.clipsToBounds = YES;
+        noInfoVertView.hidden = YES;
+        
+        [self.albumCollectionView addSubview: noInfoVertView];
+        [self.albumCollectionView bringSubviewToFront: noInfoVertView];
+        
+        MyFrameLayout *frameLayout = [self createFrameLayout];
+        [noInfoVertView addSubview: frameLayout];
+        
+        UILabel *label = [self createLabel: msg];
+        [frameLayout addSubview: label];
+    }
+    
+    isNoInfoVertViewCreate = YES;
+}
+
+- (MyFrameLayout *)createFrameLayout
+{
+    MyFrameLayout *frameLayout = [MyFrameLayout new];
+    frameLayout.myMargin = 0;
+    frameLayout.myCenterXOffset = 0;
+    frameLayout.myCenterYOffset = 0;
+    frameLayout.padding = UIEdgeInsetsMake(32, 32, 32, 32);
+    
+    return frameLayout;
+}
+
+- (UILabel *)createLabel: (NSString *)title
+{
+    UILabel *label = [UILabel new];
+    label.text = title;
+    label.font = [UIFont systemFontOfSize: 17];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
+    
+    [label sizeToFit];
+    
+    label.myCenterXOffset = 0;
+    label.myCenterYOffset = 0;
+    
+    return label;
+}
 
 #pragma mark - CustomUpdateAlert
 - (void)showCustomUpdateAlert:(NSString *)msg
@@ -2503,7 +3226,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       eventId: (NSString *)eventId {
+                       eventId: (NSString *)eventId
+                          text: (NSString *)text {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     
@@ -2546,6 +3270,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 [weakSelf getCategoryList];
             } else if ([protocolName isEqualToString: @"getTheMeArea"]) {
                 [weakSelf getTheMeArea];
+            } else if ([protocolName isEqualToString: @"showUserRecommendedList"]) {
+                [weakSelf showUserRecommendedList];
+            } else if ([protocolName isEqualToString: @"showAlbumRecommendedList"]) {
+                [weakSelf showAlbumRecommendedList];
+            } else if ([protocolName isEqualToString: @"filterUserContentForSearchText"]) {
+                [weakSelf filterUserContentForSearchText: text];
+            } else if ([protocolName isEqualToString: @"filterAlbumContentForSearchText"]) {
+                [weakSelf filterAlbumContentForSearchText: text];
             }
         }
     }];

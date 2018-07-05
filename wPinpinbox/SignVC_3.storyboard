@@ -37,7 +37,7 @@
                                 </connections>
                             </button>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="75z-Ky-l1r">
-                                <rect key="frame" x="16" y="302" width="77" height="48"/>
+                                <rect key="frame" x="16" y="305" width="77" height="48"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="台灣+886" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wbr-Y5-QX0">
                                         <rect key="frame" x="8" y="16" width="60" height="16"/>
@@ -54,7 +54,7 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bCj-Ac-4oq">
-                                <rect key="frame" x="107" y="302" width="252" height="48"/>
+                                <rect key="frame" x="107" y="305" width="252" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="行 動 裝 置 號 碼" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0kJ-Yu-sZs">
                                         <rect key="frame" x="8" y="10" width="181" height="30"/>
@@ -73,13 +73,13 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="剩餘 59 秒可再發送" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQ7-2v-rud">
-                                <rect key="frame" x="114" y="382" width="125" height="17"/>
+                                <rect key="frame" x="114" y="385" width="125" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.94901960780000005" green="0.4823529412" blue="0.63921568630000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vDk-8o-Si0">
-                                <rect key="frame" x="247" y="366" width="112" height="48"/>
+                                <rect key="frame" x="247" y="369" width="112" height="48"/>
                                 <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="112" id="9mS-Bb-hpW"/>
@@ -93,7 +93,7 @@
                                 </connections>
                             </button>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oho-14-CJv">
-                                <rect key="frame" x="16" y="479" width="343" height="48"/>
+                                <rect key="frame" x="16" y="482" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="輸 入 驗 證 碼" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sPt-sC-RBr">
                                         <rect key="frame" x="41" y="8" width="294" height="32"/>
@@ -124,7 +124,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="請等候驗證碼寄送至您輸入的行動裝置，若時間過長，可回前步驟重新獲取驗證碼" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UGa-jd-z1j">
-                                <rect key="frame" x="16" y="543" width="343" height="44"/>
+                                <rect key="frame" x="16" y="546" width="343" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="yVj-rc-wW2"/>
                                 </constraints>
@@ -133,10 +133,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tv4-lo-U6H">
-                                <rect key="frame" x="16" y="603" width="343" height="48"/>
+                                <rect key="frame" x="16" y="606" width="343" height="45"/>
                                 <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="48" id="2bZ-XX-0mU"/>
+                                    <constraint firstAttribute="height" constant="45" id="2bZ-XX-0mU"/>
                                 </constraints>
                                 <state key="normal" title="完 成 註 冊">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -146,7 +146,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="riU-1Z-sBs">
-                                <rect key="frame" x="0.0" y="446" width="375" height="1"/>
+                                <rect key="frame" x="0.0" y="449" width="375" height="1"/>
                                 <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.5" id="m5c-Va-wzp"/>

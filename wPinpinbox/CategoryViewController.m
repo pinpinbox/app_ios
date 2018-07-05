@@ -995,7 +995,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumLineSpacingForSectionAtIndex");
-    return 16.0f;
+    if (collectionView.tag == 1) {
+        return 16.0;
+    } else if (collectionView.tag == 2) {
+        return 16.0;
+    } else {
+        return 0.0f;
+    }    
 }
 
 #pragma mark - UIScrollViewDelegate Methods

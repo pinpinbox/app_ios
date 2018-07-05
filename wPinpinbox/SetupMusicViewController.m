@@ -293,7 +293,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             
             switch (view.tag) {
                 case 1:
-                    self.noMusicView.backgroundColor = [UIColor thirdMain];
+//                    self.noMusicView.backgroundColor = [UIColor thirdMain];
                     
                     self.noMusicSelectionView.backgroundColor = [UIColor thirdMain];
                     self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
@@ -302,7 +302,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     self.audioMode = @"none";
                     break;
                 case 2:
-                    self.eachPageMusicView.backgroundColor = [UIColor thirdMain];
+//                    self.eachPageMusicView.backgroundColor = [UIColor thirdMain];
                     
                     self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
                     self.eachPageSelectionView.backgroundColor = [UIColor thirdMain];
@@ -311,7 +311,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     self.audioMode = @"plural";
                     break;
                 case 3:
-                    self.bgMusicView.backgroundColor = [UIColor thirdMain];
+//                    self.bgMusicView.backgroundColor = [UIColor thirdMain];
                     
                     self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
                     self.eachPageSelectionView.backgroundColor = [UIColor clearColor];

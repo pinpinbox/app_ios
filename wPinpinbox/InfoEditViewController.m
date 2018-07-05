@@ -136,6 +136,8 @@
     
     [self initialValueSetup];
     [self userInterfaceSetup];
+    
+    [self getProfile];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -164,6 +166,69 @@
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
+}
+
+- (void)getProfile {
+    NSLog(@"getProfile");
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    [wTools ShowMBProgressHUD];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = [boxAPI getprofile: [userPrefs objectForKey: @"id"] token: [userPrefs objectForKey: @"token"]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+            
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"MeTabViewController");
+                    NSLog(@"getProfile");
+                    
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"getprofile"];                                        
+                    //                    [self.refreshControl endRefreshing];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    NSLog(@"responseFromGetProfile != nil");
+                    NSLog(@"dic: %@", dic);
+                    
+                    if ([dic[@"result"] boolValue]) {
+                        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+                        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
+                        
+                        for (NSString *key in [dataIc allKeys]) {
+                            id objective = [dataIc objectForKey: key];
+                            
+                            if ([objective isKindOfClass: [NSNull class]]) {
+                                [dataIc setObject: @"" forKey: key];
+                            }
+                        }
+                        [userPrefs setValue: dataIc forKey: @"profile"];
+                        [userPrefs synchronize];
+                        
+                        myData = [dataIc mutableCopy];
+                        
+                        [self checkSocialData];
+                    } else {
+                        //                        [self.refreshControl endRefreshing];
+                        
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [self showCustomErrorAlert: msg];
+                    }
+                }
+            } else {
+                //                [self.refreshControl endRefreshing];
+            }
+        });
+    });
 }
 
 #pragma mark - UI Setup Section
@@ -220,6 +285,12 @@
     [self.communityLabel sizeToFit];
     
     self.scrollView.showsVerticalScrollIndicator = NO;
+    
+    //    self.refreshControl = [[UIRefreshControl alloc] init];
+    //    [self.refreshControl addTarget: self
+    //                            action: @selector(getProfile)
+    //                  forControlEvents: UIControlEventValueChanged];
+    //    [self.scrollView addSubview: self.refreshControl];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -249,8 +320,7 @@
     }
 }
 
-- (void)dismissKeyboard
-{
+- (void)dismissKeyboard {
     [self.view endEditing:YES];
     
     [blurEffectView removeFromSuperview];
@@ -412,7 +482,7 @@
         self.femaleBtn.layer.borderWidth = 1.0;
         
         [self.privateBtn setTitleColor: [UIColor thirdGrey]
-                             forState: UIControlStateNormal];
+                              forState: UIControlStateNormal];
         self.privateBtn.backgroundColor = [UIColor clearColor];
         self.privateBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
         self.privateBtn.layer.borderWidth = 1.0;
@@ -424,7 +494,7 @@
         self.maleBtn.layer.borderWidth = 1.0;
         
         [self.femaleBtn setTitleColor: [UIColor blackColor]
-                           forState: UIControlStateNormal];
+                             forState: UIControlStateNormal];
         self.femaleBtn.backgroundColor = [UIColor secondMain];
         self.femaleBtn.layer.borderWidth = 0;
         
@@ -447,7 +517,7 @@
         self.femaleBtn.layer.borderWidth = 1.0;
         
         [self.privateBtn setTitleColor: [UIColor blackColor]
-                           forState: UIControlStateNormal];
+                              forState: UIControlStateNormal];
         self.privateBtn.backgroundColor = [UIColor secondMain];
         self.privateBtn.layer.borderWidth = 0;
     }
@@ -477,10 +547,10 @@
     self.birthdayTextField.inputAccessoryView = toolBar;
     
     // SaveBtn Setting
-    self.saveBtn.layer.cornerRadius = kCornerRadius;
-    
-    NSLog(@"Before checking social link");
-    
+    self.saveBtn.layer.cornerRadius = kCornerRadius;    
+}
+
+- (void)checkSocialData {
     if ([myData[@"sociallink"] isEqual: [NSNull null]]) {
         [self hideSocialData];
     } else if ([myData[@"sociallink"] isKindOfClass: [NSString class]]) {
@@ -593,7 +663,7 @@
 
 - (IBAction)mobileChangeBtnPress:(id)sender {
     //ChangeCellPhoneNumberViewController *changeCellPhoneNumberVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"ChangeCellPhoneNumberViewController"];
-    ChangeCellPhoneNumberViewController *changeCellPhoneNumberVC = [[UIStoryboard storyboardWithName: @"ChangeCellPhoneNumberVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ChangeCellPhoneNumberViewController"];        
+    ChangeCellPhoneNumberViewController *changeCellPhoneNumberVC = [[UIStoryboard storyboardWithName: @"ChangeCellPhoneNumberVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ChangeCellPhoneNumberViewController"];
     //[self.navigationController pushViewController: changeCellPhoneNumberVC animated: YES];
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -620,7 +690,7 @@
     self.femaleBtn.layer.borderWidth = 1.0;
     
     [self.privateBtn setTitleColor: [UIColor thirdGrey]
-                         forState: UIControlStateNormal];
+                          forState: UIControlStateNormal];
     self.privateBtn.backgroundColor = [UIColor clearColor];
     self.privateBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
     self.privateBtn.layer.borderWidth = 1.0;
@@ -663,7 +733,7 @@
     self.femaleBtn.layer.borderWidth = 1.0;
     
     [self.privateBtn setTitleColor: [UIColor blackColor]
-                         forState: UIControlStateNormal];
+                          forState: UIControlStateNormal];
     self.privateBtn.backgroundColor = [UIColor secondMain];
     self.privateBtn.layer.borderWidth = 0;
     
@@ -781,7 +851,7 @@
                                                        selector: @selector(logOut)
                                                        userInfo: nil
                                                         repeats: NO];
-                    } 
+                    }
                 }
             }
         });
@@ -951,7 +1021,7 @@
     } else {
         placeHolderNameLabel.alpha = 0;
     }
-
+    
     if ([self.descriptionTextView.text isEqualToString: @""]) {
         placeHolderDescriptionLabel.alpha = 1;
     } else {
@@ -1307,13 +1377,13 @@ shouldChangeTextInRange:(NSRange)range
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

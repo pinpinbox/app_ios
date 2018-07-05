@@ -58,8 +58,8 @@
     NSLog(@"AlbumCollectionViewController");
     NSLog(@"viewDidLoad");
     
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     // CustomActionSheet
     self.customEditActionSheet = [[DDAUIActionSheetViewController alloc] init];
@@ -92,14 +92,14 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {

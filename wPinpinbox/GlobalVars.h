@@ -31,11 +31,21 @@ extern NSString *sharingLinkWithoutAutoPlay;
 
 extern NSString *userIdSharingLink;
 
+extern NSString *aboutPageLink;
+
 extern NSString *wwwFlurryAPIKey;
 extern NSString *w3FlurryAPIKey;
 
 extern CGFloat navBarHeightConstant;
 extern CGFloat kBtnInset;
+
+extern CGFloat kHomeTabIndex;
+extern CGFloat kMeTabIndex;
+extern CGFloat kNotifTabIndex;
+
+extern CGFloat kToolBarButtonHeight;
+extern CGFloat kToolBarViewHeight;
+extern CGFloat kToolBarViewHeightForX;
 
 @interface GlobalVars : NSObject
 

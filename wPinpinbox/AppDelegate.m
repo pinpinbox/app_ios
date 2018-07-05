@@ -107,7 +107,7 @@
             NSLog(@"vc: %@", vc);
             if ([vc isKindOfClass: [MyTabBarController class]]) {
                 MyTabBarController *myTabBarC = (MyTabBarController *)vc;
-                [[myTabBarC.viewControllers objectAtIndex: 4] tabBarItem].badgeValue = @"N";
+                [[myTabBarC.viewControllers objectAtIndex: kNotifTabIndex] tabBarItem].badgeValue = @"N";
             }
         }
     }
@@ -854,7 +854,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         NSLog(@"vc: %@", vc);
         if ([vc isKindOfClass: [MyTabBarController class]]) {
             MyTabBarController *myTabBarC = (MyTabBarController *)vc;
-            [[myTabBarC.viewControllers objectAtIndex: 4] tabBarItem].badgeValue = @"N";
+            [[myTabBarC.viewControllers objectAtIndex: kNotifTabIndex] tabBarItem].badgeValue = @"N";
         }
     }
     //if (state == UIApplicationStateBackground || state == UIApplicationStateInactive) {

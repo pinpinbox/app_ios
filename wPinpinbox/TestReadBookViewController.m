@@ -425,8 +425,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"TestReadBookViewController viewDidLoad");
     NSLog(@"self.eventId: %@", self.eventId);
     
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     self.collectionView.pagingEnabled = NO;
     isGiftScrollViewScrolling = NO;
@@ -549,8 +549,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
     
     [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 0.0]];
     
@@ -560,8 +560,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

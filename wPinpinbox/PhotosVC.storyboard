@@ -19,6 +19,59 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6kS-eQ-cJ8">
+                                <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3kx-tO-Twc">
+                                        <rect key="frame" x="8" y="6" width="42" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="42" id="R5c-Vd-YE3"/>
+                                            <constraint firstAttribute="height" constant="42" id="dNZ-v0-6j5"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                                        <state key="normal" image="ic200_arrow_left_dark.png">
+                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="back:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="Ui1-3x-6cM"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xJa-ND-W5t">
+                                        <rect key="frame" x="267" y="2" width="42" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="42" id="JNy-xs-aq8"/>
+                                            <constraint firstAttribute="width" constant="42" id="YuK-G8-sEf"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                                        <state key="normal" image="ic200_photosize_light.png"/>
+                                        <connections>
+                                            <action selector="compressionBtnPress:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="Cgg-c2-rgH"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G15-1q-6W3">
+                                        <rect key="frame" x="317" y="2" width="42" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="42" id="Y90-NM-EyS"/>
+                                            <constraint firstAttribute="height" constant="42" id="hZV-fr-dEK"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                                        <state key="normal" title="Button" image="ic200_camera_dark"/>
+                                        <connections>
+                                            <action selector="cameraBtnPress:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="8Uc-iv-oLJ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="G15-1q-6W3" secondAttribute="trailing" constant="16" id="1kf-kS-T0O"/>
+                                    <constraint firstAttribute="bottom" secondItem="3kx-tO-Twc" secondAttribute="bottom" id="2D6-li-P2g"/>
+                                    <constraint firstAttribute="height" constant="48" id="CMq-Dd-h5K"/>
+                                    <constraint firstAttribute="bottom" secondItem="G15-1q-6W3" secondAttribute="bottom" constant="4" id="Eiw-5W-gSH"/>
+                                    <constraint firstItem="G15-1q-6W3" firstAttribute="leading" secondItem="xJa-ND-W5t" secondAttribute="trailing" constant="8" id="HbJ-uV-orL"/>
+                                    <constraint firstItem="3kx-tO-Twc" firstAttribute="leading" secondItem="6kS-eQ-cJ8" secondAttribute="leading" constant="8" id="OaP-2M-ZHK"/>
+                                    <constraint firstAttribute="bottom" secondItem="xJa-ND-W5t" secondAttribute="bottom" constant="4" id="zoq-Pj-G7M"/>
+                                </constraints>
+                            </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="WZ2-lB-P6e">
                                 <rect key="frame" x="0.0" y="68" width="375" height="548"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
@@ -75,84 +128,43 @@
                                     <outlet property="delegate" destination="l1v-4M-Lg6" id="2jt-PZ-Ct0"/>
                                 </connections>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6kS-eQ-cJ8">
-                                <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nVJ-Yg-uxh">
+                                <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3kx-tO-Twc">
-                                        <rect key="frame" x="8" y="6" width="42" height="42"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i6T-bu-c6B">
+                                        <rect key="frame" x="16" y="2" width="343" height="45"/>
+                                        <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="42" id="R5c-Vd-YE3"/>
-                                            <constraint firstAttribute="height" constant="42" id="dNZ-v0-6j5"/>
+                                            <constraint firstAttribute="height" constant="45" id="0n3-ga-EEB"/>
                                         </constraints>
-                                        <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark.png">
-                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title=" 確 認 選 取（ 1 / 34 ）" image="2-01icon_confirm.png">
+                                            <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="back:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="Ui1-3x-6cM"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xJa-ND-W5t">
-                                        <rect key="frame" x="267" y="2" width="42" height="42"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="42" id="JNy-xs-aq8"/>
-                                            <constraint firstAttribute="width" constant="42" id="YuK-G8-sEf"/>
-                                        </constraints>
-                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_photosize_light.png"/>
-                                        <connections>
-                                            <action selector="compressionBtnPress:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="Cgg-c2-rgH"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G15-1q-6W3">
-                                        <rect key="frame" x="317" y="2" width="42" height="42"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="42" id="Y90-NM-EyS"/>
-                                            <constraint firstAttribute="height" constant="42" id="hZV-fr-dEK"/>
-                                        </constraints>
-                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" title="Button" image="ic200_camera_dark"/>
-                                        <connections>
-                                            <action selector="cameraBtnPress:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="8Uc-iv-oLJ"/>
+                                            <action selector="OKbtn:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="7cf-Fc-wRQ"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="G15-1q-6W3" secondAttribute="trailing" constant="16" id="1kf-kS-T0O"/>
-                                    <constraint firstAttribute="bottom" secondItem="3kx-tO-Twc" secondAttribute="bottom" id="2D6-li-P2g"/>
-                                    <constraint firstAttribute="height" constant="48" id="CMq-Dd-h5K"/>
-                                    <constraint firstAttribute="bottom" secondItem="G15-1q-6W3" secondAttribute="bottom" constant="4" id="Eiw-5W-gSH"/>
-                                    <constraint firstItem="G15-1q-6W3" firstAttribute="leading" secondItem="xJa-ND-W5t" secondAttribute="trailing" constant="8" id="HbJ-uV-orL"/>
-                                    <constraint firstItem="3kx-tO-Twc" firstAttribute="leading" secondItem="6kS-eQ-cJ8" secondAttribute="leading" constant="8" id="OaP-2M-ZHK"/>
-                                    <constraint firstAttribute="bottom" secondItem="xJa-ND-W5t" secondAttribute="bottom" constant="4" id="zoq-Pj-G7M"/>
+                                    <constraint firstAttribute="trailing" secondItem="i6T-bu-c6B" secondAttribute="trailing" constant="16" id="7VF-QP-b55"/>
+                                    <constraint firstAttribute="height" constant="49" id="A98-bE-5fg"/>
+                                    <constraint firstItem="i6T-bu-c6B" firstAttribute="leading" secondItem="nVJ-Yg-uxh" secondAttribute="leading" constant="16" id="D0b-Wc-55D"/>
+                                    <constraint firstItem="i6T-bu-c6B" firstAttribute="top" secondItem="nVJ-Yg-uxh" secondAttribute="top" constant="2" id="omq-sb-OWv"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i6T-bu-c6B">
-                                <rect key="frame" x="0.0" y="616" width="375" height="51"/>
-                                <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="51" id="1eb-2d-1mc"/>
-                                </constraints>
-                                <state key="normal" title=" 確 認 選 取（ 1 / 34 ）" image="2-01icon_confirm.png">
-                                    <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="OKbtn:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="7cf-Fc-wRQ"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="WZ2-lB-P6e" firstAttribute="trailing" secondItem="c3A-WI-hKD" secondAttribute="trailing" id="37C-Zm-XnK"/>
                             <constraint firstItem="WZ2-lB-P6e" firstAttribute="top" secondItem="6kS-eQ-cJ8" secondAttribute="bottom" id="49q-4m-NUk"/>
-                            <constraint firstItem="i6T-bu-c6B" firstAttribute="leading" secondItem="c3A-WI-hKD" secondAttribute="leading" id="4gQ-zi-b15"/>
+                            <constraint firstItem="nVJ-Yg-uxh" firstAttribute="bottom" secondItem="c3A-WI-hKD" secondAttribute="bottom" id="9Lq-mn-c4s"/>
                             <constraint firstItem="WZ2-lB-P6e" firstAttribute="leading" secondItem="c3A-WI-hKD" secondAttribute="leading" id="9c3-HU-Qad"/>
                             <constraint firstItem="6kS-eQ-cJ8" firstAttribute="top" secondItem="zm1-cq-rcN" secondAttribute="top" constant="20" symbolic="YES" id="cFo-xM-AHT"/>
-                            <constraint firstItem="i6T-bu-c6B" firstAttribute="top" secondItem="WZ2-lB-P6e" secondAttribute="bottom" id="dhb-5F-yvu"/>
-                            <constraint firstItem="i6T-bu-c6B" firstAttribute="trailing" secondItem="c3A-WI-hKD" secondAttribute="trailing" id="iwT-Lx-OpF"/>
                             <constraint firstItem="6kS-eQ-cJ8" firstAttribute="leading" secondItem="c3A-WI-hKD" secondAttribute="leading" id="khw-cv-WT7"/>
-                            <constraint firstAttribute="bottom" secondItem="i6T-bu-c6B" secondAttribute="bottom" id="nwD-Zt-Ho9"/>
+                            <constraint firstItem="nVJ-Yg-uxh" firstAttribute="trailing" secondItem="c3A-WI-hKD" secondAttribute="trailing" id="owf-kg-edR"/>
+                            <constraint firstItem="nVJ-Yg-uxh" firstAttribute="leading" secondItem="c3A-WI-hKD" secondAttribute="leading" id="uHO-rh-FgM"/>
+                            <constraint firstItem="nVJ-Yg-uxh" firstAttribute="top" secondItem="WZ2-lB-P6e" secondAttribute="bottom" constant="2" id="yXe-mV-lFp"/>
                             <constraint firstItem="6kS-eQ-cJ8" firstAttribute="trailing" secondItem="c3A-WI-hKD" secondAttribute="trailing" id="ykC-Kn-pFU"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="c3A-WI-hKD"/>
@@ -163,13 +175,15 @@
                         <outlet property="mycov" destination="WZ2-lB-P6e" id="I8F-ad-ZwP"/>
                         <outlet property="navBarHeight" destination="CMq-Dd-h5K" id="a6e-Zz-Inc"/>
                         <outlet property="navBarView" destination="6kS-eQ-cJ8" id="P0G-1a-La0"/>
-                        <outlet property="okBtnHeight" destination="1eb-2d-1mc" id="z0W-w1-Ueo"/>
+                        <outlet property="okBtnHeight" destination="0n3-ga-EEB" id="VWZ-ck-4eC"/>
                         <outlet property="okbtn" destination="i6T-bu-c6B" id="2BU-yt-al8"/>
+                        <outlet property="toolBarView" destination="nVJ-Yg-uxh" id="Mvt-f3-0pU"/>
+                        <outlet property="toolBarViewHeight" destination="A98-bE-5fg" id="yDG-cZ-iH9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XRk-aE-nJz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5719" y="-1804"/>
+            <point key="canvasLocation" x="-5719.1999999999998" y="-1804.0479760119943"/>
         </scene>
         <!--Photos View Controller-->
         <scene sceneID="0ik-mB-cQZ">

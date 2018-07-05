@@ -53,12 +53,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     BOOL isSearching;
     BOOL isNoInfoVertViewCreate;
-    BOOL isNoInfoHorzViewCreate;
-    
-    NSURLSession *session;
-    
-    // For canceling NSURLSessionDataTask
-    NSMutableArray *dataTaskArray;
+    BOOL isNoInfoHorzViewCreate;        
     
     NSInteger columnCount;
     NSInteger miniInteriorSpacing;
@@ -165,8 +160,6 @@ static NSString *hostURL = @"www.pinpinbox.com";
     albumData = [NSMutableArray new];
     userData = [NSMutableArray new];
     
-    dataTaskArray = [NSMutableArray new];
-    
     self.navBarView.backgroundColor = [UIColor barColor];
     
     // JCCollectionViewWaterfallLayout
@@ -202,10 +195,6 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     // ScanBtn Setting
     self.scanBtn.layer.cornerRadius = kCornerRadius;
-    
-//    self.scanBtn.layer.borderWidth = 1.0;
-//    self.scanBtn.layer.borderColor = [UIColor firstMain].CGColor;
-//    [self.scanBtn setTitleColor: [UIColor firstMain] forState: UIControlStateNormal];
     
     [self.scanBtn addTarget: self
                            action: @selector(scanButtonHighlight:)
@@ -480,6 +469,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     if (collectionView.tag == 1) {
         NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
+        
+        NSLog(@"albumRecommendationLabel: %@", albumRecommendationLabel);
         
         if (isSearching) {
             albumRecommendationLabel.text = @"找到的作品";
@@ -869,15 +860,6 @@ replacementString:(NSString *)string
 - (void)callProtocol: (NSString *)text {
     NSLog(@"callProtocol");
     NSLog(@"text: %@", text);
-    NSLog(@"dataTaskArray.count: %lu", (unsigned long)dataTaskArray.count);
-    
-    if (dataTaskArray.count > 0) {
-        for (NSURLSessionDataTask *tempTask in dataTaskArray) {
-            NSLog(@"tempTask: %@", tempTask);
-            [tempTask cancel];
-        }
-        [dataTaskArray removeAllObjects];
-    }
     
     if ([text isEqualToString: @""]) {
         isSearching = NO;
@@ -1490,262 +1472,6 @@ replacementString:(NSString *)string
     NSLog(@"");
     
     return contentView;
-}
-
-#pragma mark - 
-- (NSString *)getRecommendedList: (NSString *)uid token:(NSString *)token data:(NSDictionary *)data {
-    NSLog(@"");
-    NSLog(@"getRecommendedList");
-    
-    NSString *returnStr = @"";
-    NSMutableDictionary *dic = [NSMutableDictionary new];
-    [dic addEntriesFromDictionary: data];
-    [dic setObject: uid forKey: @"id"];
-    [dic setObject: token forKey: @"token"];
-    
-    returnStr = [self boxAPI: dic URL: @"/getrecommendedlist/1.3"];
-    
-    return returnStr;
-}
-
-- (NSString *)search:(NSString *)uid token:(NSString *)token data:(NSDictionary *)data{
-    NSLog(@"");
-    NSLog(@"search");
-    
-    NSString *returnstr=@"";
-    NSMutableDictionary *dic=[NSMutableDictionary new];
-    [dic addEntriesFromDictionary:data];
-    [dic setObject:uid forKey:@"id"];
-    [dic setObject:token forKey:@"token"];
-    
-    returnstr=[self boxAPI:dic URL:@"/search/1.1"];
-    
-    return returnstr;
-}
-
-#pragma mark  調用所有API
-- (NSString *)boxAPI:(NSDictionary *)wData URL:(NSString *)url {
-    NSLog(@"boxAPI wData URL");
-    
-    //NSLog(@"wData: %@", wData);
-    
-    NSString *returnstr = @"";
-    NSMutableDictionary *dic = [NSMutableDictionary new];
-    
-    for (NSString *kye in wData.allKeys) {
-        if ([wData[kye] isKindOfClass:[NSString class]]) {
-            [dic setObject:wData[kye] forKey:kye];
-            
-            /*
-             NSLog(@"isKindOfClass: [NSString class]");
-             NSLog(@"kye: %@", kye);
-             NSLog(@"wData[kye]: %@", wData[kye]);
-             NSLog(@"dic: %@", dic);
-             */
-        } else {
-            [dic setObject:[wData[kye] stringValue] forKey:kye];
-            
-            /*
-             NSLog(@"is not KindOfClass: [NSString class]");
-             NSLog(@"kye: %@", kye);
-             NSLog(@"wData[kye]: %@", wData[kye]);
-             NSLog(@"dic: %@", dic);
-             */
-        }
-    }
-    
-    // Get the value of key "sign"
-    [dic setObject: [self signGenerator2:dic] forKey: @"sign"];
-    
-    //NSLog(@"sign: %@", [self signGenerator2:dic]);
-    //NSLog(@"dic: %@", dic);
-    
-    // Create NSMutableURLRequest, post data to server for getting response
-    returnstr = [self api_Wine: url dic: dic];
-    
-    return returnstr;
-}
-
-- (NSString *)signGenerator2:(NSDictionary *)parameters {
-    NSLog(@"signGenerator2");
-    
-    NSString *secrectSN = @"d9$kv3fk(ri3mv#d-kg05[vs)F;f2lg/";
-    NSString *signSN = @"";
-    NSArray *keys = [parameters allKeys];
-    
-    keys = [keys sortedArrayUsingComparator: ^NSComparisonResult(id obj1, id obj2) {
-        return [obj1 compare: obj2 options: NSNumericSearch];
-    }];
-    
-    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
-    //:/?@!$&'()*+,;=
-    
-    NSString *requestOriginal = @"";
-    
-    for (int i = 0 ;i < keys.count ;i++) {
-        //NSLog(@"i: %d", i);
-        //NSLog(@"keys.count: %lu", (unsigned long)keys.count);
-        
-        NSString *key = keys[i];
-        NSString *value = parameters[key];
-        // requestOriginal=[NSString stringWithFormat:@"%@%@=%@",requestOriginal,key,[value stringByAddingPercentEncodingWithAllowedCharacters:URLCombinedCharacterSet]];
-        
-        requestOriginal = [NSString stringWithFormat:@"%@%@=%@", requestOriginal, key, value];
-        //NSLog(@"requestOriginal: %@", requestOriginal);
-        
-        if (i < keys.count - 1) {
-            //NSLog(@"i < keys.count - 1");
-            requestOriginal = [NSString stringWithFormat:@"%@&", requestOriginal];
-            //NSLog(@"requestOriginal: %@", requestOriginal);
-        }
-    }
-    //requestOriginal=[requestOriginal stringByReplacingOccurrencesOfString:@"%@20" withString:@"+"];
-    
-    //NSLog(@"requestOriginal lowercaseString");
-    NSString *requestLow = [requestOriginal lowercaseString];
-    //NSLog(@"%@",requestLow);
-    
-    //NSLog(@"requestLow,secrectSN");
-    requestLow = [NSString stringWithFormat:@"%@%@",requestLow,secrectSN];
-    //NSLog(@"%@",requestLow);
-    
-    //NSLog(@"requestLow.MD5");
-    requestLow = requestLow.MD5;
-    //NSLog(@"%@",requestLow);
-    
-    //NSLog(@"requestLow.lowercaseString");
-    requestLow = requestLow.lowercaseString;
-    //NSLog(@"%@",requestLow);
-    
-    signSN = requestLow;
-    //NSLog(@"signSN: %@", signSN);
-    
-    return signSN;
-}
-
-- (NSString *)api_Wine:(NSString *)url dic:(NSMutableDictionary *)dic{
-    NSLog(@"api_wine url dic");
-    
-    if (![self hostAvailable:hostURL]) {
-        NSLog(@"");
-        NSLog(@"");
-        NSLog(@"網路不通");
-        NSLog(@"");
-        NSLog(@"");
-        
-        return nil;
-    }
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", ServerURL, url]]];
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:[self httpBodyForParamsDictionary:dic]];
-    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
-    //[request setTimeoutInterval: [kTimeOut floatValue]];
-    
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    __block NSString *str;
-    
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    config.timeoutIntervalForRequest = [kTimeOut floatValue];
-    //config.timeoutIntervalForResource = [kTimeOut floatValue];
-    session = [NSURLSession sessionWithConfiguration: config];
-    
-    //NSLog(@"NSURLSession *session = [NSURLSession sharedSession]");
-    //NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        if (error == nil) {
-            str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-            
-            NSLog(@"");
-            NSLog(@"str = %@", str);
-        } else {
-            str = [NSString stringWithFormat: @"%ld", error.code];
-            
-            NSLog(@"");
-            NSLog(@"error: %@", error);
-            NSLog(@"error.userInfo: %@", error.userInfo);
-            NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
-        }
-        dispatch_semaphore_signal(semaphore);
-    }];
-    NSLog(@"task resume");
-    [task resume];
-    
-    NSLog(@"dataTaskArray addObject: dataTask");
-    [dataTaskArray addObject: task];
-    
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    
-    return str;
-}
-
-- (NSData *)httpBodyForParamsDictionary:(NSDictionary *)paramDictionary
-{
-    //NSLog(@"httpBodyForParamsDictionary");
-    
-    NSMutableArray *parameterArray = [NSMutableArray array];
-    
-    [paramDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
-        /*
-         NSLog(@"enumerateKeysAndObjectsUsingBlock");
-         NSLog(@"key: %@", key);
-         NSLog(@"obj: %@", obj);
-         */
-        NSString *param = [NSString stringWithFormat:@"%@=%@", key, [self percentEscapeString:obj]];
-        //NSLog(@"param: %@", param);
-        [parameterArray addObject:param];
-        //NSLog(@"parameterArray: %@", parameterArray);
-    }];
-    
-    //NSLog(@"parameterArray: %@", parameterArray);
-    
-    NSString *string = [parameterArray componentsJoinedByString:@"&"];
-    
-    //NSLog(@"after componentsJoinedByString &: %@", string);
-    
-    //NSLog(@"string dataUsingEncoding:NSUTF8StringEncoding: %@", [string dataUsingEncoding:NSUTF8StringEncoding]);
-    
-    return [string dataUsingEncoding:NSUTF8StringEncoding];
-}
-
-- (NSString *)percentEscapeString:(NSString *)string
-{
-    //NSLog(@"percentEscapeString");
-    //NSLog(@"string: %@", string);
-    
-    NSString *result = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                 (CFStringRef)string,
-                                                                                 (CFStringRef)@" ",
-                                                                                 (CFStringRef)@":/?@!$&'()*+,;=",
-                                                                                 kCFStringEncodingUTF8));
-    
-    //NSLog(@"result: %@", result);
-    
-    //NSLog(@"result stringByReplacingOccurrencesOfString withString: %@", [result stringByReplacingOccurrencesOfString:@" " withString:@"+"]);
-    
-    return [result stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-}
-
-#pragma mark  檢測網路
-- (BOOL)hostAvailable:(NSString *)theHost
-{
-    NSLog(@"");
-    NSLog(@"hostAvailable");
-    
-    SCNetworkReachabilityRef defaultRouteReachability = SCNetworkReachabilityCreateWithName(CFAllocatorGetDefault(), [theHost UTF8String]);
-    SCNetworkReachabilityFlags flags;
-    BOOL didRetrieveFlags = SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags);
-    CFRelease(defaultRouteReachability);
-    
-    if (!didRetrieveFlags)
-    {
-        NSLog(@"Error. Could not recover network reachability flags\n");
-        return NO;
-    }
-    BOOL isReachable = flags & kSCNetworkFlagsReachable;
-    return isReachable ? YES : NO;
 }
 
 /*

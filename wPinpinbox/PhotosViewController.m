@@ -56,7 +56,8 @@
     NSURLSessionDataTask *dataTask;
     NSMutableArray *dataTaskArray;
 }
-
+@property (weak, nonatomic) IBOutlet UIView *toolBarView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *okBtnHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -196,29 +197,37 @@
             case 1136:
                 printf("iPhone 5 or 5S or 5C");
                 mycov.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
                 mycov.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 1920:
                 printf("iPhone 6+/6S+/7+/8+");
                 mycov.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 mycov.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             case 2436:
                 printf("iPhone X");
                 self.navBarHeight.constant = navBarHeightConstant;
+                self.toolBarViewHeight.constant = kToolBarViewHeightForX - 20;
                 break;
             default:
                 printf("unknown");
                 mycov.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
         }
     }
+    self.okBtnHeight.constant = 45;
+    okbtn.layer.cornerRadius = kCornerRadius;
     //[mycov reloadData];
 }
 

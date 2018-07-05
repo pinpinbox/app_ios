@@ -44,6 +44,8 @@
 
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
+
 @end
 
 @implementation QrcordViewController
@@ -63,7 +65,8 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSLog(@"QrcordViewController viewWillAppear");
+    NSLog(@"QrcordViewController viewWillAppear");    
+    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
     [self startReading];
     [_bbitemStart setTitle:@"開始" forState:UIControlStateNormal];
@@ -79,8 +82,6 @@
     NSLog(@"QrcordViewController viewDidAppear");
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
-    
-    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -89,6 +90,39 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
+            case 2436:
+                printf("iPhone X");
+                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
+                break;
+            default:
+                printf("unknown");
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+                break;
+        }
+    }    
 }
 
 - (void)didReceiveMemoryWarning {
