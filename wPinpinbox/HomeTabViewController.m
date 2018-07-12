@@ -1661,13 +1661,12 @@ sourceController:(UIViewController *)source
             NSString *eventId = [adArray[indexPath.row][@"event"][@"event_id"] stringValue];
             if (![eventId isEqual: [NSNull null]]) {
                 if (![eventId isEqualToString: @""]) {
-                    
                     NSLog(@"cell.bannerImageView.image: %@", cell.bannerImageView.image);
                     double delayInSeconds = 0.5;
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
                         self.zoomView = cell.bannerImageView;
-                        [self extracted:indexPath];
+                        [self extracted: indexPath];
                     });
                 }
             }
@@ -1770,9 +1769,7 @@ sourceController:(UIViewController *)source
         NSLog(@"collectionView.tag == 2");
         HomeBannerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"HomeBannerCell" forIndexPath: indexPath];
         NSLog(@"adArray: %@", adArray);
-        
         NSDictionary *adData = adArray[indexPath.row];
-        
         cell.bannerImageView.image = nil;
         
         if ([adData[@"ad"][@"image"] isEqual: [NSNull null]]) {
@@ -1782,7 +1779,6 @@ sourceController:(UIViewController *)source
             
             if ([[urlString pathExtension] isEqualToString: @"gif"]) {
                 NSLog(@"file is gif");
-                
                 NSURL *urlImage = [NSURL URLWithString: urlString];
                 __block NSData *data;
                 

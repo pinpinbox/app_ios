@@ -121,14 +121,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [Fabric with:@[[Crashlytics class]]];
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];    
     
-    /*
     [Flurry startSession:@"GSPHT8B4KV8F89VHQ6D8"
       withSessionBuilder:[[[FlurrySessionBuilder new]
                            withCrashReporting:YES]
                           withLogLevel:FlurryLogLevelDebug]];
-     */
     
     NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+    
     
     FlurrySessionBuilder* builder = [[[[[FlurrySessionBuilder new]
                                         withLogLevel:FlurryLogLevelAll]
@@ -137,8 +136,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                                      withAppVersion: version];
     
     //[Flurry startSession: w3FlurryAPIKey withSessionBuilder:builder];
-    [Flurry startSession: wwwFlurryAPIKey withSessionBuilder: builder];
-    
+    [Flurry startSession: wwwFlurryAPIKey withSessionBuilder: builder];    
     
 //    VersionUpdate *vu = [[VersionUpdate alloc] initWithFrame: self.window.bounds];
 //    [vu checkVersion];
@@ -185,16 +183,17 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
         }
     }        
     
+    /*
     CGSize iOSDeviceScreenSize = [[UIScreen mainScreen] bounds].size;
     //判斷3.5吋或4吋螢幕以載入不同storyboard
-    if (iOSDeviceScreenSize.height == 480)
-    {
+    if (iOSDeviceScreenSize.height == 480) {
         UIStoryboard *iPhone35Storyboard = [UIStoryboard storyboardWithName:@"Main35" bundle:nil];
         UIViewController *initialViewController = [iPhone35Storyboard instantiateInitialViewController];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         self.window.rootViewController  = initialViewController;
         [self.window makeKeyAndVisible];
     }
+     */
     
     NSLog(@"launchOptions: %@", launchOptions);
     
