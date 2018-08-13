@@ -588,17 +588,24 @@
     NSLog(@"backBtnPress");
     NSLog(@"self.fromVC: %@", self.fromVC);
     
-    if ([self.fromVC isEqualToString: @"TestReadBookViewController"]) {
+    if ([self.delegate respondsToSelector: @selector(buyPPointViewController:)]) {
+        [self.delegate buyPPointViewController: self];
+        NSLog(@"self.delegate buyPPointViewController: self");
+    }
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav popViewControllerAnimated: YES];
+    
+    /*
+    if ([self.fromVC isEqualToString: @"ContentCheckingViewController"]) {
         if ([self.delegate respondsToSelector: @selector(buyPPointViewController:)]) {
             [self.delegate buyPPointViewController: self];
             NSLog(@"self.delegate buyPPointViewController: self");
         }
     } else {
-        //[self.navigationController popViewControllerAnimated:YES];
-        
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [appDelegate.myNav popViewControllerAnimated: YES];
     }
+     */
 }
 
 - (IBAction)buyBtnPress:(id)sender {

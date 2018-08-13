@@ -2,8 +2,8 @@
 //  AlbumInfoViewController.h
 //  wPinpinbox
 //
-//  Created by David on 6/13/17.
-//  Copyright © 2017 Angus. All rights reserved.
+//  Created by David on 2018/8/7.
+//  Copyright © 2018 Angus. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

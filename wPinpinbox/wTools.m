@@ -26,6 +26,7 @@
 #import "UIColor+Extensions.h"
 
 #import "TestReadBookViewController.h"
+#import "ContentCheckingViewController.h"
 
 #import "GlobalVars.h"
 
@@ -337,14 +338,18 @@ static wTools *instance =nil;
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         
+                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                        contentCheckingVC.albumId = albumId;
+                        contentCheckingVC.postMode = postMode;
+                        /*
                         TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
                         
                         testReadBookVC.albumid = albumId;
                         testReadBookVC.dic = [dic[@"data"] mutableCopy];
                         testReadBookVC.eventId = eventId;
                         testReadBookVC.postMode = postMode;
-                        
-                        [app.myNav pushViewController: testReadBookVC animated: YES];
+                        */
+                        [app.myNav pushViewController: contentCheckingVC animated: YES];
                     } else {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];

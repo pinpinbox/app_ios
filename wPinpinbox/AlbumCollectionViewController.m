@@ -32,6 +32,8 @@
 
 #import "DDAUIActionSheetViewController.h"
 
+#import "ContentCheckingViewController.h"
+
 @interface AlbumCollectionViewController () <CAPSPageMenuDelegate, MyAlbumCollectionViewControllerDelegate, OtherCollectionViewControllerDelegate, CalbumlistViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic) CAPSPageMenu *pageMenu;
 //@property (nonatomic) UIView *navBarView;
@@ -643,8 +645,7 @@
     [self retrieveAlbum: albumId];
 }
 
-- (void)retrieveAlbum: (NSString *)albumId
-{
+- (void)retrieveAlbum: (NSString *)albumId {
     NSLog(@"retrieveAlbum");
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated: YES];
@@ -655,7 +656,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrievealbump: albumId
@@ -672,7 +672,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             
             if (response != nil) {
                 NSLog(@"response: %@", response);
@@ -695,15 +694,20 @@
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         
+                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                        contentCheckingVC.albumId = albumId;
+                        
+                        /*
                         TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
                         
                         testReadBookVC.albumid = albumId;
                         testReadBookVC.dic = dic[@"data"];
                         testReadBookVC.isDownloaded = NO;
                         //[self.navigationController pushViewController: testReadBookVC animated: YES];
+                        */
                         
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: testReadBookVC animated: YES];
+                        [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
                     } else {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];

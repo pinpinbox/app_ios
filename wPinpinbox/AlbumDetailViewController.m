@@ -27,7 +27,6 @@
 #import "NewMessageBoardViewController.h"
 #import "MessageboardViewController.h"
 #import "AppDelegate.h"
-#import "NewReadBookViewController.h"
 #import "TestReadBookViewController.h"
 #import "CreaterViewController.h"
 #import <SafariServices/SafariServices.h>
@@ -45,10 +44,11 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 
 #import "LikeListViewController.h"
-
 #import "AlbumSponsorListViewController.h"
 
 #import <QuartzCore/QuartzCore.h>
+
+#import "ContentCheckingViewController.h"
 
 //#import "FXBlurView.h"
 
@@ -59,7 +59,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 #define animateConstant 0.1
 
-@interface AlbumDetailViewController () <FBSDKSharingDelegate, SelectBarDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIScrollViewDelegate, TestReadBookViewControllerDelegate, UITextViewDelegate, NewMessageBoardViewControllerDelegate, MessageboardViewControllerDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate, AlbumSettingViewControllerDelegate, ParallaxViewControllerDelegate>
+@interface AlbumDetailViewController () <FBSDKSharingDelegate, SelectBarDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIScrollViewDelegate, TestReadBookViewControllerDelegate, ContentCheckingViewControllerDelegate, UITextViewDelegate, NewMessageBoardViewControllerDelegate, MessageboardViewControllerDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate, AlbumSettingViewControllerDelegate, ParallaxViewControllerDelegate>
 {
     // For Showing Message of Getting Point
     NSString *missionTopicStr;
@@ -227,6 +227,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     pgr.delegate = self;
     [self.view addGestureRecognizer: pgr];
     self.delegate = self;
+    
+    [self retrieveAlbum];
 }
 
 - (void)panGestureRecognizerHandler:(UIPanGestureRecognizer *)gestureRecognizer {
@@ -331,7 +333,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self retrieveAlbum];
+//    [self retrieveAlbum];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -666,7 +668,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     // Step 3: Add link descriptionStr
     NSArray *urls1 = [string componentsMatchedByRegex: @"http://[^\\s]*"];
-    NSArray *urls2 = [string componentsMatchedByRegex: @"https://[^\\s]*"];
+    NSArray *urls2 = [string componentsMatchedByRegex: @"https://[^\\s]*"];    
     NSMutableArray *array = [NSMutableArray new];
     [array addObjectsFromArray: urls1];
     [array addObjectsFromArray: urls2];
@@ -1092,27 +1094,26 @@ static NSString *autoPlayStr = @"&autoplay=1";
     });
 }
 
-- (void)toNewReadBookVC
-{
-    NewReadBookViewController *newReadBookVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"NewReadBookViewController"];
-    //[self.navigationController pushViewController: newReadBookVC animated: YES];
+- (void)toReadBookVC {
+    ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+    contentCheckingVC.albumId = self.albumId;
+    contentCheckingVC.isLikes = isLikes;
+    contentCheckingVC.eventJoin = self.data[@"eventjoin"];
+    contentCheckingVC.delegate = self;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav pushViewController: newReadBookVC animated: YES];
-}
-
-- (void)toReadBookVC
-{
-    TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
-    testReadBookVC.dic = self.data;
-    testReadBookVC.isDownloaded = NO;
-    testReadBookVC.albumid = self.albumId;
-    testReadBookVC.delegate = self;
-    testReadBookVC.isLikes = isLikes;
-    testReadBookVC.likeNumber = likesInt;
-    testReadBookVC.eventJoin = self.data[@"eventjoin"];
-    //[self.navigationController pushViewController: testReadBookVC animated: YES];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav pushViewController: testReadBookVC animated: YES];
+    [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
+    
+//    TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
+//    testReadBookVC.dic = self.data;
+//    testReadBookVC.isDownloaded = NO;
+//    testReadBookVC.albumid = self.albumId;
+//    testReadBookVC.delegate = self;
+//    testReadBookVC.isLikes = isLikes;
+//    testReadBookVC.likeNumber = likesInt;
+//    testReadBookVC.eventJoin = self.data[@"eventjoin"];
+//    //[self.navigationController pushViewController: testReadBookVC animated: YES];
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [appDelegate.myNav pushViewController: testReadBookVC animated: YES];
 }
 
 #pragma mark - ActionSheet
@@ -1951,11 +1952,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
 #pragma mark - IBAction Methods
 - (IBAction)checkContentBtnPress:(id)sender {
     NSLog(@"checkContentBtnPress");
-    NSLog(@"self.data: %@", self.data);
+//    NSLog(@"self.data: %@", self.data);
     
     if (self.data == nil) {
-        NSLog(@"self.data == nil");
-        NSLog(@"self.data: %@", self.data);
+//        NSLog(@"self.data == nil");
+//        NSLog(@"self.data: %@", self.data);
         [self retrieveAlbum];
     } else {
         NSLog(@"self.data != nil");
@@ -1965,7 +1966,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         } else {
             [self toReadBookVC];
         }
-        //[self toNewReadBookVC];
     }
 }
 
@@ -2848,6 +2848,16 @@ static NSString *autoPlayStr = @"&autoplay=1";
     //[self retrieveAlbum];
 }
 
+#pragma mark - ContentCheckingViewControllerDelegate Method
+- (void)contentCheckingViewControllerViewWillDisappear:(ContentCheckingViewController *)controller
+                                      isLikeBtnPressed:(BOOL)isLikeBtnPressed {
+    NSLog(@"");
+    NSLog(@"contentCheckingViewControllerViewWillDisappear");
+    if (isLikeBtnPressed) {
+        [self retrieveAlbum];
+    }
+}
+
 #pragma mark - UITextViewDelegate Methods
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
@@ -3206,8 +3216,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     return contentView;
 }
 
-- (void)newMessageBoardViewControllerDisappear:(NewMessageBoardViewController *)controller msgNumber:(NSUInteger)msgNumber
-{
+- (void)newMessageBoardViewControllerDisappear:(NewMessageBoardViewController *)controller msgNumber:(NSUInteger)msgNumber {
     NSLog(@"newMessageBoardViewControllerDisappear");
     //[self retrieveAlbum];
 }

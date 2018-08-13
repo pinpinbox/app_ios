@@ -77,7 +77,6 @@
     [self.gradientView.layer insertSublayer: headerBgVGradient atIndex: 0];
     self.gradientView.alpha = 0.5;
     
-    
     [self likeViewSetup];
     [self messageViewSetup];
     [self sponsorViewSetup];

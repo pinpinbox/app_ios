@@ -78,7 +78,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 //static NSString *sharingLinkWithoutAutoPlay = @"http://www.pinpinbox.com/index/album/content/?album_id=%@";
 static NSString *autoPlayStr = @"&autoplay=1";
 
-
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
@@ -185,8 +184,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSMutableArray *selectItemArray;
     NSArray *photoArray;
     
-    NSInteger userPoint;
-    
+    NSInteger userPoint;    
     
     int _firstVisiblePageIndexBeforeRotation;  // for autorotation
     CGFloat _percentScrolledIntoFirstVisiblePage;
@@ -311,7 +309,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark - Browsing Data
-
 - (void)checkBrowsingDataReachMax {
     //NSLog(@"checkBrowseDataReachMax");
     
@@ -914,30 +911,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             }
         }
     }
-    
-    /*
-     if (audioStr != nil || ![audioStr isEqual: [NSNull null]]) {
-     NSLog(@"audioStr is not nil or NSNull null");
-     if (![audioStr isEqualToString: @""]) {
-     if (self.audioSwitch) {
-     if (self.avPlayer == nil) {
-     NSLog(@"avPlayer is nil, needs to be initialized");
-     [self avPlayerSetUp: audioStr];
-     } else {
-     NSLog(@"avPlayer is initialized");
-     
-     if (self.isReadyToPlay) {
-     if (isplayaudio) {
-     [self.avPlayer play];
-     }
-     }
-     }
-     }
-     }
-     } else {
-     NSLog(@"audioStr is nil");
-     }
-     */
 }
 
 #pragma mark - Button Selector Methods
@@ -1023,8 +996,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark - Likes Method
-- (void)insertAlbumToLikes
-{
+- (void)insertAlbumToLikes {
     NSLog(@"insertAlbumToLikes");
     
     @try {
@@ -1093,8 +1065,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     });
 }
 
-- (void)deleteAlbumToLikes
-{
+- (void)deleteAlbumToLikes {
     NSLog(@"deleteAlbumToLikes");
     
     @try {
@@ -1521,9 +1492,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark - Check Point Task
-
-- (void)checkTaskComplete
-{
+- (void)checkTaskComplete {
     NSLog(@"checkTask");
     
     @try {
@@ -2394,8 +2363,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 
 #pragma mark - AVPlayer Section
-- (void)avPlayerSetUp: (NSString *)audioData
-{
+- (void)avPlayerSetUp: (NSString *)audioData {
     NSLog(@"avPlayerSetUp");
     
     //註冊audioInterrupted
@@ -2431,7 +2399,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark Prepare to play asset, URL
-
 /*
  Invoked at the completion of the loading of the values for all keys on the asset that we require.
  Checks whether loading was successfull and whether the asset is playable.
@@ -2703,7 +2670,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 NSLog(@"AVPlayerStatusReadyToPlay");
                 self.isReadyToPlay = YES;
                 [self initScrubberTimer];
-                
                 [self enableScrubber];
                 
                 if (self.audioSwitch) {
@@ -3344,8 +3310,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-- (void)postAlbum
-{
+- (void)postAlbum {
     NSLog(@"postAlbum");
     //[wTools ShowMBProgressHUD];
     @try {
@@ -5167,29 +5132,23 @@ replacementString:(NSString *)string
  */
 
 #pragma mark -
-- (void)checkFBSDK:(NSURL *)url
-{
+- (void)checkFBSDK:(NSURL *)url {
     NSLog(@"checkFBSDK");
     NSLog(@"url: %@", url);
     
     // Section Below is to check FBSDK
-    
     //NSDictionary *parametersDic = [[NSDictionary alloc] initWithObjectsAndKeys: @"id,source", @"fields", nil];
     NSString *videoStr;
-    
     NSCharacterSet *notDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
     
     for (NSString *str in [url pathComponents]) {
         //NSLog(@"str: %@", str);
-        
         // Check which string section is all decimal
         if ([str rangeOfCharacterFromSet: notDigits].location == NSNotFound) {
             //NSLog(@"str: %@", str);
-            
             videoStr = str;
         }
     }
-    
     __block NSString *fbVideoLink;
     
     NSLog(@"fbVideoLink: %@", fbVideoLink);
@@ -5212,9 +5171,7 @@ replacementString:(NSString *)string
                      
                      fbVideoLink = [result objectForKey: @"source"];
                      NSLog(@"fbVideoLink: %@", fbVideoLink);
-                     
                      NSURL *videoURL = [NSURL URLWithString: fbVideoLink];
-                     
                      AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL: videoURL];
                      AVPlayer *player = [AVPlayer playerWithPlayerItem: playerItem];
                      //AVPlayerViewController *playerViewController = [AVPlayerViewController new];
@@ -5325,7 +5282,6 @@ replacementString:(NSString *)string
             }];
         } declinedOrCanceledHandler:^{
             NSLog(@"declinedOrCanceledHandler");
-            
             // If the user declined permissions tell them why we need permissions
             // and ask for permissions again if they want to grant permissions.
             [self alertDeclinedPublishActionsWithCompletion:^{

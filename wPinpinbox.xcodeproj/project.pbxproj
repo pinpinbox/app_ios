@@ -104,6 +104,10 @@
 		54AE997320170BA50003D060 /* VotingVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54AE997220170BA50003D060 /* VotingVC.storyboard */; };
 		54AFF4491F8491AB00222CEF /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AFF4461F8491AB00222CEF /* FLAnimatedImage.m */; };
 		54AFF44A1F8491AB00222CEF /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AFF4481F8491AB00222CEF /* FLAnimatedImageView.m */; };
+		54B08C7B2105B8A700ADC09A /* ContentCheckingVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54B08C7A2105B8A700ADC09A /* ContentCheckingVC.storyboard */; };
+		54B08C7E2105B8B500ADC09A /* ContentCheckingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B08C7D2105B8B500ADC09A /* ContentCheckingViewController.m */; };
+		54B08C812105BCCB00ADC09A /* ImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B08C802105BCCB00ADC09A /* ImageCollectionViewCell.m */; };
+		54B08C8D2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B08C8C2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m */; };
 		54B2C3A2206AB05200ABEC76 /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B2C39F206AB05200ABEC76 /* UIImage+Alpha.m */; };
 		54B2C3A3206AB05200ABEC76 /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B2C3A0206AB05200ABEC76 /* UIImage+RoundedCorner.m */; };
 		54B2C3A4206AB05200ABEC76 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B2C3A1206AB05200ABEC76 /* UIImage+Resize.m */; };
@@ -129,6 +133,8 @@
 		54C964C02015F16E00F995DF /* FBFriendsFindingVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54C964BF2015F16E00F995DF /* FBFriendsFindingVC.storyboard */; };
 		54C964C22015F40A00F995DF /* FBFriendNotFoundVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54C964C12015F40A00F995DF /* FBFriendNotFoundVC.storyboard */; };
 		54C964C4201642D000F995DF /* FBFriendsListVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54C964C3201642D000F995DF /* FBFriendsListVC.storyboard */; };
+		54D2694921194E8900AE3273 /* AlbumInfoVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54D2694821194E8900AE3273 /* AlbumInfoVC.storyboard */; };
+		54D2694C21194EAF00AE3273 /* AlbumInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54D2694B21194EAF00AE3273 /* AlbumInfoViewController.m */; };
 		54D4B9A41F74B6EC002C50BC /* NewEventPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54D4B9A31F74B6EC002C50BC /* NewEventPostViewController.m */; };
 		54DBCE7A1FA03C430031F2A3 /* SendingVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DBCE791FA03C430031F2A3 /* SendingVideo.m */; };
 		54DCA60B1F7E447F001B6FB1 /* ScanRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54DCA60A1F7E447F001B6FB1 /* ScanRegisterViewController.m */; };
@@ -258,7 +264,6 @@
 		632082251EC2F59C003CE1CE /* NotifTabTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 632082241EC2F59C003CE1CE /* NotifTabTableViewCell.m */; };
 		63301DDE1EF68EAB002C082A /* OtherCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63301DDD1EF68EAB002C082A /* OtherCollectionViewController.m */; };
 		63301DE11EF69EB0002C082A /* OtherCollectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63301DE01EF69EB0002C082A /* OtherCollectionTableViewCell.m */; };
-		6332178D1EEFF228006F27EF /* AlbumInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6332178C1EEFF228006F27EF /* AlbumInfoViewController.m */; };
 		63369F771E21CF4D0074A3C6 /* MemberCenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63369F761E21CF4D0074A3C6 /* MemberCenterViewController.m */; };
 		63378A401E012DB600532443 /* MyTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63378A3F1E012DB600532443 /* MyTabBarController.m */; };
 		633BC38C1EE0F1D1006FB6F8 /* 8035.png in Resources */ = {isa = PBXBuildFile; fileRef = 633BC38B1EE0F1D1006FB6F8 /* 8035.png */; };
@@ -998,6 +1003,13 @@
 		54AFF4461F8491AB00222CEF /* FLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImage.m; sourceTree = "<group>"; };
 		54AFF4471F8491AB00222CEF /* FLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImageView.h; sourceTree = "<group>"; };
 		54AFF4481F8491AB00222CEF /* FLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImageView.m; sourceTree = "<group>"; };
+		54B08C7A2105B8A700ADC09A /* ContentCheckingVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ContentCheckingVC.storyboard; sourceTree = "<group>"; };
+		54B08C7C2105B8B500ADC09A /* ContentCheckingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentCheckingViewController.h; sourceTree = "<group>"; };
+		54B08C7D2105B8B500ADC09A /* ContentCheckingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentCheckingViewController.m; sourceTree = "<group>"; };
+		54B08C7F2105BCCB00ADC09A /* ImageCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCollectionViewCell.h; sourceTree = "<group>"; };
+		54B08C802105BCCB00ADC09A /* ImageCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageCollectionViewCell.m; sourceTree = "<group>"; };
+		54B08C8B2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThumbnailImageCollectionViewCell.h; sourceTree = "<group>"; };
+		54B08C8C2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThumbnailImageCollectionViewCell.m; sourceTree = "<group>"; };
 		54B2C39C206AB05200ABEC76 /* UIImage+RoundedCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCorner.h"; sourceTree = "<group>"; };
 		54B2C39D206AB05200ABEC76 /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		54B2C39E206AB05200ABEC76 /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
@@ -1032,6 +1044,9 @@
 		54C964BF2015F16E00F995DF /* FBFriendsFindingVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FBFriendsFindingVC.storyboard; sourceTree = "<group>"; };
 		54C964C12015F40A00F995DF /* FBFriendNotFoundVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FBFriendNotFoundVC.storyboard; sourceTree = "<group>"; };
 		54C964C3201642D000F995DF /* FBFriendsListVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FBFriendsListVC.storyboard; sourceTree = "<group>"; };
+		54D2694821194E8900AE3273 /* AlbumInfoVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AlbumInfoVC.storyboard; sourceTree = "<group>"; };
+		54D2694A21194EAF00AE3273 /* AlbumInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumInfoViewController.h; sourceTree = "<group>"; };
+		54D2694B21194EAF00AE3273 /* AlbumInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumInfoViewController.m; sourceTree = "<group>"; };
 		54D4B9A21F74B6EC002C50BC /* NewEventPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewEventPostViewController.h; sourceTree = "<group>"; };
 		54D4B9A31F74B6EC002C50BC /* NewEventPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewEventPostViewController.m; sourceTree = "<group>"; };
 		54DBCE781FA03C430031F2A3 /* SendingVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendingVideo.h; sourceTree = "<group>"; };
@@ -1267,8 +1282,6 @@
 		63301DDD1EF68EAB002C082A /* OtherCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtherCollectionViewController.m; sourceTree = "<group>"; };
 		63301DDF1EF69EB0002C082A /* OtherCollectionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OtherCollectionTableViewCell.h; sourceTree = "<group>"; };
 		63301DE01EF69EB0002C082A /* OtherCollectionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtherCollectionTableViewCell.m; sourceTree = "<group>"; };
-		6332178B1EEFF228006F27EF /* AlbumInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumInfoViewController.h; sourceTree = "<group>"; };
-		6332178C1EEFF228006F27EF /* AlbumInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumInfoViewController.m; sourceTree = "<group>"; };
 		63369F751E21CF4D0074A3C6 /* MemberCenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemberCenterViewController.h; sourceTree = "<group>"; };
 		63369F761E21CF4D0074A3C6 /* MemberCenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MemberCenterViewController.m; sourceTree = "<group>"; };
 		63378A3E1E012DB600532443 /* MyTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTabBarController.h; sourceTree = "<group>"; };
@@ -2424,6 +2437,21 @@
 			name = SponsorList;
 			sourceTree = "<group>";
 		};
+		54672DD620FF23E10045DD7E /* ContentCheckingVC */ = {
+			isa = PBXGroup;
+			children = (
+				54B08C7C2105B8B500ADC09A /* ContentCheckingViewController.h */,
+				54B08C7D2105B8B500ADC09A /* ContentCheckingViewController.m */,
+				54B08C7F2105BCCB00ADC09A /* ImageCollectionViewCell.h */,
+				54B08C802105BCCB00ADC09A /* ImageCollectionViewCell.m */,
+				54B08C8B2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.h */,
+				54B08C8C2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m */,
+				54B08C7A2105B8A700ADC09A /* ContentCheckingVC.storyboard */,
+				54B8CF3A2119E69A006DFE06 /* AlbumInfoVC */,
+			);
+			name = ContentCheckingVC;
+			sourceTree = "<group>";
+		};
 		5486C2272050F6B70016BB9D /* ExchangeInfoEditVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -2587,6 +2615,16 @@
 				54B2C39F206AB05200ABEC76 /* UIImage+Alpha.m */,
 			);
 			path = "UIImage-categories";
+			sourceTree = "<group>";
+		};
+		54B8CF3A2119E69A006DFE06 /* AlbumInfoVC */ = {
+			isa = PBXGroup;
+			children = (
+				54D2694A21194EAF00AE3273 /* AlbumInfoViewController.h */,
+				54D2694B21194EAF00AE3273 /* AlbumInfoViewController.m */,
+				54D2694821194E8900AE3273 /* AlbumInfoVC.storyboard */,
+			);
+			name = AlbumInfoVC;
 			sourceTree = "<group>";
 		};
 		54C137EE1F80835500CC12BC /* AboutPinpinBoxVC */ = {
@@ -4352,8 +4390,6 @@
 				92AE90691C1E9A0400C53413 /* PagetextViewController.h */,
 				92AE906A1C1E9A0400C53413 /* PagetextViewController.m */,
 				92AE906B1C1E9A0400C53413 /* PagetextViewController.xib */,
-				6332178B1EEFF228006F27EF /* AlbumInfoViewController.h */,
-				6332178C1EEFF228006F27EF /* AlbumInfoViewController.m */,
 				92AE906E1C1E9CB900C53413 /* cell */,
 				92BD83731C215054003D668C /* PageNavigationController.h */,
 				92BD83741C215054003D668C /* PageNavigationController.m */,
@@ -4588,6 +4624,7 @@
 		92D362E41BE0678A0084C746 /* 預覽器(包含下載指示器) */ = {
 			isa = PBXGroup;
 			children = (
+				54672DD620FF23E10045DD7E /* ContentCheckingVC */,
 				9222B21C1BEC78CD00DF2CAD /* 預覽書本 */,
 				92D362F71BE06C170084C746 /* TYMProgressBarView */,
 				92D362E51BE068770084C746 /* PreviewbookViewController.h */,
@@ -4939,8 +4976,6 @@
 				9276DF9D1B72FDC000E6ACC9 /* Frameworks */,
 				9276DF9E1B72FDC000E6ACC9 /* Resources */,
 				54E232B21FA6DA9400D95FD5 /* ShellScript */,
-				E1303E8D49989CDBEE0C4C21 /* [CP] Embed Pods Frameworks */,
-				D52C91A1466FA67E9538C1C4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5106,6 +5141,7 @@
 				9202799A1C449D0F00A63027 /* 4-19icon_plus.png in Resources */,
 				927AADDF1BE1FE980088CDB9 /* icon_establish@2x.png in Resources */,
 				927AADFA1BE223650088CDB9 /* 4-08button_cooperation@2x.png in Resources */,
+				54B08C7B2105B8A700ADC09A /* ContentCheckingVC.storyboard in Resources */,
 				54F2CBFD200B898E0091AA86 /* FollowListsVC.storyboard in Resources */,
 				9274103C1BD0A6FC0031460B /* icon_gardening@2x.png in Resources */,
 				54933AA6207DFA7B001582C3 /* TagCollectionViewCell.xib in Resources */,
@@ -5176,6 +5212,7 @@
 				922A4B001BD623E9006D5A36 /* icon_分格線@2x.png in Resources */,
 				92D526071BCF9F7F002C157B /* codebeautify.json in Resources */,
 				92511A061CF5B2B8002D4678 /* button_buy_en@2x.png in Resources */,
+				54D2694921194E8900AE3273 /* AlbumInfoVC.storyboard in Resources */,
 				54C964C22015F40A00F995DF /* FBFriendNotFoundVC.storyboard in Resources */,
 				927410361BD0A6FC0031460B /* icon_exercise@2x.png in Resources */,
 				9222B2211BEC797400DF2CAD /* BookViewController.xib in Resources */,
@@ -5533,39 +5570,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D52C91A1466FA67E9538C1C4 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh",
-				"${PODS_ROOT}/PEPhotoCropEditor/Resources/PEPhotoCropEditor.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E1303E8D49989CDBEE0C4C21 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -5682,6 +5686,7 @@
 				63AA44BD1F17712B00E834E7 /* MyAVPlayerViewController.m in Sources */,
 				9225572A1BDF228400CD4E9B /* RemindViewController.m in Sources */,
 				635775DD1ED3F94400637914 /* RecentBrowsingTableViewCell.m in Sources */,
+				54B08C7E2105B8B500ADC09A /* ContentCheckingViewController.m in Sources */,
 				638F4A5F1E5D499400F7130B /* FTWCache.m in Sources */,
 				63094A711D999F7B00725680 /* AsyncImageView.m in Sources */,
 				92A8B73F1C521EA0000B7D61 /* OpenUDID.m in Sources */,
@@ -5709,7 +5714,6 @@
 				6315B2E51EE7E13600EE67C5 /* NewMessageBoardViewController.m in Sources */,
 				6319A36B1DABB60C001CB8BD /* JCCollectionHeaderView.m in Sources */,
 				92AE20F21C059A1B0033C298 /* VideoViewController.m in Sources */,
-				6332178D1EEFF228006F27EF /* AlbumInfoViewController.m in Sources */,
 				630A83E41EB1D07300AC8479 /* MyLinearLayout.m in Sources */,
 				543B11A7205619A900111102 /* ZOZolaZoomTransition.m in Sources */,
 				630AD8521EA7659000825BBA /* FBFriendNotFoundViewController.m in Sources */,
@@ -5863,11 +5867,13 @@
 				543FC4F920EB24320090DF43 /* MoreTabViewController.m in Sources */,
 				635775DA1ED3ECFB00637914 /* RecentBrowsingViewController.m in Sources */,
 				92A384A01CFD786A00C1CDBC /* OfflineViewController.m in Sources */,
+				54B08C8D2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m in Sources */,
 				92F68D061BE9BCD80085D748 /* SHViewPagerController.m in Sources */,
 				6319A39F1DABB949001CB8BD /* AFNetworkReachabilityManager.m in Sources */,
 				92F6CD021B7B5382002E547C /* O_drag.m in Sources */,
 				9251122C1BE08B3F00B5F161 /* zip.c in Sources */,
 				63A574181DE7FA7D00C9EFAF /* GHContextMenuView.m in Sources */,
+				54D2694C21194EAF00AE3273 /* AlbumInfoViewController.m in Sources */,
 				92CBCC761BD756D500F1F27A /* MemberPointTableViewCell.m in Sources */,
 				63090C8F1EAE828600788DA6 /* HomeDataCollectionViewCell.m in Sources */,
 				54885DBF20DB419800644A82 /* LikeListTableViewCell.m in Sources */,
@@ -5882,6 +5888,7 @@
 				633BC3901EE0F96F006FB6F8 /* ParallaxViewController.m in Sources */,
 				54933AA5207DFA7B001582C3 /* TagCollectionViewCell.m in Sources */,
 				92D526041BCF9E58002C157B /* SelectBarViewController.m in Sources */,
+				54B08C812105BCCB00ADC09A /* ImageCollectionViewCell.m in Sources */,
 				639E21731D449365008EB6FF /* ReorderViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

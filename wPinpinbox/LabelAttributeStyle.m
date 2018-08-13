@@ -11,7 +11,8 @@
 
 @implementation LabelAttributeStyle
 
-+ (void)changeGapString:(UILabel *)label content:(NSString *)content {
++ (void)changeGapString:(UILabel *)label
+                content:(NSString *)content {
     NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
     //[attDic setValue:[UIFont systemFontOfSize:16] forKey:NSFontAttributeName];      // 字体大小
     //[attDic setValue:[UIColor redColor] forKey:NSForegroundColorAttributeName];     // 字体颜色
@@ -25,6 +26,24 @@
     
     //.attributedText = attStr;
     label.attributedText = attStr;
+}
+
++ (void)changeGapStringForTextView:(UITextView *)textView
+                           content:(NSString *)content
+                             color:(UIColor *)color
+                          fontSize:(CGFloat)fontSize {
+//    UIFont *font = [UIFont boldSystemFontOfSize: fontSize];
+    UIFont *font = [UIFont systemFontOfSize: fontSize];
+    NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
+    // Text Gap
+    [attDic setValue: @1 forKey: NSKernAttributeName];
+    // Text Color
+    [attDic setValue: color forKey: NSForegroundColorAttributeName];
+    // Text Font Size
+    [attDic setValue: font forKey: NSFontAttributeName];
+    
+    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:content attributes:attDic];
+    textView.attributedText = attStr;
 }
 
 + (NSInteger)checkTagString:(NSString *)searchedString {

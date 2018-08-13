@@ -2,26 +2,29 @@
 //  AlbumInfoViewController.m
 //  wPinpinbox
 //
-//  Created by David on 6/13/17.
-//  Copyright © 2017 Angus. All rights reserved.
+//  Created by David on 2018/8/7.
+//  Copyright © 2018 Angus. All rights reserved.
 //
 
 #import "AlbumInfoViewController.h"
 #import "UIColor+Extensions.h"
 #import "MyLinearLayout.h"
 #import <MapKit/MapKit.h>
+#import "AppDelegate.h"
+#import "GlobalVars.h"
 
-@interface AlbumInfoViewController ()
-{
+@interface AlbumInfoViewController () {
     float lon;
     float lat;
 }
+//@property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
+@property (weak, nonatomic) IBOutlet UIButton *dismissBtn;
 
 @property (weak, nonatomic) IBOutlet MyLinearLayout *bgLayout;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
-@property (weak, nonatomic) IBOutlet MyLinearLayout *contetVertLayout;
+@property (weak, nonatomic) IBOutlet MyLinearLayout *contentVertLayout;
 @property (weak, nonatomic) IBOutlet UILabel *topicLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 
@@ -45,17 +48,41 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewWillLayoutSubviews
-{
+- (void)viewWillLayoutSubviews {
     NSLog(@"----------------------");
     NSLog(@"AlbumInfoViewController");
     NSLog(@"viewWillLayoutSubviews");
     
     [self checkDeviceOrientation];
+    
+    /*
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                break;
+            case 2436:
+                printf("iPhone X");
+                
+                break;
+            default:
+                printf("unknown");
+                break;
+        }
+    }
+     */
 }
 
-- (void)checkDeviceOrientation
-{
+- (void)checkDeviceOrientation {
     NSLog(@"----------------------");
     NSLog(@"checkDeviceOrientation");
     
@@ -70,16 +97,15 @@
 }
 
 #pragma mark -
-- (void)initialValueSetup
-{
+- (void)initialValueSetup {
     self.navBarView.backgroundColor = [UIColor barColor];
     
     //self.bgLayout.backgroundColor = [UIColor yellowColor];
     self.bgLayout.myLeftMargin = self.bgLayout.myRightMargin = 0;
     self.bgLayout.myTopMargin = self.bgLayout.myBottomMargin = 0;
     
-    self.contetVertLayout.myLeftMargin = self.contetVertLayout.myRightMargin = 0;
-    self.contetVertLayout.padding = UIEdgeInsetsMake(0, 16, 5, 16);
+    self.contentVertLayout.myLeftMargin = self.contentVertLayout.myRightMargin = 0;
+    self.contentVertLayout.padding = UIEdgeInsetsMake(0, 16, 5, 16);
     //self.contetVertLayout.backgroundColor = [UIColor greenColor];
     
     self.topicLabel.text = self.data[@"album"][@"name"];
@@ -90,8 +116,8 @@
     self.topicLabel.numberOfLines = 0;
     [self.topicLabel sizeToFit];
     self.topicLabel.myTopMargin = 16;
-//    self.topicLabel.myLeftMargin = 16;
-//    self.topicLabel.myRightMargin = 16;
+    //    self.topicLabel.myLeftMargin = 16;
+    //    self.topicLabel.myRightMargin = 16;
     self.topicLabel.wrapContentHeight = YES;
     
     self.descriptionLabel.text = self.data[@"album"][@"description"];
@@ -101,8 +127,8 @@
     self.descriptionLabel.font = [UIFont systemFontOfSize: 18];
     self.descriptionLabel.numberOfLines = 0;
     self.descriptionLabel.myTopMargin = 16;
-//    self.descriptionLabel.myLeftMargin = 16;
-//    self.descriptionLabel.myRightMargin = 16;
+    //    self.descriptionLabel.myLeftMargin = 16;
+    //    self.descriptionLabel.myRightMargin = 16;
     self.descriptionLabel.wrapContentHeight = YES;
     
     //self.creatorInfoHorzLayout.backgroundColor = [UIColor blueColor];
@@ -127,7 +153,7 @@
     [self.nameLabel sizeToFit];
     self.nameLabel.numberOfLines = 0;
     self.nameLabel.myLeftMargin = 5;
-//    self.nameLabel.myRightMargin = 16;
+    //    self.nameLabel.myRightMargin = 16;
     self.nameLabel.weight = 1.0;
     self.nameLabel.wrapContentHeight = YES;
     
@@ -136,7 +162,7 @@
     self.scrollView.myTopMargin = self.scrollView.myBottomMargin = 0;
     self.scrollView.myLeftMargin = self.scrollView.myRightMargin = 0;
     
-    self.scrollView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
+    self.scrollView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
     
     NSLog(@"self.localData: %@", self.localData);
     
@@ -177,29 +203,31 @@
             }
         }
     }
-    
     //self.mapView.myTopMargin = 8;
     //self.mapView.myLeftMargin = self.mapView.myRightMargin = 0;
-    
 }
 
 - (IBAction)dimissVC:(id)sender {
-    if ([self.delegate respondsToSelector: @selector(albumInfoViewControllerDisappear:)]) {
-        [self.delegate albumInfoViewControllerDisappear: self];
-    }
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.5;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionReveal;
+    transition.subtype = kCATransitionFromBottom;
+    [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
     
-    [self dismissViewControllerAnimated: YES completion: nil];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav popViewControllerAnimated: NO];
 }
 
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

@@ -600,6 +600,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.avPlayer pause];
     NSLog(@"self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem]");
     self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem];
+    // This loading audio faster feature is available iOS 10.0 not lower version
+    self.avPlayer.automaticallyWaitsToMinimizeStalling = NO;
 }
 
 #pragma mark - Audio Interrupted

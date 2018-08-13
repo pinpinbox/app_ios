@@ -855,6 +855,7 @@ NSString static *const kYTPlayerSyndicationRegexPattern = @"^https://tpc.googles
     webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     webView.scrollView.scrollEnabled = NO;
     webView.scrollView.bounces = NO;
+    webView.tag = 1000;
     
     if ([self.delegate respondsToSelector:@selector(playerViewPreferredWebViewBackgroundColor:)]) {
         webView.backgroundColor = [self.delegate playerViewPreferredWebViewBackgroundColor:self];
@@ -880,6 +881,24 @@ NSString static *const kYTPlayerSyndicationRegexPattern = @"^https://tpc.googles
         frameworkBundle = [NSBundle bundleWithPath:frameworkBundlePath];
     });
     return frameworkBundle;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
+    NSLog(@"");
+    NSLog(@"touchesBegan");
+    NSLog(@"");
+    
+    UITouch *touch = [touches anyObject];
+    
+    NSLog(@"touch.view: %@", touch.view);
+    NSLog(@"touch.view.tag: %ld", touch.view.tag);
+    
+    if (touch.view.tag == 1000) {
+        if ([self.delegate respondsToSelector: @selector(playerViewDidTouch:)]) {
+            [self.delegate playerViewDidTouch: self];
+        }
+    }
 }
 
 @end

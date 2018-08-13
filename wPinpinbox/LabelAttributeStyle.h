@@ -10,7 +10,14 @@
 #import <UIKit/UIKit.h>
 
 @interface LabelAttributeStyle : NSObject
-+ (void)changeGapString:(UILabel *)label content:(NSString *)content;
++ (void)changeGapString:(UILabel *)label
+                content:(NSString *)content;
+
++ (void)changeGapStringForTextView:(UITextView *)textView
+                           content:(NSString *)content
+                             color:(UIColor *)color
+                          fontSize:(CGFloat)fontSize;
+
 + (NSInteger)checkTagString: (NSString *)searchedString;
 + (NSMutableAttributedString *)convertToTagString:(NSString *)searchedString;
 //+ (NSMutableAttributedString *)changeTextColor:(NSRange)tagRange stringForReplacement:(NSString *)stringForReplacement;

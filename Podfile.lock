@@ -6,18 +6,28 @@ PODS:
   - SDWebImage (4.2.2):
     - SDWebImage/Core (= 4.2.2)
   - SDWebImage/Core (4.2.2)
+  - TTTAttributedLabel (2.0.0)
 
 DEPENDENCIES:
   - Flurry-iOS-SDK/FlurryAds
   - Flurry-iOS-SDK/FlurrySDK
   - RMPZoomTransitionAnimator
   - SDWebImage (~> 4.0)
+  - TTTAttributedLabel
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Flurry-iOS-SDK
+    - RMPZoomTransitionAnimator
+    - SDWebImage
+    - TTTAttributedLabel
 
 SPEC CHECKSUMS:
   Flurry-iOS-SDK: 912b3eb78bee559883feb3b13263437b185e8fe9
   RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
   SDWebImage: 89a9d32cd520bbb46eb14e541d5109b3564af198
+  TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: 8a5614e0d2bdf3ecb991c149efea4d90abc1282e
+PODFILE CHECKSUM: fb3965285758bd3dc5de3ae3a14a12134695c086
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3

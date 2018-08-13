@@ -31,6 +31,7 @@
 #import "HomeTabViewController.h"
 #import "CategoryViewController.h"
 
+#import "ContentCheckingViewController.h"
 #import <SafariServices/SafariServices.h>
 
 #import "UIColor+Extensions.h"
@@ -136,7 +137,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                                      withAppVersion: version];
     
     //[Flurry startSession: w3FlurryAPIKey withSessionBuilder:builder];
-    [Flurry startSession: wwwFlurryAPIKey withSessionBuilder: builder];    
+    [Flurry startSession: wwwFlurryAPIKey withSessionBuilder: builder];
     
 //    VersionUpdate *vu = [[VersionUpdate alloc] initWithFrame: self.window.bounds];
 //    [vu checkVersion];
@@ -1147,6 +1148,15 @@ continueUserActivity:(NSUserActivity *)userActivity
                 return UIInterfaceOrientationMaskPortrait;
             }
         }
+        if ([controller isKindOfClass: [ContentCheckingViewController class]]) {
+            ContentCheckingViewController *contentCheckingVC = (ContentCheckingViewController *)controller;
+            
+            if (contentCheckingVC.isPresented) {
+                return UIInterfaceOrientationMaskAll;
+            } else {
+                return UIInterfaceOrientationMaskPortrait;
+            }
+        }
     }
     
     for (MyTabBarController *myTabBarC in self.myNav.viewControllers) {
@@ -1168,6 +1178,16 @@ continueUserActivity:(NSUserActivity *)userActivity
                                         } else {
                                             //return UIInterfaceOrientationMaskAll;
                                         }                                        
+                                    } else {
+                                        return UIInterfaceOrientationMaskPortrait;
+                                    }
+                                }
+                                if ([vc isKindOfClass: [ContentCheckingViewController class]]) {
+                                    ContentCheckingViewController *contentCheckingVC = (ContentCheckingViewController *)vc;
+                                    NSLog(@"contentCheckingVC.isPresented: %d", contentCheckingVC.isPresented);
+                                    
+                                    if (contentCheckingVC.isPresented) {
+                                        return UIInterfaceOrientationMaskAll;
                                     } else {
                                         return UIInterfaceOrientationMaskPortrait;
                                     }

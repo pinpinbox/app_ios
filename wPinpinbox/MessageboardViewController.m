@@ -534,6 +534,8 @@
     [self setupActionSheetView];
     [self createMessageInputView];
     
+    [self.view addSubview: self.actionSheetView];
+    
     // Set up an animation for the transition between the views
     CATransition *animation = [CATransition animation];
     [animation setDuration: 0.2];
@@ -1016,15 +1018,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)setupActionSheetView {
     NSLog(@"");
     NSLog(@"setupActionSheetView");
-    self.actionSheetView.myLeftMargin = self.actionSheetView.myRightMargin = 0;
-    self.actionSheetView.myBottomMargin = 0;
-    
     CGRect rect = self.actionSheetView.frame;
     rect.size.height = self.view.frame.size.height - 110;
     rect.origin.y = 127;
 //    rect.size.height = self.view.frame.size.height - 110;
 //    rect.origin.y = 127;
     self.actionSheetView.frame = rect;
+    
+    self.actionSheetView.myLeftMargin = self.actionSheetView.myRightMargin = 0;
+    self.actionSheetView.myBottomMargin = 0;
+    
+//    self.actionSheetView.backgroundColor = [UIColor redColor];
     
     // Topic Label Setting
     self.topicLabel.myLeftMargin = 16;
@@ -1060,6 +1064,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     self.contentLayout.myTopMargin = 0.1;
     self.contentLayout.myBottomMargin = 0;
     self.contentLayout.wrapContentHeight = YES;
+//    self.contentLayout.backgroundColor = [UIColor greenColor];
 }
 
 - (void)createMessageInputView {
