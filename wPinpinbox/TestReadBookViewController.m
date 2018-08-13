@@ -5955,8 +5955,7 @@ replacementString:(NSString *)string
         
         if ([view.accessibilityIdentifier isEqualToString: @"giftBgV"]) {
             [view removeFromSuperview];
-        }
-        
+        }        
         if ([view.accessibilityIdentifier isEqualToString: @"SlotBtn"]) {
             if ([view isKindOfClass: [UIButton class]]) {
                 UIButton *btn = (UIButton *)view;

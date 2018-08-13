@@ -96,6 +96,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSString *useFor;
     BOOL videoIsPlaying;
     NSURL *fbVideoUrl;
+    
+    CGFloat giftViewWidth;
+    CGFloat giftViewHeight;
+    ImageCollectionViewCell *iCVC;
 }
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarViewTopConstraint;
@@ -154,6 +158,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 @property (nonatomic) NSMutableDictionary *slotDicData;
 @property (strong, nonatomic) NSMutableArray *slotArray;
+@property (nonatomic) UIImageView *giftImageView;
 @end
 
 @implementation ContentCheckingViewController
@@ -274,24 +279,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-    ImageCollectionViewCell *iCVC = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     
     if (interfaceOrientation == 1) {
         [UIView animateWithDuration: 0.3 animations:^{
-            iCVC.bgV3CenterYConstraint.constant = 0;
-            iCVC.bgV3CenterYConstraint.constant = -30;
+            cell.bgV3CenterYConstraint.constant = 0;
+            cell.bgV3CenterYConstraint.constant = -30;
             
-            iCVC.bgV4CenterYConstraint.constant = 0;
-            iCVC.bgV4CenterYConstraint.constant = -30;
+            cell.bgV4CenterYConstraint.constant = 0;
+            cell.bgV4CenterYConstraint.constant = -30;
 //            self.bgV4CenterYConstraint.constant = -30;
         }];
     } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
         [UIView animateWithDuration: 0.3 animations:^{
-            iCVC.bgV3CenterYConstraint.constant = 0;
-            iCVC.bgV3CenterYConstraint.constant = -100;
+            cell.bgV3CenterYConstraint.constant = 0;
+            cell.bgV3CenterYConstraint.constant = -100;
             
-            iCVC.bgV4CenterYConstraint.constant = 0;
-            iCVC.bgV4CenterYConstraint.constant = -100;
+            cell.bgV4CenterYConstraint.constant = 0;
+            cell.bgV4CenterYConstraint.constant = -100;
 //            self.bgV4CenterYConstraint.constant = -30;
         }];
     }
@@ -303,24 +308,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-    ImageCollectionViewCell *iCVC = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     
     if (interfaceOrientation == 1) {
         [UIView animateWithDuration: 0.3 animations:^{
-            iCVC.bgV3CenterYConstraint.constant = -30;
-            iCVC.bgV3CenterYConstraint.constant = 0;
+            cell.bgV3CenterYConstraint.constant = -30;
+            cell.bgV3CenterYConstraint.constant = 0;
             
-            iCVC.bgV4CenterYConstraint.constant = -30;
-            iCVC.bgV4CenterYConstraint.constant = 0;
+            cell.bgV4CenterYConstraint.constant = -30;
+            cell.bgV4CenterYConstraint.constant = 0;
 //            self.bgV4CenterYConstraint.constant = 0;
         }];
     } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
         [UIView animateWithDuration: 0.3 animations:^{
-            iCVC.bgV3CenterYConstraint.constant = -60;
-            iCVC.bgV3CenterYConstraint.constant = 0;
+            cell.bgV3CenterYConstraint.constant = -60;
+            cell.bgV3CenterYConstraint.constant = 0;
             
-            iCVC.bgV4CenterYConstraint.constant = -60;
-            iCVC.bgV4CenterYConstraint.constant = 0;
+            cell.bgV4CenterYConstraint.constant = -60;
+            cell.bgV4CenterYConstraint.constant = 0;
 //            self.bgV4CenterYConstraint.constant = 0;
         }];
     }
@@ -343,6 +348,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     isLikeBtnPressed = NO;
     oldCurrentPage = 0;
     videoIsPlaying = NO;
+    
+    giftViewWidth = self.view.frame.size.width - 32 * 2;
+    giftViewHeight = self.view.frame.size.width;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     self.audioSwitch = [[defaults objectForKey: @"isAudioPlayedAutomatically"] boolValue];
@@ -560,17 +568,26 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+        NSLog(@"");
+        NSLog(@"");
         NSLog(@"orientation: %ld", (long)orientation);
         
         if (orientation == 1) {
+            NSLog(@"Portrait Mode");
+            NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
+            
             [self settingSizeBasedOnDevice];
             self.horzLineView.hidden = NO;
             self.thumbnailImageScrollCV.hidden = NO;
             self.descriptionScrollViewBottomConstraint.constant = 0;
+            
 //            self.descriptionScrollViewHeightConstraint.constant = 140;
 //            self.textViewBottomConstraint.constant = 0;
 //            self.textViewBgViewBottomConstraint.constant = 0;
         } else {
+            NSLog(@"Landscape Mode");
+            NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
+            
             self.navBarViewTopConstraint.constant = 0;
             self.horzLineView.hidden = YES;
             self.thumbnailImageScrollCV.hidden = YES;
@@ -647,7 +664,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self getGoogleAPI];
                         [self checkLocationBtn: oldCurrentPage];
                         [self checkAudio: oldCurrentPage];
-                        
                         [self.imageScrollCV reloadData];
                         [self.thumbnailImageScrollCV reloadData];
                         
@@ -671,8 +687,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                 self.descriptionScrollView.alpha = 0;
                                 self.descriptionScrollView.alpha = 1;
                                 
-                                // videoPlayer need to be successfully initialized then can play
+                                // Cell need to be successfully initialized then can play
                                 [self checkVideo: oldCurrentPage];
+                                [self checkSlotAndExchangeInfo: oldCurrentPage];
                             }];
                             
                             [self textViewContentSetup: [self getCurrentPage]];
@@ -2287,35 +2304,622 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     return page;
 }
 
-//#pragma mark - Gift Image Button Action
-//- (void)showSlot:(UIButton *)slotBtn {
-//    slotBtn.hidden = YES;
-//    
-//    NSMutableArray *array = [NSMutableArray new];
-//    
-//    for (int i = 1; i < 13; i++) {
-//        UIImage *image = [UIImage imageNamed: [NSString stringWithFormat: @"GiftImages%i.png", i]];
-//        [array addObject: image];
-//    }
-//    
-//    UIImageView *animateImageView;
-//    animateImageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 180, 200)];
+#pragma mark - Check Slot Info
+- (void)checkSlotAndExchangeInfo:(NSInteger)page {
+    NSLog(@"checkSlotAndExchangeInfo");
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    useFor = self.photoArray[indexPath.row][@"usefor"];
+    
+    if ([useFor isEqualToString: @"slot"]) {
+        if (self.isOwned) {
+            cell.giftImageBtn.hidden = NO;
+            cell.checkCollectionLayout.hidden = YES;
+            
+            [self checkSlotDataInDatabaseOrNot];
+            BOOL slotted = NO;
+            
+            for (int i = 0; i < self.slotArray.count; i++) {
+                NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
+                NSLog(@"photoId: %ld", (long)[[slotData valueForKey: @"photoId"] integerValue]);
+                
+                if ([[slotData valueForKey: @"photoId"] integerValue] == [self.photoArray[page][@"photo_id"] integerValue]) {
+                    slotted = YES;
+                }
+            }
+            if (slotted) {
+                [self slotPhotoUseFor: cell.giftViewBgV indexPathRow: page];
+            }
+        } else {
+            cell.giftImageBtn.hidden = YES;
+            cell.checkCollectionLayout.hidden = NO;
+            [self createViewForCollectionCheck: page];
+        }
+    } else {
+        cell.giftImageBtn.hidden = YES;
+        cell.checkCollectionLayout.hidden = YES;
+    }
+    
+    if ([useFor isEqualToString: @"exchange"]) {
+        if (self.isOwned) {
+            cell.giftViewBgV.hidden = NO;
+            cell.checkCollectionLayout.hidden = YES;
+            [self checkSlotDataInDatabaseOrNot];
+            [self getPhotoUseFor: cell.giftViewBgV indexPathRow: page];
+        } else {
+            cell.giftViewBgV.hidden = YES;
+            cell.checkCollectionLayout.hidden = NO;
+            [self createViewForCollectionCheck: page];
+        }
+    } else {
+        cell.alphaBgV.hidden = YES;
+        cell.giftViewBgV.hidden = YES;
+        cell.checkCollectionLayout.hidden = YES;
+    }
+}
+
+- (void)createViewForCollectionCheck:(NSInteger)page {
+    NSLog(@"createViewForCollectionCheck");
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    cell.checkCollectionLayout.hidden = NO;
+    cell.giftImageBtn.hidden = YES;
+    
+    for (UIView *view in cell.checkCollectionLayout.subviews) {
+        [view removeFromSuperview];
+    }
+    
+    UILabel *topicLabel = [UILabel new];
+    topicLabel.wrapContentHeight = YES;
+    topicLabel.myTopMargin = 0;
+    topicLabel.myLeftMargin = topicLabel.myRightMargin = 0;
+    topicLabel.myBottomMargin = 8;
+    topicLabel.text = @"本頁功能要先收藏或贊助才能使用";
+    [LabelAttributeStyle changeGapString: topicLabel content: topicLabel.text];
+    topicLabel.textColor = [UIColor firstGrey];
+    topicLabel.font = [UIFont systemFontOfSize: 20.0];
+    topicLabel.numberOfLines = 0;
+    [topicLabel sizeToFit];
+    [cell.checkCollectionLayout addSubview: topicLabel];
+    
+    UIButton *collectBtn = [UIButton buttonWithType: UIButtonTypeCustom];
+    [collectBtn addTarget: self action: @selector(collectAlbum) forControlEvents: UIControlEventTouchUpInside];
+    collectBtn.frame = CGRectMake(0.0, 0.0, 112.0, 48.0);
+    collectBtn.myTopMargin = 8;
+    collectBtn.myCenterXOffset = 0;
+    collectBtn.backgroundColor = [UIColor firstMain];
+    collectBtn.layer.cornerRadius = 6;
+    
+    NSString *btnStrForExchange;
+    
+    albumPoint = [self.bookdata[@"album"][@"point"] intValue];
+    NSLog(@"albumPoint: %lu", (unsigned long)albumPoint);
+    
+    if (albumPoint == 0) {
+        btnStrForExchange = @"收藏";
+    } else {
+        btnStrForExchange = @"贊助";
+    }
+    
+    [collectBtn setTitle: btnStrForExchange forState: UIControlStateNormal];
+    [cell.checkCollectionLayout addSubview: collectBtn];
+    
+    NSLog(@"cell.checkCollectionLayout: %@", cell.checkCollectionLayout);
+    NSLog(@"cell.checkCollectionLayout.frame: %@", NSStringFromCGRect(cell.checkCollectionLayout.frame));
+    NSLog(@"cell.checkCollectionLayout.subViews: %@", cell.checkCollectionLayout.subviews);
+}
+
+#pragma mark - To Final Page
+- (void)collectAlbum {
+    NSLog(@"collectAlbum");
+    
+    if (albumPoint == 0) {
+        NSLog(@"pPoint == 0");
+        [self buyAlbum];
+    } else {
+        NSLog(@"pPoint != 0");
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
+        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+    }
+}
+
+#pragma mark - Gift Image Button Action
+- (void)showSlot:(UIButton *)slotBtn
+     giftViewBgV:(MyLinearLayout *)giftViewBgV
+    indexPathRow:(NSInteger)indexPathRow {
+    slotBtn.hidden = YES;
+    
+    NSMutableArray *array = [NSMutableArray new];
+    
+    for (int i = 1; i < 13; i++) {
+        UIImage *image = [UIImage imageNamed: [NSString stringWithFormat: @"GiftImages%i.png", i]];
+        [array addObject: image];
+    }
+    
+    UIImageView *animateImageView;
+    animateImageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 180, 200)];
 //    animateImageView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-//    animateImageView.contentMode = UIViewContentModeScaleAspectFill;
-//    animateImageView.animationImages = array;
-//    animateImageView.animationDuration = 1.5;
-//    animateImageView.animationRepeatCount = 1;
-//    
-//    [slotBtn.superview addSubview: animateImageView];
-//    [animateImageView startAnimating];
-//    
-//    while ([animateImageView isAnimating]) {
-//        [[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow: 0.05]];
-//    }
-//    [animateImageView removeFromSuperview];
-//    
-//    
-//}
+    animateImageView.center = giftViewBgV.center;
+    animateImageView.contentMode = UIViewContentModeScaleAspectFill;
+    animateImageView.animationImages = array;
+    animateImageView.animationDuration = 1.5;
+    animateImageView.animationRepeatCount = 1;
+    
+    [slotBtn.superview addSubview: animateImageView];
+    [animateImageView startAnimating];
+    
+    while ([animateImageView isAnimating]) {
+        [[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow: 0.05]];
+    }
+    [animateImageView removeFromSuperview];
+    
+    [self slotPhotoUseFor: giftViewBgV indexPathRow: indexPathRow];
+    
+//    [self createGiftViewContent: giftViewBgV];
+//    [self createGiftViewContent: giftViewBgV
+//                        dicData: nil
+//                     returnType: @""];
+}
+
+- (void)slotPhotoUseFor:(MyLinearLayout *)bgV
+           indexPathRow:(NSInteger)indexPathRow {
+    NSLog(@"slotPhotoUseFor");
+    
+    NSInteger photoId = [self.photoArray[[self getCurrentPage]][@"photo_id"] integerValue];
+    NSLog(@"photoId: %ld", (long)photoId);
+    NSString *photoIdStr = [self.photoArray[[self getCurrentPage]][@"photo_id"] stringValue];
+    
+    UIDevice *device = [UIDevice currentDevice];
+    NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
+    
+    [wTools ShowMBProgressHUD];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = [boxAPI slotPhotoUseFor: currentDeviceId
+                                             photoId: photoIdStr
+                                               token: [wTools getUserToken]
+                                              userId: [wTools getUserID]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+            
+            if (response != nil) {
+                NSLog(@"response from slotPhotoUseFor");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"slotPhotoUseFor");
+                    
+                    //                    [self createTimeOutView: slotBtn];
+                    
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"slotPhotoUseFor"
+                                        pointStr: @""
+                                             btn: nil
+                                             bgV: nil];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSLog(@"Get response from slotPhotoUseFor");
+                    
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSLog(@"dic: %@", dic);
+                    NSLog(@"dic message: %@", dic[@"message"]);
+                    
+                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        [self saveSlotData: photoId];
+                        [self checkSlotDataInDatabaseOrNot];
+                        
+                        self.slotDicData = dic[@"data"];
+                        [self createGiftView: bgV
+                                     dicData: self.slotDicData
+                                  returnType: @"SYSTEM_OK"];
+                        
+                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+                        NSLog(@"SYSTEM_ERROR");
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+                        NSLog(@"TOKEN_ERROR");
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor thirdPink];
+                        
+                        [self.view makeToast: @"用戶驗證異常請重新登入"
+                                    duration: 2.0
+                                    position: CSToastPositionBottom
+                                       style: style];
+                        
+                        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                                         target: self
+                                                       selector: @selector(logOut)
+                                                       userInfo: nil
+                                                        repeats: NO];
+                        
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_EXPIRED"]) {
+                        [self saveSlotData: photoId];
+                        [self checkSlotDataInDatabaseOrNot];
+                        
+                        [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
+                        [self saveSlotData: photoId];
+                        [self checkSlotDataInDatabaseOrNot];
+                        
+                        [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
+                        [self saveSlotData: photoId];
+                        [self checkSlotDataInDatabaseOrNot];
+                        
+                        self.slotDicData = dic[@"data"];
+                        [self createGiftView: bgV
+                                     dicData: self.slotDicData
+                                  returnType: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"];
+                        
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
+                        [self saveSlotData: photoId];
+                        [self checkSlotDataInDatabaseOrNot];
+                        
+                        self.slotDicData = dic[@"data"];
+                        [self createGiftView: bgV
+                                     dicData: self.slotDicData
+                                  returnType: @"PHOTOUSEFOR_USER_HAS_GAINED"];
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_SLOTTED"]) {
+                        [self saveSlotData: photoId];
+                        [self checkSlotDataInDatabaseOrNot];
+                        
+                        self.slotDicData = dic[@"data"];
+                        [self createGiftView: bgV
+                                     dicData: self.slotDicData
+                                  returnType: @"PHOTOUSEFOR_USER_HAS_SLOTTED"];
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_NOT_YET_STARTED"]) {
+                        for (UIView *view in bgV.subviews) {
+                            NSLog(@"view.accessibilityIdentifier: %@", view.accessibilityIdentifier);
+                            
+                            if ([view.accessibilityIdentifier isEqualToString: @"SlotBtn"]) {
+                                if ([view isKindOfClass: [UIButton class]]) {
+                                    UIButton *btn = (UIButton *)view;
+                                    btn.hidden = NO;
+                                }
+                            }
+                        }
+                        
+                        // The Toast method below will call scrollViewScroll delegate method
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor hintGrey];
+                        
+                        NSLog(@"self.view.subviews: %@", self.view.subviews);
+                        
+                        // Use self.view.superview to present toast will not call scrollViewDidScroll
+                        [self.view.superview makeToast: @"活動尚未開始"
+                                              duration: 2.0
+                                              position: CSToastPositionBottom
+                                                 style: style];
+                    }
+                }
+            }
+        });
+    });
+}
+
+- (void)getPhotoUseFor:(MyLinearLayout *)bgV
+          indexPathRow:(NSInteger)indexPathRow {
+    //    NSLog(@"self.mySV.subviews: %@", self.mySV.subviews);
+    NSLog(@"getPhotoUseFor");
+    NSInteger photoId = [self.photoArray[[self getCurrentPage]][@"photo_id"] integerValue];
+    NSLog(@"photoId: %ld", (long)photoId);
+    NSString *photoIdStr = [self.photoArray[[self getCurrentPage]][@"photo_id"] stringValue];
+    
+    [wTools ShowMBProgressHUD];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = [boxAPI getPhotoUseFor: photoIdStr
+                                              token: [wTools getUserToken]
+                                             userId: [wTools getUserID]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+            
+            if (response != nil) {
+                NSLog(@"response from slotPhotoUseFor");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"slotPhotoUseFor");
+                    
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"getPhotoUseFor"
+                                        pointStr: @""
+                                             btn: nil
+                                             bgV: nil];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSLog(@"Get response from getPhotoUseFor");
+                    
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSLog(@"dic: %@", dic);
+                    NSLog(@"dic message: %@", dic[@"message"]);
+                    
+                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        self.slotDicData = dic[@"data"];
+                        [self createGiftView: bgV
+                                     dicData: self.slotDicData
+                                  returnType: @"SYSTEM_OK"];
+                        
+                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+                        NSLog(@"SYSTEM_ERROR");
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+                        NSLog(@"TOKEN_ERROR");
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor thirdPink];
+                        
+                        [self.view makeToast: @"用戶驗證異常請重新登入"
+                                    duration: 2.0
+                                    position: CSToastPositionBottom
+                                       style: style];
+                        
+                        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                                         target: self
+                                                       selector: @selector(logOut)
+                                                       userInfo: nil
+                                                        repeats: NO];
+                        
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_EXPIRED"]) {
+                        [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
+                        [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
+                        self.slotDicData = dic[@"data"];
+                        [self createGiftView: bgV
+                                     dicData: self.slotDicData
+                                  returnType: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"];
+                        
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
+                        [self checkSlotDataInDatabaseOrNot];
+                        
+                        self.slotDicData = dic[@"data"];
+                        [self createGiftView: bgV
+                                     dicData: self.slotDicData
+                                  returnType: @"PHOTOUSEFOR_USER_HAS_GAINED"];
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_SLOTTED"]) {
+                        self.slotDicData = dic[@"data"];
+                        [self createGiftView: bgV
+                                     dicData: self.slotDicData
+                                  returnType: @"PHOTOUSEFOR_USER_HAS_SLOTTED"];
+                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_NOT_YET_STARTED"]) {
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor hintGrey];
+                        
+                        // Use self.view.superview to present toast will not call scrollViewDidScroll
+                        [self.view.superview makeToast: @"活動尚未開始"
+                                              duration: 2.0
+                                              position: CSToastPositionBottom
+                                                 style: style];
+                    }
+                }
+            }
+        });
+    });
+}
+
+- (void)createGiftView:(MyLinearLayout *)giftViewBgV
+               dicData:(NSDictionary *)dicData
+            returnType:(NSString *)returnType {
+    NSLog(@"createGiftViewContent");
+    for (UIView *view in giftViewBgV.subviews) {
+        [view removeFromSuperview];
+    }
+    // GiftView
+    MyFrameLayout *giftView = [MyFrameLayout new];
+    giftView.backgroundColor = [UIColor whiteColor];
+    giftView.mySize = CGSizeMake(giftViewBgV.frame.size.width, giftViewBgV.frame.size.height - 54);
+    NSLog(@"giftView: %@", NSStringFromCGRect(giftView.frame));
+    giftView.myTopMargin = 0;
+    giftView.myLeftMargin = giftView.myRightMargin = 0;
+    giftView.myBottomMargin = 8;
+    giftView.layer.cornerRadius = kCornerRadius;
+    [giftViewBgV addSubview: giftView];
+    
+    NSLog(@"giftViewBgV.subviews: %@", giftViewBgV.subviews);
+    
+    // ScrollView
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame: giftView.bounds];
+    scrollView.myTopMargin = scrollView.myBottomMargin = 0;
+    scrollView.myLeftMargin = scrollView.myRightMargin = 0;
+    scrollView.contentInset = UIEdgeInsetsMake(0.0, 0.0, 51.0, 0.0);
+    scrollView.showsVerticalScrollIndicator = NO;
+    scrollView.delegate = self;
+    [giftView addSubview: scrollView];
+    
+    // ContentLayout
+    MyLinearLayout *contentLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
+    contentLayout.wrapContentHeight = YES;
+    contentLayout.myTopMargin = 0;
+    contentLayout.myLeftMargin = contentLayout.myRightMargin = 0;
+    [scrollView addSubview: contentLayout];
+    
+    // Name Label
+    if (![dicData[@"photousefor"][@"name"] isEqual: [NSNull null]]) {
+        UILabel *nameLabel = [UILabel new];
+        nameLabel.wrapContentHeight = YES;
+        nameLabel.myTopMargin = 16;
+        nameLabel.myLeftMargin = nameLabel.myRightMargin = 16;
+        nameLabel.myBottomMargin = 8;
+        nameLabel.numberOfLines = 0;
+        nameLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+        nameLabel.text = dicData[@"photousefor"][@"name"];
+        [LabelAttributeStyle changeGapString: nameLabel content: nameLabel.text];
+        nameLabel.textColor = [UIColor firstGrey];
+        [nameLabel sizeToFit];
+        [contentLayout addSubview: nameLabel];
+    }
+    
+    // ImageView
+    if (![dicData[@"photousefor"][@"image"] isEqual: [NSNull null]]) {
+        __block UIImageView *imageView = [[UIImageView alloc] init];
+        [imageView sd_setImageWithURL: [NSURL URLWithString: @"http://cdn2.autoexpress.co.uk/sites/autoexpressuk/files/2017/11/490259.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            imageView = [self calculateImageViewSize: giftViewBgV imgV: imageView];
+            imageView.myTopMargin = imageView.myBottomMargin = 8;
+            imageView.myLeftMargin = imageView.myRightMargin = 16;
+            imageView.layer.cornerRadius = kCornerRadius;
+            imageView.layer.masksToBounds = YES;
+            
+            self.giftImageView = imageView;
+            
+            [contentLayout addSubview: imageView];
+            
+            UILabel *descriptionLabel = [UILabel new];
+            descriptionLabel.wrapContentHeight = YES;
+            descriptionLabel.myTopMargin = descriptionLabel.myBottomMargin = 8;
+            descriptionLabel.myLeftMargin = descriptionLabel.myRightMargin = 16;
+            descriptionLabel.numberOfLines = 0;
+            descriptionLabel.font = [UIFont systemFontOfSize: 14.0];
+            descriptionLabel.text = dicData[@"photousefor"][@"description"];
+            [LabelAttributeStyle changeGapString: descriptionLabel content: descriptionLabel.text];
+            descriptionLabel.textColor = [UIColor firstGrey];
+            [descriptionLabel sizeToFit];
+            [contentLayout addSubview: descriptionLabel];
+        }];
+    } else {
+        // Description Label
+        if (![dicData[@"photousefor"][@"description"] isEqual: [NSNull null]]) {
+            UILabel *descriptionLabel = [UILabel new];
+            descriptionLabel.wrapContentHeight = YES;
+            descriptionLabel.myTopMargin = descriptionLabel.myBottomMargin = 8;
+            descriptionLabel.myLeftMargin = descriptionLabel.myRightMargin = 16;
+            descriptionLabel.numberOfLines = 0;
+            descriptionLabel.font = [UIFont systemFontOfSize: 14.0];
+            descriptionLabel.text = dicData[@"photousefor"][@"description"];
+            [LabelAttributeStyle changeGapString: descriptionLabel content: descriptionLabel.text];
+            descriptionLabel.textColor = [UIColor firstGrey];
+            [descriptionLabel sizeToFit];
+            [contentLayout addSubview: descriptionLabel];
+        }
+    }
+    
+    // Add to Exchange List
+    UIButton *addToExchangeListBtn = [UIButton buttonWithType: UIButtonTypeCustom];
+//    [addToExchangeListBtn addTarget: self
+//                             action: @selector(addToExchangeListBtnTouchDown:)
+//                   forControlEvents: UIControlEventTouchDown];
+//    [addToExchangeListBtn addTarget: self
+//                             action: @selector(addToExchangeListBtnTouchUpInside:)
+//                   forControlEvents: UIControlEventTouchUpInside];
+//    [addToExchangeListBtn addTarget: self
+//                             action: @selector(addToExchangeListBtnTouchDragExit:)
+//                   forControlEvents: UIControlEventTouchDragExit];
+    addToExchangeListBtn.mySize = CGSizeMake(32.0, 46.0);
+    addToExchangeListBtn.myLeftMargin = addToExchangeListBtn.myRightMargin = 0;
+    addToExchangeListBtn.myBottomMargin = 0;
+    
+    if ([dicData[@"bookmark"][@"is_existing"] boolValue]) {
+    }
+    if ([dicData[@"bookmark"][@"is_existing"] boolValue]) {
+        [addToExchangeListBtn setTitle: @"已加入兌換清單" forState: UIControlStateNormal];
+        [addToExchangeListBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
+        addToExchangeListBtn.userInteractionEnabled = NO;
+        addToExchangeListBtn.adjustsImageWhenHighlighted = NO;
+    } else {
+        [addToExchangeListBtn setTitle: @"加入兌換清單" forState: UIControlStateNormal];
+        [addToExchangeListBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
+        addToExchangeListBtn.userInteractionEnabled = YES;
+        addToExchangeListBtn.userInteractionEnabled = YES;
+        addToExchangeListBtn.adjustsImageWhenHighlighted = YES;
+    }
+    addToExchangeListBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0];
+    addToExchangeListBtn.backgroundColor = [UIColor whiteColor];
+    addToExchangeListBtn.layer.cornerRadius = kCornerRadius;
+    [giftView addSubview: addToExchangeListBtn];
+    
+    if ([returnType isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"] || [dicData[@"photousefor"][@"useless_award"] boolValue]) {
+        addToExchangeListBtn.hidden = YES;
+    }
+    
+    // exchangeBtn
+    UIButton *exchangeBtn = [UIButton buttonWithType: UIButtonTypeCustom];
+    [exchangeBtn addTarget: self
+                    action: @selector(exchangeBtnTouchDown:)
+          forControlEvents: UIControlEventTouchDown];
+    [exchangeBtn addTarget: self
+                    action: @selector(exchangeBtnTouchUpInside:)
+          forControlEvents: UIControlEventTouchUpInside];
+    [exchangeBtn addTarget: self
+                    action: @selector(exchangeBtnTouchUpDragExit:)
+          forControlEvents: UIControlEventTouchDragExit];
+    exchangeBtn.frame = CGRectMake(0.0, 0.0, 32.0, 46.0);
+    exchangeBtn.myTopMargin = 8;
+    exchangeBtn.myLeftMargin = exchangeBtn.myRightMargin = 0;
+    exchangeBtn.myBottomMargin = 0;
+    exchangeBtn.layer.cornerRadius = kCornerRadius;
+    exchangeBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
+    
+    if ([returnType isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
+        [exchangeBtn setTitle: @"已完成" forState: UIControlStateNormal];
+        [exchangeBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
+        exchangeBtn.backgroundColor = [UIColor whiteColor];
+        exchangeBtn.userInteractionEnabled = NO;
+        exchangeBtn.adjustsImageWhenHighlighted = NO;
+    } else {
+        [exchangeBtn setTitle: @"立即兌換" forState: UIControlStateNormal];
+        [exchangeBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+        exchangeBtn.backgroundColor = [UIColor firstMain];
+    }
+    
+    if ([dicData[@"photousefor"][@"useless_award"] boolValue]) {
+        exchangeBtn.hidden = YES;
+    }
+    [giftViewBgV addSubview: exchangeBtn];
+    
+    giftViewBgV.hidden = NO;
+}
+
+- (UIImageView *)calculateImageViewSize:(UIView *)bV
+                                   imgV:(UIImageView *)imgV {
+    NSLog(@"calculateImageViewSize");
+    CGFloat bgVWidth = bV.bounds.size.width;
+    NSLog(@"bgVWidth: %f", bgVWidth);
+    
+    CGFloat imgVWidth = bgVWidth - 16 * 2;
+    NSLog(@"imgVWidth: %f", imgVWidth);
+    
+    CGFloat imgVHeight = (imgVWidth * imgV.image.size.height) / imgV.image.size.width;
+    NSLog(@"imgVHeight: %f", imgVHeight);
+    
+    imgV.myWidth = imgVWidth;
+    imgV.myHeight = imgVHeight;
+    
+    return imgV;
+}
+
+- (void)createViewForStatus:(NSString *)msg
+               indexPathRow:(NSInteger)indexPathRow {
+    NSLog(@"createViewForStatus msg: %@", msg);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: indexPathRow inSection: 0];
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    cell.statusView.hidden = NO;
+    cell.statusLabel.text = msg;
+    [LabelAttributeStyle changeGapString: cell.statusLabel content: msg];
+}
+
+#pragma mark - ExchangeBtn Action Methods
+- (void)exchangeBtnTouchDown:(UIButton *)btn {
+    NSLog(@"exchangeBtnTouchDown");
+    btn.backgroundColor = [UIColor darkMain];
+}
 
 #pragma mark - UICollectionViewDataSource Methods
 - (NSInteger)collectionView:(UICollectionView *)collectionView
@@ -2333,7 +2937,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if (collectionView.tag == 100) {
         NSLog(@"collectionView.tag == 100");
-        ImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"ImageCell" forIndexPath: indexPath];        
+        ImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"ImageCell" forIndexPath: indexPath];
+        iCVC = cell;
         
         if (data[@"image_url"] == nil) {
             if (data[@"image"] == nil) {
@@ -2351,18 +2956,42 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSArray *photoArray = self.bookdata[@"photo"];
         NSUInteger totalPhoto = photoArray.count;
         
-//        if ([useFor isEqualToString: @"slot"]) {
-//            cell.alphaBgV.hidden = NO;
-//            cell.giftImageBtn.hidden = NO;
-//        } else {
-//            cell.alphaBgV.hidden = YES;
-//            cell.giftImageBtn.hidden = YES;
-//        }
-//        if ([useFor isEqualToString: @"exchange"]) {
-//            cell.alphaBgV.hidden = NO;
-//        } else {
-//            cell.alphaBgV.hidden = YES;
-//        }
+        // Setup GiftView Width & Height
+        cell.giftViewWidthConstraint.constant = giftViewWidth;
+        cell.giftViewHeightConstraint.constant = giftViewHeight - 10;
+        
+        cell.statusView.hidden = YES;
+        
+        if ([useFor isEqualToString: @"slot"]) {
+            cell.alphaBgV.hidden = NO;
+            
+            if (self.isOwned) {
+                cell.giftImageBtn.hidden = NO;
+                cell.checkCollectionLayout.hidden = YES;
+            } else {
+                cell.giftImageBtn.hidden = YES;
+                cell.checkCollectionLayout.hidden = NO;
+            }
+        } else {
+            cell.alphaBgV.hidden = YES;
+            cell.giftImageBtn.hidden = YES;
+            cell.checkCollectionLayout.hidden = YES;
+        }
+        if ([useFor isEqualToString: @"exchange"]) {
+            cell.alphaBgV.hidden = NO;
+            
+            if (self.isOwned) {
+                cell.giftViewBgV.hidden = NO;
+                cell.checkCollectionLayout.hidden = YES;
+            } else {
+                cell.giftViewBgV.hidden = YES;
+                cell.checkCollectionLayout.hidden = NO;
+            }
+        } else {
+            cell.alphaBgV.hidden = YES;
+            cell.giftViewBgV.hidden = YES;
+            cell.checkCollectionLayout.hidden = YES;
+        }
         
         if ([useFor isEqualToString: @"FinalPage"]) {
             NSLog(@"useFor is equal to Final Page");
@@ -2444,9 +3073,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                              userPoint: userPoint];
             }
         };
-//        cell.giftImageBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
-//            [self showSlot: btn];
-//        };
+        
+        __weak MyLinearLayout *weakGiftViewBgV = cell.giftViewBgV;
+        cell.giftImageBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
+            [self showSlot: btn giftViewBgV: weakGiftViewBgV indexPathRow: indexPath.row];
+        };
         return cell;
     } else {
         NSLog(@"collectionView.tag == 200");
@@ -2525,7 +3156,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             NSLog(@"Do some work");
             [self checkVideo: indexPath.row];
         });
-        
+        [self checkSlotAndExchangeInfo: indexPath.row];
         [self updateOldCurrentPage: indexPath.row];
         [self textViewContentSetup: indexPath.row];
         [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
@@ -2581,6 +3212,18 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"");
     NSLog(@"scrollViewWillBeginDragging");
     
+    iCVC.imageView.alpha = 1;
+    [iCVC.ytPlayerView stopVideo];
+    iCVC.ytPlayerView.hidden = YES;
+    iCVC.videoView.hidden = YES;
+    self.videoPlayerViewController.view.hidden = YES;
+    iCVC.alphaBgV.hidden = YES;
+    iCVC.videoBtn.hidden = YES;
+    iCVC.giftImageBtn.hidden = YES;
+    iCVC.giftViewBgV.hidden = YES;
+    iCVC.statusView.hidden = YES;
+    iCVC.checkCollectionLayout.hidden = YES;
+    /*
     if (isDataLoaded) {
         NSLog(@"data is loaded");
         if (!isRotating) {
@@ -2596,6 +3239,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             cell.videoBtn.hidden = YES;
         }
     }
+     */
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -2630,7 +3274,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
     
     [self updateOldCurrentPage: page];
-    
     self.videoPlayerViewController.view.hidden = NO;
     
     if (isDataLoaded) {
@@ -2639,6 +3282,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             NSLog(@"is not rotating");
             if (scrollView == self.imageScrollCV) {
                 NSLog(@"scrollView == self.imageScrollCV");
+                [self checkSlotAndExchangeInfo: [self getCurrentPage]];
                 [self checkLocationBtn: [self getCurrentPage]];
                 [self checkAudio: [self getCurrentPage]];
                 [self checkVideo: [self getCurrentPage]];
@@ -2800,26 +3444,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"backBtnPressed");
     if (self.videoPlayer) {
         [self.videoPlayer pause];
+        self.videoPlay = nil;
     }
-    
-    @try {
-        [self removeObserverForPlayerAndItem];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    @try {
-        [[NSNotificationCenter defaultCenter] removeObserver: self];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
+    [self removeObserverForPlayerAndItem];
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
     
     self.isPresented = NO;
     [self changeOrientationToPortrait];
@@ -3814,9 +4442,9 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     userPoint = [[userPrefs objectForKey: @"pPoint"] integerValue];
     NSLog(@"userPoint: %ld", (long)userPoint);
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-    ImageCollectionViewCell *iCVC = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-    iCVC.currentPointLabelForBgV3.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
-    iCVC.currentPointLabelForBgV4.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    cell.currentPointLabelForBgV3.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
+    cell.currentPointLabelForBgV4.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
 }
 
 #pragma mark -
@@ -3866,7 +4494,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             NSLog( @"Reason: %@", exception.reason );
             return;
         }
-        
         
         self.avPlayer = nil;
     }

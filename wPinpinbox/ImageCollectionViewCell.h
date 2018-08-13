@@ -61,4 +61,13 @@ typedef void(^ButtonTouch)(BOOL selected, NSInteger tag, UIButton *btn);
 @property (weak, nonatomic) IBOutlet UIButton *giftImageBtn;
 @property (copy, nonatomic) ButtonTouch giftImageBlock;
 
+@property (weak, nonatomic) IBOutlet MyLinearLayout *giftViewBgV;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *giftViewWidthConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *giftViewHeightConstraint;
+
+@property (weak, nonatomic) IBOutlet UIView *statusView;
+@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+
+@property (weak, nonatomic) IBOutlet MyLinearLayout *checkCollectionLayout;
+
 @end

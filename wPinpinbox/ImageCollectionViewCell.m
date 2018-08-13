@@ -20,6 +20,21 @@
     [self setupBgV4];
     [self setupFinalPage];
     
+    self.checkCollectionLayout.hidden = YES;
+    self.checkCollectionLayout.wrapContentHeight = YES;
+    self.checkCollectionLayout.padding = UIEdgeInsetsMake(16, 16, 16, 16);
+    self.checkCollectionLayout.myWidth = 240;
+    self.checkCollectionLayout.myHeight = 150;
+    self.checkCollectionLayout.layer.cornerRadius = 16;
+    
+    self.statusView.hidden = YES;
+    self.statusView.backgroundColor = [UIColor whiteColor];
+    self.statusView.layer.cornerRadius = kCornerRadius;
+    
+    self.statusLabel.numberOfLines = 0;
+    self.statusLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    self.statusLabel.textColor = [UIColor firstGrey];
+    
     self.alphaBgV.hidden = YES;
     self.giftImageBtn.hidden = YES;
     [self.giftImageBtn addTarget: self action: @selector(giftImageBtnPressed:) forControlEvents: UIControlEventTouchUpInside];
