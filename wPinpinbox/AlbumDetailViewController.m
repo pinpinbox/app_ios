@@ -177,7 +177,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     NSLog(@"AlbumDetailViewController");
-    NSLog(@"viewDidLoad");
+    NSLog(@"viewDidLoad");    
+    
     isMessageShowing = NO;
     
     self.creatorNameLabel.text = @"";

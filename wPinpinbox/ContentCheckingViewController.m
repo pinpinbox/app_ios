@@ -42,6 +42,9 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import "YTVimeoExtractor.h"
+#import "ExchangeInfoEditViewController.h"
+
+#import "ZOZolaZoomTransition.h"
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
@@ -51,7 +54,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate> {
+@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate, ExchangeInfoEditViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate> {
     BOOL isDataLoaded;
     BOOL isRotating;
     BOOL kbShowUp;
@@ -341,6 +344,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - initialValueSetup
 - (void)initialValueSetup {
     NSLog(@"viewDidAppear");
+    self.navigationController.delegate = self;
+    
     self.isPresented = YES;
     isDataLoaded = NO;
     isRotating = NO;
@@ -657,7 +662,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         NSLog(@"result bool value is YES");
                         isDataLoaded = YES;
                         self.bookdata = [dic[@"data"] copy];
-                        NSLog(@"self.bookdata: %@", self.bookdata);
+//                        NSLog(@"self.bookdata: %@", self.bookdata);
                         self.photoArray = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
                         [self checkIsOwnedOrNot: dic[@"data"]];
                         
@@ -671,6 +676,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
                         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
                             NSLog(@"Do some work");
+                            
+                            if (self.isOwned) {
+                                NSLog(@"Owned this album");
+                                NSLog(@"To 1st page");
+                                // To 1st Page
+                                NSIndexPath *indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
+                                [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+                                
+                                // To old current page
+                                NSLog(@"To old current page");
+                                indexPath = [NSIndexPath indexPathForItem: oldCurrentPage inSection: 0];
+                                [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+                                [self.thumbnailImageScrollCV reloadData];
+                            }
                             
                             [UIView animateWithDuration: 0.1 animations:^{
                                 self.imageScrollCV.alpha = 0;
@@ -688,22 +707,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                 self.descriptionScrollView.alpha = 1;
                                 
                                 // Cell need to be successfully initialized then can play
+                                NSLog(@"oldCurrentPage: %lu", (unsigned long)oldCurrentPage);
                                 [self checkVideo: oldCurrentPage];
+                                
+                                // cell.giftViewBgV need to be successfully initialized then can play
+                                NSIndexPath *indexPath = [NSIndexPath indexPathForItem: oldCurrentPage inSection: 0];
+                                ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+                                NSLog(@"cell: %@", cell);
+                                NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
                                 [self checkSlotAndExchangeInfo: oldCurrentPage];
                             }];
                             
                             [self textViewContentSetup: [self getCurrentPage]];
                             [self pageCalculation: [self getCurrentPage]];
-                            
-                            if (self.isOwned) {
-                                // To 1st Page
-                                NSIndexPath *indexPath = [NSIndexPath indexPathForItem: 0 inSection: 0];
-                                [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-                                // To old current page
-                                indexPath = [NSIndexPath indexPathForItem: oldCurrentPage inSection: 0];
-                                [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-                                [self.thumbnailImageScrollCV reloadData];
-                            }
                         });
                     }
                 }
@@ -1822,7 +1838,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [wTools HideMBProgressHUD];
                 
                 if (response != nil) {
-                    NSLog(@"response from api_GET: %@",response);
+//                    NSLog(@"response from api_GET: %@",response);
                     
                     if ([response isEqualToString: timeOutErrorCode]) {
                         NSLog(@"Time Out Message Return");
@@ -2280,7 +2296,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         [self.photoArray addObject: collectDic];
     }
-    NSLog(@"self.photoArray: %@", self.photoArray);
+//    NSLog(@"self.photoArray: %@", self.photoArray);
 }
 
 - (void)updateOldCurrentPage:(NSUInteger)currentPage {
@@ -2306,13 +2322,28 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 #pragma mark - Check Slot Info
 - (void)checkSlotAndExchangeInfo:(NSInteger)page {
+    NSLog(@"");
     NSLog(@"checkSlotAndExchangeInfo");
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-    useFor = self.photoArray[indexPath.row][@"usefor"];
+    useFor = self.photoArray[page][@"usefor"];
+    NSLog(@"useFor: %@", useFor);
+    
+    NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
+    
+    cell.giftImageBtn.hidden = YES;
+    cell.checkCollectionLayout.hidden = YES;
+    cell.alphaBgV.hidden = YES;
+    cell.giftViewBgV.hidden = YES;
+    cell.checkCollectionLayout.hidden = YES;
     
     if ([useFor isEqualToString: @"slot"]) {
+        NSLog(@"");
+        NSLog(@"useFor is equal to slot");
+        cell.alphaBgV.hidden = NO;
+        
         if (self.isOwned) {
+            NSLog(@"Owned this album");
             cell.giftImageBtn.hidden = NO;
             cell.checkCollectionLayout.hidden = YES;
             
@@ -2331,34 +2362,35 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self slotPhotoUseFor: cell.giftViewBgV indexPathRow: page];
             }
         } else {
+            NSLog(@"Does not own this album");
             cell.giftImageBtn.hidden = YES;
             cell.checkCollectionLayout.hidden = NO;
             [self createViewForCollectionCheck: page];
         }
-    } else {
-        cell.giftImageBtn.hidden = YES;
-        cell.checkCollectionLayout.hidden = YES;
     }
-    
+
     if ([useFor isEqualToString: @"exchange"]) {
+        NSLog(@"");
+        NSLog(@"useFor is equal to exchange");
+        cell.alphaBgV.hidden = NO;
+        
         if (self.isOwned) {
+            NSLog(@"Owned this album");
             cell.giftViewBgV.hidden = NO;
             cell.checkCollectionLayout.hidden = YES;
             [self checkSlotDataInDatabaseOrNot];
             [self getPhotoUseFor: cell.giftViewBgV indexPathRow: page];
         } else {
+            NSLog(@"Does not own this album");
             cell.giftViewBgV.hidden = YES;
             cell.checkCollectionLayout.hidden = NO;
             [self createViewForCollectionCheck: page];
         }
-    } else {
-        cell.alphaBgV.hidden = YES;
-        cell.giftViewBgV.hidden = YES;
-        cell.checkCollectionLayout.hidden = YES;
     }
 }
 
 - (void)createViewForCollectionCheck:(NSInteger)page {
+    NSLog(@"");
     NSLog(@"createViewForCollectionCheck");
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
@@ -2411,6 +2443,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 #pragma mark - To Final Page
 - (void)collectAlbum {
+    NSLog(@"");
     NSLog(@"collectAlbum");
     
     if (albumPoint == 0) {
@@ -2418,8 +2451,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self buyAlbum];
     } else {
         NSLog(@"pPoint != 0");
+        NSLog(@"self.photoArray.count: %lu", (unsigned long)self.photoArray.count);
+        
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
+        NSLog(@"self.imageScrollCV: %@", self.imageScrollCV);
         [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+        
+        NSLog(@"self.thumbnailImageScrollCV: %@", self.thumbnailImageScrollCV);
+        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
     }
 }
 
@@ -2454,11 +2493,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [animateImageView removeFromSuperview];
     
     [self slotPhotoUseFor: giftViewBgV indexPathRow: indexPathRow];
-    
-//    [self createGiftViewContent: giftViewBgV];
-//    [self createGiftViewContent: giftViewBgV
-//                        dicData: nil
-//                     returnType: @""];
 }
 
 - (void)slotPhotoUseFor:(MyLinearLayout *)bgV
@@ -2608,11 +2642,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)getPhotoUseFor:(MyLinearLayout *)bgV
           indexPathRow:(NSInteger)indexPathRow {
-    //    NSLog(@"self.mySV.subviews: %@", self.mySV.subviews);
-    NSLog(@"getPhotoUseFor");
-    NSInteger photoId = [self.photoArray[[self getCurrentPage]][@"photo_id"] integerValue];
+    NSLog(@"");
+    NSLog(@"getPhotoUseFor bgV indexPathRow");
+    
+    NSLog(@"bgV: %@", bgV);
+    
+    NSInteger photoId = [self.photoArray[indexPathRow][@"photo_id"] integerValue];
     NSLog(@"photoId: %ld", (long)photoId);
-    NSString *photoIdStr = [self.photoArray[[self getCurrentPage]][@"photo_id"] stringValue];
+    NSString *photoIdStr = [self.photoArray[indexPathRow][@"photo_id"] stringValue];
     
     [wTools ShowMBProgressHUD];
     
@@ -2625,7 +2662,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [wTools HideMBProgressHUD];
             
             if (response != nil) {
-                NSLog(@"response from slotPhotoUseFor");
+                NSLog(@"response from getPhotoUseFor");
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -2719,22 +2756,29 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)createGiftView:(MyLinearLayout *)giftViewBgV
                dicData:(NSDictionary *)dicData
             returnType:(NSString *)returnType {
+    NSLog(@"");
     NSLog(@"createGiftViewContent");
+    NSLog(@"giftViewBgV: %@", giftViewBgV);
+    
+    NSLog(@"self getCurrentPage: %ld", (long)[self getCurrentPage]);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    
     for (UIView *view in giftViewBgV.subviews) {
         [view removeFromSuperview];
     }
+    cell.giftViewBgV.hidden = NO;
+    
     // GiftView
     MyFrameLayout *giftView = [MyFrameLayout new];
     giftView.backgroundColor = [UIColor whiteColor];
-    giftView.mySize = CGSizeMake(giftViewBgV.frame.size.width, giftViewBgV.frame.size.height - 54);
+    giftView.mySize = CGSizeMake(cell.giftViewBgV.frame.size.width, cell.giftViewBgV.frame.size.height - 54);
     NSLog(@"giftView: %@", NSStringFromCGRect(giftView.frame));
     giftView.myTopMargin = 0;
     giftView.myLeftMargin = giftView.myRightMargin = 0;
     giftView.myBottomMargin = 8;
     giftView.layer.cornerRadius = kCornerRadius;
-    [giftViewBgV addSubview: giftView];
-    
-    NSLog(@"giftViewBgV.subviews: %@", giftViewBgV.subviews);
+    [cell.giftViewBgV addSubview: giftView];
     
     // ScrollView
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame: giftView.bounds];
@@ -2751,6 +2795,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     contentLayout.myTopMargin = 0;
     contentLayout.myLeftMargin = contentLayout.myRightMargin = 0;
     [scrollView addSubview: contentLayout];
+    
+    NSLog(@"dicData: %@", dicData);
     
     // Name Label
     if (![dicData[@"photousefor"][@"name"] isEqual: [NSNull null]]) {
@@ -2771,8 +2817,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // ImageView
     if (![dicData[@"photousefor"][@"image"] isEqual: [NSNull null]]) {
         __block UIImageView *imageView = [[UIImageView alloc] init];
-        [imageView sd_setImageWithURL: [NSURL URLWithString: @"http://cdn2.autoexpress.co.uk/sites/autoexpressuk/files/2017/11/490259.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            imageView = [self calculateImageViewSize: giftViewBgV imgV: imageView];
+        [imageView sd_setImageWithURL: [NSURL URLWithString: dicData[@"photousefor"][@"image"]] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            imageView = [self calculateImageViewSize: cell.giftViewBgV imgV: imageView];
             imageView.myTopMargin = imageView.myBottomMargin = 8;
             imageView.myLeftMargin = imageView.myRightMargin = 16;
             imageView.layer.cornerRadius = kCornerRadius;
@@ -2813,21 +2859,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     // Add to Exchange List
     UIButton *addToExchangeListBtn = [UIButton buttonWithType: UIButtonTypeCustom];
-//    [addToExchangeListBtn addTarget: self
-//                             action: @selector(addToExchangeListBtnTouchDown:)
-//                   forControlEvents: UIControlEventTouchDown];
-//    [addToExchangeListBtn addTarget: self
-//                             action: @selector(addToExchangeListBtnTouchUpInside:)
-//                   forControlEvents: UIControlEventTouchUpInside];
-//    [addToExchangeListBtn addTarget: self
-//                             action: @selector(addToExchangeListBtnTouchDragExit:)
-//                   forControlEvents: UIControlEventTouchDragExit];
+    [addToExchangeListBtn addTarget: self
+                             action: @selector(addToExchangeListBtnTouchDown:)
+                   forControlEvents: UIControlEventTouchDown];
+    [addToExchangeListBtn addTarget: self
+                             action: @selector(addToExchangeListBtnTouchUpInside:)
+                   forControlEvents: UIControlEventTouchUpInside];
+    [addToExchangeListBtn addTarget: self
+                             action: @selector(addToExchangeListBtnTouchDragExit:)
+                   forControlEvents: UIControlEventTouchDragExit];
     addToExchangeListBtn.mySize = CGSizeMake(32.0, 46.0);
     addToExchangeListBtn.myLeftMargin = addToExchangeListBtn.myRightMargin = 0;
     addToExchangeListBtn.myBottomMargin = 0;
     
-    if ([dicData[@"bookmark"][@"is_existing"] boolValue]) {
-    }
     if ([dicData[@"bookmark"][@"is_existing"] boolValue]) {
         [addToExchangeListBtn setTitle: @"已加入兌換清單" forState: UIControlStateNormal];
         [addToExchangeListBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
@@ -2843,6 +2887,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     addToExchangeListBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0];
     addToExchangeListBtn.backgroundColor = [UIColor whiteColor];
     addToExchangeListBtn.layer.cornerRadius = kCornerRadius;
+    addToExchangeListBtn.accessibilityIdentifier = @"addToExchangeListBtn";
     [giftView addSubview: addToExchangeListBtn];
     
     if ([returnType isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"] || [dicData[@"photousefor"][@"useless_award"] boolValue]) {
@@ -2866,6 +2911,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     exchangeBtn.myBottomMargin = 0;
     exchangeBtn.layer.cornerRadius = kCornerRadius;
     exchangeBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
+    exchangeBtn.accessibilityIdentifier = @"exchangeBtn";
     
     if ([returnType isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
         [exchangeBtn setTitle: @"已完成" forState: UIControlStateNormal];
@@ -2882,9 +2928,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if ([dicData[@"photousefor"][@"useless_award"] boolValue]) {
         exchangeBtn.hidden = YES;
     }
-    [giftViewBgV addSubview: exchangeBtn];
-    
-    giftViewBgV.hidden = NO;
+    [cell.giftViewBgV addSubview: exchangeBtn];
+    NSLog(@"giftViewBgV.hidden: %d", cell.giftViewBgV.hidden);
+    NSLog(@"giftViewBgV: %@", cell.giftViewBgV);
+    NSLog(@"giftViewBgV.subviews: %@", cell.giftViewBgV.subviews);
 }
 
 - (UIImageView *)calculateImageViewSize:(UIView *)bV
@@ -2915,10 +2962,175 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [LabelAttributeStyle changeGapString: cell.statusLabel content: msg];
 }
 
+#pragma mark - AddToExchangeListBtn Action Methods
+- (void)addToExchangeListBtnTouchDown:(UIButton *)btn {
+    NSLog(@"addToExchangeListBtnTouchDown");
+    btn.backgroundColor = [UIColor thirdMain];
+}
+
+- (void)addToExchangeListBtnTouchUpInside:(UIButton *)btn {
+    NSLog(@"addToExchangeListBtnTouchUpInside");
+    btn.backgroundColor = [UIColor whiteColor];
+    [self insertBookmark: btn];
+}
+
+- (void)addToExchangeListBtnTouchDragExit:(UIButton *)btn {
+    NSLog(@"addToExchangeListBtnTouchDragExit");
+    btn.backgroundColor = [UIColor whiteColor];
+}
+
 #pragma mark - ExchangeBtn Action Methods
 - (void)exchangeBtnTouchDown:(UIButton *)btn {
     NSLog(@"exchangeBtnTouchDown");
     btn.backgroundColor = [UIColor darkMain];
+}
+
+- (void)exchangeBtnTouchUpInside:(UIButton *)btn {
+    NSLog(@"exchangeBtnTouchUpInside");
+    [self changeOrientationToPortrait];
+    
+    btn.backgroundColor = [UIColor firstMain];
+    
+    NSInteger photoId = [self.photoArray[[self getCurrentPage]][@"photo_id"] integerValue];
+    NSLog(@"photoId: %ld", (long)photoId);
+    
+    ExchangeInfoEditViewController *exchangeInfoEditVC = [[ExchangeInfoEditViewController alloc] init];
+    exchangeInfoEditVC.exchangeDic = [self.slotDicData mutableCopy];
+    exchangeInfoEditVC.hasExchanged = NO;
+    exchangeInfoEditVC.isExisting = [self.slotDicData[@"bookmark"][@"is_existing"] boolValue];
+    exchangeInfoEditVC.backgroundView = btn.superview;
+    exchangeInfoEditVC.photoId = photoId;
+    exchangeInfoEditVC.delegate = self;
+    self.navigationController.delegate = self;
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate.myNav pushViewController: exchangeInfoEditVC animated: YES];
+}
+
+- (void)exchangeBtnTouchUpDragExit:(UIButton *)btn {
+    NSLog(@"exchangeBtnTouchUpDragExit");
+    btn.backgroundColor = [UIColor firstMain];
+}
+
+#pragma mark - ExchangeInfoEditViewControllerDelegate Methods
+- (void)finishExchange:(NSMutableDictionary *)exchangeDic
+                   bgV:(UIView *)bgV {
+    NSLog(@"");
+    NSLog(@"finishExchange");
+    NSLog(@"bgV.subviews: %@", bgV.subviews);
+    NSLog(@"bgV.accessibilityIdentifier: %@", bgV.accessibilityIdentifier);
+    
+    for (UIView *view1 in bgV.subviews) {
+        NSLog(@"view1.accessibilityIdentifier: %@", view1.accessibilityIdentifier);
+        
+        if ([view1.accessibilityIdentifier isEqualToString: @"giftView"]) {
+            for (UIView *view2 in view1.subviews) {
+                NSLog(@"view2.accessibilityIdentifier: %@", view2.accessibilityIdentifier);
+                
+                if ([view2.accessibilityIdentifier isEqualToString: @"addToExchangeListBtn"]) {
+                    if ([view2 isKindOfClass: [UIButton class]]) {
+                        UIButton *btn = (UIButton *)view2;
+                        btn.hidden = YES;
+                    }
+                }
+            }
+        }
+        
+        if ([view1.accessibilityIdentifier isEqualToString: @"exchangeBtn"]) {
+            NSLog(@"view1.accessibilityIdentifier isEqualToString exchangeBtn");
+            if ([view1 isKindOfClass: [UIButton class]]) {
+                NSLog(@"view1 isKindOfClass UIButton class");
+                UIButton *btn = (UIButton *)view1;
+                NSLog(@"Before change");
+                NSLog(@"btn.titleLabel.text: %@", btn.titleLabel.text);
+                
+                [btn setTitle: @"已完成" forState: UIControlStateNormal];
+                
+                NSLog(@"After change");
+                NSLog(@"btn.titleLabel.text: %@", btn.titleLabel.text);
+                [btn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
+                btn.backgroundColor = [UIColor whiteColor];
+                btn.userInteractionEnabled = NO;
+                btn.adjustsImageWhenHighlighted = NO;
+            }
+        }
+    }
+}
+
+- (void)insertBookmark:(UIButton *)btn {
+    NSLog(@"insertBookmark");
+    
+    //    [wTools ShowMBProgressHUD];
+    
+    NSString *photoIdStr = [self.photoArray[[self getCurrentPage]][@"photo_id"] stringValue];
+    NSLog(@"photoIdStr: %@", photoIdStr);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI insertBookmark: photoIdStr
+                                              token: [wTools getUserToken]
+                                             userId: [wTools getUserID]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+            
+            if (response != nil) {
+                NSLog(@"response from insertBookmark");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"ExchangeInfoEditViewController");
+                    NSLog(@"insertBookmark");
+                    
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"insertBookmark"
+                                        pointStr: @""
+                                             btn: btn
+                                             bgV: nil];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSLog(@"Get response from insertBookmark");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        NSLog(@"SYSTEM_OK");
+                        NSLog(@"dic: %@", dic);
+                        
+                        [self.slotDicData[@"bookmark"] setObject: [NSNumber numberWithBool: YES] forKey: @"is_existing"];
+                        NSLog(@"self.slotDicData: %@", self.slotDicData);
+                        
+                        [btn setTitle: @"已加入兌換清單" forState: UIControlStateNormal];
+                        [btn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
+                        btn.userInteractionEnabled = NO;
+                        btn.adjustsImageWhenHighlighted = NO;
+                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+                        NSLog(@"SYSTEM_ERROR");
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+                        NSLog(@"TOKEN_ERROR");
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor thirdPink];
+                        
+                        [self.view makeToast: @"用戶驗證異常請重新登入"
+                                    duration: 2.0
+                                    position: CSToastPositionBottom
+                                       style: style];
+                        
+                        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                                         target: self
+                                                       selector: @selector(logOut)
+                                                       userInfo: nil
+                                                        repeats: NO];
+                    }
+                }
+            }
+        });
+    });
 }
 
 #pragma mark - UICollectionViewDataSource Methods
@@ -2938,6 +3150,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (collectionView.tag == 100) {
         NSLog(@"collectionView.tag == 100");
         ImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"ImageCell" forIndexPath: indexPath];
+        NSLog(@"cell: %@", cell);
+        NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
         iCVC = cell;
         
         if (data[@"image_url"] == nil) {
@@ -2960,7 +3174,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         cell.giftViewWidthConstraint.constant = giftViewWidth;
         cell.giftViewHeightConstraint.constant = giftViewHeight - 10;
         
+        // Hide view for default
         cell.statusView.hidden = YES;
+        cell.alphaBgV.hidden = YES;
+        cell.giftImageBtn.hidden = YES;
+        cell.checkCollectionLayout.hidden = YES;
+        cell.giftViewBgV.hidden = YES;
         
         if ([useFor isEqualToString: @"slot"]) {
             cell.alphaBgV.hidden = NO;
@@ -2972,10 +3191,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 cell.giftImageBtn.hidden = YES;
                 cell.checkCollectionLayout.hidden = NO;
             }
-        } else {
-            cell.alphaBgV.hidden = YES;
-            cell.giftImageBtn.hidden = YES;
-            cell.checkCollectionLayout.hidden = YES;
         }
         if ([useFor isEqualToString: @"exchange"]) {
             cell.alphaBgV.hidden = NO;
@@ -2987,10 +3202,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 cell.giftViewBgV.hidden = YES;
                 cell.checkCollectionLayout.hidden = NO;
             }
-        } else {
-            cell.alphaBgV.hidden = YES;
-            cell.giftViewBgV.hidden = YES;
-            cell.checkCollectionLayout.hidden = YES;
         }
         
         if ([useFor isEqualToString: @"FinalPage"]) {
@@ -3155,8 +3366,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         dispatch_after(popTime, dispatch_get_main_queue(), ^{
             NSLog(@"Do some work");
             [self checkVideo: indexPath.row];
-        });
-        [self checkSlotAndExchangeInfo: indexPath.row];
+            [self checkSlotAndExchangeInfo: indexPath.row];
+        });        
         [self updateOldCurrentPage: indexPath.row];
         [self textViewContentSetup: indexPath.row];
         [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
@@ -3208,40 +3419,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - UIScrollViewDelegate Methods
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    NSLog(@"");
-    NSLog(@"scrollViewWillBeginDragging");
-    
-    iCVC.imageView.alpha = 1;
-    [iCVC.ytPlayerView stopVideo];
-    iCVC.ytPlayerView.hidden = YES;
-    iCVC.videoView.hidden = YES;
-    self.videoPlayerViewController.view.hidden = YES;
-    iCVC.alphaBgV.hidden = YES;
-    iCVC.videoBtn.hidden = YES;
-    iCVC.giftImageBtn.hidden = YES;
-    iCVC.giftViewBgV.hidden = YES;
-    iCVC.statusView.hidden = YES;
-    iCVC.checkCollectionLayout.hidden = YES;
-    /*
-    if (isDataLoaded) {
-        NSLog(@"data is loaded");
-        if (!isRotating) {
-            NSLog(@"is not rotating");
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-            ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-            cell.imageView.alpha = 1;
-            [cell.ytPlayerView stopVideo];
-            cell.ytPlayerView.hidden = YES;
-            cell.videoView.hidden = YES;
-            self.videoPlayerViewController.view.hidden = YES;
-            cell.alphaBgV.hidden = YES;
-            cell.videoBtn.hidden = YES;
-        }
-    }
-     */
-}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"");
     NSLog(@"scrollViewDidScroll");
@@ -3263,6 +3440,22 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             }
         }
     }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
+                  willDecelerate:(BOOL)decelerate {
+    iCVC.imageView.alpha = 1;
+    [iCVC.ytPlayerView stopVideo];
+    iCVC.ytPlayerView.hidden = YES;
+    iCVC.videoView.hidden = YES;
+    self.videoPlayerViewController.view.hidden = YES;
+//    iCVC.alphaBgV.hidden = YES;
+    iCVC.videoBtn.hidden = YES;
+    
+//    iCVC.giftImageBtn.hidden = YES;
+//    iCVC.giftViewBgV.hidden = YES;
+//    iCVC.statusView.hidden = YES;
+//    iCVC.checkCollectionLayout.hidden = YES;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -3442,10 +3635,11 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - IBAction Methods
 - (IBAction)backBtnPressed:(id)sender {
     NSLog(@"backBtnPressed");
-    if (self.videoPlayer) {
-        [self.videoPlayer pause];
-        self.videoPlay = nil;
-    }
+    self.navigationController.delegate = nil;
+    
+    [self.videoPlayer pause];
+    self.videoPlay = nil;
+    
     [self removeObserverForPlayerAndItem];
     [[NSNotificationCenter defaultCenter] removeObserver: self];
     
@@ -3880,6 +4074,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             if ([option isEqualToString: @"buyPoint"]) {
                 BuyPPointViewController *bPPVC = [[UIStoryboard storyboardWithName: @"BuyPointVC" bundle: nil] instantiateViewControllerWithIdentifier: @"BuyPPointViewController"];
                 bPPVC.delegate = self;
+                self.navigationController.delegate = nil;
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [appDelegate.myNav pushViewController: bPPVC animated: YES];
             }
@@ -4238,7 +4433,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         if (buttonIndex == 0) {
             AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
             albumCollectionVC.postMode = self.postMode;
-            
+            self.navigationController.delegate = nil;
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [appDelegate.myNav pushViewController: albumCollectionVC animated: YES];
         } else {
@@ -4445,6 +4640,64 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     cell.currentPointLabelForBgV3.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
     cell.currentPointLabelForBgV4.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
+}
+
+#pragma mark - UINavigationControllerDelegate Methods
+- (id <UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                   animationControllerForOperation:(UINavigationControllerOperation)operation
+                                                fromViewController:(UIViewController *)fromVC
+                                                  toViewController:(UIViewController *)toVC {
+    // Sanity
+    if (fromVC != self && toVC != self) return nil;
+    
+    // Determine if we're presenting or dismissing
+    ZOTransitionType type = (fromVC == self) ? ZOTransitionTypePresenting : ZOTransitionTypeDismissing;
+    
+    // Create a transition instance with the selected cell's imageView as the target view
+    ZOZolaZoomTransition *zoomTransition = [ZOZolaZoomTransition transitionFromView:self.giftImageView
+                                                                               type:type
+                                                                           duration:0.5
+                                                                           delegate:self];
+    zoomTransition.fadeColor = self.imageScrollCV.backgroundColor;
+    
+    return zoomTransition;
+}
+
+#pragma mark - ZOZolaZoomTransitionDelegate Methods
+- (CGRect)zolaZoomTransition:(ZOZolaZoomTransition *)zoomTransition
+        startingFrameForView:(UIView *)targetView
+              relativeToView:(UIView *)relativeView
+          fromViewController:(UIViewController *)fromViewController
+            toViewController:(UIViewController *)toViewController {
+    
+    if (fromViewController == self) {
+        // We're pushing to the detail controller. The starting frame is taken from the selected cell's imageView.
+        return [self.giftImageView convertRect:self.giftImageView.bounds toView:relativeView];
+    } else if ([fromViewController isKindOfClass:[ExchangeInfoEditViewController class]]) {
+        // We're popping back to this master controller. The starting frame is taken from the detailController's imageView.
+        ExchangeInfoEditViewController *detailController = (ExchangeInfoEditViewController *)fromViewController;
+        return [detailController.imageView convertRect:detailController.imageView.bounds toView:relativeView];
+    }
+    
+    return CGRectZero;
+}
+
+- (CGRect)zolaZoomTransition:(ZOZolaZoomTransition *)zoomTransition
+       finishingFrameForView:(UIView *)targetView
+              relativeToView:(UIView *)relativeView
+          fromViewController:(UIViewController *)fromViewController
+            toViewController:(UIViewController *)toViewController {
+    
+    if (fromViewController == self) {
+        // We're pushing to the detail controller. The finishing frame is taken from the detailController's imageView.
+        ExchangeInfoEditViewController *detailController = (ExchangeInfoEditViewController *)toViewController;
+        return [detailController.imageView convertRect:detailController.imageView.bounds toView:relativeView];
+    } else if ([fromViewController isKindOfClass:[ExchangeInfoEditViewController class]]) {
+        // We're popping back to this master controller. The finishing frame is taken from the selected cell's imageView.
+        return [self.giftImageView convertRect:self.giftImageView.bounds toView:relativeView];
+    }
+    
+    return CGRectZero;
 }
 
 #pragma mark -

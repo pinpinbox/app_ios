@@ -77,7 +77,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     for (UIView *v in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[v viewWithTag: 104];
         btn.hidden = YES;
@@ -88,11 +87,11 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
-    
     // Force view to dislay portrait mode
     [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey: @"orientation"];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

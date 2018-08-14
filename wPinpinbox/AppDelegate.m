@@ -32,6 +32,9 @@
 #import "CategoryViewController.h"
 
 #import "ContentCheckingViewController.h"
+
+#import "ExchangeInfoEditViewController.h"
+
 #import <SafariServices/SafariServices.h>
 
 #import "UIColor+Extensions.h"
@@ -1122,17 +1125,24 @@ continueUserActivity:(NSUserActivity *)userActivity
 }
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application
-  supportedInterfaceOrientationsForWindow:(UIWindow *)window
-{
-    //NSLog(@"");
-    //NSLog(@"supportedInterfaceOrientationsForWindow");
+  supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    NSLog(@"");
+    NSLog(@"supportedInterfaceOrientationsForWindow");
     
+    NSLog(@"self.myNav.viewControllers: %@", self.myNav.viewControllers);
     for (id controller in self.myNav.viewControllers) {
         if ([controller isKindOfClass: [AlbumCreationViewController class]]) {
             return UIInterfaceOrientationMaskPortrait;
         }
-        
         if ([controller isKindOfClass: [AlbumCollectionViewController class]]) {
+        }
+        if ([controller isKindOfClass: [BuyPPointViewController class]]) {
+            NSLog(@"controller: %@", controller);
+            return UIInterfaceOrientationMaskPortrait;
+        }
+        if ([controller isKindOfClass: [ExchangeInfoEditViewController class]]) {
+            NSLog(@"controller: %@", controller);
+            return UIInterfaceOrientationMaskPortrait;
         }
         if ([controller isKindOfClass: [TestReadBookViewController class]]) {
             TestReadBookViewController *testReadBookVC = (TestReadBookViewController *)controller;            
@@ -1149,8 +1159,18 @@ continueUserActivity:(NSUserActivity *)userActivity
             }
         }
         if ([controller isKindOfClass: [ContentCheckingViewController class]]) {
+            NSLog(@"controller isKindOfClass ContentCheckingViewController");
             ContentCheckingViewController *contentCheckingVC = (ContentCheckingViewController *)controller;
+            NSLog(@"contentCheckingVC.navigationController.viewControllers: %@", contentCheckingVC.navigationController.viewControllers);
             
+            for (UIViewController *vc in contentCheckingVC.navigationController.viewControllers) {
+                if ([vc isKindOfClass: [BuyPPointViewController class]]) {
+                    return UIInterfaceOrientationMaskPortrait;
+                }
+                if ([vc isKindOfClass: [ExchangeInfoEditViewController class]]) {
+                    return UIInterfaceOrientationMaskPortrait;
+                }
+            }
             if (contentCheckingVC.isPresented) {
                 return UIInterfaceOrientationMaskAll;
             } else {
@@ -1159,12 +1179,12 @@ continueUserActivity:(NSUserActivity *)userActivity
         }
     }
     
+    /*
     for (MyTabBarController *myTabBarC in self.myNav.viewControllers) {
         if ([myTabBarC isKindOfClass: [MyTabBarController class]]) {
             for (id controller in myTabBarC.viewControllers) {
                 if ([controller isKindOfClass: [UINavigationController class]]) {
                     UINavigationController *navController = (UINavigationController *)controller;
-                    
                     for (UINavigationController *navC in navController.viewControllers) {
                         if ([navC isKindOfClass: [AlbumDetailViewController class]]) {
                             for (UIViewController *vc in navC.navigationController.viewControllers) {
@@ -1185,7 +1205,6 @@ continueUserActivity:(NSUserActivity *)userActivity
                                 if ([vc isKindOfClass: [ContentCheckingViewController class]]) {
                                     ContentCheckingViewController *contentCheckingVC = (ContentCheckingViewController *)vc;
                                     NSLog(@"contentCheckingVC.isPresented: %d", contentCheckingVC.isPresented);
-                                    
                                     if (contentCheckingVC.isPresented) {
                                         return UIInterfaceOrientationMaskAll;
                                     } else {
@@ -1199,6 +1218,7 @@ continueUserActivity:(NSUserActivity *)userActivity
             }
         }
     }
+     */
     return UIInterfaceOrientationMaskPortrait;
 }
 

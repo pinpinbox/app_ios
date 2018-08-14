@@ -58,6 +58,7 @@
     NSLog(@"ExchangeInfoEditViewController");
     NSLog(@"viewWillAppear");
     [self addKeyboardNotification];
+    [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey: @"orientation"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -1525,6 +1526,31 @@
     NSLog(@"");
     
     return contentView;
+}
+
+- (BOOL)shouldAutorotate
+{
+    NSLog(@"shouldAutorotate");
+    return NO;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    NSLog(@"shouldAutorotateToInterfaceOrientation");
+    return NO;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    NSLog(@"supportedInterfaceOrientations");
+    
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    NSLog(@"preferredInterfaceOrientationForPresentation");
+    return UIInterfaceOrientationPortrait;
 }
 
 /*
