@@ -74,7 +74,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 @end
 
-
 @implementation CreaterViewController
 
 #pragma mark - View Related
@@ -90,7 +89,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     [self initialValueSetup];
-    [self loadData];
+//    [self loadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -101,10 +100,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = YES;
-    }        
-    
-    NSLog(@"[self.collectionView reloadData]");
-    //[self.collectionView reloadData];
+    }
+    [self loadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -178,9 +175,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
                             action: @selector(refresh)
                   forControlEvents: UIControlEventValueChanged];
     [self.collectionView addSubview: self.refreshControl];
+    self.collectionView.showsVerticalScrollIndicator = NO;
     
     self.navBarView.backgroundColor = [UIColor barColor];
-    self.collectionView.showsVerticalScrollIndicator = NO;
     
     columnCount = 2;
     miniInteriorSpacing = 16;
@@ -213,9 +210,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         if (nextId == 0) {
             NSLog(@"nextId: %ld", (long)nextId);
         }
-        
         isLoading = YES;
-        
         [self getCreator];
     }
 }
@@ -223,21 +218,12 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)getCreator {
     NSLog(@"");
     NSLog(@"getCreator");
+    [wTools ShowMBProgressHUD];
     
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
     [data setObject: self.userId forKey: @"authorid"];
-    
-    @try {
-        [wTools ShowMBProgressHUD];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *respnose = [boxAPI getcreative: [wTools getUserID]
@@ -270,13 +256,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
-                    
+                    NSLog(@"response from getCreative");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respnose dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    NSLog(@"dic: %@", dic);
+//                    NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"]boolValue]) {
-                        
                         userDic = dic[@"data"][@"user"];
                         sponsorInt = [dic[@"data"][@"userstatistics"][@"besponsored"] intValue];
                         NSLog(@"sponsorInt: %ld", (long)sponsorInt);
@@ -290,7 +274,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                             pictures = [NSMutableArray new];
                         }
                         
-                        int s=0;
+                        int s = 0;
                         
                         for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
                             s++;
@@ -303,25 +287,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         
                         NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
                         followDic = dic[@"data"][@"follow"];
-                        
                         _follow = [dic[@"data"][@"follow"][@"follow"] boolValue];
-                        
                         sponsorDic = dic[@"data"][@"userstatistics"];
                         
                         self.followBtn = [self changeFollowBtn: self.followBtn];
                         
-                        if (_follow) {
-                            //[_button setTitle:NSLocalizedString(@"AuthorText-inAtt", @"") forState:UIControlStateNormal];
-                            //_button.hidden=YES;
-                        }else{
-                            //[_button setTitle:NSLocalizedString(@"AuthorText-att", @"") forState:UIControlStateNormal];
-                            // _button.hidden=NO;
-                        }
-                        
-                        [self layoutSetup];                        
-                        [self.refreshControl endRefreshing];
-                        NSLog(@"self.collectionView reloadData");
                         [self.collectionView reloadData];
+                        [self.refreshControl endRefreshing];
                         
                         if (nextId >= 0)
                             isLoading = NO;
@@ -329,9 +301,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         if (s == 0) {
                             isLoading = YES;
                         }
-                        
+                        [self layoutSetup];
                         isReloading = NO;
-                        
                     } else {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
@@ -349,6 +320,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 [self.refreshControl endRefreshing];
                 isReloading = NO;
             }
+            [self.refreshControl endRefreshing];
+            isReloading = NO;
         });
     });
 }
@@ -357,76 +330,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)layoutSetup {
     NSLog(@"");
     NSLog(@"layoutSetup");
-    
     // ScrollView contentInset Top is navigationBar Height 64
-    
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.collectionView.collectionViewLayout;
     NSLog(@"self.jccLayout.headerHeight: %f", self.jccLayout.headerHeight);
-
-    
-//    NSInteger headshotHeight = 96;
-//    NSInteger gapToNameSection = 32;
-//    NSInteger gapToName;
-//    NSInteger gapToSponsorLabel;
-//    NSInteger gapToDescription;
-//    NSInteger gapToLinkLabel;
-//    NSInteger gapToLinkView;
-//    NSInteger gapToAlbumSection = 32;
-//    NSInteger albumSectionHeight = 22;
-//
-//    NSString *creativeNameStr = userDic[@"creative_name"];
-//    CGSize creativeNameStrSize;
-//
-//    NSString *nameStr = userDic[@"name"];
-//    CGSize nameStrSize;
-//
-//    if ([creativeNameStr isEqualToString: @""]) {
-//        NSLog(@"creativeNameStr: %@", creativeNameStr);
-//
-//        if (![nameStr isEqualToString: @""]) {
-//            NSLog(@"nameStr: %@", nameStr);
-//            creativeNameStrSize = [nameStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 32]} context: nil].size;
-//
-//            gapToName = 0;
-//            nameStrSize = CGSizeZero;
-//        } else {
-//            creativeNameStrSize = CGSizeMake(296, 31);
-//            gapToName = 0;
-//            nameStrSize = CGSizeZero;
-//        }
-//    } else {
-//        creativeNameStrSize = [creativeNameStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 32]} context: nil].size;
-//
-//        if ([nameStr isEqualToString: @""]) {
-//            gapToName = 0;
-//            nameStrSize = CGSizeZero;
-//        } else {
-//            gapToName = 8;
-//            nameStrSize = [nameStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 18]} context: nil].size;
-//        }
-//    }
-//
-//    CGSize sponsorStrSize;
-//
-//    if (sponsorInt == 0) {
-//        gapToSponsorLabel = 0;
-//        sponsorStrSize = CGSizeZero;
-//    } else {
-//        gapToSponsorLabel = 8;
-//        NSString *sponsorStr = [NSString stringWithFormat: @"已 接 受 %ld 次 贊 助", (long)sponsorInt];
-//        sponsorStrSize = [sponsorStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize:18]} context: nil].size;
-//    }
-//
-//    NSString *descriptionStr = userDic[@"description"];
-//    CGSize descriptionStrSize;
-//
-//    if ([descriptionStr isEqualToString: @""]) {
-//        gapToDescription = 0;
-//        descriptionStrSize = CGSizeZero;
-//    } else {
-//        gapToDescription = 8;
-//        descriptionStrSize = [descriptionStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize:18]} context: nil].size;
-//    }
     
     // Social Link
     NSLog(@"socialLink: %@", userDic[@"sociallink"]);
@@ -451,51 +357,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
         if (![userDic[@"sociallink"][@"youtube"] isEqualToString: @""])
             socialLinkInt++;
     }
-    
     NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
     
-//    CGSize linkStrSize;
-//    CGSize linkView;
-//
-//    if (socialLinkInt != 0) {
-//        gapToLinkLabel = 32;
-//        NSString *linkStr = [NSString stringWithFormat: @"%@的連結", userDic[@"name"]];
-//        linkStrSize = [linkStr boundingRectWithSize: CGSizeMake(296, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont systemFontOfSize:18]} context: nil].size;
-//
-//        gapToLinkView = 8;
-//        linkView = CGSizeMake(296, 32);
-//    } else {
-//        gapToLinkLabel = 0;
-//        linkStrSize = CGSizeZero;
-//
-//        gapToLinkView = 0;
-//        linkView = CGSizeZero;
-//    }
-    
-    //self.jccLayout.headerHeight = headshotHeight + gapToNameSection + creativeNameStrSize.height + gapToName + nameStrSize.height + gapToDescription + descriptionStrSize.height + gapToLinkLabel + linkStrSize.height + gapToLinkView + linkView.height + gapToAlbumSection + albumSectionHeight + 8;
-    
-//    self.jccLayout.headerHeight = headshotHeight + gapToNameSection + creativeNameStrSize.height + gapToName + nameStrSize.height + gapToSponsorLabel + sponsorStrSize.height + gapToDescription + descriptionStrSize.height + gapToLinkLabel + linkStrSize.height + gapToLinkView + linkView.height + gapToAlbumSection + albumSectionHeight + 50;
-//
-//    NSLog(@"");
-//    NSLog(@"headshotHeight: %ld", (long)headshotHeight);
-//    NSLog(@"gapToNameSection: %ld", (long)gapToNameSection);
-//    NSLog(@"creativeNameStrSize.height: %ld", (long)creativeNameStrSize.height);
-//    NSLog(@"gapToName: %ld", (long)gapToName);
-//    NSLog(@"nameStrSize.height: %f", nameStrSize.height);
-//    NSLog(@"gapToDescription: %ld", (long)gapToDescription);
-//    NSLog(@"descriptionStrSize.height: %f", descriptionStrSize.height);
-//    NSLog(@"gapToLinkLabel: %ld", (long)gapToLinkLabel);
-//    NSLog(@"linkStrSize.height: %f", linkStrSize.height);
-//    NSLog(@"gapToLinkView: %ld", (long)gapToLinkView);
-//    NSLog(@"linkView.height: %f", linkView.height);
-//    NSLog(@"gapToAlbumSection: %ld", (long)gapToAlbumSection);
-//    NSLog(@"albumSectionHeight: %ld", (long)albumSectionHeight);
-//    NSLog(@"");
-
     self.jccLayout.headerHeight = 300;
-    
-    //self.jccLayout.headerHeight = 500.0f;
-    //self.jccLayout.footerHeight = 0.0f;
 }
 
 #pragma mark - Helper Method
@@ -511,16 +375,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     CGFloat headerHeight = 0;
     //headerHeight += coverImageHeight + 32 * 3 + creativeNameLabelHeight + 32 + 67 + 32;
     headerHeight += coverImageHeight + 32 + 32 * 2;
-    
-//    // Creative Name Label
-//    if ([userDic[@"creative_name"] isEqualToString: @""]) {
-//
-//    } else if ([userDic[@"creative_name"] isEqual: [NSNull null]]) {
-//
-//    } else {
-//        NSLog(@"creative_name: %@", userDic[@"creative_name"]);
-//        headerHeight += creativeNameLabelHeight + 32;
-//    }
     
     if (![userDic[@"sociallink"] isEqual: [NSNull null]]) {
         if (socialLinkInt != 0) {
@@ -570,27 +424,23 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - UICollectionViewDataSource Methods
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     NSLog(@"");
     NSLog(@"numberOfSectionsInCollectionView");
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
     NSLog(@"");
     NSLog(@"numberOfItemsInSection");
     NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
-    
     return pictures.count;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
            viewForSupplementaryElementOfKind:(NSString *)kind
-                                 atIndexPath:(NSIndexPath *)indexPath
-{
+                                 atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"viewForSupplementaryElementOfKind");
     
@@ -786,7 +636,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     CreatorCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"Creator" forIndexPath: indexPath];
     NSDictionary *data = pictures[indexPath.row];
-    NSLog(@"data: %@", data);
+//    NSLog(@"data: %@", data);
     
     cell.contentView.subviews[0].backgroundColor = nil;
     
@@ -922,7 +772,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"");
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 16.0f;
 }
 
@@ -930,12 +779,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"");
     NSLog(@"minimumLineSpacingForSectionAtIndex");
-    
     return 24.0f;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
     NSLog(@"");
     NSLog(@"insetForSectionAtIndex");
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
@@ -945,8 +792,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - JCCollectionViewWaterfallLayoutDelegate
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(UICollectionViewLayout *)collectionViewLayout
- heightForHeaderInSection:(NSInteger)section
-{
+ heightForHeaderInSection:(NSInteger)section {
     NSLog(@"");
     NSLog(@"heightForHeaderInSection");
     return self.jccLayout.headerHeight;
@@ -954,8 +800,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
     
@@ -1023,9 +868,29 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - UIScrollViewDelegate Methods
 
+- (void)collectionView:(UICollectionView *)collectionView
+       willDisplayCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"willDisplayCell");
+    if (indexPath.item == (pictures.count - 1)) {
+        NSLog(@"indexPath.item == (pictures.count - 1)");
+        [self loadData];
+    }
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidScroll");
+    // Below code will call loadData twice when viewController just appears
     
+    if (!isLoading) {
+        NSLog(@"Is Not Loading");
+        CGFloat bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height;
+        if (bottomEdge > scrollView.contentSize.height) {
+            NSLog(@"We are at the bottom");
+//            [self loadData];
+        }
+    }
+    /*
     // getting the scroll offset
     CGFloat bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height;
     NSLog(@"bottomEdge: %f", bottomEdge);
@@ -1037,6 +902,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"We are at the bottom");
         [self loadData];
     }
+     */
 }
 
 /*

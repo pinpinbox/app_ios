@@ -2548,21 +2548,16 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             if (self.lastContentOffset > scrollView.contentOffset.y) {
                 NSLog(@"Scroll Up");
                 [UIView animateWithDuration: 0.5 animations:^{
-//                    self.navBarHeight.constant = navBarHeightConstant;
-                    [self settingSizeBasedOnDevice];
+//                    [self settingSizeBasedOnDevice];
+                    self.navBarView.hidden = NO;
                     [self.navBarView layoutIfNeeded];
-                    //                CGRect rect = self.navBarView.frame;
-                    //                rect.origin.y = oldNavBarViewYValue;
-                    //                self.navBarView.frame = rect;
                 }];
             } else {
                 NSLog(@"Scroll Down");
                 [UIView animateWithDuration: 0.5 animations:^{
-                    self.navBarHeight.constant = -10;
+//                    self.navBarHeight.constant = -10;                    
+                    self.navBarView.hidden = YES;
                     [self.navBarView layoutIfNeeded];
-                    //                CGRect rect = self.navBarView.frame;
-                    //                rect.origin.y = oldNavBarViewYValue - 48;
-                    //                self.navBarView.frame = rect;
                 }];
             }
         }

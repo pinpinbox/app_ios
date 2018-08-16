@@ -1126,23 +1126,15 @@ continueUserActivity:(NSUserActivity *)userActivity
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application
   supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-    NSLog(@"");
-    NSLog(@"supportedInterfaceOrientationsForWindow");
-    
-    NSLog(@"self.myNav.viewControllers: %@", self.myNav.viewControllers);
+//    NSLog(@"");
+//    NSLog(@"supportedInterfaceOrientationsForWindow");
+//    
+//    NSLog(@"self.myNav.viewControllers: %@", self.myNav.viewControllers);
     for (id controller in self.myNav.viewControllers) {
         if ([controller isKindOfClass: [AlbumCreationViewController class]]) {
             return UIInterfaceOrientationMaskPortrait;
         }
         if ([controller isKindOfClass: [AlbumCollectionViewController class]]) {
-        }
-        if ([controller isKindOfClass: [BuyPPointViewController class]]) {
-            NSLog(@"controller: %@", controller);
-            return UIInterfaceOrientationMaskPortrait;
-        }
-        if ([controller isKindOfClass: [ExchangeInfoEditViewController class]]) {
-            NSLog(@"controller: %@", controller);
-            return UIInterfaceOrientationMaskPortrait;
         }
         if ([controller isKindOfClass: [TestReadBookViewController class]]) {
             TestReadBookViewController *testReadBookVC = (TestReadBookViewController *)controller;            
@@ -1159,18 +1151,15 @@ continueUserActivity:(NSUserActivity *)userActivity
             }
         }
         if ([controller isKindOfClass: [ContentCheckingViewController class]]) {
-            NSLog(@"controller isKindOfClass ContentCheckingViewController");
-            ContentCheckingViewController *contentCheckingVC = (ContentCheckingViewController *)controller;
-            NSLog(@"contentCheckingVC.navigationController.viewControllers: %@", contentCheckingVC.navigationController.viewControllers);
-            
+            ContentCheckingViewController *contentCheckingVC = (ContentCheckingViewController *)controller;            
             for (UIViewController *vc in contentCheckingVC.navigationController.viewControllers) {
                 if ([vc isKindOfClass: [BuyPPointViewController class]]) {
                     return UIInterfaceOrientationMaskPortrait;
-                }
+                } else {}
                 if ([vc isKindOfClass: [ExchangeInfoEditViewController class]]) {
                     return UIInterfaceOrientationMaskPortrait;
                 }
-            }
+            }            
             if (contentCheckingVC.isPresented) {
                 return UIInterfaceOrientationMaskAll;
             } else {

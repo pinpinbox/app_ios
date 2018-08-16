@@ -6,6 +6,7 @@ PODS:
   - SDWebImage (4.2.2):
     - SDWebImage/Core (= 4.2.2)
   - SDWebImage/Core (4.2.2)
+  - SSFadingScrollView (1.1.0)
   - TTTAttributedLabel (2.0.0)
 
 DEPENDENCIES:
@@ -13,6 +14,7 @@ DEPENDENCIES:
   - Flurry-iOS-SDK/FlurrySDK
   - RMPZoomTransitionAnimator
   - SDWebImage (~> 4.0)
+  - SSFadingScrollView (~> 1.1)
   - TTTAttributedLabel
 
 SPEC REPOS:
@@ -20,14 +22,16 @@ SPEC REPOS:
     - Flurry-iOS-SDK
     - RMPZoomTransitionAnimator
     - SDWebImage
+    - SSFadingScrollView
     - TTTAttributedLabel
 
 SPEC CHECKSUMS:
   Flurry-iOS-SDK: 912b3eb78bee559883feb3b13263437b185e8fe9
   RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
   SDWebImage: 89a9d32cd520bbb46eb14e541d5109b3564af198
+  SSFadingScrollView: ac908f565594b1faa748d2d55973f2dde919f754
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: fb3965285758bd3dc5de3ae3a14a12134695c086
+PODFILE CHECKSUM: 7b84ee32a4f1017493099880f8b50761437968db
 
 COCOAPODS: 1.5.3

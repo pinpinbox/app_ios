@@ -1021,13 +1021,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     CGRect rect = self.actionSheetView.frame;
     rect.size.height = self.view.frame.size.height - 110;
     rect.origin.y = 127;
-//    rect.size.height = self.view.frame.size.height - 110;
-//    rect.origin.y = 127;
     self.actionSheetView.frame = rect;
-    
     self.actionSheetView.myLeftMargin = self.actionSheetView.myRightMargin = 0;
     self.actionSheetView.myBottomMargin = 0;
-    
 //    self.actionSheetView.backgroundColor = [UIColor redColor];
     
     // Topic Label Setting

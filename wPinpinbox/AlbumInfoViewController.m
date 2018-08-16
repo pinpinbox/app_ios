@@ -17,8 +17,7 @@
     float lon;
     float lat;
 }
-//@property (weak, nonatomic) IBOutlet UIView *navBarView;
-@property (weak, nonatomic) IBOutlet UIView *navBarView;
+@property (weak, nonatomic) IBOutlet MyLinearLayout *navBarView;
 @property (weak, nonatomic) IBOutlet UIButton *dismissBtn;
 
 @property (weak, nonatomic) IBOutlet MyLinearLayout *bgLayout;
@@ -52,7 +51,6 @@
     NSLog(@"----------------------");
     NSLog(@"AlbumInfoViewController");
     NSLog(@"viewWillLayoutSubviews");
-    
     [self checkDeviceOrientation];
     
     /*
@@ -89,16 +87,48 @@
     if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
         NSLog(@"UIDeviceOrientationIsPortrait");
         self.bgLayout.orientation = 0;
+        self.navBarView.myRightMargin = 0;
+        self.dismissBtn.myTopMargin = 32;
+        self.dismissBtn.myLeftMargin = 16;
+        self.contentVertLayout.padding = UIEdgeInsetsMake(0, 16, 5, 16);
     }
     if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
         NSLog(@"UIDeviceOrientationIsLandscape");
         self.bgLayout.orientation = 1;
+        self.dismissBtn.myTopMargin = 16;
+        self.dismissBtn.myLeftMargin = 32;
+        self.navBarView.myRightMargin = [UIScreen mainScreen].bounds.size.width * 0.3;
+        self.contentVertLayout.padding = UIEdgeInsetsMake(0, 32, 5, 16);
     }
 }
+
+/*
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    NSLog(@"viewWillTransitionToSize");
+    [super viewWillTransitionToSize: size withTransitionCoordinator: coordinator];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+        if (orientation == 1) {
+            NSLog(@"Portrait Mode");
+            
+        } else {
+            NSLog(@"Landscape Mode");
+            
+        }
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        NSLog(@"completions");
+    }];
+}
+*/
 
 #pragma mark -
 - (void)initialValueSetup {
     self.navBarView.backgroundColor = [UIColor barColor];
+    self.navBarView.myTopMargin = 0;
+    self.navBarView.myLeftMargin = self.navBarView.myRightMargin = 0;
+    
+    self.dismissBtn.myTopMargin = 32;
+    self.dismissBtn.myLeftMargin = 16;
     
     //self.bgLayout.backgroundColor = [UIColor yellowColor];
     self.bgLayout.myLeftMargin = self.bgLayout.myRightMargin = 0;

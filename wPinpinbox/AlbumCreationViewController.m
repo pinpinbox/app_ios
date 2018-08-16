@@ -2690,30 +2690,57 @@ didFinishSavingWithError:(NSError *)error
         [imagev sd_setImageWithURL: [NSURL URLWithString: ImageDataArr[indexPath.item-1][@"image_url_thumbnail"]]];
     }
     
-    UIImageView *audioImageView = (UIImageView *)[myCell viewWithTag: 3333];
+//    UIButton *infoButton = (UIButton *)[myCell viewWithTag: 3333];
+//    infoButton.hidden = YES;
+//    infoButton.userInteractionEnabled = NO;
+//
+//    if (![ImageDataArr[indexPath.item - 1][@"audio_url"] isEqual: [NSNull null]]) {
+//        NSLog(@"audio_url is not null");
+//        infoButton.hidden = NO;
+//        [infoButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+//        infoButton.backgroundColor = [UIColor firstMain];
+//        infoButton.layer.cornerRadius = infoButton.layer.bounds.size.width / 2;
+//    } else {
+//        infoButton.hidden = YES;
+//        [infoButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
+//    }
+//
+//    if (![ImageDataArr[indexPath.item - 1][@"video_url"] isEqual: [NSNull null]]) {
+//        NSLog(@"video_url is not null");
+//        infoButton.hidden = NO;
+//        [infoButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+//        infoButton.backgroundColor = [UIColor firstMain];
+//        infoButton.layer.cornerRadius = infoButton.bounds.size.width / 2;
+//    } else {
+//        infoButton.hidden = YES;
+//        [infoButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
+//    }
+    
+    
+    UIButton *audioButton = (UIButton *)[myCell viewWithTag: 3333];
     
     if (![ImageDataArr[indexPath.item - 1][@"audio_url"] isEqual: [NSNull null]]) {
-        audioImageView.hidden = NO;
-        audioImageView.image = [UIImage imageNamed: @"ic200_audio_play_white"];
-        audioImageView.backgroundColor = [UIColor firstMain];
-        audioImageView.layer.cornerRadius = audioImageView.bounds.size.width / 2;
+        audioButton.hidden = NO;
+        [audioButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];        
+        audioButton.backgroundColor = [UIColor firstMain];
+        audioButton.layer.cornerRadius = audioButton.bounds.size.width / 2;
     } else {
-        audioImageView.hidden = YES;
-        audioImageView.image = [UIImage imageNamed: @""];
+        audioButton.hidden = YES;
+        [audioButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
     }
     
-    UIImageView *videoImageView = (UIImageView *)[myCell viewWithTag: 4444];
+    UIButton *videoButton = (UIButton *)[myCell viewWithTag: 4444];
     
     if (![ImageDataArr[indexPath.item - 1][@"video_url"] isEqual: [NSNull null]]) {
         NSLog(@"video_url is not null");
-        videoImageView.hidden = NO;
-        videoImageView.image = [UIImage imageNamed: @"ic200_video_white"];
-        videoImageView.backgroundColor = [UIColor firstMain];
-        videoImageView.layer.cornerRadius = videoImageView.bounds.size.width / 2;
+        videoButton.hidden = NO;
+        [videoButton setImage: [UIImage imageNamed: @"ic200_video_white_1"] forState: UIControlStateNormal];        
+        videoButton.backgroundColor = [UIColor firstMain];
+        videoButton.layer.cornerRadius = videoButton.bounds.size.width / 2;
     } else {
         NSLog(@"video_url is null");
-        videoImageView.hidden = YES;
-        videoImageView.image = [UIImage imageNamed: @""];                
+        videoButton.hidden = YES;
+        [videoButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
     }
     
     UILabel *lab = (UILabel *)[myCell viewWithTag:1111];

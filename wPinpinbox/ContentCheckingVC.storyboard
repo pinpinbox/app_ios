@@ -347,8 +347,8 @@
                                                         <constraint firstAttribute="width" constant="240" id="brH-gn-zbC"/>
                                                     </constraints>
                                                 </view>
-                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ywr-fC-lW5" customClass="MyLinearLayout">
-                                                    <rect key="frame" x="87" y="294" width="240" height="200"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ywr-fC-lW5" customClass="MyLinearLayout">
+                                                    <rect key="frame" x="87" y="258" width="240" height="200"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="240" id="az0-YX-Uwn"/>
@@ -439,7 +439,7 @@
                                 <rect key="frame" x="0.0" y="619" width="414" height="60"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gD8-9M-Iko">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gD8-9M-Iko" customClass="SSFadingScrollView">
                                 <rect key="frame" x="32" y="619" width="350" height="60"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8K-FQ-cYJ" customClass="TTTAttributedLabel">
@@ -515,10 +515,15 @@
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NCF-bB-gsX">
                                                                     <rect key="frame" x="0.0" y="0.0" width="35" height="0.0"/>
                                                                 </imageView>
-                                                                <imageView userInteractionEnabled="NO" tag="3333" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RDb-Ou-zfX">
-                                                                    <rect key="frame" x="18" y="0.0" width="16" height="16"/>
-                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                </imageView>
+                                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1lj-2w-30V">
+                                                                    <rect key="frame" x="13" y="0.0" width="22" height="22"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
+                                                                    <state key="normal">
+                                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    </state>
+                                                                </button>
                                                             </subviews>
                                                         </view>
                                                         <constraints>
@@ -528,7 +533,7 @@
                                                             <constraint firstAttribute="bottom" secondItem="NCF-bB-gsX" secondAttribute="bottom" id="Wn5-uL-vbu"/>
                                                         </constraints>
                                                         <connections>
-                                                            <outlet property="infoImageView" destination="RDb-Ou-zfX" id="Ta5-Xd-ggy"/>
+                                                            <outlet property="infoButton" destination="1lj-2w-30V" id="Ihd-EZ-gMc"/>
                                                             <outlet property="thumbnailImageView" destination="NCF-bB-gsX" id="xGL-w9-Pn6"/>
                                                         </connections>
                                                     </collectionViewCell>
@@ -693,7 +698,7 @@
                     </view>
                     <connections>
                         <outlet property="descriptionLabel" destination="M8K-FQ-cYJ" id="dWY-h9-bYo"/>
-                        <outlet property="descriptionScrollView" destination="gD8-9M-Iko" id="U8n-Km-Dgc"/>
+                        <outlet property="descriptionScrollView" destination="gD8-9M-Iko" id="Q8H-k2-Isq"/>
                         <outlet property="descriptionScrollViewBottomConstraint" destination="lZg-mo-sr9" id="8qK-Qp-hYH"/>
                         <outlet property="descriptionScrollViewHeightConstraint" destination="n0z-Hn-tR5" id="IOJ-uw-FzV"/>
                         <outlet property="horzLineView" destination="JXd-ak-tK2" id="9aI-NI-5Ox"/>

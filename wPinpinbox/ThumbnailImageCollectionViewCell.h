@@ -10,5 +10,6 @@
 
 @interface ThumbnailImageCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *thumbnailImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *infoImageView;
+@property (weak, nonatomic) IBOutlet UIButton *infoButton;
+
 @end

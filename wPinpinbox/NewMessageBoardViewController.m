@@ -61,10 +61,8 @@
     [self initialValueSetup];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     [self getMessage];
 }
 
@@ -74,13 +72,11 @@
 }
 
 #pragma mark - View Controller Rotation
-- (void)viewWillLayoutSubviews
-{
+- (void)viewWillLayoutSubviews {
     NSLog(@"viewWillLayoutSubviews");
 }
 
-- (void)checkDeviceOrientation
-{
+- (void)checkDeviceOrientation {
     NSLog(@"----------------------");
     NSLog(@"checkDeviceOrientation");
     
@@ -268,43 +264,36 @@
     self.tableView.showsVerticalScrollIndicator = NO;
 }
 
-- (void)dismissKeyboard
-{
+- (void)dismissKeyboard {
     [self.view endEditing:YES];
 }
 
-- (void)handleTap
-{
+- (void)handleTap {
     NSLog(@"handleTap");
     
     [self.view endEditing: YES];
 }
 
-- (void)exitBtnHighLight: (UIButton *)sender
-{
+- (void)exitBtnHighLight: (UIButton *)sender {
     NSLog(@"exitBtnHighLight");
     sender.backgroundColor = [UIColor thirdMain];
 }
 
-- (void)exitBtnNormal: (UIButton *)sender
-{
+- (void)exitBtnNormal: (UIButton *)sender {
     NSLog(@"exitBtnNormal");
     sender.backgroundColor = [UIColor clearColor];
 }
 
 #pragma mark - UITextViewDelegate
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
+- (void)textViewDidBeginEditing:(UITextView *)textView {
     selectTextView = textView;
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
+- (void)textViewDidEndEditing:(UITextView *)textView {
     selectTextView = nil;
 }
 
-- (void)textViewDidChange:(UITextView *)textView
-{
+- (void)textViewDidChange:(UITextView *)textView {
     NSLog(@"textViewDidChange");
     
     //每次输入变更都让布局重新布局。
@@ -463,8 +452,7 @@
     });
 }
 
-- (void)insertMessage: (NSString *)text
-{
+- (void)insertMessage: (NSString *)text {
     NSLog(@"");
     NSLog(@"insertMessage");
     NSLog(@"text: %@", text);
@@ -482,7 +470,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     
     NSLog(@"");
     NSLog(@"nextId: %ld", (long)nextId);

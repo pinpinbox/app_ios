@@ -85,7 +85,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Ca-aU-4b4">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Ca-aU-4b4" customClass="MyLinearLayout">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -113,7 +113,7 @@
                         <outlet property="mapView" destination="9Ck-Qd-8ST" id="NdT-1M-gAw"/>
                         <outlet property="nameImgView" destination="eKC-lK-f0o" id="dfY-hU-XwA"/>
                         <outlet property="nameLabel" destination="vwr-Ah-kVz" id="eLh-Kn-JUs"/>
-                        <outlet property="navBarView" destination="0Ca-aU-4b4" id="TXa-f8-4ZE"/>
+                        <outlet property="navBarView" destination="0Ca-aU-4b4" id="PHT-Uk-fMX"/>
                         <outlet property="scrollView" destination="YIa-Xj-KkI" id="NI7-k7-myi"/>
                         <outlet property="topicLabel" destination="Mq4-mW-8xw" id="yOU-a4-xlN"/>
                     </connections>

@@ -272,7 +272,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"refresh");
     
     if (!isReloading) {
-        
         isReloading = YES;
         nextId = 0;
         isLoading = NO;
@@ -534,8 +533,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - Point Task
-- (void)checkFirstTimeEditing
-{
+- (void)checkFirstTimeEditing {
     NSLog(@"checkFirstTimeEditing");
     
     // Check whether getting edit profile point or not
@@ -559,9 +557,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - Check Point Method
-
-- (void)checkPoint
-{
+- (void)checkPoint {
     NSLog(@"checkPoint");
     
     @try {
@@ -648,8 +644,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - Get P Point
-- (void)getUrPoints
-{
+- (void)getUrPoints {
     NSLog(@"");
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -678,7 +673,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             
             if (response != nil) {
                 NSLog(@"response from geturpoints");
@@ -719,8 +713,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - Custom AlertView for Getting Point
-- (void)showAlertView
-{
+- (void)showAlertView {
     // Custom AlertView shows up when getting the point
     alertView = [[OldCustomAlertView alloc] init];
     [alertView setContainerView: [self createPointView]];
@@ -730,8 +723,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [alertView show];
 }
 
-- (UIView *)createPointView
-{
+- (UIView *)createPointView {
     NSLog(@"createPointView");
     
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
@@ -899,6 +891,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
      numberOfItemsInSection:(NSInteger)section
 {
     NSLog(@"numberOfItemsInSection");
+    NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
     return pictures.count;
 }
 

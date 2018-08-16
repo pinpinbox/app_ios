@@ -11,4 +11,5 @@ target 'wPinpinbox' do
   pod 'Flurry-iOS-SDK/FlurryAds' #Advertising Pod (requires Analytics)
   pod "RMPZoomTransitionAnimator"
   pod 'TTTAttributedLabel'
+  pod 'SSFadingScrollView', '~> 1.1'
 end

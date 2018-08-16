@@ -27,6 +27,7 @@
 #import "OldCustomAlertView.h"
 #import "BuyPPointViewController.h"
 #import "MessageboardViewController.h"
+#import "NewMessageBoardViewController.h"
 #import "DDAUIActionSheetViewController.h"
 #import "MapShowingViewController.h"
 #import "AlbumInfoViewController.h"
@@ -45,6 +46,9 @@
 #import "ExchangeInfoEditViewController.h"
 
 #import "ZOZolaZoomTransition.h"
+#import <SSFadingScrollView.h>
+
+#define kTextContentHeight 155
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
@@ -54,7 +58,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate, ExchangeInfoEditViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate> {
+@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate, ExchangeInfoEditViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, NewMessageBoardViewControllerDelegate> {
     BOOL isDataLoaded;
     BOOL isRotating;
     BOOL kbShowUp;
@@ -103,6 +107,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     CGFloat giftViewWidth;
     CGFloat giftViewHeight;
     ImageCollectionViewCell *iCVC;
+    
+    BOOL isGiftImageLoaded;
 }
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarViewTopConstraint;
@@ -135,7 +141,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBottomConstraint;
 
-@property (weak, nonatomic) IBOutlet UIScrollView *descriptionScrollView;
+//@property (weak, nonatomic) IBOutlet UIScrollView *descriptionScrollView;
+@property (weak, nonatomic) IBOutlet SSFadingScrollView *descriptionScrollView;
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewBottomConstraint;
 //@property (weak, nonatomic) IBOutlet FRHyperLabel *descriptionLabel;
@@ -157,6 +165,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (strong, nonatomic) AVPlayerItem *avPlayerItem;
 
 @property (strong, nonatomic) AVPlayer *videoPlayer;
+@property (strong, nonatomic) AVPlayerItem *videoPlayerItem;
 @property (strong, nonatomic) AVPlayerViewController *videoPlayerViewController;
 
 @property (nonatomic) NSMutableDictionary *slotDicData;
@@ -357,11 +366,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     giftViewWidth = self.view.frame.size.width - 32 * 2;
     giftViewHeight = self.view.frame.size.width;
     
+    isGiftImageLoaded = NO;
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     self.audioSwitch = [[defaults objectForKey: @"isAudioPlayedAutomatically"] boolValue];
     NSLog(@"self.audioSwitch: %d", self.audioSwitch);
     
     userPrefs = [NSUserDefaults standardUserDefaults];
+    
+    self.descriptionScrollView.fadeSize = 10;
     
     [self setupCustomMapActionSheet];
     [self setupCustomMoreActionSheet];
@@ -516,6 +529,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }];
     
     if ([useFor isEqualToString: @"video"]) {
+        if ((self.videoPlayer.rate != 0) && (self.videoPlayer.error == nil)) {
+            NSLog(@"self.videoPlayer.rate: %f", self.videoPlayer.rate);
+        }
+        
         if (self.navBarView.hidden) {
             self.videoPlayerViewController.showsPlaybackControls = YES;
         } else {
@@ -1337,8 +1354,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [cell.ytPlayerView stopVideo];
     cell.ytPlayerView.hidden = YES;
     cell.videoView.hidden = YES;
-    [self.videoPlayer pause];
-    
+    [self.videoPlayer pause];    
     
     if ([useFor isEqualToString: @"video"]) {
         if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
@@ -1383,18 +1399,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 // Get URL
                 NSURL *highQualityURL = [video lowestQualityStreamURL];
                 [self setupVideoPlayer: cell
-                              videoUrl: highQualityURL];
+                              videoUrl: highQualityURL
+                              platform: @"vimeo"];
             }
         }];
     }
     if (!([[url host] rangeOfString: @"facebook"].location == NSNotFound)) {
         NSLog(@"url host contains facebook");
-        [self checkFBSDK: cell url: url];
+        fbVideoUrl = url;
+        cell.imageView.alpha = 1;
+        cell.alphaBgV.hidden = NO;
+        cell.videoBtn.hidden = NO;
+        
+        [cell.ytPlayerView stopVideo];
+        cell.ytPlayerView.hidden = YES;
+        cell.videoView.hidden = YES;
+//        [self checkFBSDK: cell url: url];
         cell.imageView.alpha = 1;
         cell.ytPlayerView.hidden = YES;
         cell.videoView.hidden = YES;
-    } else {
-        
     }
     if (!([[url host] rangeOfString: @"youtube"].location == NSNotFound) || !([[url host] rangeOfString: @"youtu.be"].location == NSNotFound)) {
         NSLog(@"url host contains youtube");
@@ -1421,14 +1444,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"checkFBSDK");
     NSLog(@"url: %@", url);
     
-    cell.imageView.alpha = 1;
-    cell.alphaBgV.hidden = NO;
-    cell.videoBtn.hidden = NO;
-    
-    [cell.ytPlayerView stopVideo];
-    cell.ytPlayerView.hidden = YES;
-    cell.videoView.hidden = YES;
-    
     // Section Below is to check FBSDK
     NSString *videoStr;
     NSCharacterSet *notDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
@@ -1452,9 +1467,30 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             if (connection) {
                 fbVideoUrl = url;
-//                [self openSafari: url];
+                NSLog(@"url: %@", url);
+                
+                if ([url isEqual: [NSNull null]]) {
+                    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                    style.messageColor = [UIColor whiteColor];
+                    style.backgroundColor = [UIColor thirdPink];
+                    
+                    [self.view makeToast: @"FB影片連結有錯誤"
+                                duration: 2.0
+                                position: CSToastPositionBottom
+                                   style: style];
+                } else {
+                    [self openSafari: url];
+                }
             } else if (!connection) {
                 NSLog(@"Get Video Error");
+                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                style.messageColor = [UIColor whiteColor];
+                style.backgroundColor = [UIColor thirdPink];
+                
+                [self.view makeToast: @"FB影片連結有錯誤"
+                            duration: 2.0
+                            position: CSToastPositionBottom
+                               style: style];
             }
         }];
     } else {
@@ -1468,9 +1504,30 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
                 if (connection) {
                     fbVideoUrl = url;
-//                    [self openSafari: url];
+                    NSLog(@"url: %@", url);
+                    
+                    if ([url isEqual: [NSNull null]]) {
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor thirdPink];
+                        
+                        [self.view makeToast: @"FB影片連結有錯誤"
+                                    duration: 2.0
+                                    position: CSToastPositionBottom
+                                       style: style];
+                    } else {
+                        [self openSafari: url];
+                    }
                 } else if (!connection) {
                     NSLog(@"Get Video Error");
+                    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                    style.messageColor = [UIColor whiteColor];
+                    style.backgroundColor = [UIColor thirdPink];
+                    
+                    [self.view makeToast: @"FB影片連結有錯誤"
+                                duration: 2.0
+                                position: CSToastPositionBottom
+                                   style: style];
                 }
             }];
         } declinedOrCanceledHandler:^{
@@ -1536,7 +1593,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (IBAction)fbVideoBtnPressed:(id)sender {
-    [self openSafari: fbVideoUrl];
+    NSLog(@"fbVideoBtnPressed");
+    NSLog(@"fbVideoUrl: %@", fbVideoUrl);
+    
+    if (fbVideoUrl == nil) {
+        NSLog(@"fbVideoUrl == nil");
+        NSURL *url = [NSURL URLWithString: self.photoArray[[self getCurrentPage]][@"video_target"]];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+        ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+        [self checkFBSDK:cell url: url];
+    } else {
+        [self openSafari: fbVideoUrl];
+    }
 }
 
 - (void)openSafari: (NSURL *)url {
@@ -1556,6 +1624,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSDictionary *playerVars = @{
                                  @"playsinline" : @1,
                                  @"showinfo" : @1,
+//                                 @"origin" :@"http://www.youtube.com",
                                  };
     [cell.ytPlayerView stopVideo];
     
@@ -1582,12 +1651,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - YTPlayerView Delegate Methods
 - (void)playerViewDidBecomeReady:(YTPlayerView *)playerView {
     NSLog(@"playerViewDidBecomeReady");
-    [playerView playVideo];
-}
-
-- (void)playerViewDidTouch:(YTPlayerView *)playerView {
-    NSLog(@"playerViewDidTouch");
-    [self handleSingleTap];
+//    [playerView playVideo];
 }
 
 #pragma mark - Play Uploaded Video
@@ -1595,24 +1659,35 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                      page:(NSInteger)page {
     NSURL *videoUrl = [NSURL URLWithString: self.photoArray[page][@"video_target"]];
     [self setupVideoPlayer: cell
-                  videoUrl: videoUrl];
+                  videoUrl: videoUrl
+                  platform: @"general"];
 }
 
 #pragma mark - Setup Video Player
 - (void)setupVideoPlayer:(ImageCollectionViewCell *)cell
-                videoUrl:(NSURL *)videoUrl {
+                videoUrl:(NSURL *)videoUrl
+                platform:(NSString *)platform {
     NSLog(@"setupVideoPlayer");
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL: videoUrl];
-    NSLog(@"playerItem: %@", playerItem);
+//    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL: videoUrl];
+//    NSLog(@"playerItem: %@", playerItem);
+    
+    cell.videoView.hidden = NO;
+    videoIsPlaying = YES;
+    
+    [self.avPlayer pause];
+    self.mScrubber.hidden = YES;
+    
+    self.videoPlayerItem = [AVPlayerItem playerItemWithURL: videoUrl];
     
     if (!self.videoPlayer) {
         NSLog(@"self.videoPlayer is not initialized");
-        self.videoPlayer = [AVPlayer playerWithPlayerItem: playerItem];
+        self.videoPlayer = [AVPlayer playerWithPlayerItem: self.videoPlayerItem];
+        self.videoPlayer.automaticallyWaitsToMinimizeStalling = NO;
     } else {
         NSLog(@"self.videoPlayer is initialized");
-        [self.videoPlayer replaceCurrentItemWithPlayerItem: playerItem];
+        self.videoPlayer.automaticallyWaitsToMinimizeStalling = NO;
+        [self.videoPlayer replaceCurrentItemWithPlayerItem: self.videoPlayerItem];
     }
-    
     if (!self.videoPlayerViewController) {
         NSLog(@"self.videoPlayerViewController is initialized");
         self.videoPlayerViewController = [AVPlayerViewController new];
@@ -1631,11 +1706,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [cell.videoView addSubview: self.videoPlayerViewController.view];
     [self.videoPlayer play];
     
-    cell.videoView.hidden = NO;
-    videoIsPlaying = YES;
-    
-    [self.avPlayer pause];
-    self.mScrubber.hidden = YES;
+    if (![platform isEqualToString: @"general"]) {
+        [self.videoPlayer pause];
+    }
 }
 
 #pragma mark -
@@ -2814,10 +2887,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [contentLayout addSubview: nameLabel];
     }
     
+    isGiftImageLoaded = NO;
+    
     // ImageView
     if (![dicData[@"photousefor"][@"image"] isEqual: [NSNull null]]) {
         __block UIImageView *imageView = [[UIImageView alloc] init];
         [imageView sd_setImageWithURL: [NSURL URLWithString: dicData[@"photousefor"][@"image"]] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            isGiftImageLoaded = YES;
+            
             imageView = [self calculateImageViewSize: cell.giftViewBgV imgV: imageView];
             imageView.myTopMargin = imageView.myBottomMargin = 8;
             imageView.myLeftMargin = imageView.myRightMargin = 16;
@@ -2987,23 +3064,34 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)exchangeBtnTouchUpInside:(UIButton *)btn {
     NSLog(@"exchangeBtnTouchUpInside");
-    [self changeOrientationToPortrait];
-    
-    btn.backgroundColor = [UIColor firstMain];
-    
-    NSInteger photoId = [self.photoArray[[self getCurrentPage]][@"photo_id"] integerValue];
-    NSLog(@"photoId: %ld", (long)photoId);
-    
-    ExchangeInfoEditViewController *exchangeInfoEditVC = [[ExchangeInfoEditViewController alloc] init];
-    exchangeInfoEditVC.exchangeDic = [self.slotDicData mutableCopy];
-    exchangeInfoEditVC.hasExchanged = NO;
-    exchangeInfoEditVC.isExisting = [self.slotDicData[@"bookmark"][@"is_existing"] boolValue];
-    exchangeInfoEditVC.backgroundView = btn.superview;
-    exchangeInfoEditVC.photoId = photoId;
-    exchangeInfoEditVC.delegate = self;
-    self.navigationController.delegate = self;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate.myNav pushViewController: exchangeInfoEditVC animated: YES];
+    if (isGiftImageLoaded) {
+        [self changeOrientationToPortrait];
+        
+        btn.backgroundColor = [UIColor firstMain];
+        
+        NSInteger photoId = [self.photoArray[[self getCurrentPage]][@"photo_id"] integerValue];
+        NSLog(@"photoId: %ld", (long)photoId);
+        
+        ExchangeInfoEditViewController *exchangeInfoEditVC = [[ExchangeInfoEditViewController alloc] init];
+        exchangeInfoEditVC.exchangeDic = [self.slotDicData mutableCopy];
+        exchangeInfoEditVC.hasExchanged = NO;
+        exchangeInfoEditVC.isExisting = [self.slotDicData[@"bookmark"][@"is_existing"] boolValue];
+        exchangeInfoEditVC.backgroundView = btn.superview;
+        exchangeInfoEditVC.photoId = photoId;
+        exchangeInfoEditVC.delegate = self;
+        self.navigationController.delegate = self;
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [appDelegate.myNav pushViewController: exchangeInfoEditVC animated: YES];
+    } else {
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor thirdPink];
+        
+        [self.view makeToast: @"請等待圖片載入完成"
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+    }
 }
 
 - (void)exchangeBtnTouchUpDragExit:(UIButton *)btn {
@@ -3303,7 +3391,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         } else {
             [cell.thumbnailImageView sd_setImageWithURL: data[@"image_url_thumbnail"]];
         }
-        
         NSString *audioTargetStr = self.photoArray[indexPath.row][@"audio_target"];
         // Check audioTarget
         if (audioTargetStr == nil) {
@@ -3316,22 +3403,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"Before checking audioTargetStr isEqualToString empty");
         
         if ([useFor isEqualToString: @"video"]) {
-//            NSLog(@"usefor is video");
-            cell.infoImageView.image = [UIImage imageNamed: @"ic200_video_white"];
-            cell.infoImageView.backgroundColor = [UIColor firstMain];
+            cell.infoButton.hidden = NO;
+            [cell.infoButton setImage: [UIImage imageNamed: @"ic200_video_white_1"] forState: UIControlStateNormal];
         } else if ([useFor isEqualToString: @"slot"] || [useFor isEqualToString: @"exchange"]) {
-            cell.infoImageView.image = [UIImage imageNamed: @"ic200_gift_white"];
-            cell.infoImageView.backgroundColor = [UIColor firstMain];
+            cell.infoButton.hidden = NO;
+            [cell.infoButton setImage: [UIImage imageNamed: @"ic200_gift_white"] forState: UIControlStateNormal];
         } else {
-            cell.infoImageView.image = nil;
-            cell.infoImageView.backgroundColor = [UIColor clearColor];
+            cell.infoButton.hidden = YES;
         }
-        
         if (![audioTargetStr isEqualToString: @""]) {
-            cell.infoImageView.image = [UIImage imageNamed: @"ic200_audio_play_white"];
-            cell.infoImageView.backgroundColor = [UIColor firstMain];
+            cell.infoButton.hidden = NO;
+            [cell.infoButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
         }
-        
         if (indexPath.item == [self getCurrentPage]) {
             cell.layer.borderWidth = 2;
             cell.layer.borderColor = [UIColor firstMain].CGColor;
@@ -3444,18 +3527,19 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
                   willDecelerate:(BOOL)decelerate {
+    if (isDataLoaded) {
+        NSLog(@"data is loaded");
+        if (!isRotating) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+            ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+            [cell.ytPlayerView stopVideo];
+            cell.ytPlayerView.hidden = YES;
+        }
+    }
     iCVC.imageView.alpha = 1;
-    [iCVC.ytPlayerView stopVideo];
-    iCVC.ytPlayerView.hidden = YES;
     iCVC.videoView.hidden = YES;
     self.videoPlayerViewController.view.hidden = YES;
-//    iCVC.alphaBgV.hidden = YES;
     iCVC.videoBtn.hidden = YES;
-    
-//    iCVC.giftImageBtn.hidden = YES;
-//    iCVC.giftViewBgV.hidden = YES;
-//    iCVC.statusView.hidden = YES;
-//    iCVC.checkCollectionLayout.hidden = YES;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -3513,17 +3597,23 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)textViewContentSetup:(NSInteger)page {
     NSLog(@"textViewContentSetup");
+    NSLog(@"page: %ld", (long)page);
     NSString *description = self.photoArray[page][@"description"];
     
     NSAttributedString *attString = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleBody], NSKernAttributeName: @1, NSForegroundColorAttributeName: [UIColor whiteColor]}];
     self.descriptionLabel.text = attString;
     
-    [self setupContentSizeHeight: description];
+    CGFloat btnHeight = 0;
+    NSInteger urlCount = 0;
     
     if ([self.photoArray[page][@"hyperlink"] isEqual: [NSNull null]]) {
+        NSLog(@"hyperlink is null");
         self.linkStackView.hidden = YES;
+        btnHeight = 0;
     } else {
+        NSLog(@"hyperlink is not null");
         self.linkStackView.hidden = NO;
+        
         NSArray *hyperLinkArray = self.photoArray[page][@"hyperlink"];
         NSLog(@"hyperlink section");
         NSLog(@"hyperLinkArray: %@", hyperLinkArray);
@@ -3531,12 +3621,18 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         for (NSInteger i = 0; i < hyperLinkArray.count; i++) {
             NSDictionary *dic = hyperLinkArray[i];
             if ([dic[@"url"] isEqualToString: @""]) {
+                NSLog(@"url is equal to empty");
+                btnHeight = 0;
+                
                 if (i == 0) {
                     self.linkBtn1.hidden = YES;
                 } else if (i == 1) {
                     self.linkBtn2.hidden = YES;
                 }
             } else {
+                NSLog(@"url is not equal to empty");
+                urlCount++;
+                
                 if (i == 0) {
                     btnUrl1 = dic[@"url"];
                     self.linkBtn1.hidden = NO;
@@ -3561,31 +3657,36 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             }
         }
     }
+    if (urlCount > 0) {
+        btnHeight = 30;
+    }
+    NSLog(@"btnHeight: %f", btnHeight);
+    [self setupContentSizeHeight: description btnHeight: btnHeight];
+    [self.descriptionScrollView setContentOffset: CGPointZero];
 }
 
-- (void)setupContentSizeHeight:(NSString *)description {
+- (void)setupContentSizeHeight:(NSString *)description
+                     btnHeight:(CGFloat)btnHeight {
+    NSLog(@"setupContentSizeHeight");
     NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     style.lineBreakMode = NSLineBreakByWordWrapping;
     style.alignment = NSTextAlignmentLeft;
-    NSAttributedString *string = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName:[UIFont systemFontOfSize:14], NSParagraphStyleAttributeName:style}];
+    NSAttributedString *string = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName:[UIFont systemFontOfSize:16], NSParagraphStyleAttributeName:style}];
     CGSize textSize = [string boundingRectWithSize: CGSizeMake([UIScreen mainScreen].bounds.size.width - 32 * 2, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context: nil].size;
-    
+    NSLog(@"description: %@", description);
+    NSLog(@"self getCurrentPage: %ld", (long)[self getCurrentPage]);
     NSLog(@"textSize.height: %f", textSize.height);
+    NSLog(@"btnHeight: %f", btnHeight);
     
-    if (textSize.height < 48) {
-        //        self.textViewHeightConstraint.constant = textSize.height;
-        self.descriptionScrollViewHeightConstraint.constant = textSize.height;
-        //        self.textViewBgViewHeightConstraint.constant = textSize.height;
+    if (textSize.height + btnHeight + 30 < kTextContentHeight) {
+        self.descriptionScrollViewHeightConstraint.constant = textSize.height + btnHeight + 30;
+        NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
         
         if ([description isEqualToString: @""]) {
-            //            self.textViewHeightConstraint.constant = 0;
             self.descriptionScrollViewHeightConstraint.constant = 0;
-            //            self.textViewBgViewHeightConstraint.constant = 0;
         }
-    } else if (textSize.height > 48) {
-        //        self.textViewHeightConstraint.constant = 113.6;
-        self.descriptionScrollViewHeightConstraint.constant = 140;
-        //        self.textViewBgViewHeightConstraint.constant = 113.6;
+    } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
+        self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;
     }
 }
 
@@ -3733,7 +3834,15 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     if (kbShowUp) {
         [self dismissKeyboard];
     }
-    [self showCustomMessageActionSheet];
+    [self showNewMessageBoardVC];
+//    [self showCustomMessageActionSheet];
+}
+
+- (void)showNewMessageBoardVC {
+    NewMessageBoardViewController *nMBVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"NewMessageBoardViewController"];
+    nMBVC.type = @"album";
+    nMBVC.typeId = self.albumId;
+    [self presentViewController: nMBVC animated: YES completion: nil];
 }
 
 - (void)showCustomMessageActionSheet {

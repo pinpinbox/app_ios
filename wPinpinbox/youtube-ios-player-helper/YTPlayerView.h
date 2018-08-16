@@ -61,7 +61,6 @@ typedef NS_ENUM(NSInteger, YTPlayerError) {
 @protocol YTPlayerViewDelegate<NSObject>
 
 @optional
-- (void)playerViewDidTouch:(nonnull YTPlayerView *)playerView;
 
 /**
  * Invoked when the player view is ready to receive API calls.
