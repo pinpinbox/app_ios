@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7eV-yR-QAC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7eV-yR-QAC">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -422,7 +421,7 @@
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RG1-sb-VoD">
-                                                                    <rect key="frame" x="0.0" y="14" width="112" height="21"/>
+                                                                    <rect key="frame" x="0.0" y="13.5" width="112" height="21"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -529,7 +528,7 @@
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="piF-4I-vfv">
-                                                                    <rect key="frame" x="0.0" y="14" width="112" height="21"/>
+                                                                    <rect key="frame" x="0.0" y="13.5" width="112" height="21"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -667,7 +666,7 @@
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BEm-1U-EyU">
-                                                                    <rect key="frame" x="0.0" y="14" width="112" height="21"/>
+                                                                    <rect key="frame" x="0.0" y="13.5" width="112" height="21"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -731,7 +730,7 @@
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AjO-Ka-EeX">
-                                                                    <rect key="frame" x="0.0" y="14" width="112" height="21"/>
+                                                                    <rect key="frame" x="0.0" y="13.5" width="112" height="21"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -910,7 +909,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G6s-OO-mcw">
-                                        <rect key="frame" x="268" y="11.5" width="36" height="36"/>
+                                        <rect key="frame" x="268" y="12" width="36" height="36"/>
                                         <color key="backgroundColor" red="0.90980392156862744" green="0.90980392156862744" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="OkH-Ip-GOW"/>
@@ -1044,7 +1043,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="awe-FP-i0H"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" id="btT-45-6Ig"/>
+                    <tabBarItem key="tabBarItem" title="" image="MeTab" selectedImage="MeSelectedTab" id="btT-45-6Ig"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yMx-W9-QUU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1346,7 +1345,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pib-sW-517">
-                                <rect key="frame" x="0.0" y="269" width="135" height="0.5"/>
+                                <rect key="frame" x="0.0" y="269.5" width="135" height="0.5"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.5" id="ENd-lX-b3W"/>
@@ -1371,7 +1370,7 @@
                                         </connections>
                                     </textField>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_mail_dark" translatesAutoresizingMaskIntoConstraints="NO" id="BT6-Hv-Ba8">
-                                        <rect key="frame" x="8" y="13.5" width="20" height="20"/>
+                                        <rect key="frame" x="8" y="14" width="20" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="20" id="jHX-9G-Q1j"/>
                                             <constraint firstAttribute="height" constant="20" id="q51-Hh-VK7"/>
@@ -1445,7 +1444,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wbi-Lu-q8H">
-                                <rect key="frame" x="145" y="504" width="31" height="48"/>
+                                <rect key="frame" x="144.5" y="504" width="31" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="JPo-um-CdS"/>
                                 </constraints>
@@ -2857,6 +2856,8 @@
         <image name="3-03bg.png" width="540" height="960"/>
         <image name="4-08button_cooperation_click.png" width="60" height="60"/>
         <image name="4-08photo-size.png" width="88" height="132"/>
+        <image name="MeSelectedTab" width="25" height="25"/>
+        <image name="MeTab" width="25" height="25"/>
         <image name="PinPinBoxSelectedTab" width="25" height="25"/>
         <image name="PinPinBoxTab" width="25" height="25"/>
         <image name="bg200_login" width="1080" height="1920"/>

@@ -207,32 +207,32 @@ static NSString *autoPlayStr = @"&autoplay=1";
             case 1136:
                 printf("iPhone 5 or 5S or 5C");
                 self.navBarHeight.constant = 48;
-                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+    //            self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
                 self.navBarHeight.constant = 48;
-                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+    //            self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
                 break;
             case 1920:
                 printf("iPhone 6+/6S+/7+/8+");
                 self.navBarHeight.constant = 48;
-                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+   //             self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
                 break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 self.navBarHeight.constant = 48;
-                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+   //             self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
                 break;
             case 2436:
                 printf("iPhone X");
                 self.navBarHeight.constant = navBarHeightConstant;
-                self.collectionView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
+   //             self.collectionView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
                 break;
             default:
                 printf("unknown");
                 self.navBarHeight.constant = 48;
-                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+   //             self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
                 break;
         }
     }
@@ -1031,7 +1031,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             
             NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
             
-            linkLabelStr = [NSString stringWithFormat: @"%@的連結", self.userDic[@"name"]];
+            linkLabelStr = [NSString stringWithFormat: @"連結"];//, self.userDic[@"name"]];
             headerView.linkLabel.text = linkLabelStr;
             [LabelAttributeStyle changeGapString: headerView.linkLabel content: linkLabelStr];
             

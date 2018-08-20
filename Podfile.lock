@@ -1,11 +1,11 @@
 PODS:
-  - Flurry-iOS-SDK/FlurryAds (8.3.1):
-    - Flurry-iOS-SDK/FlurrySDK
-  - Flurry-iOS-SDK/FlurrySDK (8.3.1)
+  - Flurry-iOS-SDK/FlurryAds (9.0.0):
+    - Flurry-iOS-SDK/FlurrySDK (~> 9.0.0)
+  - Flurry-iOS-SDK/FlurrySDK (9.0.0)
   - RMPZoomTransitionAnimator (1.0.3)
-  - SDWebImage (4.2.2):
-    - SDWebImage/Core (= 4.2.2)
-  - SDWebImage/Core (4.2.2)
+  - SDWebImage (4.4.2):
+    - SDWebImage/Core (= 4.4.2)
+  - SDWebImage/Core (4.4.2)
   - SSFadingScrollView (1.1.0)
   - TTTAttributedLabel (2.0.0)
 
@@ -26,9 +26,9 @@ SPEC REPOS:
     - TTTAttributedLabel
 
 SPEC CHECKSUMS:
-  Flurry-iOS-SDK: 912b3eb78bee559883feb3b13263437b185e8fe9
+  Flurry-iOS-SDK: 58e48e417fee667154e4d240040b270b3734d28a
   RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
-  SDWebImage: 89a9d32cd520bbb46eb14e541d5109b3564af198
+  SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   SSFadingScrollView: ac908f565594b1faa748d2d55973f2dde919f754
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 

@@ -14,5 +14,7 @@
     [super awakeFromNib];
     // Initialization code
 }
-
+- (IBAction)testActionBtn:(id)sender {
+    NSLog(@"testActionBtn");
+}
 @end

@@ -12,5 +12,6 @@
 @interface BannerCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *bannerImageView;
 @property (weak, nonatomic) IBOutlet YTPlayerView *playerView;
-
+@property (weak, nonatomic) IBOutlet UIButton *actionButton;
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @end

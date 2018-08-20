@@ -24,6 +24,7 @@
 
 @property (weak, nonatomic) IBOutlet UIView *messageView;
 @property (weak, nonatomic) IBOutlet UILabel *headerMessageNumberLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *messageTrail;
 
 @property (weak, nonatomic) IBOutlet UIView *sponsorView;
 @property (weak, nonatomic) IBOutlet UILabel *sponsorNumberLabel;

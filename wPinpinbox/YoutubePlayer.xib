@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,30 +13,63 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="YoutubeCell" id="NL5-zL-ZlT" customClass="BannerCollectionViewCell">
-            <rect key="frame" x="0.0" y="0.0" width="228" height="161"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="247"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                <rect key="frame" x="0.0" y="0.0" width="228" height="161"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="247"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ok5-YE-cwN" customClass="YTPlayerView">
-                        <rect key="frame" x="0.0" y="0.0" width="228" height="161"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
+                    <button opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FyP-br-S9g">
+                        <rect key="frame" x="279" y="211" width="96" height="36"/>
+                        <color key="backgroundColor" red="0.0" green="0.67450980392156867" blue="0.75686274509803919" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="96" id="7XY-KQ-RwO"/>
+                            <constraint firstAttribute="height" constant="36" id="MFZ-HX-K2p"/>
+                        </constraints>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <state key="normal" title="Button">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </state>
+                        <connections>
+                            <action selector="testActionBtn:" destination="NL5-zL-ZlT" eventType="touchUpInside" id="sQ0-BX-UGU"/>
+                        </connections>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nf8-P5-H6t">
+                        <rect key="frame" x="0.0" y="211" width="279" height="36"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="Nf8-P5-H6t" secondAttribute="bottom" id="07u-Z6-nGu"/>
+                <constraint firstItem="Ok5-YE-cwN" firstAttribute="leading" secondItem="NL5-zL-ZlT" secondAttribute="leading" id="AyQ-4Z-c9i"/>
                 <constraint firstItem="Ok5-YE-cwN" firstAttribute="top" secondItem="NL5-zL-ZlT" secondAttribute="top" id="D4U-ND-jar"/>
-                <constraint firstAttribute="trailing" secondItem="Ok5-YE-cwN" secondAttribute="trailing" id="KLn-i9-cHx"/>
+                <constraint firstItem="Nf8-P5-H6t" firstAttribute="leading" secondItem="Ok5-YE-cwN" secondAttribute="leading" id="KQl-df-QvY"/>
+                <constraint firstItem="FyP-br-S9g" firstAttribute="leading" secondItem="Nf8-P5-H6t" secondAttribute="trailing" id="OVv-OC-OkO"/>
+                <constraint firstItem="Nf8-P5-H6t" firstAttribute="top" secondItem="Ok5-YE-cwN" secondAttribute="bottom" id="U0X-AO-CMz"/>
+                <constraint firstItem="Nf8-P5-H6t" firstAttribute="top" secondItem="FyP-br-S9g" secondAttribute="top" id="Zup-2l-Epf"/>
+                <constraint firstItem="Nf8-P5-H6t" firstAttribute="width" secondItem="NL5-zL-ZlT" secondAttribute="width" constant="-96" id="cEr-1f-DPw"/>
                 <constraint firstItem="Ok5-YE-cwN" firstAttribute="leading" secondItem="NL5-zL-ZlT" secondAttribute="leading" id="dHO-4h-ydj"/>
-                <constraint firstAttribute="bottom" secondItem="Ok5-YE-cwN" secondAttribute="bottom" id="hYx-1Z-pku"/>
+                <constraint firstAttribute="bottom" secondItem="Ok5-YE-cwN" secondAttribute="bottom" constant="36" id="hYx-1Z-pku"/>
+                <constraint firstItem="Ok5-YE-cwN" firstAttribute="top" secondItem="NL5-zL-ZlT" secondAttribute="top" id="jnP-aF-JPq"/>
+                <constraint firstItem="Nf8-P5-H6t" firstAttribute="bottom" secondItem="FyP-br-S9g" secondAttribute="bottom" id="oBn-D3-8el"/>
+                <constraint firstItem="Ok5-YE-cwN" firstAttribute="width" secondItem="NL5-zL-ZlT" secondAttribute="width" id="vCF-z1-NTO"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vIX-0g-ZJz"/>
             <size key="customSize" width="228" height="161"/>
             <connections>
+                <outlet property="actionButton" destination="FyP-br-S9g" id="Nvc-Ax-4mx"/>
+                <outlet property="infoLabel" destination="Nf8-P5-H6t" id="j9n-oc-n1W"/>
                 <outlet property="playerView" destination="Ok5-YE-cwN" id="RsS-hW-ADf"/>
             </connections>
-            <point key="canvasLocation" x="49" y="27.5"/>
+            <point key="canvasLocation" x="48.5" y="27.5"/>
         </collectionViewCell>
     </objects>
 </document>

@@ -29,7 +29,7 @@
     self.userPictureImageView.layer.borderWidth = 0.5;
     
     self.userNameLabel.textColor = [UIColor firstGrey];
-    self.userNameLabel.font = [UIFont boldSystemFontOfSize: 18];
+    //self.userNameLabel.font = [UIFont boldSystemFontOfSize: 18];
     
     self.creativeNameLabel.textColor = [UIColor whiteColor];
     self.creativeNameLabel.font = [UIFont boldSystemFontOfSize: 24.0];

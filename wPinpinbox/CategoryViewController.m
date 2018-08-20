@@ -458,7 +458,22 @@
         [self.userLayout addSubview: imageView];
     }
 }
-
+- (IBAction)handleBannerActionButtonTap:(id) sender {
+    UIButton *btn = (UIButton *)sender;
+    if (btn && btn.tag >= 0 && btn.tag < self.bannerDataArray.count) {
+        NSDictionary *bannerDic = self.bannerDataArray[btn.tag];
+        NSString *link = bannerDic[@"banner_type_data"][@"link"];
+        if (link && link.length > 0) {
+            NSURL *url = [NSURL URLWithString:link];
+            if (url) {
+                SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
+                safariVC.delegate = self;
+                safariVC.preferredBarTintColor = [UIColor whiteColor];
+                [self presentViewController: safariVC animated: YES completion: nil];
+            }
+        }
+    }
+}
 #pragma mark - UITableViewDatasource Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSLog(@"");
@@ -663,38 +678,38 @@ heightForHeaderInSection:(NSInteger)section {
     NSLog(@"heightForHeaderInSection");
     NSLog(@"bannerHeight: %f", bannerHeight);
     
-    CGFloat heightForHeader = 0;
+    CGFloat heightForHeader = 247;
     
-    NSLog(@"[[UIScreen mainScreen] nativeBounds].size.height: %f", [[UIScreen mainScreen] nativeBounds].size.height);
-    
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-            case 1136:
-                printf("iPhone 5 or 5S or 5C");
-                heightForHeader = 150;
-                break;
-            case 1334:
-                printf("iPhone 6/6S/7/8");
-                heightForHeader = 160;
-                break;
-            case 1920:
-                printf("iPhone 6+/6S+/7+/8+");
-                heightForHeader = 175;
-                break;
-            case 2208:
-                printf("iPhone 6+/6S+/7+/8+");
-                heightForHeader = 175;
-                break;
-            case 2436:
-                printf("iPhone X");
-                heightForHeader = 165;
-                break;
-            default:
-                printf("unknown");
-                heightForHeader = 175;
-                break;
-        }
-    }
+//    NSLog(@"[[UIScreen mainScreen] nativeBounds].size.height: %f", [[UIScreen mainScreen] nativeBounds].size.height);
+//
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+//            case 1136:
+//                printf("iPhone 5 or 5S or 5C");
+//                heightForHeader = 150;
+//                break;
+//            case 1334:
+//                printf("iPhone 6/6S/7/8");
+//                heightForHeader = 160;
+//                break;
+//            case 1920:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                heightForHeader = 175;
+//                break;
+//            case 2208:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                heightForHeader = 175;
+//                break;
+//            case 2436:
+//                printf("iPhone X");
+//                heightForHeader = 165;
+//                break;
+//            default:
+//                printf("unknown");
+//                heightForHeader = 175;
+//                break;
+//        }
+//    }
     
     if (self.bannerDataArray.count > 0) {
         return heightForHeader;
@@ -897,18 +912,36 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             NSString *bannerType = bannerDic[@"banner_type"];
             NSString *videoUrl = bannerDic[@"banner_type_data"][@"url"];
             NSString *imageUrl = bannerDic[@"image"];
+            NSString *btnText = bannerDic[@"banner_type_data"][@"btntext"];
+            NSString *vidtext = bannerDic[@"banner_type_data"][@"videotext"];
             
             if ([bannerType isEqualToString: @"video"]) {
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"YoutubeCell" forIndexPath: indexPath];
                 NSDictionary *playerVars = @{@"playsinline" : @1};
                 [cell.playerView loadWithVideoId: videoUrl playerVars: playerVars];
                 cell.playerView.delegate = self;
+                if (btnText)
+                    [cell.actionButton setTitle:btnText forState:UIControlStateNormal];
+                if (vidtext)
+                    cell.infoLabel.text = vidtext;
+                cell.actionButton.tag = indexPath.row;
+                
+                //[cell.actionButton removeTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+                [cell.actionButton addTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
             } else if ([bannerType isEqualToString: @"image"]) {
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"BannerCell" forIndexPath: indexPath];
                 [cell.bannerImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
                                         placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+                if (btnText)
+                    [cell.actionButton setTitle:btnText forState:UIControlStateNormal];
+                if (vidtext)
+                    cell.infoLabel.text = vidtext;
+                cell.actionButton.tag = indexPath.row;
+                //[cell.actionButton removeTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+                [cell.actionButton addTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
             }
-        }        
+        }
+        cell.userInteractionEnabled = YES;
         return cell;
     } else {
         NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);

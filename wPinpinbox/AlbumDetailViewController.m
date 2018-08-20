@@ -457,11 +457,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
         self.sponsorView.hidden = NO;
     } else {
         self.sponsorView.hidden = YES;
+        self.messageTrail.constant = -16;
     }
     
     // Likes Section
     isLikes = [self.data[@"album"][@"is_likes"] boolValue];
     likesInt = [self.data[@"albumstatistics"][@"likes"] integerValue];
+    
+    likesInt = 1234;
     
     if ([self.data[@"album"][@"is_likes"] boolValue]) {
         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
@@ -486,7 +489,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     // Message Section
     messageInt = [self.data[@"albumstatistics"][@"messageboard"] integerValue];
-    
+    messageInt = 432;
     self.headerMessageNumberLabel.textColor = [UIColor secondGrey];
     
     if (messageInt >= 100000) {

@@ -217,7 +217,6 @@
 		630B8F961EDD1AA0009D72FB /* CategoryDetailCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630B8F951EDD1AA0009D72FB /* CategoryDetailCollectionViewCell.m */; };
 		630BE4741E8A8D2A007C4810 /* Info-iOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = 630BE4671E8A8D2A007C4810 /* Info-iOS.plist */; };
 		630BE4751E8A8D2A007C4810 /* Info-tvOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = 630BE4681E8A8D2A007C4810 /* Info-tvOS.plist */; };
-		630BE4761E8A8D2A007C4810 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 630BE4691E8A8D2A007C4810 /* Info.plist */; };
 		630BE4771E8A8D2A007C4810 /* YTVimeoExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 630BE46C1E8A8D2A007C4810 /* YTVimeoExtractor.m */; };
 		630BE4781E8A8D2A007C4810 /* YTVimeoExtractorOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 630BE46E1E8A8D2A007C4810 /* YTVimeoExtractorOperation.m */; };
 		630BE4791E8A8D2A007C4810 /* YTVimeoURLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 630BE4701E8A8D2A007C4810 /* YTVimeoURLParser.m */; };
@@ -457,9 +456,6 @@
 		9251195F1CEEE8BE002D4678 /* button_建立相本.png in Resources */ = {isa = PBXBuildFile; fileRef = 9251195E1CEEE8BE002D4678 /* button_建立相本.png */; };
 		925119621CEEE8C9002D4678 /* button_首頁.png in Resources */ = {isa = PBXBuildFile; fileRef = 925119611CEEE8C9002D4678 /* button_首頁.png */; };
 		925119641CEEE8CD002D4678 /* button_搜尋.png in Resources */ = {isa = PBXBuildFile; fileRef = 925119631CEEE8CD002D4678 /* button_搜尋.png */; };
-		925119661CEEF242002D4678 /* button_建立相本.png in Resources */ = {isa = PBXBuildFile; fileRef = 925119651CEEF242002D4678 /* button_建立相本.png */; };
-		925119681CEEF40C002D4678 /* button_首頁.png in Resources */ = {isa = PBXBuildFile; fileRef = 925119671CEEF40C002D4678 /* button_首頁.png */; };
-		9251196A1CEEF411002D4678 /* button_搜尋.png in Resources */ = {isa = PBXBuildFile; fileRef = 925119691CEEF411002D4678 /* button_搜尋.png */; };
 		925119701CEEFFF2002D4678 /* CalbumV1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9251196F1CEEFFF2002D4678 /* CalbumV1.xib */; };
 		925119721CEF0001002D4678 /* CalbumV2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 925119711CEF0001002D4678 /* CalbumV2.xib */; };
 		925119741CEF000D002D4678 /* CalbumV3.xib in Resources */ = {isa = PBXBuildFile; fileRef = 925119731CEF000D002D4678 /* CalbumV3.xib */; };
@@ -848,7 +844,6 @@
 		D76F5E3A1D73E776008567D8 /* EventPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D76F5E391D73E776008567D8 /* EventPostViewController.m */; };
 		D76F5E3D1D73F682008567D8 /* EventPostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D76F5E3C1D73F682008567D8 /* EventPostViewController.xib */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
-		D78F738B1D226C8700D8A271 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D78F73881D226C8700D8A271 /* Info.plist */; };
 		D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78F738D1D226D8700D8A271 /* YTPlayerView.m */; };
 		D7C1695C1D58336800671974 /* ili_photo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C1695B1D58336800671974 /* ili_photo.jpg */; };
 /* End PBXBuildFile section */
@@ -4997,9 +4992,8 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = APD4588SHJ;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -5083,7 +5077,6 @@
 				922557831BDF7F7E00CD4E9B /* icon_uploadphoto_click@2x.png in Resources */,
 				924A92BF1BD4C33600E3D610 /* icon_password_check@2x.png in Resources */,
 				9276DFAF1B72FDC000E6ACC9 /* Main.storyboard in Resources */,
-				630BE4761E8A8D2A007C4810 /* Info.plist in Resources */,
 				924A92B71BD48DF400E3D610 /* 1-07bg@2x.png in Resources */,
 				92EE16E71C3BC04500F37519 /* BookdetViewController.xib in Resources */,
 				545685332018894400A5FD07 /* ReorderVC.storyboard in Resources */,
@@ -5232,7 +5225,6 @@
 				929C791B1BD89D870093E65E /* 1-02a3photoframe@2x.png in Resources */,
 				92511A0C1CF5B2C7002D4678 /* button_track_click_zh-TW@2x.png in Resources */,
 				922557701BDF765C00CD4E9B /* wbutton_download@2x.png in Resources */,
-				9251196A1CEEF411002D4678 /* button_搜尋.png in Resources */,
 				927AADEE1BE2222C0088CDB9 /* 4-08icon_creatnewframe_plus@2x.png in Resources */,
 				92F89B251BBE79CF00565908 /* install_02.png in Resources */,
 				6309552E1E13C84900EAD6A2 /* icon_searchcode_white.png in Resources */,
@@ -5252,7 +5244,6 @@
 				922D92BE1BD9D1A200640639 /* icon_type_search@2x.png in Resources */,
 				9281DFA61BDE23DD00463337 /* 3-05bg@2x.png in Resources */,
 				546DF49E20723F790056B73F /* MessageTableViewCell.xib in Resources */,
-				D78F738B1D226C8700D8A271 /* Info.plist in Resources */,
 				925119551CEEDEE1002D4678 /* 3_05_05.png in Resources */,
 				9276DFB11B72FDC000E6ACC9 /* Images.xcassets in Resources */,
 				9211563A1C4F644A00F9200A /* TaobannameTableViewCell.xib in Resources */,
@@ -5262,7 +5253,6 @@
 				927AADEC1BE222100088CDB9 /* 4-08photo-size@2x.png in Resources */,
 				54F777EA20ABE5B000A6E195 /* MeTab.xcassets in Resources */,
 				92F89B0A1BBE73D400565908 /* render_3_14.png in Resources */,
-				925119681CEEF40C002D4678 /* button_首頁.png in Resources */,
 				925119181CEB072A002D4678 /* 2-11_03@2x.png in Resources */,
 				924A92C11BD4C3F400E3D610 /* 1-04bg.png in Resources */,
 				54331A9C1FE4EDF8005E6ACE /* MeTab.storyboard in Resources */,
@@ -5352,7 +5342,6 @@
 				92AE90731C1E9CE000C53413 /* Pagetext_titleTableViewCell.xib in Resources */,
 				92DF720F1C5EFFF600062FC6 /* icon_check@2x.png in Resources */,
 				922D92EF1BD9EB2E00640639 /* icon_pcoindownload@2x.png in Resources */,
-				925119661CEEF242002D4678 /* button_建立相本.png in Resources */,
 				92D526051BCF9E58002C157B /* SelectBarViewController.xib in Resources */,
 				545D502D20AE7A7D00BA14F5 /* 4-19.xcassets in Resources */,
 				922A4B0F1BD6429D006D5A36 /* MemberTextViewTableViewCell.xib in Resources */,
@@ -6009,18 +5998,18 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 88DC268752B3F322BAF983B8 /* Pods-wPinpinbox.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/angus/Documents/AdobeCreativeSDKFrameworks/GettingStartedWithCreativeSDK-iOS-v0.10.2096/AdobeCreativeSDKFrameworks",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6034,9 +6023,8 @@
 					"-all_load",
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
-					"-l\"FlurryAds_8.3.1\"",
-					"-l\"Flurry_8.3.1\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -6051,18 +6039,18 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55DDBC661003FCB56D114637 /* Pods-wPinpinbox.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: vmage creation ltd, (APD4588SHJ)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/angus/Documents/AdobeCreativeSDKFrameworks/GettingStartedWithCreativeSDK-iOS-v0.10.2096/AdobeCreativeSDKFrameworks",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -6076,9 +6064,8 @@
 					"-all_load",
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
-					"-l\"FlurryAds_8.3.1\"",
-					"-l\"Flurry_8.3.1\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
