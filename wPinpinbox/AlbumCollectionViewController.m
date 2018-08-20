@@ -18,7 +18,7 @@
 //#import "GetAlbumListViewController.h"
 #import "MyAlbumCollectionViewController.h"
 #import "OtherCollectionViewController.h"
-#import "TestReadBookViewController.h"
+//#import "TestReadBookViewController.h"
 #import "MBProgressHUD.h"
 #import "CustomIOSAlertView.h"
 #import "wTools.h"
@@ -687,7 +687,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
                         
@@ -697,25 +697,13 @@
                         ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
                         contentCheckingVC.albumId = albumId;
                         
-                        /*
-                        TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
-                        
-                        testReadBookVC.albumid = albumId;
-                        testReadBookVC.dic = dic[@"data"];
-                        testReadBookVC.isDownloaded = NO;
-                        //[self.navigationController pushViewController: testReadBookVC animated: YES];
-                        */
-                        
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }                                
             }

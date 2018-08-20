@@ -225,7 +225,6 @@
 		630D31E21E531BC9001506EE /* NSArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 630D31E11E531BC9001506EE /* NSArray+Reverse.m */; };
 		630D31E51E531C42001506EE /* NSMutableArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 630D31E41E531C42001506EE /* NSMutableArray+Reverse.m */; };
 		630DBB121E3253C4006CDFF6 /* FollowListCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630DBB111E3253C4006CDFF6 /* FollowListCollectionViewController.m */; };
-		630DC9041EFF649C00C5B171 /* NewReadBookViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630DC9031EFF649C00C5B171 /* NewReadBookViewController.m */; };
 		630E1A601EC00F63003FE76A /* MeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630E1A5F1EC00F63003FE76A /* MeCollectionViewCell.m */; };
 		630E1A631EC053CE003FE76A /* MeCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 630E1A621EC053CE003FE76A /* MeCollectionReusableView.m */; };
 		630FD27A1E31C61B0036DEC6 /* RecentBrowseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD2791E31C61B0036DEC6 /* RecentBrowseTableViewCell.m */; };
@@ -293,7 +292,6 @@
 		639F556C1E151409006599FF /* NotificationCenterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639F556B1E151409006599FF /* NotificationCenterTableViewController.m */; };
 		63A574181DE7FA7D00C9EFAF /* GHContextMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A574171DE7FA7D00C9EFAF /* GHContextMenuView.m */; };
 		63A7DDD41E9223CE003D6A6E /* UIColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A7DDD31E9223CE003D6A6E /* UIColor+Extensions.m */; };
-		63AA44BD1F17712B00E834E7 /* MyAVPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AA44BC1F17712B00E834E7 /* MyAVPlayerViewController.m */; };
 		63B340E51EC98DF000AEC4E9 /* ChooseHobbyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B340E41EC98DF000AEC4E9 /* ChooseHobbyViewController.m */; };
 		63B340E81EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B340E71EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m */; };
 		63B3B3D11E0D21980028CCAA /* CAPSPageMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B3B3D01E0D21980028CCAA /* CAPSPageMenu.m */; };
@@ -1201,8 +1199,6 @@
 		630D31E41E531C42001506EE /* NSMutableArray+Reverse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Reverse.m"; sourceTree = "<group>"; };
 		630DBB101E3253C4006CDFF6 /* FollowListCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowListCollectionViewController.h; sourceTree = "<group>"; };
 		630DBB111E3253C4006CDFF6 /* FollowListCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowListCollectionViewController.m; sourceTree = "<group>"; };
-		630DC9021EFF649C00C5B171 /* NewReadBookViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewReadBookViewController.h; sourceTree = "<group>"; };
-		630DC9031EFF649C00C5B171 /* NewReadBookViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewReadBookViewController.m; sourceTree = "<group>"; };
 		630E1A5E1EC00F63003FE76A /* MeCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeCollectionViewCell.h; sourceTree = "<group>"; };
 		630E1A5F1EC00F63003FE76A /* MeCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeCollectionViewCell.m; sourceTree = "<group>"; };
 		630E1A611EC053CE003FE76A /* MeCollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeCollectionReusableView.h; sourceTree = "<group>"; };
@@ -1332,8 +1328,6 @@
 		63A574171DE7FA7D00C9EFAF /* GHContextMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHContextMenuView.m; sourceTree = "<group>"; };
 		63A7DDD21E9223CE003D6A6E /* UIColor+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Extensions.h"; sourceTree = "<group>"; };
 		63A7DDD31E9223CE003D6A6E /* UIColor+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Extensions.m"; sourceTree = "<group>"; };
-		63AA44BB1F17712B00E834E7 /* MyAVPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAVPlayerViewController.h; sourceTree = "<group>"; };
-		63AA44BC1F17712B00E834E7 /* MyAVPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAVPlayerViewController.m; sourceTree = "<group>"; };
 		63B340E31EC98DF000AEC4E9 /* ChooseHobbyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseHobbyViewController.h; sourceTree = "<group>"; };
 		63B340E41EC98DF000AEC4E9 /* ChooseHobbyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseHobbyViewController.m; sourceTree = "<group>"; };
 		63B340E61EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseHobbyCollectionViewCell.h; sourceTree = "<group>"; };
@@ -3340,10 +3334,6 @@
 				636B3AD41EEF8EB100B03AA6 /* TestReadBookViewController.h */,
 				636B3AD51EEF8EB100B03AA6 /* TestReadBookViewController.m */,
 				542DD9942019ECDB00289565 /* TestReadBookVC.storyboard */,
-				630DC9021EFF649C00C5B171 /* NewReadBookViewController.h */,
-				630DC9031EFF649C00C5B171 /* NewReadBookViewController.m */,
-				63AA44BB1F17712B00E834E7 /* MyAVPlayerViewController.h */,
-				63AA44BC1F17712B00E834E7 /* MyAVPlayerViewController.m */,
 			);
 			name = "預覽書本";
 			sourceTree = "<group>";
@@ -5632,7 +5622,6 @@
 				543D649B1F9F4DE10092AF2F /* SendingPhoto.m in Sources */,
 				630A83DF1EB1D07300AC8479 /* MyFlowLayout.m in Sources */,
 				6370022D1D86B48900825EF5 /* ChooseVideoViewController.m in Sources */,
-				630DC9041EFF649C00C5B171 /* NewReadBookViewController.m in Sources */,
 				92F68D051BE9BCD80085D748 /* SHViewPager.m in Sources */,
 				9260370D1B81D223009B3B5A /* UIImage+Rotation.m in Sources */,
 				922D92F81BDA2FF500640639 /* CalbumlistViewController.m in Sources */,
@@ -5672,7 +5661,6 @@
 				630A83E21EB1D07300AC8479 /* MyLayoutSize.m in Sources */,
 				922557481BDF621200CD4E9B /* MTMenuItem.m in Sources */,
 				92A155901C3386E000E83EC5 /* TaobanViewController.m in Sources */,
-				63AA44BD1F17712B00E834E7 /* MyAVPlayerViewController.m in Sources */,
 				9225572A1BDF228400CD4E9B /* RemindViewController.m in Sources */,
 				635775DD1ED3F94400637914 /* RecentBrowsingTableViewCell.m in Sources */,
 				54B08C7E2105B8B500ADC09A /* ContentCheckingViewController.m in Sources */,

@@ -48,6 +48,9 @@
 
 #import <CoreData/CoreData.h>
 
+#import "CustomIOSAlertView.h"
+#import "UIColor+Extensions.h"
+
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 @interface ReadBookViewController () <MyScrollViewDataSource1, UIScrollViewDelegate, SFSafariViewControllerDelegate, UITextViewDelegate>
@@ -1078,7 +1081,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
                 if ([data[@"result"] intValue] == 1) {
-                    
                     missionTopicStr = data[@"data"][@"task"][@"name"];
                     NSLog(@"name: %@", missionTopicStr);
                     
@@ -1128,6 +1130,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 } else if ([data[@"result"] intValue] == 0) {
                     NSString *errorMessage = data[@"message"];
                     NSLog(@"error messsage: %@", errorMessage);
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];                
                 }
             }
         });
@@ -1299,18 +1303,19 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"post album success");
-                    
                     int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
-                    
                     NSLog(@"contributionCheck: %d", contributionCheck);
-                    
-                    
-                } else {
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"message: %@", dic[@"message"]);
                     
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: dic[@"message"] preferredStyle: UIAlertControllerStyleAlert];
+                    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"OK" style: UIAlertActionStyleDefault handler: nil];
+                    [alert addAction: okBtn];
+                    [self presentViewController: alert animated: YES completion: nil];
+                } else {
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: NSLocalizedString(@"Host-NotAvailable", @"") preferredStyle: UIAlertControllerStyleAlert];
                     UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"OK" style: UIAlertActionStyleDefault handler: nil];
                     [alert addAction: okBtn];
                     [self presentViewController: alert animated: YES completion: nil];
@@ -2700,15 +2705,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                     // Success
                     NSLog(@"兌換 Success");
-                    
-                    
-                    // Change the image of exchange button
-                    /*
-                     UIImageView *exchangedImage = [[UIImageView alloc] initWithFrame: CGRectMake(giftView.bounds.size.width - 100 * 1.0, giftView.bounds.size.height - 100 * 1.0, 100 * 1.0, 100 * 1.0)];
-                     exchangedImage.image = [UIImage imageNamed: @"icon_exchanged.png"];
-                     [giftView addSubview: exchangedImage];
-                     */
-                    
                     NSLog(@"check subViews & Set up");
                     
                     UIButton *btn;
@@ -3177,14 +3173,17 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     [rv addtitletext: @"兌換 / 拉霸的對象數量已用盡或已被領取"];
                     [rv addBackTouch];
                     [rv showView: self.view];
-                    
                     return;
-                    
                 } else if ([data[@"result"] intValue] == 0) {
                     //[wTools HideMBProgressHUD];
                     [MBProgressHUD hideHUDForView: self.view animated: YES];
                     
                     NSLog(@"Fail");
+                } else {
+                    Remind *rv = [[Remind alloc] initWithFrame: self.view.bounds];
+                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [rv addBackTouch];
+                    [rv showView: self.view];
                 }
             }
         });
@@ -3335,6 +3334,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     [MBProgressHUD hideHUDForView: self.view animated: YES];
                     
                     NSLog(@"Fail");
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -3443,15 +3444,105 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [self presentViewController:nav animated:YES completion:nil];
 }
 
-/*
-- (BOOL)shouldAutorotate
-{
-    return YES;
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert: (NSString *)msg {
+    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
+    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    
+    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    errorAlertView.arrangeStyle = @"Horizontal";
+    
+    /*
+     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
+     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
+     alertView.arrangeStyle = @"Vertical";
+     */
+    
+    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
+    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [weakErrorAlertView close];
+    }];
+    [errorAlertView setUseMotionEffects: YES];
+    [errorAlertView show];
 }
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+- (UIView *)createErrorContainerView: (NSString *)msg
 {
-    return UIInterfaceOrientationMaskAllButUpsideDown;
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = msg;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
+    
+    CGFloat viewHeight;
+    
+    if ((textViewY + textViewHeight) > 96) {
+        if ((textViewY + textViewHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight;
+        }
+    } else {
+        viewHeight = 96;
+    }
+    NSLog(@"demoHeight: %f", viewHeight);
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = [UIColor firstPink];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.view.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    return contentView;
 }
-*/
+
 @end

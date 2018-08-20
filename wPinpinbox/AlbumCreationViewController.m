@@ -603,7 +603,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         textForDescription = ImageDataArr[selectItem][@"description"];
                         
@@ -622,6 +622,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     } else if ([dic[@"result"] boolValue] == 0) {
                         NSLog(@"callUpdatePhotoOfDiyWithoutPhoto return result is 0");
                         [self showPermission];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1170,9 +1172,7 @@ shouldChangeTextInRange:(NSRange)range
                 NSLog( @"Name: %@", exception.name);
                 NSLog( @"Reason: %@", exception.reason );
                 return;
-            }
-            
-            
+            }                        
             [self stopRipple];
             
             if (response != nil) {
@@ -1198,7 +1198,7 @@ shouldChangeTextInRange:(NSRange)range
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"updateAudio Success");
                         //NSLog(@"%@", dic[@"data"]);
                         
@@ -1231,6 +1231,8 @@ shouldChangeTextInRange:(NSRange)range
                         isRecorded = NO;
                         
                         [self showPermission];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1270,8 +1272,6 @@ shouldChangeTextInRange:(NSRange)range
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response from deleteAudioOfDiy");
                 
@@ -1293,7 +1293,7 @@ shouldChangeTextInRange:(NSRange)range
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"deleteAudio Success");
                         //NSLog(@"%@", dic[@"data"]);
                         
@@ -1319,6 +1319,8 @@ shouldChangeTextInRange:(NSRange)range
                     } else if ([dic[@"result"] boolValue] == 0) {
                         NSLog(@"message: %@", dic[@"message"]);
                         [self showPermission];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1404,7 +1406,6 @@ shouldChangeTextInRange:(NSRange)range
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
                                              token: [wTools getUserToken]
@@ -1441,7 +1442,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"call getalbumofdiy success");
                         NSLog(@"dic: %@", dic);
                         
@@ -1497,14 +1498,11 @@ shouldChangeTextInRange:(NSRange)range
                         } else {
                             [self myshowimage];
                         }
-                    } else {
-                        NSLog(@"失敗：%@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }                                                
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1669,12 +1667,10 @@ shouldChangeTextInRange:(NSRange)range
                                           option: option];
                 } else {
                     NSLog(@"Get Real Response");
-                    
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];                    
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         if ([option isEqualToString: @"save"]) {
                             AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
                             aSVC.albumId = self.albumid;
@@ -1711,6 +1707,11 @@ shouldChangeTextInRange:(NSRange)range
                                 [appDelegate.myNav pushViewController: albumCollectionVC animated: YES];
                             }
                         }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1750,8 +1751,7 @@ shouldChangeTextInRange:(NSRange)range
                                             type: @"Video"];
 }
 
-- (void)deletePhotoOfDiy
-{
+- (void)deletePhotoOfDiy {
     NSLog(@"deletePhotoOfDiy");
     NSString *pid = [ImageDataArr[selectItem][@"photo_id"] stringValue];
     
@@ -1781,8 +1781,6 @@ shouldChangeTextInRange:(NSRange)range
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response from deletephotoofdiy");
                 
@@ -1803,15 +1801,17 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"deletePhoto Success");
                         ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         [self myshowimage];
                         //[mycollection reloadData];
                         //[self.dataCollectionView reloadData];
                         
-                    } else if ([dic[@"result"] boolValue] == 0) {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         [self showPermission];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1871,20 +1871,17 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"deleteVideo Success");
                         ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         [self myshowimage];
                         //[mycollection reloadData];
                         //[self.dataCollectionView reloadData];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2201,7 +2198,7 @@ didFinishSavingWithError:(NSError *)error
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"insertvideoofdiy Success");
                         
                         ImageDataArr = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
@@ -2213,7 +2210,7 @@ didFinishSavingWithError:(NSError *)error
                         [self myshowimage];
                         NSLog(@"[_dataCollectionView reloadData]");
                         //[self.dataCollectionView reloadData];                                                
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"insertvideoofdiy Failed");
                         NSLog(@"message: %@", dic[@"message"]);
                         
@@ -2232,6 +2229,8 @@ didFinishSavingWithError:(NSError *)error
                         } else {
                             [self showCustomErrorAlert: dic[@"message"]];
                         }
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];                    
                     }
                 }
             }
@@ -3102,8 +3101,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"Adobe PhotoEditor Response");
                 
@@ -3124,16 +3121,17 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         [self myshowimage];
                         //[self.dataCollectionView reloadData];
-                    } else if ([dic[@"result"] boolValue] == 0) {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         [self showPermission];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
-            //[self dismissViewControllerAnimated:YES completion:nil];
         });
     });
 }
@@ -3145,22 +3143,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
     [alert addAction: okBtn];
     [self presentViewController: alert animated: YES completion: nil];
-    
-    /*
-    if ([identity isEqualToString:@"viewer"] || [identity isEqualToString: @"editor"]) {
-        Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-        [rv addtitletext:NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
-        [rv addBackTouch];
-        [rv showView:self.view];
-        return;
-    }
-    
-    //CooperationViewController *copv=[[CooperationViewController alloc]initWithNibName:@"CooperationViewController" bundle:nil];
-    CooperationViewController *copv = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"CooperationViewController"];
-    copv.albumid=_albumid;
-    copv.identity=identity;
-    [self.navigationController pushViewController:copv animated:YES];
-     */
 }
 
 - (BOOL)checkPermissionForEditing {
@@ -3174,12 +3156,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showPermission {
     if ([identity isEqualToString:@"editor"] || [identity isEqualToString: @"approver"]) {
         [self showPermissionAlert: NSLocalizedString(@"CreateAlbumText-canNotEditOthers", @"")];
-        /*
-        Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-        [rv addtitletext:NSLocalizedString(@"CreateAlbumText-canNotEditOthers", @"")];
-        [rv addBackTouch];
-        [rv showView:self.view];
-         */
     }
 }
 
@@ -3296,8 +3272,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)callAlbumSettings: (NSString *)jsonStr
-                audioMode: (NSString *)audioMode
-{
+                audioMode: (NSString *)audioMode {
     NSLog(@"callAlbumSettings");
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){

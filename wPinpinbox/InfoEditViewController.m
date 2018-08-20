@@ -195,7 +195,7 @@
                     NSLog(@"responseFromGetProfile != nil");
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
                         NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
                         
@@ -212,20 +212,13 @@
                         myData = [dataIc mutableCopy];
                         
                         [self checkSocialData];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        //                        [self.refreshControl endRefreshing];
-                        
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
-            } else {
-                //                [self.refreshControl endRefreshing];
             }
         });
     });
@@ -284,13 +277,7 @@
     [LabelAttributeStyle changeGapString: self.communityLabel content: self.communityLabel.text];
     [self.communityLabel sizeToFit];
     
-    self.scrollView.showsVerticalScrollIndicator = NO;
-    
-    //    self.refreshControl = [[UIRefreshControl alloc] init];
-    //    [self.refreshControl addTarget: self
-    //                            action: @selector(getProfile)
-    //                  forControlEvents: UIControlEventValueChanged];
-    //    [self.scrollView addSubview: self.refreshControl];
+    self.scrollView.showsVerticalScrollIndicator = NO;    
 }
 
 - (void)viewDidLayoutSubviews {
@@ -792,7 +779,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -897,25 +883,21 @@
                 NSLog(@"response from updateProfilePic");
                 
                 NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                
                 NSLog(@"dic: %@", dic);
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"dic result boolValue is 1");
                     
                     if ([self.delegate respondsToSelector: @selector(profilePictureUpdate:)]) {
                         [self.delegate profilePictureUpdate: dic[@"data"]];
-                    }
-                    
+                    }                    
                     [self checkPointTask];
-                } else {
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗： %@", dic[@"message"]);
                     NSString *msg = dic[@"message"];
-                    
-                    if (msg == nil) {
-                        msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                    }
                     [self showCustomErrorAlert: msg];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });

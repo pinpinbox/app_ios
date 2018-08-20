@@ -26,6 +26,8 @@
 
 #import "GlobalVars.h"
 
+#import "UIColor+Extensions.h"
+
 @interface PreviewbookViewController () <MZDownloadDataSource, MZDownloadDelegate, SFSafariViewControllerDelegate>
 {
     int tmp;
@@ -116,7 +118,7 @@
                         NSLog(@"%@",respone);
                         NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                          
-                        if ([dic[@"result"]boolValue]) {
+                        if ([dic[@"result"] intValue] == 1) {
                             if ([unixt isEqualToString:[dic[@"data"][@"modifytime"] stringValue]]) {
                                 //未過期
                                 [self.navigationController popViewControllerAnimated:NO];
@@ -124,10 +126,12 @@
                                 [wTools ReadBookalbumid: _albumid userbook: _userbook eventId: nil postMode: nil fromEventPostVC: nil];
                                 //[self ReadBookalbumid: _albumid userbook: _userbook eventId: nil postMode: nil];
                                  
-                            } else {
+                            } else if ([dic[@"result"] intValue] == 0) {
                                  //已過期 下載新檔案
                                  [fileManager removeItemAtPath:docDirectoryPath error:nil];
                                  [self downbook];
+                            } else {
+                                [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                             }
                         }
                     }
@@ -210,82 +214,32 @@
                         NSLog(@"%@",respone);
                         NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
-                        if ([dic[@"result"]boolValue]) {
-                            
+                        if ([dic[@"result"] intValue] == 1) {
                             if (![unixt isEqualToString:[dic[@"data"][@"modifytime"] stringValue]]) {
                                 //已過期 下載新檔案
                                 
                                 [self performSegueWithIdentifier: @"showPreviewbookViewController" sender: self];
-                                /*
-                                PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
-                                rv.albumid=albumid;
-                                rv.userbook=userbook;
-                                [app.myNav pushViewController:rv animated:YES];
-                                */
                                 return;
                             }
-                            
                             [self performSegueWithIdentifier: @"showBookViewController" sender: self];
-                            
-                            /*
-                            BookViewController *bv=[[BookViewController alloc]initWithNibName:@"BookViewController" bundle:nil];
-                            bv.albumid=albumid;
-                            bv.DirectoryPath=docDirectoryPath;
-                            bv.postMode = postMode;
-                            bv.eventId = eventId;
-                            [app.myNav pushViewController:bv animated:YES];
-                            */
                         }else{
-                            
                             [self performSegueWithIdentifier: @"showBookViewController" sender: self];
-                            
-                            /*
-                            BookViewController *bv=[[BookViewController alloc]initWithNibName:@"BookViewController" bundle:nil];
-                            bv.albumid=albumid;
-                            bv.DirectoryPath=docDirectoryPath;
-                            bv.postMode = postMode;
-                            bv.eventId = eventId;
-                            [app.myNav pushViewController:bv animated:YES];
-                             */
                         }
-                        
                     }else{
-                        
                         [self performSegueWithIdentifier: @"showBookViewController" sender: self];
-                        
-                        /*
-                        BookViewController *bv=[[BookViewController alloc]initWithNibName:@"BookViewController" bundle:nil];
-                        bv.albumid=albumid;
-                        bv.DirectoryPath=docDirectoryPath;
-                        bv.postMode = postMode;
-                        bv.eventId = eventId;
-                        [app.myNav pushViewController:bv animated:YES];
-                         */
                     }
                 });
-                
             });
-            
         } else {
             NSLog(@"沒有info");
             Remind *rv=[[Remind alloc]initWithFrame: self.view.bounds];
             [rv addtitletext:[NSString stringWithFormat:@"錯誤 因為沒有檔案(%@)",albumid]];
             [rv addBackTouch];
             [rv showView: self.view];
-            
-            //              PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
-            //              rv.albumid=albumid;
-            //              [app.myNav pushViewController:rv animated:YES];
         }
     } else {
         //檢查下載
         [self performSegueWithIdentifier: @"showPreviewbookViewController" sender: self];
-        /*
-        PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
-        rv.albumid=albumid;
-        rv.userbook=userbook;
-        [app.myNav pushViewController:rv animated:YES];
-         */
     }
 }
 
@@ -314,26 +268,29 @@
                 NSLog(@"%@",respone);
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
-                if ([dic[@"result"]boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"result: %d", [dic[@"result"] boolValue]);
                     
                     [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:imageview];
                     NSString *cover=dic[@"data"][@"coverurl"];
                     
                     if (![cover isKindOfClass:[NSNull class]]) {
-                        
                         imageview.imageURL=[NSURL URLWithString:cover];
                     }
-                    
                     [self playdown];
-                    
-                } else {
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
                     Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
                     //[rv addtitletext:[NSString stringWithFormat:@"%@%@",dic[@"message"],_albumid]];
                     [rv addtitletext: @"連線中斷 請重新載入"];
                     [rv addBackTouch];
                     [rv showView:self.view];                                        
+                } else {
+                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+                    //[rv addtitletext:[NSString stringWithFormat:@"%@%@",dic[@"message"],_albumid]];
+                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [rv addBackTouch];
+                    [rv showView:self.view];
                 }
             }
         });
@@ -632,6 +589,107 @@
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [app.myNav pushViewController: bv animated: YES];
     }
+}
+
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert: (NSString *)msg {
+    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
+    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    
+    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    errorAlertView.arrangeStyle = @"Horizontal";
+    
+    /*
+     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
+     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
+     alertView.arrangeStyle = @"Vertical";
+     */
+    
+    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
+    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [weakErrorAlertView close];
+    }];
+    [errorAlertView setUseMotionEffects: YES];
+    [errorAlertView show];
+}
+
+- (UIView *)createErrorContainerView: (NSString *)msg
+{
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = msg;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
+    
+    CGFloat viewHeight;
+    
+    if ((textViewY + textViewHeight) > 96) {
+        if ((textViewY + textViewHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight;
+        }
+    } else {
+        viewHeight = 96;
+    }
+    NSLog(@"demoHeight: %f", viewHeight);
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = [UIColor firstPink];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.view.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    return contentView;
 }
 
 @end

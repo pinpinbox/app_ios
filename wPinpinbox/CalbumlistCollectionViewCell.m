@@ -206,21 +206,25 @@
             if (respone!=nil) {
                  NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
-                if ([dic[@"result"]boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     [_delegate reloadData];
-                }else{
+                } else if ([dic[@"result"] intValue] == 0) {
                     AppDelegate *app=[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
                     [rv addtitletext:dic[@"message"]];
                      [rv addBackTouch];
                     [rv showView:app.menu.view];
                     [_delegate reloadData];
+                } else {
+                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+                    Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [rv addBackTouch];
+                    [rv showView:app.menu.view];
+                    [_delegate reloadData];
                 }
-                
             }
-            
         });
-        
     });
 }
 
@@ -236,15 +240,20 @@
             if (respone!=nil) {
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
-                if ([dic[@"result"]boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     [_delegate reloadData];
-                    
                     [self deletePlist: albumid];
-                    
-                } else {
+                } else if ([dic[@"result"] intValue] == 0) {
                     AppDelegate *app=[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
                     [rv addtitletext:dic[@"message"]];
+                    [rv addBackTouch];
+                    [rv showView:app.menu.view];
+                    [_delegate reloadData];
+                } else {
+                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+                    Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+                    [rv addtitletext:NSLocalizedString(@"Host-NotAvailable", @"")];
                     [rv addBackTouch];
                     [rv showView:app.menu.view];
                     [_delegate reloadData];

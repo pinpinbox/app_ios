@@ -410,18 +410,6 @@
                         cell.voteBtn.hidden = YES;
                         
                         [self refresh];
-                        
-                        /*
-                        NSLog(@"Before Change");
-                        NSLog(@"voteArray: %@", voteArray);
-                        NSMutableDictionary *data =  voteArray[indexPath.row];
-                        [data setValue: [NSNumber numberWithBool: YES] forKey: data[@"album"][@"has_voted"]];
-                        
-                        NSLog(@"After Change");
-                        NSLog(@"data: %@", data);
-                        NSLog(@"indexPath.row: %ld", (long)indexPath.row);
-                        NSLog(@"voteArray: %@", voteArray);
-                        */
                     } else if ([resultStr isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"resultStr isEqualToString SYSTEM_ERROR");
                         [self showCustomErrorAlert: @"不明錯誤"];

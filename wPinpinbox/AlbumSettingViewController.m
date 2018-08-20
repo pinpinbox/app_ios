@@ -18,6 +18,7 @@
 #import "AlbumCollectionViewController.h"
 #import <SafariServices/SafariServices.h>
 #import "TestReadBookViewController.h"
+#import "ContentCheckingViewController.h"
 #import "AlbumCreationViewController.h"
 #import "GlobalVars.h"
 #import "AppDelegate.h"
@@ -135,9 +136,7 @@
     NSLog(@"AlbumSettingViewController viewDidLoad");
     NSLog(@"self.prefixText: %@", self.prefixText);    
     NSLog(@"self.postMode: %d", self.postMode);
-    
     [self setupUI1];
-    
     [self getAlbumDataOptions];
     //[self checkCreatePointTask];
 }
@@ -227,19 +226,16 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         mdata = [[dic objectForKey: @"data"] mutableCopy];
                         NSLog(@"mdata: %@", mdata);
                         
                         [self getAlbumSettings];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -290,7 +286,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         self.data = [dic[@"data"] mutableCopy];
                         
                         [self initialValueSetup];
@@ -300,14 +296,11 @@
                         [self.moodCollectionView reloadData];
                         
                         [self checkCreatePointTask];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -368,13 +361,10 @@
                                          albumId: @""];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 1) {
-                        
                         missionTopicStr = data[@"data"][@"task"][@"name"];
                         NSLog(@"name: %@", missionTopicStr);
                         
@@ -409,9 +399,10 @@
                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                         [defaults setObject: [NSNumber numberWithBool: create_free_album]  forKey: @"create_free_album"];
                         [defaults synchronize];
-                        
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);                        
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -420,8 +411,7 @@
 }
 
 #pragma mark - Get P Point
-- (void)getUrPoints
-{
+- (void)getUrPoints {
     NSLog(@"");
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -435,8 +425,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
                                            token: [userPrefs objectForKey:@"token"]];
@@ -451,8 +439,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response from geturpoints");
                 
@@ -470,21 +456,18 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         NSInteger point = [dic[@"data"] integerValue];
                         //NSLog(@"point: %ld", (long)point);
                         
                         [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                         [userPrefs synchronize];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1283,7 +1266,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"post album success");
                         
                         int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
@@ -1299,14 +1282,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                        style: style];
                         
                         [self ToRetrievealbumpViewControlleralbumid: self.albumId];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1319,11 +1299,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     if (![oldName isEqualToString: self.nameTextField.text]) {
         isModified = YES;
     }
-    /*
-    if (![oldName isEqualToString: self.nameTextView.text]) {
-        isModified = YES;
-    }
-     */
     if (![oldDescription isEqualToString: self.descriptionTextView.text]) {
         isModified = YES;
     }
@@ -1717,8 +1692,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response from retrievealbump: %@", response);
                 
@@ -1736,27 +1709,20 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
+                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                        contentCheckingVC.albumId = self.albumId;
+                        contentCheckingVC.postMode = self.postMode;
+                        contentCheckingVC.specialUrl = self.specialUrl;
                         
-                        TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
-                        testReadBookVC.dic = [dic[@"data"] mutableCopy];
-                        testReadBookVC.isDownloaded = NO;
-                        testReadBookVC.albumid = self.albumId;
-                        testReadBookVC.postMode = self.postMode;
-                        testReadBookVC.eventId = self.eventId;
-                        testReadBookVC.specialUrl = self.specialUrl;
-                        NSLog(@"self.specialUrl: %@", self.specialUrl);
-                        [self.navigationController pushViewController: testReadBookVC animated: YES];
+                        [self.navigationController pushViewController: contentCheckingVC animated: YES];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

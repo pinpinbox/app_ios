@@ -352,13 +352,7 @@
                                     [self.bannerDataArray addObject: styleDic1];
                                 }
                             }
-                        }
-                        
-//                        if (![dic[@"data"][@"categoryarea"][@"user"] isEqual: [NSNull null]]) {
-//                            self.categoryAreaArray = [NSMutableArray arrayWithArray: dic[@"data"][@"categoryarea"][@"user"]];
-//                            NSLog(@"self.categoryAreaArray: %@", self.categoryAreaArray);
-//                            [self addUserView];
-//                        }
+                        }                        
                         
                         if (![dic[@"data"][@"albumexplore"] isEqual: [NSNull null]]) {
                             self.albumArray = [NSMutableArray arrayWithArray: dic[@"data"][@"albumexplore"]];

@@ -185,7 +185,7 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"Before");
                         NSLog(@"nextId: %ld", (long)nextId);
                         
@@ -245,19 +245,15 @@
                             // Set userInteractionEnabled to YES for scrolling
                             self.tableView.userInteractionEnabled = YES;
                         }
-//                        NSLog(@"messageArray.count: %lu", (unsigned long)messageArray.count);
-//                        NSLog(@"messageArray: %@", messageArray);
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         if (![self.tableView isEqual: [NSNull null]] || self.tableView != nil) {
                             self.tableView.userInteractionEnabled = YES;
                         }
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -315,7 +311,7 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         tempStr = @"";
                         
                         NSLog(@"Before");
@@ -384,15 +380,13 @@
                         // Set userInteractionEnabled to YES for scrolling
                         self.tableView.userInteractionEnabled = YES;
                         
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         self.tableView.userInteractionEnabled = YES;
                         NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                        NSString *msg = dic[@"message"];                        
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1584,7 +1578,7 @@ shouldChangeTextInRange:(NSRange)range
                         return;
                     }
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
                         userData = [NSMutableArray arrayWithArray: dic[@"data"]];
@@ -1604,14 +1598,11 @@ shouldChangeTextInRange:(NSRange)range
                         
                         [userData removeObjectsInArray: tempArray];                        
                         [collectionView reloadData];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1621,22 +1612,13 @@ shouldChangeTextInRange:(NSRange)range
 
 #pragma mark - UITapGestureRecognizer Selector Handler Method
 // Method below is to achieve the TouchUpInside Behavior
-- (void)handleTapFromView: (UITapGestureRecognizer *)sender
-{
+- (void)handleTapFromView: (UITapGestureRecognizer *)sender {
     NSLog(@"handleTapFromView");
     [self slideOut];
     
     if (self.customViewBlock) {
         self.customViewBlock(sender.view.tag, isTouchDown, sender.view.accessibilityIdentifier);
     }
-    
-    /*
-     if (sender.state == UIGestureRecognizerStateBegan || sender.state == UIGestureRecognizerStateChanged) {
-     sender.view.backgroundColor = [UIColor lightGrayColor];
-     } else if (sender.state == UIGestureRecognizerStateEnded) {
-     sender.view.backgroundColor = [UIColor clearColor];
-     }
-     */
 }
 
 // Methods below are to achieve the selected behavior

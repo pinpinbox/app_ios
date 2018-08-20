@@ -194,23 +194,25 @@
         NSString * respone=[boxAPI requsetsmspwd2:[NSString stringWithFormat:@"%@,%@",countrstr,phonetv.text] Account:_email];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
-
             NSLog(@"%@",respone);
-            NSDictionary *data= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-            
-            if ([data[@"result"]boolValue]) {
+            NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+            if ([dic[@"result"] intValue] == 1) {
                 Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
                 [rv addtitletext:NSLocalizedString(@"ProfileText-successSent", @"")];
                 [rv addBackTouch];
                 [rv showView:self.view];
-                
-            }else{
+            } else if ([dic[@"result"] intValue] == 0) {
                 NSLog(@"Response from requsetsmspwd2");
                 Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                [rv addtitletext:data[@"message"]];
+                [rv addtitletext: dic[@"message"]];
                 [rv addBackTouch];
                 [rv showView:self.view];
-                NSLog(@"失敗：%@",data[@"message"]);
+                NSLog(@"失敗：%@", dic[@"message"]);
+            } else {
+                Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+                [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+                [rv addBackTouch];
+                [rv showView:self.view];
             }
         });
     });
@@ -265,9 +267,9 @@
             [wTools HideMBProgressHUD];
 
             NSLog(@"%@",respone);
-            NSDictionary *data= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+            NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
             
-            if ([data[@"result"]boolValue]) {
+            if ([dic[@"result"] intValue] == 1) {
                 //_editview.cellphone.text=[NSString stringWithFormat:@"%@,%@",countrstr,phonetv.text];
                 _editview.phoneNumberTextField.text = [NSString stringWithFormat:@"%@,%@",countrstr,phonetv.text];
                 Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
@@ -276,13 +278,17 @@
                  AppDelegate *app=[[UIApplication sharedApplication]delegate];
                 [rv showView:app.menu.view];
                 [self.navigationController popViewControllerAnimated:YES];
-                
-            }else{
+            } else if ([dic[@"result"] intValue] == 0) {
                 Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                [rv addtitletext:data[@"message"]];
+                [rv addtitletext:dic[@"message"]];
                 [rv addBackTouch];
                 [rv showView:self.view];
-                NSLog(@"失敗：%@",data[@"message"]);
+                NSLog(@"失敗：%@",dic[@"message"]);
+            } else {
+                Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+                [rv addtitletext:NSLocalizedString(@"Host-NotAvailable", @"")];
+                [rv addBackTouch];
+                [rv showView:self.view];
             }
         });
     });

@@ -754,8 +754,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 
 #pragma mark - Get P Point
-- (void)getUrPoints
-{
+- (void)getUrPoints {
     NSLog(@"");
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -769,7 +768,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
                                            token: [userPrefs objectForKey:@"token"]];
@@ -784,7 +782,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-                        
             if (response != nil) {
                 NSLog(@"response from geturpoints");
                 
@@ -802,7 +799,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         NSInteger point = [dic[@"data"] integerValue];
                         //NSLog(@"point: %ld", (long)point);
@@ -811,14 +808,11 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                         [userPrefs synchronize];
                         
                         [self toMyTabBarController];
-                    } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

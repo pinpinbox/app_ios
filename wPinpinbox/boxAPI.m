@@ -196,7 +196,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
 }
 
 //忘記密碼
-+(NSString *)retiievepassword:(NSString *)cellphone Account:(NSString *)account{
++(NSString *)retrievepassword:(NSString *)cellphone Account:(NSString *)account{
     NSLog(@"");
     NSLog(@"retiievepassword");
     

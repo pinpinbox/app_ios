@@ -401,7 +401,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
                         aDVC.data = [dic[@"data"] mutableCopy];
                         aDVC.albumId = albumId;
@@ -416,10 +416,11 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
                         [appDelegate.myNav pushViewController: aDVC animated: NO];
-                        
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -451,16 +452,16 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         [MBProgressHUD hideHUDForView: self.view animated: YES];
                         
                         albumId = [dic[@"data"][@"albumid"] stringValue];
                         [self ToRetrievealbumpViewControlleralbumid: albumId];
-                    } else {
-                        [MBProgressHUD hideHUDForView: self.view animated: YES];
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             } else {
@@ -511,11 +512,11 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result is 1");
                         
                         [self getcalbumlist];
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         //[self.navigationController popViewControllerAnimated: YES];
                         
@@ -523,6 +524,11 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                         [appDelegate.myNav popViewControllerAnimated: YES];
                         
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav popViewControllerAnimated: YES];
+                        
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -562,7 +568,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result is: %d", [dic[@"result"] boolValue]);
                         
                         for (NSDictionary *d in dic[@"data"]) {
@@ -595,14 +601,15 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                 }
                             }
                         }
-                    } else {
-                        NSLog(@"失敗：%@", dic[@"message"]);
-                        //[self.navigationController popViewControllerAnimated: YES];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav popViewControllerAnimated: YES];
-                        
-                        //[self showAlertView: dic[@"message"]];
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav popViewControllerAnimated: YES];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];                                            
                     }
                 }
             }

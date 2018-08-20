@@ -46,7 +46,7 @@ static NSString *version = @"";
          checkValue:(NSString *)value;
 
 //忘記密碼
-+(NSString *)retiievepassword:(NSString *)cellphone
++(NSString *)retrievepassword:(NSString *)cellphone
                       Account:(NSString *)account;
 //更新個人興趣
 + (NSString *)updateprofilehobby:(NSString *)token

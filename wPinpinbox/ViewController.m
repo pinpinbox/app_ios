@@ -353,24 +353,24 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         
                         NSLog(@"dic: %@", dic);
                         
-                        if ([dic[@"result"] boolValue]) {
+                        NSLog(@"result intValue: %d", [dic[@"result"] intValue]);
+                        
+                        if ([dic[@"result"] intValue] == 1) {
                             NSLog(@"dic result boolValue is 1");
                             //[self toMyTabBarController];
                             //[self getProfile];
                             [self refreshToken];
-                        } else {
+                        } else if ([dic[@"result"] intValue] == 0) {
                             NSLog(@"失敗： %@", dic[@"message"]);
                             NSString *msg = dic[@"message"];
-                            
-                            if (msg == nil) {
-                                msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                            }
+                            NSLog(@"msg: %@", msg);
                             [self showCustomErrorAlert: msg];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
                     }
                 } else {
                     NSLog(@"response == nil");
-                    
                     if (![boxAPI hostAvailable: pinpinbox]) {
                         //[self showCustomAlertForOptions: @"是否離線瀏覽相本?"];
                         [self showCustomErrorAlert: @"伺服器連線失敗"];
@@ -525,8 +525,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
+                    NSLog(@"result intValue: %d", [dic[@"result"] intValue]);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
 
                         tokenStr = dic[@"data"][@"token"];
@@ -537,13 +538,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         //[self getProfile];
                         [self refreshToken];
                         //[self setupPushNotification];
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                        NSLog(@"msg: %@", msg);
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -971,24 +971,21 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 } else {
                     NSLog(@"Get Real Response");
                     
-                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"%@",respone);
                     
-                    if ([data[@"result"] boolValue]) {
-                        tokenStr = data[@"data"][@"token"];
-                        idStr = [data[@"data"][@"id"] stringValue];
+                    if ([dic[@"result"] intValue] == 1) {
+                        tokenStr = dic[@"data"][@"token"];
+                        idStr = [dic[@"data"][@"id"] stringValue];
                         
                         [self saveDataAfterLogin: @"facebookLogin"];
                         //[self setupPushNotification];
                         [self toFbFindingVCAndResetData];
-                    } else {
-                        NSLog(@"失敗：%@",data[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1153,8 +1150,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - Web Service - GetProfile
-- (void)getProfile
-{
+- (void)getProfile {
     NSLog(@"");
     NSLog(@"");
     NSLog(@"getProfile");
@@ -1173,8 +1169,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSLog(@"userPrefs id: %@", [userPrefs objectForKey: @"id"]);
-        //NSString *response = [PinPinBoxAPI getProfile: [userPrefs objectForKey: @"id"] token: [userPrefs objectForKey: @"token"]];
-        
         NSString *response = [boxAPI getprofile: [userPrefs objectForKey: @"id"]
                                           token: [userPrefs objectForKey: @"token"]];
         
@@ -1212,7 +1206,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         [self getUrPoints];
                         
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -1238,14 +1232,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         
                         [userPrefs setValue: dataIc forKey: @"profile"];
                         [userPrefs synchronize];
-                    } else {
-                        NSLog(@"失敗: %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1254,8 +1245,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - Get P Point
-- (void)getUrPoints
-{
+- (void)getUrPoints {
     NSLog(@"");
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -1269,10 +1259,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        //NSString *response = [PinPinBoxAPI getUrPoints: [userPrefs objectForKey:@"id"]  token: [userPrefs objectForKey:@"token"]];
-                
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
                                            token: [userPrefs objectForKey:@"token"]];
         
@@ -1305,7 +1292,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         NSInteger point = [dic[@"data"] integerValue];
                         //NSLog(@"point: %ld", (long)point);
@@ -1314,14 +1301,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         [userPrefs synchronize];
                         
                         [self toMyTabBarController];
-                    } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

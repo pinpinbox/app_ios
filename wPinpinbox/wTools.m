@@ -25,7 +25,7 @@
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
 
-#import "TestReadBookViewController.h"
+//#import "TestReadBookViewController.h"
 #import "ContentCheckingViewController.h"
 
 #import "GlobalVars.h"
@@ -175,7 +175,7 @@ static wTools *instance =nil;
                     
                     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
@@ -188,9 +188,11 @@ static wTools *instance =nil;
                         
                         rev.albumid=albumid;
                         [app.myNav pushViewController:rev animated:YES];
-                    } else {
-                        NSLog(@"失敗：%@", dic[@"message"]);
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -331,7 +333,7 @@ static wTools *instance =nil;
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
                         
@@ -341,18 +343,13 @@ static wTools *instance =nil;
                         ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
                         contentCheckingVC.albumId = albumId;
                         contentCheckingVC.postMode = postMode;
-                        /*
-                        TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
                         
-                        testReadBookVC.albumid = albumId;
-                        testReadBookVC.dic = [dic[@"data"] mutableCopy];
-                        testReadBookVC.eventId = eventId;
-                        testReadBookVC.postMode = postMode;
-                        */
                         [app.myNav pushViewController: contentCheckingVC animated: YES];
-                    } else {
-                        NSLog(@"失敗：%@", dic[@"message"]);
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

@@ -239,7 +239,8 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    if ([dic[@"result"] boolValue]) {
+                    
+                    if ([dic[@"result"] intValue] == 1) {
                         NSDictionary *d = dic[@"data"];
                         
                         if ([d[@"followstatus"] boolValue]) {
@@ -253,14 +254,11 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         }
                         NSLog(@"self.collectionView reloadData");
                         [self.collectionView reloadData];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

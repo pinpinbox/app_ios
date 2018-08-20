@@ -119,8 +119,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response: %@", response);
                 
@@ -139,7 +137,7 @@
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"get result from getcalbumlist");
                         
                         if (nextId == 0) {
@@ -166,15 +164,13 @@
                             isLoading = YES;
                         }
                         isReloading = NO;
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                        [self.refreshControl endRefreshing];
+                        isReloading = NO;
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
-                                                
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         [self.refreshControl endRefreshing];
                         isReloading = NO;
                     }

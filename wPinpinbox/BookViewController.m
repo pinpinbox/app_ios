@@ -44,8 +44,8 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 #import "YTVimeoExtractor.h"
-
 #import "MBProgressHUD.h"
+#import "UIColor+Extensions.h"
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
@@ -1263,7 +1263,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
                 if ([data[@"result"] intValue] == 1) {
-                    
                     missionTopicStr = data[@"data"][@"task"][@"name"];
                     NSLog(@"name: %@", missionTopicStr);
                     
@@ -1313,6 +1312,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 } else if ([data[@"result"] intValue] == 0) {
                     NSString *errorMessage = data[@"message"];
                     NSLog(@"error messsage: %@", errorMessage);
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];                
                 }
             }
         });
@@ -1545,18 +1546,19 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"post album success");
-                    
                     int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
-                    
                     NSLog(@"contributionCheck: %d", contributionCheck);
-                    
-                    
-                } else {
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"message: %@", dic[@"message"]);
                     
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: dic[@"message"] preferredStyle: UIAlertControllerStyleAlert];
+                    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"OK" style: UIAlertActionStyleDefault handler: nil];
+                    [alert addAction: okBtn];
+                    [self presentViewController: alert animated: YES completion: nil];
+                } else {
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: NSLocalizedString(@"Host-NotAvailable", @"") preferredStyle: UIAlertControllerStyleAlert];
                     UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"OK" style: UIAlertActionStyleDefault handler: nil];
                     [alert addAction: okBtn];
                     [self presentViewController: alert animated: YES completion: nil];
@@ -2185,24 +2187,20 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSString * Pointstr=[boxAPI geturpoints:[wTools getUserID] token:[wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             //[wTools HideMBProgressHUD];
             [MBProgressHUD hideHUDForView: self.view animated: YES];
             
             NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[Pointstr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
             
             if ([_dic[@"album"][@"point"] intValue]==0) {
-                
                 NSLog(@"收藏相本");
                 
                 PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
-                //PreviewbookViewController *rv = [[UIStoryboard storyboardWithName: @"Home" bundle: nil]  instantiateViewControllerWithIdentifier: @"PreviewbookViewController"];
                 rv.albumid=_albumid;
                 rv.userbook=@"N";
                 
                 [self own];
                 [self.navigationController pushViewController:rv animated:YES];
-                
                 
                 // Check whether taskType is createAlbum or collectAlbum
                 // Because, these two type will go to the same view controller - BookViewController
@@ -2210,34 +2208,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 task_for = @"collect_free_album";
                 [defaults setObject: task_for forKey: @"task_for"];
                 [defaults synchronize];
-                
-                
-                // Check whether getting collecting free album point or not
-                
-                
-                //免費直接詢問是否收藏
-                //                      Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                //                      [rv addtitletext:@"確定收藏？"];
-                //                      [rv addSelectBtntext:@"是" btn2:@"否"];
-                //                      [rv showView:self.view];
-                //                      rv.btn1select=^(BOOL bo){
-                //                          if (bo) {
-                //                              PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
-                //                              rv.albumid=_albumid;
-                //                              [self.navigationController pushViewController:rv animated:YES];
-                //                          }
-                //                      };
-                
             } else {
                 //是否足夠
                 if ([_dic[@"album"][@"point"] intValue]>[dic[@"data"] intValue]) {
-                    /*
-                     Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                     [rv addtitletext:@"暫時無法購買, 請待開放後使用!!"];
-                     [rv addBackTouch];
-                     [rv showView:self.view];
-                     */
-                    
                     Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
                     [rv addtitletext:NSLocalizedString(@"Works-tipAskP", @"")];
                     [rv addSelectBtntext:NSLocalizedString(@"GeneralText-yes", @"") btn2:NSLocalizedString(@"GeneralText-no", @"") ];
@@ -2250,9 +2223,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                             [self.navigationController pushViewController:cvc animated:YES];
                         }
                     };
-                    
-                } else {
-                    
+                } else {                    
                     //可以購買
                     Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
                     [rv addtitletext:[NSString stringWithFormat:@"%@(%d P)",NSLocalizedString(@"Works-tipConfirmGetIt", @""),[_dic[@"album"][@"point"] intValue]]];
@@ -2927,6 +2898,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     //[wTools HideMBProgressHUD];
                     [MBProgressHUD hideHUDForView: self.view animated: YES];
                     NSLog(@"Fail");
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -3101,18 +3074,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 if ([data[@"result"] intValue] == 1) {
                     //[wTools HideMBProgressHUD];
                     [MBProgressHUD hideHUDForView: self.view animated: YES];
-                    
                     // Success
                     NSLog(@"兌換 Success");
-                    
-                    
-                    // Change the image of exchange button
-                    /*
-                    UIImageView *exchangedImage = [[UIImageView alloc] initWithFrame: CGRectMake(giftView.bounds.size.width - 100 * 1.0, giftView.bounds.size.height - 100 * 1.0, 100 * 1.0, 100 * 1.0)];
-                    exchangedImage.image = [UIImage imageNamed: @"icon_exchanged.png"];
-                    [giftView addSubview: exchangedImage];
-                    */
-                    
                     NSLog(@"check subViews & Set up");
                     
                     UIButton *btn;
@@ -3183,6 +3146,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     [MBProgressHUD hideHUDForView: self.view animated: YES];
                     
                     NSLog(@"Fail");
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -3572,7 +3537,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 } else if ([data[@"result"] intValue] == 2) {
                     //[wTools HideMBProgressHUD];
                     [MBProgressHUD hideHUDForView: self.view animated: YES];
-                    
                     // 兌換 / 拉霸的對象數量已用盡或已被領取
                     NSLog(@"兌換 / 拉霸的對象數量已用盡或已被領取");
                     
@@ -3583,12 +3547,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     [rv showView: self.view];
                     
                     return;
-                    
                 } else if ([data[@"result"] intValue] == 0) {
                     //[wTools HideMBProgressHUD];
                     [MBProgressHUD hideHUDForView: self.view animated: YES];
-                    
                     NSLog(@"Fail");
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -3739,6 +3703,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     [MBProgressHUD hideHUDForView: self.view animated: YES];
                     
                     NSLog(@"Fail");
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -3845,6 +3811,107 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [nav setNavigationBarHidden:YES animated:NO];
     
     [self presentViewController:nav animated:YES completion:nil];
+}
+
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert: (NSString *)msg {
+    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
+    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    
+    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    errorAlertView.arrangeStyle = @"Horizontal";
+    
+    /*
+     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
+     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
+     alertView.arrangeStyle = @"Vertical";
+     */
+    
+    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
+    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [weakErrorAlertView close];
+    }];
+    [errorAlertView setUseMotionEffects: YES];
+    [errorAlertView show];
+}
+
+- (UIView *)createErrorContainerView: (NSString *)msg
+{
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = msg;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
+    
+    CGFloat viewHeight;
+    
+    if ((textViewY + textViewHeight) > 96) {
+        if ((textViewY + textViewHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight;
+        }
+    } else {
+        viewHeight = 96;
+    }
+    NSLog(@"demoHeight: %f", viewHeight);
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = [UIColor firstPink];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.view.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    return contentView;
 }
 
 @end

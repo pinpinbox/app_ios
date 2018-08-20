@@ -453,6 +453,8 @@
                             [defaults synchronize];
                             [self initApp];
                         }
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -703,15 +705,6 @@ sourceController:(UIViewController *)source
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
-//            @try {
-//                [MBProgressHUD hideHUDForView: self.view animated: YES];
-//            } @catch (NSException *exception) {
-//                // Print exception information
-//                NSLog( @"NSException caught" );
-//                NSLog( @"Name: %@", exception.name);
-//                NSLog( @"Reason: %@", exception.reason);
-//                return;
-//            }
             
             if (response != nil) {
                 NSLog(@"response from updateList");
@@ -736,7 +729,7 @@ sourceController:(UIViewController *)source
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         //NSLog(@"dic: %@", dic[@"data"]);
                         
                         NSLog(@"Before");
@@ -785,16 +778,14 @@ sourceController:(UIViewController *)source
                         
                         NSLog(@"-------------------------");
                         NSLog(@"nextId: %ld", (long)nextId);
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                         [self.refreshControl endRefreshing];
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
-                        
+                        isReloading = NO;
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self.refreshControl endRefreshing];
                         isReloading = NO;
                     }
                 }
@@ -854,11 +845,11 @@ sourceController:(UIViewController *)source
                 } else {
                     NSLog(@"Get Real Response");
                     
-                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
                     
-                    if ([data[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"GetAd Success");
-                        adArray = data[@"data"];
+                        adArray = dic[@"data"];
                         
                         // Check array data is 0 or more than 0
                         NSLog(@"adArray: %@", adArray);
@@ -871,14 +862,11 @@ sourceController:(UIViewController *)source
                         [self getCategoryList];
                         
                         //[self checkFirstTimeLogin];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", data[@"message"]);
-                        NSString *msg = data[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -929,7 +917,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic: %@", dic);
                         NSLog(@"dic data: %@", dic[@"data"]);
                         categoryArray = [NSMutableArray arrayWithArray: dic[@"data"]];
@@ -945,14 +933,11 @@ sourceController:(UIViewController *)source
                         //[self.categoryCollectionView reloadData];
                         
                         [self getTheMeArea];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1102,11 +1087,18 @@ sourceController:(UIViewController *)source
                         return ;
                     }
                     
-                    followUserData = [NSMutableArray arrayWithArray: dic[@"data"]];
-                    NSLog(@"followUserData: %@", followUserData);
-                    [self.followUserCollectionView reloadData];
-                    
-                    [self showAlbumRecommendedList];
+                    if ([dic[@"result"] intValue] == 1) {
+                        followUserData = [NSMutableArray arrayWithArray: dic[@"data"]];
+                        NSLog(@"followUserData: %@", followUserData);
+                        [self.followUserCollectionView reloadData];
+                        
+                        [self showAlbumRecommendedList];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
                 }
             }
         });
@@ -1157,11 +1149,17 @@ sourceController:(UIViewController *)source
                         return;
                     }
                     
-                    followAlbumData = [NSMutableArray arrayWithArray: dic[@"data"]];
-                    NSLog(@"followAlbumData.count: %lu", (unsigned long)followAlbumData.count);
-                    [self.followAlbumCollectionView reloadData];
-                    
-                    [self checkFirstTimeLogin];
+                    if ([dic[@"result"] intValue] == 1) {
+                        followAlbumData = [NSMutableArray arrayWithArray: dic[@"data"]];
+                        NSLog(@"followAlbumData.count: %lu", (unsigned long)followAlbumData.count);
+                        [self.followAlbumCollectionView reloadData];
+                        [self checkFirstTimeLogin];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
                 }
             }
         });
@@ -1347,6 +1345,11 @@ sourceController:(UIViewController *)source
                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                         [defaults setObject: [NSNumber numberWithBool: firsttime_login] forKey: @"firsttime_login"];
                         [defaults synchronize];
+                    } else if ([data[@"result"] intValue] == 0) {
+                        NSString *errorMessage = data[@"message"];
+                        NSLog(@"error messsage: %@", errorMessage);
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1402,21 +1405,18 @@ sourceController:(UIViewController *)source
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         NSInteger point = [dic[@"data"] integerValue];
                         //NSLog(@"point: %ld", (long)point);
                         
                         [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                         [userPrefs synchronize];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1565,12 +1565,10 @@ sourceController:(UIViewController *)source
                         [appDelegate.myNav pushViewController: newEventPostVC animated: YES];
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
-                        NSString *msg = data[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                        NSString *msg = data[@"message"];                       
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2785,7 +2783,7 @@ replacementString:(NSString *)string {
                         return;
                     }
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
                         if (nextUserId >= 0) {
@@ -2813,14 +2811,11 @@ replacementString:(NSString *)string {
                         }
                         [self.userCollectionView reloadData];
                         [self filterAlbumContentForSearchText: text];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2879,7 +2874,7 @@ replacementString:(NSString *)string {
                         return;
                     }
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
                         if (nextAlbumId >= 0) {
@@ -2887,15 +2882,11 @@ replacementString:(NSString *)string {
                         } else {
                             isAlbumLoading = YES;
                         }
-                        
                         NSLog(@"");
                         NSLog(@"");
                         
                         albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
                         nextAlbumId = albumData.count;
-                        
-                        //                        NSLog(@"albumData: %@", albumData);
-                        //                        NSLog(@"albumData.count: %lu", (unsigned long)albumData.count);
                         
                         if (albumData.count == 0) {
                             if (!isNoInfoVertViewCreate) {
@@ -2907,14 +2898,11 @@ replacementString:(NSString *)string {
                         }
                         
                         [self.albumCollectionView reloadData];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

@@ -184,9 +184,6 @@
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getpointstore: [userPrefs objectForKey: @"id"]
                                             token: [userPrefs objectForKey: @"token"]];
-//        pointstr = [boxAPI geturpoints: [userPrefs objectForKey: @"id"]
-//                                 token: [userPrefs objectForKey: @"token"]];
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
                 [wTools HideMBProgressHUD];
@@ -213,20 +210,9 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    //NSDictionary *pointdic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[pointstr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     NSLog(@"dic: %@", dic);
-                    //NSLog(@"pointdic: %@", pointdic);
                     
-                    //NSInteger point = [pointdic[@"data"] integerValue];
-                    
-                    //NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-                    //[userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
-                    //[userPrefs synchronize];
-                    //pointstr = [NSString stringWithFormat:@"%ld",(long)point];
-                    
-                    if ([dic[@"result"]boolValue]) {
-                        
+                    if ([dic[@"result"] intValue] == 1) {
                         pointlist = [dic[@"data"] mutableCopy];
                         
                         NSMutableArray *testarr=[NSMutableArray new];
@@ -276,31 +262,19 @@
                             [self.sixthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[5]]
                                            forState: UIControlStateNormal];
                         }
-                        
-                        //_mypoint.text=pointstr;
-                        //self.priceLabel.text = @"NT";
                         self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[0]];
-                        //NSLog(@"myPoint: %@", _mypoint);
                         
-                        //_selectpointText.text=[NSString stringWithFormat:@"%@ P",listdata[0]];
-                        //_selectpriceText.text=@"";
                         selectproductid = datakey[0];
                         
                         [self getUrPoints];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
-            //[InAppPurchaseManager getInstance].delegate = self;
-            //[InAppPurchaseManager getInstance].priceid = datakey;
-            //[[InAppPurchaseManager getInstance] loadStore]; //讀取商店資訊
         });
     });
 }
@@ -722,19 +696,16 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         orderid = dic[@"data"];
                         NSLog(@"orderid: %@", orderid);
                         
                         [[InAppPurchaseManager getInstance] purchaseProUpgrade2:selectproductid];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -851,7 +822,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         pointstr = [dic[@"data"] stringValue];
                         NSLog(@"old pointstr: %@", pointstr);
                         
@@ -876,14 +847,11 @@
                         } else {
                             [self checkPoint];
                         }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -918,7 +886,6 @@
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        //NSString *response = [boxAPI doTask2: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_buy_point" platform: @"apple" type: @"album" type_id: _albumid];
         
         NSString *response = [boxAPI doTask1: [wTools getUserID]
                                        token: [wTools getUserToken]
@@ -939,7 +906,6 @@
                 return;
             }
             
-            
             if (response != nil) {
                 NSLog(@"response from doTask1");
                 
@@ -957,7 +923,6 @@
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if ([data[@"result"] intValue] == 1) {
-                        
                         missionTopicStr = data[@"data"][@"task"][@"name"];
                         NSLog(@"name: %@", missionTopicStr);
                         
@@ -978,11 +943,8 @@
                         
                         numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
                         NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
-                        
                         [self showAlertView];
-                        
                         [self pointsUPdate];
-                        
                     } else if ([data[@"result"] intValue] == 2) {
                         NSLog(@"message: %@", data[@"message"]);
                         
@@ -993,9 +955,11 @@
                         [defaults setObject: [NSNumber numberWithBool: firsttime_buy_point]
                                      forKey: @"firsttime_buy_point"];
                         [defaults synchronize];
-                        
                     } else if ([data[@"result"] intValue] == 0) {
-                        
+                        NSString *errorMessage = data[@"message"];
+                        NSLog(@"error messsage: %@", errorMessage);
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

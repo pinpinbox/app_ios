@@ -327,8 +327,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Name: %@", exception.name);
                 NSLog( @"Reason: %@", exception.reason );
                 return;
-            }
-            
+            }            
             if (response != nil) {
                 NSLog(@"response from getCreative is not nil");
                 
@@ -349,7 +348,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         self.identity = dic[@"data"][@"split"][@"identity"];
                         self.sum = [dic[@"data"][@"split"][@"sum"] integerValue];
                         self.sumOfSettlement = [dic[@"data"][@"split"][@"sumofsettlement"] integerValue];
@@ -393,16 +392,12 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         [self getProfile];
                         
                         isReloading = NO;
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                        isReloading = NO;
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
-                        
-//                        [self.refreshControl endRefreshing];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         isReloading = NO;
                     }
                 }
@@ -460,7 +455,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"responseFromGetProfile != nil");
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
                         NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
                         
@@ -475,16 +470,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         [userPrefs synchronize];
                         
                         myData = [dataIc mutableCopy];                                                
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                         [self.refreshControl endRefreshing];
-                        
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self.refreshControl endRefreshing];
                     }
                 }
             } else {
@@ -587,8 +579,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -636,6 +626,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         [defaults setObject: [NSNumber numberWithBool: firsttime_edit_profile]
                                      forKey: @"firsttime_edit_profile"];
                         [defaults synchronize];
+                    } else if ([data[@"result"] intValue] == 0) {
+                        NSString *errorMessage = data[@"message"];
+                        NSLog(@"error messsage: %@", errorMessage);
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -690,21 +685,18 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         NSInteger point = [dic[@"data"] integerValue];
                         //NSLog(@"point: %ld", (long)point);
                         
                         [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                         [userPrefs synchronize];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1675,7 +1667,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
                 return;
             }
             
-            
             if (response != nil) {
                 NSLog(@"response from retrievealbump");
                 
@@ -1692,7 +1683,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
@@ -1712,14 +1703,11 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
                         [appDelegate.myNav pushViewController: aDVC animated: NO];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

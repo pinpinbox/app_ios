@@ -27,7 +27,6 @@
 #import "NewMessageBoardViewController.h"
 #import "MessageboardViewController.h"
 #import "AppDelegate.h"
-#import "TestReadBookViewController.h"
 #import "CreaterViewController.h"
 #import <SafariServices/SafariServices.h>
 #import "DDAUIActionSheetViewController.h"
@@ -59,7 +58,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 #define animateConstant 0.1
 
-@interface AlbumDetailViewController () <FBSDKSharingDelegate, SelectBarDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIScrollViewDelegate, TestReadBookViewControllerDelegate, ContentCheckingViewControllerDelegate, UITextViewDelegate, NewMessageBoardViewControllerDelegate, MessageboardViewControllerDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate, AlbumSettingViewControllerDelegate, ParallaxViewControllerDelegate>
+@interface AlbumDetailViewController () <FBSDKSharingDelegate, SelectBarDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIScrollViewDelegate, ContentCheckingViewControllerDelegate, UITextViewDelegate, NewMessageBoardViewControllerDelegate, MessageboardViewControllerDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate, AlbumSettingViewControllerDelegate, ParallaxViewControllerDelegate>
 {
     // For Showing Message of Getting Point
     NSString *missionTopicStr;
@@ -977,12 +976,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
                         NSString *msg = data[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
-                        
+                        [self showCustomErrorAlert: msg];                        
                     } else if ([data[@"result"] intValue] == 2) {
                         NewEventPostViewController *newEventPostVC = [[UIStoryboard storyboardWithName: @"NewEventPostVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewEventPostViewController"];
                         newEventPostVC.name = data[@"data"][@"event"][@"name"];
@@ -999,6 +993,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav pushViewController: newEventPostVC animated: YES];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1091,6 +1087,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         }
                         UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems: [NSArray arrayWithObjects: message, nil] applicationActivities: nil];
                         [self presentViewController: activityVC animated: YES completion: nil];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1106,18 +1104,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     contentCheckingVC.delegate = self;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
-    
-//    TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
-//    testReadBookVC.dic = self.data;
-//    testReadBookVC.isDownloaded = NO;
-//    testReadBookVC.albumid = self.albumId;
-//    testReadBookVC.delegate = self;
-//    testReadBookVC.isLikes = isLikes;
-//    testReadBookVC.likeNumber = likesInt;
-//    testReadBookVC.eventJoin = self.data[@"eventjoin"];
-//    //[self.navigationController pushViewController: testReadBookVC animated: YES];
-//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//    [appDelegate.myNav pushViewController: testReadBookVC animated: YES];
 }
 
 #pragma mark - ActionSheet
@@ -1245,8 +1231,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             NSLog(@"response: %@", response);
             
             if (response != nil) {
@@ -1265,7 +1249,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSInteger point = [dic[@"data"] integerValue];
                         NSLog(@"%ld", (long)point);
                         
@@ -1274,14 +1258,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         } else {
                             [self showCustomAlert: @"你的P點不足，前往購點?" option: @"buyPoint"];
                         }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1354,12 +1335,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         [self showCustomErrorAlert: @"已擁有該相本"];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                        NSString *msg = dic[@"message"];                        
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1502,6 +1481,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         [self saveCollectInfoToDevice: YES];
                     } else if ([data[@"result"] intValue] == 3) {
                         NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1582,7 +1563,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         reportIntentList = dic[@"data"];
                         SelectBarViewController *mv = [[SelectBarViewController alloc] initWithNibName: @"SelectBarViewController" bundle: nil];
                         
@@ -1595,14 +1576,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         mv.delegate = self;
                         mv.topViewController = self;
                         [self wpresentPopupViewController: mv animated: YES completion: nil];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1661,20 +1639,15 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     
                     NSString *msg = @"";
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         msg = NSLocalizedString(@"Works-tipRpSuccess", @"");
                         [self showCustomOKAlert: msg];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
-                    
-                    //[self showCustomAlert: msg];
                 }
             }
         });
@@ -1739,22 +1712,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (void)retrieveAlbum {
     NSLog(@"retrieveAlbum");
-    
-    @try {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools ShowMBProgressHUD];
-        });
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
+    [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        //NSString *response = [boxAPI retrievealbump: self.albumId uid: [wTools getUserID] token: [wTools getUserToken]];
-        
         NSLog(@"isViewed: %d", isViewed);
         
         NSString *viewedString = [NSString stringWithFormat: @"%d", isViewed];
@@ -1789,7 +1749,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 } else {
                     NSLog(@"Get Real Response");NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
                         
@@ -1802,14 +1762,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         [self pointsUPdate];                                                
                         
                         [self initialValueSetup];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2363,7 +2320,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         likesInt++;
                         
                         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
@@ -2373,14 +2330,12 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         NSLog(@"isLikes: %d", isLikes);
                         
                         [self retrieveAlbum];
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2415,8 +2370,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response from deleteAlbum2Likes");
                 
@@ -2433,7 +2386,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         likesInt--;
                         
                         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_dark"] forState: UIControlStateNormal];
@@ -2442,14 +2395,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         isLikes = !isLikes;
                         
                         [self retrieveAlbum];
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2753,23 +2703,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     //return touch.view == self.view;
     
     NSLog(@"touch.view: %@", touch.view);
-    
-    /*
-     if ([touch.view isKindOfClass: [UIScrollView class]]) {
-     NSLog(@"touch.view isKindOf UIScrollView Class");
-     
-     TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
-     
-     NSLog(@"self.data photo: %@", self.data[@"photo"]);
-     
-     testReadBookVC.dic = self.data;
-     testReadBookVC.isDownloaded = NO;
-     testReadBookVC.albumid = self.albumId;
-     
-     [self.navigationController pushViewController: testReadBookVC animated: YES];
-     }
-     */
-    
+        
     if (touch.view.tag == 200) {
         return NO;
     } else {
@@ -2841,15 +2775,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     albumSponsorListVC.albumId = self.albumId;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: albumSponsorListVC animated: YES];
-}
-
-#pragma mark - TestReadBookViewControllerDelegate Method
-- (void)testReadBookViewControllerViewWillDisappear:(TestReadBookViewController *)controller likeNumber:(NSUInteger)likeNumber isLike:(BOOL)isLike
-{
-    NSLog(@"");
-    NSLog(@"testReadBookViewControllerViewWillDisappear");
-    
-    //[self retrieveAlbum];
 }
 
 #pragma mark - ContentCheckingViewControllerDelegate Method

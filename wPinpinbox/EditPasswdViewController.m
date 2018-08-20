@@ -216,25 +216,16 @@
         [rv showView: self.view];
         return;
     }
-    
-    
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         BOOL respone=[boxAPI updatepwd:[wTools getUserID] token:[wTools getUserToken] oldpwd:t1.text newpwd:t2.text];
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             [wTools HideMBProgressHUD];
             
             if (respone) {
                 NSLog(@"更新成功");
                 [self.navigationController popViewControllerAnimated:YES];
-//                Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-//                [rv editiamgetick];
-//                [rv addtitletext:@"更新成功"];
-//                [rv addBackTouch];
-//                [rv showView:self.view];
-                
             }else{
                 NSLog(@"更新失敗");
                 Remind *rv = [[Remind alloc] initWithFrame: self.view.bounds];
