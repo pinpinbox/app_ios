@@ -261,8 +261,7 @@
                 NSLog( @"Name: %@", exception.name);
                 NSLog( @"Reason: %@", exception.reason );
                 return;
-            }
-                        
+            }                        
             if (response != nil) {
                 NSLog(@"response from albumsettings");
                 

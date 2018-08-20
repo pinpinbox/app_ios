@@ -19,6 +19,9 @@
 
 #import "NSMutableArray+Reverse.h"
 
+#import "CustomIOSAlertView.h"
+#import "UIColor+Extensions.h"
+
 @interface BookdetViewController () <UITextViewDelegate,BookdetDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 {
     UIButton *selectbtn;
@@ -142,9 +145,7 @@
 }
 
 #pragma mark -
-
-- (void)getSettingData
-{
+- (void)getSettingData {
     NSLog(@"getSettingData");
     
     statusValue = NO;
@@ -179,30 +180,24 @@
     
     // 下載資料
     [wTools ShowMBProgressHUD];
-    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *respone=[boxAPI getalbumdataoptions:[wTools getUserID] token:[wTools getUserToken]];
-        
-        NSString *getAlbumSettingsResponse = [boxAPI getalbumsettings: [wTools getUserID] token: [wTools getUserToken] album_id: _album_id];
-        
+        NSString *respone = [boxAPI getalbumdataoptions:[wTools getUserID] token:[wTools getUserToken]];
+        NSString *getAlbumSettingsResponse = [boxAPI getalbumsettings: [wTools getUserID] token: [wTools getUserToken] album_id: _album_id];        
         NSLog(@"getAlbumSettingsResponse: %@", getAlbumSettingsResponse);
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             if (respone!=nil) {
                 //NSLog(@"%@",respone);
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 NSLog(@"getalbumdataoptions");
                 //NSLog(@"dic: %@", dic);
                 
-                if ([dic[@"result"]boolValue]) {
-                    
+                if ([dic[@"result"] intValue] == 1) {
                     mdata=[[dic objectForKey:@"data"] mutableCopy];
                     //NSLog(@"mdata: %@", mdata);
                     
                     if (getAlbumSettingsResponse != nil) {
-                        
                         NSDictionary *dicForSettings = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [getAlbumSettingsResponse dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                         NSLog(@"getAlbumSettingsResponse");
                         NSLog(@"dicForSettings: %@", dicForSettings);
@@ -292,7 +287,6 @@
                             [waudio setTitle:data[@"name"] forState:UIControlStateNormal];
                         }
                     }
-                    
                     NSLog(@"audio");
                     NSLog(@"saudio intValue: %d", [saudio intValue]);
                     
@@ -315,9 +309,7 @@
                         NSLog(@"data act is open");
                         sact = @"公開";
                         [wact setTitle: @"公開" forState: UIControlStateNormal];
-                        
                         switchImageView.image = [UIImage imageNamed: @"frame_blue"];
-                        
                     } else if ([_data[@"act"] isEqualToString: @"close"]) {
                         NSLog(@"data act is close");
                         [wact setTitle: @"隱私" forState: UIControlStateNormal];
@@ -325,13 +317,14 @@
                         
                         switchImageView.image = [UIImage imageNamed: @"frame_blue_red"];
                     }
-                    
                     if ([wTools userbook]==100) {
                         indexview.hidden=NO;
                     }
-                    
-                } else {
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
             [wTools HideMBProgressHUD];
@@ -340,7 +333,6 @@
 }
 
 - (IBAction)firstpaging:(id)sender {
-    
     selectbtn=sender;
     
     NSMutableArray *arr=[NSMutableArray new];
@@ -348,10 +340,9 @@
     for (NSDictionary *d in mdata[@"firstpaging"]) {
         [arr addObject:d[@"name"]];
     }
-    
     [self showSVSVC:arr];
-    
 }
+
 - (IBAction)secondpaging:(id)sender {
     if (sfir==nil) {
         
@@ -839,24 +830,20 @@
     [self presentViewController: alert animated: YES completion: nil];
 }
 
-- (void)callAlbumSettings: (NSString *)jsonStr
-{
+- (void)callAlbumSettings: (NSString *)jsonStr {
     [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *respone=[boxAPI albumsettings:[wTools getUserID] token:[wTools getUserToken] album_id:_album_id settings: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             [wTools HideMBProgressHUD];
             
             if (respone!=nil) {
                 NSLog(@"%@",respone);
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
-                if ([dic[@"result"]boolValue]) {
-                    
-                    //PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
+                if ([dic[@"result"] intValue] == 1) {
                     PreviewbookViewController *rv = [[UIStoryboard storyboardWithName: @"Home" bundle: nil]  instantiateViewControllerWithIdentifier: @"PreviewbookViewController"];
                     rv.albumid=_album_id;
                     rv.userbook=@"Y";
@@ -865,18 +852,15 @@
                     rv.fromEventPostVC = self.fromEventPostVC;
                     [self.navigationController pushViewController:rv animated:YES];
                     
-                    
-                    //[self performSegueWithIdentifier: @"showPreviewbookViewController" sender: self];
-                    
-                    // Check whether taskType is createAlbum or collectAlbum
-                    // Because, these two type will go to the same view controller - BookViewController
                     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                     NSString *task_for = @"create_free_album";
                     [defaults setObject: task_for forKey: @"task_for"];
                     [defaults synchronize];
-                    
-                }else{
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -1214,6 +1198,107 @@
         
         [self.navigationController pushViewController: rv animated: YES];
     }
+}
+
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert: (NSString *)msg {
+    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
+    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    
+    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    errorAlertView.arrangeStyle = @"Horizontal";
+    
+    /*
+     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
+     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
+     alertView.arrangeStyle = @"Vertical";
+     */
+    
+    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
+    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [weakErrorAlertView close];
+    }];
+    [errorAlertView setUseMotionEffects: YES];
+    [errorAlertView show];
+}
+
+- (UIView *)createErrorContainerView: (NSString *)msg
+{
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = msg;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
+    
+    CGFloat viewHeight;
+    
+    if ((textViewY + textViewHeight) > 96) {
+        if ((textViewY + textViewHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight;
+        }
+    } else {
+        viewHeight = 96;
+    }
+    NSLog(@"demoHeight: %f", viewHeight);
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = [UIColor firstPink];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.view.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    return contentView;
 }
 
 @end

@@ -224,12 +224,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
         NSMutableDictionary *data = [NSMutableDictionary new];
         [data setObject: @"user" forKey: @"type"];
         [data setObject: @"0,16" forKey: @"limit"];
-        /*
-        response = [self getRecommendedList: [wTools getUserID]
-                                      token: [wTools getUserToken]
-                                       data: data];
-        */
-        
+
         response = [boxAPI getRecommendedList: [wTools getUserID]
                                         token: [wTools getUserToken]
                                          data: data];
@@ -245,9 +240,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                     NSLog(@"Time Out Message Return");
                     NSLog(@"SearchTableViewController");
                     NSLog(@"showUserRecommendedList");
-                    
-                    [self dismissKeyboard];
-                    
+                    [self dismissKeyboard];                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"showUserRecommendedList"
                                             text: @""
@@ -267,7 +260,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                         return;
                     }
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
                         if (nextUserId >= 0) {
@@ -275,26 +268,20 @@ static NSString *hostURL = @"www.pinpinbox.com";
                         } else {
                             isUserLoading = YES;
                         }
-                        
                         NSLog(@"");
                         NSLog(@"");
                         
                         userData = [NSMutableArray arrayWithArray:dic[@"data"]];
                         nextUserId = userData.count;
                         
-//                        NSLog(@"userData: %@", userData);
-                        
                         [self.userCollectionView reloadData];
                         
                         [self showAlbumRecommendedList];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -316,11 +303,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
         NSMutableDictionary *data = [NSMutableDictionary new];
         [data setObject: @"album" forKey: @"type"];
         [data setObject: @"0,16" forKey: @"limit"];
-        /*
-        response = [self getRecommendedList: [wTools getUserID]
-                                      token: [wTools getUserToken]
-                                       data: data];
-        */
+
         response = [boxAPI getRecommendedList: [wTools getUserID]
                                         token: [wTools getUserToken]
                                          data: data];
@@ -336,9 +319,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                     NSLog(@"Time Out Message Return");
                     NSLog(@"SearchTableViewController");
                     NSLog(@"showAlbumRecommendedList");
-                    
                     [self dismissKeyboard];
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"showAlbumRecommendedList"
                                             text: @""
@@ -347,39 +328,30 @@ static NSString *hostURL = @"www.pinpinbox.com";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    //NSLog(@"dic: %@", dic);
-                    
                     if (![dic[@"result"] boolValue]) {
                         return ;
                     }
-                    
                     //判斷目前table和 搜尋結果是否相同
                     if (![data[@"type"] isEqualToString: @"album"]) {
                         return;
                     }
-                    
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
                         if (nextAlbumId >= 0) {
                             isAlbumLoading = NO;
                         } else {
                             isAlbumLoading = YES;
-                        }
-                        
+                        }                        
                         albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
                         nextAlbumId = albumData.count;
                         
-//                        NSLog(@"albumData: %@", albumData);
                         [self.albumCollectionView reloadData];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -889,11 +861,7 @@ replacementString:(NSString *)string
         [data setObject: @"user" forKey: @"searchtype"];
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,32" forKey: @"limit"];
-        /*
-        response = [self search: [wTools getUserID]
-                          token: [wTools getUserToken]
-                           data: data];
-        */
+        
         response = [boxAPI search: [wTools getUserID]
                             token: [wTools getUserToken]
                              data: data];
@@ -930,7 +898,7 @@ replacementString:(NSString *)string
                         return;
                     }
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
                         if (nextUserId >= 0) {
@@ -960,14 +928,11 @@ replacementString:(NSString *)string
                         [self.userCollectionView reloadData];
                         
                         [self filterAlbumContentForSearchText: text];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -990,15 +955,10 @@ replacementString:(NSString *)string
         [data setObject: @"album" forKey: @"searchtype"];
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,32" forKey: @"limit"];
-        /*
-        response = [self search: [wTools getUserID]
-                          token: [wTools getUserToken]
-                           data: data];
-        */
+        
         response = [boxAPI search: [wTools getUserID]
                             token: [wTools getUserToken]
                              data: data];
-        
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (response != nil) {
@@ -1030,8 +990,7 @@ replacementString:(NSString *)string
                     if (![data[@"searchtype"] isEqualToString: @"album"]) {
                         return;
                     }
-                    
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
                         if (nextAlbumId >= 0) {
@@ -1039,15 +998,11 @@ replacementString:(NSString *)string
                         } else {
                             isAlbumLoading = YES;
                         }
-                        
                         NSLog(@"");
                         NSLog(@"");
                         
                         albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
                         nextAlbumId = albumData.count;
-                        
-//                        NSLog(@"albumData: %@", albumData);
-//                        NSLog(@"albumData.count: %lu", (unsigned long)albumData.count);
                         
                         if (albumData.count == 0) {
                             if (!isNoInfoVertViewCreate) {
@@ -1059,14 +1014,11 @@ replacementString:(NSString *)string
                         }
                         
                         [self.albumCollectionView reloadData];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1163,32 +1115,14 @@ replacementString:(NSString *)string
 #pragma mark - Call Protocol
 - (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
     NSLog(@"ToRetrievealbumpViewControlleralbumid");
-    
-    @try {
-        [wTools ShowMBProgressHUD];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    
+    [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI retrievealbump: albumid
                                                 uid: [wTools getUserID]
                                               token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [wTools HideMBProgressHUD];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
+            [wTools HideMBProgressHUD];
             
             if (response != nil) {
                 NSLog(@"response from retrievealbump");
@@ -1210,7 +1144,7 @@ replacementString:(NSString *)string
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
                         
@@ -1232,14 +1166,11 @@ replacementString:(NSString *)string
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
                         [appDelegate.myNav pushViewController: aDVC animated: NO];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

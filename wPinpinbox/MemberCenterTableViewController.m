@@ -73,10 +73,9 @@
             
             if (response != nil) {
                 NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                
                 NSLog(@"dic: %@", dic);
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
                     NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
                     
@@ -159,13 +158,18 @@
                     NSLog(@"firstRowHeight: %f", firstRowHeight);
                     
                     [self.tableView reloadData];
-                } else {
+                } else if ([dic[@"result"] intValue] == 0) {
                     Remind *rv = [[Remind alloc] initWithFrame: self.view.bounds];
                     [rv addtitletext: dic[@"message"]];
                     [rv addBackTouch];
                     [rv showView: self.view];
                     
                     NSLog(@"失敗: %@", dic[@"message"]);
+                } else {
+                    Remind *rv = [[Remind alloc] initWithFrame: self.view.bounds];
+                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [rv addBackTouch];
+                    [rv showView: self.view];
                 }
             }
         });

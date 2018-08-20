@@ -382,7 +382,7 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"Before");
                         NSLog(@"nextId: %ld", (long)nextId);
                         
@@ -435,16 +435,13 @@
                         
                         NSLog(@"messageArray.count: %lu", (unsigned long)messageArray.count);
                         NSLog(@"messageArray: %@", messageArray);
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         self.tableView.userInteractionEnabled = YES;
-                        
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -521,7 +518,7 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         tempStr = @"";
                         
                         NSLog(@"Before");
@@ -596,15 +593,14 @@
                         //isLoading = NO;
                         //[self getMessageBoardList];
                         
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         self.tableView.userInteractionEnabled = YES;
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
                         
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

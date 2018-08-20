@@ -173,7 +173,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from getPushQueue");
                 
@@ -196,8 +195,7 @@
                     NSLog(@"response from getPushQueue");
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
-                        
+                    if ([dic[@"result"] intValue] == 1) {
                         if (nextId == 0)
                             [notificationData removeAllObjects];
                         
@@ -250,15 +248,15 @@
                                 [[myTabBarC.viewControllers objectAtIndex: kNotifTabIndex] tabBarItem].badgeValue = nil;
                             }
                         }
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: msg];
                         
+                        [self.refreshControl endRefreshing];
+                        isReloading = NO;
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         [self.refreshControl endRefreshing];
                         isReloading = NO;
                     }
@@ -794,7 +792,7 @@ heightForHeaderInSection:(NSInteger)section {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
@@ -814,14 +812,11 @@ heightForHeaderInSection:(NSInteger)section {
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
                         [appDelegate.myNav pushViewController: aDVC animated: NO];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

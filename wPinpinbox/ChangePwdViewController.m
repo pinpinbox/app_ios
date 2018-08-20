@@ -428,9 +428,7 @@ replacementString:(NSString *)string
                                          token: [wTools getUserToken]
                                         oldpwd: self.currentPwdTextField.text
                                         newpwd: self.pwdTextField2.text];
-        
-        //BOOL response = [boxAPI updatepwd: [wTools getUserID] token: [wTools getUserToken] oldpwd: self.pwdTextField1.text newpwd: self.pwdTextField2.text];
-        
+                
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
                 [wTools HideMBProgressHUD];
@@ -441,7 +439,6 @@ replacementString:(NSString *)string
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             
             if (response != nil) {
                 NSLog(@"response from updatepwd: %@", response);
@@ -460,7 +457,7 @@ replacementString:(NSString *)string
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 NSLog(@"dic: %@", dic);
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"更新成功");
                     
                     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -479,28 +476,13 @@ replacementString:(NSString *)string
                     //[self.navigationController popViewControllerAnimated:YES];
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [appDelegate.myNav popViewControllerAnimated: YES];
+                } else if ([dic[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
                 } else {
-                    NSLog(@"失敗： %@", dic[@"message"]);
-                    NSString *msg = dic[@"message"];
-                    
-                    if (msg == nil) {
-                        msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                    }
-                    [self showCustomErrorAlert: msg];
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
-            }
-            
-            /*
-            if (response) {
-                NSLog(@"更新成功");
-                
-                [self.navigationController popViewControllerAnimated:YES];
-            } else {
-                NSLog(@"check失敗");
-                
-                [self showCustomAlert: NSLocalizedString(@"ProfileText-changeFail", @"")];
-            }
-             */
+            }          
         });
     });
 }

@@ -140,8 +140,7 @@
 }
 
 #pragma mark - Protocol Methods
-- (void)getExistedAlbum
-{
+- (void)getExistedAlbum {
     NSLog(@"getExistedAlbum");    
     existedAlbumArray = [[NSMutableArray alloc] init];
     
@@ -189,7 +188,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSArray *array = dic[@"data"];
                         NSLog(@"array: %@", array);
                         
@@ -274,14 +273,11 @@
                         [existedAlbumArray removeObjectsInArray: arrayForRemove];
                         [self.collectionView reloadData];
                         
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -332,7 +328,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"post album success");
                         
                         int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
@@ -370,14 +366,11 @@
                         checkPostArray[indexPath.row] = checkPost;
                         
                         [self getExistedAlbum];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -487,7 +480,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSArray *array = dic[@"data"];
                         NSLog(@"array.count: %lu", (unsigned long)array.count);
                         
@@ -536,14 +529,11 @@
                         } else {
                             [self toChooseTempalteVC];
                         }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

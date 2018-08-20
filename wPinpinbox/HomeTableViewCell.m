@@ -15,6 +15,7 @@
 #import <SafariServices/SafariServices.h>
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
 #import <FBSDKShareKit/FBSDKShareDialog.h>
+#import "UIColor+Extensions.h"
 
 static NSString *sharingLink = @"http://www.pinpinbox.com/index/album/content/?album_id=%@%@";
 static NSString *autoPlayStr = @"&autoplay=1";
@@ -116,19 +117,18 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
                 if ([data[@"result"] intValue] == 1) {
-                    
                     // Task is completed, so calling the original sharing function
                     [wTools Activitymessage:[NSString stringWithFormat: sharingLink , _album_id, autoPlayStr]];
                     
                 } else if ([data[@"result"] intValue] == 2) {
-                    
                     // Task is not completed, so pop ups alert view
                     [self showSharingAlertView];
                     
                 } else if ([data[@"result"] intValue] == 0) {
-                    
                     NSString *errorMessage = data[@"message"];
                     NSLog(@"errorMessage: %@", errorMessage);
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -265,7 +265,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
                 if ([data[@"result"] intValue] == 1) {
-                    
                     missionTopicStr = data[@"data"][@"task"][@"name"];
                     NSLog(@"name: %@", missionTopicStr);
                     
@@ -278,10 +277,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     eventUrl = data[@"data"][@"event"][@"url"];
                     NSLog(@"event: %@", eventUrl);
                     
-                    [self showAlertView];
-                    
+                    [self showAlertView];                    
                     [self getPointStore];
-                    
                 } else if ([data[@"result"] intValue] == 2) {
                     NSLog(@"message: %@", data[@"message"]);
                     
@@ -315,6 +312,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 } else if ([data[@"result"] intValue] == 0) {
                     NSString *errorMessage = data[@"message"];
                     NSLog(@"error messsage: %@", errorMessage);
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -329,9 +328,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
-        NSString *respone=[boxAPI getpointstore:[userPrefs objectForKey:@"id"] token:[userPrefs objectForKey:@"token"]];
-        
+        NSString *respone=[boxAPI getpointstore:[userPrefs objectForKey:@"id"] token:[userPrefs objectForKey:@"token"]];        
         NSString *pointstr=[boxAPI geturpoints:[userPrefs objectForKey:@"id"] token:[userPrefs objectForKey:@"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -459,6 +456,108 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 -(IBAction)message:(id)sender{
     [wTools messageboard:_album_id];
+}
+
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert: (NSString *)msg {
+    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
+    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    
+    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    errorAlertView.arrangeStyle = @"Horizontal";
+    
+    /*
+     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
+     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
+     alertView.arrangeStyle = @"Vertical";
+     */
+    
+    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
+    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [weakErrorAlertView close];
+    }];
+    [errorAlertView setUseMotionEffects: YES];
+    [errorAlertView show];
+}
+
+- (UIView *)createErrorContainerView: (NSString *)msg
+{
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = msg;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
+    
+    CGFloat viewHeight;
+    
+    if ((textViewY + textViewHeight) > 96) {
+        if ((textViewY + textViewHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight;
+        }
+    } else {
+        viewHeight = 96;
+    }
+    NSLog(@"demoHeight: %f", viewHeight);
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = [UIColor firstPink];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    maskLayer.frame = appDelegate.window.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    return contentView;
 }
 
 @end

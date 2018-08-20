@@ -43,6 +43,8 @@
 #import "MBProgressHUD.h"
 #import "UIView+Toast.h"
 
+#import "UIColor+Extensions.h"
+
 #define kWidthForUpload 720
 #define kHeightForUpload 960
 
@@ -518,26 +520,20 @@
 
 #pragma mark -
 
-- (void)callUpdatePhotoOfDiy: (NSString *)jsonStr
-{
+- (void)callUpdatePhotoOfDiy: (NSString *)jsonStr {
     [wTools ShowMBProgressHUD];
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
         NSString *response = @"";
-        
         NSString *pid = [ImageDataArr [selectItem][@"photo_id"] stringValue];
-        
         response = [boxAPI updatephotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid photo_id: pid image: nil setting: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             [wTools HideMBProgressHUD];
             
             if (response != nil) {
                 NSLog(@"UpdatePhotoOfDiy: %@", response);
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                     textForDescription = ImageDataArr[selectItem][@"description"];
                     
@@ -554,12 +550,11 @@
                     
                 } else if ([dic[@"result"] boolValue] == 0) {
                     NSLog(@"callUpdatePhotoOfDiy return result is 0");
-                    
                     [self showPermission];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
-            
-            //[self dismissViewControllerAnimated:YES completion:nil];
         });
     });
 }
@@ -737,7 +732,7 @@
                 NSLog(@"%@", response);
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"updateAudio Success");
                     NSLog(@"%@", dic[@"data"]);
                     
@@ -770,6 +765,8 @@
                     isRecorded = NO;
                     
                     [self showPermission];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -795,7 +792,7 @@
                 NSLog(@"%@", response);
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"deleteAudio Success");
                     NSLog(@"%@", dic[@"data"]);
                     
@@ -814,10 +811,11 @@
                     audioBgView.hidden = YES;
                     deleteAudioBtn.hidden = YES;
                     [recordPausePlayBtn setImage: [UIImage imageNamed: @"icon_mic_bluegreen_120x120"] forState: UIControlStateNormal];
-                    
                 } else if ([dic[@"result"] boolValue] == 0) {
                     NSLog(@"message: %@", dic[@"message"]);
                     [self showPermission];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -1109,7 +1107,7 @@
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 NSDictionary *identdic=(NSDictionary *)[NSJSONSerialization JSONObjectWithData:[coopid dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
-                if ([dic[@"result"]boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"call getalbumofdiy success");
                     NSLog(@"%@", dic[@"data"][@"photo"]);
                     
@@ -1136,8 +1134,11 @@
                     [self myshowimage];
                     //[mycollection reloadData];
                     [_dataCollectionView reloadData];
+                } else if ([dic[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
                 } else {
-                    
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -1234,12 +1235,10 @@
             [wTools HideMBProgressHUD];
             
             if (respone!=nil) {
-                
                 NSLog(@"%@",respone);
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
-                if ([dic[@"result"]boolValue]) {                                        
-                    
+                if ([dic[@"result"] intValue] == 1) {
                     if ([self checkPermissionForEditing]) {
                         NSArray *arr = self.navigationController.viewControllers;
                         
@@ -1248,30 +1247,16 @@
                             [self.navigationController popViewControllerAnimated:YES];
                         } else {
                             NSLog(@"postMode: %d", _postMode);
-                            
-                            //[wTools editphotoinfo:_albumid templateid:_templateid];
                             NSLog(@"[wTools editphotoinfo: _albumid templateid: _templateid eventId: _event_id postMode: _postMode]");
-                            //[wTools editphotoinfo: _albumid templateid: _templateid eventId: _event_id postMode: _postMode];
                             
-                            /*
-                            BookdetViewController *bVC = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"BookdetViewController"];
-                            
-                            //bdv.data=[dic[@"data"] mutableCopy];
-                            bVC.album_id = _albumid;
-                            bVC.templateid = _templateid;
-                            bVC.postMode = _postMode;
-                            bVC.eventId = _event_id;
-                            
-                            bVC.navigationItem.title = @"資 訊 編 輯";
-                            bVC.navigationController.navigationBar.titleTextAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize:18 weight:UIFontWeightLight], NSForegroundColorAttributeName: [UIColor whiteColor]};
-                            [self.navigationController pushViewController: bVC animated: YES];
-                             */
                             [self performSegueWithIdentifier: @"showBookdetViewController" sender: self];
                         }
                     }
-                    
+                } else if ([dic[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
                 } else {
-                    
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -1347,21 +1332,20 @@
                     if (respone!=nil) {
                         NSLog(@"%@",respone);
                         NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                        if ([dic[@"result"]boolValue]) {
+                        if ([dic[@"result"] intValue] == 1) {
                             NSLog(@"deletePhoto Success");
                             ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                             [self myshowimage];
                             //[mycollection reloadData];
                             [_dataCollectionView reloadData];
-                        }else if ([dic[@"result"] boolValue] == 0) {
+                        } else if ([dic[@"result"] intValue] == 0) {
                             [self showPermission];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
                     }
                 });
             });
-            
-        } else {
-            
         }
     };
     [rv showView:self.view];
@@ -1391,21 +1375,21 @@
                         NSLog(@"%@",response);
                         NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
-                        if ([dic[@"result"]boolValue]) {
+                        if ([dic[@"result"] intValue] == 1) {
                             NSLog(@"deleteVideo Success");
                             ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                             [self myshowimage];
                             //[mycollection reloadData];
                             [_dataCollectionView reloadData];
-                        }else{
-                            
+                        } else if ([dic[@"result"] intValue] == 0) {
+                            NSLog(@"失敗：%@",dic[@"message"]);
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
                     }
                 });
             });
-            
-        } else {
-            
         }
     };
     [rv showView:self.view];
@@ -1751,7 +1735,7 @@
                 
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"insertvideoofdiy Success");
                     
                     ImageDataArr = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
@@ -1766,7 +1750,7 @@
                     
                     isEditing = YES;
                     _choiceOptionView.hidden = YES;
-                } else {
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"insertvideoofdiy Failed");
                     NSLog(@"message: %@", dic[@"message"]);
                     
@@ -1783,102 +1767,13 @@
                             }
                         }
                     }
-                    
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
     });
-    
-    
-    /*
-    [wTools ShowMBProgressHUD];
-    NSMutableURLRequest *request;
-    
-    request = [boxAPI insertvideoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid file: data];
-    
-    __block NSString *str;
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    
-    NSURLSessionTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        if (data.length > 0 && error == nil) {
-            str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
-            NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [str dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-            
-            NSLog(@"dic result: %@", dic[@"result"]);
-            NSLog(@"dic message: %@", dic[@"message"]);             
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                ImageDataArr = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
-                selectItem = ImageDataArr.count - 1;
-                [self myshowimage];
-                //[mycollection reloadData];
-                
-                [wTools HideMBProgressHUD];
-                
-                [_dataCollectionView reloadData];
-            });
-            
-        } else if (data.length == 0 && error == nil) {
-            NSLog(@"Nothing was downloaded");
-        } else if (error != nil) {
-            NSLog(@"Error = %@", error);
-        }
-    }];
-    [task resume];
-     */
 }
-
-/*
-- (void)createTask: (NSData *)data
-{
-    NSLog(@"createDownloadTask");
-    //[self.view addSubview: self.progressView];
-    
-    self.progressView.hidden = NO;
-    NSLog(@"createDownloadTask");
-    NSMutableURLRequest *request;
-    request = [boxAPI insertvideoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid file: data];
-    NSLog(@"request: %@", request);
-    
-    NSURLSession *session = [NSURLSession sessionWithConfiguration: [NSURLSessionConfiguration defaultSessionConfiguration] delegate: self delegateQueue: [NSOperationQueue mainQueue]];
-    
-    task = [session dataTaskWithRequest: request];
-    [task resume];
-    NSLog(@"task resume");
-}
-
-- (void)resetView
-{
-    NSLog(@"resetView");
-    [task cancel];
-    self.progressView.hidden = YES;
-}
-
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
-{
-    float progress = (float)totalBytesSent / totalBytesExpectedToSend;
-    [self.progressView animateProgressViewToProgress: progress];
-    [self.progressView updateProgressViewLabelWithProgress: (progress * 100)];
-    [self.progressView updateProgressViewWithTotalSent: totalBytesSent andTotalFileSize: totalBytesExpectedToSend];
-    
-    NSLog(@"progress: %f", progress);
-}
-
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
-{
-    NSLog(@"didCompleteWithError");
-    
-    if (error) {
-        NSLog(@"Download Failed");
-    } else {
-        NSLog(@"Download Finished");
-    }
-    
-    [self resetView];
-}
-*/
   
 #pragma mark -
 #pragma mark Long Press Gesture
@@ -2217,158 +2112,7 @@
             //hud.labelText = [NSString stringWithFormat: @"%d 張照片上傳完成", photoFinished];
         }];
         [self.queue addOperation: operation];
-    }        
-    
-    /*
-    NSBlockOperation *operation1 = [NSBlockOperation blockOperationWithBlock:^{
-        for (int i = 0; i < Images.count; i++) {
-            NSLog(@"i = %d, thread = %@", i, [NSThread currentThread]);
-            NSLog(@"Image: %d", i);
-            UIImage *image = [Images objectAtIndex: i];
-            
-            NSLog(@"boxAPI insertPhotoOfDiy");
-            respone = [boxAPI insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid image: image compression: compressionQuality];
-        }
-    }];
-    [operation1 setCompletionBlock:^{
-        NSLog(@"operation1 completed");
-    }];
-    [queue addOperation: operation1];
-    */
-    
-    /*
-    NSBlockOperation *operation2 = [NSBlockOperation blockOperationWithBlock:^{
-        NSLog(@"MainQueue Executes");
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [wTools HideMBProgressHUD];
-            
-            if (respone!=nil) {
-                NSLog(@"response is not nil");
-                
-                NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                
-                if ([dic[@"result"]boolValue]) {
-                    
-                    ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                    NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
-                    
-                    selectItem = ImageDataArr.count - 1;
-                    
-                    [self myshowimage];
-                    //[mycollection reloadData];
-                    [_dataCollectionView reloadData];
-                    
-                } else{
-                    
-                }
-            }
-        }];
-    }];
-    NSLog(@"[operation2 addDependency: operation1]");
-    [operation2 addDependency: operation1];
-    [operation2 setCompletionBlock:^{
-        NSLog(@"operation2 completed");
-    }];
-    [queue addOperation:operation2];
-    */
-    
-    /*
-    // Original One
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
-        NSString *respone=@"";
-        
-        for (int i = 0; i < [Images count]; i++) {
-            NSLog(@"Image: %d", i);
-            UIImage *image = [Images objectAtIndex: i];
-                
-            //UIImage *image = [Images objectAtIndex: i];
-     
-            UIImage *imageForResize = [Images objectAtIndex: i];
-            NSLog(@"Before Resize");
-            NSLog(@"width: %f, height: %f", imageForResize.size.width, imageForResize.size.height);
-     
-            UIImage *image = [imageForResize imageByScalingAndCroppingForSize: CGSizeMake(kWidthForUpload, kHeightForUpload)];
-            NSLog(@"After Resize");
-            NSLog(@"width: %f, height: %f", image.size.width, image.size.height);
-     
-            NSLog(@"boxAPI insertPhotoOfDiy");
-            //respone=[boxAPI insertphotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:_albumid image:image];
-            respone = [boxAPI insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid image: image compression: compressionQuality];
-            //respone = [boxAPI insertPhotoOfDiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid image: image compression: compressionQuality];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [wTools HideMBProgressHUD];
-            
-            if (respone!=nil) {
-                NSLog(@"response is not nil");
-                
-                NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                
-                if ([dic[@"result"]boolValue]) {
-                   
-                    ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                    NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
-                    
-                    selectItem = ImageDataArr.count - 1;
-                    
-                    [self myshowimage];
-                    //[mycollection reloadData];
-                    [_dataCollectionView reloadData];
-                    
-                } else{
-                    
-                }
-            }
-        });
-    });
-        
-    //[ImageDataArr addObjectsFromArray:Images];
-    //[self myshowimage];
-    //[mycollection reloadData];
-    */
-    
-    /*
-    __block NSString *respone=@"";
-    dispatch_group_t uploadGroup = dispatch_group_create();
-    
-    dispatch_apply(Images.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(size_t i) {
-        dispatch_group_enter(uploadGroup);
-        NSLog(@"Image: %d", i);
-        UIImage *image = [Images objectAtIndex: i];
-        NSLog(@"boxAPI insertPhotoOfDiy");
-        
-        respone = [boxAPI insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid image: image compression: compressionQuality];
-        dispatch_group_leave(uploadGroup);
-    });
-    
-    dispatch_group_notify(uploadGroup, dispatch_get_main_queue(), ^{
-        [wTools HideMBProgressHUD];
-        
-        if (respone!=nil) {
-            NSLog(@"response is not nil");
-            
-            NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-            
-            if ([dic[@"result"]boolValue]) {
-                
-                ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
-                
-                selectItem = ImageDataArr.count - 1;
-                
-                [self myshowimage];
-                //[mycollection reloadData];
-                [_dataCollectionView reloadData];
-                
-            } else{
-                
-            }
-        }
-    });
-    */
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -2891,8 +2635,6 @@
         
         NSString *respone=@"";
         
-        //respone=[boxAPI updatephotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:_albumid photo_id:pid image:image];
-        
         respone = [boxAPI updatephotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid photo_id: pid image: image setting: textForDescription];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2902,17 +2644,16 @@
             if (respone!=nil) {
                 NSLog(@"Adobe PhotoEditor Response: %@",respone);
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                     [self myshowimage];
                     [_dataCollectionView reloadData];
                 } else if ([dic[@"result"] boolValue] == 0) {
-                    
                     [self showPermission];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
-            }
-            
-            //[self dismissViewControllerAnimated:YES completion:nil];
+            }            
         });
     });
 }
@@ -3336,6 +3077,107 @@
                     position: CSToastPositionBottom
                        style: style];
     }
+}
+
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert: (NSString *)msg {
+    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
+    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    
+    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    errorAlertView.arrangeStyle = @"Horizontal";
+    
+    /*
+     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
+     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
+     alertView.arrangeStyle = @"Vertical";
+     */
+    
+    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
+    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [weakErrorAlertView close];
+    }];
+    [errorAlertView setUseMotionEffects: YES];
+    [errorAlertView show];
+}
+
+- (UIView *)createErrorContainerView: (NSString *)msg
+{
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = msg;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
+    
+    CGFloat viewHeight;
+    
+    if ((textViewY + textViewHeight) > 96) {
+        if ((textViewY + textViewHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight;
+        }
+    } else {
+        viewHeight = 96;
+    }
+    NSLog(@"demoHeight: %f", viewHeight);
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = [UIColor firstPink];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.view.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    return contentView;
 }
 
 @end

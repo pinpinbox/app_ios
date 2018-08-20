@@ -258,32 +258,22 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSLog(@"response from getCreative");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respnose dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-//                    NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         userDic = dic[@"data"][@"user"];
                         sponsorInt = [dic[@"data"][@"userstatistics"][@"besponsored"] intValue];
                         NSLog(@"sponsorInt: %ld", (long)sponsorInt);
                         
-                        //name=[wTools stringisnull:dic[@"data"][@"user"][@"name"]];
-                        //profilepic=[wTools stringisnull:dic[@"data"][@"user"][@"picture"]];
-                        //bio=[wTools stringisnull:dic[@"data"][@"user"][@"description"]];
-                        //_mytitle.text=name;
-                        
                         if (nextId == 0) {
                             pictures = [NSMutableArray new];
                         }
-                        
                         int s = 0;
                         
                         for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
                             s++;
                             [pictures addObject: picture];
                         }
-                        
                         nextId = nextId + s;
-                        //countf = [wTools stringisnull:dic[@"data"][@"follow"][@"count_from"]];
-                        //viewedNumber = [wTools stringisnull: dic[@"data"][@"user"][@"viewed"]];
                         
                         NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
                         followDic = dic[@"data"][@"follow"];
@@ -303,15 +293,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         }
                         [self layoutSetup];
                         isReloading = NO;
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                        [self.refreshControl endRefreshing];
+                        isReloading = NO;
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
-                        
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         [self.refreshControl endRefreshing];
                         isReloading = NO;
                     }
@@ -1122,8 +1110,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respnose dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"]boolValue]) {
-                        
+                    if ([dic[@"result"] intValue] == 1) {
                         [self refresh];
                         
                         NSDictionary *d = dic[@"data"];
@@ -1149,14 +1136,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                             followBtn.layer.masksToBounds = NO;
                             followBtn.layer.borderWidth = 0;
                         }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗：%@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1210,7 +1194,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [respnose dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
                         
@@ -1232,15 +1216,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
                         [appDelegate.myNav pushViewController: aDVC animated: NO];
-                    }
-                    else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

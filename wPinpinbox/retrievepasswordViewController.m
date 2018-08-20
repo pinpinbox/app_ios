@@ -229,7 +229,7 @@
     NSString *emailStr = emaillab.text;
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI retiievepassword:[NSString stringWithFormat:@"%@,%@", countrstr, phoneStr] Account: emailStr];
+        NSString *response = [boxAPI retrievepassword:[NSString stringWithFormat:@"%@,%@", countrstr, phoneStr] Account: emailStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -241,23 +241,20 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"%@", response);
-                
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ViewController");
-                    NSLog(@"retiievepassword");
+                    NSLog(@"retrievepassword");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"retiievepassword"];
+                                    protocolName: @"retrievepassword"];
                 } else {
                     NSLog(@"Get Real Response");
-                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([data[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor secondMain];
@@ -266,15 +263,11 @@
                                     duration: 2.0
                                     position: CSToastPositionBottom
                                        style: style];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗：%@",data[@"message"]);
-                        
-                        NSString *msg = data[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: data[@"message"]];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -534,7 +527,7 @@
         
         if (buttonIndex == 0) {            
         } else {
-            if ([protocolName isEqualToString: @"retiievepassword"]) {
+            if ([protocolName isEqualToString: @"retrievepassword"]) {
                 [weakSelf downbtn: nil];
             }
         }

@@ -100,8 +100,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             NSDictionary *data= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-            if ([data[@"result"]boolValue]) {
-                
+            if ([data[@"result"]boolValue]) {                
                 [webview loadHTMLString:data[@"data"] baseURL:nil];
                  [wTools HideMBProgressHUD];
             }else{
@@ -202,8 +201,6 @@
     myphoto.image=Image;
 }
 - (IBAction)downbtn:(id)sender {
-    
-    
     NSString *meeage=@"";
     if (!ageree.selected) {
         meeage=@"請同意會員條款";
@@ -213,20 +210,16 @@
         meeage=@"請填寫暱稱";
         return ;
     }
-    
     if (!_facebookID) {
         if ([phone.text isEqualToString:@""]) {
             meeage=@"請填寫電話";
             return ;
         }
     }
-    
     if ([url.text isEqualToString:@""]) {
         meeage=@"請填寫URL";
         return ;
     }
-    
- 
     if (![meeage isEqualToString:@""]) {
         Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
         [rv addtitletext:meeage];
@@ -234,11 +227,7 @@
         [rv showView:self.view];
         return ;
     }
-    
-    
-   NSString *countrstr=[countryLabel.text componentsSeparatedByString:@"+"][1];
-    
-    
+    NSString *countrstr=[countryLabel.text componentsSeparatedByString:@"+"][1];
     
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
@@ -259,59 +248,46 @@
     [userPrefs setObject:tmp forKey:@"tmp"];
  //   [userPrefs synchronize];
     
-    
     if (_facebookID) {
         [self FBSign];
         return;
     }
-    
-    
-    
     [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
-        NSString *email=@"";
-        if (_facebookID==nil) {
+        NSString *email = @"";
+        if (_facebookID == nil) {
             email=tmp[@"email"];
         }else{
             email=_facebookID;
         }
-        
         NSString *respone=[boxAPI requsetsmspwd:tmp[@"phone"] Account:email];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
-            if (respone!=nil) {
-                
+            if (respone != nil) {
                 NSLog(@"%@",respone);
-                 NSDictionary *data= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                
-                if ([data[@"result"]boolValue]) {
+                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                if ([dic[@"result"] intValue] == 1) {
                    SignViewController_3 *sv3= [[UIStoryboard storyboardWithName:@"SignVC_3" bundle:nil]instantiateViewControllerWithIdentifier:@"SignViewController_3"];
-                    
                     if (_facebookID!=nil) {
                         sv3.facebookID=_facebookID;
                     }
                     [self.navigationController pushViewController:sv3 animated:YES];
-
-                    
-                    
-                }else{
-                    
+                } else if ([dic[@"result"] intValue] == 0) {
                     Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                    [rv addtitletext:data[@"message"]];
+                    [rv addtitletext:dic[@"message"]];
                     [rv addBackTouch];
                     [rv showView:self.view];
-                    NSLog(@"失敗：%@",data[@"message"]);
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                } else {
+                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [rv addBackTouch];
+                    [rv showView:self.view];
                 }
-                
             }
         });
-        
     });
-
-
 }
-
 
 -(void)FBSign{
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -336,16 +312,14 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             if (respone!=nil) {
-                
-                NSDictionary *data= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 NSLog(@"%@",respone);
-                if ([data[@"result"]boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-                    
-                    
-                    [userPrefs setObject:data[@"data"][@"token"] forKey:@"token"];
-                    [userPrefs setObject:[data[@"data"][@"id"] stringValue] forKey:@"id"];
+                    [userPrefs setObject:dic[@"data"][@"token"] forKey:@"token"];
+                    [userPrefs setObject:[dic[@"data"][@"id"] stringValue] forKey:@"id"];
                     [userPrefs synchronize];
+                    
                     if (tmp[@"image"]) {
                         NSLog(@"UPDATA IMAGE");
                         NSMutableDictionary *dic=[NSMutableDictionary new];
@@ -382,22 +356,25 @@
                         [self.navigationController pushViewController: chooseHobbyVC animated: YES];
                     }
                     
-                }else{
+                } else if ([dic[@"result"] intValue] == 0) {
                     [wTools HideMBProgressHUD];
                     Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                    [rv addtitletext:data[@"message"]];
+                    [rv addtitletext:dic[@"message"]];
                     [rv addBackTouch];
                     [rv showView:self.view];
-                    NSLog(@"失敗：%@",data[@"message"]);
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                } else {
+                    [wTools HideMBProgressHUD];
+                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [rv addBackTouch];
+                    [rv showView:self.view];
                 }
-                
             }
         });
-        
     });
-
-    
 }
+
 - (BOOL)prefersStatusBarHidden
 {
     return YES;

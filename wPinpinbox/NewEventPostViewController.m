@@ -460,7 +460,7 @@
                     NSLog(@"getcalbumlist");
 //                    NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSArray *array = dic[@"data"];
                         NSLog(@"array: %@", array);
                         //NSLog(@"array.count: %lu", (unsigned long)array.count);
@@ -548,14 +548,11 @@
                         NSLog(@"currentContributionNumber: %ld", (long)currentContributionNumber);
                         
                         [self initialValueSetup];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -679,7 +676,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSArray *array = dic[@"data"];
                         NSLog(@"array.count: %lu", (unsigned long)array.count);
                         //NSLog(@"dic data: %@", array);
@@ -735,14 +732,11 @@
                                 [self toChooseTempalteVC];
                             }
                         }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -865,7 +859,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"post album success");
                         
                         int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
@@ -897,7 +891,7 @@
                                 //[appDelegate.myNav pushViewController: s2VC animated: YES];
                             }
                         }
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
                         
@@ -905,6 +899,8 @@
                             msg = NSLocalizedString(@"Host-NotAvailable", @"");
                         }
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

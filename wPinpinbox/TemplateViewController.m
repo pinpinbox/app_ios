@@ -120,8 +120,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response from getalbumofdiy: %@", response);
                 
@@ -138,15 +136,12 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         _templatelist = [dic[@"data"][@"frame"]mutableCopy];
                         // ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                        
                         selectItem = 0;
-                        
                         NSDictionary *data = _templatelist[selectItem];
                         NSLog(@"data: %@", data);
-                        
                         NSArray *frame = data[@"blank"];
                         
                         for (int i = 0; i < frame.count; i++) {
@@ -168,18 +163,13 @@
                             return;
                         }
                         [self getCooperation];
-                    } else {
-                        NSLog(@"失敗：%@", dic[@"message"]);
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
-                        @try {
-                            [wTools HideMBProgressHUD];
-                        } @catch (NSException *exception) {
-                            // Print exception information
-                            NSLog( @"NSException caught" );
-                            NSLog( @"Name: %@", exception.name);
-                            NSLog( @"Reason: %@", exception.reason );
-                            return;
-                        }
+                        [wTools HideMBProgressHUD];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wTools HideMBProgressHUD];
                     }
                 }
             }
@@ -1128,21 +1118,18 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue: %d", [dic[@"result"] boolValue]);
-                        NSLog(@"self.navigationController.viewControllers: %@", self.navigationController.viewControllers);
-                        
+                        NSLog(@"self.navigationController.viewControllers: %@", self.navigationController.viewControllers);                        
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         
                         for (UIViewController *vc in [appDelegate.myNav viewControllers] ) {
                             if ([vc isKindOfClass:[AlbumCreationViewController class]]) {
-                                
                                 NSLog(@"_templateid: %@", _templateid);
                                 
                                 if ([self.delegate respondsToSelector: @selector(uploadPhotoDidComplete:)]) {
                                     [self.delegate uploadPhotoDidComplete: self];
                                 }
-                                
                                 AlbumCreationViewController *albumCreationVC = (AlbumCreationViewController *)vc;
                                 [albumCreationVC reloaddatat: [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]]];
                                 [albumCreationVC reloadItem: [dic[@"data"][@"photo"] count] - 1];
@@ -1151,40 +1138,16 @@
                                 albumCreationVC.event_id = _event_id;
                                 albumCreationVC.postMode = _postMode;
                                 albumCreationVC.choice = @"Template";
-                                
-                                //[self.navigationController popToViewController:vc animated:YES];
                                 
                                 [appDelegate.myNav popToViewController: vc animated: YES];
                                 return;
                             }
                         }
-                        
-                        /*
-                        for (UIViewController *vc in [self.navigationController viewControllers] ) {
-                            if ([vc isKindOfClass:[AlbumCreationViewController class]]) {
-                                
-                                NSLog(@"_templateid: %@", _templateid);
-                                
-                                if ([self.delegate respondsToSelector: @selector(uploadPhotoDidComplete:)]) {
-                                    [self.delegate uploadPhotoDidComplete: self];
-                                }
-                                
-                                AlbumCreationViewController *albumCreationVC = (AlbumCreationViewController *)vc;
-                                [albumCreationVC reloaddatat: [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]]];
-                                [albumCreationVC reloadItem: [dic[@"data"][@"photo"] count] - 1];
-                                albumCreationVC.albumid = _albumid;
-                                albumCreationVC.templateid = _templateid;
-                                albumCreationVC.event_id = _event_id;
-                                albumCreationVC.postMode = _postMode;
-                                albumCreationVC.choice = @"Template";
-                                
-                                [self.navigationController popToViewController:vc animated:YES];
-                                return;
-                            }
-                        }
-                         */
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

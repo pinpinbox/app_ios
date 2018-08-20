@@ -258,7 +258,7 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         if (nextId==0) {
                             dataarr=[NSMutableArray new];
                         }
@@ -283,8 +283,13 @@
                         }
                         
                         isreload = NO;
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                        [_refreshControl endRefreshing];
+                        isreload = NO;
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         [_refreshControl endRefreshing];
                         isreload = NO;
                     }
@@ -816,7 +821,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 NSDictionary *identdic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [coopid dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"call getalbumofdiy success");
                     NSLog(@"%@", dic[@"data"][@"photo"]);
                     
@@ -825,12 +830,15 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     
                     if ([msg isEqualToString: @"Cooperation"]) {
                         
-                        
                     }
-                    
                     if ([msg isEqualToString: @"PhotoEdit"]) {
                         
                     }
+                } else if ([dic[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -895,11 +903,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         [self reloadData];
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         [self showCustomAlertNormal: dic[@"message"]];
+                        [self reloadData];
+                    } else {
+                        [self showCustomAlertNormal: NSLocalizedString(@"Host-NotAvailable", @"")];
                         [self reloadData];
                     }
                 }
@@ -1261,13 +1272,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         [self reloadData];
                         [self deletePlist: albumid];
-                        
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         [self showCustomAlertNormal: dic[@"message"]];
                         [self reloadData];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

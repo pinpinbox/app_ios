@@ -17,6 +17,9 @@
 #import "SBookSelectViewController.h"
 #import "UIViewController+CWPopup.h"
 
+#import "CustomIOSAlertView.h"
+#import "UIColor+Extensions.h"
+
 @interface CooperationViewController () <UITableViewDataSource,UITableViewDelegate,SBookSelectViewController>
 {
     NSMutableArray *mydataarr;
@@ -108,7 +111,7 @@
         NSMutableDictionary *data=[NSMutableDictionary new];
         [data setObject:_albumid forKey:@"type_id"];
         [data setObject:@"album" forKey:@"type"];
-        NSString *respone=[boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
+        NSString *respone = [boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
         
         NSMutableDictionary *qrDic = [NSMutableDictionary new];
         [qrDic setObject: [NSNumber numberWithBool: YES] forKey: @"is_cooperation"];
@@ -136,7 +139,7 @@
                 NSLog(@"response from getQRCode: %@", responseQRCode);
                 NSLog(@"dicQR: %@", dicQR);
                 
-                if ([dic[@"result"] boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     mydataarr=[NSMutableArray arrayWithArray:dic[@"data"]];
                     
                     for (NSDictionary *userdic in mydataarr) {
@@ -148,19 +151,24 @@
                             break;
                         }
                     }
-                    
                     [self.refreshControl endRefreshing];
                     [mytable reloadData];
-                } else{
+                } else if ([dic[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
                     [self.refreshControl endRefreshing];
-                    
-                    NSLog(@"失敗: %@", dic[@"message"]);
-                }
-                
-                if ([dicQR[@"result"] boolValue]) {
-                    qrImageStr = dicQR[@"data"];
                 } else {
-                    
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [self.refreshControl endRefreshing];
+                }
+
+                if ([dicQR[@"result"] intValue] == 1) {
+                    qrImageStr = dicQR[@"data"];
+                } else if ([dicQR[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dicQR[@"message"]);
+                    [self showCustomErrorAlert: dicQR[@"message"]];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             } else {
                 [self.refreshControl endRefreshing];
@@ -419,16 +427,18 @@
 
             if (respone!=nil) {
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                if ([dic[@"result"]boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                      [self w2dismissPopupViewControllerAnimated:YES completion:nil];
+                } else if ([dic[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
-            
         });
-        
     });
 }
-
 
 //選擇中
 -(void)DidselectDataRow:(NSInteger)row{
@@ -441,7 +451,8 @@
     return YES;
 }
 
--(NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+-(NSArray *)tableView:(UITableView *)tableView
+editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewRowAction *button = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:NSLocalizedString(@"GeneralText-del", @"") handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
           {
             //刪除動作
@@ -459,20 +470,20 @@
             dispatch_async(dispatch_get_main_queue(), ^{
               [wTools HideMBProgressHUD];
                                                 
-                    if (respone!=nil) { NSDictionary *dic= (NSDictionary *)   [NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    if ([dic[@"result"]boolValue]) {
-                        [self reload];
+                    if (respone!=nil) {
+                        NSDictionary *dic = (NSDictionary *)   [NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                        if ([dic[@"result"] intValue] == 1) {
+                            [self reload];
+                        } else if ([dic[@"result"] intValue] == 0) {
+                            NSLog(@"失敗：%@",dic[@"message"]);
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                       }
-                                                
-                     });
-                                            
+                    }
+                });
            });
-
-                                        
-                                        
-                                        
-                                    }];
+          }];
     button.backgroundColor = [wTools colorFromHexString:@"#12b0b3"]; //arbitrary color
 
     return @[button];
@@ -481,23 +492,106 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     // No statement or algorithm is needed in here. Just the implementation
 }
-//-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    
-//    if (indexPath.section==0) {
-//        return UITableViewCellEditingStyleNone;
-//    }
-//    
-//    return UITableViewCellEditingStyleDelete;
-//}
 
-/*
-- (void)performSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    if ([identifier isEqualToString: @"showCooperationAddViewController"]) {
-        CooperationAddViewController *cadd = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"CooperationAddViewController"];
-        cadd.albumid=_albumid;
-        [self.navigationController pushViewController:cadd animated:YES];
-    }
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert: (NSString *)msg {
+    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
+    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    
+    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    errorAlertView.arrangeStyle = @"Horizontal";
+    
+    /*
+     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
+     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
+     alertView.arrangeStyle = @"Vertical";
+     */
+    
+    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
+    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [weakErrorAlertView close];
+    }];
+    [errorAlertView setUseMotionEffects: YES];
+    [errorAlertView show];
 }
-*/
+
+- (UIView *)createErrorContainerView: (NSString *)msg
+{
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = msg;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
+    
+    CGFloat viewHeight;
+    
+    if ((textViewY + textViewHeight) > 96) {
+        if ((textViewY + textViewHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight;
+        }
+    } else {
+        viewHeight = 96;
+    }
+    NSLog(@"demoHeight: %f", viewHeight);
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = [UIColor firstPink];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.view.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    return contentView;
+}
 
 @end

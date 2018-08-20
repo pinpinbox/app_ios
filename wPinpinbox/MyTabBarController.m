@@ -243,34 +243,7 @@ const CGFloat kBarHeight = 56;
                  forKey: @"fromHomeVC"];
     [defaults synchronize];
     NSLog(@"FastBtn");
-    
     [self addNewFastMod];
-    
-//    [self checkAlbumOfDiy];
-    
-    /*
-    //判斷是否有編輯中相本
-    
-    [wTools ShowMBProgressHUD];
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
-        NSString *respone = [boxAPI checkalbumofdiy:[wTools getUserID] token:[wTools getUserToken]];
-        
-        if (respone != nil) {
-            NSLog(@"response from checkalbumofdiy");            
-            
-            NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-            
-            if ([dic[@"result"]boolValue]) {
-                [boxAPI updatealbumofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:[dic[@"data"][@"album"][@"album_id"] stringValue]];
-            }
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
-            [self addNewFastMod];
-        });
-    });
-     */
 }
 
 - (void)checkAlbumOfDiy {
@@ -307,13 +280,15 @@ const CGFloat kBarHeight = 56;
                     if (dic != nil) {
                         NSLog(@"dic != nil");
                         
-                        if ([dic[@"result"] boolValue]) {
+                        if ([dic[@"result"] intValue] == 1) {
                             NSLog(@"dic result boolValue is 1");
                             
                             [self updateAlbumOfDiy: [dic[@"data"][@"album"][@"album_id"] stringValue]];
-                        } else {
-                            NSLog(@"失敗： %@", dic[@"message"]);
+                        } else if ([dic[@"result"] intValue] == 0) {
+                            NSLog(@"失敗：%@",dic[@"message"]);
                             [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
                     } else {
                         NSLog(@"dic == nil");
@@ -356,11 +331,13 @@ const CGFloat kBarHeight = 56;
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                    } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

@@ -260,7 +260,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from requsetsmspwd");
                 NSLog(@"response: %@",response);
@@ -275,9 +274,9 @@
                 } else {
                     NSLog(@"Get Real Response");
                     
-                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([data[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor secondMain];
@@ -297,14 +296,12 @@
                         timeTick = 59;
                         [timer invalidate];
                         timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector: @selector(tickForSMS) userInfo: nil repeats: YES];
-                    } else {
-                        NSLog(@"失敗： %@", data[@"message"]);
-                        NSString *msg = data[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        NSString *msg = dic[@"message"];
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -414,7 +411,7 @@
                     
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([data[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result is: %d", [data[@"result"] boolValue]);
                         
                         // Show Toast Message
@@ -464,16 +461,13 @@
                                 }
                             });
                         });
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
                         NSString *msg = data[@"message"];
-                        
-                        NSLog(@"msg: %@", msg);
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
+                        NSLog(@"msg: %@", msg);                        
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

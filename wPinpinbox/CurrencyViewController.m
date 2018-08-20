@@ -15,6 +15,7 @@
 
 #import "CustomIOSAlertView.h"
 #import <SafariServices/SafariServices.h>
+#import "UIColor+Extensions.h"
 
 @interface CurrencyViewController () <UITextFieldDelegate, SFSafariViewControllerDelegate, MKDropdownMenuDelegate, MKDropdownMenuDataSource>
 {
@@ -54,7 +55,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     pickview.alpha=0;
     
     [self dropdownMenuSetUp];
@@ -67,12 +67,10 @@
     btn_buy.clipsToBounds = YES;
     btn_buy.layer.masksToBounds = NO;
     
-    
     [wTools ShowMBProgressHUD];
     
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
         NSString *respone=[boxAPI getpointstore:[userPrefs objectForKey:@"id"] token:[userPrefs objectForKey:@"token"]];
         
         pointstr=[boxAPI geturpoints:[userPrefs objectForKey:@"id"] token:[userPrefs objectForKey:@"token"]];
@@ -85,12 +83,10 @@
             if (respone!=nil) {
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 NSDictionary *pointdic=(NSDictionary *)[NSJSONSerialization JSONObjectWithData:[pointstr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                
                 NSInteger point=[pointdic[@"data"] integerValue];
                 pointstr=[NSString stringWithFormat:@"%ld",(long)point];
                 
-                if ([dic[@"result"]boolValue]) {
-                    
+                if ([dic[@"result"] intValue] == 1) {
                     pointlist=[dic[@"data"] mutableCopy];
                     
                     NSMutableArray *testarr=[NSMutableArray new];
@@ -108,7 +104,6 @@
                     listdata=[NSArray arrayWithArray:testarr2];
                     NSLog(@"listdata: %@", listdata);
                     
-                    
                     _mypoint.text=pointstr;
                     
                     NSLog(@"myPoint: %@", _mypoint);
@@ -116,12 +111,12 @@
                     _selectpointText.text=[NSString stringWithFormat:@"%@ P",listdata[0]];
                     _selectpriceText.text=@"";
                     selectproductid=datakey[0];
-                    
-                    
-                }else{
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
-                
             }
             [InAppPurchaseManager getInstance].delegate = self;
             [InAppPurchaseManager getInstance].priceid=datakey;
@@ -203,13 +198,16 @@
             if (respone!=nil) {
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
-                if ([dic[@"result"]boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     orderid=dic[@"data"];
                     [[InAppPurchaseManager getInstance] purchaseProUpgrade2:selectproductid];
-                    
-                } else {
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
+
             }
         });
     });
@@ -271,6 +269,8 @@
                 } else if ([data[@"result"] intValue] == 0) {
                     NSString *errorMessage = data[@"message"];
                     NSLog(@"error messsage: %@", errorMessage);
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -494,32 +494,18 @@
     NSLog(@"購買行為");
     NSError *error;
     
-    //    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
-    //                                                       options:NSJSONWritingPrettyPrinted
-    //                                                         error:&error];
-    //     NSString *jsonString=@"";
-    //    if (! jsonData) {
-    //        NSLog(@"Got an error: %@", error);
-    //        [wTools HideMBProgressHUD];
-    //        return;
-    //    } else {
-    //        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    //    }
-    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *respone=[boxAPI finishpurchased:[wTools getUserID] token:[wTools getUserToken] orderid:orderid dataSignature:str];
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             [wTools HideMBProgressHUD];
             
             if (respone!=nil) {
-                
                 NSLog(@"%@",respone);
                 
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
-                if ([dic[@"result"]boolValue]) {
+                if ([dic[@"result"] intValue] == 1) {
                     pointstr=[dic[@"data"] stringValue];
                     NSLog(@"old pointstr: %@", pointstr);
                     
@@ -536,14 +522,17 @@
                     } else {
                         [self checkPoint];
                     }
-                    
                     [self pointsUPdate];
                     
-                } else {
-                    
+                } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
                     Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
                     [rv addtitletext:dic[@"message"]];
+                    [rv addBackTouch];
+                    [rv showView:self.view];
+                } else {
+                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+                    [rv addtitletext:NSLocalizedString(@"Host-NotAvailable", @"")];
                     [rv addBackTouch];
                     [rv showView:self.view];
                 }
@@ -656,6 +645,107 @@
     
     [self refresh];
       */
+}
+
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert: (NSString *)msg {
+    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
+    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    
+    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    errorAlertView.arrangeStyle = @"Horizontal";
+    
+    /*
+     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
+     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
+     alertView.arrangeStyle = @"Vertical";
+     */
+    
+    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
+    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [weakErrorAlertView close];
+    }];
+    [errorAlertView setUseMotionEffects: YES];
+    [errorAlertView show];
+}
+
+- (UIView *)createErrorContainerView: (NSString *)msg
+{
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = msg;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
+    
+    CGFloat viewHeight;
+    
+    if ((textViewY + textViewHeight) > 96) {
+        if ((textViewY + textViewHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight;
+        }
+    } else {
+        viewHeight = 96;
+    }
+    NSLog(@"demoHeight: %f", viewHeight);
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = [UIColor firstPink];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.view.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    return contentView;
 }
 
 @end

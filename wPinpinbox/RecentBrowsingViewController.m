@@ -17,6 +17,7 @@
 #import "boxAPI.h"
 #import "CustomIOSAlertView.h"
 #import "TestReadBookViewController.h"
+#import "ContentCheckingViewController.h"
 #import "GlobalVars.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
@@ -292,31 +293,31 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic: %@", dic);
                         
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
-                        
+                        /*
                         TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
                         testReadBookVC.dic = [dic[@"data"] mutableCopy];
                         testReadBookVC.isDownloaded = NO;
                         testReadBookVC.albumid = albumid;
-                        
+                        */
                         //[self.navigationController pushViewController: testReadBookVC animated: YES];
                         
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: testReadBookVC animated: YES];
-                    } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
+                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                        contentCheckingVC.albumId = albumid;
                         
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

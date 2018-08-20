@@ -675,7 +675,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         isDataLoaded = YES;
                         self.bookdata = [dic[@"data"] copy];
@@ -738,6 +738,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                             [self textViewContentSetup: [self getCurrentPage]];
                             [self pageCalculation: [self getCurrentPage]];
                         });
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1729,7 +1734,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"buyAlbum");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -1742,7 +1747,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"response from buyalbum");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor firstMain];
@@ -1754,6 +1759,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         
                         [self own];
                         [self retrieveAlbum];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1774,7 +1784,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"getPoint pointStr");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -1786,7 +1796,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSInteger point = [dic[@"data"] integerValue];
                         NSLog(@"point: %ld", (long)point);
                         NSLog(@"albumPoint: %ld", (long)albumPoint);
@@ -1798,14 +1808,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                             NSLog(@"point is not enough");
                             [self showBuyAlbumCustomAlert: @"你的P點不足，前往購點?" option: @"buyPoint" pointStr: @""];
                         }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1828,7 +1835,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"newBuyAlbum pointStr");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -1841,8 +1848,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     //NSLog(@"dic: %@", dic);
-                    
-                    
                     NSString *resultStr = dic[@"result"];
                     //NSLog(@"resultStr: %@", resultStr);
                     
@@ -1915,7 +1920,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     
                     if ([response isEqualToString: timeOutErrorCode]) {
                         NSLog(@"Time Out Message Return");
-                        NSLog(@"TestReadBookViewController");
+                        NSLog(@"ContentCheckingViewController");
                         NSLog(@"getGoogleAPI");
                         
                         [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -1954,7 +1959,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 //NSLog(@"%@", response);
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"checkTaskComplete");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -2002,6 +2007,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         
                         UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems: [NSArray arrayWithObjects: message, nil] applicationActivities: nil];
                         [self presentViewController: activityVC animated: YES completion: nil];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2026,7 +2033,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"insertAlbumToLikes");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -2038,23 +2045,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
-//                        self.likeNumber++;
-//                        NSLog(@"self.likeNumber: %lu", (unsigned long)self.likeNumber);
-                        
+                    if ([dic[@"result"] intValue] == 1) {
                         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
-                        //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
-                        
                         self.isLikes = !self.isLikes;
                         NSLog(@"self.isLikes: %d", self.isLikes);
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2078,7 +2078,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 //NSLog(@"response: %@", response);
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"deleteAlbumToLikes");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -2090,22 +2090,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
-//                        self.likeNumber--;
-//                        NSLog(@"self.likeNumber: %lu", (unsigned long)self.likeNumber);
-                        
+                    if ([dic[@"result"] intValue] == 1) {
                         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_white"] forState: UIControlStateNormal];
-                        //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
-                        
                         self.isLikes = !self.isLikes;
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2133,7 +2126,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"getUrPoints");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -2146,7 +2139,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         NSInteger point = [dic[@"data"] integerValue];
                         //NSLog(@"point: %ld", (long)point);
@@ -2156,14 +2149,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         
                         // For Point Activity
                         [self checkAlbumCollectTask];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2250,7 +2240,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"checkPoint");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -2302,7 +2292,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         
                     } else if ([data[@"result"] intValue] == 3) {
                         NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
-                    }
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }                    
                 }
             }
         });
@@ -2594,7 +2586,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"slotPhotoUseFor");
                     
                     //                    [self createTimeOutView: slotBtn];
@@ -2739,7 +2731,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"TestReadBookViewController");
+                    NSLog(@"ContentCheckingViewController");
                     NSLog(@"slotPhotoUseFor");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
@@ -4366,7 +4358,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
                   protocolName: (NSString *)protocolName
                       pointStr: (NSString *)pointStr
                            btn: (UIButton *)btn
-                           bgV: (UIView *)bgV
+                           bgV: (MyLinearLayout *)bgV
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
@@ -4411,22 +4403,20 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
                 [weakSelf newBuyAlbum: pointStr];
             } else if ([protocolName isEqualToString: @"retrievealbump"]) {
                 [weakSelf retrieveAlbum];
-            }
-            /*
-            else if ([protocolName isEqualToString: @"geturpoints"]) {
+            } else if ([protocolName isEqualToString: @"geturpoints"]) {
                 [weakSelf getUrPoints];
             } else if ([protocolName isEqualToString: @"doTask2"]) {
                 [weakSelf checkPoint];
-            } else if ([protocolName isEqualToString: @"switchstatusofcontribution"]) {
-                [weakSelf postAlbum];
             } else if ([protocolName isEqualToString: @"slotPhotoUseFor"]) {
-                [weakSelf slotPhotoUseFor: bgV];
+                [weakSelf checkSlotAndExchangeInfo: [self getCurrentPage]];
             } else if ([protocolName isEqualToString: @"getPhotoUseFor"]) {
-                [weakSelf getPhotoUseFor: bgV];
+                [weakSelf getPhotoUseFor: bgV indexPathRow: [self getCurrentPage]];
             } else if ([protocolName isEqualToString: @"insertBookmark"]) {
                 [weakSelf insertBookmark: btn];
             }
-             */
+//            else if ([protocolName isEqualToString: @"switchstatusofcontribution"]) {
+//                [weakSelf postAlbum];
+//            }
         }
     }];
     [alertTimeOutView setUseMotionEffects: YES];

@@ -58,7 +58,6 @@
 #import "AlbumInfoViewController.h"
 #import "AsyncImageView.h"
 
-#import "MyAVPlayerViewController.h"
 #import "DDAUIActionSheetViewController.h"
 #import "MapShowingViewController.h"
 //#import "NewEventPostViewController.h"
@@ -1042,22 +1041,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
-                        likesInt++;
-                        
+                    if ([dic[@"result"] intValue] == 1) {
+                        likesInt++;                        
                         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
-                        //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
                         
                         isLikes = !isLikes;
                         NSLog(@"isLikes: %d", isLikes);
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1110,21 +1105,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         likesInt--;
                         
                         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_white"] forState: UIControlStateNormal];
-                        //self.likeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
-                        
                         isLikes = !isLikes;
-                    } else {
+                    } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
                         [self showCustomErrorAlert: msg];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1521,8 +1512,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 //NSLog(@"%@", response);
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -1575,6 +1564,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         
                         UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems: [NSArray arrayWithObjects: message, nil] applicationActivities: nil];
                         [self presentViewController: activityVC animated: YES completion: nil];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1740,7 +1731,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -1944,7 +1934,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"response from buyalbum");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor firstMain];
@@ -1956,16 +1946,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         
                         [self own];
                         [self retrieveAlbum];
-                        
-                        //                        [self.mySV moveToPage: 0];
-                        //[self.mySV setContentOffset: CGPointMake(0.0f, 0.0f) animated: YES];
-                        
-                        //[self getPointStore];
-                        //[self getUrPoints];
-                        
-                        // For Temporate Solution about last page
-                        //[self.navigationController popViewControllerAnimated: YES];
-                        //[self.navigationController pushViewController: self animated: YES];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2020,7 +2005,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         //NSLog(@"dic: %@", dic);
                         
@@ -2054,14 +2039,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self.mySV moveToPage: 0];
                         
                         [self getUrPoints];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2295,6 +2277,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         
                     } else if ([data[@"result"] intValue] == 3) {
                         NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];                    
                     }
                 }
             }
@@ -3341,8 +3325,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 //NSLog(@"%@", response);
                 
@@ -3360,7 +3342,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"post album success");
                         
                         int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
@@ -3374,14 +3356,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                     duration: 2.0
                                     position: CSToastPositionBottom
                                        style: style];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

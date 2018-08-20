@@ -155,8 +155,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response from gettemplatelist");
                 
@@ -174,7 +172,7 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         int s = 0;
                         
                         for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
@@ -192,14 +190,11 @@
                         NSLog(@"pictures: %@", pictures);
                         
                         [self.collectionView reloadData];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -362,8 +357,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI geturpoints: [wTools getUserID]
                                            token: [wTools getUserToken]];
@@ -378,8 +371,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -415,8 +406,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
-    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI buytemplate: [wTools getUserID]
                                            token: [wTools getUserToken]
@@ -432,8 +421,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -447,17 +434,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"]boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         //開始製作
                         [self editTaoban];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -511,8 +495,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     NSLog(@"dic: %@", dic);
                     
                     if (dic != nil) {
-                        if ([dic[@"result"] boolValue]) {
+                        if ([dic[@"result"] intValue] == 1) {
                             [self updateAlbumOfDiy: [dic[@"data"][@"album"][@"album_id"] stringValue]];
+                        } else if ([dic[@"result"] intValue] == 0) {
+                            NSLog(@"失敗：%@",dic[@"message"]);
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
                     } else {
                         NSLog(@"dic == nil");
@@ -571,16 +560,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -716,8 +702,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response from doTask2");
                 
@@ -761,7 +745,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                         [defaults synchronize];
                         
                     } else if ([data[@"result"] intValue] == 0) {
-                        NSLog(@"失敗： %@", data[@"message"]);                        
+                        NSLog(@"失敗： %@", data[@"message"]);
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -770,8 +756,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - Get P Point
-- (void)getUrPoints
-{
+- (void)getUrPoints {
     NSLog(@"");
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -800,8 +785,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 NSLog(@"response from geturpoints");
                 
@@ -818,21 +801,18 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] boolValue]) {
+                    if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         NSInteger point = [dic[@"data"] integerValue];
                         //NSLog(@"point: %ld", (long)point);
                         
                         [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                         [userPrefs synchronize];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
