@@ -549,7 +549,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
             
             NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
             
-            linkLabelStr = [NSString stringWithFormat: @"%@的連結", userDic[@"name"]];
+            //linkLabelStr = [NSString stringWithFormat: @"%@的連結", userDic[@"name"]];
+            linkLabelStr = [NSString stringWithFormat: @"連結"];
             headerView.linkLabel.text = linkLabelStr;
             [LabelAttributeStyle changeGapString: headerView.linkLabel content: linkLabelStr];
             

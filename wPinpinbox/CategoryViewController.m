@@ -35,7 +35,7 @@
 {
     //NSMutableArray *albumExploreArray;
     UICollectionView *collectionView;
-    UIPageControl *pageControl;
+    
     MyLinearLayout *bannerVertLayout;
     
     CGFloat bannerHeight;
@@ -67,7 +67,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *closeBtnHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *closeBtnTopConstraint;
-
+//  move UIPageControl from tableSectionHeader to Navbar on top
+@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 @end
 
 @implementation CategoryViewController
@@ -189,7 +190,7 @@
     NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
     
     
-    [self setupTableViewHeader];
+    //[self setupTableViewHeader];
     self.tableView.hidden = NO;
     [self.tableView reloadData];
     
@@ -378,7 +379,7 @@
                             
                             self.tableView.hidden = NO;
                         }
-                        [self setupTableViewHeader];
+                        //[self setupTableViewHeader];
                         [self.tableView reloadData];
                         [self.userCollectionView reloadData];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
@@ -504,9 +505,11 @@
     NSLog(@"cell.strData: %@", cell.strData);
     
     if (!cell.strData || [cell.strData isKindOfClass: [NSNull class]]) {
-        cell.moreBtn.hidden = YES;
+        //cell.moreBtn.hidden = YES;
+        [cell setMoreBtnHidden:YES];
     } else {
-        cell.moreBtn.hidden = NO;
+        //cell.moreBtn.hidden = NO;
+        [cell setMoreBtnHidden:NO];
     }
     
     cell.customBlock = ^(NSString *strData) {
@@ -656,7 +659,7 @@
     safariVC.preferredBarTintColor = [UIColor whiteColor];
     [self presentViewController: safariVC animated: YES completion: nil];
 }
-- (void)setupTableViewHeader {
+- (UIView *)setupTableViewHeader {
     
     NSLog(@"");
     NSLog(@"viewForHeaderInSection");
@@ -670,7 +673,7 @@
     
     if (self.bannerDataArray.count > 0) {
         NSLog(@"bannerHeight: %f", bannerHeight);
-        bannerVertLayout.heightDime.max(416);//160);
+        bannerVertLayout.heightDime.max(376);//160);
         
         // Horizontal CollectionView Setting
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -694,15 +697,15 @@
         collectionView.showsHorizontalScrollIndicator = NO;
         [bannerVertLayout addSubview: collectionView];
         
-        pageControl = [[UIPageControl alloc] initWithFrame: CGRectMake(0, 0, 50, 10)];
-        pageControl.myCenterXOffset = 0;
-        pageControl.myTopMargin = 4;
-        pageControl.myBottomMargin = 16;
-        pageControl.numberOfPages = self.bannerDataArray.count;
-        pageControl.pageIndicatorTintColor = [UIColor secondGrey];
-        pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
-        pageControl.userInteractionEnabled = NO;
-        [bannerVertLayout addSubview: pageControl];
+        //pageControl = [[UIPageControl alloc] initWithFrame: CGRectMake(0, 0, 50, 10)];
+        _pageControl.myCenterXOffset = 0;
+        _pageControl.myTopMargin = 4;
+        _pageControl.myBottomMargin = 4;
+        _pageControl.numberOfPages = self.bannerDataArray.count;
+        _pageControl.pageIndicatorTintColor = [UIColor secondGrey];
+        _pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
+        _pageControl.userInteractionEnabled = NO;
+        //[bannerVertLayout addSubview: pageControl];
     } else {
         bannerVertLayout.heightDime.max(105);
     }
@@ -726,7 +729,9 @@
     [bannerVertLayout addSubview: topicLabel];
     
     [bannerVertLayout sizeToFit];
-    self.tableView.tableHeaderView = bannerVertLayout;
+    //self.tableView.tableHeaderView = bannerVertLayout;
+    bannerVertLayout.backgroundColor = [UIColor whiteColor];
+    return bannerVertLayout;
     
 }
 #pragma mark - UITableViewDelegate Methods
@@ -742,70 +747,28 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     [cell.collectionView setContentOffset:CGPointMake(horizontalOffset, 0)];
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView
-//heightForHeaderInSection:(NSInteger)section {
-//    NSLog(@"");
-//    NSLog(@"heightForHeaderInSection");
-//    NSLog(@"bannerHeight: %f", bannerHeight);
-
-//    CGFloat heightForHeader = 247;
+- (CGFloat)tableView:(UITableView *)tableView
+heightForHeaderInSection:(NSInteger)section {
+    if (section == 0 ) {
+        if (self.bannerDataArray.count > 0)
+            return 376;
+        return 105;
+    }
     
-//    NSLog(@"[[UIScreen mainScreen] nativeBounds].size.height: %f", [[UIScreen mainScreen] nativeBounds].size.height);
-//
-//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-//            case 1136:
-//                printf("iPhone 5 or 5S or 5C");
-//                heightForHeader = 150;
-//                break;
-//            case 1334:
-//                printf("iPhone 6/6S/7/8");
-//                heightForHeader = 160;
-//                break;
-//            case 1920:
-//                printf("iPhone 6+/6S+/7+/8+");
-//                heightForHeader = 175;
-//                break;
-//            case 2208:
-//                printf("iPhone 6+/6S+/7+/8+");
-//                heightForHeader = 175;
-//                break;
-//            case 2436:
-//                printf("iPhone X");
-//                heightForHeader = 165;
-//                break;
-//            default:
-//                printf("unknown");
-//                heightForHeader = 175;
-//                break;
-//        }
-//    }
-    
-//    if (self.bannerDataArray.count > 0) {
-//        return heightForHeader;
-//    } else {
-//        return 40;
-//    }
-//}
+    return 0;
+}
 
-//- (UIView *)tableView:(UITableView *)tableView
-//viewForHeaderInSection:(NSInteger)section {
-//
-//}
+- (UIView *)tableView:(UITableView *)tableView
+viewForHeaderInSection:(NSInteger)section {
+    if (section == 0)
+        return [self setupTableViewHeader];
+    
+    return nil;
+}
 
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"");
-    NSLog(@"heightForRowAtIndexPath");
-//    switch (indexPath.row) {
-//        case 0:
-//            return 115.0;
-//            break;
-//            
-//        default:
-//            return 280.0;
-//            break;
-//    }
+
     return 280.0;
 }
 
@@ -1093,7 +1056,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
     
     if (scrollView == collectionView) {
-        pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+    _pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
     }
 }
 

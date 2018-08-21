@@ -17,6 +17,7 @@ typedef void(^ButtonTouch)(NSString *strData);
 @interface CategoryTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *albumExploreLabel;
 @property (weak, nonatomic) IBOutlet UIButton *moreBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *lineConstraint;
 
 @property (strong, nonatomic) NSString *strData;
 @property (copy, nonatomic) ButtonTouch customBlock;
@@ -24,4 +25,6 @@ typedef void(^ButtonTouch)(NSString *strData);
 @property (weak, nonatomic) IBOutlet HorzAlbumCollectionView *collectionView;
 
 - (void)setCollectionViewDataSourceDelegate:(id<UICollectionViewDataSource, UICollectionViewDelegate>)dataSourceDelegate indexPath:(NSIndexPath *)indexPath;
+// set visibility and related constraint of the moreBtn
+- (void)setMoreBtnHidden:(BOOL)hidden;
 @end

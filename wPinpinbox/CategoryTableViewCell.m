@@ -45,5 +45,14 @@
         self.customBlock(self.strData);
     }
 }
-
+// set visibility and related constraint of the moreBtn
+- (void)setMoreBtnHidden:(BOOL)hidden {
+    self.moreBtn.hidden = hidden;
+    if (hidden) {
+        //  extend the line if moreBtn is hidden
+        self.lineConstraint.constant = self.moreBtn.frame.size.width;
+    } else {
+        self.lineConstraint.constant = -16;
+    }
+}
 @end
