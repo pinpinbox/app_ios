@@ -264,14 +264,9 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
-                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="lh6-dd-pAd">
-                                        <rect key="frame" x="168" y="21" width="39" height="37"/>
-                                    </pageControl>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="ak1-kq-Ud7"/>
-                                    <constraint firstItem="lh6-dd-pAd" firstAttribute="centerX" secondItem="z1n-89-X2f" secondAttribute="centerX" id="qFi-1b-Yiu"/>
-                                    <constraint firstItem="lh6-dd-pAd" firstAttribute="bottom" secondItem="z1n-89-X2f" secondAttribute="bottom" constant="10" id="ugp-El-chP"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -300,7 +295,6 @@
                         <outlet property="navBarView" destination="z1n-89-X2f" id="YbA-eU-YbR"/>
                         <outlet property="navBarViewHeight" destination="ak1-kq-Ud7" id="8E9-as-Viv"/>
                         <outlet property="navBtn" destination="cmp-0C-5nl" id="jfL-Xn-Cpk"/>
-                        <outlet property="pageControl" destination="lh6-dd-pAd" id="ran-6B-7bd"/>
                         <outlet property="tableView" destination="K9s-bZ-cq2" id="sul-9V-q61"/>
                         <outlet property="userBgView" destination="gec-tk-nSR" id="8M5-tt-hfx"/>
                         <outlet property="userBgViewHeight" destination="Ksg-oj-Uxb" id="7bk-Oa-Djc"/>

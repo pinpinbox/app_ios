@@ -39,6 +39,7 @@
     MyLinearLayout *bannerVertLayout;
     
     CGFloat bannerHeight;
+    UIPageControl *pageControl;
 }
 //@property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (nonatomic, strong) NSString *categoryName;
@@ -67,8 +68,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *closeBtnHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *closeBtnTopConstraint;
-//  move UIPageControl from tableSectionHeader to Navbar on top
-@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 @end
 
 @implementation CategoryViewController
@@ -190,7 +189,7 @@
     NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
     
     
-    //[self setupTableViewHeader];
+    [self setupTableViewHeader];
     self.tableView.hidden = NO;
     [self.tableView reloadData];
     
@@ -379,7 +378,7 @@
                             
                             self.tableView.hidden = NO;
                         }
-                        //[self setupTableViewHeader];
+                        [self setupTableViewHeader];
                         [self.tableView reloadData];
                         [self.userCollectionView reloadData];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
@@ -462,6 +461,20 @@
     if (btn && btn.tag >= 0 && btn.tag < self.bannerDataArray.count) {
         NSDictionary *bannerDic = self.bannerDataArray[btn.tag];
         NSString *link = bannerDic[@"banner_type_data"][@"link"];
+        
+        //  check if bannerDic[@"banner_type_data"][@"link"] is redirecting to an album //
+        NSArray *albumKey = [sharingLinkWithoutAutoPlay componentsSeparatedByString:@"%@"];
+        if (albumKey.count) {
+            NSString *key = (NSString *)albumKey.firstObject;
+            if ([link hasPrefix:key]) {
+                NSString *aid = [link substringFromIndex:key.length];
+                if (aid && aid.length) {
+                    [self presentAlbumDetailVC:aid];
+                    return ;
+                }
+            }
+        }
+        //  ordinary links
         if (link && link.length > 0) {
             NSURL *url = [NSURL URLWithString:link];
             if (url) {
@@ -472,6 +485,23 @@
             }
         }
     }
+}
+//  present AlbumDetailViewController by albumid
+- (void)presentAlbumDetailVC:(NSString *)albumid {
+    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+    
+    aDVC.albumId = albumid;//[dic[@"album"][@"album_id"] stringValue];
+    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+    
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.5;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionMoveIn;
+    transition.subtype = kCATransitionFromTop;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+    [appDelegate.myNav pushViewController: aDVC animated: NO];
 }
 #pragma mark - UITableViewDatasource Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -659,7 +689,7 @@
     safariVC.preferredBarTintColor = [UIColor whiteColor];
     [self presentViewController: safariVC animated: YES completion: nil];
 }
-- (UIView *)setupTableViewHeader {
+- (void)setupTableViewHeader {
     
     NSLog(@"");
     NSLog(@"viewForHeaderInSection");
@@ -681,6 +711,16 @@
         layout.itemSize = CGSizeMake(self.view.bounds.size.width, bannerHeight);
         layout.minimumLineSpacing = 0;
         
+        pageControl = [[UIPageControl alloc] initWithFrame: CGRectMake(0, 0, 50, 10)];
+        pageControl.myCenterXOffset = 0;
+        pageControl.myTopMargin = 4;
+        pageControl.myBottomMargin = 4;
+        pageControl.numberOfPages = self.bannerDataArray.count;
+        pageControl.pageIndicatorTintColor = [UIColor secondGrey];
+        pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
+        pageControl.userInteractionEnabled = NO;
+        [bannerVertLayout addSubview: pageControl];
+        
         collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, bannerHeight) collectionViewLayout: layout];
         collectionView.myTopMargin = 0;
         collectionView.myBottomMargin = 8;
@@ -697,15 +737,7 @@
         collectionView.showsHorizontalScrollIndicator = NO;
         [bannerVertLayout addSubview: collectionView];
         
-        //pageControl = [[UIPageControl alloc] initWithFrame: CGRectMake(0, 0, 50, 10)];
-        _pageControl.myCenterXOffset = 0;
-        _pageControl.myTopMargin = 4;
-        _pageControl.myBottomMargin = 4;
-        _pageControl.numberOfPages = self.bannerDataArray.count;
-        _pageControl.pageIndicatorTintColor = [UIColor secondGrey];
-        _pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
-        _pageControl.userInteractionEnabled = NO;
-        //[bannerVertLayout addSubview: pageControl];
+        
     } else {
         bannerVertLayout.heightDime.max(105);
     }
@@ -729,10 +761,9 @@
     [bannerVertLayout addSubview: topicLabel];
     
     [bannerVertLayout sizeToFit];
-    //self.tableView.tableHeaderView = bannerVertLayout;
+    //
     bannerVertLayout.backgroundColor = [UIColor whiteColor];
-    return bannerVertLayout;
-    
+    self.tableView.tableHeaderView = bannerVertLayout;
 }
 #pragma mark - UITableViewDelegate Methods
 - (void)tableView:(UITableView *)tableView
@@ -748,27 +779,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView
-heightForHeaderInSection:(NSInteger)section {
-    if (section == 0 ) {
-        if (self.bannerDataArray.count > 0)
-            return 376;
-        return 105;
-    }
-    
-    return 0;
-}
-
-- (UIView *)tableView:(UITableView *)tableView
-viewForHeaderInSection:(NSInteger)section {
-    if (section == 0)
-        return [self setupTableViewHeader];
-    
-    return nil;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
     return 280.0;
 }
 
@@ -961,23 +973,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSArray *collectionViewArray = self.horzAlbumArray[[(HorzAlbumCollectionView *)collectionView indexPath].row];
         NSDictionary *dic = collectionViewArray[indexPath.item];
         
-        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-        
         if (![dic[@"album"][@"album_id"] isEqual: [NSNull null]]) {
             NSLog(@"album_id: %@", dic[@"album"][@"album_id"]);
-            aDVC.albumId = [dic[@"album"][@"album_id"] stringValue];
+            [self presentAlbumDetailVC:[dic[@"album"][@"album_id"] stringValue]];
         }
-        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
         
-        CATransition *transition = [CATransition animation];
-        transition.duration = 0.5;
-        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionMoveIn;
-        transition.subtype = kCATransitionFromTop;
-        
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-        [appDelegate.myNav pushViewController: aDVC animated: NO];
     } else if (collectionView.tag == 3) {
         NSDictionary *bannerDic = self.bannerDataArray[indexPath.row];
         NSString *bannerType = bannerDic[@"banner_type"];
@@ -1056,7 +1056,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
     
     if (scrollView == collectionView) {
-    _pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+    pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
     }
 }
 

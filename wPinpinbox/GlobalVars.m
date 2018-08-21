@@ -25,10 +25,10 @@ NSString *appStoreUrl = @"https://itunes.apple.com/tw/app/pinpinbox/id1057840696
 NSString *ServerURL = @"https://w3.pinpinbox.com/index/api";
 NSString *pinpinbox = @"https://w3.pinpinbox.com/";
 
-NSString *sharingLinkWithAutoPlay = @"http://w3.pinpinbox.com/index/album/content/?album_id=%@%@";
-NSString *sharingLinkWithoutAutoPlay = @"http://w3.pinpinbox.com/index/album/content/?album_id=%@";
+NSString *sharingLinkWithAutoPlay = @"https://w3.pinpinbox.com/index/album/content/?album_id=%@%@";
+NSString *sharingLinkWithoutAutoPlay = @"https://w3.pinpinbox.com/index/album/content/?album_id=%@";
 
-NSString *userIdSharingLink = @"http://w3.pinpinbox.com/index/creative/content/?user_id=%@%@";
+NSString *userIdSharingLink = @"https://w3.pinpinbox.com/index/creative/content/?user_id=%@%@";
 
 NSString *aboutPageLink = @"https://w3.pinpinbox.com/index/about";
 
