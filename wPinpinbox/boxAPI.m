@@ -233,7 +233,9 @@ static NSString *hostURL = @"www.pinpinbox.com";
 }
 
 //取得相本資料
-+ (NSString *)retrievealbump:(NSString *)albumid uid:(NSString *)uid token:(NSString *)token {
++ (NSString *)retrievealbump:(NSString *)albumid
+                         uid:(NSString *)uid
+                       token:(NSString *)token {
     NSLog(@"");
     NSLog(@"retrievealbump");
     
@@ -249,7 +251,10 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnstr;
 }
 
-+ (NSString *)retrievealbump:(NSString *)albumid uid:(NSString *)uid token:(NSString *)token viewed:(NSString *)viewed {
++ (NSString *)retrievealbump:(NSString *)albumid
+                         uid:(NSString *)uid
+                       token:(NSString *)token
+                      viewed:(NSString *)viewed {
     NSLog(@"");
     NSLog(@"retrievealbump");
     
