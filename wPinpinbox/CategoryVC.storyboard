@@ -82,43 +82,27 @@
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
-                                                                    <view clipsSubviews="YES" alpha="0.80000001192092896" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H8z-DV-AEV" customClass="MyLinearLayout">
+                                                                    <view alpha="0.80000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H8z-DV-AEV" customClass="MyLinearLayout">
                                                                         <rect key="frame" x="33" y="120" width="84" height="28"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                         <subviews>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lhB-Un-FR0">
+                                                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lhB-Un-FR0">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="28" height="28"/>
-                                                                                <constraints>
-                                                                                    <constraint firstAttribute="height" constant="28" id="XAy-vl-O90"/>
-                                                                                    <constraint firstAttribute="width" constant="28" id="oke-aT-x7Y"/>
-                                                                                </constraints>
+                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                             </button>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6hV-22-Riu">
-                                                                                <rect key="frame" x="26" y="0.0" width="28" height="28"/>
-                                                                                <constraints>
-                                                                                    <constraint firstAttribute="height" constant="28" id="KZa-Ds-MOh"/>
-                                                                                    <constraint firstAttribute="width" constant="28" id="n00-mG-8Nk"/>
-                                                                                </constraints>
+                                                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6hV-22-Riu">
+                                                                                <rect key="frame" x="28" y="0.0" width="28" height="28"/>
+                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                 <inset key="imageEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
                                                                             </button>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tus-Mn-2qw">
+                                                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tus-Mn-2qw">
                                                                                 <rect key="frame" x="56" y="0.0" width="28" height="28"/>
-                                                                                <constraints>
-                                                                                    <constraint firstAttribute="height" constant="28" id="HJ6-pm-QaM"/>
-                                                                                    <constraint firstAttribute="width" constant="28" id="U0D-g7-Ex1"/>
-                                                                                </constraints>
+                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                 <inset key="imageEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
                                                                             </button>
                                                                         </subviews>
                                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                        <constraints>
-                                                                            <constraint firstItem="tus-Mn-2qw" firstAttribute="top" secondItem="lhB-Un-FR0" secondAttribute="top" id="FyW-g4-o2d"/>
-                                                                            <constraint firstItem="lhB-Un-FR0" firstAttribute="leading" secondItem="H8z-DV-AEV" secondAttribute="leading" id="QMl-ng-u2F"/>
-                                                                            <constraint firstItem="6hV-22-Riu" firstAttribute="leading" secondItem="tus-Mn-2qw" secondAttribute="leading" constant="-30" id="aEX-S3-B2Z"/>
-                                                                            <constraint firstItem="6hV-22-Riu" firstAttribute="top" secondItem="lhB-Un-FR0" secondAttribute="top" id="cNr-y1-CdW"/>
-                                                                            <constraint firstItem="lhB-Un-FR0" firstAttribute="top" secondItem="H8z-DV-AEV" secondAttribute="bottom" constant="-28" id="dW5-Nr-S8X"/>
-                                                                            <constraint firstItem="tus-Mn-2qw" firstAttribute="trailing" secondItem="H8z-DV-AEV" secondAttribute="trailing" id="nah-eX-oaZ"/>
-                                                                        </constraints>
                                                                         <userDefinedRuntimeAttributes>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="orientation">
                                                                                 <integer key="value" value="1"/>
@@ -132,10 +116,6 @@
                                                                 <constraint firstItem="hJC-0b-kpX" firstAttribute="leading" secondItem="Iqm-yH-aue" secondAttribute="leading" id="B7e-Tk-9Lf"/>
                                                                 <constraint firstItem="hJC-0b-kpX" firstAttribute="top" secondItem="Iqm-yH-aue" secondAttribute="top" id="E5o-bE-ksy"/>
                                                                 <constraint firstItem="F7l-I6-YKS" firstAttribute="leading" secondItem="Iqm-yH-aue" secondAttribute="leading" id="K9g-VR-zjF"/>
-                                                                <constraint firstItem="H8z-DV-AEV" firstAttribute="trailing" secondItem="Iqm-yH-aue" secondAttribute="trailingMargin" constant="5" id="OyC-fP-AzP"/>
-                                                                <constraint firstItem="H8z-DV-AEV" firstAttribute="top" secondItem="Iqm-yH-aue" secondAttribute="top" constant="120" id="Zoi-W8-rbP"/>
-                                                                <constraint firstItem="H8z-DV-AEV" firstAttribute="leading" secondItem="Iqm-yH-aue" secondAttribute="leadingMargin" constant="17" id="Zus-2i-s3W"/>
-                                                                <constraint firstItem="H8z-DV-AEV" firstAttribute="bottom" secondItem="Iqm-yH-aue" secondAttribute="bottom" constant="-39" id="fcP-cz-KHF"/>
                                                                 <constraint firstItem="F7l-I6-YKS" firstAttribute="top" secondItem="hJC-0b-kpX" secondAttribute="bottom" constant="5" id="mVv-mx-La1"/>
                                                                 <constraint firstItem="hJC-0b-kpX" firstAttribute="trailing" secondItem="Iqm-yH-aue" secondAttribute="trailing" id="rRs-Co-TTp"/>
                                                                 <constraint firstItem="F7l-I6-YKS" firstAttribute="trailing" secondItem="Iqm-yH-aue" secondAttribute="trailing" id="uPB-qD-brT"/>
