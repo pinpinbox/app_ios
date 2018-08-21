@@ -108,7 +108,7 @@
     
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     NSLog(@"screenWidth: %f", screenWidth);
-    bannerHeight = screenWidth * 540 / 960;
+    bannerHeight = 247;//screenWidth * 540 / 960;
     NSLog(@"bannerHeight: %f", bannerHeight);
     
     self.navBarView.backgroundColor = [UIColor barColor];
@@ -188,10 +188,14 @@
     NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
     NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
     
+    
+    [self setupTableViewHeader];
     self.tableView.hidden = NO;
     [self.tableView reloadData];
     
     [self.userCollectionView reloadData];
+    
+    
 }
 
 - (void)userTapped {
@@ -374,7 +378,7 @@
                             
                             self.tableView.hidden = NO;
                         }
-                        
+                        [self setupTableViewHeader];
                         [self.tableView reloadData];
                         [self.userCollectionView reloadData];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
@@ -652,68 +656,8 @@
     safariVC.preferredBarTintColor = [UIColor whiteColor];
     [self presentViewController: safariVC animated: YES completion: nil];
 }
-
-#pragma mark - UITableViewDelegate Methods
-- (void)tableView:(UITableView *)tableView
-  willDisplayCell:(CategoryTableViewCell *)cell
-forRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"");
-    NSLog(@"willDisplayCell");
-    [cell setCollectionViewDataSourceDelegate: self indexPath: indexPath];
-    NSInteger index = cell.collectionView.indexPath.row;
+- (void)setupTableViewHeader {
     
-    CGFloat horizontalOffset = [self.contentOffsetDictionary[[@(index) stringValue]] floatValue];
-    [cell.collectionView setContentOffset:CGPointMake(horizontalOffset, 0)];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView
-heightForHeaderInSection:(NSInteger)section {
-    NSLog(@"");
-    NSLog(@"heightForHeaderInSection");
-    NSLog(@"bannerHeight: %f", bannerHeight);
-    
-    CGFloat heightForHeader = 247;
-    
-//    NSLog(@"[[UIScreen mainScreen] nativeBounds].size.height: %f", [[UIScreen mainScreen] nativeBounds].size.height);
-//
-//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-//            case 1136:
-//                printf("iPhone 5 or 5S or 5C");
-//                heightForHeader = 150;
-//                break;
-//            case 1334:
-//                printf("iPhone 6/6S/7/8");
-//                heightForHeader = 160;
-//                break;
-//            case 1920:
-//                printf("iPhone 6+/6S+/7+/8+");
-//                heightForHeader = 175;
-//                break;
-//            case 2208:
-//                printf("iPhone 6+/6S+/7+/8+");
-//                heightForHeader = 175;
-//                break;
-//            case 2436:
-//                printf("iPhone X");
-//                heightForHeader = 165;
-//                break;
-//            default:
-//                printf("unknown");
-//                heightForHeader = 175;
-//                break;
-//        }
-//    }
-    
-    if (self.bannerDataArray.count > 0) {
-        return heightForHeader;
-    } else {
-        return 40;
-    }
-}
-
-- (UIView *)tableView:(UITableView *)tableView
-viewForHeaderInSection:(NSInteger)section {
     NSLog(@"");
     NSLog(@"viewForHeaderInSection");
     MyLinearLayout *bannerVertLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
@@ -726,7 +670,7 @@ viewForHeaderInSection:(NSInteger)section {
     
     if (self.bannerDataArray.count > 0) {
         NSLog(@"bannerHeight: %f", bannerHeight);
-        bannerVertLayout.heightDime.max(160);
+        bannerVertLayout.heightDime.max(416);//160);
         
         // Horizontal CollectionView Setting
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -760,7 +704,7 @@ viewForHeaderInSection:(NSInteger)section {
         pageControl.userInteractionEnabled = NO;
         [bannerVertLayout addSubview: pageControl];
     } else {
-        bannerVertLayout.heightDime.max(40);
+        bannerVertLayout.heightDime.max(105);
     }
     
     UILabel *topicLabel = [UILabel new];
@@ -775,18 +719,93 @@ viewForHeaderInSection:(NSInteger)section {
     [LabelAttributeStyle changeGapString: topicLabel content: self.categoryName];
     topicLabel.font = [UIFont boldSystemFontOfSize: 48];
     [topicLabel sizeToFit];
+    UIView *space = [[UIView alloc] initWithFrame:CGRectMake(0, 0, topicLabel.frame.size.width, 25)];
+    space.backgroundColor = [UIColor clearColor];
+    space.userInteractionEnabled = NO;
+    [bannerVertLayout addSubview: space];
     [bannerVertLayout addSubview: topicLabel];
     
     [bannerVertLayout sizeToFit];
     self.tableView.tableHeaderView = bannerVertLayout;
     
-    return bannerVertLayout;
 }
+#pragma mark - UITableViewDelegate Methods
+- (void)tableView:(UITableView *)tableView
+  willDisplayCell:(CategoryTableViewCell *)cell
+forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"");
+    NSLog(@"willDisplayCell");
+    [cell setCollectionViewDataSourceDelegate: self indexPath: indexPath];
+    NSInteger index = cell.collectionView.indexPath.row;
+    
+    CGFloat horizontalOffset = [self.contentOffsetDictionary[[@(index) stringValue]] floatValue];
+    [cell.collectionView setContentOffset:CGPointMake(horizontalOffset, 0)];
+}
+
+//- (CGFloat)tableView:(UITableView *)tableView
+//heightForHeaderInSection:(NSInteger)section {
+//    NSLog(@"");
+//    NSLog(@"heightForHeaderInSection");
+//    NSLog(@"bannerHeight: %f", bannerHeight);
+
+//    CGFloat heightForHeader = 247;
+    
+//    NSLog(@"[[UIScreen mainScreen] nativeBounds].size.height: %f", [[UIScreen mainScreen] nativeBounds].size.height);
+//
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+//            case 1136:
+//                printf("iPhone 5 or 5S or 5C");
+//                heightForHeader = 150;
+//                break;
+//            case 1334:
+//                printf("iPhone 6/6S/7/8");
+//                heightForHeader = 160;
+//                break;
+//            case 1920:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                heightForHeader = 175;
+//                break;
+//            case 2208:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                heightForHeader = 175;
+//                break;
+//            case 2436:
+//                printf("iPhone X");
+//                heightForHeader = 165;
+//                break;
+//            default:
+//                printf("unknown");
+//                heightForHeader = 175;
+//                break;
+//        }
+//    }
+    
+//    if (self.bannerDataArray.count > 0) {
+//        return heightForHeader;
+//    } else {
+//        return 40;
+//    }
+//}
+
+//- (UIView *)tableView:(UITableView *)tableView
+//viewForHeaderInSection:(NSInteger)section {
+//
+//}
 
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"heightForRowAtIndexPath");
+//    switch (indexPath.row) {
+//        case 0:
+//            return 115.0;
+//            break;
+//            
+//        default:
+//            return 280.0;
+//            break;
+//    }
     return 280.0;
 }
 
@@ -920,7 +939,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                     cell.infoLabel.text = vidtext;
                 cell.actionButton.tag = indexPath.row;
                 
-                //[cell.actionButton removeTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+                
                 [cell.actionButton addTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
             } else if ([bannerType isEqualToString: @"image"]) {
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"BannerCell" forIndexPath: indexPath];
@@ -931,11 +950,11 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                 if (vidtext)
                     cell.infoLabel.text = vidtext;
                 cell.actionButton.tag = indexPath.row;
-                //[cell.actionButton removeTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+                
                 [cell.actionButton addTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
-        cell.userInteractionEnabled = YES;
+
         return cell;
     } else {
         NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);

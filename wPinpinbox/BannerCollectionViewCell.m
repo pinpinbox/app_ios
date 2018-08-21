@@ -13,8 +13,11 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
+    self.infoLabel.layer.borderColor = [UIColor grayColor].CGColor;
 }
-- (IBAction)testActionBtn:(id)sender {
-    NSLog(@"testActionBtn");
+- (void)prepareForReuse{
+    [super prepareForReuse];
+    
+    [self.actionButton removeTarget:nil action:nil forControlEvents:UIControlEventAllEvents];
 }
 @end
