@@ -114,6 +114,8 @@
     titlelab.text = NSLocalizedString(@"PicText-selPicture", @"");
     
     // Requests the user’s permission, if needed, for accessing the Photos library.
+    //__block PHFetchResult *wresult = assetsFetchResults;
+    __block UICollectionView *cov = mycov;
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"dispatch_async");
@@ -129,7 +131,7 @@
                 // An ordered list of assets or collections returned from a Photos fetch method.
                 assetsFetchResults = [PHAsset fetchAssetsWithOptions:options];
                 
-                [mycov reloadData];
+                [cov reloadData];
             } else {
                 NSLog(@"Not Authorized");
                 
@@ -235,7 +237,8 @@
 - (void)showNoAccessAlertAndCancel {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"沒有照片存取權" message: @"請打開照片權限設定" preferredStyle: UIAlertControllerStyleAlert];
     [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+        //[[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
     }]];
     [self presentViewController: alert animated: YES completion: nil];
 }
@@ -252,7 +255,8 @@
         //无权限
         UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"PicText-tipAccessPrivacy", @"") message: @"" preferredStyle: UIAlertControllerStyleAlert];
         [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+            //[[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
         }]];
         
         [self presentViewController: alert animated: YES completion: nil];
@@ -1090,7 +1094,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/insertphotoofdiy",@"/1.1"]];
     
     // create request
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [request setHTTPShouldHandleCookies:NO];
     [request setTimeoutInterval: [kTimeOutForPhoto floatValue]];
@@ -1144,7 +1148,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
     
     // set URL
-    [request setURL:requestURL];
+    //[request setURL:requestURL];
     
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
@@ -1175,7 +1179,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                 return;
             }
         }
-        if (data) {
+        if (!error && data) {
             str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
             
             NSLog(@"str: %@", str);

@@ -37,7 +37,8 @@
 @property (nonatomic, strong) JCCollectionViewWaterfallLayout *layout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewBottomConstraint;
-
+//  contextmenu selection index (-1,0,1,2)
+@property (nonatomic) NSInteger contextMenuIndex;
 @end
 
 @implementation CalbumlistViewController
@@ -58,6 +59,7 @@
     isLoadbtn = NO;
     //type=0;
     type = self.collectionType;
+    self.contextMenuIndex = -1;
     
     self.layout = (JCCollectionViewWaterfallLayout *)self.collectioview.collectionViewLayout;
     self.layout.headerHeight = 0.0f;
@@ -84,6 +86,7 @@
     GHContextMenuView *overlay = [[GHContextMenuView alloc] init];
     overlay.dataSource = self;
     overlay.delegate = self;
+    overlay.menuActionType = GHContextMenuActionTypeTap;
     
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget: overlay
                                                                                                       action: @selector(longPressDetected:)];
@@ -629,6 +632,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (BOOL)shouldShowMenuAtPoint:(CGPoint)point {
     NSIndexPath *indexPath = [_collectioview indexPathForItemAtPoint: point];
     UICollectionViewCell *cell = [_collectioview cellForItemAtIndexPath: indexPath];
+    _contextMenuIndex = -1;
+    if (cell )
+        _contextMenuIndex = indexPath.row;
     
     return cell != nil;
 }
@@ -695,7 +701,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     return [UIImage imageNamed: imageName];
 }
-
+//  no valid selection is made
+- (void)menuCancelled {
+    _contextMenuIndex = -1;
+}
 - (void)didSelectItemAtIndex:(NSInteger)selectedIndex forMenuAtPoint:(CGPoint)point {
     NSLog(@"didSelectItemAtIndex");
     NSIndexPath *indexPath = [_collectioview indexPathForItemAtPoint: point];
@@ -731,20 +740,23 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 break;
         }
     }
-    
-    NSDictionary *data = dataarr[indexPath.row][@"album"];
+    if (_contextMenuIndex == -1)
+        _contextMenuIndex = indexPath.row;
+    NSDictionary *data = dataarr[_contextMenuIndex][@"album"];
     NSString *albumId = [data[@"album_id"] stringValue];
-    NSString *templateId = [dataarr[indexPath.row][@"template"][@"template_id"] stringValue];
+    NSString *templateId = [dataarr[_contextMenuIndex][@"template"][@"template_id"] stringValue];
     NSLog(@"templateId: %@", templateId);
-    NSDictionary *userdata = dataarr[indexPath.row][@"user"];
-    NSString *identity = dataarr[indexPath.row][@"cooperation"][@"identity"];
+    NSDictionary *userdata = dataarr[_contextMenuIndex][@"user"];
+    NSString *identity = dataarr[_contextMenuIndex][@"cooperation"][@"identity"];
+    
     
     BOOL hasImage = [data[@"usefor"][@"image"] boolValue];
     NSLog(@"hasImage: %d", hasImage);
     
     if ([msg isEqualToString: @"Delete"]) {
         NSLog(@"msg isEqualToString: Delete");
-        [self deleteBook: indexPath];
+        NSIndexPath *i = [NSIndexPath indexPathForRow:_contextMenuIndex inSection:0];
+        [self deleteBook:i ];//indexPath];
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"deleteAlbum"];
@@ -796,6 +808,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             }
         }
     }
+    _contextMenuIndex = -1;
 }
 
 - (void)getIdentity:(NSString *)albumId templateId:(NSString *)templateId msg:(NSString *)msg

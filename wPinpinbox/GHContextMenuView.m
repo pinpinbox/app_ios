@@ -142,6 +142,9 @@ CGFloat const   GHAnimationDelay = GHAnimationDuration/5;
     if(self.delegate && [self.delegate respondsToSelector:@selector(didSelectItemAtIndex: forMenuAtPoint:)] && self.prevIndex >= 0){
         [self.delegate didSelectItemAtIndex:self.prevIndex forMenuAtPoint:point];
         self.prevIndex = -1;
+    }else if (self.prevIndex  < 0) {
+        if ([self.delegate respondsToSelector:@selector(menuCancelled)])
+            [self.delegate menuCancelled];
     }
 
     [self hideMenu];

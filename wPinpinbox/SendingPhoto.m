@@ -47,7 +47,7 @@
     NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/insertphotoofdiy",@"/1.2"]];
     
     // create request
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [request setHTTPShouldHandleCookies:NO];
     //[request setTimeoutInterval: [kTimeOutForPhoto floatValue]];
@@ -100,7 +100,7 @@
     [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
     
     // set URL
-    [request setURL:requestURL];
+    //[request setURL:requestURL];
     
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSString *responseStr;
