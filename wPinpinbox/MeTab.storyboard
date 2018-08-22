@@ -544,57 +544,58 @@
                     </view>
                     <navigationItem key="navigationItem" id="I3q-7G-SBs">
                         <nil key="title"/>
-                        <barButtonItem key="rightBarButtonItem" width="168" style="plain" id="rgX-0W-t7O">
-                            <view key="customView" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="s2e-9w-7Xm">
-                                <rect key="frame" x="136" y="1" width="168" height="42"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gwk-M8-Xh6">
-                                        <rect key="frame" x="136" y="0.0" width="42" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_share_dark.png"/>
-                                        <connections>
-                                            <action selector="shareBtnPress:" destination="YhI-lD-jqk" eventType="touchUpInside" id="10P-uh-3FV"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QW0-hh-Bby">
-                                        <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_message_dark.png"/>
-                                        <connections>
-                                            <action selector="messageBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="sbJ-Gs-eR7"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="smq-cw-ibw">
-                                        <rect key="frame" x="84" y="0.0" width="42" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_chart_dark.png"/>
-                                        <connections>
-                                            <action selector="pointCalculationBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="A8T-pA-xGM"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o8q-u7-CRs">
-                                        <rect key="frame" x="42" y="0.0" width="42" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_user_about_dark.png"/>
-                                        <connections>
-                                            <action selector="myPageBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="hqq-u5-zEd"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                            </view>
-                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="GKT-ab-lwF" id="dMb-Fw-kKj"/>
+                        <outlet property="collectionViewTopConstraint" destination="eUO-Kj-1WU" id="zwL-o5-vYU"/>
+                        <outlet property="navMenu" destination="fQ6-Cf-wDG" id="9uf-YD-IAd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yi7-fp-WXe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="fQ6-Cf-wDG">
+                    <rect key="frame" x="0.0" y="0.0" width="168" height="42"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jRB-cN-xnm">
+                            <rect key="frame" x="136" y="0.0" width="42" height="42"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                            <state key="normal" image="ic200_share_dark.png"/>
+                            <connections>
+                                <action selector="shareBtnPress:" destination="YhI-lD-jqk" eventType="touchUpInside" id="GB9-PD-89J"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VlH-hn-SfR">
+                            <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                            <state key="normal" image="ic200_message_dark.png"/>
+                            <connections>
+                                <action selector="messageBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="eSy-Ky-dFo"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MWy-gh-H9Y">
+                            <rect key="frame" x="84" y="0.0" width="42" height="42"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                            <state key="normal" image="ic200_chart_dark.png"/>
+                            <connections>
+                                <action selector="pointCalculationBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="Nul-nB-s2v"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lT4-va-1qG">
+                            <rect key="frame" x="42" y="0.0" width="42" height="42"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                            <state key="normal" image="ic200_user_about_dark.png"/>
+                            <connections>
+                                <action selector="myPageBtnPressed:" destination="YhI-lD-jqk" eventType="touchUpInside" id="esf-jf-3Im"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="NCo-tc-Rqu"/>
+                </view>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y4W-Lb-oDy">
                     <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
                     <constraints>

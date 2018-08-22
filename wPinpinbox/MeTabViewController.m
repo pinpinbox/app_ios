@@ -104,8 +104,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 @property (strong, nonatomic) NSDictionary *userDic;
 
-@property (weak, nonatomic) IBOutlet UIView *navBarView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
+//@property (weak, nonatomic) IBOutlet UIView *navBarView;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 
 @property (nonatomic, strong) JCCollectionViewWaterfallLayout *jccLayout;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -121,6 +121,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
 @property (nonatomic) NSInteger sumOfSettlement;
 @property (nonatomic) NSInteger sumOfUnsettlement;
 @property (nonatomic) NSString *identity;
+
+@property (nonatomic) IBOutlet NSLayoutConstraint *collectionViewTopConstraint;
+@property (nonatomic) IBOutlet UIView *navMenu;
 @end
 
 @implementation MeTabViewController
@@ -139,6 +142,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"MeTabViewController viewWillAppear");
     
     [super viewWillAppear:animated];
+    
+    if ([[[UIDevice currentDevice] systemVersion] compare:@"11.0" options:NSNumericSearch] == NSOrderedAscending){
+        self.collectionViewTopConstraint.constant = 0;
+    }
+    // ADD buttons to navigation bar at right
+    UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:self.navMenu];
+    [self.navigationItem setRightBarButtonItem:item];
     
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
@@ -202,40 +212,40 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");        
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-            case 1136:
-                printf("iPhone 5 or 5S or 5C");
-                self.navBarHeight.constant = 48;
-    //            self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
-                break;
-            case 1334:
-                printf("iPhone 6/6S/7/8");
-                self.navBarHeight.constant = 48;
-    //            self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
-                break;
-            case 1920:
-                printf("iPhone 6+/6S+/7+/8+");
-                self.navBarHeight.constant = 48;
-   //             self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
-                break;
-            case 2208:
-                printf("iPhone 6+/6S+/7+/8+");
-                self.navBarHeight.constant = 48;
-   //             self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
-                break;
-            case 2436:
-                printf("iPhone X");
-                self.navBarHeight.constant = navBarHeightConstant;
-   //             self.collectionView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
-                break;
-            default:
-                printf("unknown");
-                self.navBarHeight.constant = 48;
-   //             self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
-                break;
-        }
-    }
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+//            case 1136:
+//                printf("iPhone 5 or 5S or 5C");
+//                self.navBarHeight.constant = 48;
+//    //            self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+//                break;
+//            case 1334:
+//                printf("iPhone 6/6S/7/8");
+//                self.navBarHeight.constant = 48;
+//    //            self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+//                break;
+//            case 1920:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                self.navBarHeight.constant = 48;
+//   //             self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+//                break;
+//            case 2208:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                self.navBarHeight.constant = 48;
+//   //             self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+//                break;
+//            case 2436:
+//                printf("iPhone X");
+//                self.navBarHeight.constant = navBarHeightConstant;
+//   //             self.collectionView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
+//                break;
+//            default:
+//                printf("unknown");
+//                self.navBarHeight.constant = 48;
+//   //             self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+//                break;
+//        }
+//    }
     
     self.customActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customActionSheet.delegate = self;
@@ -258,7 +268,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     self.collectionView.showsVerticalScrollIndicator = NO;
     
-    self.navBarView.backgroundColor = [UIColor barColor];
+    //self.navBarView.backgroundColor = [UIColor barColor];
     
     columnCount = 2;
     miniInteriorSpacing = 16;

@@ -68,6 +68,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *closeBtnHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *closeBtnTopConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableTopConstraint;
 @end
 
 @implementation CategoryViewController
@@ -89,6 +90,10 @@
     [super viewDidAppear:animated];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+    
+    if ([[[UIDevice currentDevice] systemVersion] compare:@"11.0" options:NSNumericSearch] == NSOrderedAscending){
+        self.tableTopConstraint.constant = -20;
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

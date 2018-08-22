@@ -13,7 +13,7 @@
         <!--Category View Controller-->
         <scene sceneID="Yfv-n8-jdS">
             <objects>
-                <viewController storyboardIdentifier="CategoryViewController" id="gYz-xh-ScQ" customClass="CategoryViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CategoryViewController" extendedLayoutIncludesOpaqueBars="YES" id="gYz-xh-ScQ" customClass="CategoryViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kJg-l2-c3j">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -276,7 +276,7 @@
                             <constraint firstItem="z1n-89-X2f" firstAttribute="trailing" secondItem="b2J-UE-MLB" secondAttribute="trailing" id="BbK-76-Fr6"/>
                             <constraint firstItem="K9s-bZ-cq2" firstAttribute="trailing" secondItem="b2J-UE-MLB" secondAttribute="trailing" id="GGN-FN-IiX"/>
                             <constraint firstItem="gec-tk-nSR" firstAttribute="top" secondItem="kJg-l2-c3j" secondAttribute="top" constant="20" symbolic="YES" id="JtH-D3-q1o"/>
-                            <constraint firstItem="K9s-bZ-cq2" firstAttribute="top" secondItem="kJg-l2-c3j" secondAttribute="top" constant="20" symbolic="YES" id="TiT-q2-Wxj"/>
+                            <constraint firstItem="K9s-bZ-cq2" firstAttribute="top" secondItem="b2J-UE-MLB" secondAttribute="top" id="TiT-q2-Wxj"/>
                             <constraint firstItem="gec-tk-nSR" firstAttribute="trailing" secondItem="b2J-UE-MLB" secondAttribute="trailing" id="ZRI-97-qrl"/>
                             <constraint firstItem="K9s-bZ-cq2" firstAttribute="bottom" secondItem="b2J-UE-MLB" secondAttribute="bottom" id="nDS-wq-StH"/>
                             <constraint firstItem="z1n-89-X2f" firstAttribute="leading" secondItem="b2J-UE-MLB" secondAttribute="leading" id="sa0-gb-6hm"/>
@@ -295,6 +295,7 @@
                         <outlet property="navBarView" destination="z1n-89-X2f" id="YbA-eU-YbR"/>
                         <outlet property="navBarViewHeight" destination="ak1-kq-Ud7" id="8E9-as-Viv"/>
                         <outlet property="navBtn" destination="cmp-0C-5nl" id="jfL-Xn-Cpk"/>
+                        <outlet property="tableTopConstraint" destination="TiT-q2-Wxj" id="83n-Wm-fed"/>
                         <outlet property="tableView" destination="K9s-bZ-cq2" id="sul-9V-q61"/>
                         <outlet property="userBgView" destination="gec-tk-nSR" id="8M5-tt-hfx"/>
                         <outlet property="userBgViewHeight" destination="Ksg-oj-Uxb" id="7bk-Oa-Djc"/>
