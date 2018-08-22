@@ -314,47 +314,10 @@
 }
 
 - (void)settingSizeBasedOnDevice {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-            case 1136:
-                printf("iPhone 5 or 5S or 5C");
-                headerHeight = 900.0f;
-                self.navBarHeight.constant = 48;
-                topContentOffset = 48;
-                break;
-            case 1334:
-                printf("iPhone 6/6S/7/8");
-                headerHeight = 940.0f;
-                self.navBarHeight.constant = 48;
-                topContentOffset = 48;
-                break;
-            case 1920:
-                printf("iPhone 6+/6S+/7+/8+");
-                headerHeight = 950.0f;
-                self.navBarHeight.constant = 48;
-                topContentOffset = 48;
-                break;
-            case 2208:
-                printf("iPhone 6+/6S+/7+/8+");
-                headerHeight = 950.0f;
-                self.navBarHeight.constant = 48;
-                topContentOffset = 48;
-                break;
-            case 2436:
-                printf("iPhone X");
-                headerHeight = 920.0f;
-                self.navBarHeight.constant = navBarHeightConstant;
-                topContentOffset = 28;
-                break;
-            default:
-                printf("unknown");
-                headerHeight = 940.0f;
-                self.navBarHeight.constant = 48;
-                topContentOffset = 48;
-                break;
-        }
-    }
     
+    self.navBarHeight.constant = 48;
+    topContentOffset = 48;
+    headerHeight = 960;
     self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
     self.jccLayout1 = (JCCollectionViewWaterfallLayout *)self.albumCollectionView.collectionViewLayout;
@@ -1820,12 +1783,12 @@ sourceController:(UIViewController *)source
         
         if (![dic[@"name"] isEqual:[NSNull null]]) {
             cell.categoryNameLabel.text = dic[@"name"];
-            [LabelAttributeStyle changeGapString: cell.categoryNameLabel content: dic[@"name"]];
+            //[LabelAttributeStyle changeGapString: cell.categoryNameLabel content: dic[@"name"]];
         }
         
         if (![dic[@"colorhex"] isEqual: [NSNull null]]) {
             NSLog(@"colorhex: %@", dic[@"colorhex"]);
-            cell.categoryBgView.backgroundColor = [UIColor colorFromHexString: dic[@"colorhex"]];
+            //cell.categoryBgView.backgroundColor = [UIColor colorFromHexString: dic[@"colorhex"]];
         }
         return cell;
     } else if (collectionView.tag == 4) {
