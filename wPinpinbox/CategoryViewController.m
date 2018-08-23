@@ -479,6 +479,18 @@
                 }
             }
         }
+        NSArray *creativeKey = [userIdSharingLink componentsSeparatedByString:@"%@"];
+        if (creativeKey.count) {
+            NSString *key = (NSString *)creativeKey.firstObject;
+            if ([link hasPrefix:key]) {
+                NSString *uid = [link substringFromIndex:key.length];
+                if (uid && uid.length) {
+                    [self presentUserVC:uid];
+                    return ;
+                }
+            }
+        }
+        
         //  ordinary links
         if (link && link.length > 0) {
             NSURL *url = [NSURL URLWithString:link];
@@ -507,6 +519,21 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
     [appDelegate.myNav pushViewController: aDVC animated: NO];
+}
+//  present CreaterViewController by userId
+- (void)presentUserVC:(NSString *)uid {
+    CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+    cVC.userId = uid;
+    
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.5;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionMoveIn;
+    transition.subtype = kCATransitionFromTop;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+    [appDelegate.myNav pushViewController: cVC animated: NO];
 }
 #pragma mark - UITableViewDatasource Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

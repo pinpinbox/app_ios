@@ -229,12 +229,15 @@
 - (IBAction)crashButtonTapped:(id)sender {
     [[Crashlytics sharedInstance] crash];
 }
-
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    // Do any additional setup after loading the view.
+    [self settingSizeBasedOnDevice];
+    
+}
 - (void)viewDidLoad {
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
-    // Do any additional setup after loading the view.
-    [self settingSizeBasedOnDevice];
     
     isSearchTextFieldSelected = NO;
     self.albumCollectionView.hidden = YES;
@@ -316,7 +319,7 @@
 - (void)settingSizeBasedOnDevice {
     
     self.navBarHeight.constant = 48;
-    topContentOffset = 48;
+    topContentOffset = self.navBarView.frame.size.height;
     headerHeight = 960;
     self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
