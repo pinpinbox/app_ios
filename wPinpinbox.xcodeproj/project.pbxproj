@@ -157,9 +157,7 @@
 		54F777DE20ABE02B00A6E195 /* TestReadBook.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777DD20ABE02B00A6E195 /* TestReadBook.xcassets */; };
 		54F777E220ABE38100A6E195 /* AlbumDetail.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777E120ABE38100A6E195 /* AlbumDetail.xcassets */; };
 		54F777E420ABE3A700A6E195 /* HomeTab.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777E320ABE3A700A6E195 /* HomeTab.xcassets */; };
-		54F777E620ABE48900A6E195 /* SearchTab.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777E520ABE48900A6E195 /* SearchTab.xcassets */; };
 		54F777E820ABE50200A6E195 /* NotifTab.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777E720ABE50200A6E195 /* NotifTab.xcassets */; };
-		54F777EA20ABE5B000A6E195 /* MeTab.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777E920ABE5B000A6E195 /* MeTab.xcassets */; };
 		54F777EC20ABE61800A6E195 /* ActivityWeb.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777EB20ABE61800A6E195 /* ActivityWeb.xcassets */; };
 		54F777EE20ABE70A00A6E195 /* PhotosVC.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777ED20ABE70A00A6E195 /* PhotosVC.xcassets */; };
 		54F777F020ABE78C00A6E195 /* PointCalculation.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777EF20ABE78C00A6E195 /* PointCalculation.xcassets */; };
@@ -1070,9 +1068,7 @@
 		54F777DD20ABE02B00A6E195 /* TestReadBook.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = TestReadBook.xcassets; path = "Image Resources/TestReadBook.xcassets"; sourceTree = "<group>"; };
 		54F777E120ABE38100A6E195 /* AlbumDetail.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = AlbumDetail.xcassets; path = "Image Resources/AlbumDetail.xcassets"; sourceTree = "<group>"; };
 		54F777E320ABE3A700A6E195 /* HomeTab.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = HomeTab.xcassets; path = "Image Resources/HomeTab.xcassets"; sourceTree = "<group>"; };
-		54F777E520ABE48900A6E195 /* SearchTab.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = SearchTab.xcassets; path = "Image Resources/SearchTab.xcassets"; sourceTree = "<group>"; };
 		54F777E720ABE50200A6E195 /* NotifTab.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = NotifTab.xcassets; path = "Image Resources/NotifTab.xcassets"; sourceTree = "<group>"; };
-		54F777E920ABE5B000A6E195 /* MeTab.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = MeTab.xcassets; path = "Image Resources/MeTab.xcassets"; sourceTree = "<group>"; };
 		54F777EB20ABE61800A6E195 /* ActivityWeb.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = ActivityWeb.xcassets; path = "Image Resources/ActivityWeb.xcassets"; sourceTree = "<group>"; };
 		54F777ED20ABE70A00A6E195 /* PhotosVC.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = PhotosVC.xcassets; path = "Image Resources/PhotosVC.xcassets"; sourceTree = "<group>"; };
 		54F777EF20ABE78C00A6E195 /* PointCalculation.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = PointCalculation.xcassets; path = "Image Resources/PointCalculation.xcassets"; sourceTree = "<group>"; };
@@ -3064,8 +3060,6 @@
 				54F777DD20ABE02B00A6E195 /* TestReadBook.xcassets */,
 				54F777E120ABE38100A6E195 /* AlbumDetail.xcassets */,
 				54F777E320ABE3A700A6E195 /* HomeTab.xcassets */,
-				54F777E520ABE48900A6E195 /* SearchTab.xcassets */,
-				54F777E920ABE5B000A6E195 /* MeTab.xcassets */,
 				54F777EB20ABE61800A6E195 /* ActivityWeb.xcassets */,
 				54F777ED20ABE70A00A6E195 /* PhotosVC.xcassets */,
 				54F777EF20ABE78C00A6E195 /* PointCalculation.xcassets */,
@@ -5238,9 +5232,7 @@
 				9211563A1C4F644A00F9200A /* TaobannameTableViewCell.xib in Resources */,
 				92A1559B1C338CC900E83EC5 /* 4-04icon_share@2x.png in Resources */,
 				54AB130620AD829200C7CC1A /* SignUp.xcassets in Resources */,
-				54F777E620ABE48900A6E195 /* SearchTab.xcassets in Resources */,
 				927AADEC1BE222100088CDB9 /* 4-08photo-size@2x.png in Resources */,
-				54F777EA20ABE5B000A6E195 /* MeTab.xcassets in Resources */,
 				92F89B0A1BBE73D400565908 /* render_3_14.png in Resources */,
 				925119181CEB072A002D4678 /* 2-11_03@2x.png in Resources */,
 				924A92C11BD4C3F400E3D610 /* 1-04bg.png in Resources */,

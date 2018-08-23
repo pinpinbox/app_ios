@@ -417,11 +417,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"tagId: %ld", (long)tagId);
         NSLog(@"isTouchDown: %d", isTouchDown);
         NSLog(@"identifierStr: %@", identifierStr);
-        
+        __strong typeof(weakSelf) stSelf = weakSelf;
         if ([identifierStr isEqualToString: @"reorder"]) {
-            if (ImageDataArr.count > 0) {
-                [weakSelf showReorderVC];
-            } else if (ImageDataArr.count == 0) {
+            if (stSelf->ImageDataArr.count > 0) {
+                [stSelf showReorderVC];
+            } else if (stSelf->ImageDataArr.count == 0) {
                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                 style.messageColor = [UIColor whiteColor];
                 style.backgroundColor = [UIColor thirdPink];
@@ -432,9 +432,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                    style: style];
             }
         } else if ([identifierStr isEqualToString: @"choosePreview"]) {
-            if (ImageDataArr.count > 0) {
-                [weakSelf showPreviewPageSetupVC];
-            } else if (ImageDataArr.count == 0) {
+            if (stSelf->ImageDataArr.count > 0) {
+                [stSelf showPreviewPageSetupVC];
+            } else if (stSelf->ImageDataArr.count == 0) {
                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                 style.messageColor = [UIColor whiteColor];
                 style.backgroundColor = [UIColor thirdPink];
@@ -560,14 +560,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block AlbumCreationViewController *weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = @"";
-        NSString *pid = [ImageDataArr [selectItem][@"photo_id"] stringValue];
+        __strong typeof(weakSelf) stSelf = weakSelf;
+        NSString *pid = [stSelf->ImageDataArr [stSelf->selectItem][@"photo_id"] stringValue];
         
         response = [boxAPI updatephotoofdiy: [wTools getUserID]
                                       token: [wTools getUserToken]
-                                   album_id: _albumid
+                                   album_id: stSelf.albumid
                                    photo_id: pid
                                       image: nil
                                     setting: textStr];
@@ -604,26 +605,26 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                        textForDescription = ImageDataArr[selectItem][@"description"];
+                        stSelf->ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
+                        stSelf->textForDescription = stSelf->ImageDataArr[stSelf->selectItem][@"description"];
                         
-                        if ([textForDescription isEqualToString: @""]) {
-                            textBgView.hidden = YES;
-                            deleteTextBtn.hidden = YES;
+                        if ([stSelf->textForDescription isEqualToString: @""]) {
+                            stSelf->textBgView.hidden = YES;
+                            stSelf->deleteTextBtn.hidden = YES;
                             
                             [self removeTextDescriptionView];
                         } else {
-                            textBgView.hidden = NO;
-                            deleteTextBtn.hidden = NO;
+                            stSelf->textBgView.hidden = NO;
+                            stSelf->deleteTextBtn.hidden = NO;
                             
-                            [self removeTextDescriptionView];
-                            [self addTextDescriptionView];
+                            [stSelf removeTextDescriptionView];
+                            [stSelf addTextDescriptionView];
                         }
                     } else if ([dic[@"result"] boolValue] == 0) {
                         NSLog(@"callUpdatePhotoOfDiyWithoutPhoto return result is 0");
-                        [self showPermission];
+                        [stSelf showPermission];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -731,9 +732,11 @@ shouldChangeTextInRange:(NSRange)range
 
 - (void)enableRecordAndPlayBtn {
     NSLog(@"enableRecordAndPlayBtn");
+    __block AlbumCreationViewController *weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"enableRecordAndPlayBtn in get_main_queue");
-        recordPausePlayBtn.userInteractionEnabled = YES;
+        __strong typeof(weakSelf) stSelf = weakSelf;
+        stSelf->recordPausePlayBtn.userInteractionEnabled = YES;
     });
 }
 
@@ -1110,9 +1113,11 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"startRipple");
     [recordPausePlayBtn fadeInBackgroundAndRippleTapCircle];
     double delayInSeconds = 0.2;
+    __weak typeof(self) weakSelf = self;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^{
-        [recordPausePlayBtn burstTapCircle];
+        __strong typeof(weakSelf) stSelf = weakSelf;
+        [stSelf->recordPausePlayBtn burstTapCircle];
     });
 }
 
@@ -1155,13 +1160,14 @@ shouldChangeTextInRange:(NSRange)range
     
     audioData = [[NSData alloc] initWithContentsOfURL: outputFileURL];
     //NSLog(@"audioData: %@", audioData);
-    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *response = [boxAPI updateAudioOfDiy: [wTools getUserID]
                                                 token: [wTools getUserToken]
-                                             album_id: _albumid
+                                             album_id: stSelf.albumid
                                              photo_id: pid
-                                                 file: audioData];
+                                                 file: stSelf->audioData];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1183,7 +1189,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"AlbumCollectionViewController");
                     NSLog(@"deleteAudioOfDiy");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"updateAudioOfDiy"
                                          textStr: @""
                                             data: nil
@@ -1193,8 +1199,8 @@ shouldChangeTextInRange:(NSRange)range
                                           option: @""];
                 } else {
                     NSLog(@"Get Real Response");
-                    [self enableRecordAndPlayBtn];
-                    isRecordingAudio = NO;
+                    [stSelf enableRecordAndPlayBtn];
+                    stSelf->isRecordingAudio = NO;
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
@@ -1203,36 +1209,36 @@ shouldChangeTextInRange:(NSRange)range
                         //NSLog(@"%@", dic[@"data"]);
                         
                         // Update audio_url for just finish recording
-                        audio_url = dic[@"data"][@"photo"][selectItem][@"audio_url"];
-                        NSLog(@"audio_url: %@", audio_url);
+                        stSelf->audio_url = dic[@"data"][@"photo"][stSelf->selectItem][@"audio_url"];
+                        NSLog(@"audio_url: %@", stSelf->audio_url);
                         
                         // Update ImageDataArr
-                        ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
+                        stSelf->ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         
                         //[mycollection reloadData];
-                        [_dataCollectionView reloadData];
+                        [stSelf.dataCollectionView reloadData];
                         
                         // Is Recorded
-                        [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+                        [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
                         
-                        audioBgView.hidden = NO;
-                        deleteAudioBtn.hidden = NO;
+                        stSelf->audioBgView.hidden = NO;
+                        stSelf->deleteAudioBtn.hidden = NO;
                         
-                        isRecorded = YES;
+                        stSelf->isRecorded = YES;
                         
                     } else if ([dic[@"result"] boolValue] == 0) {
                         NSLog(@"message: %@", dic[@"message"]);
                         
                         // Can not Record
-                        [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
-                        audioBgView.hidden = YES;
-                        deleteAudioBtn.hidden = YES;
+                        [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+                        stSelf->audioBgView.hidden = YES;
+                        stSelf->deleteAudioBtn.hidden = YES;
                         
-                        isRecorded = NO;
+                        stSelf->isRecorded = NO;
                         
-                        [self showPermission];
+                        [stSelf showPermission];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1255,11 +1261,12 @@ shouldChangeTextInRange:(NSRange)range
     
     NSString *pid = [ImageDataArr [selectItem][@"photo_id"] stringValue];
     NSLog(@"pid: %@", pid);
-    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void) {
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *response = [boxAPI deleteAudioOfDiy: [wTools getUserID]
                                                 token: [wTools getUserToken]
-                                             album_id: _albumid
+                                             album_id: stSelf.albumid
                                              photo_id: pid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1280,7 +1287,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"AlbumCollectionViewController");
                     NSLog(@"deleteAudioOfDiy");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"deleteAudioOfDiy"
                                          textStr: @""
                                             data: nil
@@ -1298,29 +1305,29 @@ shouldChangeTextInRange:(NSRange)range
                         //NSLog(@"%@", dic[@"data"]);
                         
                         // Update audio_url for just finish recording
-                        audio_url = dic[@"data"][@"photo"][selectItem][@"audio_url"];
-                        NSLog(@"audio_url: %@", audio_url);
+                        stSelf->audio_url = dic[@"data"][@"photo"][stSelf->selectItem][@"audio_url"];
+                        NSLog(@"audio_url: %@", stSelf->audio_url);
                         
                         // Update ImageDataArr
-                        ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
+                        stSelf->ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         
                         //[mycollection reloadData];
-                        [_dataCollectionView reloadData];
+                        [stSelf.dataCollectionView reloadData];
                         
-                        isRecorded = NO;
+                        stSelf->isRecorded = NO;
                         
                         //[avPlayer pause];
-                        [self.avPlayer pause];
-                        isPlayingAudio = NO;
+                        [stSelf.avPlayer pause];
+                        stSelf->isPlayingAudio = NO;
                         
-                        audioBgView.hidden = YES;
-                        deleteAudioBtn.hidden = YES;
-                        [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+                        stSelf->audioBgView.hidden = YES;
+                        stSelf->deleteAudioBtn.hidden = YES;
+                        [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
                     } else if ([dic[@"result"] boolValue] == 0) {
                         NSLog(@"message: %@", dic[@"message"]);
-                        [self showPermission];
+                        [stSelf showPermission];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1330,17 +1337,19 @@ shouldChangeTextInRange:(NSRange)range
 
 #pragma mark - Check Photo Access Permission
 - (void)photoSetup {
+    __weak typeof(self) weakSelf = self;
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSLog(@"requestAuthorization");
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
             NSLog(@"authorized");
             
-            photoGranted = YES;
+            stSelf->photoGranted = YES;
         } else {
             NSLog(@"Not Authorized");
             
-            photoGranted = NO;
-            [self showNoAccessAlertAndCancel: @"photo"];
+            stSelf->photoGranted = NO;
+            [stSelf showNoAccessAlertAndCancel: @"photo"];
         }
     }];
 }
@@ -1379,7 +1388,8 @@ shouldChangeTextInRange:(NSRange)range
     UIAlertController *alert = [UIAlertController alertControllerWithTitle: titleStr message: msgStr preferredStyle: UIAlertControllerStyleAlert];
     
     [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
+        
     }]];
     
     [self presentViewController: alert animated: YES completion: nil];
@@ -1406,10 +1416,13 @@ shouldChangeTextInRange:(NSRange)range
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
                                              token: [wTools getUserToken]
-                                          album_id: _albumid];
+                                          album_id: stSelf.albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1430,7 +1443,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"AlbumCollectionViewController");
                     NSLog(@"reload");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getalbumofdiy"
                                          textStr: @""
                                             data: nil
@@ -1446,52 +1459,52 @@ shouldChangeTextInRange:(NSRange)range
                         NSLog(@"call getalbumofdiy success");
                         NSLog(@"dic: %@", dic);
                         
-                        self.selectrow = [dic[@"data"][@"usergrade"][@"photo_limit_of_album"] intValue];
-                        NSLog(@"self.selectrow: %ld", (long)self.selectrow);
+                        stSelf.selectrow = [dic[@"data"][@"usergrade"][@"photo_limit_of_album"] intValue];
+                        NSLog(@"self.selectrow: %ld", (long)stSelf.selectrow);
                         
-                        self.audioMode = dic[@"data"][@"album"][@"audio_mode"];
-                        NSLog(@"audioMode: %@", self.audioMode);
+                        stSelf.audioMode = dic[@"data"][@"album"][@"audio_mode"];
+                        NSLog(@"audioMode: %@", stSelf.audioMode);
                         
-                        ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                        NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
+                        stSelf->ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
+                        NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
                         
-                        if (ImageDataArr.count == 0) {
-                            adobeEidt.hidden = YES;
-                            recordPausePlayBtn.hidden = YES;
-                            audioBgView.hidden = YES;
-                            deleteAudioBtn.hidden = YES;
+                        if (stSelf->ImageDataArr.count == 0) {
+                            stSelf->adobeEidt.hidden = YES;
+                            stSelf->recordPausePlayBtn.hidden = YES;
+                            stSelf->audioBgView.hidden = YES;
+                            stSelf->deleteAudioBtn.hidden = YES;
                             
-                            textBgView.hidden = YES;
-                            addTextBtn.hidden = YES;
-                            deleteTextBtn.hidden = YES;
+                            stSelf->textBgView.hidden = YES;
+                            stSelf->addTextBtn.hidden = YES;
+                        stSelf->deleteTextBtn.hidden = YES;
                             
-                            deleteImageBtn.hidden = YES;
+                        stSelf->deleteImageBtn.hidden = YES;
                             
-                            [self.dataCollectionView reloadData];
+                            [stSelf.dataCollectionView reloadData];
                             
                             // Check whether is in template mode or not
-                            if ([self.templateid intValue] != 0) {
+                            if ([stSelf.templateid intValue] != 0) {
                                 TemplateViewController *tVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil]instantiateViewControllerWithIdentifier:@"TemplateViewController"];
-                                tVC.albumid = _albumid;
-                                tVC.event_id = _event_id;
-                                tVC.postMode = _postMode;
-                                tVC.choice = _choice;
-                                tVC.templateid = self.templateid;
-                                tVC.delegate = self;
+                                tVC.albumid = stSelf.albumid;
+                                tVC.event_id = stSelf.event_id;
+                                tVC.postMode = stSelf.postMode;
+                                tVC.choice = stSelf.choice;
+                                tVC.templateid = stSelf.templateid;
+                                tVC.delegate = stSelf;
                                 //[self.navigationController pushViewController: tVC animated: YES];
                                 
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 [appDelegate.myNav pushViewController: tVC animated: YES];
                             } else {
-                                NSLog(@"isViewDidLoad: %d", isViewDidLoad);
+                                NSLog(@"isViewDidLoad: %d",stSelf->isViewDidLoad);
                                 
                                 if ([self.templateid intValue] == 0) {
                                     // check if there is no image
-                                    if (isViewDidLoad) {
+                                    if (stSelf->isViewDidLoad) {
                                         // And it's first time to go to AlbumCreationVC
                                         // will call actionSheet
-                                        [self showPhotoAndVideoActionSheet];
-                                        isViewDidLoad = NO;
+                                        [stSelf showPhotoAndVideoActionSheet];
+                                    stSelf->isViewDidLoad = NO;
                                     }
                                 }
                             }
@@ -1500,9 +1513,9 @@ shouldChangeTextInRange:(NSRange)range
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [stSelf showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1527,8 +1540,9 @@ shouldChangeTextInRange:(NSRange)range
     [data setObject: _albumid forKey: @"type_id"];
     [data setObject: [wTools getUserID] forKey: @"user_id"];
     [data setObject: @"album" forKey: @"type"];
-    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *response = [boxAPI getcooperation: [wTools getUserID]
                                             token: [wTools getUserToken]
                                              data: data];
@@ -1567,7 +1581,7 @@ shouldChangeTextInRange:(NSRange)range
                     
                     if ([dic[@"result"] boolValue]) {
                         NSLog(@"dic result boolValue is 1");
-                        identity = dic[@"data"];
+                        stSelf->identity = dic[@"data"];
                     } else {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
@@ -1575,7 +1589,7 @@ shouldChangeTextInRange:(NSRange)range
                         if (msg == nil) {
                             msg = NSLocalizedString(@"Host-NotAvailable", @"");
                         }
-                        [self showCustomErrorAlert: msg];
+                        [stSelf showCustomErrorAlert: msg];
                     }
                 }
             }
@@ -1632,11 +1646,12 @@ shouldChangeTextInRange:(NSRange)range
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *response = [boxAPI updatealbumofdiy: [wTools getUserID]
                                                 token: [wTools getUserToken]
-                                             album_id: _albumid];
+                                             album_id: stSelf.albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1657,7 +1672,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"AlbumCollectionViewController");
                     NSLog(@"updateAlbumOfDiy");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"updatealbumofdiy"
                                          textStr: @""
                                             data: nil
@@ -1673,35 +1688,35 @@ shouldChangeTextInRange:(NSRange)range
                     if ([dic[@"result"] intValue] == 1) {
                         if ([option isEqualToString: @"save"]) {
                             AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
-                            aSVC.albumId = self.albumid;
-                            aSVC.postMode = self.postMode;
-                            aSVC.eventId = self.event_id;
+                            aSVC.albumId = stSelf.albumid;
+                            aSVC.postMode = stSelf.postMode;
+                            aSVC.eventId = stSelf.event_id;
                             aSVC.fromVC = @"AlbumCreationVC";
                             aSVC.hasImage = YES;
                             aSVC.isNew = YES;
-                            aSVC.prefixText = self.prefixText;
-                            aSVC.specialUrl = self.specialUrl;                                                        
+                            aSVC.prefixText = stSelf.prefixText;
+                            aSVC.specialUrl = stSelf.specialUrl;
                             
                             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                             [appDelegate.myNav pushViewController: aSVC animated: NO];
                         } else if ([option isEqualToString: @"back"]) {
-                            if ([self.fromVC isEqualToString: @"AlbumDetailVC"]) {
+                            if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 
                                 for (UIViewController *vc in appDelegate.myNav.viewControllers) {
                                     if ([vc isKindOfClass: [AlbumDetailViewController class]]) {
-                                        if ([self.delegate respondsToSelector: @selector(albumCreationViewControllerBackBtnPressed:)]) {
-                                            [self.delegate albumCreationViewControllerBackBtnPressed: self];
+                                        if ([stSelf.delegate respondsToSelector: @selector(albumCreationViewControllerBackBtnPressed:)]) {
+                                            [stSelf.delegate albumCreationViewControllerBackBtnPressed: stSelf];
                                         }
                                         [appDelegate.myNav popToViewController: vc animated: YES];
                                     }
                                 }                                
-                            } else if ([self.fromVC isEqualToString: @"AlbumCollectionVC"]) {
+                            } else if ([stSelf.fromVC isEqualToString: @"AlbumCollectionVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 [appDelegate.myNav popViewControllerAnimated: YES];
                             } else {                                
                                 AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
-                                albumCollectionVC.postMode = self.postMode;
+                                albumCollectionVC.postMode = stSelf.postMode;
                                 
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 [appDelegate.myNav pushViewController: albumCollectionVC animated: YES];
@@ -1709,9 +1724,9 @@ shouldChangeTextInRange:(NSRange)range
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [stSelf showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1721,17 +1736,18 @@ shouldChangeTextInRange:(NSRange)range
 
 - (IBAction)deleteFile:(id)sender
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         //NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageDataArr[selectItem][@"video_url"]]];
-        
-        NSString *videoStr = ImageDataArr[selectItem][@"video_url"];
+        __strong typeof(weakSelf) stSelf = weakSelf;
+        NSString *videoStr = stSelf->ImageDataArr[stSelf->selectItem][@"video_url"];
         NSLog(@"videoStr: %@", videoStr);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([videoStr isKindOfClass: [NSNull class]]) {
-                [self deleteImage];
+                [stSelf deleteImage];
             } else {
-                [self deleteVideo];
+                [stSelf deleteVideo];
             }
         });
     });
@@ -1764,11 +1780,12 @@ shouldChangeTextInRange:(NSRange)range
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *response = [boxAPI deletephotoofdiy: [wTools getUserID]
                                                 token: [wTools getUserToken]
-                                             album_id: _albumid
+                                             album_id: stSelf.albumid
                                              photo_id: pid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1789,7 +1806,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"AlbumCollectionViewController");
                     NSLog(@"deletePhotoOfDiy");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"deletephotoofdiy"
                                          textStr: @""
                                             data: nil
@@ -1803,15 +1820,15 @@ shouldChangeTextInRange:(NSRange)range
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"deletePhoto Success");
-                        ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
+                        stSelf->ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         [self myshowimage];
                         //[mycollection reloadData];
                         //[self.dataCollectionView reloadData];
                         
                     } else if ([dic[@"result"] intValue] == 0) {
-                        [self showPermission];
+                        [stSelf showPermission];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1832,11 +1849,13 @@ shouldChangeTextInRange:(NSRange)range
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *response = [boxAPI deleteVideoOfDiy: [wTools getUserID]
                                                 token: [wTools getUserToken]
-                                             album_id: _albumid
+                                             album_id: stSelf.albumid
                                              photo_id: pid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1859,7 +1878,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"AlbumCollectionViewController");
                     NSLog(@"deleteVideoOfDiy");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"deleteVideoOfDiy"
                                          textStr: @""
                                             data: nil
@@ -1873,15 +1892,15 @@ shouldChangeTextInRange:(NSRange)range
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"deleteVideo Success");
-                        ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                        [self myshowimage];
+                        stSelf->ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
+                        [stSelf myshowimage];
                         //[mycollection reloadData];
                         //[self.dataCollectionView reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [stSelf showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2079,7 +2098,9 @@ didFinishSavingWithError:(NSError *)error
         //set the output file format if you want to make it in other file format (ex .3gp)
         exportSession.outputFileType = AVFileTypeMPEG4;
         exportSession.shouldOptimizeForNetworkUse = YES;
+        __weak typeof(self) weakSelf = self;
         [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            __strong typeof(weakSelf) stSelf = weakSelf;
             switch ([exportSession status]) {
                 case AVAssetExportSessionStatusFailed:
                 {
@@ -2088,7 +2109,7 @@ didFinishSavingWithError:(NSError *)error
                         UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確認" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                         }];
                         [alert addAction: okBtn];
-                        [self presentViewController: alert animated: YES completion: nil];
+                        [stSelf presentViewController: alert animated: YES completion: nil];
                         /*
                         UIAlertView* alert = [[UIAlertView alloc] initWithTitle: @"錯誤"
                                                                         message: [[exportSession error] localizedDescription]
@@ -2113,7 +2134,7 @@ didFinishSavingWithError:(NSError *)error
                         
                         NSURL *videoURL = [NSURL fileURLWithPath: mp4Path];
                         NSData *data = [NSData dataWithContentsOfURL: videoURL];
-                        [self callInsertVideoOfDiy: data];
+                        [stSelf callInsertVideoOfDiy: data];
                         
                         /*
                          UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"影像檔案轉檔成功"
@@ -2161,12 +2182,13 @@ didFinishSavingWithError:(NSError *)error
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *response = @"";
         response = [boxAPI insertVideoOfDiy: [wTools getUserID]
                                       token: [wTools getUserToken]
-                                   album_id: _albumid
+                                   album_id: stSelf.albumid
                                        file: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2201,13 +2223,13 @@ didFinishSavingWithError:(NSError *)error
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"insertvideoofdiy Success");
                         
-                        ImageDataArr = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
-                        NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
+                        stSelf->ImageDataArr = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
+                        NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
                         
-                        selectItem = ImageDataArr.count - 1;
-                        NSLog(@"selectItem: %ld", (long)selectItem);
+                        stSelf->selectItem = stSelf->ImageDataArr.count - 1;
+                        NSLog(@"selectItem: %ld", (long)stSelf->selectItem);
                         
-                        [self myshowimage];
+                        [stSelf myshowimage];
                         NSLog(@"[_dataCollectionView reloadData]");
                         //[self.dataCollectionView reloadData];                                                
                     } else if ([dic[@"result"] intValue] == 0) {
@@ -2223,14 +2245,14 @@ didFinishSavingWithError:(NSError *)error
                                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: response message: @"目前網路不穩定，請確認網路品質再繼續使用pinpinbox唷!" preferredStyle: UIAlertControllerStyleAlert];
                                     UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
                                     [alert addAction: okBtn];
-                                    [self presentViewController: alert animated: YES completion: nil];
+                                    [stSelf presentViewController: alert animated: YES completion: nil];
                                 }
                             }
                         } else {
-                            [self showCustomErrorAlert: dic[@"message"]];
+                            [stSelf showCustomErrorAlert: dic[@"message"]];
                         }
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];                    
+                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2367,13 +2389,13 @@ didFinishSavingWithError:(NSError *)error
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         // If ImageDataArr is empty
         // then the code below will not be executed
-        
-        NSData *data = [NSData dataWithContentsOfURL: [NSURL URLWithString:ImageDataArr[selectItem][@"image_url"]]];
-        NSLog(@"image_url: %@", ImageDataArr[selectItem][@"image_url"]);
+        __strong typeof(weakSelf) stSelf = weakSelf;
+        NSData *data = [NSData dataWithContentsOfURL: [NSURL URLWithString:stSelf->ImageDataArr[stSelf->selectItem][@"image_url"]]];
+        NSLog(@"image_url: %@", stSelf->ImageDataArr[stSelf->selectItem][@"image_url"]);
         
         NSLog(@"global queue");
         
@@ -2392,15 +2414,15 @@ didFinishSavingWithError:(NSError *)error
             
             UIImage *image = [UIImage imageWithData: data];
             NSLog(@"image: %@", image);
-            NSLog(@"_ShowView: %@", _ShowView);
-            UIImageView *imgv = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, _ShowView.bounds.size.width, _ShowView.bounds.size.height)];
+            NSLog(@"_ShowView: %@", stSelf.ShowView);
+            UIImageView *imgv = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, stSelf.ShowView.bounds.size.width, stSelf.ShowView.bounds.size.height)];
             imgv.image = image;
             imgv.contentMode = UIViewContentModeScaleAspectFit;
             
-            selectimage = image;
-            [_ShowView addSubview: imgv];
+            stSelf->selectimage = image;
+            [stSelf.ShowView addSubview: imgv];
             
-            NSString *videoStr = ImageDataArr[selectItem][@"video_url"];
+            NSString *videoStr = stSelf->ImageDataArr[stSelf->selectItem][@"video_url"];
             NSLog(@"videoStr: %@", videoStr);
             
             UIButton *videoBtn;
@@ -2415,61 +2437,61 @@ didFinishSavingWithError:(NSError *)error
                 [videoBtn setImage: [UIImage imageNamed: @"icon_videoplay_white_310x310"] forState: UIControlStateNormal];
                 [videoBtn setImage: [UIImage imageNamed: @"icon_videoplay_grey800_310x310"] forState: UIControlStateHighlighted];
                 videoBtn.center = CGPointMake(imgv.bounds.size.width / 2, imgv.bounds.size.height / 2);
-                [_ShowView addSubview: videoBtn];
+                [stSelf.ShowView addSubview: videoBtn];
                 
-                adobeEidt.hidden = YES;
+                stSelf->adobeEidt.hidden = YES;
                 
-                recordPausePlayBtn.hidden = YES;
-                audioBgView.hidden = YES;
-                deleteAudioBtn.hidden = YES;
+                stSelf->recordPausePlayBtn.hidden = YES;
+                stSelf->audioBgView.hidden = YES;
+                stSelf->deleteAudioBtn.hidden = YES;
                 
             } else if ([videoStr isKindOfClass: [NSNull class]]) {
                 NSLog(@"videoStr is null");
                 [videoBtn removeFromSuperview];
-                adobeEidt.hidden = NO;
+                stSelf->adobeEidt.hidden = NO;
                 
-                recordPausePlayBtn.hidden = NO;
-                audioBgView.hidden = NO;
-                deleteAudioBtn.hidden = NO;
+                stSelf->recordPausePlayBtn.hidden = NO;
+                stSelf->audioBgView.hidden = NO;
+                stSelf->deleteAudioBtn.hidden = NO;
             }
             
-            audio_url = ImageDataArr[selectItem][@"audio_url"];
-            NSLog(@"audio_url: %@", audio_url);
+            stSelf->audio_url = stSelf->ImageDataArr[stSelf->selectItem][@"audio_url"];
+            NSLog(@"audio_url: %@", stSelf->audio_url);
             
-            if (![audio_url isKindOfClass: [NSNull class]]) {
-                if (![audio_url isEqualToString: @""]) {
+            if (![stSelf->audio_url isKindOfClass: [NSNull class]]) {
+                if (![stSelf->audio_url isEqualToString: @""]) {
                     NSLog(@"audio_url is not empty");
-                    NSLog(@"audio_url: %@", audio_url);
+                    NSLog(@"audio_url: %@", stSelf->audio_url);
                     
-                    [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
-                    audioBgView.hidden = NO;
-                    deleteAudioBtn.hidden = NO;
-                    isRecorded = YES;
+                    [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+                    stSelf->audioBgView.hidden = NO;
+                    stSelf->deleteAudioBtn.hidden = NO;
+                    stSelf->isRecorded = YES;
                 }
             } else {
                 NSLog(@"audio_url is empty");
-                audioBgView.hidden = YES;
-                deleteAudioBtn.hidden = YES;
-                [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
-                isRecorded = NO;
+                stSelf->audioBgView.hidden = YES;
+                stSelf->deleteAudioBtn.hidden = YES;
+                [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+                stSelf->isRecorded = NO;
             }
             
-            textForDescription = ImageDataArr[selectItem][@"description"];
-            NSLog(@"textForDescription: %@", textForDescription);
+            stSelf->textForDescription = stSelf->ImageDataArr[stSelf->selectItem][@"description"];
+            NSLog(@"textForDescription: %@", stSelf->textForDescription);
             
-            if (![textForDescription isEqualToString: @""]) {
-                textBgView.hidden = NO;
-                deleteTextBtn.hidden = NO;
+            if (![stSelf->textForDescription isEqualToString: @""]) {
+                stSelf->textBgView.hidden = NO;
+                stSelf->deleteTextBtn.hidden = NO;
                 
-                [self addTextDescriptionView];
+                [stSelf addTextDescriptionView];
             } else {
-                textBgView.hidden = YES;
-                deleteTextBtn.hidden = YES;
+                stSelf->textBgView.hidden = YES;
+                stSelf->deleteTextBtn.hidden = YES;
                 
-                [self removeTextDescriptionView];
+                [stSelf removeTextDescriptionView];
             }
             
-            [self.dataCollectionView reloadData];
+            [stSelf.dataCollectionView reloadData];
         });
     });
 }
@@ -3080,16 +3102,17 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) weakself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        __strong typeof (weakself) stSelf = weakself;
         NSString *response = @"";
         
         response = [boxAPI updatephotoofdiy: [wTools getUserID]
                                       token: [wTools getUserToken]
-                                   album_id: _albumid
+                                   album_id: stSelf.albumid
                                    photo_id: pid
                                       image: image
-                                    setting: textForDescription];
+                                    setting: stSelf->textForDescription];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -3122,13 +3145,13 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                        [self myshowimage];
+                        stSelf->ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
+                        [stSelf myshowimage];
                         //[self.dataCollectionView reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        [self showPermission];
+                        [stSelf showPermission];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -3482,6 +3505,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     __weak CustomIOSAlertView *weakAlertBackView = alertBackView;
     __weak typeof(self) weakSelf = self;
     [alertBackView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertBackView, int buttonIndex) {
+        __strong typeof(weakSelf) stSelf = weakSelf;
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertBackView tag]);
         [weakAlertBackView close];
         
@@ -3489,22 +3513,22 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             
         } else {
             // When pressing back button, the audio should be stopped
-            [self setupWhenViewWillDisappear];
+            [stSelf setupWhenViewWillDisappear];
             
             CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
             style.messageColor = [UIColor whiteColor];
             style.backgroundColor = [UIColor firstGrey];
             
-            [self.view makeToast: @"作品保存中...請稍候"
+            [stSelf.view makeToast: @"作品保存中...請稍候"
                         duration: 2.0
                         position: CSToastPositionBottom
                             style: style];
             
-            if (ImageDataArr.count == 0) {
+            if (stSelf->ImageDataArr.count == 0) {
                 // if there is no image then should set to close
-                [self callAlbumSettings];
+                [stSelf callAlbumSettings];
             } else {
-                [weakSelf updateAlbumOfDiy: @"back"];
+                [stSelf updateAlbumOfDiy: @"back"];
             }
         }
     }];

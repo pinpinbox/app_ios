@@ -38,13 +38,34 @@ NSString *const YTVimeoVideoErrorDomain = @"YTVimeoVideoErrorDomain";
  
     return self;
 }
-#pragma mark - 
+#pragma mark -
+- (void)setMetaData:(NSDictionary *) videoinfo {
+    _metaData = videoinfo;
+}
+- (void)setDuration:(NSTimeInterval)duration {
+    _duration = duration;
+}
+- (void)setTitle:(NSString * _Nonnull)title {
+    _title = title;
+}
+- (void)setHTTPLiveStreamURL:(NSURL * _Nullable)HTTPLiveStreamURL {
+    _HTTPLiveStreamURL = HTTPLiveStreamURL;
+}
+- (void)setStreamURLs:(NSDictionary<id,NSURL *> * _Nonnull)streamURLs {
+    _streamURLs = streamURLs;
+}
+- (void)setThumbnailURLs:(NSDictionary<id,NSURL *> * _Nullable)thumbnailURLs {
+    _thumbnailURLs = thumbnailURLs;
+}
 - (void)extractVideoInfoWithCompletionHandler:(void (^)(NSError *error))completionHandler{
 
     if (!completionHandler)
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"The `completionHandler` must not be nil." userInfo:nil];
     
+    __block YTVimeoVideo *wself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
+        
+        __strong typeof(wself) stSelf = wself;
         
     NSDictionary *videoInfo = [self.infoDict valueForKey:@"video"];
     
@@ -57,21 +78,22 @@ NSString *const YTVimeoVideoErrorDomain = @"YTVimeoVideoErrorDomain";
         return;
     }
     
-    _metaData = videoInfo;
-
+    ///_metaData = videoInfo;
+    [stSelf setMetaData:videoInfo];
     NSString *title = videoInfo[@"title"] ?: @"";
     
-    _duration = [videoInfo[@"duration"] doubleValue];
-    _title = title;
-    
+    //_duration = [videoInfo[@"duration"] doubleValue];
+        [stSelf setDuration:[videoInfo[@"duration"] doubleValue]];
+    //_title = title;
+    [stSelf setTitle:title];
     
     NSArray *filesInfo = [self.infoDict valueForKeyPath:@"request.files.progressive"];
     
     
     NSMutableDictionary *streamURLs = [NSMutableDictionary new];
     NSMutableDictionary *thumbnailURLs = [NSMutableDictionary new];
-    
-    _HTTPLiveStreamURL = [NSURL URLWithString:[self.infoDict valueForKeyPath:@"request.files.hls.url"]];
+    [stSelf setHTTPLiveStreamURL:[NSURL URLWithString:[self.infoDict valueForKeyPath:@"request.files.hls.url"]]];
+    //_HTTPLiveStreamURL = [NSURL URLWithString:[self.infoDict valueForKeyPath:@"request.files.hls.url"]];
     
     for (NSDictionary *info in filesInfo) {
         
@@ -95,8 +117,8 @@ NSString *const YTVimeoVideoErrorDomain = @"YTVimeoVideoErrorDomain";
         return;
     
     }else{
-        
-        _streamURLs = [streamURLs copy];
+        [stSelf setStreamURLs:[streamURLs copy]];
+        //_streamURLs = [streamURLs copy];
     }
     
     
@@ -107,8 +129,8 @@ NSString *const YTVimeoVideoErrorDomain = @"YTVimeoVideoErrorDomain";
         NSURL *thumbnailURL = [NSURL URLWithString:thumbnailString];
         thumbnailURLs [@(thumbnailquality)] = thumbnailURL;
     }
-    
-    _thumbnailURLs = [thumbnailURLs copy];
+    [stSelf setThumbnailURLs:[thumbnailURLs copy]];
+    //_thumbnailURLs = [thumbnailURLs copy];
     
     completionHandler(nil);
 

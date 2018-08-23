@@ -10,7 +10,7 @@
 
 @interface NewEventPostViewController : UIViewController
 @property (nonatomic) NSString *name;
-@property (nonatomic) NSString *title;
+@property (nonatomic) NSString *evtTitle;
 @property (nonatomic) NSString *imageUrl;
 @property (nonatomic) NSString *urlString;
 @property (nonatomic) NSArray *templateArray;

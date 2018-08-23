@@ -42,11 +42,12 @@
 }
 
 -(IBAction)ok:(id)sender{
+    __block wShowImageList *wself = self;
     [UIView animateWithDuration:0.3 animations:^{
         self.alpha=0;
     } completion:^(BOOL anim){
         [self removeFromSuperview];
-        [_delegate showbook];
+        [wself.delegate showbook];
     }];
 }
 

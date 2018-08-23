@@ -278,10 +278,11 @@ static NSString * const reuseIdentifier = @"Cell";
                                                                            forIndexPath: indexPath];
     // Configure the cell
     UIImageView *imageView = (UIImageView *)[cell viewWithTag: 100];
-    
+    __block ReorderViewController *wself = self;
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
     dispatch_async(queue, ^{
-        NSData *data = [NSData dataWithContentsOfURL: [NSURL URLWithString: _imageArray[indexPath.row][@"image_url_thumbnail"]]];
+        __strong typeof(wself) stSelf = wself;
+        NSData *data = [NSData dataWithContentsOfURL: [NSURL URLWithString: stSelf.imageArray[indexPath.row][@"image_url_thumbnail"]]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             imageView.image = [UIImage imageWithData: data];

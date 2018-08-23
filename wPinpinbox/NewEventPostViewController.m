@@ -273,8 +273,8 @@
     contentLabel.myLeftMargin = contentLabel.myRightMargin = 16;
     contentLabel.font = [UIFont systemFontOfSize: 18];
     contentLabel.textColor = [UIColor firstGrey];
-    contentLabel.text = self.title;
-    [LabelAttributeStyle changeGapString: contentLabel content: self.title];
+    contentLabel.text = self.evtTitle;
+    [LabelAttributeStyle changeGapString: contentLabel content: self.evtTitle];
     contentLabel.numberOfLines = 0;
     contentLabel.wrapContentHeight = YES;
     [self.vertLayout addSubview: contentLabel];

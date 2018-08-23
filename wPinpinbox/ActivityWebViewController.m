@@ -49,7 +49,11 @@
     self.webView = [[WKWebView alloc] init];
     self.webView.navigationDelegate = self;
     
+    __block ActivityWebViewController *wself = self;
+    
     [self.webView evaluateJavaScript: @"navigator.userAgent" completionHandler:^(id _Nullable userAgent, NSError * _Nullable error) {
+        __strong typeof(wself)stSelf = wself;
+        
         NSLog(@"\n\nself.webView evaluateJavaScript");
         NSLog(@"\n\nuserAgent: %@", userAgent);
         
@@ -61,10 +65,10 @@
         }
         //[[NSUserDefaults standardUserDefaults] registerDefaults: @{@"UserAgent": customUserAgent}];
         
-        self.webView.customUserAgent = customUserAgent;
+        stSelf.webView.customUserAgent = customUserAgent;
         NSURL *url = [NSURL URLWithString: self.eventURL];
         NSURLRequest *request = [NSURLRequest requestWithURL: url];
-        [self.webView loadRequest: request];
+        [stSelf.webView loadRequest: request];
         CGRect frame = self.view.frame;
         
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -74,43 +78,43 @@
             switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
                 case 1136:
                     printf("iPhone 5 or 5S or 5C");
-                    offset = 60;
-                    webViewHeight = frame.size.height - 60;
+                    stSelf->offset = 60;
+                    stSelf->webViewHeight = frame.size.height - 60;
                     break;
                 case 1334:
                     printf("iPhone 6/6S/7/8");
-                    offset = 60;
-                    webViewHeight = frame.size.height - 60;
+                    stSelf->offset = 60;
+                    stSelf->webViewHeight = frame.size.height - 60;
                     break;
                 case 1920:
                     printf("iPhone 6+/6S+/7+/8+");
-                    offset = 60;
-                    webViewHeight = frame.size.height - 60;
+                    stSelf->offset = 60;
+                    stSelf->webViewHeight = frame.size.height - 60;
                     break;
                 case 2208:
                     printf("iPhone 6+/6S+/7+/8+");
-                    offset = 60;
-                    webViewHeight = frame.size.height - 60;
+                    stSelf->offset = 60;
+                    stSelf->webViewHeight = frame.size.height - 60;
                     break;
                 case 2436:
                     printf("iPhone X");
-                    self.navBarHeight.constant = navBarHeightConstant;
-                    offset = 78;
-                    webViewHeight = frame.size.height - 110;
+                    stSelf->_navBarHeight.constant = navBarHeightConstant;
+                    stSelf->offset = 78;
+                    stSelf->webViewHeight = frame.size.height - 110;
                     break;
                 default:
                     printf("unknown");
-                    offset = 60;
-                    webViewHeight = frame.size.height - 60;
+                    stSelf->offset = 60;
+                    stSelf->webViewHeight = frame.size.height - 60;
                     break;
             }
         }
         
 //        self.webView.frame = CGRectMake(frame.origin.x, frame.origin.y + offset, frame.size.width, frame.size.height);
-        self.webView.frame = CGRectMake(frame.origin.x, frame.origin.y + offset, frame.size.width, webViewHeight);
-        [self.view addSubview: self.webView];
-        [self.view bringSubviewToFront: self.navBarView];
-        [self.view bringSubviewToFront: self.toolBar];
+        stSelf.webView.frame = CGRectMake(frame.origin.x, frame.origin.y + stSelf->offset, frame.size.width, stSelf->webViewHeight);
+        [stSelf.view addSubview: stSelf.webView];
+        [stSelf.view bringSubviewToFront: stSelf.navBarView];
+        [stSelf.view bringSubviewToFront: stSelf.toolBar];
     }];
 }
 
