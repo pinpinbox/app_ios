@@ -229,12 +229,6 @@
 - (IBAction)crashButtonTapped:(id)sender {
     [[Crashlytics sharedInstance] crash];
 }
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    // Do any additional setup after loading the view.
-    [self settingSizeBasedOnDevice];
-    
-}
 - (void)viewDidLoad {
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
@@ -271,6 +265,8 @@
     //[self checkFirstTimeLogin];
     //[self addTestBtn];
     //[self testInterest];
+    
+    [self settingSizeBasedOnDevice];
 }
 
 //- (void)testInterest {
@@ -322,6 +318,7 @@
     topContentOffset = self.navBarView.frame.size.height;
     headerHeight = 960;
     self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
+    
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
     self.jccLayout1 = (JCCollectionViewWaterfallLayout *)self.albumCollectionView.collectionViewLayout;
     
@@ -331,6 +328,8 @@
     self.jccLayout1.headerHeight = 250;
     
     self.albumCollectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+    if (self.homeCollectionView.contentOffset.y <= 0.0)
+        self.homeCollectionView.contentOffset = CGPointMake(0,-topContentOffset);
 }
 
 #pragma mark - Push Notification Setting
