@@ -189,10 +189,11 @@
     if ([[segue identifier]isEqualToString:@"showimage"]) {
         
         
-        int i =0;
         NSMutableArray*arr=[[NSMutableArray alloc]init];
-        for (NSDictionary *vdic in [dataDic objectForKey:@"28"]) {
-            i++;
+        NSArray *imgs = (NSArray *)[dataDic objectForKey:@"28"];
+        
+        for (int i = 0; i< imgs.count; i++) {
+            
             O_drag *v=(O_drag*)[bgview viewWithTag:100+i];
             UIImage*img=[v finishCropping];
             

@@ -724,7 +724,7 @@
 {
     NSLog(@"purchaseComplete");
     NSLog(@"購買行為");
-    NSError *error;
+    //NSError *error;
     
     //    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
     //                                                       options:NSJSONWritingPrettyPrinted

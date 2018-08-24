@@ -40,6 +40,11 @@
     
     CGFloat bannerHeight;
     UIPageControl *pageControl;
+    
+    UIButton *actionButton;
+    UILabel *infoLabel;
+    UIView *actionBase;
+    
 }
 //@property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (nonatomic, strong) NSString *categoryName;
@@ -113,7 +118,7 @@
     
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     NSLog(@"screenWidth: %f", screenWidth);
-    bannerHeight = 247;//screenWidth * 540 / 960;
+    bannerHeight = 211;//screenWidth * 540 / 960;
     NSLog(@"bannerHeight: %f", bannerHeight);
     
     self.navBarView.backgroundColor = [UIColor barColor];
@@ -235,6 +240,7 @@
 #pragma mark - IBAction Methods
 - (IBAction)backBtnPressed:(id)sender {
     //[self.navigationController popViewControllerAnimated: YES];
+    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
@@ -459,6 +465,38 @@
         imageView.layer.borderWidth = 0.5;
         
         [self.userLayout addSubview: imageView];
+    }
+}
+- (void)setBtnText:(NSString *)btntext infoText:(NSString *)infotext {
+    infoLabel.text = @"";
+    if (btntext && btntext.length > 0) {
+        
+        [actionButton setTitle:btntext forState:UIControlStateNormal];
+        if (infotext)
+            infoLabel.text = infotext;
+        
+        actionBase.hidden = NO;
+    } else {
+        actionBase.hidden = YES;
+        
+    }
+}
+- (void)handlePageControlValueChanged {
+    long index = pageControl.currentPage;
+    NSLog(@"self.bannerDataArray: %@", self.bannerDataArray);
+    
+    if (self.bannerDataArray.count > index) {
+        NSDictionary *bannerDic = self.bannerDataArray[index];
+        
+        NSString *btnText = bannerDic[@"banner_type_data"][@"btntext"];
+        NSString *vidtext = bannerDic[@"banner_type_data"][@"videotext"];
+        
+        if (arc4random()%5 == 0)
+            btnText = @"";
+        [self setBtnText:btnText infoText: vidtext];
+        actionButton.tag = index;
+        [actionBase setNeedsLayout];
+        [pageControl setNeedsLayout];
     }
 }
 - (IBAction)handleBannerActionButtonTap:(id) sender {
@@ -726,6 +764,7 @@
     NSLog(@"");
     NSLog(@"viewForHeaderInSection");
     MyLinearLayout *bannerVertLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
+    //MyFloatLayout *bannerVertLayout = [MyFloatLayout floatLayoutWithOrientation:MyLayoutViewOrientation_Vert];
     bannerVertLayout.wrapContentHeight = YES;
     bannerVertLayout.myTopMargin = 0;
     bannerVertLayout.myLeftMargin = bannerVertLayout.myRightMargin = 0;
@@ -735,13 +774,55 @@
     
     if (self.bannerDataArray.count > 0) {
         NSLog(@"bannerHeight: %f", bannerHeight);
-        bannerVertLayout.heightDime.max(376);//160);
+        bannerVertLayout.heightDime.min(340).max(376);//160);
         
         // Horizontal CollectionView Setting
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         layout.itemSize = CGSizeMake(self.view.bounds.size.width, bannerHeight);
         layout.minimumLineSpacing = 0;
+        
+        
+        
+        collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, bannerHeight) collectionViewLayout: layout];
+        collectionView.myTopMargin = 0;
+        collectionView.myBottomMargin = 0;
+        collectionView.myLeftMargin = collectionView.myRightMargin = 0;
+        collectionView.dataSource = self;
+        collectionView.delegate = self;
+        collectionView.tag = 3;
+        collectionView.pagingEnabled = YES;
+        collectionView.wrapContentHeight = YES;
+        
+        [collectionView registerNib: [UINib nibWithNibName: @"BannerImageView" bundle: [NSBundle mainBundle]] forCellWithReuseIdentifier: @"BannerCell"];
+        [collectionView registerNib: [UINib nibWithNibName: @"YoutubePlayer" bundle: [NSBundle mainBundle]] forCellWithReuseIdentifier: @"YoutubeCell"];
+        
+        collectionView.backgroundColor = [UIColor clearColor];
+        collectionView.showsHorizontalScrollIndicator = NO;
+        [bannerVertLayout addSubview: collectionView];
+        
+        //  button and link desc under the banner //
+        actionBase = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 36)];
+        actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        actionBase.backgroundColor = [UIColor whiteColor];
+        actionButton.frame = CGRectMake(self.view.bounds.size.width-96, 0, 96, 36);
+        actionButton.backgroundColor = [UIColor colorWithRed:0  green:0.67 blue:0.76 alpha:1];
+        [actionButton addTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+        
+        infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 8, self.view.bounds.size.width-96-32, 24)];
+        infoLabel.textColor = [UIColor firstGrey];
+        infoLabel.backgroundColor = [UIColor clearColor];
+        infoLabel.font = [UIFont systemFontOfSize:14];
+        infoLabel.myTopMargin = 8;
+        [actionBase addSubview:infoLabel];
+        [actionBase addSubview:actionButton];
+        actionBase.myBottomMargin = 8;
+        actionBase.heightDime.min(0).max(36);
+        CALayer *line = [[CALayer alloc] init];
+        line.backgroundColor = [UIColor colorWithRed:0.6 green:0.6 blue:0.6 alpha:0.6].CGColor;//[UIColor grayColor].CGColor;
+        line.frame = CGRectMake(0, actionBase.frame.size.height-1, actionBase.frame.size.width-96, 0.5);
+        [actionBase.layer addSublayer:line];
+        [bannerVertLayout addSubview:actionBase];
         
         pageControl = [[UIPageControl alloc] initWithFrame: CGRectMake(0, 0, 50, 10)];
         pageControl.myCenterXOffset = 0;
@@ -753,22 +834,8 @@
         pageControl.userInteractionEnabled = NO;
         [bannerVertLayout addSubview: pageControl];
         
-        collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, bannerHeight) collectionViewLayout: layout];
-        collectionView.myTopMargin = 0;
-        collectionView.myBottomMargin = 8;
-        collectionView.myLeftMargin = collectionView.myRightMargin = 0;
-        collectionView.dataSource = self;
-        collectionView.delegate = self;
-        collectionView.tag = 3;
-        collectionView.pagingEnabled = YES;
         
-        [collectionView registerNib: [UINib nibWithNibName: @"BannerImageView" bundle: [NSBundle mainBundle]] forCellWithReuseIdentifier: @"BannerCell"];
-        [collectionView registerNib: [UINib nibWithNibName: @"YoutubePlayer" bundle: [NSBundle mainBundle]] forCellWithReuseIdentifier: @"YoutubeCell"];
-        
-        collectionView.backgroundColor = [UIColor clearColor];
-        collectionView.showsHorizontalScrollIndicator = NO;
-        [bannerVertLayout addSubview: collectionView];
-        
+        [self handlePageControlValueChanged];
         
     } else {
         bannerVertLayout.heightDime.max(105);
@@ -795,6 +862,7 @@
     [bannerVertLayout sizeToFit];
     //
     bannerVertLayout.backgroundColor = [UIColor whiteColor];
+    
     self.tableView.tableHeaderView = bannerVertLayout;
 }
 #pragma mark - UITableViewDelegate Methods
@@ -935,30 +1003,19 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             NSString *btnText = bannerDic[@"banner_type_data"][@"btntext"];
             NSString *vidtext = bannerDic[@"banner_type_data"][@"videotext"];
             
+            if (arc4random()%5 == 0)
+                btnText = @"";
+            
             if ([bannerType isEqualToString: @"video"]) {
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"YoutubeCell" forIndexPath: indexPath];
                 NSDictionary *playerVars = @{@"playsinline" : @1};
                 [cell.playerView loadWithVideoId: videoUrl playerVars: playerVars];
                 cell.playerView.delegate = self;
-                if (btnText)
-                    [cell.actionButton setTitle:btnText forState:UIControlStateNormal];
-                if (vidtext)
-                    cell.infoLabel.text = vidtext;
-                cell.actionButton.tag = indexPath.row;
-                
-                
-                [cell.actionButton addTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
             } else if ([bannerType isEqualToString: @"image"]) {
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"BannerCell" forIndexPath: indexPath];
                 [cell.bannerImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
                                         placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
-                if (btnText)
-                    [cell.actionButton setTitle:btnText forState:UIControlStateNormal];
-                if (vidtext)
-                    cell.infoLabel.text = vidtext;
-                cell.actionButton.tag = indexPath.row;
                 
-                [cell.actionButton addTarget:self action:@selector(handleBannerActionButtonTap:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
 
@@ -1088,7 +1145,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
     
     if (scrollView == collectionView) {
-    pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+        pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
     }
 }
 
@@ -1106,7 +1163,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         // Check video setting
         if (![[defaults objectForKey: @"isVideoPlayedAutomatically"] boolValue]) {
             [cell.playerView stopVideo];
+            
         }
+        [self handlePageControlValueChanged];
     }
 }
 

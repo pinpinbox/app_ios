@@ -9,7 +9,7 @@
 #import "UIViewController+CWPopup.h"
 #import <objc/runtime.h>
 #import <QuartzCore/QuartzCore.h>
-#import "WTools.h"
+#import "wTools.h"
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
 @import Accelerate;
 #endif

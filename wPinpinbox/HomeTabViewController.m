@@ -316,7 +316,7 @@
     
     self.navBarHeight.constant = 48;
     topContentOffset = self.navBarView.frame.size.height;
-    headerHeight = 960;
+    headerHeight = 873;
     self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
     
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;

@@ -105,10 +105,10 @@
     return YES;
 }
 
--(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
+//-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+//{
+//    return YES;
+//}
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {

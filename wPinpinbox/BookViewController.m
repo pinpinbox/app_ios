@@ -242,7 +242,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     myText.backgroundColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 0.5];
     
     myText.frame = CGRectMake(0, 300, showview.bounds.size.width, showview.bounds.size.height);
-    [myText.text drawInRect: myText.frame withFont: myText.font];
+    //[myText.text drawInRect: myText.frame withFont: myText.font];
+    [myText.text drawInRect:myText.frame withAttributes:@{}];
     myText.editable = NO;
     myText.textAlignment = NSTextAlignmentCenter;
     
@@ -375,7 +376,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     // NavigationBar Setup
     //self.navigationController.navigationBar.hidden = YES;
     
-    [[UIApplication sharedApplication] setStatusBarHidden: YES];
+    //[[UIApplication sharedApplication] setStatusBarHidden: YES];
     
     // Back to BookViewController, so that means videoPlay is finished
     
@@ -774,7 +775,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     // NavigationBar Setup
     self.navigationController.navigationBar.hidden = NO;
     
-    [[UIApplication sharedApplication] setStatusBarHidden: NO];
+    //[[UIApplication sharedApplication] setStatusBarHidden: NO];
     
     [timer invalidate];
     

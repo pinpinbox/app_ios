@@ -492,7 +492,7 @@
 //內購相關
 -(void)purchaseComplete:(NSString*)PID withDic:(NSDictionary*)dict appendString:(NSString*)str flag:(int)status{
     NSLog(@"購買行為");
-    NSError *error;
+    //NSError *error;
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         

@@ -1464,7 +1464,7 @@
     
     [self checkCamera];
     
-    NSString *mediaType = AVMediaTypeVideo;
+    //NSString *mediaType = AVMediaTypeVideo;
     
     /*
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType: mediaType];

@@ -25,7 +25,7 @@
     //self.userNameLabel.font = [UIFont boldSystemFontOfSize: 18];
     
     self.creativeNameLabel.textColor = [UIColor whiteColor];
-    self.creativeNameLabel.font = [UIFont boldSystemFontOfSize: 24.0];
+    self.creativeNameLabel.font = [UIFont boldSystemFontOfSize: 22.0];
     self.creativeNameLabel.numberOfLines = 2;
     
     self.viewedNumberLabel.textColor = [UIColor firstGrey];
@@ -36,7 +36,7 @@
     self.likeLabel.textColor = [UIColor firstGrey];
     self.sponsoredLabel.textColor = [UIColor firstGrey];
     
-    self.linkLabel.font = [UIFont systemFontOfSize: 18];
+    self.linkLabel.font = [UIFont systemFontOfSize: 14];
     self.linkLabel.textColor = [UIColor secondGrey];
     
     self.horzLineView.backgroundColor = [UIColor thirdGrey];

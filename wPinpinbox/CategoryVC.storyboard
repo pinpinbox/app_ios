@@ -36,7 +36,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ckg-f2-EDE" userLabel="Line">
-                                                    <rect key="frame" x="94" y="30.5" width="193" height="0.5"/>
+                                                    <rect key="frame" x="94" y="30.5" width="185" height="0.5"/>
                                                     <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="0.5" id="jhZ-xV-09g"/>
@@ -63,11 +63,11 @@
                                                         <size key="itemSize" width="128" height="187"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                                        <inset key="sectionInset" minX="8" minY="0.0" maxX="8" maxY="0.0"/>
+                                                        <inset key="sectionInset" minX="16" minY="0.0" maxX="8" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HorzAlbumCell" id="Iqm-yH-aue" customClass="CategoryCollectionViewCell">
-                                                            <rect key="frame" x="8" y="14" width="128" height="187"/>
+                                                            <rect key="frame" x="16" y="14" width="128" height="187"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                                                 <rect key="frame" x="0.0" y="0.0" width="128" height="187"/>
@@ -139,7 +139,7 @@
                                                 <constraint firstItem="f1Z-HQ-ghW" firstAttribute="leading" secondItem="SPE-nW-KgP" secondAttribute="leading" constant="16" id="Kqa-6S-0Rx"/>
                                                 <constraint firstItem="f1Z-HQ-ghW" firstAttribute="top" secondItem="SPE-nW-KgP" secondAttribute="top" constant="16" id="VDy-Fl-jSL"/>
                                                 <constraint firstItem="kLv-ht-fdj" firstAttribute="leading" secondItem="SPE-nW-KgP" secondAttribute="leading" id="XNj-Mc-9UX"/>
-                                                <constraint firstItem="Ckg-f2-EDE" firstAttribute="trailing" secondItem="vEL-jO-zvp" secondAttribute="leading" constant="-8" id="bMm-U2-XMF"/>
+                                                <constraint firstItem="Ckg-f2-EDE" firstAttribute="trailing" secondItem="vEL-jO-zvp" secondAttribute="leading" constant="-16" id="bMm-U2-XMF"/>
                                                 <constraint firstItem="vEL-jO-zvp" firstAttribute="trailing" secondItem="SPE-nW-KgP" secondAttribute="trailing" constant="-16" id="hDk-94-Jdh"/>
                                                 <constraint firstItem="kLv-ht-fdj" firstAttribute="top" secondItem="f1Z-HQ-ghW" secondAttribute="bottom" constant="8" id="il6-hV-MyR"/>
                                                 <constraint firstItem="vEL-jO-zvp" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="f1Z-HQ-ghW" secondAttribute="trailing" constant="4" id="o9O-15-bnJ"/>
@@ -304,6 +304,12 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zlx-Nr-gQa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="Yew-Gt-EEN">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="376"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <viewLayoutGuide key="safeArea" id="I5h-Rt-kaC"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="-802.39999999999998" y="-357.57121439280365"/>
         </scene>

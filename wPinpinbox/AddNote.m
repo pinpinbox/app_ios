@@ -38,7 +38,7 @@
     }
     
     
-    UIImage *data2=[UIImage imageNamed:@"datapickers-flag-australia.png"];
+    //UIImage *data2=[UIImage imageNamed:@"datapickers-flag-australia.png"];
 
 
     

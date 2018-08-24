@@ -22,21 +22,21 @@ CGFloat kCornerRadius = 6.0;
 
 NSString *appStoreUrl = @"https://itunes.apple.com/tw/app/pinpinbox/id1057840696?mt=8";
 
-NSString *ServerURL = @"https://www.pinpinbox.com/index/api";
-NSString *pinpinbox = @"https://www.pinpinbox.com/";
-
-NSString *sharingLinkWithAutoPlay = @"https://www.pinpinbox.com/index/album/content/?album_id=%@%@";
-NSString *sharingLinkWithoutAutoPlay = @"https://www.pinpinbox.com/index/album/content/?album_id=%@";
-
-NSString *userIdSharingLink = @"https://www.pinpinbox.com/index/creative/content/?user_id=%@%@";
-
-//NSString *ServerURL = @"https://w3.pinpinbox.com/index/api";
-//NSString *pinpinbox = @"https://w3.pinpinbox.com/";
+//NSString *ServerURL = @"https://www.pinpinbox.com/index/api";
+//NSString *pinpinbox = @"https://www.pinpinbox.com/";
 //
-//NSString *sharingLinkWithAutoPlay = @"https://w3.pinpinbox.com/index/album/content/?album_id=%@%@";
-//NSString *sharingLinkWithoutAutoPlay = @"https://w3.pinpinbox.com/index/album/content/?album_id=%@";
+//NSString *sharingLinkWithAutoPlay = @"https://www.pinpinbox.com/index/album/content/?album_id=%@%@";
+//NSString *sharingLinkWithoutAutoPlay = @"https://www.pinpinbox.com/index/album/content/?album_id=%@";
 //
-//NSString *userIdSharingLink = @"https://w3.pinpinbox.com/index/creative/content/?user_id=%@%@";
+//NSString *userIdSharingLink = @"https://www.pinpinbox.com/index/creative/content/?user_id=%@%@";
+
+NSString *ServerURL = @"https://w3.pinpinbox.com/index/api";
+NSString *pinpinbox = @"https://w3.pinpinbox.com/";
+
+NSString *sharingLinkWithAutoPlay = @"https://w3.pinpinbox.com/index/album/content/?album_id=%@%@";
+NSString *sharingLinkWithoutAutoPlay = @"https://w3.pinpinbox.com/index/album/content/?album_id=%@";
+
+NSString *userIdSharingLink = @"https://w3.pinpinbox.com/index/creative/content/?user_id=%@%@";
 
 NSString *aboutPageLink = @"https://www.pinpinbox.com/index/about";
 

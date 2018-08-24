@@ -550,8 +550,11 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
                     continue;
                 }
                 
-                NSString *key = [[bits objectAtIndex: 0] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-                NSString *value = [[bits objectAtIndex: 1] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+//                NSString *key = [[bits objectAtIndex: 0] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+//                NSString *value = [[bits objectAtIndex: 1] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+                NSString *key = [[bits objectAtIndex:0] stringByRemovingPercentEncoding];
+                NSString *value = [[bits objectAtIndex:1] stringByRemovingPercentEncoding];
+                
                 NSLog(@"key: %@", key);
                 NSLog(@"value: %@", value);
                 [pairs setObject: value forKey: key];
@@ -620,8 +623,11 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
                     continue;
                 }
                 
-                NSString *key = [[bits objectAtIndex: 0] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-                NSString *value = [[bits objectAtIndex: 1] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+//                NSString *key = [[bits objectAtIndex: 0] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+//                NSString *value = [[bits objectAtIndex: 1] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+                NSString *key = [[bits objectAtIndex:0] stringByRemovingPercentEncoding];
+                NSString *value = [[bits objectAtIndex:1] stringByRemovingPercentEncoding];
+                
                 NSLog(@"key: %@", key);
                 NSLog(@"value: %@", value);
                 [pairs setObject: value forKey: key];
@@ -671,8 +677,10 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
                 continue;
             }
             
-            NSString *key = [[bits objectAtIndex: 0] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-            NSString *value = [[bits objectAtIndex: 1] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+            //NSString *key = [[bits objectAtIndex: 0] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+            NSString *key = [[bits objectAtIndex:0] stringByRemovingPercentEncoding];
+            //NSString *value = [[bits objectAtIndex: 1] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+            NSString *value = [[bits objectAtIndex:1] stringByRemovingPercentEncoding];
             NSLog(@"key: %@", key);
             NSLog(@"value: %@", value);
             [pairs setObject: value forKey: key];

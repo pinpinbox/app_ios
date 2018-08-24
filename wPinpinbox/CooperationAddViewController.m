@@ -140,7 +140,7 @@
     [pictures removeAllObjects];
     
     for (NSDictionary *dic in alldata) {
-        NSString *userid=[dic[@"user"][@"user_id"] stringValue];
+        //NSString *userid=[dic[@"user"][@"user_id"] stringValue];
         //if (![tmpAdduserid containsObject:userid]) {
             [pictures addObject:dic];
         //}

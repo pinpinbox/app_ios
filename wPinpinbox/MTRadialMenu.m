@@ -110,8 +110,8 @@ BOOL CGAffineTransformEqualToTransformWithAccuracy (CGAffineTransform firstTrans
     
     
     
-    CGPoint touchpoint=self.center;
-    CGPoint superpoin=[self superview].frame.origin;
+//    CGPoint touchpoint=self.center;
+//    CGPoint superpoin=[self superview].frame.origin;
     
 
     

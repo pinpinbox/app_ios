@@ -7,7 +7,7 @@
 //
 
 #import "InAppPurchaseManager.h"
-#import "WTools.h"
+#import "wTools.h"
 #import "Remind.h"
 #import "AppDelegate.h"
 #import "CustomIOSAlertView.h"

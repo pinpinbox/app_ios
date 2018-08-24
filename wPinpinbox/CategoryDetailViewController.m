@@ -404,7 +404,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)collectionView:(UICollectionView *)collectionView
 didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+    //UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.backgroundColor = nil;
     //cell.contentView.subviews[0].backgroundColor = nil;
 }

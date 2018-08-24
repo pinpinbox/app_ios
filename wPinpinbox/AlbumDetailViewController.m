@@ -106,7 +106,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 @property (weak, nonatomic) IBOutlet UIButton *likeBtn;
 @property (weak, nonatomic) IBOutlet UIButton *moreBtn;
 @property (weak, nonatomic) IBOutlet UIButton *checkContentBtn;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *checkContentBtnHeight;
 
 @property (nonatomic) DDAUIActionSheetViewController *customMoreActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
@@ -344,34 +343,34 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-            case 1136:
-                printf("iPhone 5 or 5S or 5C");
-                self.toolBarViewHeight.constant = kToolBarViewHeight;
-                break;
-            case 1334:
-                printf("iPhone 6/6S/7/8");
-                self.toolBarViewHeight.constant = kToolBarViewHeight;
-                break;
-            case 1920:
-                printf("iPhone 6+/6S+/7+/8+");
-                self.toolBarViewHeight.constant = kToolBarViewHeight;
-                break;
-            case 2208:
-                printf("iPhone 6+/6S+/7+/8+");
-                self.toolBarViewHeight.constant = kToolBarViewHeight;
-                break;
-            case 2436:
-                printf("iPhone X");
-                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
-                break;
-            default:
-                printf("unknown");
-                self.toolBarViewHeight.constant = kToolBarViewHeight;
-                break;
-        }
-    }
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+//            case 1136:
+//                printf("iPhone 5 or 5S or 5C");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//            case 1334:
+//                printf("iPhone 6/6S/7/8");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//            case 1920:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//            case 2208:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//            case 2436:
+//                printf("iPhone X");
+//                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
+//                break;
+//            default:
+//                printf("unknown");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//        }
+//    }
     self.snapshotImageView.image = self.snapShotImage;
 }
 
@@ -414,7 +413,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     self.moreBtn.layer.cornerRadius = kCornerRadius;
     
     self.checkContentBtn.layer.cornerRadius = kCornerRadius;
-    self.checkContentBtnHeight.constant = kToolBarButtonHeight;
+    //self.checkContentBtnHeight.constant = kToolBarButtonHeight;
     
     NSLog(@"self.getMessagePush: %d", self.getMessagePush);
     
@@ -469,7 +468,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_dark"] forState: UIControlStateNormal];
     }
     
-    self.headerLikedNumberLabel.textColor = [UIColor secondGrey];
+    //self.headerLikedNumberLabel.textColor = [UIColor secondGrey];
     
     if (likesInt >= 100000) {
         likesInt = likesInt / 10000;
@@ -487,7 +486,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // Message Section
     messageInt = [self.data[@"albumstatistics"][@"messageboard"] integerValue];
 
-    self.headerMessageNumberLabel.textColor = [UIColor secondGrey];
+    //self.headerMessageNumberLabel.textColor = [UIColor secondGrey];
     
     if (messageInt >= 100000) {
         messageInt = messageInt / 10000;
@@ -505,7 +504,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // Sponsor Section
     sponsorInt = [self.data[@"albumstatistics"][@"exchange"] integerValue];
     
-    self.sponsorNumberLabel.textColor = [UIColor secondGrey];
+    //self.sponsorNumberLabel.textColor = [UIColor secondGrey];
     
     if (sponsorInt >= 100000) {
         sponsorInt = sponsorInt / 10000;
@@ -536,7 +535,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     // Layout Setup
     MyLinearLayout *rootLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
-    rootLayout.myTopMargin = 16;
+    rootLayout.myTopMargin = 8;
     rootLayout.myLeftMargin = rootLayout.myRightMargin = 0;
     [self.contentView addSubview: rootLayout];
     
@@ -608,7 +607,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     topicLabel.font = [UIFont boldSystemFontOfSize: 28];
     topicLabel.numberOfLines = 0;
     [topicLabel sizeToFit];
-    topicLabel.myTopMargin = 16;
+    topicLabel.myTopMargin = 8;
     topicLabel.myLeftMargin = 16;
     topicLabel.myRightMargin = 16;
     topicLabel.wrapContentHeight = YES;
@@ -652,7 +651,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     descriptionLabel.textColor = [UIColor firstGrey];
     descriptionLabel.font = [UIFont systemFontOfSize: 16];
     descriptionLabel.numberOfLines = 0;
-    descriptionLabel.myTopMargin = 16;
+    descriptionLabel.myTopMargin = 0;
     descriptionLabel.myLeftMargin = 16;
     descriptionLabel.myRightMargin = 16;
     descriptionLabel.wrapContentHeight = YES;
@@ -726,7 +725,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog(@"got location data");
         // Horizontal location Layout
         MyLinearLayout *horzLocLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
-        horzLocLayout.myTopMargin = 13;
+        horzLocLayout.myTopMargin = 0;
         horzLocLayout.myLeftMargin = horzLocLayout.myRightMargin = 0;
         horzLocLayout.wrapContentHeight = YES;
         [rootLayout addSubview: horzLocLayout];
@@ -829,10 +828,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
 {
     UIImageView *soundImgView = [UIImageView new];
     soundImgView.image = [UIImage imageNamed: @"ic200_audio_play_light"];
-    soundImgView.myLeftMargin = 2;
-    soundImgView.myRightMargin = 2;
-    soundImgView.myWidth = 18;
-    soundImgView.myHeight = 18;
+    soundImgView.myLeftMargin = 4;
+    soundImgView.myRightMargin = 4;
+    soundImgView.myWidth = 16;
+    soundImgView.myHeight = 16;
     [horzInfoLayout addSubview:soundImgView];
 }
 
@@ -840,10 +839,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
 {
     UIImageView *videoImgView = [UIImageView new];
     videoImgView.image = [UIImage imageNamed: @"ic200_video_light"];
-    videoImgView.myLeftMargin = 2;
-    videoImgView.myRightMargin = 2;
-    videoImgView.myWidth = 18;
-    videoImgView.myHeight = 18;
+    videoImgView.myLeftMargin = 4;
+    videoImgView.myRightMargin = 0;
+    videoImgView.myWidth = 16;
+    videoImgView.myHeight = 16;
     [horzInfoLayout addSubview: videoImgView];
 }
 
@@ -852,9 +851,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     UIImageView *giftImgView = [UIImageView new];
     giftImgView.image = [UIImage imageNamed: @"ic200_gift_light"];
     giftImgView.myLeftMargin = 2;
-    giftImgView.myRightMargin = 2;
-    giftImgView.myWidth = 18;
-    giftImgView.myHeight = 18;
+    giftImgView.myRightMargin = 4;
+    giftImgView.myWidth = 16;
+    giftImgView.myHeight = 16;
     [horzInfoLayout addSubview: giftImgView];
 }
 

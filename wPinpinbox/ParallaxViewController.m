@@ -127,7 +127,7 @@
 //    maskLayer.path = maskPath.CGPath;
 //    self.likeView.layer.mask = maskLayer;
 //
-    self.headerLikedNumberLabel.textColor = [UIColor secondGrey];
+//    self.headerLikedNumberLabel.textColor = [UIColor secondGrey];
 //    self.headerLikedNumberLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     
     UITapGestureRecognizer *likeViewTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(likeViewTapped:)];
@@ -144,7 +144,7 @@
 //    maskLayer.path = maskPath.CGPath;
 //    self.messageView.layer.mask = maskLayer;
 //
-    self.headerMessageNumberLabel.textColor = [UIColor secondGrey];
+//    self.headerMessageNumberLabel.textColor = [UIColor secondGrey];
 //    self.headerMessageNumberLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     
     UITapGestureRecognizer *messageViewTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(messageViewTapped:)];
@@ -161,7 +161,7 @@
 //    maskLayer.path = maskPath.CGPath;
 //    self.sponsorView.layer.mask = maskLayer;
 //
-    self.sponsorNumberLabel.textColor = [UIColor secondGrey];
+//    self.sponsorNumberLabel.textColor = [UIColor secondGrey];
 //    self.sponsorNumberLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     
     UITapGestureRecognizer *sponsorViewTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(sponsorViewTapped:)];

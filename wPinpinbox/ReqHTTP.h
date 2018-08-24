@@ -73,20 +73,23 @@
     [data appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     request.HTTPMethod = @"POST";
     request.HTTPBody = data;
+    
+    __block typeof(self) weakSelf = self;
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        __strong typeof(weakSelf) stSelf = weakSelf;
         [session invalidateAndCancel];//メモリリーク対策
         if(error){
-            requestFailHandler(-1);
+            stSelf->requestFailHandler(-1);
         }else{
             NSError *err = nil;
             NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data
                                                                  options:NSJSONReadingMutableContainers
                                                                    error:&err];
             if (err) {
-                requestFailHandler(-1);
+                stSelf->requestFailHandler(-1);
                 return;
             }
-            requestDoneHandler(json);
+            stSelf->requestDoneHandler(json);
         }
         
     }];

@@ -244,13 +244,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"viewDidAppear");
     [super viewDidAppear:animated];
     [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 0.0]];
-    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
+    //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
     [self addKeyboardNotification];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
+    //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
     [self removeKeyboardNotification];
     
     if ([self.delegate respondsToSelector: @selector(contentCheckingViewControllerViewWillDisappear:isLikeBtnPressed:)]) {

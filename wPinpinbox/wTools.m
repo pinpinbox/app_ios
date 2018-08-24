@@ -51,9 +51,9 @@ static wTools *instance =nil;
         btil = @"確定";
     }
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:btil otherButtonTitles: nil];
-
-    [alertView show];    
+//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:btil otherButtonTitles: nil];
+//
+//    [alertView show];    
 }
 
 +(void)releaseInstance
@@ -253,7 +253,7 @@ static wTools *instance =nil;
 //留言板
 +(void)messageboard:(NSString *)alid
 {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    MessageboardViewController *mv=[[MessageboardViewController alloc]initWithNibName:@" MessageboardViewController" bundle:nil];
 //    mv.alid=alid;
 //    MessageboardViewController *messagev=[[MessageboardViewController alloc]initWithNibName:@"MessageboardViewController" bundle:nil];

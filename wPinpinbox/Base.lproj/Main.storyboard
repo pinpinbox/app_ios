@@ -14,10 +14,12 @@
         <scene sceneID="a1G-1v-Kmo">
             <objects>
                 <tabBarController storyboardIdentifier="MyTabBarController" id="ikc-X2-lvI" customClass="MyTabBarController" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleAspectFit" id="2dP-Lv-yKV">
+                    <tabBar key="tabBar" contentMode="scaleAspectFit" translucent="NO" id="2dP-Lv-yKV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
                         <segue destination="Jmh-WL-GbA" kind="relationship" relationship="viewControllers" id="exi-O4-s3I"/>
@@ -1038,7 +1040,7 @@
             <objects>
                 <viewController id="iXx-xm-GyH" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="OPp-9A-gca">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="519"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="awe-FP-i0H"/>

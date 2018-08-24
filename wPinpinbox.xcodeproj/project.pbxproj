@@ -83,7 +83,6 @@
 		54951AF42005E6A0001FFAF9 /* AlbumDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54951AF32005E6A0001FFAF9 /* AlbumDetailViewController.m */; };
 		549765D01F7EA0B300E2CBEF /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549765CF1F7EA0B300E2CBEF /* SettingViewController.m */; };
 		5498BF751FC7200A007BD033 /* ActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5498BF741FC7200A007BD033 /* ActivityDetailViewController.m */; };
-		549A189F20AD9F2200532E1E /* TabBar Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 549A189E20AD9F2200532E1E /* TabBar Images.xcassets */; };
 		549A18A120AE714D00532E1E /* APNS Banner Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */; };
 		549B48A91F6EC2F60012FE13 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 549B48A81F6EC2F60012FE13 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		549B48AC1F6EC3190012FE13 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 549B48AB1F6EC3190012FE13 /* libicucore.tbd */; };
@@ -966,7 +965,6 @@
 		549765CF1F7EA0B300E2CBEF /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		5498BF731FC72007007BD033 /* ActivityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityDetailViewController.h; sourceTree = "<group>"; };
 		5498BF741FC7200A007BD033 /* ActivityDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityDetailViewController.m; sourceTree = "<group>"; };
-		549A189E20AD9F2200532E1E /* TabBar Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "TabBar Images.xcassets"; path = "Image Resources/TabBar Images.xcassets"; sourceTree = "<group>"; };
 		549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "APNS Banner Images.xcassets"; path = "Image Resources/APNS Banner Images.xcassets"; sourceTree = "<group>"; };
 		549B48A71F6EC2F60012FE13 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		549B48A81F6EC2F60012FE13 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
@@ -3084,7 +3082,6 @@
 				5440836620D8EFAA00A5F645 /* SystemImages.xcassets */,
 				63060C9D1E821B42005B2462 /* icon_select_pink500_120x120.png */,
 				54AB130D20AD917F00C7CC1A /* OldImages.xcassets */,
-				549A189E20AD9F2200532E1E /* TabBar Images.xcassets */,
 				549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */,
 				637929E01D7BDBA100A26CA4 /* icon_selectcontribute_white_60x60.png */,
 				D747C4C71D65BCC600F6B70E /* 160810_鄭家純APP抽寫真_720x96.jpg */,
@@ -5399,7 +5396,6 @@
 				922A4B0A1BD6416C006D5A36 /* MemberTopimageTableViewCell.xib in Resources */,
 				927AADFC1BE223960088CDB9 /* 4-08button_upload@2x.png in Resources */,
 				924A92D41BD4D62E00E3D610 /* button_checkbox@2x.png in Resources */,
-				549A189F20AD9F2200532E1E /* TabBar Images.xcassets in Resources */,
 				54AB130820AD82AE00C7CC1A /* Login.xcassets in Resources */,
 				927410521BD0B3DA0031460B /* 1-03_bg@2x.png in Resources */,
 				9251194E1CEEDB67002D4678 /* 3_05_480@2x.png in Resources */,
