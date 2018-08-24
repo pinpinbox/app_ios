@@ -1000,11 +1000,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             NSString *bannerType = bannerDic[@"banner_type"];
             NSString *videoUrl = bannerDic[@"banner_type_data"][@"url"];
             NSString *imageUrl = bannerDic[@"image"];
-            NSString *btnText = bannerDic[@"banner_type_data"][@"btntext"];
-            NSString *vidtext = bannerDic[@"banner_type_data"][@"videotext"];
-            
-            if (arc4random()%5 == 0)
-                btnText = @"";
             
             if ([bannerType isEqualToString: @"video"]) {
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"YoutubeCell" forIndexPath: indexPath];
@@ -1014,8 +1009,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             } else if ([bannerType isEqualToString: @"image"]) {
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"BannerCell" forIndexPath: indexPath];
                 [cell.bannerImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
-                                        placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
-                
+                                        placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];                
             }
         }
 
