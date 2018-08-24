@@ -491,8 +491,6 @@
         NSString *btnText = bannerDic[@"banner_type_data"][@"btntext"];
         NSString *vidtext = bannerDic[@"banner_type_data"][@"videotext"];
         
-        if (arc4random()%5 == 0)
-            btnText = @"";
         [self setBtnText:btnText infoText: vidtext];
         actionButton.tag = index;
         [actionBase setNeedsLayout];
