@@ -58,7 +58,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate, ExchangeInfoEditViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, NewMessageBoardViewControllerDelegate> {
+@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, YTPlayerViewDelegate, ExchangeInfoEditViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, NewMessageBoardViewControllerDelegate, SFSafariViewControllerDelegate> {
     BOOL isDataLoaded;
     BOOL isRotating;
     BOOL kbShowUp;
@@ -1362,10 +1362,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.videoPlayer pause];    
     
     if ([useFor isEqualToString: @"video"]) {
+        NSLog(@"useFor is video");
         if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
+            NSLog(@"refer is file or system");
             [self playUploadedVideo: cell
                                page: page];
         } else if ([refer isEqualToString: @"embed"]) {
+            NSLog(@"refer is embed");
             [self playEmbeddedVideo: cell
                                page: page];
         }
@@ -1381,9 +1384,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)playEmbeddedVideo:(ImageCollectionViewCell *)cell
                      page:(NSInteger)page {
+    NSLog(@"playEmbeddedVideo");
     NSURL *url = [NSURL URLWithString: self.photoArray[page][@"video_target"]];
     NSLog(@"url: %@", url);
-    
     NSLog(@"scheme: %@", [url scheme]);
     NSLog(@"host: %@", [url host]);
     NSLog(@"port: %@", [url port]);
@@ -1399,8 +1402,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (!([[url host] rangeOfString: @"vimeo"].location == NSNotFound)) {
         NSLog(@"url contains vimeo");
         
+        [wTools ShowMBProgressHUD];
+        
         [[YTVimeoExtractor sharedExtractor] fetchVideoWithVimeoURL: self.photoArray[page][@"video_target"] withReferer: nil completionHandler:^(YTVimeoVideo * _Nullable video, NSError * _Nullable error) {
+            [wTools HideMBProgressHUD];
+            
+            NSLog(@"fetchVideoWithVimeoURL");
+            
             if (video) {
+                NSLog(@"Get Vimeo URL");
                 // Get URL
                 NSURL *highQualityURL = [video lowestQualityStreamURL];
                 [self setupVideoPlayer: cell
@@ -1617,6 +1627,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"url: %@", url);
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
     safariVC.preferredBarTintColor = [UIColor whiteColor];
+    safariVC.delegate = self;
     [self presentViewController: safariVC animated: YES completion: nil];
 }
 
@@ -1662,6 +1673,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Play Uploaded Video
 - (void)playUploadedVideo:(ImageCollectionViewCell *)cell
                      page:(NSInteger)page {
+    NSLog(@"playUploadedVideo");
     NSURL *videoUrl = [NSURL URLWithString: self.photoArray[page][@"video_target"]];
     [self setupVideoPlayer: cell
                   videoUrl: videoUrl
@@ -3544,6 +3556,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     [self updateOldCurrentPage: page];
     self.videoPlayerViewController.view.hidden = NO;
+    [wTools HideMBProgressHUD];
     
     if (isDataLoaded) {
         NSLog(@"Data is loaded");
@@ -4721,10 +4734,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 }
 
 #pragma mark - SFSafariViewController delegate methods
-- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller
-{
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
     // Done button pressed
-    
     NSLog(@"show");
     [alertView show];
 }

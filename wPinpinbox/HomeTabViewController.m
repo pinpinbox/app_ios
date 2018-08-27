@@ -293,6 +293,8 @@
     [super viewWillAppear:animated];
     NSLog(@"status bar height: %f", [UIApplication sharedApplication].statusBarFrame.size.height);
     
+    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 0.0]];
+    
     [self removeNotification];
     [self addNotification];
     

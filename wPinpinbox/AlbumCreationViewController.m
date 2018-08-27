@@ -63,6 +63,12 @@
 #define kCellHeightForPreview 130
 #define kViewHeightForPreview 568
 
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
@@ -199,6 +205,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"self.selectrow: %ld", (long)self.selectrow);
     NSLog(@"self.prefixText: %@", self.prefixText);
     NSLog(@"self.specialUrl: %@", self.specialUrl);
+    
+    [self checkOSVersionToShowOrHideAdobeBtn];
     
     viewHeightForPreview = [UIScreen mainScreen].bounds.size.height;
     
@@ -1457,6 +1465,7 @@ shouldChangeTextInRange:(NSRange)range
                         
                         if (ImageDataArr.count == 0) {
                             adobeEidt.hidden = YES;
+                            
                             recordPausePlayBtn.hidden = YES;
                             audioBgView.hidden = YES;
                             deleteAudioBtn.hidden = YES;
@@ -2340,6 +2349,9 @@ didFinishSavingWithError:(NSError *)error
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
         adobeEidt.hidden = NO;
+        
+        [self checkOSVersionToShowOrHideAdobeBtn];
+        
         addTextBtn.hidden = NO;
         
         recordPausePlayBtn.hidden = NO;
@@ -2427,6 +2439,8 @@ didFinishSavingWithError:(NSError *)error
                 NSLog(@"videoStr is null");
                 [videoBtn removeFromSuperview];
                 adobeEidt.hidden = NO;
+                
+                [self checkOSVersionToShowOrHideAdobeBtn];
                 
                 recordPausePlayBtn.hidden = NO;
                 audioBgView.hidden = NO;
@@ -4465,6 +4479,14 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 {
     NSLog(@"uploadPhotoDidComplete");
     [self reload: nil];
+}
+
+- (void)checkOSVersionToShowOrHideAdobeBtn {
+    if (SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"9.3")) {
+        adobeEidt.hidden = NO;
+    } else if (SYSTEM_VERSION_GREATER_THAN(@"9.3")) {
+        adobeEidt.hidden = YES;
+    }
 }
 
 @end
