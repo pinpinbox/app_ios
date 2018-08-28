@@ -292,6 +292,8 @@
     [super viewWillAppear:animated];
     NSLog(@"status bar height: %f", [UIApplication sharedApplication].statusBarFrame.size.height);
     
+    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 0.0]];
+    
     [self removeNotification];
     [self addNotification];
     
@@ -316,12 +318,12 @@
     
     self.navBarHeight.constant = 48;
     topContentOffset = self.navBarView.frame.size.height;
-    headerHeight = 873;
+    headerHeight = 871;
     self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
     
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
     self.jccLayout1 = (JCCollectionViewWaterfallLayout *)self.albumCollectionView.collectionViewLayout;
-    
+
     self.jccLayout.headerHeight = headerHeight;
     self.jccLayout.footerHeight = 0.0f;
     

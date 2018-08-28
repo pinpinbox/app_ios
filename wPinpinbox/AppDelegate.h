@@ -25,7 +25,7 @@
 @property (weak, nonatomic) UINavigationController *myNav;
 @property (weak, nonatomic) MenuViewController *menu;
 @property (strong, nonatomic) NSString *coordinate;
-@property (copy) void (^backgroundSessionCompletionHandler)();
+@property (copy) void (^backgroundSessionCompletionHandler)(void);
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
