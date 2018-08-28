@@ -879,7 +879,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return 280.0;
+    return 264;//280.0;
 }
 
 #pragma mark - UICollectionViewDatasource Methods
