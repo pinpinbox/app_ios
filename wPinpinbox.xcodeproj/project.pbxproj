@@ -59,6 +59,8 @@
 		5451457B200EE2DB00332E9A /* CategoryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5451457A200EE2DB00332E9A /* CategoryCollectionViewCell.m */; };
 		545685332018894400A5FD07 /* ReorderVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 545685322018894400A5FD07 /* ReorderVC.storyboard */; };
 		545D502D20AE7A7D00BA14F5 /* 4-19.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 545D502C20AE7A7D00BA14F5 /* 4-19.xcassets */; };
+		54659A68212FA49300311FF4 /* YoutubePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54659A67212FA49300311FF4 /* YoutubePlayerViewController.m */; };
+		54659A6A212FA91F00311FF4 /* YoutubePlayerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54659A69212FA91F00311FF4 /* YoutubePlayerVC.storyboard */; };
 		5466A49C200FAADF003F901A /* UserCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5466A49B200FAADF003F901A /* UserCollectionViewCell.m */; };
 		546DF49D20723F790056B73F /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 546DF49B20723F790056B73F /* MessageTableViewCell.m */; };
 		546DF49E20723F790056B73F /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546DF49C20723F790056B73F /* MessageTableViewCell.xib */; };
@@ -929,6 +931,9 @@
 		5451457A200EE2DB00332E9A /* CategoryCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryCollectionViewCell.m; sourceTree = "<group>"; };
 		545685322018894400A5FD07 /* ReorderVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ReorderVC.storyboard; sourceTree = "<group>"; };
 		545D502C20AE7A7D00BA14F5 /* 4-19.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "4-19.xcassets"; path = "Image Resources/4-19.xcassets"; sourceTree = "<group>"; };
+		54659A66212FA49300311FF4 /* YoutubePlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YoutubePlayerViewController.h; sourceTree = "<group>"; };
+		54659A67212FA49300311FF4 /* YoutubePlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YoutubePlayerViewController.m; sourceTree = "<group>"; };
+		54659A69212FA91F00311FF4 /* YoutubePlayerVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = YoutubePlayerVC.storyboard; sourceTree = "<group>"; };
 		5466A49A200FAADF003F901A /* UserCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserCollectionViewCell.h; sourceTree = "<group>"; };
 		5466A49B200FAADF003F901A /* UserCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserCollectionViewCell.m; sourceTree = "<group>"; };
 		546DF49A20723F790056B73F /* MessageTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageTableViewCell.h; sourceTree = "<group>"; };
@@ -2436,11 +2441,14 @@
 			children = (
 				54B08C7C2105B8B500ADC09A /* ContentCheckingViewController.h */,
 				54B08C7D2105B8B500ADC09A /* ContentCheckingViewController.m */,
+				54B08C7A2105B8A700ADC09A /* ContentCheckingVC.storyboard */,
 				54B08C7F2105BCCB00ADC09A /* ImageCollectionViewCell.h */,
 				54B08C802105BCCB00ADC09A /* ImageCollectionViewCell.m */,
 				54B08C8B2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.h */,
 				54B08C8C2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m */,
-				54B08C7A2105B8A700ADC09A /* ContentCheckingVC.storyboard */,
+				54659A66212FA49300311FF4 /* YoutubePlayerViewController.h */,
+				54659A67212FA49300311FF4 /* YoutubePlayerViewController.m */,
+				54659A69212FA91F00311FF4 /* YoutubePlayerVC.storyboard */,
 				54B8CF3A2119E69A006DFE06 /* AlbumInfoVC */,
 			);
 			name = ContentCheckingVC;
@@ -5308,6 +5316,7 @@
 				D747516C1D51EDBB000BCA3F /* frame_text2_red@2x.png in Resources */,
 				927410431BD0A6FC0031460B /* icon_cooking_click@2x.png in Resources */,
 				924A92DB1BD4D8F100E3D610 /* 1-06bg@2x.png in Resources */,
+				54659A6A212FA91F00311FF4 /* YoutubePlayerVC.storyboard in Resources */,
 				9274102E1BD0A6FC0031460B /* icon_makeup@2x.png in Resources */,
 				9225577F1BDF7F7E00CD4E9B /* icon_othercollection_click@2x.png in Resources */,
 				92BD833F1C21090A003D668C /* 3-11adown_button.png in Resources */,
@@ -5624,6 +5633,7 @@
 				921156391C4F644A00F9200A /* TaobannameTableViewCell.m in Sources */,
 				54885DB120DA854500644A82 /* LikeListViewController.m in Sources */,
 				D76F5E3A1D73E776008567D8 /* EventPostViewController.m in Sources */,
+				54659A68212FA49300311FF4 /* YoutubePlayerViewController.m in Sources */,
 				540636292050DEAB004C9F21 /* CheckExchangeViewController.m in Sources */,
 				63C375BD1EB9E44A000C7FC1 /* CreatorCollectionReusableView.m in Sources */,
 				922D92B61BD9CDB400640639 /* SearchViewController.m in Sources */,
@@ -6014,7 +6024,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = wPinpinbox/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -6056,7 +6066,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = wPinpinbox/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (

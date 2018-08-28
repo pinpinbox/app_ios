@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "MyLayout.h"
-#import "YTPlayerView.h"
 
 typedef void(^ButtonTouch)(BOOL selected, NSInteger tag, UIButton *btn);
 
@@ -53,7 +52,6 @@ typedef void(^ButtonTouch)(BOOL selected, NSInteger tag, UIButton *btn);
 @property (nonatomic) NSInteger userPoint;
 
 @property (weak, nonatomic) IBOutlet UIView *videoView;
-@property (weak, nonatomic) IBOutlet YTPlayerView *ytPlayerView;
 
 @property (weak, nonatomic) IBOutlet UIView *alphaBgV;
 @property (weak, nonatomic) IBOutlet UIButton *videoBtn;

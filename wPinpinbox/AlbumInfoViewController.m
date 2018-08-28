@@ -42,6 +42,15 @@
     [self initialValueSetup];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    NSLog(@"AlbumInfoViewController viewWillDisappear");
+    
+    if ([self.delegate respondsToSelector: @selector(albumInfoViewControllerDisappear:)]) {
+        [self.delegate albumInfoViewControllerDisappear: self];
+    }
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

@@ -41,7 +41,6 @@
     
     self.videoBtn.hidden = YES;
     self.videoView.hidden = YES;
-    self.ytPlayerView.hidden = YES;
     
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView.frame = self.bounds;
