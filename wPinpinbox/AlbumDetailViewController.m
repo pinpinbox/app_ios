@@ -684,10 +684,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     self.creatorView.layer.cornerRadius = self.creatorView.bounds.size.height / 2;
     
     // Shadow Setting
-    self.creatorView.layer.shadowColor = [UIColor firstGrey].CGColor;
-    self.creatorView.layer.shadowOpacity = 0.5;
-    self.creatorView.layer.shadowRadius = 10;
-    self.creatorView.layer.shadowOffset = CGSizeMake(5.0f, 5.0f);
+    self.creatorView.layer.shadowColor = [UIColor thirdGrey].CGColor;
+    self.creatorView.layer.shadowOpacity = 0.8;
+    self.creatorView.layer.shadowRadius = 32;
+    self.creatorView.layer.shadowOffset = CGSizeMake(0.0f, 12.0f);
     
     // CreatorHeadshotImageView Setting
     self.creatorHeadshotImageView.layer.cornerRadius = self.creatorHeadshotImageView.bounds.size.width / 2;

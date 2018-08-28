@@ -359,7 +359,7 @@
                                 if ([styleDic1[@"banner_type"] isEqualToString: @"creative"]) {
                                     NSLog(@"styleDic1 banner_type_data: %@", styleDic1[@"banner_type_data"]);
                                     
-                                    if (styleDic1[@"banner_type"] == nil) {
+                                    if (styleDic1[@"banner_type"] != nil) {
                                         self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
                                     }
                                     [self addUserView];
@@ -442,7 +442,7 @@
     }
     
     for (int i = 0; i < userImageViewNumber; i++) {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 40, 40)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 32, 32)];
         
         NSDictionary *pictureDic = self.categoryAreaArray[i];
         NSLog(@"pictureDic: %@", pictureDic);

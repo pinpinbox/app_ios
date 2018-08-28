@@ -143,6 +143,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     [super viewWillAppear:animated];
     
+    [self.navigationController.navigationBar setShadowImage: [UIImage imageNamed:@"navigationbarshadow"]];
+    
     if ([[[UIDevice currentDevice] systemVersion] compare:@"11.0" options:NSNumericSearch] == NSOrderedAscending){
         self.collectionViewTopConstraint.constant = 0;
     }
