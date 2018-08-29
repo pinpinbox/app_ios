@@ -27,7 +27,7 @@
 #import "VersionUpdate.h"
 
 #import "MKDropdownMenu.h"
-#import "Utilities.h"
+//#import "Utilities.h"
 #import "CreationTableViewCell.h"
 #import "SetupViewController.h"
 
@@ -290,7 +290,8 @@
         [alertViewForLocation close];
         
         if (buttonIndex == 0) {
-            [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+            //[[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+            [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
         }
     }];
     [alertViewForLocation setUseMotionEffects: true];
@@ -627,7 +628,7 @@
         if (![templateIdString isEqualToString: @""]) {
             TaobanViewController *tv=[[TaobanViewController alloc]initWithNibName:@"TaobanViewController" bundle:nil];
             tv.temolateid = templateIdString;
-            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             //[app.myNav pushViewController:tv animated:YES];
         }
     } else if (user != (NSString *)[NSNull null]) {
@@ -987,7 +988,7 @@
         
         NSDictionary *album=dic[@"album"];
         NSDictionary *user=dic[@"user"];
-        NSDictionary *follow=dic[@"follow"];
+//        NSDictionary *follow=dic[@"follow"];
         NSDictionary *notice=dic[@"notice"];
         
         NSDictionary *albumStatistics = dic[@"albumstatistics"];
@@ -1490,10 +1491,10 @@
     
     NSLog(@"self.typeData: %@", self.typeData);
     
-    delay(0.1, ^{
-        [dropdownMenu closeAllComponentsAnimated:YES];
-        [dropdownMenu reloadAllComponents];
-    });
+//    delay(0.1, ^{
+//        [dropdownMenu closeAllComponentsAnimated:YES];
+//        [dropdownMenu reloadAllComponents];
+//    });
     
     [self refresh];
 }
@@ -1620,7 +1621,7 @@
                      forKey: @"fromPageCollection"];
         [defaults synchronize];
         
-        SetupViewController *sVC = segue.destinationViewController;        
+//        SetupViewController *sVC = segue.destinationViewController;        
     }
     /*
     if ([segue.identifier isEqualToString: @"showRetrievealbumpViewController"]) {

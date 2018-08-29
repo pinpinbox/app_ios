@@ -381,7 +381,7 @@
     }
     
     NSURLSessionDownloadTask *downloadTask = [downloadInfo objectForKey:kMZDownloadKeyTask];
-    NSString *downloadingStatus = [downloadInfo objectForKey:kMZDownloadKeyStatus];
+//    NSString *downloadingStatus = [downloadInfo objectForKey:kMZDownloadKeyStatus];
     
     if (sender.selected) {
         isPlay=YES;

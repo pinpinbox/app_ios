@@ -1281,7 +1281,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         }
     }
     
-    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+//    AppDelegate *app=[[UIApplication sharedApplication]delegate];
     //[app.menu showJCC:nil];
     [self.navigationController popViewControllerAnimated:YES];
 }

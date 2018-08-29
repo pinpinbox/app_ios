@@ -3119,7 +3119,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             NSLog(@"audioTarget is not null class");
             NSLog(@"audioTarget: %@", audioTarget);
             
-            UIButton *btn;
+//            UIButton *btn;
             
             if (isplayaudio) {
                 [self.soundBtn setImage: [UIImage imageNamed: @"ic200_audio_play_light"] forState: UIControlStateNormal];
@@ -3388,7 +3388,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSString *usefor = datalist[pageId][@"usefor"];
     NSLog(@"usefor: %@", usefor);
     
-    NSString *pid = [datalist[pageId][@"photo_id"] stringValue];
+//    NSString *pid = [datalist[pageId][@"photo_id"] stringValue];
     //NSLog(@"pid: %@", pid);
     
     [self textViewSetup: page];
@@ -4402,7 +4402,7 @@ replacementString:(NSString *)string
          NSLog(@"self.mySV.contentOffset.x: %f", self.mySV.contentOffset.x);
          NSLog(@"self.mySV.frame.size.width: %f", self.mySV.frame.size.width);
          */
-        int page = self.mySV.contentOffset.x / self.mySV.frame.size.width;
+//        int page = self.mySV.contentOffset.x / self.mySV.frame.size.width;
         
         /*
          NSLog(@"page: %d", page);
@@ -4935,12 +4935,12 @@ replacementString:(NSString *)string
                         if ([_dic[@"album"][@"point"] intValue] == 0) {
                             NSLog(@"album point is equal to 0");
                             
-                            NSString *msg = @"收藏並完整閱讀";
+//                            NSString *msg = @"收藏並完整閱讀";
                             //[self showAlertViewForCollect: msg];
                             //[self showCustomCollectionAlert: msg];
                         } else if ([_dic[@"album"][@"point"] intValue] > 0) {
                             NSLog(@"album point is bigger than 0");
-                            NSString *msg = [NSString stringWithFormat: @"贊助收藏 %d P", [_dic[@"album"][@"point"] intValue]];
+//                            NSString *msg = [NSString stringWithFormat: @"贊助收藏 %d P", [_dic[@"album"][@"point"] intValue]];
                             //[self showAlertViewForCollect: msg];
                             //[self showCustomCollectionAlert: msg];
                         }

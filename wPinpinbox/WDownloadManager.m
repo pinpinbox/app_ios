@@ -117,7 +117,7 @@ static WDownloadManager *instance =nil;
     [downloadInfo setObject:RequestStatusDownloading forKey:kMZDownloadKeyStatus];
     [downloadInfo setObject:downloadTask forKey:kMZDownloadKeyTask];
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:downloadingArray.count inSection:0];
+//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:downloadingArray.count inSection:0];
     [downloadingArray addObject:downloadInfo];
     
     //[bgDownloadTableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
@@ -190,7 +190,7 @@ static WDownloadManager *instance =nil;
     [downloadInfo setObject:RequestStatusDownloading forKey:kMZDownloadKeyStatus];
     [downloadInfo setObject:downloadTask forKey:kMZDownloadKeyTask];
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:downloadingArray.count inSection:0];
+//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:downloadingArray.count inSection:0];
     [downloadingArray addObject:downloadInfo];
     
     //[bgDownloadTableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
@@ -289,8 +289,8 @@ static WDownloadManager *instance =nil;
                 
                 float speed = totalBytesWritten / downloadTime;
                 
-                NSInteger indexOfDownloadDict = [downloadingArray indexOfObject:downloadDict];
-                NSIndexPath *indexPathToRefresh = [NSIndexPath indexPathForRow:indexOfDownloadDict inSection:0];
+//                NSInteger indexOfDownloadDict = [downloadingArray indexOfObject:downloadDict];
+//                NSIndexPath *indexPathToRefresh = [NSIndexPath indexPathForRow:indexOfDownloadDict inSection:0];
                 //MZDownloadingCell *cell = (MZDownloadingCell *)[bgDownloadTableView cellForRowAtIndexPath:indexPathToRefresh];
                 //進度條
                 //[cell.progressDownload setProgress:progress];
@@ -446,7 +446,7 @@ static WDownloadManager *instance =nil;
                     
                     [downloadingArray removeObjectAtIndex:indexOfObject];
                     
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexOfObject inSection:0];
+//                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexOfObject inSection:0];
                     //[bgDownloadTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
                     
                     

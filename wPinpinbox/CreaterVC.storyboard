@@ -119,16 +119,16 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Hv-gV-OXy">
-                                            <rect key="frame" x="0.0" y="0.0" width="374" height="176"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="176"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WM3-fD-PDT">
-                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="176"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="176"/>
                                                 </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5wM-fq-vOQ">
-                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="176"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="176"/>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="343" placeholderIntrinsicHeight="20.5" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQL-Y9-Hn7">
-                                                    <rect key="frame" x="16" y="147.5" width="342" height="20.5"/>
+                                                    <rect key="frame" x="16" y="147.5" width="343" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -151,7 +151,7 @@
                                             </constraints>
                                         </view>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qUO-k1-I7s">
-                                            <rect key="frame" x="16" y="378" width="342" height="61.5"/>
+                                            <rect key="frame" x="16" y="378" width="343" height="61.5"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ubm-WS-RBo">
                                                     <rect key="frame" x="0.0" y="0.0" width="44" height="23.5"/>
@@ -331,20 +331,20 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yCD-dk-V14">
-                                            <rect key="frame" x="105" y="483" width="253" height="0.5"/>
+                                            <rect key="frame" x="105" y="483" width="254" height="0.5"/>
                                             <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="yMe-gW-DlA"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PSh-R1-cwp">
-                                            <rect key="frame" x="16" y="208" width="342" height="154"/>
+                                            <rect key="frame" x="16" y="208" width="343" height="154"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rf1-sC-mNK" userLabel="STView">
-                                                    <rect key="frame" x="96" y="28" width="245" height="48"/>
+                                                    <rect key="frame" x="96" y="28" width="246" height="48"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Aid-NY-Auu">
-                                                            <rect key="frame" x="163" y="0.0" width="82" height="48"/>
+                                                            <rect key="frame" x="164" y="0.0" width="82" height="48"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PyD-gq-itW">
                                                                     <rect key="frame" x="0.0" y="3" width="82" height="26.5"/>
@@ -401,7 +401,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v2Q-Kc-lOq">
-                                                            <rect key="frame" x="81.5" y="0.0" width="82" height="48"/>
+                                                            <rect key="frame" x="82" y="0.0" width="82" height="48"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A4i-qD-pMh">
                                                                     <rect key="frame" x="0.0" y="3" width="82" height="26.5"/>
@@ -455,7 +455,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IC5-Wb-m6r">
-                                                    <rect key="frame" x="0.0" y="112" width="342" height="42"/>
+                                                    <rect key="frame" x="0.0" y="112" width="343" height="42"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="42" id="SKm-7g-CpY"/>
                                                     </constraints>
@@ -614,6 +614,8 @@
                                     <constraint firstItem="Fec-wN-kGD" firstAttribute="leading" secondItem="f3V-2S-meE" secondAttribute="trailing" constant="8" id="Bja-Vy-kIw"/>
                                     <constraint firstAttribute="height" constant="44" id="Ihw-h2-HAO"/>
                                     <constraint firstAttribute="bottom" secondItem="0Of-XM-DM2" secondAttribute="bottom" id="IzD-KP-Tf7"/>
+                                    <constraint firstItem="Fec-wN-kGD" firstAttribute="centerY" secondItem="Fh5-QD-tWv" secondAttribute="centerY" id="Tbk-wa-hN3"/>
+                                    <constraint firstItem="f3V-2S-meE" firstAttribute="centerY" secondItem="Fh5-QD-tWv" secondAttribute="centerY" id="dnO-2g-Obd"/>
                                     <constraint firstItem="Fec-wN-kGD" firstAttribute="bottom" secondItem="Fh5-QD-tWv" secondAttribute="bottom" constant="-6" id="sDI-ZC-R8g"/>
                                     <constraint firstItem="0Of-XM-DM2" firstAttribute="leading" secondItem="Fh5-QD-tWv" secondAttribute="leading" constant="4" id="vQV-wa-etX"/>
                                     <constraint firstItem="Fec-wN-kGD" firstAttribute="trailing" secondItem="Fh5-QD-tWv" secondAttribute="trailing" constant="-20" id="y2p-2j-c3p"/>
@@ -641,7 +643,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QOQ-4M-eWK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-578.39999999999998" y="-537.48125937031489"/>
+            <point key="canvasLocation" x="-586" y="-734"/>
         </scene>
     </scenes>
     <resources>

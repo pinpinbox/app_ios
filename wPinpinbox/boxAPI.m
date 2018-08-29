@@ -1472,14 +1472,14 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [_params setObject: album_id forKey: @"album_id"];
     [_params setObject: [self signGenerator2: _params] forKey: @"sign"];
     
-    NSData *imageData = UIImageJPEGRepresentation(image, compressionQuality);
-    
-    NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
-    NSString* FileParamConstant = @"file";
-    
-    NSString *urlString = [NSString stringWithFormat: @"%@%@%@", ServerURL, @"/insertphotoofdiy", @"/1.1"];
-    NSURL *requestURL = [NSURL URLWithString: urlString];
-    //NSURL *requestURL = [NSURL URLWithString: [NSString stringWithFormat: @"%@%@%@", ServerURL, @"/insertphotoofdiy", @"/1.1"]];
+//    NSData *imageData = UIImageJPEGRepresentation(image, compressionQuality);
+//    
+//    NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
+//    NSString* FileParamConstant = @"file";
+//    
+//    NSString *urlString = [NSString stringWithFormat: @"%@%@%@", ServerURL, @"/insertphotoofdiy", @"/1.1"];
+//    NSURL *requestURL = [NSURL URLWithString: urlString];
+//    //NSURL *requestURL = [NSURL URLWithString: [NSString stringWithFormat: @"%@%@%@", ServerURL, @"/insertphotoofdiy", @"/1.1"]];
     
     /*
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -2836,7 +2836,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
         return [obj1 compare: obj2 options: NSNumericSearch];
     }];
     
-    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
+//    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
     //:/?@!$&'()*+,;=
     
     NSString *requestOriginal = @"";
@@ -3069,7 +3069,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
         return nil;
     }
     
-    NSString* webStringURL = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    //NSString* webStringURL = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *webStringURL = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     NSURL *surl=[NSURL URLWithString:webStringURL];
     NSMutableURLRequest *request =[NSMutableURLRequest requestWithURL:surl];
     [request setHTTPMethod:@"GET"];

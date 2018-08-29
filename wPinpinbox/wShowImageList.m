@@ -111,7 +111,7 @@
 -(int)TotalPageInScrollView:(MyScrollView *)scrollView ;
 {
     if (_isShow) {
-        _imagelist.count+1;
+//        _imagelist.count+1;
     }
     return _imagelist.count;
 }
@@ -120,7 +120,7 @@
 {
     
     //目前頁數
-    int wNowPage = [vc getNowPage:2];
+//    int wNowPage = [vc getNowPage:2];
 
 }
 

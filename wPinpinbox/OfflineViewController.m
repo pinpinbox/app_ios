@@ -77,7 +77,7 @@
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)back:(id)sender {
-    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+//    AppDelegate *app=[[UIApplication sharedApplication]delegate];
     //[app.menu showMenu];
 }
 
@@ -155,7 +155,7 @@
     }
     if (dataarr.count==0) {
         
-        NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%i",type+1] owner:self options:nil];
+        NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%li",type+1] owner:self options:nil];
         backview  = [subviewArray objectAtIndex:0];
         [collectionView addSubview:backview];
         

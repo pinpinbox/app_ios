@@ -133,7 +133,7 @@
         
         isLoading = YES;
         NSMutableDictionary *data = [NSMutableDictionary new];
-        NSString *limit=[NSString stringWithFormat:@"%d,%d",nextId,nextId+10];
+        NSString *limit=[NSString stringWithFormat:@"%ld,%ld",nextId,nextId+10];
         [data setValue:limit forKey:@"limit"];
         [data setObject:@"official=" forKey:@"rank"];
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){

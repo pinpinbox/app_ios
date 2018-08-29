@@ -306,7 +306,7 @@
         NSMutableDictionary *data=[NSMutableDictionary new];
         [data setObject:self.searchtype forKey:@"searchtype"];
         [data setObject:_textkey forKey:@"searchkey"];
-        NSString *limit=[NSString stringWithFormat:@"%d,%d",nextId, 10];
+        NSString *limit=[NSString stringWithFormat:@"%ld,%d",nextId, 10];
         [data setObject:limit forKey:@"limit"];
         
         respone=[boxAPI search:[wTools getUserID] token:[wTools getUserToken] data:data];

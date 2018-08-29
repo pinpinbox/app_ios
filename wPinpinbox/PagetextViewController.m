@@ -386,10 +386,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 -(void)btnadd:(UIButton *)sender {
-    NSArray *btnarr=_pagedata[@"hyperlink"];
-    NSString *urlstr=btnarr[sender.tag][@"url"];
-    NSString *title=btnarr[sender.tag][@"text"];
-    
+//    NSArray *btnarr=_pagedata[@"hyperlink"];
+//    NSString *urlstr=btnarr[sender.tag][@"url"];
+//    NSString *title=btnarr[sender.tag][@"text"];
+//    
 //    MessageboardViewController *messagev=[[MessageboardViewController alloc]initWithNibName:@"MessageboardViewController" bundle:nil];
 //    messagev.title=title;
 //    messagev.url=urlstr;

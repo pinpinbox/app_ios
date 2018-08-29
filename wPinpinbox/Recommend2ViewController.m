@@ -383,7 +383,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         
         phoneString = (__bridge NSString*)ABMultiValueCopyValueAtIndex(phone, 0);
         phoneString=[phoneString stringByReplacingOccurrencesOfString:@"-" withString:@""];
-        CFDictionaryRef dict =ABMultiValueCopyValueAtIndex(phone, 0);
+//        CFDictionaryRef dict =ABMultiValueCopyValueAtIndex(phone, 0);
         //CFStringRef myCountryCode = CFDictionaryGetValue(dict, kABPersonAddressCountryCodeKey);
         //phoneCountry=[NSString stringWithFormat:@"%@",myCountryCode];
         
@@ -486,7 +486,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         }
         isLoading = YES;
         NSMutableDictionary *data = [NSMutableDictionary new];
-        NSString *limit=[NSString stringWithFormat:@"%d,%d",nextId,nextId+10];
+        NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId,nextId+10];
         [data setValue:limit forKey:@"limit"];
         if (rank==nil) {
             [data setObject:@"official=" forKey:@"rank"];

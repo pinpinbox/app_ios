@@ -747,7 +747,7 @@
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
     
     NSString *albumId = [voteArray[indexPath.row][@"album"][@"album_id"] stringValue];
@@ -771,7 +771,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)collectionView:(UICollectionView *)collectionView
 didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.subviews[0].backgroundColor = nil;
 }
 

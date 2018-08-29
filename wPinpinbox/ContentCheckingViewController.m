@@ -1541,7 +1541,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 AVPlayer *player = [AVPlayer playerWithURL: highQualityURL];
                 AVPlayerViewController *playerViewController = [AVPlayerViewController new];
                 playerViewController.player = player;
-                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 
 //                self.navigationController.delegate = nil;
 //                [appDelegate.myNav pushViewController: playerViewController animated: YES];
@@ -3399,7 +3399,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSString *refer = self.photoArray[indexPath.row][@"video_refer"];
         
         if ([useFor isEqualToString: @"video"]) {
-            NSURL *url = [NSURL URLWithString: self.photoArray[indexPath.row][@"video_target"]];
+//            NSURL *url = [NSURL URLWithString: self.photoArray[indexPath.row][@"video_target"]];
             
             if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
                 cell.alphaBgV.hidden = YES;

@@ -1239,7 +1239,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         return [obj1 compare: obj2 options: NSNumericSearch];
     }];
     
-    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
+//    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
     //:/?@!$&'()*+,;=
     
     NSString *requestOriginal = @"";

@@ -433,7 +433,7 @@
                         
                         for (UIView *subView in v.subviews) {
                             if ([subView isKindOfClass: [UIImageView class]]) {
-                                UIImageView *imgV = (UIImageView *)subView;
+//                                UIImageView *imgV = (UIImageView *)subView;
                                 
                                 /*
                                 if (imgV.tag == 1) {
@@ -1065,7 +1065,7 @@
     NSLog(@"bgimag: %@", bgimag);
     
     // 現在のグラフィックスコンテキストの画像を取得する
-    UIImage *newbgimag = UIGraphicsGetImageFromCurrentImageContext();
+//    UIImage *newbgimag = UIGraphicsGetImageFromCurrentImageContext();
     
     // 現在のグラフィックスコンテキストへの編集を終了
     // (スタックの先頭から削除する)

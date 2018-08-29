@@ -103,8 +103,6 @@
 		54AB130E20AD917F00C7CC1A /* OldImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54AB130D20AD917F00C7CC1A /* OldImages.xcassets */; };
 		54AE99692016522C0003D060 /* ChooseHobbyVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54AE99682016522C0003D060 /* ChooseHobbyVC.storyboard */; };
 		54AE997320170BA50003D060 /* VotingVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54AE997220170BA50003D060 /* VotingVC.storyboard */; };
-		54AFF4491F8491AB00222CEF /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AFF4461F8491AB00222CEF /* FLAnimatedImage.m */; };
-		54AFF44A1F8491AB00222CEF /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54AFF4481F8491AB00222CEF /* FLAnimatedImageView.m */; };
 		54B08C7B2105B8A700ADC09A /* ContentCheckingVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54B08C7A2105B8A700ADC09A /* ContentCheckingVC.storyboard */; };
 		54B08C7E2105B8B500ADC09A /* ContentCheckingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B08C7D2105B8B500ADC09A /* ContentCheckingViewController.m */; };
 		54B08C812105BCCB00ADC09A /* ImageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54B08C802105BCCB00ADC09A /* ImageCollectionViewCell.m */; };
@@ -809,6 +807,8 @@
 		92F89B271BBE79CF00565908 /* install_04.png in Resources */ = {isa = PBXBuildFile; fileRef = 92F89B231BBE79CF00565908 /* install_04.png */; };
 		92F89B2A1BBE79F900565908 /* StartImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F89B291BBE79F900565908 /* StartImage.m */; };
 		BF61430D909D28AAF4BCA35B /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF49CD35627C495D6CBEB4C /* libPods-wPinpinbox.a */; };
+		CBE815F3213649D30043AEFA /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE815EF213649D30043AEFA /* FLAnimatedImage.m */; };
+		CBE815F4213649D30043AEFA /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE815F0213649D30043AEFA /* FLAnimatedImageView.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D743E9041D2CB5F500652A97 /* icon_exchanged.png in Resources */ = {isa = PBXBuildFile; fileRef = D743E9031D2CB5F500652A97 /* icon_exchanged.png */; };
@@ -1253,7 +1253,6 @@
 		6380C5531DC3538100D5F753 /* ReadBookViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReadBookViewController.xib; sourceTree = "<group>"; };
 		638128991DFFCEAF00605466 /* MKDropdownMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKDropdownMenu.h; sourceTree = "<group>"; };
 		6381289A1DFFCEAF00605466 /* MKDropdownMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKDropdownMenu.m; sourceTree = "<group>"; };
-		6381289C1DFFF45600605466 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
 		63842E5D1EF9D8B100C871A0 /* AlbumSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumSettingViewController.h; sourceTree = "<group>"; };
 		63842E5E1EF9D8B100C871A0 /* AlbumSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumSettingViewController.m; sourceTree = "<group>"; };
 		638F4A5D1E5D499400F7130B /* FTWCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTWCache.h; sourceTree = "<group>"; };
@@ -1948,6 +1947,10 @@
 		92F89B231BBE79CF00565908 /* install_04.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = install_04.png; sourceTree = "<group>"; };
 		92F89B281BBE79F900565908 /* StartImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartImage.h; sourceTree = "<group>"; };
 		92F89B291BBE79F900565908 /* StartImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartImage.m; sourceTree = "<group>"; };
+		CBE815EF213649D30043AEFA /* FLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImage.m; sourceTree = "<group>"; };
+		CBE815F0213649D30043AEFA /* FLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImageView.m; sourceTree = "<group>"; };
+		CBE815F1213649D30043AEFA /* FLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImage.h; sourceTree = "<group>"; };
+		CBE815F2213649D30043AEFA /* FLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImageView.h; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -3755,7 +3758,6 @@
 		9276DFA31B72FDC000E6ACC9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6381289C1DFFF45600605466 /* Utilities.h */,
 				63090CFC1DCC858400D8BF20 /* wPinpinbox-Bridging-Header.h */,
 				925119EC1CF57E99002D4678 /* Hobby_lang.plist */,
 				9276DFA41B72FDC000E6ACC9 /* Info.plist */,
@@ -4002,6 +4004,7 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CBE815EE213649D30043AEFA /* FLAnimatedImage */,
 				630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */,
 				D78F73861D226C8700D8A271 /* youtube-ios-player-helper */,
 				9295A3B51C22521300317FEA /* 圖片放大預覽器 */,
@@ -4737,6 +4740,17 @@
 				9200B1D91C5B483A00996358 /* P04.png */,
 			);
 			path = "起始說明";
+			sourceTree = "<group>";
+		};
+		CBE815EE213649D30043AEFA /* FLAnimatedImage */ = {
+			isa = PBXGroup;
+			children = (
+				CBE815EF213649D30043AEFA /* FLAnimatedImage.m */,
+				CBE815F0213649D30043AEFA /* FLAnimatedImageView.m */,
+				CBE815F1213649D30043AEFA /* FLAnimatedImage.h */,
+				CBE815F2213649D30043AEFA /* FLAnimatedImageView.h */,
+			);
+			path = FLAnimatedImage;
 			sourceTree = "<group>";
 		};
 		D70145001D1A7F20005D8CDE /* Email 驗證 */ = {
@@ -5565,6 +5579,7 @@
 				543043D320B2A5F600018AF4 /* BannerCollectionViewCell.m in Sources */,
 				63B340E81EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m in Sources */,
 				92AE20ED1C0575DB0033C298 /* YoutubeViewController.m in Sources */,
+				CBE815F4213649D30043AEFA /* FLAnimatedImageView.m in Sources */,
 				63C8DA661E30F03A00AFBC2B /* RecentBrowseTableViewController.m in Sources */,
 				92C4D50C1B74578000504B57 /* SignViewController_1.m in Sources */,
 				54885DBA20DB413E00644A82 /* AlbumSponsorListViewController.m in Sources */,
@@ -5593,7 +5608,6 @@
 				630D31E21E531BC9001506EE /* NSArray+Reverse.m in Sources */,
 				9281DF9B1BDE1FF900463337 /* WdataButton.m in Sources */,
 				54933ADF207F4A30001582C3 /* MintAttrColor.m in Sources */,
-				54AFF4491F8491AB00222CEF /* FLAnimatedImage.m in Sources */,
 				925119111CEAF63E002D4678 /* TERMSViewController.m in Sources */,
 				6308C45C1EACA89F00F99AC0 /* InfoEditViewController.m in Sources */,
 				9222B21B1BEC78C800DF2CAD /* MyScrollView.m in Sources */,
@@ -5648,10 +5662,10 @@
 				630DBB121E3253C4006CDFF6 /* FollowListCollectionViewController.m in Sources */,
 				920279B41C4500B200A63027 /* CooperationAddViewController.m in Sources */,
 				630B8F931EDD0F16009D72FB /* CategoryDetailViewController.m in Sources */,
-				54AFF44A1F8491AB00222CEF /* FLAnimatedImageView.m in Sources */,
 				922A4B091BD6416C006D5A36 /* MemberTopimageTableViewCell.m in Sources */,
 				92C0C5101C1808110010D2B6 /* Recommend2ViewController.m in Sources */,
 				6306D6501DB4CEA5005EC98C /* UIImage+AverageColor.m in Sources */,
+				CBE815F3213649D30043AEFA /* FLAnimatedImage.m in Sources */,
 				63175B1E1EA54CF6008ADEC4 /* FBFriendsListViewController.m in Sources */,
 				928348A11C62F53C002DBC6A /* SearchuserTableViewCell.m in Sources */,
 				920279A21C449D8500A63027 /* CoopTopTableViewCell.m in Sources */,

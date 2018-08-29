@@ -144,7 +144,7 @@
         isLoading = YES;
         
         NSMutableDictionary *data = [NSMutableDictionary new];
-        NSString *limit=[NSString stringWithFormat:@"%d,%d",nextId,nextId+10];
+        NSString *limit=[NSString stringWithFormat:@"%ld,%ld",nextId,nextId+10];
         [data setObject:_rank forKey:@"rank"];
         [data setValue:limit forKey:@"limit"];
         

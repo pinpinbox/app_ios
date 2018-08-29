@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="Mcn-0a-tnm">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="Mcn-0a-tnm">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,7 +14,7 @@
             <objects>
                 <viewController storyboardIdentifier="homeViewController" id="wF9-e7-yr8" customClass="homeViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HUC-0a-3FI">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1-02a3bg.png" id="k1d-9l-1iC">
@@ -247,7 +246,7 @@
                     <navigationItem key="navigationItem" id="9eb-OB-afI">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="h48-DB-yAg">
                             <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="JpF-Dv-vOb">
-                                <rect key="frame" x="16" y="4" width="35" height="35"/>
+                                <rect key="frame" x="16" y="4.5" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -259,7 +258,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" style="plain" id="jmX-h9-cFP">
                             <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="E3E-4E-vEu">
-                                <rect key="frame" x="236" y="10" width="68" height="23"/>
+                                <rect key="frame" x="236" y="5" width="68" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -290,7 +289,7 @@
             <objects>
                 <tableViewController id="umX-J0-82D" customClass="NotificationCenterTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" id="25X-Qe-xEF">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -344,7 +343,7 @@
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="sz7-QU-ixi" customClass="SetupViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hvu-D7-nXE">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="top_menu.png" id="byJ-UW-TqA">
@@ -385,9 +384,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="建 立 作 品" id="UxB-ro-OoN">
-                        <barButtonItem key="leftBarButtonItem" style="plain" id="07x-rq-41W">
+                        <barButtonItem key="leftBarButtonItem" id="07x-rq-41W">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="02U-CL-i27">
-                                <rect key="frame" x="16" y="4" width="35" height="35"/>
+                                <rect key="frame" x="16" y="4.5" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="button_back.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -413,7 +412,7 @@
             <objects>
                 <viewController storyboardIdentifier="TaobanViewController" hidesBottomBarWhenPushed="YES" id="w2d-fy-dDq" customClass="TaobanViewController" sceneMemberID="viewController">
                     <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="7bZ-WB-sEu">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="9Y8-ky-nye">
@@ -449,7 +448,7 @@
                     <navigationItem key="navigationItem" id="KqW-xH-7zY">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="B5x-uM-ROG">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fnC-RQ-ddl">
-                                <rect key="frame" x="16" y="4" width="35" height="35"/>
+                                <rect key="frame" x="16" y="4.5" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="button_back.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -473,7 +472,7 @@
             <objects>
                 <tableViewController id="0wi-iY-BTg" customClass="MemberCenterTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="qXR-ix-AFA">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
@@ -640,7 +639,7 @@
                                         <rect key="frame" x="0.0" y="536" width="320" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="x8E-X9-PHS" id="gIy-Ja-R7p">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="69.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="294" height="69.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="購 買 P 點" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Fgc-hX-yAq">
@@ -690,7 +689,7 @@
                         <inset key="imageInsets" minX="0.0" minY="9" maxX="0.0" maxY="-9"/>
                     </tabBarItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="Nk7-fi-1H9">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.12549019610000001" green="0.74901960779999999" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
@@ -710,7 +709,7 @@
                         <inset key="imageInsets" minX="0.0" minY="9" maxX="0.0" maxY="-9"/>
                     </tabBarItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="8bV-ek-tTS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.12549019610000001" green="0.74901960779999999" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
@@ -731,7 +730,7 @@
                     </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="xys-BD-8nS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.12549019610000001" green="0.74901960779999999" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
@@ -801,7 +800,7 @@
             <objects>
                 <viewController id="YVE-m4-z3G" customClass="NewSearchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5iT-ru-OrO">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="second_menu1.png" id="830-wE-QFo">
@@ -836,7 +835,7 @@
             <objects>
                 <viewController storyboardIdentifier="QrcordViewController" hidesBottomBarWhenPushed="YES" id="dLE-Hg-JmP" customClass="QrcordViewController" sceneMemberID="viewController">
                     <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="GUk-Va-tpg">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="3-03bg.png" id="vPX-xV-ooN">
@@ -883,7 +882,7 @@
                     <navigationItem key="navigationItem" id="too-Gb-sOq">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="QY1-2D-Uhe">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="AL2-S1-xUG">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -907,14 +906,14 @@
             <objects>
                 <viewController storyboardIdentifier="PageRankViewController" id="rjp-Eu-sYU" customClass="PageRankViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dIT-hE-qIS">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="swF-UJ-iPB">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="XBS-IT-ZDC">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="FMg-Jp-buc">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -935,14 +934,14 @@
             <objects>
                 <viewController storyboardIdentifier="PageCollectionViewController" hidesBottomBarWhenPushed="YES" id="1Ac-Cz-Thc" customClass="PageCollectionViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="g4G-2G-jdK">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="GnL-ux-Gh4">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="uXY-9i-aAx">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ptM-EM-NUf">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -963,7 +962,7 @@
             <objects>
                 <viewController storyboardIdentifier="RecommendViewController" hidesBottomBarWhenPushed="YES" id="7Uh-ch-mrH" customClass="RecommendViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="g9B-Ad-1iK">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Klx-BN-lux">
@@ -1028,7 +1027,7 @@
                     <navigationItem key="navigationItem" title="關 注 更 多" id="z0T-Fq-2em">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="0cE-Fo-Ce6">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="WeX-hY-D70">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1056,7 +1055,7 @@
             <objects>
                 <viewController storyboardIdentifier="Recommend2ViewController" hidesBottomBarWhenPushed="YES" id="U5T-ug-WlK" customClass="Recommend2ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9v4-Nb-Qqv">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="8kR-Oc-oUD">
@@ -1099,7 +1098,7 @@
                     <navigationItem key="navigationItem" title="推 薦 職 人" id="Wh5-Of-AEc">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="8Zj-gb-Tj7">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="oGg-Gx-tzG">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1127,7 +1126,7 @@
             <objects>
                 <viewController storyboardIdentifier="CurrencyViewController" hidesBottomBarWhenPushed="YES" id="E2l-hP-ur0" customClass="CurrencyViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ugr-Ci-I9j">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="目 前 擁 有 P 點" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cXz-XN-zlU">
@@ -1182,7 +1181,7 @@
                     <navigationItem key="navigationItem" title="購 買 P 點" id="IYa-u1-kWb">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="V4z-O0-n1v">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="EJo-j4-inb">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1211,7 +1210,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="EditMemberTableViewController" id="dSP-f2-4Di" customClass="EditMemberTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="165" sectionHeaderHeight="28" sectionFooterHeight="28" id="nd7-32-qSH">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
@@ -1426,7 +1425,7 @@
                     <navigationItem key="navigationItem" id="N5H-Pp-cQK">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="hFN-yn-VQa">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Dkl-di-IuS">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1475,7 +1474,7 @@
             <objects>
                 <viewController storyboardIdentifier="EditPasswdViewController" hidesBottomBarWhenPushed="YES" id="1rm-hr-I51" customClass="EditPasswdViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4QY-qv-pkN">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" id="WwT-GT-nmG">
@@ -1568,7 +1567,7 @@
                     <navigationItem key="navigationItem" id="Cls-wG-kyg">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="3JM-vP-0iA">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="qxj-5z-FVJ">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1596,7 +1595,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="RecentBrowseTableViewController" id="4pu-PM-ZEc" customClass="RecentBrowseTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="186" sectionHeaderHeight="28" sectionFooterHeight="28" id="JRl-XC-HwV">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -1651,7 +1650,7 @@
                     <navigationItem key="navigationItem" title="最 近 瀏 覽 作 品" id="2RG-ED-EWZ">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="eMf-h0-C5A">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bmu-wj-k0y">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1674,7 +1673,7 @@
             <objects>
                 <viewController storyboardIdentifier="EditPhoneViewController" hidesBottomBarWhenPushed="YES" id="Cau-7z-xtr" customClass="EditPhoneViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NeF-Q9-NLA">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" id="0EF-io-xbc">
@@ -1770,7 +1769,7 @@
                     <navigationItem key="navigationItem" title="變更行動裝置號碼" id="VWe-u2-5Kl">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="dZd-M3-naP">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1a5-CQ-R9s">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2395,7 +2394,7 @@
             <objects>
                 <viewController storyboardIdentifier="Setup2ViewController" hidesBottomBarWhenPushed="YES" id="hWa-Qf-mgD" customClass="Setup2ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lR6-Dy-u6F">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="rjB-z3-JXP">
@@ -2427,7 +2426,7 @@
                     <navigationItem key="navigationItem" id="Xc9-vL-ix3">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="dtc-5W-ba8">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="nsK-wi-tSa">
-                                <rect key="frame" x="16" y="4" width="35" height="35"/>
+                                <rect key="frame" x="16" y="4.5" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="button_back.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3165,7 +3164,7 @@
             <objects>
                 <viewController storyboardIdentifier="RetrievealbumpViewController" hidesBottomBarWhenPushed="YES" id="kNH-v4-HjR" customClass="RetrievealbumpViewController" sceneMemberID="viewController">
                     <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="cLw-6z-TIG">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="4Ah-Bz-JW3">
@@ -3326,7 +3325,7 @@
                     <navigationItem key="navigationItem" id="1ZW-eE-25G">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="4IK-Xp-Omf">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gd1-v9-chW">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3338,7 +3337,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="plain" id="ao6-9N-vwx">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="dAf-bg-FRY">
-                                <rect key="frame" x="269" y="4" width="35" height="35"/>
+                                <rect key="frame" x="184" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_share_white_120x120.png"/>
                                 <connections>
@@ -3377,7 +3376,7 @@
             <objects>
                 <viewController storyboardIdentifier="EventPostViewController" hidesBottomBarWhenPushed="YES" id="Yq6-EO-Zcq" customClass="EventPostViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jfJ-jc-P6V">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="kbH-jM-qfP">
@@ -3423,7 +3422,7 @@
                     <navigationItem key="navigationItem" title="活 動 專 區" id="f23-Aw-MDO">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="ZWP-wq-mNT">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="i5P-PZ-ztH">
-                                <rect key="frame" x="16" y="4" width="35" height="35"/>
+                                <rect key="frame" x="16" y="4.5" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="button_back.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3452,7 +3451,7 @@
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="SSc-bW-lC6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.12549019610000001" green="0.74901960779999999" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
@@ -3470,7 +3469,7 @@
             <objects>
                 <viewController storyboardIdentifier="CreativeViewController" hidesBottomBarWhenPushed="YES" id="u2j-zv-v70" customClass="CreativeViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YUf-WD-SCG">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="OMa-by-bgv">
@@ -3565,7 +3564,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" editable="NO" text="我是Sian,是一個喜歡攝及旅行的女孩，目前旅遊過英、法國、荷蘭、西班牙，以及中國幾十個城市，希望能和大家分享我留下的點點滴滴..." selectable="NO" id="nmp-U3-axA">
-                                            <rect key="frame" x="24" y="303" width="272" height="143"/>
+                                            <rect key="frame" x="25" y="303" width="270.5" height="78.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -3620,7 +3619,7 @@
                     <navigationItem key="navigationItem" title="職 人 詳 情" id="GOF-Ij-mQb">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="Lbq-tu-2Kn">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="EeG-Xo-kAE">
-                                <rect key="frame" x="16" y="4" width="35" height="35"/>
+                                <rect key="frame" x="16" y="4.5" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="button_back.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3644,7 +3643,7 @@
             <objects>
                 <collectionViewController hidesBottomBarWhenPushed="YES" id="shG-ig-Uso" customClass="FollowListCollectionViewController" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="KNr-Vw-yIc">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="lbg-Rb-xf3">
@@ -3692,7 +3691,7 @@
                     <navigationItem key="navigationItem" title="我 關 注 的 人" id="9sE-6I-5Yd">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="SyN-kS-3aD">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="pVG-lZ-y1X">
-                                <rect key="frame" x="16" y="-6" width="55" height="55"/>
+                                <rect key="frame" x="16" y="0.0" width="120" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3719,7 +3718,7 @@
             <objects>
                 <viewController storyboardIdentifier="ExistingAlbumViewController" hidesBottomBarWhenPushed="YES" id="sbd-Dm-1X3" customClass="ExistingAlbumViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hkP-Ux-hWI">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="n5L-EF-4pp">
@@ -3771,7 +3770,7 @@
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" style="plain" id="3pT-gM-9lZ">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="noW-Jw-SJ4">
-                                <rect key="frame" x="16" y="4" width="35" height="35"/>
+                                <rect key="frame" x="16" y="4.5" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="button_back.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3962,9 +3961,4 @@
         <image name="top_menu.png" width="540" height="82"/>
         <image name="wbutton_cooperation.png" width="120" height="120"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4_0.fullscreen"/>
-    </simulatedMetricsContainer>
 </document>
