@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Youtube Player View Controller-->
+        <scene sceneID="wuE-tj-4Rt">
+            <objects>
+                <viewController storyboardIdentifier="YoutubePlayerViewController" id="7t5-J7-ZR9" customClass="YoutubePlayerViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="bnA-pm-er2">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nzc-rU-pkY" customClass="YTPlayerView">
+                                <rect key="frame" x="0.0" y="68" width="375" height="599"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Ec-7D-rl0">
+                                <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I3d-V5-jfP">
+                                        <rect key="frame" x="16" y="3" width="42" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="42" id="Ufl-DV-0r3"/>
+                                            <constraint firstAttribute="width" constant="42" id="tY0-jN-vK0"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
+                                        <state key="normal" image="ic200_cancel_white.png"/>
+                                        <connections>
+                                            <action selector="backBtnPressed:" destination="7t5-J7-ZR9" eventType="touchUpInside" id="xho-Qx-uHp"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="I3d-V5-jfP" firstAttribute="centerY" secondItem="6Ec-7D-rl0" secondAttribute="centerY" id="40T-TZ-m6r"/>
+                                    <constraint firstItem="I3d-V5-jfP" firstAttribute="leading" secondItem="6Ec-7D-rl0" secondAttribute="leading" constant="16" id="F5j-kk-aA3"/>
+                                    <constraint firstAttribute="height" constant="48" id="aMc-vc-SeC"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Nzc-rU-pkY" firstAttribute="bottom" secondItem="PhX-TN-qry" secondAttribute="bottom" id="176-y2-5AH"/>
+                            <constraint firstItem="Nzc-rU-pkY" firstAttribute="top" secondItem="6Ec-7D-rl0" secondAttribute="bottom" id="9i4-WL-4pU"/>
+                            <constraint firstItem="6Ec-7D-rl0" firstAttribute="top" secondItem="bnA-pm-er2" secondAttribute="top" constant="20" symbolic="YES" id="Hks-l8-ufR"/>
+                            <constraint firstItem="6Ec-7D-rl0" firstAttribute="trailing" secondItem="PhX-TN-qry" secondAttribute="trailing" id="NaZ-r2-L9x"/>
+                            <constraint firstItem="6Ec-7D-rl0" firstAttribute="leading" secondItem="PhX-TN-qry" secondAttribute="leading" id="RKd-At-hVS"/>
+                            <constraint firstItem="Nzc-rU-pkY" firstAttribute="trailing" secondItem="PhX-TN-qry" secondAttribute="trailing" id="eyT-f0-QNF"/>
+                            <constraint firstItem="Nzc-rU-pkY" firstAttribute="leading" secondItem="PhX-TN-qry" secondAttribute="leading" id="j2K-KN-Yut"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="PhX-TN-qry"/>
+                    </view>
+                    <connections>
+                        <outlet property="navBarHeight" destination="aMc-vc-SeC" id="duE-x8-MfE"/>
+                        <outlet property="navBarView" destination="6Ec-7D-rl0" id="zB6-c2-gR9"/>
+                        <outlet property="playerView" destination="Nzc-rU-pkY" id="Gat-ap-k7P"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0P9-4c-Vyi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1752.8" y="36.431784107946029"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="ic200_cancel_white.png" width="16" height="16"/>
+    </resources>
+</document>

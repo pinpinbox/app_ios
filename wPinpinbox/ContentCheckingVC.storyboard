@@ -296,9 +296,6 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wrI-eU-xNq" customClass="YTPlayerView">
-                                                    <rect key="frame" x="0.0" y="50" width="414" height="586"/>
-                                                </view>
                                                 <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Veg-ON-Ql9">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -311,7 +308,7 @@
                                                     </constraints>
                                                     <state key="normal" title="Button" image="wbutton_play.png"/>
                                                     <connections>
-                                                        <action selector="fbVideoBtnPressed:" destination="ZUu-YK-KeO" eventType="touchUpInside" id="VBJ-qN-Url"/>
+                                                        <action selector="videoBtnPressed:" destination="ZUu-YK-KeO" eventType="touchUpInside" id="ebc-tn-O1S"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dA7-cb-8GI">
@@ -360,13 +357,11 @@
                                         <constraints>
                                             <constraint firstItem="Ks3-ST-i1j" firstAttribute="centerX" secondItem="p7W-VO-aCM" secondAttribute="centerX" id="0xO-mL-XXO"/>
                                             <constraint firstItem="ywr-fC-lW5" firstAttribute="centerX" secondItem="p7W-VO-aCM" secondAttribute="centerX" id="2LC-r4-hQJ"/>
-                                            <constraint firstAttribute="trailing" secondItem="wrI-eU-xNq" secondAttribute="trailing" id="6m4-K1-Psm"/>
                                             <constraint firstItem="T3j-vs-oDi" firstAttribute="centerY" secondItem="p7W-VO-aCM" secondAttribute="centerY" id="7Ay-rg-2UO"/>
                                             <constraint firstItem="ywr-fC-lW5" firstAttribute="centerY" secondItem="p7W-VO-aCM" secondAttribute="centerY" id="7oL-eM-5m6"/>
                                             <constraint firstItem="wbC-X0-UiR" firstAttribute="top" secondItem="p7W-VO-aCM" secondAttribute="top" id="FxV-Dg-ybx"/>
                                             <constraint firstAttribute="bottom" secondItem="Veg-ON-Ql9" secondAttribute="bottom" id="G7s-mU-5M3"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="xwf-tU-tHl" secondAttribute="trailing" constant="-17" id="H9K-e8-YFU"/>
-                                            <constraint firstItem="wrI-eU-xNq" firstAttribute="leading" secondItem="p7W-VO-aCM" secondAttribute="leading" id="IGt-VA-BKK"/>
                                             <constraint firstItem="kE3-LW-aSQ" firstAttribute="leading" secondItem="p7W-VO-aCM" secondAttribute="leading" id="Juf-rW-C94"/>
                                             <constraint firstAttribute="trailing" secondItem="wbC-X0-UiR" secondAttribute="trailing" id="LFN-0b-VMk"/>
                                             <constraint firstItem="Pl5-8o-eBX" firstAttribute="centerX" secondItem="p7W-VO-aCM" secondAttribute="centerX" id="Qtj-ES-XS2"/>
@@ -377,7 +372,6 @@
                                             <constraint firstItem="Veg-ON-Ql9" firstAttribute="leading" secondItem="p7W-VO-aCM" secondAttribute="leading" id="ctN-vo-Bdl"/>
                                             <constraint firstItem="T3j-vs-oDi" firstAttribute="centerX" secondItem="p7W-VO-aCM" secondAttribute="centerX" id="eJw-Qz-NJQ"/>
                                             <constraint firstItem="xwf-tU-tHl" firstAttribute="leading" secondItem="p7W-VO-aCM" secondAttribute="leading" id="gaM-Gb-4hB"/>
-                                            <constraint firstAttribute="bottom" secondItem="wrI-eU-xNq" secondAttribute="bottom" constant="80" id="j0Y-EM-9VD"/>
                                             <constraint firstAttribute="bottom" secondItem="wbC-X0-UiR" secondAttribute="bottom" id="ksj-kU-cRe"/>
                                             <constraint firstItem="Pl5-8o-eBX" firstAttribute="centerY" secondItem="p7W-VO-aCM" secondAttribute="centerY" id="pNz-JQ-tc3"/>
                                             <constraint firstAttribute="trailing" secondItem="Veg-ON-Ql9" secondAttribute="trailing" id="r97-bh-Vil"/>
@@ -387,7 +381,6 @@
                                             <constraint firstItem="dA7-cb-8GI" firstAttribute="centerY" secondItem="p7W-VO-aCM" secondAttribute="centerY" id="w6h-QR-T8b"/>
                                             <constraint firstAttribute="trailing" secondItem="kE3-LW-aSQ" secondAttribute="trailing" id="xgl-cx-2N0"/>
                                             <constraint firstItem="kE3-LW-aSQ" firstAttribute="top" secondItem="p7W-VO-aCM" secondAttribute="top" id="yb0-jm-4zo"/>
-                                            <constraint firstItem="wrI-eU-xNq" firstAttribute="top" secondItem="p7W-VO-aCM" secondAttribute="top" constant="50" id="zCB-Fn-81e"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="alphaBgV" destination="Veg-ON-Ql9" id="ovn-cQ-zte"/>
@@ -426,7 +419,6 @@
                                             <outlet property="topicLabelForBgV4" destination="EUc-ey-tg3" id="IyL-tl-b2U"/>
                                             <outlet property="videoBtn" destination="Pl5-8o-eBX" id="BaK-rx-msa"/>
                                             <outlet property="videoView" destination="kE3-LW-aSQ" id="5Ja-gC-0yI"/>
-                                            <outlet property="ytPlayerView" destination="wrI-eU-xNq" id="jIF-ki-HJM"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

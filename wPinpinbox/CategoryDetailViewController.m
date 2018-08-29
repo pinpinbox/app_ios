@@ -37,7 +37,6 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
-
 @end
 
 @implementation CategoryDetailViewController

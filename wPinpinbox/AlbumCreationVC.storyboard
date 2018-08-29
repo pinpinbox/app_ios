@@ -117,24 +117,24 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0eE-qQ-MhU">
                                         <rect key="frame" x="324" y="16" width="35" height="453"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tR4-6c-BJr">
-                                                <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZxS-QF-hp3">
+                                                <rect key="frame" x="0.0" y="418" width="35" height="35"/>
                                                 <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="35" id="LMG-S9-8fL"/>
-                                                    <constraint firstAttribute="width" constant="35" id="PcL-Rn-Gop"/>
+                                                    <constraint firstAttribute="height" constant="35" id="JQM-IN-dX3"/>
+                                                    <constraint firstAttribute="width" constant="35" id="W8h-dO-5GP"/>
                                                 </constraints>
-                                                <state key="normal" image="ic200_aviary_white.png"/>
+                                                <state key="normal" title="Button" image="ic200_delete_white.png"/>
                                                 <connections>
-                                                    <action selector="AdobeEdit:" destination="zap-Ke-wb3" eventType="touchUpInside" id="dZW-Hb-ZTD"/>
+                                                    <action selector="deleteFile:" destination="zap-Ke-wb3" eventType="touchUpInside" id="3lR-oc-B81"/>
                                                 </connections>
                                             </button>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IfW-O8-TYa">
-                                                <rect key="frame" x="4" y="43" width="27" height="70"/>
+                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IfW-O8-TYa">
+                                                <rect key="frame" x="4" y="0.0" width="27" height="70"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="uo3-ly-oHJ">
-                                                <rect key="frame" x="0.0" y="43" width="35" height="74"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="35" height="74"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TmN-NC-R0S">
                                                         <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
@@ -162,14 +162,14 @@
                                                 </subviews>
                                             </stackView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hKC-ux-LLx">
-                                                <rect key="frame" x="4" y="125" width="27" height="70"/>
+                                                <rect key="frame" x="4" y="82" width="27" height="70"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="70" id="0zN-Et-rgO"/>
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="hcG-yz-t5a">
-                                                <rect key="frame" x="0.0" y="125" width="35" height="74"/>
+                                                <rect key="frame" x="0.0" y="82" width="35" height="74"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GUg-Ut-m3O" customClass="BFPaperButton">
                                                         <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
@@ -196,18 +196,6 @@
                                                     </button>
                                                 </subviews>
                                             </stackView>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZxS-QF-hp3">
-                                                <rect key="frame" x="0.0" y="418" width="35" height="35"/>
-                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="35" id="JQM-IN-dX3"/>
-                                                    <constraint firstAttribute="width" constant="35" id="W8h-dO-5GP"/>
-                                                </constraints>
-                                                <state key="normal" title="Button" image="ic200_delete_white.png"/>
-                                                <connections>
-                                                    <action selector="deleteFile:" destination="zap-Ke-wb3" eventType="touchUpInside" id="3lR-oc-B81"/>
-                                                </connections>
-                                            </button>
                                         </subviews>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="hKC-ux-LLx" secondAttribute="trailing" constant="4" id="02f-kQ-GuU"/>
@@ -215,19 +203,15 @@
                                             <constraint firstItem="hcG-yz-t5a" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="2MR-oI-b5U"/>
                                             <constraint firstAttribute="trailing" secondItem="IfW-O8-TYa" secondAttribute="trailing" constant="4" id="ALN-Z9-EuG"/>
                                             <constraint firstItem="hcG-yz-t5a" firstAttribute="top" secondItem="uo3-ly-oHJ" secondAttribute="bottom" constant="8" id="Bq7-HO-h6G"/>
-                                            <constraint firstItem="tR4-6c-BJr" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="EMt-4U-Nfj"/>
-                                            <constraint firstItem="uo3-ly-oHJ" firstAttribute="top" secondItem="tR4-6c-BJr" secondAttribute="bottom" constant="8" id="HFD-fD-Bjq"/>
                                             <constraint firstAttribute="trailing" secondItem="hcG-yz-t5a" secondAttribute="trailing" id="J4S-y3-plr"/>
                                             <constraint firstItem="IfW-O8-TYa" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" constant="4" id="LeZ-Jo-msV"/>
                                             <constraint firstAttribute="bottom" secondItem="ZxS-QF-hp3" secondAttribute="bottom" id="Ni5-of-XS4"/>
                                             <constraint firstItem="ZxS-QF-hp3" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="Qq1-fY-h44"/>
                                             <constraint firstItem="hcG-yz-t5a" firstAttribute="top" secondItem="IfW-O8-TYa" secondAttribute="bottom" constant="12" id="QrI-FU-mTi"/>
                                             <constraint firstItem="hKC-ux-LLx" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" constant="4" id="V93-o8-9GW"/>
-                                            <constraint firstItem="IfW-O8-TYa" firstAttribute="top" secondItem="tR4-6c-BJr" secondAttribute="bottom" constant="8" id="cu6-eD-NF5"/>
-                                            <constraint firstItem="tR4-6c-BJr" firstAttribute="top" secondItem="0eE-qQ-MhU" secondAttribute="top" id="hFA-1d-CgZ"/>
+                                            <constraint firstItem="uo3-ly-oHJ" firstAttribute="top" secondItem="0eE-qQ-MhU" secondAttribute="top" id="eub-C9-6Dr"/>
                                             <constraint firstItem="hKC-ux-LLx" firstAttribute="top" secondItem="uo3-ly-oHJ" secondAttribute="bottom" constant="8" id="hc9-Ey-FeZ"/>
                                             <constraint firstAttribute="trailing" secondItem="ZxS-QF-hp3" secondAttribute="trailing" id="kpi-aH-Ye7"/>
-                                            <constraint firstAttribute="trailing" secondItem="tR4-6c-BJr" secondAttribute="trailing" id="lVE-oE-HKu"/>
                                             <constraint firstAttribute="trailing" secondItem="uo3-ly-oHJ" secondAttribute="trailing" id="ooe-Lw-Bmx"/>
                                         </constraints>
                                     </view>
@@ -349,7 +333,6 @@
                     <connections>
                         <outlet property="ShowView" destination="XZr-ef-acy" id="PGs-Yg-ygm"/>
                         <outlet property="addTextBtn" destination="TmN-NC-R0S" id="QAB-Xr-74p"/>
-                        <outlet property="adobeEidt" destination="tR4-6c-BJr" id="bzi-XU-I3t"/>
                         <outlet property="audioBgView" destination="hKC-ux-LLx" id="uLQ-PG-Z7s"/>
                         <outlet property="conbtn" destination="0ju-l5-i4K" id="sOx-Vr-USM"/>
                         <outlet property="dataCollectionView" destination="2IG-uS-S58" id="2m4-jr-ckk"/>
@@ -374,7 +357,6 @@
         <image name="4-08icon_creatnewframe_plus.png" width="60" height="60"/>
         <image name="4-08photo-size.png" width="88" height="132"/>
         <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
-        <image name="ic200_aviary_white.png" width="144" height="144"/>
         <image name="ic200_cooperation_dark.png" width="144" height="144"/>
         <image name="ic200_delete_white.png" width="144" height="144"/>
         <image name="ic200_micro_white.png" width="144" height="144"/>

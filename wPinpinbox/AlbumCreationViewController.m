@@ -63,12 +63,6 @@
 #define kCellHeightForPreview 130
 #define kViewHeightForPreview 568
 
-#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
-#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
-
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
@@ -80,7 +74,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     __weak IBOutlet UIButton *settingBtn;
     __weak IBOutlet UIButton *nextBtn;
     
-    __weak IBOutlet UIButton *adobeEidt;
+//    __weak IBOutlet UIButton *adobeEidt;
     __weak IBOutlet BFPaperButton *recordPausePlayBtn;
     
     __weak IBOutlet UIView *textBgView;
@@ -206,8 +200,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"self.prefixText: %@", self.prefixText);
     NSLog(@"self.specialUrl: %@", self.specialUrl);
     
-    [self checkOSVersionToShowOrHideAdobeBtn];
-    
     viewHeightForPreview = [UIScreen mainScreen].bounds.size.height;
     
     textBgView.backgroundColor = [UIColor whiteColor];
@@ -233,8 +225,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     refreshBtn.hidden = YES;
     
     nextBtn.layer.cornerRadius = kCornerRadius;
-    adobeEidt.layer.cornerRadius = adobeEidt.bounds.size.width / 2;
-    adobeEidt.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+//    adobeEidt.layer.cornerRadius = adobeEidt.bounds.size.width / 2;
+//    adobeEidt.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     
     addTextBtn.layer.cornerRadius = addTextBtn.bounds.size.width / 2;
     addTextBtn.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
@@ -1476,8 +1468,9 @@ shouldChangeTextInRange:(NSRange)range
                         stSelf->ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
                         
+
                         if (stSelf->ImageDataArr.count == 0) {
-                            stSelf->adobeEidt.hidden = YES;
+                            
                             stSelf->recordPausePlayBtn.hidden = YES;
                             stSelf->audioBgView.hidden = YES;
                             stSelf->deleteAudioBtn.hidden = YES;
@@ -2351,7 +2344,7 @@ didFinishSavingWithError:(NSError *)error
     if (ImageDataArr.count == 0) {
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
-        adobeEidt.hidden = YES;
+//        adobeEidt.hidden = YES;
         recordPausePlayBtn.hidden = YES;
         audioBgView.hidden = YES;
         deleteAudioBtn.hidden = YES;
@@ -2369,10 +2362,7 @@ didFinishSavingWithError:(NSError *)error
     } else if (ImageDataArr.count != 0) {
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
-        adobeEidt.hidden = NO;
-        
-        [self checkOSVersionToShowOrHideAdobeBtn];
-        
+//        adobeEidt.hidden = NO;
         addTextBtn.hidden = NO;
         
         recordPausePlayBtn.hidden = NO;
@@ -2450,7 +2440,6 @@ didFinishSavingWithError:(NSError *)error
                 videoBtn.center = CGPointMake(imgv.bounds.size.width / 2, imgv.bounds.size.height / 2);
                 [stSelf.ShowView addSubview: videoBtn];
                 
-                stSelf->adobeEidt.hidden = YES;
                 
                 stSelf->recordPausePlayBtn.hidden = YES;
                 stSelf->audioBgView.hidden = YES;
@@ -2459,9 +2448,7 @@ didFinishSavingWithError:(NSError *)error
             } else if ([videoStr isKindOfClass: [NSNull class]]) {
                 NSLog(@"videoStr is null");
                 [videoBtn removeFromSuperview];
-                stSelf->adobeEidt.hidden = NO;
-                
-                [self checkOSVersionToShowOrHideAdobeBtn];
+
                 stSelf->recordPausePlayBtn.hidden = NO;
                 stSelf->audioBgView.hidden = NO;
                 stSelf->deleteAudioBtn.hidden = NO;
@@ -2618,7 +2605,7 @@ didFinishSavingWithError:(NSError *)error
     settingBtn.userInteractionEnabled = YES;
     nextBtn.userInteractionEnabled = YES;
     
-    adobeEidt.userInteractionEnabled = YES;
+//    adobeEidt.userInteractionEnabled = YES;
     
     addTextBtn.userInteractionEnabled = YES;
     deleteTextBtn.userInteractionEnabled = YES;
@@ -2635,7 +2622,7 @@ didFinishSavingWithError:(NSError *)error
     settingBtn.userInteractionEnabled = NO;
     nextBtn.userInteractionEnabled = NO;
     
-    adobeEidt.userInteractionEnabled = NO;
+//    adobeEidt.userInteractionEnabled = NO;
     
     addTextBtn.userInteractionEnabled = NO;
     deleteTextBtn.userInteractionEnabled = NO;
@@ -3052,9 +3039,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - Adobe SDK Delegate Methods
--(IBAction)AdobeEdit:(id)sender{
-    [self AdobeSDK];
-}
+//-(IBAction)AdobeEdit:(id)sender{
+//    [self AdobeSDK];
+//}
 
 -(void)AdobeSDK {
     NSLog(@"AdobeSDK");
@@ -4501,14 +4488,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 {
     NSLog(@"uploadPhotoDidComplete");
     [self reload: nil];
-}
-
-- (void)checkOSVersionToShowOrHideAdobeBtn {
-    if (SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"9.3")) {
-        adobeEidt.hidden = NO;
-    } else if (SYSTEM_VERSION_GREATER_THAN(@"9.3")) {
-        adobeEidt.hidden = YES;
-    }
 }
 
 @end
