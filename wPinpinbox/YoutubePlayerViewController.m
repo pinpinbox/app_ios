@@ -33,7 +33,15 @@
     [hud.button addTarget: self action: @selector(cancelWork:) forControlEvents: UIControlEventTouchUpInside];
     
     self.navBarView.backgroundColor = [UIColor clearColor];
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    NSLog(@"YoutubePlayerViewController viewWillAppear");
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     NSDictionary *playerVars = @{
                                  @"playsinline" : @1,
                                  @"showinfo" : @1,
@@ -43,11 +51,6 @@
                           playerVars: playerVars];
     self.playerView.delegate = self;
     self.playerView.alpha = 0;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    NSLog(@"YoutubePlayerViewController viewWillAppear");
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

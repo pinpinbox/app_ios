@@ -1689,68 +1689,6 @@ shouldChangeTextInRange:(NSRange)range
     }
 }
 
-/*
-#pragma mark - Notifications for Keyboard
-// Call this method somewhere in your view controller setup code.
-- (void)addKeyboardNotification {
-    NSLog(@"addKeyboardNotification");
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-- (void)removeKeyboardNotification {
-    NSLog(@"removeKeyboardNotification");
-    
-    [[NSNotificationCenter defaultCenter] removeObserver: self
-                                                    name: UIKeyboardWillShowNotification
-                                                  object: nil];
-    [[NSNotificationCenter defaultCenter] removeObserver: self
-                                                    name: UIKeyboardWillHideNotification
-                                                  object: nil];
-}
-
-// Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWillShow:(NSNotification *)aNotification {
-    NSLog(@"");
-    NSLog(@"keyboardWillShow");
-    NSDictionary *info = [aNotification userInfo];
-    kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    NSLog(@"kbSize: %@", NSStringFromCGSize(kbSize));
-    
-    NSLog(@"Before changing ");
-    NSLog(@"self.actionSheetView.frame.origin.y: %f", self.actionSheetView.frame.origin.y);
-    CGRect rect = self.actionSheetView.frame;
-    rect.origin.y -= kbSize.height;
-    self.actionSheetView.frame = rect;
-
-    NSLog(@"After changing ");
-    NSLog(@"self.actionSheetView.frame.origin.y: %f", self.actionSheetView.frame.origin.y);
-}
-
-// Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification *)aNotification {
-    NSLog(@"");
-    NSLog(@"keyboardWillBeHidden");
-    
-    NSLog(@"Before changing ");
-    NSLog(@"self.actionSheetView.frame.origin.y: %f", self.actionSheetView.frame.origin.y);
-    
-    CGRect rect = self.actionSheetView.frame;
-    rect.origin.y += kbSize.height;
-    self.actionSheetView.frame = rect;
-    
-    kbSize = CGSizeZero;
-    
-    NSLog(@"After changing ");
-    NSLog(@"self.actionSheetView.frame.origin.y: %f", self.actionSheetView.frame.origin.y);
-}
-*/
 
 /*
  #pragma mark - Navigation

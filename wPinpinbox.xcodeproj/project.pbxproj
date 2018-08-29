@@ -171,6 +171,7 @@
 		54F777F820ABF1B600A6E195 /* Template.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F777F720ABF1B600A6E195 /* Template.xcassets */; };
 		54F916322011F22700CBEC6E /* NewExistingAlbumVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54F916312011F22700CBEC6E /* NewExistingAlbumVC.storyboard */; };
 		54FA3EF3202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 54FA3EF2202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.m */; };
+		54FF9EED21359B610098A938 /* NewMessageBoardVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54FF9EEC21359B610098A938 /* NewMessageBoardVC.storyboard */; };
 		6303C4C91ED32124009E6160 /* FollowListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6303C4C81ED32124009E6160 /* FollowListsViewController.m */; };
 		630418291EF9158100132CE1 /* SetupMusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630418281EF9158100132CE1 /* SetupMusicViewController.m */; };
 		6305440A1E5FE5E200B0CB6D /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 630544091E5FE5E200B0CB6D /* UIView+Toast.m */; };
@@ -233,7 +234,6 @@
 		630FD27A1E31C61B0036DEC6 /* RecentBrowseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD2791E31C61B0036DEC6 /* RecentBrowseTableViewCell.m */; };
 		6315A1761E816962002BF101 /* PreviewPageSetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6315A1751E816962002BF101 /* PreviewPageSetupViewController.m */; };
 		6315B2E51EE7E13600EE67C5 /* NewMessageBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6315B2E31EE7E13600EE67C5 /* NewMessageBoardViewController.m */; };
-		6315B2E61EE7E13600EE67C5 /* NewMessageBoardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6315B2E41EE7E13600EE67C5 /* NewMessageBoardViewController.xib */; };
 		63175B1E1EA54CF6008ADEC4 /* FBFriendsListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63175B1D1EA54CF6008ADEC4 /* FBFriendsListViewController.m */; };
 		631768CE1EA0B5270047BAB7 /* CustomIOSAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 631768CD1EA0B5270047BAB7 /* CustomIOSAlertView.m */; };
 		6318800E1EC4135B00B8CB4F /* SearchTabCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6318800D1EC4135B00B8CB4F /* SearchTabCollectionViewCell.m */; };
@@ -1094,6 +1094,7 @@
 		54F916312011F22700CBEC6E /* NewExistingAlbumVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NewExistingAlbumVC.storyboard; sourceTree = "<group>"; };
 		54FA3EF1202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewExistingAlbumCollectionViewCell.h; sourceTree = "<group>"; };
 		54FA3EF2202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewExistingAlbumCollectionViewCell.m; sourceTree = "<group>"; };
+		54FF9EEC21359B610098A938 /* NewMessageBoardVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NewMessageBoardVC.storyboard; sourceTree = "<group>"; };
 		55DDBC661003FCB56D114637 /* Pods-wPinpinbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.release.xcconfig"; sourceTree = "<group>"; };
 		6303C4C71ED32124009E6160 /* FollowListsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowListsViewController.h; sourceTree = "<group>"; };
 		6303C4C81ED32124009E6160 /* FollowListsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowListsViewController.m; sourceTree = "<group>"; };
@@ -1220,7 +1221,6 @@
 		6315A1751E816962002BF101 /* PreviewPageSetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewPageSetupViewController.m; sourceTree = "<group>"; };
 		6315B2E21EE7E13600EE67C5 /* NewMessageBoardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewMessageBoardViewController.h; sourceTree = "<group>"; };
 		6315B2E31EE7E13600EE67C5 /* NewMessageBoardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewMessageBoardViewController.m; sourceTree = "<group>"; };
-		6315B2E41EE7E13600EE67C5 /* NewMessageBoardViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewMessageBoardViewController.xib; sourceTree = "<group>"; };
 		63175B1C1EA54CF6008ADEC4 /* FBFriendsListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBFriendsListViewController.h; sourceTree = "<group>"; };
 		63175B1D1EA54CF6008ADEC4 /* FBFriendsListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBFriendsListViewController.m; sourceTree = "<group>"; };
 		631768CC1EA0B5270047BAB7 /* CustomIOSAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomIOSAlertView.h; sourceTree = "<group>"; };
@@ -2311,7 +2311,7 @@
 			children = (
 				6315B2E21EE7E13600EE67C5 /* NewMessageBoardViewController.h */,
 				6315B2E31EE7E13600EE67C5 /* NewMessageBoardViewController.m */,
-				6315B2E41EE7E13600EE67C5 /* NewMessageBoardViewController.xib */,
+				54FF9EEC21359B610098A938 /* NewMessageBoardVC.storyboard */,
 				630C8BDD1EEB04E600EC5784 /* NewMessageTableViewCell.h */,
 				630C8BDE1EEB04E600EC5784 /* NewMessageTableViewCell.m */,
 			);
@@ -5444,6 +5444,7 @@
 				92C4149A1C3231E5004BA895 /* icon_get@2x.png in Resources */,
 				927410611BD0DF2C0031460B /* button_manu@2x.png in Resources */,
 				9281DF981BDDFD8D00463337 /* RetrievehotrankTableViewCell.xib in Resources */,
+				54FF9EED21359B610098A938 /* NewMessageBoardVC.storyboard in Resources */,
 				D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */,
 				54B9F4981FE6C27300A694E4 /* InfoEditVC.storyboard in Resources */,
 				927AADF11BE222C50088CDB9 /* 4-08button_edit_click@2x.png in Resources */,
@@ -5462,7 +5463,6 @@
 				5440836720D8EFAA00A5F645 /* SystemImages.xcassets in Resources */,
 				9200B1DD1C5B483A00996358 /* P04.png in Resources */,
 				92F89B0E1BBE73D400565908 /* render_3_18.png in Resources */,
-				6315B2E61EE7E13600EE67C5 /* NewMessageBoardViewController.xib in Resources */,
 				925119FA1CF5B28C002D4678 /* button_attMore_click_en@2x.png in Resources */,
 				922A4AF51BD6032A006D5A36 /* 2-01icon_pcoin@2x.png in Resources */,
 				92D362E91BE068770084C746 /* PreviewbookViewController.xib in Resources */,
