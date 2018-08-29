@@ -12,8 +12,8 @@
 #import "ReqHTTP.h"
 #import "wTools.h"
 
-#import "AFNetworking.h"
-#import "UIKit+AFNetworking.h"
+//#import "AFNetworking.h"
+//#import "UIKit+AFNetworking.h"
 #import "GlobalVars.h"
 
 static NSString *hostURL = @"www.pinpinbox.com";
@@ -1490,26 +1490,26 @@ static NSString *hostURL = @"www.pinpinbox.com";
     */
     
     NSLog(@"NSMutableURLRequest *request");
-    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod: @"POST" URLString: urlString parameters: _params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        
-    } error: nil];
+//    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod: @"POST" URLString: urlString parameters: _params constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+//        
+//    } error: nil];
     
-    NSLog(@"AFURLSessionManager *manager");
-    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration: [NSURLSessionConfiguration defaultSessionConfiguration]];
-    NSURLSessionUploadTask *uploadTask;
-    uploadTask = [manager uploadTaskWithStreamedRequest: request progress:^(NSProgress * _Nonnull uploadProgress) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"update for progress");
-        });
-    } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"Error: %@", error);
-        } else {
-            NSLog(@"%@ %@", response, responseObject);
-        }
-    }];
-    [uploadTask resume];
-    
+//    NSLog(@"AFURLSessionManager *manager");
+//    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration: [NSURLSessionConfiguration defaultSessionConfiguration]];
+//    NSURLSessionUploadTask *uploadTask;
+//    uploadTask = [manager uploadTaskWithStreamedRequest: request progress:^(NSProgress * _Nonnull uploadProgress) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSLog(@"update for progress");
+//        });
+//    } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+//        if (error) {
+//            NSLog(@"Error: %@", error);
+//        } else {
+//            NSLog(@"%@ %@", response, responseObject);
+//        }
+//    }];
+//    [uploadTask resume];
+//
     /*
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
     [request setValue: contentType forHTTPHeaderField: @"Content-Type"];
@@ -1544,25 +1544,26 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [request setURL: requestURL];
     */
     
-    
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    
-    __block NSString *str;
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (data) {
-            str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-            NSLog(@"str: %@", str);
-        } else {
-            NSLog(@"error: %@", error);
-        }
-        dispatch_semaphore_signal(semaphore);
-    }];
-    [task resume];
-    
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    
-    return str;
+//
+//    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+//
+//    __block NSString *str;
+//    NSURLSession *session = [NSURLSession sharedSession];
+//    NSURLSessionTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//        if (data) {
+//            str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+//            NSLog(@"str: %@", str);
+//        } else {
+//            NSLog(@"error: %@", error);
+//        }
+//        dispatch_semaphore_signal(semaphore);
+//    }];
+//    [task resume];
+//
+//    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+//
+//    return str;
+    return @"";
 }
 
 #pragma mark -

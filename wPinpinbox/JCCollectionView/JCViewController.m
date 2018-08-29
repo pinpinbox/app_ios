@@ -7,8 +7,8 @@
 //
 
 #import "JCViewController.h"
-#import "AFNetworking.h"
-#import "UIKit+AFNetworking.h"
+//#import "AFNetworking.h"
+//#import "UIKit+AFNetworking.h"
 #import "JCCollectionViewCell.h"
 #import "JCCollectionHeaderView.h"
 #import "JCCollectionFooterView.h"
@@ -49,25 +49,25 @@ static NSString * const reuseCellId = @"cellId";
 
 - (void)requestPictures
 {
-    [self.activityView startAnimating];
-    
-    NSString *url = [@"http://image.haosou.com/j?q=beijing&pn=20" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-
-    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
-    session.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/javascript"];
-    [session GET:url parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
-        
-    } success:^(NSURLSessionDataTask *task, id responseObject) {
-        [self.activityView stopAnimating];
-        
-        [self.pictures addObjectsFromArray:responseObject[@"list"]];
-        
-        [self.collectionView reloadData];
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        [self.activityView stopAnimating];
-        
-        NSLog(@"error - %@", [error localizedDescription]);
-    }];
+//    [self.activityView startAnimating];
+//
+//    NSString *url = [@"http://image.haosou.com/j?q=beijing&pn=20" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//
+//    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+//    session.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/javascript"];
+//    [session GET:url parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+//
+//    } success:^(NSURLSessionDataTask *task, id responseObject) {
+//        [self.activityView stopAnimating];
+//
+//        [self.pictures addObjectsFromArray:responseObject[@"list"]];
+//
+//        [self.collectionView reloadData];
+//    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+//        [self.activityView stopAnimating];
+//
+//        NSLog(@"error - %@", [error localizedDescription]);
+//    }];
 }
 
 #pragma mark - UICollectionViewDelegate & UICollectionViewDataSource 
@@ -118,7 +118,7 @@ static NSString * const reuseCellId = @"cellId";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     JCCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseCellId forIndexPath:indexPath];
-    [cell.imageView setImageWithURL:[NSURL URLWithString:self.pictures[indexPath.row][@"img"]]];
+    //[cell.imageView setImageWithURL:[NSURL URLWithString:self.pictures[indexPath.row][@"img"]]];
     
     return cell;
 }

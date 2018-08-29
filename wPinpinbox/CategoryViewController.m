@@ -790,7 +790,7 @@
     
     if (self.bannerDataArray.count > 0) {
         NSLog(@"bannerHeight: %f", bannerHeight);
-        bannerVertLayout.heightDime.min(340).max(376);//160);
+        bannerVertLayout.heightDime.min(316).max(352);//160);
         
         // Horizontal CollectionView Setting
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -867,7 +867,7 @@
     topicLabel.text = self.categoryName;
     topicLabel.textColor = [UIColor firstGrey];
     [LabelAttributeStyle changeGapString: topicLabel content: self.categoryName];
-    topicLabel.font = [UIFont boldSystemFontOfSize: 48];
+    topicLabel.font = [UIFont boldSystemFontOfSize: 42];
     [topicLabel sizeToFit];
     UIView *space = [[UIView alloc] initWithFrame:CGRectMake(0, 0, topicLabel.frame.size.width, 25)];
     space.backgroundColor = [UIColor clearColor];
@@ -897,7 +897,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return 264;//280.0;
+    return 250;//280.0;
 }
 
 #pragma mark - UICollectionViewDatasource Methods
