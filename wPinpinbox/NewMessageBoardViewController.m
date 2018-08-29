@@ -183,12 +183,13 @@
 //    self.userImageView.imageURL = [NSURL URLWithString: dic[@"profilepic"]];
     
     // Text Input Section
-    self.self.inputTextView.layer.cornerRadius = kCornerRadius;
-    self.self.inputTextView.backgroundColor = [UIColor thirdGrey];
-    self.self.inputTextView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
-    self.self.inputTextView.textColor = [UIColor firstGrey];
-    self.self.inputTextView.weight = 1;
-    self.self.inputTextView.delegate = self;
+    self.inputTextView.layer.cornerRadius = kCornerRadius;
+    self.inputTextView.backgroundColor = [UIColor thirdGrey];
+    self.inputTextView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
+    self.inputTextView.textColor = [UIColor firstGrey];
+    self.inputTextView.heightDime.max(160);
+    self.inputTextView.weight = 1;
+    self.inputTextView.delegate = self;
     
     UIToolbar *toolBarForDoneBtn = [[UIToolbar alloc] initWithFrame: CGRectMake(0, 0, 320, 40)];
     toolBarForDoneBtn.barStyle = UIBarStyleDefault;
@@ -197,16 +198,16 @@
                                [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemFlexibleSpace target: nil action: nil],
                                [[UIBarButtonItem alloc] initWithTitle: @"完成" style: UIBarButtonItemStyleDone target: self action: @selector(dismissKeyboard)], nil];
     
-    self.self.inputTextView.inputAccessoryView = toolBarForDoneBtn;
+    self.inputTextView.inputAccessoryView = toolBarForDoneBtn;
     
     placeHolderNameLabel = [[UILabel alloc] initWithFrame: CGRectMake(13, 10, 0, 0)];
     placeHolderNameLabel.text = @"有什麼想要表達的嗎？";
     placeHolderNameLabel.numberOfLines = 0;
     placeHolderNameLabel.textColor = [UIColor hintGrey];
     [placeHolderNameLabel sizeToFit];
-    [self.self.inputTextView addSubview: placeHolderNameLabel];
+    [self.inputTextView addSubview: placeHolderNameLabel];
     
-    self.self.inputTextView.font = [UIFont systemFontOfSize: 14.f];
+    self.inputTextView.font = [UIFont systemFontOfSize: 14.f];
     placeHolderNameLabel.font = [UIFont systemFontOfSize: 14.f];
     
     // 3rd BgView
@@ -402,7 +403,7 @@
                         
                         // Set userInteractionEnabled to YES for scrolling
                         self.tableView.userInteractionEnabled = YES;
-                        self.self.inputTextView.userInteractionEnabled = YES;
+                        self.inputTextView.userInteractionEnabled = YES;
                         
                         NSLog(@"messageArray.count: %lu", (unsigned long)messageArray.count);
                         NSLog(@"messageArray: %@", messageArray);
@@ -1075,21 +1076,21 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (IBAction)clearBtnPress:(id)sender {
-    self.self.inputTextView.text = @"";
+    self.inputTextView.text = @"";
     placeHolderNameLabel.alpha = 1;
 }
 
 - (IBAction)sendMsgBtnPress:(id)sender {
     NSLog(@"sendMsgBtnPress");
-    NSLog(@"self.self.inputTextView.text: %@", self.self.inputTextView.text);
+    NSLog(@"self.inputTextView.text: %@", self.inputTextView.text);
     NSLog(@"tempStr: %@", tempStr);
     
     NSUInteger length;
-    length = self.self.inputTextView.text.length;
+    length = self.inputTextView.text.length;
     
     NSLog(@"length: %lu", (unsigned long)length);
     
-    if (![self.self.inputTextView.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].length) {
+    if (![self.inputTextView.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].length) {
         NSLog(@"string is all whitespace or newline");
         
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -1100,7 +1101,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                               duration: 2.0
                               position: CSToastPositionBottom
                                  style: style];
-    } else if ([self.self.inputTextView.text isEqualToString: tempStr]) {
+    } else if ([self.inputTextView.text isEqualToString: tempStr]) {
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];
         style.backgroundColor = [UIColor firstGrey];
@@ -1110,13 +1111,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                               position: CSToastPositionBottom
                                  style: style];
     } else {
-        [self insertMessage: self.self.inputTextView.text];
+        [self insertMessage: self.inputTextView.text];
     }
     // tempStr is to check the message is the same or not
     // to avoid the button being press in a short time.
-    tempStr = self.self.inputTextView.text;
+    tempStr = self.inputTextView.text;
     
-    self.self.inputTextView.text = @"";
+    self.inputTextView.text = @"";
     placeHolderNameLabel.alpha = 1;
     [self.view endEditing: YES];
 }
@@ -1196,6 +1197,7 @@ shouldChangeTextInRange:(NSRange)range
     layout.endLayoutBlock = ^{
         NSRange rg = textView.selectedRange;
         [textView scrollRangeToVisible:rg];
+        NSLog(@"textView.frame.size.height: %f", textView.frame.size.height);
     };
 }
 
