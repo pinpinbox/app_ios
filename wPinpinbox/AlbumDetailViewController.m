@@ -686,7 +686,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // Shadow Setting
     self.creatorView.layer.shadowColor = [UIColor thirdGrey].CGColor;
     self.creatorView.layer.shadowOpacity = 0.8;
-    self.creatorView.layer.shadowRadius = 32;
+    self.creatorView.layer.shadowRadius = 12;
     self.creatorView.layer.shadowOffset = CGSizeMake(0.0f, 12.0f);
     
     // CreatorHeadshotImageView Setting

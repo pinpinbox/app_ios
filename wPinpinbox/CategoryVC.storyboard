@@ -262,15 +262,15 @@
                                             <action selector="backBtnPressed:" destination="gYz-xh-ScQ" eventType="touchUpInside" id="zzo-Ed-Xr4"/>
                                         </connections>
                                     </button>
-                                    <view tag="100" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JtO-CM-r18" customClass="MyLinearLayout">
-                                        <rect key="frame" x="261" y="10" width="106" height="32"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <view tag="100" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JtO-CM-r18">
+                                        <rect key="frame" x="66" y="10" width="293" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="32" id="mrg-Az-1Gy"/>
                                         </constraints>
                                     </view>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="JtO-CM-r18" firstAttribute="leading" secondItem="z1n-89-X2f" secondAttribute="leading" constant="66" id="J2i-sJ-T8G"/>
                                     <constraint firstItem="JtO-CM-r18" firstAttribute="bottom" secondItem="z1n-89-X2f" secondAttribute="bottom" constant="-6" id="WCh-Yv-Ew4"/>
                                     <constraint firstAttribute="height" constant="48" id="ak1-kq-Ud7"/>
                                     <constraint firstItem="JtO-CM-r18" firstAttribute="trailing" secondItem="z1n-89-X2f" secondAttribute="trailing" constant="-16" id="ybE-yY-GiV"/>

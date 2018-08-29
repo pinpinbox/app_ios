@@ -62,7 +62,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSMutableDictionary *contentOffsetDictionary;
 
-@property (weak, nonatomic) IBOutlet MyLinearLayout *userLayout;
+@property (weak, nonatomic) IBOutlet UIView *userLayout;//MyLinearLayout *userLayout;
 //@property (weak, nonatomic) MyLinearLayout *userLayout;
 @property (weak, nonatomic) IBOutlet UIView *userBgView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *userBgViewHeight;
@@ -137,7 +137,7 @@
     
     self.userLayout.userInteractionEnabled = YES;
     //self.userLayout.myCenterYOffset = 0;
-    self.userLayout.orientation = 1;
+    //self.userLayout.orientation = 1;
     self.userLayout.wrapContentWidth = YES;
     self.userLayout.myRightMargin = 16;
     self.userLayout.backgroundColor = [UIColor clearColor];
@@ -456,15 +456,33 @@
             [imageView sd_setImageWithURL: [NSURL URLWithString: pictureDic[@"picture"]]
                          placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
         }
-        imageView.myLeftMargin = -15;
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
+        //imageView.myRightMargin = -16*(i+1);
         imageView.myCenterYOffset = 0;
-        //imageView.myTopMargin = imageView.myBottomMargin = 0;
+        imageView.myTopMargin = imageView.myBottomMargin = 0;
         imageView.layer.cornerRadius = imageView.frame.size.width / 2;
         imageView.clipsToBounds = YES;
         imageView.layer.borderColor = [UIColor thirdGrey].CGColor;
         imageView.layer.borderWidth = 0.5;
         
         [self.userLayout addSubview: imageView];
+        NSLayoutConstraint *l = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeTrailing
+                                                             relatedBy:NSLayoutRelationEqual toItem:self.userLayout attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:-16*(userImageViewNumber-i)+16];
+        l.active = YES;
+        NSLayoutConstraint *l1 = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeTop
+                                                             relatedBy:NSLayoutRelationEqual toItem:self.userLayout attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+        l1.active = YES;
+        NSLayoutConstraint *l0 = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeWidth
+                                                              relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:32];
+        l0.active = YES;
+        NSLayoutConstraint *l01 = [NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight
+                                                              relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:32];
+        l01.active = YES;
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [imageView addConstraints:@[l0,l01]];
+        [_userLayout addConstraints:@[l,l1]];
+        
     }
 }
 - (void)setBtnText:(NSString *)btntext infoText:(NSString *)infotext {
