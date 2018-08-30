@@ -1567,18 +1567,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     if (!([[url host] rangeOfString: @"youtube"].location == NSNotFound) || !([[url host] rangeOfString: @"youtu.be"].location == NSNotFound)) {
         NSLog(@"url host contains youtube");
-        
         self.isPresentingOrPushingVC = YES;
-        
         NSString *urlString = self.photoArray[page][@"video_target"];
-        YoutubePlayerViewController *youtubePlayerVC = [[UIStoryboard storyboardWithName: @"YoutubePlayerVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YoutubePlayerViewController"];
-        youtubePlayerVC.videoUrlString = urlString;
-//        self.navigationController.delegate = nil;
-        youtubePlayerVC.delegate = self;
-        youtubePlayerVC.currentPage = [self getCurrentPage];
-        [self presentViewController: youtubePlayerVC animated: YES completion: nil];
-//        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//        [appDelegate.myNav pushViewController: youtubePlayerVC animated: YES];
+        [self openSafari: [NSURL URLWithString: urlString]];
+        
+        // Youtube SDK Player sometimes has some problem
+//        YoutubePlayerViewController *youtubePlayerVC = [[UIStoryboard storyboardWithName: @"YoutubePlayerVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YoutubePlayerViewController"];
+//        youtubePlayerVC.videoUrlString = urlString;
+//        youtubePlayerVC.delegate = self;
+//        youtubePlayerVC.currentPage = [self getCurrentPage];
+//        [self presentViewController: youtubePlayerVC animated: YES completion: nil];
     }
     videoIsPlaying = YES;
     [self.avPlayer pause];
@@ -3967,7 +3965,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)showNewMessageBoardVC {
-    NewMessageBoardViewController *nMBVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"NewMessageBoardViewController"];
+    NewMessageBoardViewController *nMBVC = [[UIStoryboard storyboardWithName: @"NewMessageBoardVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewMessageBoardViewController"];
     nMBVC.type = @"album";
     nMBVC.typeId = self.albumId;
     [self presentViewController: nMBVC animated: YES completion: nil];
