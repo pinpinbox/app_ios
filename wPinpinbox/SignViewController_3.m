@@ -246,11 +246,12 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI requsetsmspwd: [NSString stringWithFormat:@"%@,%@",countrstr,phone.text] Account:email];
+        NSString *response = [boxAPI requsetsmspwd: [NSString stringWithFormat:@"%@,%@",countrstr,wself->phone.text] Account:email];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(wself) sself = wself;
             @try {
                 [MBProgressHUD hideHUDForView: self.view  animated:YES];
             } @catch (NSException *exception) {
@@ -286,16 +287,16 @@
                                     position: CSToastPositionBottom
                                        style: style];
                         
-                        countDownLabel.hidden = NO;
-                        btn_send.userInteractionEnabled = NO;
-                        [btn_send setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
-                        btn_send.backgroundColor = [UIColor clearColor];
-                        btn_send.layer.borderWidth = 1.0f;
-                        btn_send.layer.borderColor = [UIColor secondGrey].CGColor;
+                        wself->countDownLabel.hidden = NO;
+                        wself->btn_send.userInteractionEnabled = NO;
+                        [wself->btn_send setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
+                        wself->btn_send.backgroundColor = [UIColor clearColor];
+                        wself->btn_send.layer.borderWidth = 1.0f;
+                        wself->btn_send.layer.borderColor = [UIColor secondGrey].CGColor;
                         
-                        timeTick = 59;
-                        [timer invalidate];
-                        timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector: @selector(tickForSMS) userInfo: nil repeats: YES];
+                        wself->timeTick = 59;
+                        [wself->timer invalidate];
+                        wself->timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: sself selector: @selector(tickForSMS) userInfo: nil repeats: YES];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];

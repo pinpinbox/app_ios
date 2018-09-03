@@ -30,14 +30,15 @@
      TERMS => 平台規範"
      */
     [wTools ShowMBProgressHUD];
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString * respone=[boxAPI getsettings:@"TERMS"];
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+            __strong typeof(wself) sself = wself;
             NSDictionary *data= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
             if ([data[@"result"]boolValue]) {
                 
-                [webview loadHTMLString:data[@"data"] baseURL:nil];
+                [sself->webview loadHTMLString:data[@"data"] baseURL:nil];
                 [wTools HideMBProgressHUD];
             }else{
                 [wTools HideMBProgressHUD];

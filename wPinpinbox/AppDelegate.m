@@ -57,7 +57,7 @@
 @property (nonatomic) BOOL isInBackground;
 @property (nonatomic, assign) CGRect currentStatusBarFrame;
 
-- (id)initWithStyleSheet:(NSObject<TWMessageBarStyleSheet> *)stylesheet;
+//- (id)initWithStyleSheet:(NSObject<TWMessageBarStyleSheet> *)stylesheet;
 
 @end
 
@@ -203,7 +203,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     if ([launchOptions objectForKey:UIApplicationLaunchOptionsURLKey] != nil) {
         NSURL *url =(NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
-        [self application:application handleOpenURL:url];
+        [self application:application openURL:url options:@{}];//handleOpenURL:url];
     }
     
     // Check APNS Information
@@ -248,9 +248,22 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
         }
     }
     
-    UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil];
-    [application registerUserNotificationSettings:setting];
-    
+#if __IPHONE_10_0
+        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:UNAuthorizationOptionAlert|UNAuthorizationOptionBadge|UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            if (granted)
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] registerForRemoteNotifications];
+            });
+        }];
+        
+        [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet set]];
+        
+#else
+        UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil];
+        [application registerUserNotificationSettings:setting];
+        
+#endif
     
     NSInteger badgeCount = [[defaults objectForKey: @"badgeCount"] integerValue];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber: badgeCount];
@@ -367,7 +380,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
+#if __IPHONE_10_0
+        _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+#else
         _managedObjectContext = [[NSManagedObjectContext alloc] init];
+#endif
         [_managedObjectContext setPersistentStoreCoordinator:coordinator];
     }
     return _managedObjectContext;
@@ -447,29 +464,38 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
     self.backgroundSessionCompletionHandler = completionHandler;
 }
 
-- (BOOL)application:(UIApplication *)application
-      handleOpenURL:(NSURL *)url
+//- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    NSLog(@"handleOpenURL");
-    
     BOOL returnValue = NO;
-    NSString *urlString = [url absoluteString];
-    
-    if ([urlString hasPrefix: @"pinpinbox://"]) {
-        returnValue = YES;
+    NSLog(@"handleOpenURL");
+    if (options != nil ) {
+        return [self openURL:url application:app
+           sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                  annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+        
+    } else {
+        
+        NSString *urlString = [url absoluteString];
+        
+        if ([urlString hasPrefix: @"pinpinbox://"]) {
+            returnValue = YES;
+        }
+        
+        homeViewController *hVC = [[homeViewController alloc] init];
+        hVC.urlString = url.absoluteString;
     }
-    
-    homeViewController *hVC = [[homeViewController alloc] init];
-    hVC.urlString = url.absoluteString;
-    
     return returnValue;
 }
 
 // When other apps open pinpinbox app, the method below will be called
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
+- (BOOL) openURL:(NSURL *)url
+     application:(UIApplication *)app
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
+
     
     NSLog(@"");
     NSLog(@"");
@@ -754,7 +780,7 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
         }
     }
     
-    return [[FBSDKApplicationDelegate sharedInstance] application:application
+    return [[FBSDKApplicationDelegate sharedInstance] application:app
                                                           openURL:url
                                                 sourceApplication:sourceApplication
                                                        annotation:annotation
@@ -762,12 +788,36 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
 }
 
 #pragma  mark - APNS
+#if __IPHONE_10_0
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+    
+    NSLog(@"%@", notification);
+    
+    completionHandler(UNNotificationPresentationOptionBadge);
+    
+}
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
+
+    NSLog(@"%@", response.notification.request.content.userInfo);
+
+    completionHandler();
+}
+
+#else
 -(void)application:(UIApplication *)application
 didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
     NSLog(@"didRegisterUserNotificationSettings");
     [application registerForRemoteNotifications];
+    
+}
+- (void)application:(UIApplication *)application
+didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"didReceiveRemoteNotification");
+    [self application: application didReceiveRemoteNotification: userInfo fetchCompletionHandler:^(UIBackgroundFetchResult result) {
+    }];
 }
 
+#endif
 -(void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
     NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken");
@@ -1066,12 +1116,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"appDelegate.myNav.viewControllers: %@", appDelegate.myNav.viewControllers);
 }
 
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    NSLog(@"didReceiveRemoteNotification");
-    [self application: application didReceiveRemoteNotification: userInfo fetchCompletionHandler:^(UIBackgroundFetchResult result) {
-    }];
-}
 
 - (void)application:(UIApplication *)application
 willChangeStatusBarFrame:(CGRect)newStatusBarFrame
@@ -1112,9 +1156,7 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame
     }
 }
 
-- (BOOL)application:(UIApplication *)application
-continueUserActivity:(NSUserActivity *)userActivity
- restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
 {
     NSLog(@"continueUserActivity");
     

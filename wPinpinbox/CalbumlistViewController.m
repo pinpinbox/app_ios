@@ -96,6 +96,9 @@
     
     // Avoid loading data twice for showing same data in PageCollectionViewController
 }
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleDefault;
+}
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -104,7 +107,7 @@
     NSLog(@"viewWillAppear");
     NSLog(@"Test");
     [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 1.0]];
-    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
+//    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
     
     //[_collectioview reloadData];    
     //[self refresh];
@@ -230,13 +233,13 @@
     
     [wTools ShowMBProgressHUD];
     
-    NSString *limit=[NSString stringWithFormat:@"%ld,%ld",(long)nextId, 10];
-    
+    NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 10];
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSArray *arr = @[@"mine",@"other",@"cooperation"];
         NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
                                              token: [wTools getUserToken]
-                                              rank: arr[type]
+                                              rank: arr[wself->type]
                                              limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -250,11 +253,11 @@
                     NSLog(@"CalbumlistViewController");
                     NSLog(@"getcalbumlist");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcalbumlist"
                                          albumId: @""];
-                    [self.refreshControl endRefreshing];
-                    isreload = NO;
+                    [wself.refreshControl endRefreshing];
+                    wself->isreload = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -262,44 +265,44 @@
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        if (nextId==0) {
-                            dataarr=[NSMutableArray new];
+                        if (wself->nextId==0) {
+                            wself->dataarr=[NSMutableArray new];
                         }
                         int s=0;
                         for (NSMutableDictionary *picture in [dic objectForKey:@"data"]) {
                             s++;
-                            [dataarr addObject: picture];
+                            [wself->dataarr addObject: picture];
                         }
-                        nextId = nextId+s;
+                        wself->nextId = wself->nextId+s;
                         // dataarr=[dic[@"data"] mutableCopy];
                         
                         //NSLog(@"dataarr: %@", dataarr);
                         
-                        [_refreshControl endRefreshing];
-                        [_collectioview reloadData];
+                        [wself.refreshControl endRefreshing];
+                        [wself.collectioview reloadData];
                         
-                        if (nextId  >= 0)
-                            isLoading = NO;
+                        if (wself->nextId  >= 0)
+                            wself->isLoading = NO;
                         
                         if (s==0) {
-                            isLoading = YES;
+                            wself->isLoading = YES;
                         }
                         
-                        isreload = NO;
+                        wself->isreload = NO;
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        [_refreshControl endRefreshing];
-                        isreload = NO;
+                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [wself.refreshControl endRefreshing];
+                        wself->isreload = NO;
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [_refreshControl endRefreshing];
-                        isreload = NO;
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself.refreshControl endRefreshing];
+                        self->isreload = NO;
                     }
                 }
             }else{
-                [_refreshControl endRefreshing];
-                isreload = NO;
+                [wself.refreshControl endRefreshing];
+                wself->isreload = NO;
             }
         });
     });
@@ -324,7 +327,7 @@
         UILabel *lab1;
         
         @try {
-            NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%i",type+1] owner:self options:nil];
+            NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%li",type+1] owner:self options:nil];
             backview = [subviewArray objectAtIndex:0];
             [collectionView addSubview:backview];
             

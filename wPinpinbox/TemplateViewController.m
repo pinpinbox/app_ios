@@ -104,11 +104,11 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
                                              token: [wTools getUserToken]
-                                          album_id: _albumid];
+                                          album_id: wself.albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -137,21 +137,21 @@
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        _templatelist = [dic[@"data"][@"frame"]mutableCopy];
+                        wself.templatelist = [dic[@"data"][@"frame"]mutableCopy];
                         // ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                        selectItem = 0;
-                        NSDictionary *data = _templatelist[selectItem];
+                        wself->selectItem = 0;
+                        NSDictionary *data = wself.templatelist[wself->selectItem];
                         NSLog(@"data: %@", data);
                         NSArray *frame = data[@"blank"];
                         
                         for (int i = 0; i < frame.count; i++) {
                             NSMutableDictionary *dic = [NSMutableDictionary new];
                             [dic setObject: frame[i] forKey: @"frame"];
-                            [imagearr addObject: dic];
+                            [wself->imagearr addObject: dic];
                         }
                         
-                        [self showimageview];
-                        [mycollection reloadData];
+                        [wself showimageview];
+                        [wself->mycollection reloadData];
                         
                         @try {
                             [wTools HideMBProgressHUD];
@@ -195,7 +195,7 @@
     [data setObject: _albumid forKey: @"type_id"];
     [data setObject: [wTools getUserID] forKey: @"user_id"];
     [data setObject: @"album" forKey: @"type"];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI getcooperation: [wTools getUserID]
                                               token: [wTools getUserToken]
@@ -219,7 +219,7 @@
                     NSLog(@"TemplateViewController");
                     NSLog(@"getCooperation");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcooperation"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -228,10 +228,10 @@
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] boolValue]) {
-                        _identity = dic[@"data"];
+                        wself.identity = dic[@"data"];
                     } else {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     }
                 }
             }
@@ -826,6 +826,7 @@
      */
 }
 
+
 #pragma mark -
 
 //新增相片
@@ -870,54 +871,54 @@
 //刪除照片
 -(void)deleteimage:(UIButton *)sender{
     [self showCustomForDeletingImage: NSLocalizedString(@"CreateAlbumText-tipConfirmDel", @"") btn:sender];
-   
+    
     /*
-    Remind *rv = [[Remind alloc]initWithFrame:self.view.bounds];
-    
-    [rv addtitletext:NSLocalizedString(@"CreateAlbumText-tipConfirmDel", @"")];
-    [rv addSelectBtntext:NSLocalizedString(@"GeneralText-yes", @"") btn2:NSLocalizedString(@"GeneralText-no", @"") ];
-    
-    rv.btn1select=^(BOOL select){
-        if (select) {
-            UIView *v=[_ShowView viewWithTag: sender.tag-100];
-            CGRect frame = v.frame;
-            int tag = sender.tag;
-            [v removeFromSuperview];
-            [sender removeFromSuperview];
-            
-            v = [[UIView alloc] initWithFrame: frame];
-            v.backgroundColor = [UIColor firstGrey];
-            v.tag = sender.tag - 100;
-            [_ShowView addSubview:v];
-            
-            //沒圖片用按鈕
-            //icon_creatnewframe_plus.png
-            
-            UIImageView *addimage = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 30, 30)];
-            //addimage.image = [UIImage imageNamed: @"icon_creatnewframe_plus.png"];
-            addimage.image = [UIImage imageNamed: @"camera.png"];
-            addimage.center = CGPointMake(v.frame.size.width / 2, v.frame.size.height / 2);
-            [v addSubview: addimage];
-            
-            //按鈕
-            UIButton *btn = [UIButton buttonWithType: UIButtonTypeCustom];
-            btn.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
-            btn.tag = tag - 310;
-            [btn addTarget: self action: @selector(addimage:) forControlEvents: UIControlEventTouchUpInside];
-            [v addSubview: btn];
-            
-            UIView *asyncv = [_ShowView viewWithTag: 200];
-            [_ShowView bringSubviewToFront: asyncv];
-            
-        } else {
-            
-        }
-    };
-    [rv showView:self.view];
-    
-    for (UIView *v in [_ShowView subviews]) {
-        NSLog(@"v: %@", v);
-    }
+     Remind *rv = [[Remind alloc]initWithFrame:self.view.bounds];
+     
+     [rv addtitletext:NSLocalizedString(@"CreateAlbumText-tipConfirmDel", @"")];
+     [rv addSelectBtntext:NSLocalizedString(@"GeneralText-yes", @"") btn2:NSLocalizedString(@"GeneralText-no", @"") ];
+     
+     rv.btn1select=^(BOOL select){
+     if (select) {
+     UIView *v=[_ShowView viewWithTag: sender.tag-100];
+     CGRect frame = v.frame;
+     int tag = sender.tag;
+     [v removeFromSuperview];
+     [sender removeFromSuperview];
+     
+     v = [[UIView alloc] initWithFrame: frame];
+     v.backgroundColor = [UIColor firstGrey];
+     v.tag = sender.tag - 100;
+     [_ShowView addSubview:v];
+     
+     //沒圖片用按鈕
+     //icon_creatnewframe_plus.png
+     
+     UIImageView *addimage = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 30, 30)];
+     //addimage.image = [UIImage imageNamed: @"icon_creatnewframe_plus.png"];
+     addimage.image = [UIImage imageNamed: @"camera.png"];
+     addimage.center = CGPointMake(v.frame.size.width / 2, v.frame.size.height / 2);
+     [v addSubview: addimage];
+     
+     //按鈕
+     UIButton *btn = [UIButton buttonWithType: UIButtonTypeCustom];
+     btn.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
+     btn.tag = tag - 310;
+     [btn addTarget: self action: @selector(addimage:) forControlEvents: UIControlEventTouchUpInside];
+     [v addSubview: btn];
+     
+     UIView *asyncv = [_ShowView viewWithTag: 200];
+     [_ShowView bringSubviewToFront: asyncv];
+     
+     } else {
+     
+     }
+     };
+     [rv showView:self.view];
+     
+     for (UIView *v in [_ShowView subviews]) {
+     NSLog(@"v: %@", v);
+     }
      */
 }
 
@@ -1065,7 +1066,7 @@
     NSLog(@"bgimag: %@", bgimag);
     
     // 現在のグラフィックスコンテキストの画像を取得する
-//    UIImage *newbgimag = UIGraphicsGetImageFromCurrentImageContext();
+    //    UIImage *newbgimag = UIGraphicsGetImageFromCurrentImageContext();
     
     // 現在のグラフィックスコンテキストへの編集を終了
     // (スタックの先頭から削除する)
@@ -1084,12 +1085,12 @@
     
     UIImage *newImg = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-            
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
         response = [boxAPI insertphotoofdiy: [wTools getUserID]
                                       token: [wTools getUserToken]
-                                   album_id: _albumid
+                                   album_id: wself.albumid
                                       image: newImg
                                 compression: 0.0];
         
@@ -1112,7 +1113,7 @@
                     NSLog(@"TemplateViewController");
                     NSLog(@"upphoto");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"insertphotoofdiy"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -1120,23 +1121,23 @@
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue: %d", [dic[@"result"] boolValue]);
-                        NSLog(@"self.navigationController.viewControllers: %@", self.navigationController.viewControllers);                        
+                        NSLog(@"self.navigationController.viewControllers: %@", wself.navigationController.viewControllers);
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         
                         for (UIViewController *vc in [appDelegate.myNav viewControllers] ) {
                             if ([vc isKindOfClass:[AlbumCreationViewController class]]) {
-                                NSLog(@"_templateid: %@", _templateid);
+                                NSLog(@"_templateid: %@", wself.templateid);
                                 
-                                if ([self.delegate respondsToSelector: @selector(uploadPhotoDidComplete:)]) {
-                                    [self.delegate uploadPhotoDidComplete: self];
+                                if ([wself.delegate respondsToSelector: @selector(uploadPhotoDidComplete:)]) {
+                                    [wself.delegate uploadPhotoDidComplete: wself];
                                 }
                                 AlbumCreationViewController *albumCreationVC = (AlbumCreationViewController *)vc;
                                 [albumCreationVC reloaddatat: [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]]];
                                 [albumCreationVC reloadItem: [dic[@"data"][@"photo"] count] - 1];
-                                albumCreationVC.albumid = _albumid;
-                                albumCreationVC.templateid = _templateid;
-                                albumCreationVC.event_id = _event_id;
-                                albumCreationVC.postMode = _postMode;
+                                albumCreationVC.albumid = wself.albumid;
+                                albumCreationVC.templateid = wself.templateid;
+                                albumCreationVC.event_id = wself.event_id;
+                                albumCreationVC.postMode = wself.postMode;
                                 albumCreationVC.choice = @"Template";
                                 
                                 [appDelegate.myNav popToViewController: vc animated: YES];
@@ -1187,7 +1188,7 @@
     [alertViewForDeletingImage setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
     [alertViewForDeletingImage setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
-    
+    __block typeof(self) wself = self;
     [alertViewForDeletingImage setOnButtonTouchUpInside:^(CustomIOSAlertView *alertViewForDeletingImage, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForDeletingImage tag]);
         
@@ -1196,16 +1197,16 @@
         if (buttonIndex == 0) {
             
         } else {
-            UIView *v=[_ShowView viewWithTag: sender.tag-100];
+            UIView *v=[wself.ShowView viewWithTag: sender.tag-100];
             CGRect frame = v.frame;
-            int tag = sender.tag;
+            int tag = (int)sender.tag;
             [v removeFromSuperview];
             [sender removeFromSuperview];
             
             v = [[UIView alloc] initWithFrame: frame];
             v.backgroundColor = [UIColor firstGrey];
             v.tag = sender.tag - 100;
-            [_ShowView addSubview:v];
+            [wself.ShowView addSubview:v];
             
             //沒圖片用按鈕
             //icon_creatnewframe_plus.png
@@ -1223,8 +1224,8 @@
             [btn addTarget: self action: @selector(addimage:) forControlEvents: UIControlEventTouchUpInside];
             [v addSubview: btn];
             
-            UIView *asyncv = [_ShowView viewWithTag: 200];
-            [_ShowView bringSubviewToFront: asyncv];
+            UIView *asyncv = [wself.ShowView viewWithTag: 200];
+            [wself.ShowView bringSubviewToFront: asyncv];
         }
     }];
     [alertViewForDeletingImage setUseMotionEffects: YES];
@@ -1322,7 +1323,7 @@
     [alertViewForTemplate setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
     [alertViewForTemplate setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
-    
+    __block typeof(self) wself = self;
     [alertViewForTemplate setOnButtonTouchUpInside:^(CustomIOSAlertView *alertViewForTemplate, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForTemplate tag]);
         
@@ -1331,20 +1332,20 @@
         if (buttonIndex == 0) {
             
         } else {
-            selectItem = indexPathRow;
-            imagearr = [NSMutableArray new];
+            wself->selectItem = indexPathRow;
+            wself->imagearr = [NSMutableArray new];
             
-            NSDictionary *data = _templatelist[selectItem];
+            NSDictionary *data = wself.templatelist[wself->selectItem];
             NSArray *frame = data[@"blank"];
             
             for (int i = 0; i < frame.count; i++) {
                 NSMutableDictionary *dic = [NSMutableDictionary new];
                 [dic setObject: frame[i] forKey: @"frame"];
-                [imagearr addObject: dic];
+                [wself->imagearr addObject: dic];
             }
             
-            [self showimageview];
-            [self.dataCollectionView reloadData];
+            [wself showimageview];
+            [wself.dataCollectionView reloadData];
         }
     }];
     [alertViewForTemplate setUseMotionEffects: YES];
@@ -1745,5 +1746,4 @@
     
     return contentView;
 }
-
 @end

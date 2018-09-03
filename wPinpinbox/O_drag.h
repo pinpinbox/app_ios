@@ -16,7 +16,7 @@
 
 @end
 
-@interface O_drag : UIView{
+@interface O_drag : UIView <UIGestureRecognizerDelegate>{
     CGFloat scale,rotate;
     CGPoint location;
 @private

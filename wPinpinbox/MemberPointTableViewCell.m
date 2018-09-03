@@ -11,6 +11,7 @@
 @implementation MemberPointTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
     _title.text=NSLocalizedString(@"StoreText-currentP", @"");
     [btn_buy setImage:[UIImage imageNamed:[NSString stringWithFormat:@"button_buy_%@.png",[wTools localstring]]] forState:UIControlStateNormal];

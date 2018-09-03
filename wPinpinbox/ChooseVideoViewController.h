@@ -10,6 +10,7 @@
 
 @class ChooseVideoViewController;
 @protocol ChooseVideoViewDelegate <NSObject>
+@optional
 - (void)videoCropViewController: (ChooseVideoViewController *)controller videoArray: (NSArray *)videos;
 
 @end

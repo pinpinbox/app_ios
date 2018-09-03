@@ -194,7 +194,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-        
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getalbumdataoptions: [wTools getUserID]
                                                    token: [wTools getUserToken]];
@@ -227,8 +227,8 @@
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        mdata = [[dic objectForKey: @"data"] mutableCopy];
-                        NSLog(@"mdata: %@", mdata);
+                        wself->mdata = [[dic objectForKey: @"data"] mutableCopy];
+                        NSLog(@"mdata: %@", wself->mdata);
                         
                         [self getAlbumSettings];
                     } else if ([dic[@"result"] intValue] == 0) {
@@ -328,7 +328,7 @@
     NSLog(@"checkPoint");
     
     //[wTools ShowMBProgressHUD];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI doTask2: [wTools getUserID]
@@ -365,29 +365,29 @@
                     NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 1) {
-                        missionTopicStr = data[@"data"][@"task"][@"name"];
-                        NSLog(@"name: %@", missionTopicStr);
+                        wself->missionTopicStr = data[@"data"][@"task"][@"name"];
+                        NSLog(@"name: %@", wself->missionTopicStr);
                         
-                        rewardType = data[@"data"][@"task"][@"reward"];
-                        NSLog(@"reward type: %@", rewardType);
+                        wself->rewardType = data[@"data"][@"task"][@"reward"];
+                        NSLog(@"reward type: %@", wself->rewardType);
                         
-                        rewardValue = data[@"data"][@"task"][@"reward_value"];
-                        NSLog(@"reward value: %@", rewardValue);
+                        wself->rewardValue = data[@"data"][@"task"][@"reward_value"];
+                        NSLog(@"reward value: %@", wself->rewardValue);
                         
-                        eventUrl = data[@"data"][@"event"][@"url"];
-                        NSLog(@"event: %@", eventUrl);
+                        wself->eventUrl = data[@"data"][@"event"][@"url"];
+                        NSLog(@"event: %@", wself->eventUrl);
                         
-                        restriction = data[@"data"][@"task"][@"restriction"];
-                        NSLog(@"restriction: %@", restriction);
+                        wself->restriction = data[@"data"][@"task"][@"restriction"];
+                        NSLog(@"restriction: %@", wself->restriction);
                         
-                        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
-                        NSLog(@"restrictionValue: %@", restrictionValue);
+                        wself->restrictionValue = data[@"data"][@"task"][@"restriction_value"];
+                        NSLog(@"restrictionValue: %@", wself->restrictionValue);
                         
-                        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
-                        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
+                        wself->numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
+                        NSLog(@"numberOfCompleted: %lu", (unsigned long)wself->numberOfCompleted);
                         
-                        [self showTaskAlertView];
-                        [self getUrPoints];
+                        [wself showTaskAlertView];
+                        [wself getUrPoints];
                         //[self getPointStore];
                         
                     } else if ([data[@"result"] intValue] == 2) {
@@ -402,7 +402,7 @@
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);                        
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -875,7 +875,7 @@
     } else if (collectionView == self.weatherCollectionView) {
         NSLog(@"collectionView == self.weatherCollectionView");
         numberOfItems = weatherArray.count;
-    } else if (collectionView == self.moodCollectionView) {
+    } else {//if (collectionView == self.moodCollectionView) {
         NSLog(@"collectionView == self.moodCollectionView");
         numberOfItems = moodArray.count;
     }
@@ -1548,7 +1548,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){        
         NSLog(@"self.albumId: %@", self.albumId);
         
@@ -1590,12 +1590,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"self.postMode: %d", self.postMode);
                         
-                        if (albumEditBtnPress) {
-                            NSLog(@"albumEditBtnPress: %d", albumEditBtnPress);
-                            [self checkBeforeGoingToAlbumCreationVC];
+                        if (wself->albumEditBtnPress) {
+                            NSLog(@"albumEditBtnPress: %d", wself->albumEditBtnPress);
+                            [wself checkBeforeGoingToAlbumCreationVC];
                         } else {
-                            if (self.postMode) {
-                                [self postAlbum];
+                            if (wself.postMode) {
+                                [wself postAlbum];
                             } else {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 NSLog(@"");
@@ -1605,8 +1605,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                     if ([vc isKindOfClass: [AlbumDetailViewController class]]) {
                                         NSLog(@"vc is AlbumDetailVC");
                                         
-                                        if ([self.delegate respondsToSelector: @selector(albumSettingViewControllerUpdate:)]) {
-                                            [self.delegate albumSettingViewControllerUpdate: self];
+                                        if ([wself.delegate respondsToSelector: @selector(albumSettingViewControllerUpdate:)]) {
+                                            [wself.delegate albumSettingViewControllerUpdate: self];
                                         }
                                         [appDelegate.myNav popToViewController: vc animated: YES];
                                         
@@ -1636,19 +1636,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         if (msg == nil) {
                             msg = NSLocalizedString(@"Host-NotAvailable", @"");
                         }
-                        [self showCustomErrorAlert: msg];
+                        [wself showCustomErrorAlert: msg];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor thirdPink];
                         
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
+                        [wself.view makeToast: @"用戶驗證異常請重新登入"
                                     duration: 2.0
                                     position: CSToastPositionBottom
                                        style: style];
                         
                         [NSTimer scheduledTimerWithTimeInterval: 1.0
-                                                         target: self
+                                                         target: wself
                                                        selector: @selector(logOut)
                                                        userInfo: nil
                                                         repeats: NO];

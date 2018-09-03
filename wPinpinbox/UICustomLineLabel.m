@@ -38,11 +38,11 @@
 - (void)drawTextInRect:(CGRect)rect{
     [super drawTextInRect:rect];
     
-    CGSize textSize = [[self text] sizeWithFont:[self font]];
+    CGSize textSize = [[self text] sizeWithAttributes:@{NSFontAttributeName:[self font]}];//sizeWithFont:[self font]];
     CGFloat strikeWidth = textSize.width;
     CGRect lineRect;
-    CGFloat origin_x;
-    CGFloat origin_y;
+    CGFloat origin_x = 0;
+    CGFloat origin_y = 0;
     
     
     if ([self textAlignment] == NSTextAlignmentRight) {
@@ -82,7 +82,7 @@
         CGFloat R, G, B, A;
         UIColor *uiColor = self.lineColor;
         CGColorRef color = [uiColor CGColor];
-        int numComponents = CGColorGetNumberOfComponents(color);
+        int numComponents = (int)CGColorGetNumberOfComponents(color);
         
         if( numComponents == 4)
         {
