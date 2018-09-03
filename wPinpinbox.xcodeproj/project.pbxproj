@@ -86,6 +86,9 @@
 		549765D01F7EA0B300E2CBEF /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549765CF1F7EA0B300E2CBEF /* SettingViewController.m */; };
 		5498BF751FC7200A007BD033 /* ActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5498BF741FC7200A007BD033 /* ActivityDetailViewController.m */; };
 		549A18A120AE714D00532E1E /* APNS Banner Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */; };
+		549A83E22136F23B00915495 /* DMPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549A83E12136F23B00915495 /* DMPlayerViewController.m */; };
+		549A83EA2136F2A000915495 /* DMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549A83E92136F2A000915495 /* DMViewController.m */; };
+		549A83EC2136F2A900915495 /* DMVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 549A83EB2136F2A900915495 /* DMVC.storyboard */; };
 		549B48A91F6EC2F60012FE13 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 549B48A81F6EC2F60012FE13 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		549B48AC1F6EC3190012FE13 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 549B48AB1F6EC3190012FE13 /* libicucore.tbd */; };
 		549EC78D1F7B466600260EB0 /* ChooseTemplateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549EC78C1F7B466600260EB0 /* ChooseTemplateViewController.m */; };
@@ -946,6 +949,11 @@
 		5498BF731FC72007007BD033 /* ActivityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityDetailViewController.h; sourceTree = "<group>"; };
 		5498BF741FC7200A007BD033 /* ActivityDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityDetailViewController.m; sourceTree = "<group>"; };
 		549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "APNS Banner Images.xcassets"; path = "Image Resources/APNS Banner Images.xcassets"; sourceTree = "<group>"; };
+		549A83E02136F23B00915495 /* DMPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMPlayerViewController.h; sourceTree = "<group>"; };
+		549A83E12136F23B00915495 /* DMPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMPlayerViewController.m; sourceTree = "<group>"; };
+		549A83E82136F2A000915495 /* DMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMViewController.h; sourceTree = "<group>"; };
+		549A83E92136F2A000915495 /* DMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMViewController.m; sourceTree = "<group>"; };
+		549A83EB2136F2A900915495 /* DMVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DMVC.storyboard; sourceTree = "<group>"; };
 		549B48A71F6EC2F60012FE13 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		549B48A81F6EC2F60012FE13 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		549B48AB1F6EC3190012FE13 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
@@ -2359,6 +2367,9 @@
 				54659A66212FA49300311FF4 /* YoutubePlayerViewController.h */,
 				54659A67212FA49300311FF4 /* YoutubePlayerViewController.m */,
 				54659A69212FA91F00311FF4 /* YoutubePlayerVC.storyboard */,
+				549A83E82136F2A000915495 /* DMViewController.h */,
+				549A83E92136F2A000915495 /* DMViewController.m */,
+				549A83EB2136F2A900915495 /* DMVC.storyboard */,
 				54B8CF3A2119E69A006DFE06 /* AlbumInfoVC */,
 			);
 			name = ContentCheckingVC;
@@ -2490,6 +2501,15 @@
 				54933ADE207F4A30001582C3 /* MintAnnotation.m */,
 			);
 			path = MintAnnotationView;
+			sourceTree = "<group>";
+		};
+		549A83DF2136F23B00915495 /* dailymotion-player-objc */ = {
+			isa = PBXGroup;
+			children = (
+				549A83E02136F23B00915495 /* DMPlayerViewController.h */,
+				549A83E12136F23B00915495 /* DMPlayerViewController.m */,
+			);
+			path = "dailymotion-player-objc";
 			sourceTree = "<group>";
 		};
 		549B48AA1F6EC3190012FE13 /* Frameworks */ = {
@@ -3963,6 +3983,7 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				549A83DF2136F23B00915495 /* dailymotion-player-objc */,
 				630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */,
 				D78F73861D226C8700D8A271 /* youtube-ios-player-helper */,
 				9295A3B51C22521300317FEA /* 圖片放大預覽器 */,
@@ -5204,6 +5225,7 @@
 				92CBCC821BD7606100F1F27A /* frame_click@2x.png in Resources */,
 				92511A081CF5B2BE002D4678 /* button_buy_zh-TW@2x.png in Resources */,
 				926E3BD31CE5DFAD00724B56 /* 3-01button_track@2x.png in Resources */,
+				549A83EC2136F2A900915495 /* DMVC.storyboard in Resources */,
 				922A4B0A1BD6416C006D5A36 /* MemberTopimageTableViewCell.xib in Resources */,
 				927AADFC1BE223960088CDB9 /* 4-08button_upload@2x.png in Resources */,
 				924A92D41BD4D62E00E3D610 /* button_checkbox@2x.png in Resources */,
@@ -5610,11 +5632,13 @@
 				54262AE91FA824C2008ED59B /* VotingCollectionViewCell.m in Sources */,
 				5412B5E61FD92D50007F460A /* ActivityWebViewController.m in Sources */,
 				92CBCC9E1BD78D3C00F1F27A /* EditTextFieldTableViewCell.m in Sources */,
+				549A83EA2136F2A000915495 /* DMViewController.m in Sources */,
 				5451457B200EE2DB00332E9A /* CategoryCollectionViewCell.m in Sources */,
 				63DCC77C1E28236100702E56 /* PageCollectionViewController.m in Sources */,
 				92AB4D211C27DA1B0000307B /* MenberPhoneBtnTableViewCell.m in Sources */,
 				630FD27A1E31C61B0036DEC6 /* RecentBrowseTableViewCell.m in Sources */,
 				639F556C1E151409006599FF /* NotificationCenterTableViewController.m in Sources */,
+				549A83E22136F23B00915495 /* DMPlayerViewController.m in Sources */,
 				540DE2C3202846CC0090F584 /* ChangeInterestsCollectionReusableView.m in Sources */,
 				D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */,
 				6308C45F1EACD1AA00F99AC0 /* CreaterViewController.m in Sources */,
