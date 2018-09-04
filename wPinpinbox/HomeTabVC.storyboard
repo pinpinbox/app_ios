@@ -772,8 +772,9 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="82t-NN-U7w" firstAttribute="bottom" secondItem="Bll-Lp-1pR" secondAttribute="bottom" id="2w9-lZ-dzx"/>
+                            <constraint firstItem="Bll-Lp-1pR" firstAttribute="bottom" secondItem="82t-NN-U7w" secondAttribute="bottom" id="2w9-lZ-dzx"/>
                             <constraint firstItem="Ul4-mK-9EM" firstAttribute="leading" secondItem="82t-NN-U7w" secondAttribute="leading" id="4Fl-9f-frC"/>
                             <constraint firstItem="Bll-Lp-1pR" firstAttribute="top" secondItem="82t-NN-U7w" secondAttribute="top" id="5E2-Td-3eW"/>
                             <constraint firstItem="Ul4-mK-9EM" firstAttribute="trailing" secondItem="82t-NN-U7w" secondAttribute="trailing" id="KZD-Ff-f39"/>

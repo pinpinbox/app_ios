@@ -130,6 +130,7 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="th5-7T-rQz" firstAttribute="bottom" secondItem="Svs-8v-rB2" secondAttribute="bottom" id="3dl-Nq-A3I"/>
                             <constraint firstItem="th5-7T-rQz" firstAttribute="trailing" secondItem="Svs-8v-rB2" secondAttribute="trailing" id="K7y-7M-elN"/>
@@ -140,6 +141,11 @@
                             <constraint firstItem="th5-7T-rQz" firstAttribute="leading" secondItem="Svs-8v-rB2" secondAttribute="leading" id="yH0-9o-cIn"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Svs-8v-rB2"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.alpha">
+                                <real key="value" value="0.5"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </view>
                     <connections>
                         <outlet property="checkContentBtn" destination="XR3-jW-ub1" id="HXu-xu-fbq"/>
