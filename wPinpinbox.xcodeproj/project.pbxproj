@@ -140,8 +140,6 @@
 		54E00ED11FF35B41007881ED /* CategoryDetailVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54E00ED01FF35B41007881ED /* CategoryDetailVC.storyboard */; };
 		54E00F131FF39B6D007881ED /* customLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E00F121FF39B6D007881ED /* customLayout.m */; };
 		54E0ED5720182069002A8D41 /* AlbumCreationVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54E0ED5620182068002A8D41 /* AlbumCreationVC.storyboard */; };
-		54E232B51FA6DB9E00D95FD5 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54E232B31FA6DB9D00D95FD5 /* Crashlytics.framework */; };
-		54E232B61FA6DB9E00D95FD5 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54E232B41FA6DB9D00D95FD5 /* Fabric.framework */; };
 		54E612BD2012F24400EA773B /* QRCodeVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54E612BC2012F24400EA773B /* QRCodeVC.storyboard */; };
 		54E6EA7920A0508500DA7D99 /* FollowFromListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54E6EA7820A0508500DA7D99 /* FollowFromListViewController.m */; };
 		54E6EA7B20A0509500DA7D99 /* FollowFromListVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54E6EA7A20A0509500DA7D99 /* FollowFromListVC.storyboard */; };
@@ -402,9 +400,6 @@
 		924A92E01BD4DF8B00E3D610 /* button_take-photo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 924A92DF1BD4DF8B00E3D610 /* button_take-photo@2x.png */; };
 		924A92E21BD4DF9C00E3D610 /* icon_camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 924A92E11BD4DF9C00E3D610 /* icon_camera@2x.png */; };
 		924A92E41BD4DFB200E3D610 /* icon_confirm@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 924A92E31BD4DFB200E3D610 /* icon_confirm@2x.png */; };
-		924D63B21BF3304B00E20C9A /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 924D63B11BF3304B00E20C9A /* FBSDKLoginKit.framework */; };
-		924D63B41BF3305900E20C9A /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 924D63B31BF3305900E20C9A /* FBSDKCoreKit.framework */; };
-		924D63B61BF3306F00E20C9A /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 924D63B51BF3306F00E20C9A /* FBSDKShareKit.framework */; };
 		9251121E1BE08B3300B5F161 /* ZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 9251121D1BE08B3300B5F161 /* ZipArchive.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		925112291BE08B3F00B5F161 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 925112211BE08B3F00B5F161 /* ioapi.c */; };
 		9251122A1BE08B3F00B5F161 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 925112231BE08B3F00B5F161 /* mztools.c */; };
@@ -974,10 +969,6 @@
 		54AB130D20AD917F00C7CC1A /* OldImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = OldImages.xcassets; path = "Image Resources/OldImages.xcassets"; sourceTree = "<group>"; };
 		54AE99682016522C0003D060 /* ChooseHobbyVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChooseHobbyVC.storyboard; sourceTree = "<group>"; };
 		54AE997220170BA50003D060 /* VotingVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VotingVC.storyboard; sourceTree = "<group>"; };
-		54AFF4451F8491AB00222CEF /* FLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImage.h; sourceTree = "<group>"; };
-		54AFF4461F8491AB00222CEF /* FLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImage.m; sourceTree = "<group>"; };
-		54AFF4471F8491AB00222CEF /* FLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImageView.h; sourceTree = "<group>"; };
-		54AFF4481F8491AB00222CEF /* FLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImageView.m; sourceTree = "<group>"; };
 		54B08C7A2105B8A700ADC09A /* ContentCheckingVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ContentCheckingVC.storyboard; sourceTree = "<group>"; };
 		54B08C7C2105B8B500ADC09A /* ContentCheckingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentCheckingViewController.h; sourceTree = "<group>"; };
 		54B08C7D2105B8B500ADC09A /* ContentCheckingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContentCheckingViewController.m; sourceTree = "<group>"; };
@@ -1032,8 +1023,6 @@
 		54E00F111FF39B69007881ED /* customLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = customLayout.h; sourceTree = "<group>"; };
 		54E00F121FF39B6D007881ED /* customLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = customLayout.m; sourceTree = "<group>"; };
 		54E0ED5620182068002A8D41 /* AlbumCreationVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AlbumCreationVC.storyboard; sourceTree = "<group>"; };
-		54E232B31FA6DB9D00D95FD5 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
-		54E232B41FA6DB9D00D95FD5 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		54E612BC2012F24400EA773B /* QRCodeVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = QRCodeVC.storyboard; sourceTree = "<group>"; };
 		54E6EA7720A0508500DA7D99 /* FollowFromListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FollowFromListViewController.h; sourceTree = "<group>"; };
 		54E6EA7820A0508500DA7D99 /* FollowFromListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FollowFromListViewController.m; sourceTree = "<group>"; };
@@ -1438,9 +1427,6 @@
 		924A92DF1BD4DF8B00E3D610 /* button_take-photo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_take-photo@2x.png"; sourceTree = "<group>"; };
 		924A92E11BD4DF9C00E3D610 /* icon_camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_camera@2x.png"; sourceTree = "<group>"; };
 		924A92E31BD4DFB200E3D610 /* icon_confirm@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_confirm@2x.png"; sourceTree = "<group>"; };
-		924D63B11BF3304B00E20C9A /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
-		924D63B31BF3305900E20C9A /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
-		924D63B51BF3306F00E20C9A /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		9251121C1BE08B3300B5F161 /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
 		9251121D1BE08B3300B5F161 /* ZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZipArchive.m; sourceTree = "<group>"; };
 		925112201BE08B3F00B5F161 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
@@ -1997,9 +1983,6 @@
 				92CFB5BF1BE75664001B7B78 /* QuartzCore.framework in Frameworks */,
 				92CFB5BD1BE75659001B7B78 /* OpenGLES.framework in Frameworks */,
 				92EE16D91C3B640500F37519 /* AdobeCreativeSDKBehance.framework in Frameworks */,
-				54E232B51FA6DB9E00D95FD5 /* Crashlytics.framework in Frameworks */,
-				924D63B61BF3306F00E20C9A /* FBSDKShareKit.framework in Frameworks */,
-				924D63B21BF3304B00E20C9A /* FBSDKLoginKit.framework in Frameworks */,
 				92EE16E01C3B641200F37519 /* AdobeCreativeSDKFoundation.framework in Frameworks */,
 				92CFB5BB1BE75654001B7B78 /* MessageUI.framework in Frameworks */,
 				92D363181BE0774C0084C746 /* libz.1.2.5.dylib in Frameworks */,
@@ -2008,10 +1991,8 @@
 				92CFB5B31BE75634001B7B78 /* Accelerate.framework in Frameworks */,
 				92CFB5B11BE7562B001B7B78 /* Foundation.framework in Frameworks */,
 				929ED4AE1B78A2F300D21CF0 /* CoreLocation.framework in Frameworks */,
-				924D63B41BF3305900E20C9A /* FBSDKCoreKit.framework in Frameworks */,
 				92EE16D81C3B640500F37519 /* AdobeCreativeSDKColorComponent.framework in Frameworks */,
 				929ED4AC1B78A2E200D21CF0 /* AssetsLibrary.framework in Frameworks */,
-				54E232B61FA6DB9E00D95FD5 /* Fabric.framework in Frameworks */,
 				BF61430D909D28AAF4BCA35B /* libPods-wPinpinbox.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2528,17 +2509,6 @@
 				6EF49CD35627C495D6CBEB4C /* libPods-wPinpinbox.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		54AFF4441F84918C00222CEF /* FLAnimatedImage */ = {
-			isa = PBXGroup;
-			children = (
-				54AFF4451F8491AB00222CEF /* FLAnimatedImage.h */,
-				54AFF4461F8491AB00222CEF /* FLAnimatedImage.m */,
-				54AFF4471F8491AB00222CEF /* FLAnimatedImageView.h */,
-				54AFF4481F8491AB00222CEF /* FLAnimatedImageView.m */,
-			);
-			name = FLAnimatedImage;
 			sourceTree = "<group>";
 		};
 		54B2C39B206AB05200ABEC76 /* UIImage-categories */ = {
@@ -3120,8 +3090,6 @@
 		920A0D351BE85FAB00EC5F6E /* Framework */ = {
 			isa = PBXGroup;
 			children = (
-				54E232B31FA6DB9D00D95FD5 /* Crashlytics.framework */,
-				54E232B41FA6DB9D00D95FD5 /* Fabric.framework */,
 				630AD0931D88EB85009C511A /* AVKit.framework */,
 				92B2F8761BF1A160002499DA /* AVFoundation.framework */,
 				630AD0951D88EBE8009C511A /* CoreMedia.framework */,
@@ -3138,9 +3106,6 @@
 				92EE16D51C3B640500F37519 /* AdobeCreativeSDKBehance.framework */,
 				92EE16D61C3B640500F37519 /* AdobeCreativeSDKDevice.framework */,
 				92EE16D71C3B640500F37519 /* AdobeCreativeSDKImage.framework */,
-				924D63B51BF3306F00E20C9A /* FBSDKShareKit.framework */,
-				924D63B31BF3305900E20C9A /* FBSDKCoreKit.framework */,
-				924D63B11BF3304B00E20C9A /* FBSDKLoginKit.framework */,
 				92CFB5C61BE75688001B7B78 /* libc++.dylib */,
 				92CFB5C41BE7567E001B7B78 /* UIKit.framework */,
 				92CFB5C01BE75670001B7B78 /* StoreKit.framework */,
@@ -4062,7 +4027,6 @@
 				5430446520B8122600018AF4 /* TKImageView */,
 				54933AD6207F4A30001582C3 /* MintAnnotationView */,
 				543B11A4205619A900111102 /* ZOZolaZoomTransition */,
-				54AFF4441F84918C00222CEF /* FLAnimatedImage */,
 				63AAEC021F33312C00E6276E /* CustomActionSheet */,
 				630A83BC1EB1D05E00AC8479 /* MyLayout Lib */,
 			);
@@ -4815,6 +4779,7 @@
 				9276DF9D1B72FDC000E6ACC9 /* Frameworks */,
 				9276DF9E1B72FDC000E6ACC9 /* Resources */,
 				54E232B21FA6DA9400D95FD5 /* ShellScript */,
+				8C04F962186D06E36C1BDEA3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5379,7 +5344,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run d1ae8885f7ffd8a5956e74686a7e720f8d853aac dad04e88c7afebbc23a06451359eaa91f3db070a6e600fdb82a478d5ac72519a";
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" d1ae8885f7ffd8a5956e74686a7e720f8d853aac dad04e88c7afebbc23a06451359eaa91f3db070a6e600fdb82a478d5ac72519a\n";
+		};
+		8C04F962186D06E36C1BDEA3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh",
+				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		BA41613ED0E091BE2F1ADC6A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

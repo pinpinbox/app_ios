@@ -12,4 +12,10 @@ target 'wPinpinbox' do
   pod "RMPZoomTransitionAnimator"
   pod 'TTTAttributedLabel'
   pod 'SSFadingScrollView', '~> 1.1'
+
+  pod 'Fabric'
+  pod 'Crashlytics'
+  pod 'FBSDKShareKit'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
 end
