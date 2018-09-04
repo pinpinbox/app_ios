@@ -551,8 +551,8 @@ static InAppPurchaseManager *instance =nil;
 // 獲得商品列表失敗
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error
 {
-//    UIAlertView *alerView =  [[UIAlertView alloc] initWithTitle:@"Alert" message:[error localizedDescription]  delegate:nil cancelButtonTitle:NSLocalizedString(@"Close",nil)  otherButtonTitles:nil];
-//    [alerView show];
+    UIAlertView *alerView =  [[UIAlertView alloc] initWithTitle:@"Alert" message:[error localizedDescription]  delegate:nil cancelButtonTitle:NSLocalizedString(@"Close",nil)  otherButtonTitles:nil];
+    [alerView show];
 }
 
 -(void)StoreInfoError:(NSString*)info

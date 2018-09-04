@@ -8,7 +8,7 @@
 #import "UIImage+Alpha.h"
 
 // Private helper methods
-@interface UIImage (privateResize)
+@interface UIImage ()
 - (UIImage *)resizedImage:(CGSize)newSize
                 transform:(CGAffineTransform)transform
            drawTransposed:(BOOL)transpose
@@ -175,13 +175,7 @@
     }
     
     switch (self.imageOrientation) {
-            case UIImageOrientationUp:
-            case UIImageOrientationDown:
-            case UIImageOrientationLeft:
-            case UIImageOrientationRight:
-            
-            break;
-            case UIImageOrientationUpMirrored:     // EXIF = 2
+        case UIImageOrientationUpMirrored:     // EXIF = 2
         case UIImageOrientationDownMirrored:   // EXIF = 4
             transform = CGAffineTransformTranslate(transform, newSize.width, 0);
             transform = CGAffineTransformScale(transform, -1, 1);

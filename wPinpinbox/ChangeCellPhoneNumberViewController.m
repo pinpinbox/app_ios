@@ -206,12 +206,10 @@
     NSString *emailStr = myData[@"email"];
     NSLog(@"response: %@", emailStr);
     
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI requsetsmspwd2:[NSString stringWithFormat:@"%@,%@", countrstr, self.cellPhoneTextField.text] Account: emailStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(wself) sself = wself;
             @try {
                 [wTools HideMBProgressHUD];
             } @catch (NSException *exception) {
@@ -239,28 +237,28 @@
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor secondMain];
                         
-                        [sself.view makeToast: NSLocalizedString(@"RegText-successSent", @"")
+                        [self.view makeToast: NSLocalizedString(@"RegText-successSent", @"")
                                     duration: 2.0
                                     position: CSToastPositionBottom
                                        style: style];
                         
-                        sself.countDownLabel.hidden = NO;
-                        sself.sendBtn.userInteractionEnabled = NO;
-                        [sself.sendBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
-                        sself.sendBtn.backgroundColor = [UIColor clearColor];
-                        sself.sendBtn.layer.borderWidth = 1.0f;
-                        sself.sendBtn.layer.borderColor = [UIColor secondGrey].CGColor;
+                        self.countDownLabel.hidden = NO;
+                        self.sendBtn.userInteractionEnabled = NO;
+                        [self.sendBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
+                        self.sendBtn.backgroundColor = [UIColor clearColor];
+                        self.sendBtn.layer.borderWidth = 1.0f;
+                        self.sendBtn.layer.borderColor = [UIColor secondGrey].CGColor;
                         
-                        sself->timeTick = 59;
-                        [sself->timer invalidate];
-                        sself->timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: sself selector: @selector(tickForSMS) userInfo: nil repeats: YES];
+                        timeTick = 59;
+                        [timer invalidate];
+                        timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector: @selector(tickForSMS) userInfo: nil repeats: YES];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
                         NSLog(@"msg: %@", msg);
-                        [wself showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: msg];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];                    
                     }
                 }
             }

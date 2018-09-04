@@ -109,13 +109,13 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(self) wself = self;
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getHobbyList: [wTools getUserID] token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: wself.view animated: YES];
+                [MBProgressHUD hideHUDForView: self.view animated: YES];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -133,7 +133,7 @@
                     NSLog(@"ChooseHobbyViewController");
                     NSLog(@"getHobbyList");
                     
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getHobbyList"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -145,29 +145,29 @@
                         
                         NSLog(@"data: %@", data);
                         
-                        wself->hobbyArray = data[@"data"];
+                        hobbyArray = data[@"data"];
                         
                         NSInteger hobbyId;
                         
-                        for (int i = 0; i < wself->hobbyArray.count; i++) {
+                        for (int i = 0; i < hobbyArray.count; i++) {
                             NSMutableDictionary *dic = [NSMutableDictionary new];
                             
-                            hobbyId = [wself->hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
+                            hobbyId = [hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
                             [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
                             [dic setValue: [NSNumber numberWithInteger: hobbyId] forKey: @"hobbyId"];
-                            [wself->checkSelectedArray addObject: dic];
+                            [checkSelectedArray addObject: dic];
                         }
-                        NSLog(@"checkSelectedArray: %@", wself->checkSelectedArray);
+                        NSLog(@"checkSelectedArray: %@", checkSelectedArray);
                         
-                        NSLog(@"hobbyArray: %@", wself->hobbyArray);
+                        NSLog(@"hobbyArray: %@", hobbyArray);
                         
-                        [wself.collectionView reloadData];
+                        [self.collectionView reloadData];
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
                         NSString *msg = data[@"message"];
-                        [wself showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: msg];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

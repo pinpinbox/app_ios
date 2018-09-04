@@ -41,11 +41,10 @@
     tmpAdduserid=[NSMutableArray new];
     
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSMutableDictionary *data=[NSMutableDictionary new];
-        [data setObject:wself.albumid forKey:@"type_id"];
+        [data setObject:_albumid forKey:@"type_id"];
         [data setObject:@"album" forKey:@"type"];
         
         NSString *respone=[boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
@@ -61,7 +60,7 @@
                 
                 if ([dic[@"result"] intValue] == 1) {
                     for (NSDictionary *udic in dic[@"data"]) {
-                        [wself->tmpAdduserid addObject:[udic[@"user"][@"user_id"] stringValue]];
+                        [tmpAdduserid addObject:[udic[@"user"][@"user_id"] stringValue]];
                     }
                 } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
@@ -206,7 +205,6 @@
     }else{
         [cell isaddData:NO];
     }
-    __block typeof(self) wself = self;
     
     cell.customBlock=^(BOOL add,NSString *userid){
         [wTools ShowMBProgressHUD];
@@ -216,7 +214,7 @@
             NSMutableDictionary *data=[NSMutableDictionary new];
             [data setObject:userid forKey:@"user_id"];
             [data setObject:@"album" forKey:@"type"];
-            [data setObject:wself.albumid forKey:@"type_id"];
+            [data setObject:_albumid forKey:@"type_id"];
             
             if (add) {
                 respone=[boxAPI deletecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
@@ -232,21 +230,21 @@
                     
                     if ([dic[@"result"] intValue] == 1) {
                         if (!add) {
-                            if (![wself->tmpAdduserid containsObject:userid]){
-                                [wself->tmpAdduserid addObject:userid];
+                            if (![tmpAdduserid containsObject:userid]){
+                                [tmpAdduserid addObject:userid];
                                 
                             }
                         }else{
-                            if ([wself->tmpAdduserid containsObject:userid]){
-                                [wself->tmpAdduserid removeObject:userid];
+                            if ([tmpAdduserid containsObject:userid]){
+                                [tmpAdduserid removeObject:userid];
                             }                            
                         }
-                        [wself->mytable reloadData];
+                        [mytable reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             });
@@ -255,7 +253,7 @@
     return cell;
 }
 
-- (void)loadData{//(UIAlertView *) alert{
+- (void)loadData:(UIAlertView *) alert{
     NSLog(@"loadData");
     
     if (!isLoading) {
@@ -269,9 +267,9 @@
         //[data setObject:searchText.text forKey:@"searchkey"];
         [data setObject: self.searchController.searchBar.text forKey: @"searchkey"];
         
-        NSString *limit=[NSString stringWithFormat:@"%ld,%ld",nextId,nextId+10];
+        NSString *limit=[NSString stringWithFormat:@"%d,%d",nextId,nextId+10];
         [data setObject:limit forKey:@"limit"];
-        __block typeof(self) wself = self;
+        
         respone=[boxAPI search:[wTools getUserID] token:[wTools getUserToken] data:data];
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             
@@ -286,21 +284,21 @@
                         int s=0;
                         for (NSMutableDictionary *picture in [dic objectForKey:@"data"]) {
                             s++;
-                            [wself->alldata addObject: picture];
+                            [alldata addObject: picture];
                         }
-                        wself->nextId = wself->nextId+s;
+                        nextId = nextId+s;
                         
-                        //if (alert != nil)
-                         //   [alert dismissWithClickedButtonIndex:-1 animated:YES];
-                        [wself->mytable reloadData];
+                        if (alert != nil)
+                            [alert dismissWithClickedButtonIndex:-1 animated:YES];
+                        [mytable reloadData];
                         
-                        if (wself->nextId  >= 0)
-                            wself->isLoading = NO;
+                        if (nextId  >= 0)
+                            isLoading = NO;
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             });
@@ -315,7 +313,7 @@
         return;
     
     if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
-        [self loadData];//:nil];
+        [self loadData:nil];
     }
 }
 
@@ -357,9 +355,9 @@
 
 - (void)callProtocolSearch: (NSString *)text {
     NSLog(@"callProtocolSearch");
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        wself->isLoading = YES;
+        isLoading = YES;
         NSString *respone=@"";
         NSMutableDictionary *data=[NSMutableDictionary new];
         [data setObject: @"user" forKey:@"searchtype"];
@@ -372,18 +370,18 @@
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
                 if ([dic[@"result"] intValue] == 1) {
-                    wself->alldata=[[NSMutableArray alloc]initWithArray:dic[@"data"]];//arrayWithArray:dic[@"data"]];
-                    wself->nextId=wself->alldata.count;
+                    alldata=[NSMutableArray arrayWithArray:dic[@"data"]];
+                    nextId=alldata.count;
                     
-                    if (wself->nextId  >= 0){
-                        wself->isLoading = NO;
+                    if (nextId  >= 0){
+                        isLoading = NO;
                     }
-                    [wself->mytable reloadData];
+                    [mytable reloadData];
                 } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
-                    [wself showCustomErrorAlert: dic[@"message"]];
+                    [self showCustomErrorAlert: dic[@"message"]];
                 } else {
-                    [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });

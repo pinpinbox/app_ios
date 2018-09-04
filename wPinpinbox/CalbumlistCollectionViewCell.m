@@ -155,13 +155,12 @@
 
 //刪除事件
 -(void)deletebook{
-    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    AppDelegate *app=[[UIApplication sharedApplication]delegate];
     //取得資料ID
     NSString * name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],_albumid ];
     NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     //檢查資料夾是否存在
-    __block typeof(self) wself = self;
     if ([fileManager fileExistsAtPath:docDirectoryPath]) {
         Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
         [rv addtitletext:@"確定要刪除相本?"];
@@ -170,7 +169,7 @@
         rv.btn1select=^(BOOL bo){
             if (bo) {
                 [fileManager removeItemAtPath:docDirectoryPath error:nil];
-                [wself deletebook:wself.albumid];
+                [self deletebook:_albumid];
             }
         };
     }else{
@@ -180,7 +179,7 @@
         [rv showView:app.menu.view];
         rv.btn1select=^(BOOL bo){
             if (bo) {
-                [wself deletebook:wself.albumid];
+                [self deletebook:_albumid];
             }
         };
     }
@@ -199,7 +198,6 @@
     }
     
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *respone = [boxAPI delalbum:[wTools getUserID] token:[wTools getUserToken] albumid:albumid];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -209,21 +207,21 @@
                  NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
                 if ([dic[@"result"] intValue] == 1) {
-                    [self.delegate reloadData];
+                    [_delegate reloadData];
                 } else if ([dic[@"result"] intValue] == 0) {
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
                     [rv addtitletext:dic[@"message"]];
                      [rv addBackTouch];
                     [rv showView:app.menu.view];
-                    [wself.delegate reloadData];
+                    [_delegate reloadData];
                 } else {
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
                     [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
                     [rv addBackTouch];
                     [rv showView:app.menu.view];
-                    [wself.delegate reloadData];
+                    [_delegate reloadData];
                 }
             }
         });
@@ -232,7 +230,6 @@
 
 -(void)hidealbumqueue:(NSString *)albumid{
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *respone=@"";
@@ -244,22 +241,22 @@
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
                 if ([dic[@"result"] intValue] == 1) {
-                    [wself.delegate reloadData];
-                    [wself deletePlist: albumid];
+                    [_delegate reloadData];
+                    [self deletePlist: albumid];
                 } else if ([dic[@"result"] intValue] == 0) {
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
                     [rv addtitletext:dic[@"message"]];
                     [rv addBackTouch];
                     [rv showView:app.menu.view];
-                    [wself.delegate reloadData];
+                    [_delegate reloadData];
                 } else {
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
                     [rv addtitletext:NSLocalizedString(@"Host-NotAvailable", @"")];
                     [rv addBackTouch];
                     [rv showView:app.menu.view];
-                    [wself.delegate reloadData];
+                    [_delegate reloadData];
                 }
             }
         });
@@ -298,14 +295,13 @@
 //刪除共用-共用
 -(void)deletecooperation:(NSString *)albumid{
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *respone=@"";
         NSMutableDictionary *data=[NSMutableDictionary new];
         [data setObject:[wTools getUserID] forKey:@"user_id"];
         [data setObject:@"album" forKey:@"type"];
-        [data setObject:wself.albumid forKey:@"type_id"];
+        [data setObject:_albumid forKey:@"type_id"];
             respone=[boxAPI deletecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -314,14 +310,14 @@
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
                 if ([dic[@"result"]boolValue]) {
-                    [wself.delegate reloadData];
+                    [_delegate reloadData];
                 }else{
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
                     [rv addtitletext:dic[@"message"]];
                     [rv addBackTouch];
                     [rv showView:app.menu.view];
-                    [wself.delegate reloadData];
+                    [_delegate reloadData];
                 }
             }
         });

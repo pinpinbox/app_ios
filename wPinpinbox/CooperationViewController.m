@@ -105,11 +105,11 @@
 
 -(void)reload {
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSMutableDictionary *data=[NSMutableDictionary new];
-        [data setObject:wself.albumid forKey:@"type_id"];
+        [data setObject:_albumid forKey:@"type_id"];
         [data setObject:@"album" forKey:@"type"];
         NSString *respone = [boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
         
@@ -126,7 +126,7 @@
         NSString *jsonStr = [[NSString alloc] initWithData: jsonData
                                                   encoding: NSUTF8StringEncoding];
         
-        NSString *responseQRCode = [boxAPI getQRCode: [wTools getUserID] token: [wTools getUserToken] type: @"album" type_id: wself.albumid effect: @"execute" is: jsonStr];
+        NSString *responseQRCode = [boxAPI getQRCode: [wTools getUserID] token: [wTools getUserToken] type: @"album" type_id: _albumid effect: @"execute" is: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
           
@@ -140,38 +140,38 @@
                 NSLog(@"dicQR: %@", dicQR);
                 
                 if ([dic[@"result"] intValue] == 1) {
-                    wself->mydataarr=[NSMutableArray arrayWithArray:dic[@"data"]];
+                    mydataarr=[NSMutableArray arrayWithArray:dic[@"data"]];
                     
-                    for (NSDictionary *userdic in wself->mydataarr) {
+                    for (NSDictionary *userdic in mydataarr) {
                         NSLog(@"userdic cooperation identity: %@", userdic[@"cooperation"][@"identity"]);
                         
                         if ([userdic[@"cooperation"][@"identity"] isEqualToString:@"admin"]) {
-                            wself->adminuser=userdic;
-                            [wself->mydataarr removeObject:userdic];
+                            adminuser=userdic;
+                            [mydataarr removeObject:userdic];
                             break;
                         }
                     }
-                    [wself.refreshControl endRefreshing];
-                    [wself->mytable reloadData];
+                    [self.refreshControl endRefreshing];
+                    [mytable reloadData];
                 } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
-                    [wself showCustomErrorAlert: dic[@"message"]];
-                    [wself.refreshControl endRefreshing];
+                    [self showCustomErrorAlert: dic[@"message"]];
+                    [self.refreshControl endRefreshing];
                 } else {
-                    [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    [wself.refreshControl endRefreshing];
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [self.refreshControl endRefreshing];
                 }
 
                 if ([dicQR[@"result"] intValue] == 1) {
-                    wself->qrImageStr = dicQR[@"data"];
+                    qrImageStr = dicQR[@"data"];
                 } else if ([dicQR[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dicQR[@"message"]);
-                    [wself showCustomErrorAlert: dicQR[@"message"]];
+                    [self showCustomErrorAlert: dicQR[@"message"]];
                 } else {
-                    [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             } else {
-                [wself.refreshControl endRefreshing];
+                [self.refreshControl endRefreshing];
             }
             
             [wTools HideMBProgressHUD];
@@ -259,25 +259,25 @@
             topc.photo.imageURL=[NSURL URLWithString:dic[@"user"][@"picture"]];
             [[topc.photo layer]setMasksToBounds:YES];
         }
-        __block typeof(self.albumid) aid = self.albumid;
+        
         topc.btn1select=^(BOOL bo){
             //CooperationAddViewController *cadd=[[CooperationAddViewController alloc]initWithNibName:@"CooperationAddViewController" bundle:nil];
             CooperationAddViewController *cadd = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"CooperationAddViewController"];
             
-            cadd.albumid=aid;
+            cadd.albumid=_albumid;
             [self.navigationController pushViewController:cadd animated:YES];
             
             //[self performSegueWithIdentifier: @"showCooperationAddViewController" sender: self];
         };
-        __block typeof(self) wself = self;
+
         topc.btn2select = ^(BOOL bo) {
             NSLog(@"qrCodeScan Touch");
             
-            wself->dimBackgroundUIView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-            wself->dimBackgroundUIView.backgroundColor = [UIColor whiteColor];
-            wself->dimBackgroundUIView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+            dimBackgroundUIView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+            dimBackgroundUIView.backgroundColor = [UIColor whiteColor];
+            dimBackgroundUIView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
             
-            [wself.view addSubview: wself->dimBackgroundUIView];
+            [self.view addSubview: dimBackgroundUIView];
             
             /*
             if (!UIAccessibilityIsReduceTransparencyEnabled()) {
@@ -298,8 +298,8 @@
             
             //UIImage *image = [UIImage imageWithCIImage: qrcodeImage scale: [UIScreen mainScreen].scale orientation: UIImageOrientationUp];
             
-            wself->imageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 200, 200)];
-            wself->imageView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+            imageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 200, 200)];
+            imageView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
             
             /*
             CGFloat scaleX = imageView.frame.size.width / qrcodeImage.extent.size.width;
@@ -309,13 +309,13 @@
             
             //imageView.image = [UIImage imageWithCIImage: transformedImage];
             
-            wself->imageView.image = [self decodeBase64ToImage: wself->qrImageStr];
+            imageView.image = [self decodeBase64ToImage: qrImageStr];
             
             [UIView beginAnimations: nil context: nil];
             [UIView setAnimationDuration: 1.0];
             [UIView setAnimationDelay: 1.0];
             [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
-            [wself.view addSubview: wself->imageView];
+            [self.view addSubview: imageView];
             [UIView commitAnimations];
             
             //containerView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 220, 220)];
@@ -359,48 +359,47 @@
     }else{
         cell.typetitle.text=NSLocalizedString(@"CreateAlbumText-viewer", @"");
     }
-    __block typeof(self) wself = self;
     
     cell.btn1select=^(BOOL bo){
-        NSLog(@"identity: %@", wself.identity);
-        NSLog(@"mydataarr: %@", wself->mydataarr);
+        NSLog(@"identity: %@", _identity);
+        NSLog(@"mydataarr: %@", mydataarr);
         NSLog(@"indexPath.row: %ld", (long)indexPath.row);
-        NSLog(@"mydataarr row: %@", wself->mydataarr[indexPath.row]);
+        NSLog(@"mydataarr row: %@", mydataarr[indexPath.row]);
         
-        if ([wself.identity isEqualToString:@"admin"] || [wself.identity isEqualToString: @"approver"]) {
+        if ([_identity isEqualToString:@"admin"] || [_identity isEqualToString: @"approver"]) {
             //修改權限
-            wself->selectuserid=[dic[@"user"][@"user_id"] stringValue];
+            selectuserid=[dic[@"user"][@"user_id"] stringValue];
             SBookSelectViewController *SBSVC=[[SBookSelectViewController alloc]initWithNibName:@"SBookSelectViewController" bundle:nil];
             SBSVC.mytitletext=NSLocalizedString(@"CreateAlbumText-tipAssignRole", @"");
             SBSVC.delegate=self;
             SBSVC.data=@[NSLocalizedString(@"CreateAlbumText-admin2", @""),NSLocalizedString(@"CreateAlbumText-sharer", @""),NSLocalizedString(@"CreateAlbumText-viewer", @"")];
             SBSVC.topViewController=self;                        
             
-            NSString *identityStr = wself->mydataarr[indexPath.row][@"cooperation"][@"identity"];
+            NSString *identityStr = mydataarr[indexPath.row][@"cooperation"][@"identity"];
             NSLog(@"identityStr: %@", identityStr);
             
             // Check the array member whether is approver or not
             if ([identityStr isEqualToString: @"approver"]) {
                 
                 // Check the user of editing album is approver or not
-                if (![wself.identity isEqualToString: @"admin"]) {
+                if (![_identity isEqualToString: @"admin"]) {
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: @"副管理者不能變更副管理者的權限" preferredStyle: UIAlertControllerStyleAlert];
                     UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確認" style: UIAlertActionStyleDefault handler:nil];
                     [alert addAction: okBtn];
-                    [wself presentViewController: alert animated: YES completion: nil];
+                    [self presentViewController: alert animated: YES completion: nil];
                 } else {
-                    [wself wu2presentPopupViewController:SBSVC animated:YES completion:nil];
+                    [self wu2presentPopupViewController:SBSVC animated:YES completion:nil];
                 }
                 
             } else {
-                [wself wu2presentPopupViewController:SBSVC animated:YES completion:nil];
+                [self wu2presentPopupViewController:SBSVC animated:YES completion:nil];
             }
             
         } else {
             Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
             [rv addtitletext:NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
             [rv addBackTouch];
-            [rv showView:wself.view];
+            [rv showView:self.view];
             return;
         }
     };
@@ -414,13 +413,13 @@
     NSString *type = [NSString stringWithFormat:@"%@", arr[row]];
     
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSMutableDictionary *data=[NSMutableDictionary new];
-        [data setObject:wself.albumid forKey:@"type_id"];
+        [data setObject:_albumid forKey:@"type_id"];
         [data setObject:@"album" forKey:@"type"];
         [data setObject:type forKey:@"identity"];
-        [data setObject:wself->selectuserid forKey:@"user_id"];
+        [data setObject:selectuserid forKey:@"user_id"];
         NSString *respone=[boxAPI updatecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -429,12 +428,12 @@
             if (respone!=nil) {
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 if ([dic[@"result"] intValue] == 1) {
-                     [wself w2dismissPopupViewControllerAnimated:YES completion:nil];
+                     [self w2dismissPopupViewControllerAnimated:YES completion:nil];
                 } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
-                    [wself showCustomErrorAlert: dic[@"message"]];
+                    [self showCustomErrorAlert: dic[@"message"]];
                 } else {
-                    [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -454,9 +453,6 @@
 
 -(NSArray *)tableView:(UITableView *)tableView
 editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    __block typeof(self) wself = self;
-    
     UITableViewRowAction *button = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:NSLocalizedString(@"GeneralText-del", @"") handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
           {
             //刪除動作
@@ -464,9 +460,9 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
                
                
-                NSDictionary *dic=wself->mydataarr[indexPath.row];
+                NSDictionary *dic=mydataarr[indexPath.row];
             NSMutableDictionary *data=[NSMutableDictionary new];
-                  [data setObject:wself.albumid forKey:@"type_id"];
+                  [data setObject:_albumid forKey:@"type_id"];
                   [data setObject:@"album" forKey:@"type"];
                   [data setObject:[dic[@"user"][@"user_id"] stringValue] forKey:@"user_id"];
                NSString *respone=[boxAPI deletecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
@@ -477,12 +473,12 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
                     if (respone!=nil) {
                         NSDictionary *dic = (NSDictionary *)   [NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         if ([dic[@"result"] intValue] == 1) {
-                            [wself reload];
+                            [self reload];
                         } else if ([dic[@"result"] intValue] == 0) {
                             NSLog(@"失敗：%@",dic[@"message"]);
-                            [wself showCustomErrorAlert: dic[@"message"]];
+                            [self showCustomErrorAlert: dic[@"message"]];
                         } else {
-                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
                     }
                 });

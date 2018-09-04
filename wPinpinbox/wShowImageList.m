@@ -113,7 +113,7 @@
     if (_isShow) {
 //        _imagelist.count+1;
     }
-    return (int)_imagelist.count;
+    return _imagelist.count;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -123,4 +123,5 @@
 //    int wNowPage = [vc getNowPage:2];
 
 }
+
 @end

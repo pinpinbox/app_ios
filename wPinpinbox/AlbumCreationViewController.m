@@ -4363,22 +4363,20 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
-    __block typeof(self) weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
-        
-    
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
             if ([protocolName isEqualToString: @"updateAudioOfDiy"]) {
-                [weakSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
-                weakSelf->audioBgView.hidden = YES;
-                weakSelf->deleteAudioBtn.hidden = YES;
+                [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+                audioBgView.hidden = YES;
+                deleteAudioBtn.hidden = YES;
                 
-                weakSelf->isRecorded = NO;
+                isRecorded = NO;
             }
         } else {
             if ([protocolName isEqualToString: @"callUpdatePhotoOfDiyWithoutPhoto"]) {

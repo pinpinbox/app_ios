@@ -693,47 +693,47 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"currentOffset: %@", NSStringFromCGPoint(currentOffset));
     self.pageBeforePresentingOrPushing = currentOffset.x / self.imageScrollCV.frame.size.width;
     NSLog(@"self.pageBeforePresentingOrPushing: %d", self.pageBeforePresentingOrPushing);
-    __block typeof(self) wself = self;
+    
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        wself->orientation = [[UIApplication sharedApplication] statusBarOrientation];
+        orientation = [[UIApplication sharedApplication] statusBarOrientation];
         NSLog(@"");
         NSLog(@"");
-        NSLog(@"orientation: %ld", (long)wself->orientation);
+        NSLog(@"orientation: %ld", (long)orientation);
         
-        wself.previousOrientation = wself->orientation;
+        self.previousOrientation = orientation;
         
-        if (wself->orientation == 1) {
+        if (orientation == 1) {
             NSLog(@"Portrait Mode");
-            NSLog(@"self.view.frame: %@", NSStringFromCGRect(wself.view.frame));
+            NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
             NSLog(@"");
-            NSLog(@"self.imageScrollCV.frame.size: %@", NSStringFromCGSize(wself.imageScrollCV.frame.size));
+            NSLog(@"self.imageScrollCV.frame.size: %@", NSStringFromCGSize(self.imageScrollCV.frame.size));
             
-            [wself settingSizeBasedOnDevice];
-            wself.horzLineView.hidden = NO;
-            wself.thumbnailImageScrollCV.hidden = NO;
-            wself.descriptionScrollViewBottomConstraint.constant = 0;
+            [self settingSizeBasedOnDevice];
+            self.horzLineView.hidden = NO;
+            self.thumbnailImageScrollCV.hidden = NO;
+            self.descriptionScrollViewBottomConstraint.constant = 0;
             
 //            self.descriptionScrollViewHeightConstraint.constant = 140;
 //            self.textViewBottomConstraint.constant = 0;
 //            self.textViewBgViewBottomConstraint.constant = 0;
         } else {
             NSLog(@"Landscape Mode");
-            NSLog(@"self.view.frame: %@", NSStringFromCGRect(wself.view.frame));
+            NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
             NSLog(@"");
-            NSLog(@"self.imageScrollCV.frame.size: %@", NSStringFromCGSize(wself.imageScrollCV.frame.size));
+            NSLog(@"self.imageScrollCV.frame.size: %@", NSStringFromCGSize(self.imageScrollCV.frame.size));
             
-            wself.navBarViewTopConstraint.constant = 0;
-            wself.horzLineView.hidden = YES;
-            wself.thumbnailImageScrollCV.hidden = YES;
+            self.navBarViewTopConstraint.constant = 0;
+            self.horzLineView.hidden = YES;
+            self.thumbnailImageScrollCV.hidden = YES;
 //            self.descriptionScrollViewHeightConstraint.constant = 120;
             
             if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
                 switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
                     case 2436:
                         printf("iPhone X");
-                        wself.imageScrollCVBottomConstraint.constant = 40;
+                        self.imageScrollCVBottomConstraint.constant = 40;
 //                        self.textViewBottomConstraint.constant = -20;
-                        wself.descriptionScrollViewBottomConstraint.constant = -20;
+                        self.descriptionScrollViewBottomConstraint.constant = -20;
 //                        self.textViewBgViewBottomConstraint.constant = -20;
                         break;
                 }
@@ -773,21 +773,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //        }
 //        NSLog(@"After");
 //        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
-        wself->offsetAfterRotating = wself.pageBeforePresentingOrPushing * currentSize.width;
-        NSLog(@"offsetAfterRotating: %f", wself->offsetAfterRotating);
-        [wself.imageScrollCV setContentOffset: CGPointMake(wself->offsetAfterRotating, 0)];
+        offsetAfterRotating = self.pageBeforePresentingOrPushing * currentSize.width;
+        NSLog(@"offsetAfterRotating: %f", offsetAfterRotating);
+        [self.imageScrollCV setContentOffset: CGPointMake(offsetAfterRotating, 0)];
         NSLog(@"");
-        NSLog(@"self.imageScrollCV.contentOffset: %@", NSStringFromCGPoint(wself.imageScrollCV.contentOffset));
+        NSLog(@"self.imageScrollCV.contentOffset: %@", NSStringFromCGPoint(self.imageScrollCV.contentOffset));
         
         [UIView animateWithDuration: 0.1f animations:^{
-            wself.imageScrollCV.alpha = 1.0f;
+            self.imageScrollCV.alpha = 1.0f;
         }];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: wself.pageBeforePresentingOrPushing inSection: 0];
-        [wself.thumbnailImageScrollCV reloadData];
-        [wself.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.pageBeforePresentingOrPushing inSection: 0];
+        [self.thumbnailImageScrollCV reloadData];
+        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
 
 //        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-        wself->isRotating = NO;
+        isRotating = NO;
     }];
 }
 

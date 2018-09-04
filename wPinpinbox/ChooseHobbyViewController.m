@@ -110,13 +110,13 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getHobbyList: [wTools getUserID] token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: wself.view animated: YES];
+                [MBProgressHUD hideHUDForView: self.view animated: YES];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -134,7 +134,7 @@
                     NSLog(@"ChooseHobbyViewController");
                     NSLog(@"getHobbyList");
                     
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getHobbyList"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -146,28 +146,28 @@
                         
                         NSLog(@"data: %@", data);
                         
-                        wself->hobbyArray = data[@"data"];
+                        hobbyArray = data[@"data"];
                         
                         NSInteger hobbyId;
                         
-                        for (int i = 0; i < wself->hobbyArray.count; i++) {
+                        for (int i = 0; i < hobbyArray.count; i++) {
                             NSMutableDictionary *dic = [NSMutableDictionary new];
                             
-                            hobbyId = [wself->hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
+                            hobbyId = [hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
                             [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
                             [dic setValue: [NSNumber numberWithInteger: hobbyId] forKey: @"hobbyId"];
-                            [wself->checkSelectedArray addObject: dic];
+                            [checkSelectedArray addObject: dic];
                         }
-                        NSLog(@"checkSelectedArray: %@", wself->checkSelectedArray);
-                        NSLog(@"hobbyArray: %@", wself->hobbyArray);
+                        NSLog(@"checkSelectedArray: %@", checkSelectedArray);
+                        NSLog(@"hobbyArray: %@", hobbyArray);
                         
-                        [wself.collectionView reloadData];
+                        [self.collectionView reloadData];
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
                         NSString *msg = data[@"message"];
-                        [wself showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: msg];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -343,7 +343,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         NSString *token = [userPrefs objectForKey: @"token"];
@@ -353,7 +353,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: wself.view animated: YES];
+                [MBProgressHUD hideHUDForView: self.view animated: YES];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -371,7 +371,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"ChooseHobbyViewController");
                     NSLog(@"DownBtn");
                     
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"updateprofilehobby"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -382,13 +382,13 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                        [wself getProfile];
+                        [self getProfile];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
-                        [wself showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: msg];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -414,7 +414,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
     }
     
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSLog(@"userPrefs id: %@", [userPrefs objectForKey: @"id"]);
         NSString *response = [boxAPI getprofile: [userPrefs objectForKey: @"id"] token: [userPrefs objectForKey: @"token"]];
@@ -422,7 +422,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: wself.view animated: YES];
+                [MBProgressHUD hideHUDForView: self.view animated: YES];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -442,7 +442,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"ChooseHobbyViewController");
                     NSLog(@"getProfile");
                     
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getprofile"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -469,12 +469,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                         [userPrefs setValue: dataIc forKey: @"profile"];
                         [userPrefs synchronize];
                         
-                        [wself getUrPoints];
+                        [self getUrPoints];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -497,13 +497,13 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(self) wself = self;
+        
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
                                            token: [userPrefs objectForKey:@"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView: wself.view animated: YES];
+            [MBProgressHUD hideHUDForView: self.view animated: YES];
             
             if (response != nil) {
                 NSLog(@"response from geturpoints");
@@ -513,7 +513,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"ChooseHobbyViewController");
                     NSLog(@"getUrPoints");
                     
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"geturpoints"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -528,12 +528,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                         [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                         [userPrefs synchronize];
                         
-                        [wself toMyTabBarController];
+                        [self toMyTabBarController];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

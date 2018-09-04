@@ -224,8 +224,6 @@
     }
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     
-    __block typeof(self) wself = self;
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getEventVoteList: self.eventId
                                                 limit: limit
@@ -256,8 +254,7 @@
                                          albumId: @""
                                        indexPath: nil];
                     [self.refreshControl endRefreshing];
-                    wself->isReloading = NO;
-                    //isReloading = NO;
+                    isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     
@@ -269,8 +266,8 @@
                     if ([resultStr isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"resultStr isEqualToString SYSTEM_OK");
                         
-                        if (wself->nextId == 0) {
-                            wself->voteArray = [NSMutableArray new];
+                        if (nextId == 0) {
+                            voteArray = [NSMutableArray new];
                         }
                         
                         // s for counting how much data is loaded
@@ -278,37 +275,37 @@
                         
                         for (NSMutableDictionary *vote in [dic objectForKey: @"data"][@"eventjoin"]) {
                             s++;
-                            [wself->voteArray addObject: vote];
+                            [voteArray addObject: vote];
                         }
                         
-                        NSLog(@"voteArray.count: %lu", (unsigned long)wself->voteArray.count);
+                        NSLog(@"voteArray.count: %lu", (unsigned long)voteArray.count);
                         
                         // If data keeps loading then the nextId is accumulating
-                        wself->nextId = wself->nextId + s;
+                        nextId = nextId + s;
                         
                         // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (wself->nextId >= 0) {
-                            wself->isLoading = NO;
+                        if (nextId >= 0) {
+                            isLoading = NO;
                         }
                         
                         // If s is 0, that means dic data is empty
                         if (s == 0) {
-                            wself->isLoading = YES;
+                            isLoading = YES;
                         }
                         
-                        [wself.collectionView reloadData];
-                        [wself.refreshControl endRefreshing];
-                        wself->isReloading = NO;
+                        [self.collectionView reloadData];
+                        [self.refreshControl endRefreshing];
+                        isReloading = NO;
                         
-                        wself->voteLeft = [dic[@"data"][@"event"][@"vote_left"] intValue];
-                        [wself updateRemainingVoteLabel];
+                        voteLeft = [dic[@"data"][@"event"][@"vote_left"] intValue];
+                        [self updateRemainingVoteLabel];
                         
                     } else if ([resultStr isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"resultStr isEqualToString SYSTEM_ERROR");
-                        [wself showCustomErrorAlert: @"不明錯誤"];
+                        [self showCustomErrorAlert: @"不明錯誤"];
                         
-                        [wself.refreshControl endRefreshing];
-                        wself->isReloading = NO;
+                        [self.refreshControl endRefreshing];
+                        isReloading = NO;
                     } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
                         NSLog(@"resultStr isEqualToString USER_ERROR");
                         NSLog(@"失敗： %@", dic[@"message"]);
@@ -317,17 +314,17 @@
                         if (msg == nil) {
                             msg = NSLocalizedString(@"Host-NotAvailable", @"");
                         }
-                        [wself showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: msg];
                         
-                        [wself.refreshControl endRefreshing];
-                        wself->isReloading = NO;
+                        [self.refreshControl endRefreshing];
+                        isReloading = NO;
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"resultStr isEqualToString TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor thirdPink];
                         
-                        [wself.view makeToast: @"用戶驗證異常請重新登入"
+                        [self.view makeToast: @"用戶驗證異常請重新登入"
                                     duration: 2.0
                                     position: CSToastPositionBottom
                                        style: style];
@@ -340,8 +337,8 @@
                     }
                 }
             } else {
-                [wself.refreshControl endRefreshing];
-                wself->isReloading = NO;
+                [self.refreshControl endRefreshing];
+                isReloading = NO;
             }
         });
     });
@@ -365,7 +362,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI vote: albumId
                                   eventId: self.eventId
@@ -405,17 +402,17 @@
                     
                     if ([resultStr isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"resultStr isEqualToString SYSTEM_OK");
-                        wself->voteLeft = [dic[@"data"][@"event"][@"vote_left"] intValue];
-                        [wself updateRemainingVoteLabel];
+                        voteLeft = [dic[@"data"][@"event"][@"vote_left"] intValue];
+                        [self updateRemainingVoteLabel];
                         
                         VotingCollectionViewCell *cell = (VotingCollectionViewCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
                         cell.votedLabel.hidden = NO;
                         cell.voteBtn.hidden = YES;
                         
-                        [wself refresh];
+                        [self refresh];
                     } else if ([resultStr isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"resultStr isEqualToString SYSTEM_ERROR");
-                        [wself showCustomErrorAlert: @"不明錯誤"];
+                        [self showCustomErrorAlert: @"不明錯誤"];
                     } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
                         NSLog(@"resultStr isEqualToString USER_ERROR");
                         NSLog(@"失敗： %@", dic[@"message"]);
@@ -424,7 +421,7 @@
                         if (msg == nil) {
                             msg = NSLocalizedString(@"Host-NotAvailable", @"");
                         }
-                        [wself showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: msg];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"resultStr isEqualToString TOKEN_ERROR");
                         
@@ -432,7 +429,7 @@
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor thirdPink];
                         
-                        [wself.view makeToast: @"用戶驗證異常請重新登入"
+                        [self.view makeToast: @"用戶驗證異常請重新登入"
                                     duration: 2.0
                                     position: CSToastPositionBottom
                                        style: style];

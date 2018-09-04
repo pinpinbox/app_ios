@@ -1914,11 +1914,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
             str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
             NSLog(@"str: %@", str);
         } else {
-            str = [NSString stringWithFormat: @"%ld", error.code];
+            str = [NSString stringWithFormat: @"%d", error.code];
             NSLog(@"error :%@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%d", error.code]);
         }
         
         dispatch_semaphore_signal(semaphore);
@@ -2392,11 +2392,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
             str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
             NSLog(@"str: %@", str);
         } else {
-            str = [NSString stringWithFormat: @"%ld", error.code];
+            str = [NSString stringWithFormat: @"%d", error.code];
             NSLog(@"error: %@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%d", error.code]);
         }
         
         /*
@@ -2743,7 +2743,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
             NSLog(@"error: %@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%d", error.code]);
         }
         
         /*
@@ -3133,13 +3133,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
     //NSLog(@"percentEscapeString");
     //NSLog(@"string: %@", string);
     
-//    NSString *result = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-//                                                                                 (CFStringRef)string,
-//                                                                                 (CFStringRef)@" ",
-//                                                                                 (CFStringRef)@":/?@!$&'()*+,;=",
-//                                                                                 kCFStringEncodingUTF8));
-//
-    NSString *result = [string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSString *result = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                 (CFStringRef)string,
+                                                                                 (CFStringRef)@" ",
+                                                                                 (CFStringRef)@":/?@!$&'()*+,;=",
+                                                                                 kCFStringEncodingUTF8));
     
     //NSLog(@"result: %@", result);
     

@@ -9,10 +9,10 @@
 #import "CopperatiocTableViewCell.h"
 #import "wTools.h"
 @implementation CopperatiocTableViewCell
-//
-//- (void)awakeFromNib {
-//    // Initialization code
-//}
+
+- (void)awakeFromNib {
+    // Initialization code
+}
 -(void)layoutSubviews{
     [super layoutSubviews];
     [[_photo layer] setMasksToBounds:YES];

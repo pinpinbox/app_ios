@@ -46,7 +46,7 @@
     BOOL statusValue;
     
     NSArray *arrayForPicker;
-    //UIActionSheet *actionSheet;
+    UIActionSheet *actionSheet;
     NSInteger selectRow;
     
     NSInteger selectFirstRow;
@@ -55,8 +55,6 @@
 @end
 
 @implementation BookdetViewController
-@synthesize qrcode;
-
 - (IBAction)QRcode:(id)sender {
     
     BookedtQRViewController *bdqr=[[BookedtQRViewController alloc]initWithNibName:@"BookedtQRViewController" bundle:nil];

@@ -61,7 +61,7 @@
             return;
         }
         [wTools ShowMBProgressHUD];
-        __block typeof(self) wself = self;
+        
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             NSString * Pointstr=[boxAPI geturpoints:[wTools getUserID] token:[wTools getUserToken]];
             
@@ -71,7 +71,7 @@
                 NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[Pointstr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                
                     //是否足夠
-                    if ([wself->apidata[@"template"][@"point"]intValue]>[dic[@"data"] intValue]) {
+                    if ([apidata[@"template"][@"point"]intValue]>[dic[@"data"] intValue]) {
                         Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
                         [rv addtitletext:NSLocalizedString(@"CreateAlbumText-askP", @"")];
                         [rv addSelectBtntext:NSLocalizedString(@"GeneralText-yes", @"") btn2:NSLocalizedString(@"GeneralText-no", @"") ];
@@ -88,14 +88,14 @@
                     }else{
                         //可以購買
                         Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                        [rv addtitletext:[NSString stringWithFormat:@"%@(%d P)",NSLocalizedString(@"CreateAlbumText-askPay", @""),[wself->apidata[@"template"][@"point"] intValue]]];
+                        [rv addtitletext:[NSString stringWithFormat:@"%@(%d P)",NSLocalizedString(@"CreateAlbumText-askPay", @""),[apidata[@"template"][@"point"] intValue]]];
                         [rv addSelectBtntext:NSLocalizedString(@"GeneralText-yes", @"") btn2:NSLocalizedString(@"GeneralText-no", @"") ];
                         [rv showView:self.view];
                         
                         rv.btn1select=^(BOOL bo){
                             if (bo) {
                                //購買流程
-                                [wself buyapi];
+                                [self buyapi];
                             }
                         };
                     }
@@ -107,10 +107,10 @@
 -(void)buyapi{
     
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString * Pointstr=[boxAPI buytemplate:[wTools getUserID] token:[wTools getUserToken] templateid:wself.temolateid];
+        NSString * Pointstr=[boxAPI buytemplate:[wTools getUserID] token:[wTools getUserToken] templateid:_temolateid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -172,10 +172,9 @@
     //新增相本id
     
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *respone=[boxAPI insertalbumofdiy:[wTools getUserID] token:[wTools getUserToken] template_id:wself.temolateid];
+        NSString *respone=[boxAPI insertalbumofdiy:[wTools getUserID] token:[wTools getUserToken] template_id:_temolateid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -190,15 +189,15 @@
                     
                     TemplateViewController *tvc=[[UIStoryboard storyboardWithName:@"Fast" bundle:nil]instantiateViewControllerWithIdentifier:@"TemplateViewController"];
                     tvc.albumid=tempalbum_id;
-                    tvc.event_id = wself.event_id;
-                    tvc.postMode = wself.postMode;
-                    NSLog(@"postMode: %d", wself.postMode);
+                    tvc.event_id = _event_id;
+                    tvc.postMode = _postMode;
+                    NSLog(@"postMode: %d", _postMode);
                     
                     FastViewController *fVC = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"FastViewController"];
                     fVC.selectrow = [wTools userbook];
                     fVC.albumid = tempalbum_id;
-                    fVC.event_id = wself.event_id;
-                    fVC.postMode = wself.postMode;
+                    fVC.event_id = _event_id;
+                    fVC.postMode = _postMode;
                     fVC.choice = @"Template";
                     fVC.navigationItem.title = @"版 型 建 立";
                     fVC.navigationController.navigationBar.titleTextAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize:18 weight:UIFontWeightLight], NSForegroundColorAttributeName: [UIColor whiteColor]};
@@ -242,14 +241,14 @@
     NSLog(@"checkPoint");
     
     //[wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
                 
-        NSString *response = [boxAPI doTask2: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_download_template" platform: @"apple" type: @"template" type_id: wself.temolateid];
+        NSString *response = [boxAPI doTask2: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_download_template" platform: @"apple" type: @"template" type_id: _temolateid];
         
         NSLog(@"User ID: %@", [wTools getUserID]);
         NSLog(@"Token: %@", [wTools getUserToken]);
-        NSLog(@"Template ID: %@", wself.temolateid);
+        NSLog(@"Template ID: %@", _temolateid);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -260,21 +259,21 @@
                 NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
                 if ([data[@"result"] intValue] == 1) {
-                    wself->missionTopicStr = data[@"data"][@"task"][@"name"];
-                    NSLog(@"name: %@", wself->missionTopicStr);
+                    missionTopicStr = data[@"data"][@"task"][@"name"];
+                    NSLog(@"name: %@", missionTopicStr);
                     
-                    wself->rewardType = data[@"data"][@"task"][@"reward"];
-                    NSLog(@"reward type: %@", wself->rewardType);
+                    rewardType = data[@"data"][@"task"][@"reward"];
+                    NSLog(@"reward type: %@", rewardType);
                     
-                    wself->rewardValue = data[@"data"][@"task"][@"reward_value"];
-                    NSLog(@"reward value: %@", wself->rewardValue);
+                    rewardValue = data[@"data"][@"task"][@"reward_value"];
+                    NSLog(@"reward value: %@", rewardValue);
                     
-                    wself->eventUrl = data[@"data"][@"event"][@"url"];
-                    NSLog(@"event: %@", wself->eventUrl);
+                    eventUrl = data[@"data"][@"event"][@"url"];
+                    NSLog(@"event: %@", eventUrl);
                     
-                    [wself showAlertView];
+                    [self showAlertView];
                     
-                    [wself getPointStore];
+                    [self getPointStore];
                     
                 } else if ([data[@"result"] intValue] == 2) {
                     NSLog(@"message: %@", data[@"message"]);
@@ -289,7 +288,7 @@
                     NSString *errorMessage = data[@"message"];
                     NSLog(@"error messsage: %@", errorMessage);
                 } else {
-                    [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
             }
         });
@@ -450,12 +449,11 @@
     self.navigationController.navigationBar.titleTextAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize:18 weight:UIFontWeightLight], NSForegroundColorAttributeName: [UIColor whiteColor]};
     
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSLog(@"calling getTemplate protocol");
         
-        NSString *respone=[boxAPI gettemplate:[wTools getUserID] token:[wTools getUserToken] templateid:wself.temolateid];
+        NSString *respone=[boxAPI gettemplate:[wTools getUserID] token:[wTools getUserToken] templateid:_temolateid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -468,17 +466,17 @@
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
                 if ([dic[@"result"]boolValue]) {
-                    wself->apidata=[dic[@"data"] mutableCopy];
+                    apidata=[dic[@"data"] mutableCopy];
                     
-                    NSLog(@"apidata: %@", wself->apidata);
+                    NSLog(@"apidata: %@", apidata);
                     
-                    [wself->mytable reloadData];
+                    [mytable reloadData];
                 }else{
                     NSLog(@"失敗：%@",dic[@"message"]);
                     Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
                     [rv addtitletext:dic[@"message"]];
                     [rv addBackTouch];
-                    [rv showView:wself.view];
+                    [rv showView:self.view];
                 }
             }
         });
@@ -749,26 +747,25 @@
 -(IBAction)insertreport:(id)sender{
     
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString * Pointstr=[boxAPI getreportintentlist:[wTools getUserID] token:[wTools getUserToken]];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
-            __strong typeof(wself) sself = wself;
+            
             NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[Pointstr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
             
-            wself->reportintentlist=dic[@"data"];
+            reportintentlist=dic[@"data"];
             SelectBarViewController *mv=[[SelectBarViewController alloc]initWithNibName:@"SelectBarViewController" bundle:nil];
             
             
             NSMutableArray *strarr=[NSMutableArray new];
-            for (int i =0; i<wself->reportintentlist.count; i++) {
-                [strarr addObject:wself->reportintentlist[i][@"name"]];
+            for (int i =0; i<reportintentlist.count; i++) {
+                [strarr addObject:reportintentlist[i][@"name"]];
             }
             mv.data=strarr;
-            mv.delegate=sself;
-            mv.topViewController=sself;
-            [wself wpresentPopupViewController:mv animated:YES completion:nil];
+            mv.delegate=self;
+            mv.topViewController=self;
+            [self wpresentPopupViewController:mv animated:YES completion:nil];
         });
         
     });
@@ -780,9 +777,8 @@
     NSString *rid=[reportintentlist[row][@"reportintent_id"] stringValue];
     
     [wTools ShowMBProgressHUD];
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString * Pointstr=[boxAPI insertreport:[wTools getUserID] token:[wTools getUserToken] rid:rid type:@"template" typeid:wself.temolateid];
+        NSString * Pointstr=[boxAPI insertreport:[wTools getUserID] token:[wTools getUserToken] rid:rid type:@"template" typeid:_temolateid];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             

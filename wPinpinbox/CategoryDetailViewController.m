@@ -148,11 +148,11 @@
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrieveHotRank: [wTools getUserID]
                                                token: [wTools getUserToken]
-                                      categoryAreaId: wself.categoryAreaId
+                                      categoryAreaId: self.categoryAreaId
                                                 data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -172,7 +172,7 @@
                     NSLog(@"CategoryDetailViewController");
                     NSLog(@"retrieveHotRank");
                     
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"retrieveHotRank"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -182,10 +182,10 @@
                         NSLog(@"dic data: %@", dic[@"data"]);
                         
                         NSLog(@"Before");
-                        NSLog(@"nextId: %ld", (long)wself->nextId);
+                        NSLog(@"nextId: %ld", (long)nextId);
                         
-                        if (wself->nextId == 0) {
-                            wself->categoryArray = [NSMutableArray new];
+                        if (nextId == 0) {
+                            categoryArray = [NSMutableArray new];
                         }
                         
                         // s for counting how much data is loaded
@@ -193,33 +193,33 @@
                         
                         for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
                             s++;
-                            [wself->categoryArray addObject: picture];
+                            [categoryArray addObject: picture];
                         }
                         
                         NSLog(@"After");
-                        NSLog(@"nextId: %ld", (long)wself->nextId);
+                        NSLog(@"nextId: %ld", (long)nextId);
                         NSLog(@"s: %d", s);
                         
                         // If data keeps loading then the nextId is accumulating
-                        wself->nextId += s;// nextId + s;
+                        nextId = nextId + s;
                         
                         // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (wself->nextId >= 0) {
-                            wself->isLoading = NO;
+                        if (nextId >= 0) {
+                            isLoading = NO;
                         }
                         
                         // If s is 0, that means dic data is empty.
                         if (s == 0) {
-                            wself->isLoading = YES;
+                            isLoading = YES;
                         }
                         NSLog(@"self.collectionView reloadData");
                         
-                        [wself.collectionView reloadData];
+                        [self.collectionView reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }

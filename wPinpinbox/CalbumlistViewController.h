@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @protocol CalbumlistViewControllerDelegate <NSObject>
-@optional
 - (void)editPhoto:(NSString *)albumId
        templateId:(NSString *)templateId
   shareCollection:(BOOL)shareCollection

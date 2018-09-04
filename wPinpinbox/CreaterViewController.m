@@ -224,7 +224,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSString *limit = [NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
     [data setObject: self.userId forKey: @"authorid"];
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *respnose = [boxAPI getcreative: [wTools getUserID]
                                            token: [wTools getUserToken]
@@ -249,67 +249,67 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"CreaterViewController");
                     NSLog(@"getCreator");
                     
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcreative"
                                          albumId: @""];
                     
-                    wself->isReloading = NO;
+                    isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     NSLog(@"response from getCreative");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respnose dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        wself->userDic = dic[@"data"][@"user"];
-                        wself->sponsorInt = [dic[@"data"][@"userstatistics"][@"besponsored"] intValue];
-                        NSLog(@"sponsorInt: %ld", (long)wself->sponsorInt);
+                        userDic = dic[@"data"][@"user"];
+                        sponsorInt = [dic[@"data"][@"userstatistics"][@"besponsored"] intValue];
+                        NSLog(@"sponsorInt: %ld", (long)sponsorInt);
                         
-                        if (wself->nextId == 0) {
-                            wself->pictures = [NSMutableArray new];
+                        if (nextId == 0) {
+                            pictures = [NSMutableArray new];
                         }
                         int s = 0;
                         
                         for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
                             s++;
-                            [wself->pictures addObject: picture];
+                            [pictures addObject: picture];
                         }
-                        wself->nextId = wself->nextId + s;
+                        nextId = nextId + s;
                         
                         NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
-                        wself->followDic = dic[@"data"][@"follow"];
-                        wself.follow = [dic[@"data"][@"follow"][@"follow"] boolValue];
-                        wself->sponsorDic = dic[@"data"][@"userstatistics"];
+                        followDic = dic[@"data"][@"follow"];
+                        _follow = [dic[@"data"][@"follow"][@"follow"] boolValue];
+                        sponsorDic = dic[@"data"][@"userstatistics"];
                         
-                        wself.followBtn = [wself changeFollowBtn: wself.followBtn];
+                        self.followBtn = [self changeFollowBtn: self.followBtn];
                         
-                        [wself.collectionView reloadData];
-                        [wself.refreshControl endRefreshing];
+                        [self.collectionView reloadData];
+                        [self.refreshControl endRefreshing];
                         
-                        if (wself->nextId >= 0)
-                            wself->isLoading = NO;
+                        if (nextId >= 0)
+                            isLoading = NO;
                         
                         if (s == 0) {
-                            wself->isLoading = YES;
+                            isLoading = YES;
                         }
-                        [wself layoutSetup];
-                        wself->isReloading = NO;
+                        [self layoutSetup];
+                        isReloading = NO;
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
-                        [wself.refreshControl endRefreshing];
-                        wself->isReloading = NO;
+                        [self showCustomErrorAlert: dic[@"message"]];
+                        [self.refreshControl endRefreshing];
+                        isReloading = NO;
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [wself.refreshControl endRefreshing];
-                        wself->isReloading = NO;
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self.refreshControl endRefreshing];
+                        isReloading = NO;
                     }
                 }
             } else {
-                [wself.refreshControl endRefreshing];
-                wself->isReloading = NO;
+                [self.refreshControl endRefreshing];
+                isReloading = NO;
             }
-            [wself.refreshControl endRefreshing];
-            wself->isReloading = NO;
+            [self.refreshControl endRefreshing];
+            isReloading = NO;
         });
     });
 }

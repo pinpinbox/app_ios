@@ -11,7 +11,6 @@
 @implementation SearchuserTableViewCell
 
 - (void)awakeFromNib {
-    [super awakeFromNib];
     [[_picture layer] setMasksToBounds:YES];
     [[_picture layer]setCornerRadius:_picture.bounds.size.height/2];
     // Initialization code

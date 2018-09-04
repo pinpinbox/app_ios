@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 @class PhotosViewController;
 @protocol PhotosViewDelegate <NSObject>
-@optional
 - (void)imageCropViewController:(PhotosViewController *)controller Image:(UIImage *)Image;
 - (void)imageCropViewController:(PhotosViewController *)controller ImageArr:(NSArray *)Images compression: (CGFloat)compressionQuality;
 - (void)afterSendingImages:(PhotosViewController *)controller;
