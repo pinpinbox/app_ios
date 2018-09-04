@@ -150,7 +150,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 break;
             case 2436:
                 printf("iPhone X");
-                self.navBarHeight.constant = navBarHeightConstant;
+                self.navBarHeight.constant = 48;//navBarHeightConstant;
                 self.collectionView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
                 break;
             default:

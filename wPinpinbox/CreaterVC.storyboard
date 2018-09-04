@@ -613,10 +613,10 @@
                                     <constraint firstItem="f3V-2S-meE" firstAttribute="top" secondItem="Fh5-QD-tWv" secondAttribute="top" id="BjZ-L9-BqP"/>
                                     <constraint firstItem="Fec-wN-kGD" firstAttribute="leading" secondItem="f3V-2S-meE" secondAttribute="trailing" constant="8" id="Bja-Vy-kIw"/>
                                     <constraint firstAttribute="height" constant="44" id="Ihw-h2-HAO"/>
-                                    <constraint firstAttribute="bottom" secondItem="0Of-XM-DM2" secondAttribute="bottom" id="IzD-KP-Tf7"/>
+                                    <constraint firstItem="0Of-XM-DM2" firstAttribute="bottom" secondItem="Fh5-QD-tWv" secondAttribute="bottom" id="IzD-KP-Tf7"/>
                                     <constraint firstItem="Fec-wN-kGD" firstAttribute="centerY" secondItem="Fh5-QD-tWv" secondAttribute="centerY" id="Tbk-wa-hN3"/>
                                     <constraint firstItem="f3V-2S-meE" firstAttribute="centerY" secondItem="Fh5-QD-tWv" secondAttribute="centerY" id="dnO-2g-Obd"/>
-                                    <constraint firstItem="Fec-wN-kGD" firstAttribute="bottom" secondItem="Fh5-QD-tWv" secondAttribute="bottom" constant="-6" id="sDI-ZC-R8g"/>
+                                    <constraint firstItem="Fec-wN-kGD" firstAttribute="top" secondItem="Fh5-QD-tWv" secondAttribute="top" constant="6" id="sDI-ZC-R8g"/>
                                     <constraint firstItem="0Of-XM-DM2" firstAttribute="leading" secondItem="Fh5-QD-tWv" secondAttribute="leading" constant="4" id="vQV-wa-etX"/>
                                     <constraint firstItem="Fec-wN-kGD" firstAttribute="trailing" secondItem="Fh5-QD-tWv" secondAttribute="trailing" constant="-20" id="y2p-2j-c3p"/>
                                 </constraints>
