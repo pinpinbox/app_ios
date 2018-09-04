@@ -50,8 +50,6 @@
 
 #import "YoutubePlayerViewController.h"
 
-#import "DMViewController.h"
-
 #define kTextContentHeight 155
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
@@ -1491,22 +1489,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-#pragma mark - Help Method for DailyMotion
-- (NSDictionary *)queryDictionaryFromString:(NSString *)queryString {
-    if ([queryString hasPrefix:@"&"] || [queryString hasPrefix:@"?"]) {
-        queryString = [queryString substringFromIndex:1];
-    }
-    NSString *urlString = [NSString stringWithFormat:@"http://www.dailymotion.com?%@", queryString];
-    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:urlString];
-    
-    NSMutableDictionary *queryDictionary = [NSMutableDictionary dictionary];
-    for (NSURLQueryItem *queryItem in urlComponents.queryItems) {
-        [queryDictionary setObject:queryItem.value forKey:queryItem.name];
-    }
-    
-    return queryDictionary;
-}
-
 #pragma mark -
 - (void)checkVideo:(NSInteger)page {
     NSLog(@"checkVideo");
@@ -1543,14 +1525,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if (!([[url host] rangeOfString: @"dailymotion"].location == NSNotFound)) {
         NSLog(@"url host is dailymotion");
-//        NSString *urlString = self.photoArray[page][@"video_target"];
-        DMViewController *dmVC = [[UIStoryboard storyboardWithName: @"DMVC" bundle: nil] instantiateViewControllerWithIdentifier: @"DMViewController"];
-        dmVC.baseURL = @"http://www.dailymotion.com";
-        dmVC.videoID = [url.pathComponents lastObject];
-        dmVC.additionalParameters = [self queryDictionaryFromString: @"fullscreen-action=trigger_event&autoplay=1"];
-        self.navigationController.delegate = nil;
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav pushViewController: dmVC animated: YES];
     }
     if (!([[url host] rangeOfString: @"vimeo"].location == NSNotFound)) {
         NSLog(@"url contains vimeo");
@@ -1562,11 +1536,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if (video) {
                 // Get URL
                 self.isPresentingOrPushingVC = YES;
+                
                 NSURL *highQualityURL = [video lowestQualityStreamURL];
                 AVPlayer *player = [AVPlayer playerWithURL: highQualityURL];
                 AVPlayerViewController *playerViewController = [AVPlayerViewController new];
                 playerViewController.player = player;
+//                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                
+//                self.navigationController.delegate = nil;
+//                [appDelegate.myNav pushViewController: playerViewController animated: YES];
+                
                 [self presentViewController: playerViewController animated: YES completion: nil];
+                
+//                [self setupVideoPlayer: cell
+//                              videoUrl: highQualityURL
+//                              platform: @"vimeo"];
             }
         }];
     }
@@ -1576,6 +1560,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         cell.imageView.alpha = 1;
         cell.alphaBgV.hidden = NO;
         cell.videoBtn.hidden = NO;
+        
+//        cell.videoView.hidden = YES;
+//        [wTools ShowMBProgressHUD];
         [self checkFBSDK: cell url: url];
     }
     if (!([[url host] rangeOfString: @"youtube"].location == NSNotFound) || !([[url host] rangeOfString: @"youtu.be"].location == NSNotFound)) {
@@ -1583,6 +1570,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         self.isPresentingOrPushingVC = YES;
         NSString *urlString = self.photoArray[page][@"video_target"];
         [self openSafari: [NSURL URLWithString: urlString]];
+        
+        // Youtube SDK Player sometimes has some problem
+//        YoutubePlayerViewController *youtubePlayerVC = [[UIStoryboard storyboardWithName: @"YoutubePlayerVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YoutubePlayerViewController"];
+//        youtubePlayerVC.videoUrlString = urlString;
+//        youtubePlayerVC.delegate = self;
+//        youtubePlayerVC.currentPage = [self getCurrentPage];
+//        [self presentViewController: youtubePlayerVC animated: YES completion: nil];
     }
     videoIsPlaying = YES;
     [self.avPlayer pause];
