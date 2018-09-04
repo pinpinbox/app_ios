@@ -29,6 +29,11 @@
 #import "UIView+Toast.h"
 #import <SafariServices/SafariServices.h>
 
+
+#import <GoogleAnalytics/GAI.h>
+#import <GoogleAnalytics/GAIDictionaryBuilder.h>
+#import <GoogleAnalytics/GAIFields.h>
+
 //#define kUserImageViewNumber 6
 
 @interface CategoryViewController () <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SFSafariViewControllerDelegate, YTPlayerViewDelegate, UIGestureRecognizerDelegate>
@@ -115,6 +120,12 @@
 
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");
+    
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    NSString *uid = [wTools getUserID];
+    [tracker set:kGAIUserId value:uid];
+    [tracker set:[GAIFields customDimensionForIndex:4] value:uid];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"PPBViweAnalytics" action:@"CategoryDetail" label:self.categoryAreaId value:nil] build]];
     
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     NSLog(@"screenWidth: %f", screenWidth);

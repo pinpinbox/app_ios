@@ -49,6 +49,10 @@
 
 #import "ContentCheckingViewController.h"
 
+#import <GoogleAnalytics/GAI.h>
+#import <GoogleAnalytics/GAIDictionaryBuilder.h>
+#import <GoogleAnalytics/GAIFields.h>
+
 //#import "FXBlurView.h"
 
 //static NSString *sharingLink = @"http://www.pinpinbox.com/index/album/content/?album_id=%@%@";
@@ -337,7 +341,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -372,6 +375,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 //        }
 //    }
     self.snapshotImageView.image = self.snapShotImage;
+    
 }
 
 - (void)setBtnBackgroundColorToClear {
@@ -386,6 +390,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"initialValueSetup");
     
     [self parallaxViewSetup];
+    
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    NSString *uid = [wTools getUserID];
+    [tracker set:kGAIUserId value:uid];
+    [tracker set:[GAIFields customDimensionForIndex:4] value:uid];
+    
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"PPBViweAnalytics" action:@"AlbumView" label:self.albumId value:nil] build]];
     
     isLikes = [self.data[@"album"][@"is_likes"] boolValue];
     

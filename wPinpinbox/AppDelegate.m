@@ -44,6 +44,8 @@
 
 #import "GlobalVars.h"
 
+#import <GoogleAnalytics/GAI.h>
+#import <GoogleAnalytics/GAIDictionaryBuilder.h>
 #define kPlzOpenLocSys @"請開啟定位:設置 > 隱私 > 位置 > 定位服務。"
 #define kTipTitle @"提示"
 
@@ -122,7 +124,14 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"launchOptions: %@", launchOptions);
     
     [Fabric with:@[[Crashlytics class]]];
-    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];    
+    
+    //  Google Analytics setup
+    GAI *gai = [GAI sharedInstance];
+    [gai trackerWithTrackingId:@"UA-125041000-1"];
+    gai.trackUncaughtExceptions = YES;
+    gai.logger.logLevel = kGAILogLevelVerbose;
+    
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     
     [Flurry startSession:@"GSPHT8B4KV8F89VHQ6D8"
       withSessionBuilder:[[[FlurrySessionBuilder new]

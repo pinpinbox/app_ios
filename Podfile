@@ -18,4 +18,5 @@ target 'wPinpinbox' do
   pod 'FBSDKShareKit'
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
+  pod 'GoogleAnalytics'
 end

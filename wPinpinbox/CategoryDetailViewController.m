@@ -25,6 +25,11 @@
 #import "customLayout.h"
 #import "LabelAttributeStyle.h"
 
+//
+//#import <GoogleAnalytics/GAI.h>
+//#import <GoogleAnalytics/GAIDictionaryBuilder.h>
+//#import <GoogleAnalytics/GAIFields.h>
+
 @interface CategoryDetailViewController () <customLayoutDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
     NSInteger nextId;
@@ -144,6 +149,13 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+    
+//    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+//    NSString *uid = [wTools getUserID];
+//    [tracker set:kGAIUserId value:uid];
+//    [tracker set:[GAIFields customDimensionForIndex:4] value:uid];
+//    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"PPBViweAnalytics" action:@"CategoryDetail" label:[NSString stringWithFormat:@"%d", self.categoryAreaId] value:nil] build]];
+//    
     
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
