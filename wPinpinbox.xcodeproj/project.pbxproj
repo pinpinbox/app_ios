@@ -802,6 +802,9 @@
 		92F89B271BBE79CF00565908 /* install_04.png in Resources */ = {isa = PBXBuildFile; fileRef = 92F89B231BBE79CF00565908 /* install_04.png */; };
 		92F89B2A1BBE79F900565908 /* StartImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F89B291BBE79F900565908 /* StartImage.m */; };
 		BF61430D909D28AAF4BCA35B /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF49CD35627C495D6CBEB4C /* libPods-wPinpinbox.a */; };
+		CB071CF3213E4754003D01D8 /* DMVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB071CF1213E4754003D01D8 /* DMVC.storyboard */; };
+		CB071CF4213E4754003D01D8 /* DMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB071CF2213E4754003D01D8 /* DMViewController.m */; };
+		CB071CF8213E476A003D01D8 /* DMPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB071CF7213E476A003D01D8 /* DMPlayerViewController.m */; };
 		CBE815F3213649D30043AEFA /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE815EF213649D30043AEFA /* FLAnimatedImage.m */; };
 		CBE815F4213649D30043AEFA /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE815F0213649D30043AEFA /* FLAnimatedImageView.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
@@ -1933,6 +1936,11 @@
 		92F89B231BBE79CF00565908 /* install_04.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = install_04.png; sourceTree = "<group>"; };
 		92F89B281BBE79F900565908 /* StartImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartImage.h; sourceTree = "<group>"; };
 		92F89B291BBE79F900565908 /* StartImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartImage.m; sourceTree = "<group>"; };
+		CB071CF0213E4754003D01D8 /* DMViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMViewController.h; sourceTree = "<group>"; };
+		CB071CF1213E4754003D01D8 /* DMVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DMVC.storyboard; sourceTree = "<group>"; };
+		CB071CF2213E4754003D01D8 /* DMViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMViewController.m; sourceTree = "<group>"; };
+		CB071CF6213E476A003D01D8 /* DMPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMPlayerViewController.h; sourceTree = "<group>"; };
+		CB071CF7213E476A003D01D8 /* DMPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMPlayerViewController.m; sourceTree = "<group>"; };
 		CBE815EF213649D30043AEFA /* FLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImage.m; sourceTree = "<group>"; };
 		CBE815F0213649D30043AEFA /* FLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImageView.m; sourceTree = "<group>"; };
 		CBE815F1213649D30043AEFA /* FLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImage.h; sourceTree = "<group>"; };
@@ -2355,6 +2363,9 @@
 		54672DD620FF23E10045DD7E /* ContentCheckingVC */ = {
 			isa = PBXGroup;
 			children = (
+				CB071CF1213E4754003D01D8 /* DMVC.storyboard */,
+				CB071CF0213E4754003D01D8 /* DMViewController.h */,
+				CB071CF2213E4754003D01D8 /* DMViewController.m */,
 				54B08C7C2105B8B500ADC09A /* ContentCheckingViewController.h */,
 				54B08C7D2105B8B500ADC09A /* ContentCheckingViewController.m */,
 				54B08C7A2105B8A700ADC09A /* ContentCheckingVC.storyboard */,
@@ -3969,6 +3980,7 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CB071CF5213E476A003D01D8 /* dailymotion-player-objc */,
 				CBE815EE213649D30043AEFA /* FLAnimatedImage */,
 				630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */,
 				D78F73861D226C8700D8A271 /* youtube-ios-player-helper */,
@@ -4706,6 +4718,15 @@
 			path = "起始說明";
 			sourceTree = "<group>";
 		};
+		CB071CF5213E476A003D01D8 /* dailymotion-player-objc */ = {
+			isa = PBXGroup;
+			children = (
+				CB071CF6213E476A003D01D8 /* DMPlayerViewController.h */,
+				CB071CF7213E476A003D01D8 /* DMPlayerViewController.m */,
+			);
+			path = "dailymotion-player-objc";
+			sourceTree = "<group>";
+		};
 		CBE815EE213649D30043AEFA /* FLAnimatedImage */ = {
 			isa = PBXGroup;
 			children = (
@@ -5040,6 +5061,7 @@
 				925119FE1CF5B294002D4678 /* button_attAll_en@2x.png in Resources */,
 				929C793F1BD8D6310093E65E /* button_追蹤@2x.png in Resources */,
 				920B3D821C229E8A001A2512 /* icon_exchange_click.png in Resources */,
+				CB071CF3213E4754003D01D8 /* DMVC.storyboard in Resources */,
 				927823FF1C45FB280063F82D /* CooperationAddTableViewCell.xib in Resources */,
 				92BD83461C210AA3003D668C /* 3-11abutton_voice_click.png in Resources */,
 				929C794E1BD8D7120093E65E /* button_facebook@2x.png in Resources */,
@@ -5520,6 +5542,7 @@
 				630AD8521EA7659000825BBA /* FBFriendNotFoundViewController.m in Sources */,
 				549B48A91F6EC2F60012FE13 /* RegexKitLite.m in Sources */,
 				6308C4591EACA84C00F99AC0 /* ScanCodeViewController.m in Sources */,
+				CB071CF8213E476A003D01D8 /* DMPlayerViewController.m in Sources */,
 				630A83DE1EB1D07300AC8479 /* MyFloatLayout.m in Sources */,
 				631880121EC46BDC00B8CB4F /* SearchTabCollectionReusableView.m in Sources */,
 				925112371BE0B47000B5F161 /* CreativeViewController.m in Sources */,
@@ -5554,6 +5577,7 @@
 				924A92BA1BD48EA400E3D610 /* UICustomLineLabel.m in Sources */,
 				6319A36C1DABB60C001CB8BD /* JCCollectionViewCell.m in Sources */,
 				5406362E2050DF34004C9F21 /* CheckExchangeCollectionViewCell.m in Sources */,
+				CB071CF4213E4754003D01D8 /* DMViewController.m in Sources */,
 				639F55671E14BF15006599FF /* PageRankViewController.m in Sources */,
 				92A448BD1C6245620008B776 /* Setup2ViewController.m in Sources */,
 				6308C4521EAC9ADD00F99AC0 /* MeTabViewController.m in Sources */,
