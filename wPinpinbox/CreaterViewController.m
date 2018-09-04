@@ -28,6 +28,8 @@
 #import "BuyPPointViewController.h"
 #import "MessageboardViewController.h"
 
+
+
 static NSString *sharingLink = @"http://www.pinpinbox.com/index/album/content/?album_id=%@%@";
 //static NSString *userIdSharingLink = @"http://www.pinpinbox.com/index/creative/content/?user_id=%@%@";
 static NSString *autoPlayStr = @"&autoplay=1";

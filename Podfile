@@ -12,6 +12,7 @@ target 'wPinpinbox' do
   pod "RMPZoomTransitionAnimator"
   pod 'TTTAttributedLabel'
   pod 'SSFadingScrollView', '~> 1.1'
+  pod 'GoogleAnalytics'
 
   # TestAnthy Add
   pod 'FLAnimatedImage'

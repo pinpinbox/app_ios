@@ -49,6 +49,12 @@
 
 #import "ContentCheckingViewController.h"
 
+
+#import <GoogleAnalytics/GAI.h>
+#import <GoogleAnalytics/GAIDictionaryBuilder.h>
+#import <GoogleAnalytics/GAIFields.h>
+
+
 //#import "FXBlurView.h"
 
 //static NSString *sharingLink = @"http://www.pinpinbox.com/index/album/content/?album_id=%@%@";
@@ -384,6 +390,17 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");
+    
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    
+    [tracker set:kGAIUserId
+           value:[wTools getUserID]];
+    
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"AlbumViewAnalytics"            // Event category (required)
+                                                          action:@"AlbumView"  // Event action (required)
+                                                           label:self.albumId              // Event label
+                                                           value:nil] build]];    // Event value
+    
     
     [self parallaxViewSetup];
     

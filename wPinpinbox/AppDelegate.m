@@ -47,6 +47,9 @@
 #define kPlzOpenLocSys @"請開啟定位:設置 > 隱私 > 位置 > 定位服務。"
 #define kTipTitle @"提示"
 
+#import <GoogleAnalytics/GAI.h>
+#import <GoogleAnalytics/GAIDictionaryBuilder.h>
+
 // define macro
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -122,6 +125,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"launchOptions: %@", launchOptions);
     
     [Fabric with:@[[Crashlytics class]]];
+    GAI *gai = [GAI sharedInstance];
+    [gai trackerWithTrackingId:@"UA-125041000-1"];
+    gai.trackUncaughtExceptions = YES;
+    gai.logger.logLevel = kGAILogLevelVerbose;
+    
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];    
     
     [Flurry startSession:@"GSPHT8B4KV8F89VHQ6D8"

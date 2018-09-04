@@ -805,6 +805,7 @@
 		92F89B271BBE79CF00565908 /* install_04.png in Resources */ = {isa = PBXBuildFile; fileRef = 92F89B231BBE79CF00565908 /* install_04.png */; };
 		92F89B2A1BBE79F900565908 /* StartImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F89B291BBE79F900565908 /* StartImage.m */; };
 		BF61430D909D28AAF4BCA35B /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF49CD35627C495D6CBEB4C /* libPods-wPinpinbox.a */; };
+		CB47F744213D3A6F0021A836 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CB47F743213D3A6F0021A836 /* GoogleService-Info.plist */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D743E9041D2CB5F500652A97 /* icon_exchanged.png in Resources */ = {isa = PBXBuildFile; fileRef = D743E9031D2CB5F500652A97 /* icon_exchanged.png */; };
@@ -1939,6 +1940,7 @@
 		92F89B231BBE79CF00565908 /* install_04.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = install_04.png; sourceTree = "<group>"; };
 		92F89B281BBE79F900565908 /* StartImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartImage.h; sourceTree = "<group>"; };
 		92F89B291BBE79F900565908 /* StartImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartImage.m; sourceTree = "<group>"; };
+		CB47F743213D3A6F0021A836 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -3737,6 +3739,7 @@
 		9276DFA31B72FDC000E6ACC9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				CB47F743213D3A6F0021A836 /* GoogleService-Info.plist */,
 				63090CFC1DCC858400D8BF20 /* wPinpinbox-Bridging-Header.h */,
 				925119EC1CF57E99002D4678 /* Hobby_lang.plist */,
 				9276DFA41B72FDC000E6ACC9 /* Info.plist */,
@@ -4804,8 +4807,9 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 392DCPHLMM;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -4922,6 +4926,7 @@
 				92AE907D1C1E9D8100C53413 /* Page_btnTableViewCell.xib in Resources */,
 				92F89B0D1BBE73D400565908 /* render_3_17.png in Resources */,
 				9283489D1C62F523002DBC6A /* SeacrhbookTableViewCell.xib in Resources */,
+				CB47F744213D3A6F0021A836 /* GoogleService-Info.plist in Resources */,
 				927410451BD0A6FC0031460B /* icon_exercise_click@2x.png in Resources */,
 				925119FC1CF5B290002D4678 /* button_attAll_click_zh-TW@2x.png in Resources */,
 				927824021C45FC190063F82D /* 4-19icon_p_select.png in Resources */,
@@ -5838,8 +5843,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 392DCPHLMM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5880,8 +5885,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 392DCPHLMM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
