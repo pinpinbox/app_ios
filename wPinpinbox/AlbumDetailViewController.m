@@ -377,7 +377,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
         CGSize s = self.view.safeAreaLayoutGuide.layoutFrame.size;
         self.toolBarViewHeight.constant = 49 +  self.view.frame.size.height - o.y - s.height;
     } else {
-        
+        if ([[UIScreen mainScreen] nativeBounds].size.height == 2208)
+            self.toolBarViewHeight.constant = kToolBarViewHeightForX;
     }
     self.snapshotImageView.image = self.snapShotImage;
 }
