@@ -343,15 +343,41 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
-
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+//            case 1136:
+//                printf("iPhone 5 or 5S or 5C");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//            case 1334:
+//                printf("iPhone 6/6S/7/8");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//            case 1920:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//            case 2208:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//            case 2436:
+//                printf("iPhone X");
+//                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
+//                break;
+//            default:
+//                printf("unknown");
+//                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                break;
+//        }
+//    }
+    
     if (@available(iOS 11.0, *)) {
         CGPoint o = self.view.safeAreaLayoutGuide.layoutFrame.origin;
         CGSize s = self.view.safeAreaLayoutGuide.layoutFrame.size;
-        //self.toolBarViewHeight.constant = 49 +  self.view.frame.size.height - o.y - s.height;
-        self.bottomScroll.frame = CGRectMake(o.x, o.y, s.width, s.height);
+        self.toolBarViewHeight.constant = 49 +  self.view.frame.size.height - o.y - s.height;
     } else {
-        if ([[UIScreen mainScreen] nativeBounds].size.height == 2208)
-            self.toolBarViewHeight.constant = kToolBarViewHeightForX;
+        
     }
     self.snapshotImageView.image = self.snapShotImage;
 }
