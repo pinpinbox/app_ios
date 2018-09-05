@@ -17,7 +17,6 @@ PODS:
   - Flurry-iOS-SDK/FlurryAds (9.0.0):
     - Flurry-iOS-SDK/FlurrySDK (~> 9.0.0)
   - Flurry-iOS-SDK/FlurrySDK (9.0.0)
-  - GoogleAnalytics (3.17.0)
   - RMPZoomTransitionAnimator (1.0.3)
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
@@ -33,7 +32,6 @@ DEPENDENCIES:
   - FBSDKShareKit
   - Flurry-iOS-SDK/FlurryAds
   - Flurry-iOS-SDK/FlurrySDK
-  - GoogleAnalytics
   - RMPZoomTransitionAnimator
   - SDWebImage (~> 4.0)
   - SSFadingScrollView (~> 1.1)
@@ -48,7 +46,6 @@ SPEC REPOS:
     - FBSDKLoginKit
     - FBSDKShareKit
     - Flurry-iOS-SDK
-    - GoogleAnalytics
     - RMPZoomTransitionAnimator
     - SDWebImage
     - SSFadingScrollView
@@ -62,12 +59,11 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 8bccb6064708ab2f4251a7fc4e3b6d8d00ad91ba
   FBSDKShareKit: 7090fdd55c39b03941efddb64c83a64ff6b3949f
   Flurry-iOS-SDK: 58e48e417fee667154e4d240040b270b3734d28a
-  GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
   RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   SSFadingScrollView: ac908f565594b1faa748d2d55973f2dde919f754
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: b46052a7599e3abb34f6ce70c47647f6e9b8509b
+PODFILE CHECKSUM: cf77597337df55eb21d4a5de1659abe8225c68da
 
 COCOAPODS: 1.5.3
