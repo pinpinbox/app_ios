@@ -371,6 +371,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
 //                break;
 //        }
 //    }
+    
+    if (@available(iOS 11.0, *)) {
+        CGPoint o = self.view.safeAreaLayoutGuide.layoutFrame.origin;
+        CGSize s = self.view.safeAreaLayoutGuide.layoutFrame.size;
+        self.toolBarViewHeight.constant = 49 +  self.view.frame.size.height - o.y - s.height;
+    } else {
+        
+    }
     self.snapshotImageView.image = self.snapShotImage;
 }
 
@@ -799,6 +807,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [self adjustContentViewHeight];
     [rootLayout sizeToFit];
     self.contentViewHeight.constant = rootLayout.frame.size.height + 100;
+    
 }
 
 //- (void)addInfoTextToLayout: (MyLinearLayout *)horzInfoLayout

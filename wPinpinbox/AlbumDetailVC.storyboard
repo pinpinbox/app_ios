@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,14 +15,14 @@
             <objects>
                 <viewController storyboardIdentifier="AlbumDetailViewController" hidesBottomBarWhenPushed="YES" id="Ja5-HS-H21" customClass="AlbumDetailViewController" sceneMemberID="viewController">
                     <view key="view" tag="100" contentMode="scaleToFill" id="34V-eN-LyZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="th5-7T-rQz">
-                                <rect key="frame" x="0.0" y="618" width="375" height="49"/>
+                                <rect key="frame" x="0.0" y="763" width="375" height="49"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="wAC-20-0lw">
-                                        <rect key="frame" x="16" y="6.5" width="180" height="42"/>
+                                        <rect key="frame" x="16" y="6.6666666666666288" width="180" height="42"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tk3-uc-Lx7">
                                                 <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
@@ -100,7 +100,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BhE-XK-veE">
-                                <rect key="frame" x="88" y="562" width="199" height="48"/>
+                                <rect key="frame" x="88" y="707" width="199" height="48"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Zmg-jH-f8w">
                                         <rect key="frame" x="32" y="8" width="135" height="32"/>
@@ -113,7 +113,7 @@
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cg4-l6-0YC">
-                                                <rect key="frame" x="40" y="5.5" width="95" height="21.5"/>
+                                                <rect key="frame" x="40" y="5.333333333333373" width="95" height="21.666666666666671"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -132,7 +132,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="th5-7T-rQz" firstAttribute="bottom" secondItem="Svs-8v-rB2" secondAttribute="bottom" id="3dl-Nq-A3I"/>
+                            <constraint firstItem="th5-7T-rQz" firstAttribute="bottom" secondItem="34V-eN-LyZ" secondAttribute="bottom" id="3dl-Nq-A3I"/>
                             <constraint firstItem="th5-7T-rQz" firstAttribute="trailing" secondItem="Svs-8v-rB2" secondAttribute="trailing" id="K7y-7M-elN"/>
                             <constraint firstItem="BhE-XK-veE" firstAttribute="centerX" secondItem="th5-7T-rQz" secondAttribute="centerX" id="W11-bF-2EK"/>
                             <constraint firstItem="BhE-XK-veE" firstAttribute="bottom" secondItem="th5-7T-rQz" secondAttribute="top" constant="-8" id="hpJ-aa-Kmp"/>
