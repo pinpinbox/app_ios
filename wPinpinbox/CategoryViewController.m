@@ -179,6 +179,8 @@
     } else {
         [self getCategoryArea];
     }
+    
+    
 }
 
 - (void)setupData {
@@ -864,6 +866,7 @@
     if (self.categoryName == nil) {
         self.categoryName = @"";
     }
+    [wTools sendScreenTrackingWithScreenName:[NSString stringWithFormat:@"分類(%@)",_categoryName]];
     topicLabel.text = self.categoryName;
     topicLabel.textColor = [UIColor firstGrey];
     [LabelAttributeStyle changeGapString: topicLabel content: self.categoryName];

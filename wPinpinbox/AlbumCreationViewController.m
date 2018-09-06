@@ -200,6 +200,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"self.prefixText: %@", self.prefixText);
     NSLog(@"self.specialUrl: %@", self.specialUrl);
     
+    [wTools sendScreenTrackingWithScreenName:@"編輯器"];
     viewHeightForPreview = [UIScreen mainScreen].bounds.size.height;
     
     textBgView.backgroundColor = [UIColor whiteColor];

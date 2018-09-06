@@ -108,6 +108,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [super viewDidAppear:animated];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
+    
+    [wTools sendScreenTrackingWithScreenName:@"用戶專區"];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

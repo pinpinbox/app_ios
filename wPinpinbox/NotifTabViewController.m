@@ -86,6 +86,7 @@
             [[myTabBarC.viewControllers objectAtIndex: kNotifTabIndex] tabBarItem].badgeValue = nil;
         }
     }
+    [wTools sendScreenTrackingWithScreenName:@"通知"];
 }
 
 - (void)didReceiveMemoryWarning {

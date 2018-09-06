@@ -203,6 +203,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [defaults synchronize];
     }
     //[self.collectionView reloadData];
+    [wTools sendScreenTrackingWithScreenName:@"個人專區"];
 }
 
 - (void)didReceiveMemoryWarning {

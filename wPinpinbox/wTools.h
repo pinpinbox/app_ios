@@ -81,4 +81,9 @@
 // Get Snapshot Image
 + (UIImage *)normalSnapshotImage:(UIView *)view;
 
+// GAI Screen
++ (void)sendScreenTrackingWithScreenName:(NSString *)scrnName;
+// GAI Event/Action
++ (void)sendActionTrackingWithCategoryName:(NSString *)scrnName action:(NSString *)action label:(NSString *)label value:( NSNumber * _Nullable )value;
+
 @end

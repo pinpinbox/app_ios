@@ -96,6 +96,8 @@
     } else {
         [self getExistedAlbum];
     }
+    
+    [wTools sendScreenTrackingWithScreenName:@"活動頁面"];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

@@ -333,6 +333,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 //    [self retrieveAlbum];
+    [wTools sendScreenTrackingWithScreenName:@"作品資訊頁"];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -1111,6 +1112,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     contentCheckingVC.delegate = self;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
+    
 }
 
 #pragma mark - ActionSheet

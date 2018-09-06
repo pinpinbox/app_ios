@@ -258,6 +258,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)viewDidAppear:(BOOL)animated {
     NSLog(@"ContentCheckingViewController viewDidAppear");
     [super viewDidAppear:animated];
+    
+    [wTools sendScreenTrackingWithScreenName:@"閱讀器"];
 //    NSLog(@"currentPage: %ld", (long)[self getCurrentPage]);
 //    NSLog(@"self.pageBeforePresentingOrPushing: %d", self.pageBeforePresentingOrPushing);
 //    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];

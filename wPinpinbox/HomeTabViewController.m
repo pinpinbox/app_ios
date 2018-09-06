@@ -300,6 +300,7 @@
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = NO;
     }
+    [wTools sendScreenTrackingWithScreenName:@"首頁"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

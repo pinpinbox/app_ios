@@ -42,6 +42,9 @@
 #import <Crashlytics/Crashlytics.h>
 #import <Flurry.h>
 
+#import <GoogleAnalytics/GAI.h>
+#import <GoogleAnalytics/GAIDictionaryBuilder.h>
+
 #import "GlobalVars.h"
 
 #define kPlzOpenLocSys @"請開啟定位:設置 > 隱私 > 位置 > 定位服務。"
@@ -128,6 +131,12 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
       withSessionBuilder:[[[FlurrySessionBuilder new]
                            withCrashReporting:YES]
                           withLogLevel:FlurryLogLevelDebug]];        
+
+#pragma mark  Google Analytics setup
+    GAI *gai = [GAI sharedInstance];
+    [gai trackerWithTrackingId:@"UA-58524918-1"];
+    gai.trackUncaughtExceptions = YES;
+    gai.logger.logLevel = kGAILogLevelVerbose;
     
     NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
     

@@ -30,6 +30,10 @@
 
 #import "GlobalVars.h"
 
+#import <GoogleAnalytics/GAI.h>
+#import <GoogleAnalytics/GAIDictionaryBuilder.h>
+#import <GoogleAnalytics/GAIFields.h>
+
 static wTools *instance =nil;
 
 @implementation wTools
@@ -943,5 +947,29 @@ static wTools *instance =nil;
     
     return contentView;
 }
+
+// GAI Screen
++ (void)sendScreenTrackingWithScreenName:(NSString *)scrnName {
+    if (scrnName && scrnName.length > 0) {
+        
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        NSString *uid = [wTools getUserID];
+        [tracker set:kGAIUserId value:uid];
+        [tracker set:kGAIScreenName value:scrnName];
+        [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+    }
+}
+// GAI Event/Action
++ (void)sendActionTrackingWithCategoryName:(NSString *)categoryName action:(NSString *)action label:(NSString *)label value:( NSNumber * _Nullable )value {
+    
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    NSString *uid = [wTools getUserID];
+    [tracker set:kGAIUserId value:uid];
+    
+    
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:categoryName action:action label:label value:value] build]];
+    
+}
+
 
 @end
