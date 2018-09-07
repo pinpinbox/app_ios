@@ -333,6 +333,7 @@
 
 //註冊
 - (IBAction)downbtn:(id)sender {
+    NSLog(@"downbtn");
     if ([keylab.text isEqualToString: @""]) {
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];
@@ -366,7 +367,6 @@
     [dic setObject:@"none" forKey:@"way"];
     [dic setObject:@"null" forKey:@"way_id"];
     [dic setObject:tmp[@"pwd"] forKey:@"password"];
-    
     [dic setObject:tmp[@"name"] forKey:@"name"];
     //[dic setObject:phone.text forKey:@"cellphone"];
     [dic setObject: [NSString stringWithFormat: @"%@,%@", countrStr, phone.text] forKey: @"cellphone"];
@@ -412,7 +412,7 @@
                     
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
+                    if ([data[@"result"] intValue] == 1) {
                         NSLog(@"result is: %d", [data[@"result"] boolValue]);
                         
                         // Show Toast Message
@@ -462,7 +462,7 @@
                                 }
                             });
                         });
-                    } else if ([dic[@"result"] intValue] == 0) {
+                    } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
                         NSString *msg = data[@"message"];
                         NSLog(@"msg: %@", msg);                        
