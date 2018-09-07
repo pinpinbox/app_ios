@@ -135,7 +135,7 @@
     self.navBtn.myBottomMargin = 4;
     //self.navBtn.myCenterYOffset = 0;
     
-    self.userLayout.userInteractionEnabled = YES;
+    self.userLayout.userInteractionEnabled = NO;
     //self.userLayout.myCenterYOffset = 0;
     //self.userLayout.orientation = 1;
     self.userLayout.wrapContentWidth = YES;
@@ -164,6 +164,7 @@
     //self.userBgView.hidden = YES;
     self.userBgViewHeight.constant = 0;
     self.creatorLabelHeight.constant = 0;
+    self.creatorLabel.hidden = YES;
     self.closeBtnHeight.constant = 0;
     self.closeBtn.hidden = YES;
     
@@ -200,14 +201,11 @@
     NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
     NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
     
-    
     [self setupTableViewHeader];
     self.tableView.hidden = NO;
     [self.tableView reloadData];
     
     [self.userCollectionView reloadData];
-    
-    
 }
 
 - (void)userTapped {
@@ -236,6 +234,7 @@
         //[self.userLayout layoutIfNeeded];
         [self.view layoutIfNeeded];
     } completion:^(BOOL finished) {
+        self.creatorLabel.hidden = NO;
     }];
 }
 
@@ -255,6 +254,7 @@
         self.userLayout.tag = 100;
         self.userBgViewHeight.constant = 0;
         self.creatorLabelHeight.constant = 0;
+        self.creatorLabel.hidden = YES;
         self.closeBtnHeight.constant = 0;
         self.closeBtn.hidden = YES;
         //[self.userLayout layoutIfNeeded];
@@ -364,7 +364,12 @@
                                     if (styleDic1[@"banner_type"] != nil) {
                                         self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
                                     }
-                                    [self addUserView];
+                                    if (self.categoryAreaArray.count != 0) {
+                                        self.userLayout.userInteractionEnabled = YES;
+                                        [self addUserView];
+                                    } else {
+                                        self.userLayout.userInteractionEnabled = NO;
+                                    }
                                 } else {
                                     [self.bannerDataArray addObject: styleDic1];
                                 }
@@ -434,7 +439,6 @@
 
 - (void)addUserView {
     NSLog(@"addUserView");
-    
     NSInteger userImageViewNumber = 0;
     
     if (self.categoryAreaArray.count > 6) {
