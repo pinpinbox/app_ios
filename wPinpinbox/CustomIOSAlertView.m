@@ -789,7 +789,6 @@ CGFloat buttonSpacerHeight = 0;
     CGFloat fixedWidth = textView.frame.size.width;
     CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
     CGRect newFrame = textView.frame;
-    
     NSLog(@"newSize.height: %f", newSize.height);
     
     // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
@@ -850,8 +849,12 @@ CGFloat buttonSpacerHeight = 0;
     contentView.layer.mask = maskLayer;
     
     // Add imageView and textView
-    UIBezierPath *imgRect = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 56, 56)];
-    textView.textContainerInset = UIEdgeInsetsMake(0, 0, 8, 0);
+    UIBezierPath *imgRect = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 56, (textViewHeight < 56)?48:56)];
+    CGFloat i = textView.contentSize.height;
+    if (textViewHeight<56)
+        textView.textContainerInset = UIEdgeInsetsMake(textViewHeight-i, 0, 8, 0);
+    else
+        textView.textContainerInset = UIEdgeInsetsMake(0, 0, 8, 0);
     textView.textContainer.exclusionPaths = @[imgRect];
     [textView addSubview:icon];
     [contentView addSubview: imageView];
