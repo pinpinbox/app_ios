@@ -23,6 +23,7 @@
 
 #import "AlbumCreationViewController.h"
 #import "ChooseTemplateViewController.h"
+#import "UIViewController+ErrorAlert.h"
 
 @interface NewExistingAlbumViewController ()
 {
@@ -805,30 +806,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"");
     NSLog(@"showCustomAlert msg: %@", msg);
     
-    CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    [alertView setContainerView: [self createErrorContainerView: msg]];
-    
-    [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
-    alertView.arrangeStyle = @"Horizontal";
-    
-    /*
-     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
-     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
-     alertView.arrangeStyle = @"Vertical";
-     */
-    
-    __weak CustomIOSAlertView *weakAlertView = alertView;
-    [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        [weakAlertView close];
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [customAlertView close];
     }];
-    [alertView setUseMotionEffects: YES];
-    [alertView show];
 }
-
+/*
 - (UIView *)createErrorContainerView: (NSString *)msg
 {
     // TextView Setting
@@ -903,7 +886,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     return contentView;
 }
-
+*/
 - (void)showAlertView: (NSString *)checkPost
                  cell: (UICollectionViewCell *)cell
 {
@@ -981,8 +964,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                           cell: (UICollectionViewCell *)cell
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];    
-    [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    
+    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -991,8 +974,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     alertTimeOutView.parentView = self.view;
     [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: NSLocalizedString(@"TimeOut-CancelBtnTitle", @""), NSLocalizedString(@"TimeOut-OKBtnTitle", @""), nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstMain],nil]];
-    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor], nil]];
+    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor clearColor], [UIColor clearColor],nil]];
+    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     

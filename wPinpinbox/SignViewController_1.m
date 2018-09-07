@@ -33,6 +33,8 @@
 
 #import "AppDelegate.h"
 
+#import "UIViewController+ErrorAlert.h"
+
 typedef void (^FBBlock)(void);
 
 //static NSString *pinpinbox = @"https://www.pinpinbox.com/";
@@ -340,30 +342,13 @@ typedef void (^FBBlock)(void);
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg
 {
-    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    //[errorAlertView setContainerView: [self createErrorContainerView: msg]];
-    [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
-    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
-    errorAlertView.arrangeStyle = @"Horizontal";
-    
-    /*
-     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
-     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
-     alertView.arrangeStyle = @"Vertical";
-     */
-    
-    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
-    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
-        [weakErrorAlertView close];
+        [customAlertView close];
     }];
-    [errorAlertView setUseMotionEffects: YES];
-    [errorAlertView show];
+    
 }
-
+/*
 - (UIView *)createErrorContainerView: (NSString *)msg
 {
     // TextView Setting
@@ -438,7 +423,7 @@ typedef void (^FBBlock)(void);
     
     return contentView;
 }
-
+*/
 #pragma mark - IBAction Methods
 
 - (IBAction)back:(id)sender {
@@ -949,8 +934,8 @@ replacementString:(NSString *)string
     alertTimeOutView.parentView = self.view;
     [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: NSLocalizedString(@"TimeOut-CancelBtnTitle", @""), NSLocalizedString(@"TimeOut-OKBtnTitle", @""), nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstMain],nil]];
-    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor], nil]];
+    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor clearColor], [UIColor clearColor],nil]];
+    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     

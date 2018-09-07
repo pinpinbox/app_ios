@@ -64,6 +64,7 @@
 #import "NSString+MD5.h"
 #import  <SystemConfiguration/SCNetworkReachability.h>
 #import "QrcordViewController.h"
+#import "UIViewController+ErrorAlert.h"
 
 #define kAdHeight 142
 #define kBtnWidth 78
@@ -2122,7 +2123,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)toCreatorVC:(NSString *)userId {
-    
+
     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
     cVC.userId = userId;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -3078,23 +3079,11 @@ replacementString:(NSString *)string {
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
-    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    
-    //[errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
-    [errorAlertView setContentViewWithIconName:@"bg200_settings" message:msg contentBackground:[UIColor firstPink] badgeName:nil];
-    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];
-    
-    errorAlertView.arrangeStyle = @"Horizontal";
-    
-    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
-    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+ 
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView * _Nullable customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
-        [weakErrorAlertView close];
+        [customAlertView close];
     }];
-    [errorAlertView setUseMotionEffects: YES];
-    [errorAlertView show];
 }
 
 - (UIView *)createErrorContainerView: (NSString *)msg {

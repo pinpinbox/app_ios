@@ -13,6 +13,7 @@
 #import "GlobalVars.h"
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
+#import "UIViewController+ErrorAlert.h"
 
 static NSString *mustUpdate = @"mustUpdate";
 static NSString *canUpdateLater = @"canUpdateLater";
@@ -409,31 +410,13 @@ static NSString *canUpdateLater = @"canUpdateLater";
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
-    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
-    [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
     
-    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];
-    errorAlertView.arrangeStyle = @"Horizontal";
-    
-    /*
-     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
-     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
-     alertView.arrangeStyle = @"Vertical";
-     */
-    
-    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
-    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
-        [weakErrorAlertView close];
+        [customAlertView close];
     }];
-    [errorAlertView setUseMotionEffects: YES];
-    [errorAlertView show];
 }
-
+/*
 - (UIView *)createErrorContainerView: (NSString *)msg
 {
     // TextView Setting
@@ -509,5 +492,5 @@ static NSString *canUpdateLater = @"canUpdateLater";
     
     return contentView;
 }
-
+*/
 @end

@@ -480,7 +480,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [weakErrorAlertView close];
     }];
-    [errorAlertView setUseMotionEffects: YES];
+    
     [errorAlertView show];
 }
 

@@ -18,6 +18,7 @@
 #import "AppDelegate.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "UIViewController+ErrorAlert.h"
 
 @interface OtherCollectionViewController () <UITableViewDelegate, UITableViewDataSource>
 {
@@ -290,14 +291,7 @@
 #pragma mark - Custom Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg
 {
-    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    //[errorAlertView setContainerView: [self createErrorContainerView: msg]];
-    [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
-    
-    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
-    errorAlertView.arrangeStyle = @"Horizontal";
+    CustomIOSAlertView *errorAlertView = [UIViewController getCustomErrorAlert:msg];
     
     /*
      [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
@@ -311,7 +305,7 @@
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [weakErrorAlertView close];
     }];
-    [errorAlertView setUseMotionEffects: YES];
+    
     [errorAlertView show];
 }
 
@@ -407,8 +401,8 @@
     alertTimeOutView.parentView = self.view;
     [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: NSLocalizedString(@"TimeOut-CancelBtnTitle", @""), NSLocalizedString(@"TimeOut-OKBtnTitle", @""), nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstMain],nil]];
-    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor], nil]];
+    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor clearColor], [UIColor clearColor],nil]];
+    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     

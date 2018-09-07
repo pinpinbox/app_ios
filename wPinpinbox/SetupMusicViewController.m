@@ -16,6 +16,7 @@
 #import "GlobalVars.h"
 
 #import "AppDelegate.h"
+#import "UIViewController+ErrorAlert.h"
 
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
@@ -1039,29 +1040,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Custom Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg
 {
-    CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    //[alertView setContainerView: [self createErrorContainerView: msg]];
-    [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
-    [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];
-    alertView.arrangeStyle = @"Horizontal";
-    
-    /*
-     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
-     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
-     alertView.arrangeStyle = @"Vertical";
-     */
-    
-    [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        [alertView close];
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [customAlertView close];
     }];
-    [alertView setUseMotionEffects: YES];
-    [alertView show];
+    
 }
-
+/*
 - (UIView *)createErrorContainerView: (NSString *)msg
 {
     // TextView Setting
@@ -1136,7 +1120,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     return contentView;
 }
-
+*/
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName

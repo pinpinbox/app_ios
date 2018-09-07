@@ -24,6 +24,7 @@
 #import "AppDelegate.h"
 #import "ScanCodeForAdvancedSettingViewController.h"
 #import "AlbumDetailViewController.h"
+#import "UIViewController+ErrorAlert.h"
 
 @interface AlbumSettingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate, UITextFieldDelegate, UITextViewDelegate, SFSafariViewControllerDelegate>
 {
@@ -1733,30 +1734,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - Custom Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg
 {
-    CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    //[alertView setContainerView: [self createErrorContainerView: msg]];
-    [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
-    [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];
-    alertView.arrangeStyle = @"Horizontal";
-    
-    /*
-     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor firstMain], [UIColor firstPink], [UIColor secondGrey], nil]];
-     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor darkMain], [UIColor darkPink], [UIColor firstGrey], nil]];
-     alertView.arrangeStyle = @"Vertical";
-     */
-    
-    __weak CustomIOSAlertView *weakAlertView = alertView;
-    [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        [weakAlertView close];
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [customAlertView close];
     }];
-    [alertView setUseMotionEffects: YES];
-    [alertView show];
+    
 }
-
+/*
 - (UIView *)createErrorContainerView: (NSString *)msg
 {
     // TextView Setting
@@ -1831,7 +1815,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     return contentView;
 }
-
+*/
 
 - (void)showCustomAlertForEditing: (NSString *)msg
 {

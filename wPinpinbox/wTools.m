@@ -34,6 +34,8 @@
 #import <GoogleAnalytics/GAIDictionaryBuilder.h>
 #import <GoogleAnalytics/GAIFields.h>
 
+#import "UIViewController+ErrorAlert.h"
+
 static wTools *instance =nil;
 
 @implementation wTools
@@ -727,23 +729,13 @@ static wTools *instance =nil;
 #pragma mark - Custom Error Alert Method
 + (void)showCustomErrorAlert: (NSString *)msg
 {
-    CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    //[errorAlertView setContainerView: [self createErrorContainerView: msg]];
-    [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
-    [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];
-    errorAlertView.arrangeStyle = @"Horizontal";
-    
-    __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
-    [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
-        [weakErrorAlertView close];
+        //[weakErrorAlertView close];
+        [customAlertView close];
     }];
-    [errorAlertView setUseMotionEffects: YES];
-    [errorAlertView show];
 }
-
+/*
 + (UIView *)createErrorContainerView: (NSString *)msg
 {
     // TextView Setting
@@ -820,6 +812,7 @@ static wTools *instance =nil;
     
     return contentView;
 }
+*/
 
 #pragma mark - Custom Method for TimeOut
 + (void)showCustomTimeOutAlert: (NSString *)msg
