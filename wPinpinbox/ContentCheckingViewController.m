@@ -4287,7 +4287,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     NSLog(@"showBuyAlbumCustomAlert msg: %@ option: %@", msg, option);
     
     CustomIOSAlertView *alertAlbumView = [[CustomIOSAlertView alloc] init];
-    [alertAlbumView setContainerView: [self createBuyAlbumContainerView: msg]];
+    //[alertAlbumView setContainerView: [self createBuyAlbumContainerView: msg]];
+    [alertAlbumView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
@@ -4302,8 +4303,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     }
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertAlbumView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertAlbumView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertAlbumView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertAlbumView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertAlbumView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -4412,8 +4413,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
-    
+    //[errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
     [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -4510,8 +4511,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
                            bgV: (MyLinearLayout *)bgV
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    
+    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -4653,7 +4654,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     NSLog(@"showCustomCheckPostAlertView msg: %@", msg);
     
     CustomIOSAlertView *alertPostView = [[CustomIOSAlertView alloc] init];
-    [alertPostView setContainerView: [self createCheckPostContainerView: msg]];
+    //[alertPostView setContainerView: [self createCheckPostContainerView: msg]];
+    [alertPostView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];

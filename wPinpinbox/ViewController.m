@@ -1539,11 +1539,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
-    
+    //[errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
     [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];
     errorAlertView.arrangeStyle = @"Horizontal";
     
     /*
@@ -1643,8 +1643,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSLog(@"showCustomAlert: Msg: %@", msg);
     
     CustomIOSAlertView *alertViewForOptions = [[CustomIOSAlertView alloc] init];
-    [alertViewForOptions setContainerView: [self createContainerViewForOptions: msg]];
-    
+    //[alertViewForOptions setContainerView: [self createContainerViewForOptions: msg]];
+    [alertViewForOptions setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -1652,8 +1652,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     [alertViewForOptions setButtonTitles: [NSMutableArray arrayWithObjects: @"否", @"是", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertViewForOptions setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertViewForOptions setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertViewForOptions setButtonColors: [NSMutableArray arrayWithObjects: [UIColor clearColor], [UIColor clearColor],nil]];
+    [alertViewForOptions setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertViewForOptions setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -1753,7 +1753,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSLog(@"showCustomUpdateAlert");
     
     CustomIOSAlertView *alertUpdateView = [[CustomIOSAlertView alloc] init];
-    [alertUpdateView setContainerView: [self createVersionUpdateView: msg]];
+    //[alertUpdateView setContainerView: [self createVersionUpdateView: msg]];
+    [alertUpdateView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
@@ -1875,8 +1876,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                           name: (NSString *)wname
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    
+    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -1894,8 +1895,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     }
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstMain],nil]];
-    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor], nil]];
+    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor clearColor], [UIColor clearColor],nil]];
+    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     

@@ -3488,8 +3488,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"showCustomAlert: Msg: %@", msg);
     
     CustomIOSAlertView *alertBackView = [[CustomIOSAlertView alloc] init];
-    [alertBackView setContainerView: [self createContainerView: msg]];
-    
+    //[alertBackView setContainerView: [self createContainerView: msg]];
+    [alertBackView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -3497,8 +3497,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [alertBackView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertBackView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertBackView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertBackView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertBackView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertBackView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -3615,8 +3615,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showPermissionAlert: (NSString *)msg
 {
     CustomIOSAlertView *alertPermissionView = [[CustomIOSAlertView alloc] init];
-    [alertPermissionView setContainerView: [self createContainerViewForPermission: msg]];
-    
+    //[alertPermissionView setContainerView: [self createContainerViewForPermission: msg]];
+    [alertPermissionView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -3624,8 +3624,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [alertPermissionView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertPermissionView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertPermissionView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertPermissionView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertPermissionView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertPermissionView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -3725,8 +3725,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                           type: (NSString *)type
 {
     CustomIOSAlertView *alertDeletingImageView = [[CustomIOSAlertView alloc] init];
-    [alertDeletingImageView setContainerView: [self createContainerViewForDeletingImageOrVideo: msg]];
-    
+    //[alertDeletingImageView setContainerView: [self createContainerViewForDeletingImageOrVideo: msg]];
+    [alertDeletingImageView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -3734,8 +3734,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [alertDeletingImageView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertDeletingImageView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertDeletingImageView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertDeletingImageView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertDeletingImageView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertDeletingImageView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -3920,8 +3920,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showCustomAlertForText: (NSString *)msg
 {
     CustomIOSAlertView *alertTextView = [[CustomIOSAlertView alloc] init];
-    [alertTextView setContainerView: [self createContainerViewForText: msg]];
-    
+    //[alertTextView setContainerView: [self createContainerViewForText: msg]];
+    [alertTextView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -3929,8 +3929,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [alertTextView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertTextView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertTextView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertTextView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertTextView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertTextView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -4029,8 +4029,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showCustomAlertForAudio: (NSString *)msg
 {
     CustomIOSAlertView *alertAudioView = [[CustomIOSAlertView alloc] init];
-    [alertAudioView setContainerView: [self createContainerViewForAudio: msg]];
-    
+    //[alertAudioView setContainerView: [self createContainerViewForAudio: msg]];
+    [alertAudioView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -4038,8 +4038,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [alertAudioView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertAudioView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertAudioView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertAudioView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertAudioView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertAudioView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -4138,8 +4138,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showCustomAudioModeCheckAlert: (NSString *)msg
 {
     CustomIOSAlertView *alertAudioModeView = [[CustomIOSAlertView alloc] init];
-    [alertAudioModeView setContainerView: [self createAudioModeCheckContainerView: msg]];
-    
+    //[alertAudioModeView setContainerView: [self createAudioModeCheckContainerView: msg]];
+    [alertAudioModeView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -4147,8 +4147,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [alertAudioModeView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertAudioModeView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertAudioModeView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertAudioModeView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertAudioModeView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertAudioModeView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -4247,7 +4247,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showCustomErrorAlert: (NSString *)msg
 {
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    //[errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
     
     [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
@@ -4349,8 +4350,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         option: (NSString *)option
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    
+    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -4359,7 +4360,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     alertTimeOutView.parentView = self.view;
     [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: NSLocalizedString(@"TimeOut-CancelBtnTitle", @""), NSLocalizedString(@"TimeOut-OKBtnTitle", @""), nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstMain],nil]];
+    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey],nil]];
     [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor], nil]];
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";

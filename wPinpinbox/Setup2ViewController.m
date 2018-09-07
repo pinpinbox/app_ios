@@ -200,8 +200,8 @@
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
-    
+    //[errorAlertView setContainerView: [self createErrorContainerView: msg]];
+    [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
     [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

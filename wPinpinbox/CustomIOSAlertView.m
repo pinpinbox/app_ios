@@ -13,9 +13,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+Extensions.h"
 
-const static CGFloat kCustomIOSAlertViewDefaultButtonHeight       = 50;
-const static CGFloat kCustomIOSAlertViewDefaultButtonSpacerHeight = 5;
-const static CGFloat kCustomIOSAlertViewCornerRadius              = 16;
+const static CGFloat kCustomIOSAlertViewDefaultButtonHeight       = 42;//50;
+const /*static*/ CGFloat kCustomIOSAlertViewDefaultButtonSpacerHeight = 16;//5;
+const static CGFloat kCustomIOSAlertViewCornerRadius              = 6;//16;
 const static CGFloat kCustomIOS7MotionEffectExtent                = 10.0;
 
 #define kCustomIOS7DefaultButtonColor [UIColor colorWithRed:0.670f green:0.670f blue:0.670f alpha:1.0f]
@@ -316,7 +316,7 @@ CGFloat buttonSpacerHeight = 0;
 //    NSLog(@"dialogContainer.frame.size.height: %f", dialogContainer.frame.size.height);
 //    NSLog(@"dialogSize.height: %f", dialogSize.height);
     CGRect rect = containerView.frame;
-    rect.size.height = dialogHeight - 55;
+    rect.size.height = dialogHeight - kMinAlertViewActionHeight;//55;
     containerView.frame = rect;
     
 //    NSLog(@"");
@@ -344,12 +344,12 @@ CGFloat buttonSpacerHeight = 0;
     if (buttonTitles==NULL) { return; }
 
     CGFloat oneButtonWidth = container.bounds.size.width / [buttonTitles count];
-    CGFloat buttonWidth = 116;
+    CGFloat buttonWidth = 128;
     
     if ([buttonTitles count] == 1) {
         UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         
-        [closeButton setFrame:CGRectMake(0, container.bounds.size.height - buttonHeight, oneButtonWidth, buttonHeight)];
+        [closeButton setFrame:CGRectMake(0, container.bounds.size.height - buttonHeight-buttonSpacerHeight, oneButtonWidth, buttonHeight)];
         
         [closeButton addTarget:self action:@selector(customIOS7dialogButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
         [closeButton setTag: 0];
@@ -360,7 +360,7 @@ CGFloat buttonSpacerHeight = 0;
         
         //[closeButton setTitleColor:[UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f] forState:UIControlStateNormal];
         //[closeButton setTitleColor:[UIColor colorWithRed:0.2f green:0.2f blue:0.2f alpha:0.5f] forState:UIControlStateHighlighted];
-        [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
+        [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16.0f]];
         closeButton.titleLabel.numberOfLines = 0;
         closeButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         [closeButton.layer setCornerRadius:kCustomIOSAlertViewCornerRadius];
@@ -372,7 +372,7 @@ CGFloat buttonSpacerHeight = 0;
                 
                 UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
                 
-                [closeButton setFrame:CGRectMake(22 + i * buttonWidth + 22 * i, container.bounds.size.height - buttonHeight - 10, buttonWidth, buttonHeight)];
+                [closeButton setFrame:CGRectMake(16 + i * buttonWidth, container.bounds.size.height - buttonHeight - 16, buttonWidth, buttonHeight)];
 //                NSLog(@"i: %d", i);
 //                NSLog(@"closebutton: %@", NSStringFromCGRect(closeButton.frame));
                 
@@ -488,7 +488,7 @@ CGFloat buttonSpacerHeight = 0;
 - (CGSize)countDialogSize
 {
     CGFloat dialogWidth = containerView.frame.size.width;
-    CGFloat dialogHeight = containerView.frame.size.height + buttonHeight + buttonSpacerHeight;
+    CGFloat dialogHeight = ((containerView.frame.size.height > kMinAlertViewContentHeight)?containerView.frame.size.height:kMinAlertViewContentHeight) + buttonHeight + buttonSpacerHeight*2;
 
     return CGSizeMake(dialogWidth, dialogHeight);
 }
@@ -677,6 +677,193 @@ CGFloat buttonSpacerHeight = 0;
     if ([touch.view isKindOfClass:[CustomIOSAlertView class]]) {
         [self close];
     }
+}
+
+
+
+- (void)setContentViewWithMsg:(NSString *)message contentBackgroundColor:(UIColor *)cntBackgroundColor badgeName:(NSString *)badgeName {
+    
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(16, 16, 268, 22)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = message;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    textView.textAlignment = NSTextAlignmentJustified;
+
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+
+    NSLog(@"newSize.height: %f", newSize.height);
+
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+
+
+
+    CGFloat viewHeight;
+    textViewY = kCustomIOSAlertViewDefaultButtonSpacerHeight;
+    if ((textViewY + textViewHeight+ kCustomIOSAlertViewDefaultButtonSpacerHeight) > kMinAlertViewContentHeight) {
+        if ((textViewY + textViewHeight+kCustomIOSAlertViewDefaultButtonSpacerHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight+kCustomIOSAlertViewDefaultButtonSpacerHeight;
+        }
+    } else {
+        viewHeight = kMinAlertViewContentHeight;
+        
+    }
+    CGRect c = textView.frame;
+    textView.frame = CGRectMake(c.origin.x, kCustomIOSAlertViewDefaultButtonSpacerHeight, c.size.width, textViewHeight);
+    NSLog(@"demoHeight: %f", viewHeight);
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(300-kAlertContentBackgroundImageSize+kAlertContentBackgroundImageInset, viewHeight-(kAlertContentBackgroundImageSize-kAlertContentBackgroundImageInset), kAlertContentBackgroundImageSize, kAlertContentBackgroundImageSize)];
+    UIImage *image;
+    if (!badgeName)
+        image = [UIImage imageNamed:@"icon_2_0_0_dialog_error"];
+    else {
+        image = [UIImage imageNamed:badgeName];
+        if (!image)
+            image = [UIImage imageNamed:@"icon_2_0_0_dialog_error"];
+    }
+    [imageView setImage:image];
+
+
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = cntBackgroundColor;//[UIColor firstPink];
+
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(6, 6.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    
+    [self setContainerView:contentView];
+    
+}
+- (void)setContentViewWithIconName:(NSString *)iconName message:(NSString *)message contentBackground:(UIColor *)cntBackgroundColor badgeName:(NSString *)badgeName {
+    
+    UIImageView *icon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 48, 48)];
+    if (iconName && iconName.length > 0)
+        icon.image = [UIImage imageNamed:iconName];
+    
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(16, 16, 268, 48)];
+    //textView.text = @"帳號已經存在，請使用另一個";
+    textView.text = message;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    textView.textAlignment = NSTextAlignmentJustified;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    } else if (newSize.height < 48)
+        newSize.height = 48;
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    CGFloat viewHeight;
+    textViewY = kCustomIOSAlertViewDefaultButtonSpacerHeight;
+    if ((textViewY + textViewHeight+ kCustomIOSAlertViewDefaultButtonSpacerHeight) > kMinAlertViewContentHeight) {
+        if ((textViewY + textViewHeight+kCustomIOSAlertViewDefaultButtonSpacerHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight+kCustomIOSAlertViewDefaultButtonSpacerHeight;
+        }
+    } else {
+        viewHeight = kMinAlertViewContentHeight;
+        
+    }
+    CGRect c = textView.frame;
+    textView.frame = CGRectMake(c.origin.x, kCustomIOSAlertViewDefaultButtonSpacerHeight, c.size.width, textViewHeight);
+    NSLog(@"demoHeight: %f", viewHeight);
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(300-kAlertContentBackgroundImageSize+kAlertContentBackgroundImageInset, viewHeight-(kAlertContentBackgroundImageSize-kAlertContentBackgroundImageInset), kAlertContentBackgroundImageSize, kAlertContentBackgroundImageSize)];
+    UIImage *image;
+    if (!badgeName)
+        image = [UIImage imageNamed:@"icon_2_0_0_dialog_error"];
+    else {
+        image = [UIImage imageNamed:badgeName];
+        if (!image)
+            image = [UIImage imageNamed:@"icon_2_0_0_dialog_error"];
+    }
+    [imageView setImage:image];
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    contentView.backgroundColor = cntBackgroundColor;//[UIColor firstPink];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(6, 6.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    UIBezierPath *imgRect = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 56, 56)];
+    textView.textContainerInset = UIEdgeInsetsMake(0, 0, 8, 0);
+    textView.textContainer.exclusionPaths = @[imgRect];
+    [textView addSubview:icon];
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    //[contentView addSubview:icon];
+    
+    NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    NSLog(@"");
+    
+    
+    [self setContainerView:contentView];
 }
 
 @end

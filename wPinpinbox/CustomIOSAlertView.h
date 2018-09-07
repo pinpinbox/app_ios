@@ -11,6 +11,12 @@
 
 #import <UIKit/UIKit.h>
 
+#define kMinAlertViewContentHeight 74
+#define kMinAlertViewActionHeight 74
+#define kAlertContentBackgroundImageSize 96
+#define kAlertContentBackgroundImageInset 16
+extern const CGFloat kCustomIOSAlertViewDefaultButtonSpacerHeight;
+
 @protocol CustomIOSAlertViewDelegate
 
 - (void)customIOS7dialogButtonTouchUpInside:(id)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
@@ -54,4 +60,7 @@
 - (void)deviceOrientationDidChange: (NSNotification *)notification;
 - (void)dealloc;
 
+//  if badgeName is nil , use icon_2_0_0_dialog_error as default badge image
+- (void)setContentViewWithMsg:(NSString *)message contentBackgroundColor:(UIColor *)cntBackgroundColor badgeName:(NSString *)badgeName;
+- (void)setContentViewWithIconName:(NSString *)iconName message:(NSString *)message contentBackground:(UIColor *)cntBackgroundColor badgeName:(NSString *)badgeName;
 @end

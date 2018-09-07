@@ -1734,11 +1734,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)showCustomErrorAlert: (NSString *)msg
 {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    [alertView setContainerView: [self createErrorContainerView: msg]];
-    
+    //[alertView setContainerView: [self createErrorContainerView: msg]];
+    [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
     [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];
     alertView.arrangeStyle = @"Horizontal";
     
     /*
@@ -1838,8 +1838,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [self.view endEditing: YES];
     
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    [alertView setContainerView: [self createContainerViewForEditing: msg]];
-    
+    //[alertView setContainerView: [self createContainerViewForEditing: msg]];
+    [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"我 知 道 了"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -1847,8 +1847,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"稍後再說", @"好的", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -1948,8 +1948,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [self.view endEditing: YES];
     
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    [alertView setContainerView: [self createModifiedContainerView: msg]];
-    
+    //[alertView setContainerView: [self createModifiedContainerView: msg]];
+    [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"我 知 道 了"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -1957,8 +1957,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"繼續編輯", @"直接離開", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
@@ -2058,11 +2058,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)showCustomAlert: (NSString *)msg
 {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    [alertView setContainerView: [self createContainerView: msg]];
-    
+    //[alertView setContainerView: [self createContainerView: msg]];
+    [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"我 知 道 了"]];
     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];
     alertView.arrangeStyle = @"Horizontal";
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"稍後再說", @"確定切換", nil]];
@@ -2362,8 +2362,8 @@ replacementString:(NSString *)string
                        albumId: (NSString *)albumId
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    
+    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -2372,8 +2372,8 @@ replacementString:(NSString *)string
     alertTimeOutView.parentView = self.view;
     [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: NSLocalizedString(@"TimeOut-CancelBtnTitle", @""), NSLocalizedString(@"TimeOut-OKBtnTitle", @""), nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstMain],nil]];
-    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor], nil]];
+    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     

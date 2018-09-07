@@ -2122,6 +2122,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)toCreatorVC:(NSString *)userId {
+    [self showCustomErrorAlert:@"一二三四五六七八九十一"];
+    return ;
     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
     cVC.userId = userId;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -3078,11 +3080,13 @@ replacementString:(NSString *)string {
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
-    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
     
+    //[errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
+    [errorAlertView setContentViewWithIconName:@"bg200_settings" message:msg contentBackground:[UIColor firstPink] badgeName:nil];
     [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];
+    
     errorAlertView.arrangeStyle = @"Horizontal";
     
     __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
@@ -3096,7 +3100,7 @@ replacementString:(NSString *)string {
 
 - (UIView *)createErrorContainerView: (NSString *)msg {
     // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(16, 16, 268, 22)];
     //textView.text = @"帳號已經存在，請使用另一個";
     textView.text = msg;
     textView.backgroundColor = [UIColor clearColor];
@@ -3128,22 +3132,25 @@ replacementString:(NSString *)string {
     NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
     
     
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
     
     CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
+    textViewY = kCustomIOSAlertViewDefaultButtonSpacerHeight;
+    if ((textViewY + textViewHeight+ kCustomIOSAlertViewDefaultButtonSpacerHeight) > kMinAlertViewContentHeight) {
+        if ((textViewY + textViewHeight+kCustomIOSAlertViewDefaultButtonSpacerHeight) > 450) {
             viewHeight = 450;
         } else {
-            viewHeight = textViewY + textViewHeight;
+            viewHeight = textViewY + textViewHeight+kCustomIOSAlertViewDefaultButtonSpacerHeight;
         }
     } else {
-        viewHeight = 96;
+        viewHeight = kMinAlertViewContentHeight;
+        
     }
+    CGRect c = textView.frame;
+    textView.frame = CGRectMake(c.origin.x, kCustomIOSAlertViewDefaultButtonSpacerHeight, c.size.width, textViewHeight);
     NSLog(@"demoHeight: %f", viewHeight);
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(300-kAlertContentBackgroundImageSize+kAlertContentBackgroundImageInset, viewHeight-(kAlertContentBackgroundImageSize-kAlertContentBackgroundImageInset), kAlertContentBackgroundImageSize, kAlertContentBackgroundImageSize)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
     
     
     // ContentView Setting
@@ -3151,7 +3158,7 @@ replacementString:(NSString *)string {
     contentView.backgroundColor = [UIColor firstPink];
     
     // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(6, 6.0)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
     maskLayer.frame = self.view.bounds;
     maskLayer.path  = maskPath.CGPath;
@@ -3174,7 +3181,8 @@ replacementString:(NSString *)string {
                        eventId: (NSString *)eventId
                           text: (NSString *)text {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
+    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
