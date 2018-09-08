@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "Remind.h"
-#import <AdobeCreativeSDKImage/AdobeCreativeSDKImage.h>
 
 @interface FastViewController : UIViewController
 

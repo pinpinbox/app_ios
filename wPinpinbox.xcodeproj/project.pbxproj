@@ -724,13 +724,6 @@
 		92DF721F1C5F37EB00062FC6 /* button_ok_click.png in Resources */ = {isa = PBXBuildFile; fileRef = 92DF721D1C5F37EB00062FC6 /* button_ok_click.png */; };
 		92DF72201C5F37EB00062FC6 /* button_ok.png in Resources */ = {isa = PBXBuildFile; fileRef = 92DF721E1C5F37EB00062FC6 /* button_ok.png */; };
 		92DF72231C5F553800062FC6 /* TemplateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DF72221C5F553800062FC6 /* TemplateViewController.m */; };
-		92EE16D81C3B640500F37519 /* AdobeCreativeSDKColorComponent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92EE16D41C3B640500F37519 /* AdobeCreativeSDKColorComponent.framework */; };
-		92EE16D91C3B640500F37519 /* AdobeCreativeSDKBehance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92EE16D51C3B640500F37519 /* AdobeCreativeSDKBehance.framework */; };
-		92EE16DA1C3B640500F37519 /* AdobeCreativeSDKDevice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92EE16D61C3B640500F37519 /* AdobeCreativeSDKDevice.framework */; };
-		92EE16DB1C3B640500F37519 /* AdobeCreativeSDKImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92EE16D71C3B640500F37519 /* AdobeCreativeSDKImage.framework */; };
-		92EE16DF1C3B641200F37519 /* AdobeCreativeSDKImageResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92EE16DC1C3B641200F37519 /* AdobeCreativeSDKImageResources.bundle */; };
-		92EE16E01C3B641200F37519 /* AdobeCreativeSDKFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92EE16DD1C3B641200F37519 /* AdobeCreativeSDKFoundation.framework */; };
-		92EE16E11C3B641200F37519 /* AdobeCreativeSDKFoundationResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92EE16DE1C3B641200F37519 /* AdobeCreativeSDKFoundationResources.bundle */; };
 		92EE16E61C3BC04500F37519 /* BookdetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92EE16E41C3BC04500F37519 /* BookdetViewController.m */; };
 		92EE16E71C3BC04500F37519 /* BookdetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92EE16E51C3BC04500F37519 /* BookdetViewController.xib */; };
 		92EE16EC1C3BC3D000F37519 /* icon_star@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92EE16EB1C3BC3D000F37519 /* icon_star@2x.png */; };
@@ -1842,13 +1835,6 @@
 		92DF721E1C5F37EB00062FC6 /* button_ok.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_ok.png; sourceTree = "<group>"; };
 		92DF72211C5F553800062FC6 /* TemplateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateViewController.h; sourceTree = "<group>"; };
 		92DF72221C5F553800062FC6 /* TemplateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateViewController.m; sourceTree = "<group>"; };
-		92EE16D41C3B640500F37519 /* AdobeCreativeSDKColorComponent.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKColorComponent.framework; sourceTree = "<group>"; };
-		92EE16D51C3B640500F37519 /* AdobeCreativeSDKBehance.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKBehance.framework; sourceTree = "<group>"; };
-		92EE16D61C3B640500F37519 /* AdobeCreativeSDKDevice.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKDevice.framework; sourceTree = "<group>"; };
-		92EE16D71C3B640500F37519 /* AdobeCreativeSDKImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKImage.framework; sourceTree = "<group>"; };
-		92EE16DC1C3B641200F37519 /* AdobeCreativeSDKImageResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AdobeCreativeSDKImageResources.bundle; sourceTree = "<group>"; };
-		92EE16DD1C3B641200F37519 /* AdobeCreativeSDKFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdobeCreativeSDKFoundation.framework; sourceTree = "<group>"; };
-		92EE16DE1C3B641200F37519 /* AdobeCreativeSDKFoundationResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AdobeCreativeSDKFoundationResources.bundle; sourceTree = "<group>"; };
 		92EE16E31C3BC04500F37519 /* BookdetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookdetViewController.h; sourceTree = "<group>"; };
 		92EE16E41C3BC04500F37519 /* BookdetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookdetViewController.m; sourceTree = "<group>"; };
 		92EE16E51C3BC04500F37519 /* BookdetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookdetViewController.xib; sourceTree = "<group>"; };
@@ -1978,10 +1964,8 @@
 				549B48AC1F6EC3190012FE13 /* libicucore.tbd in Frameworks */,
 				630AD0961D88EBE8009C511A /* CoreMedia.framework in Frameworks */,
 				630AD0941D88EB85009C511A /* AVKit.framework in Frameworks */,
-				92EE16DA1C3B640500F37519 /* AdobeCreativeSDKDevice.framework in Frameworks */,
 				92AE90891C1EB28100C53413 /* MapKit.framework in Frameworks */,
 				92CFB5C11BE75670001B7B78 /* StoreKit.framework in Frameworks */,
-				92EE16DB1C3B640500F37519 /* AdobeCreativeSDKImage.framework in Frameworks */,
 				92AE20F61C059C140033C298 /* MediaPlayer.framework in Frameworks */,
 				92B2F8771BF1A160002499DA /* AVFoundation.framework in Frameworks */,
 				9222B2301BEC9EA900DF2CAD /* AudioToolbox.framework in Frameworks */,
@@ -1990,8 +1974,6 @@
 				92CFB5C31BE75679001B7B78 /* MobileCoreServices.framework in Frameworks */,
 				92CFB5BF1BE75664001B7B78 /* QuartzCore.framework in Frameworks */,
 				92CFB5BD1BE75659001B7B78 /* OpenGLES.framework in Frameworks */,
-				92EE16D91C3B640500F37519 /* AdobeCreativeSDKBehance.framework in Frameworks */,
-				92EE16E01C3B641200F37519 /* AdobeCreativeSDKFoundation.framework in Frameworks */,
 				92CFB5BB1BE75654001B7B78 /* MessageUI.framework in Frameworks */,
 				92D363181BE0774C0084C746 /* libz.1.2.5.dylib in Frameworks */,
 				92CFB5B71BE7563E001B7B78 /* libsqlite3.0.dylib in Frameworks */,
@@ -1999,7 +1981,6 @@
 				92CFB5B31BE75634001B7B78 /* Accelerate.framework in Frameworks */,
 				92CFB5B11BE7562B001B7B78 /* Foundation.framework in Frameworks */,
 				929ED4AE1B78A2F300D21CF0 /* CoreLocation.framework in Frameworks */,
-				92EE16D81C3B640500F37519 /* AdobeCreativeSDKColorComponent.framework in Frameworks */,
 				929ED4AC1B78A2E200D21CF0 /* AssetsLibrary.framework in Frameworks */,
 				BF61430D909D28AAF4BCA35B /* libPods-wPinpinbox.a in Frameworks */,
 			);
@@ -3110,13 +3091,6 @@
 				929ED4AB1B78A2E200D21CF0 /* AssetsLibrary.framework */,
 				92AE90881C1EB28100C53413 /* MapKit.framework */,
 				9222B22F1BEC9EA900DF2CAD /* AudioToolbox.framework */,
-				92EE16DC1C3B641200F37519 /* AdobeCreativeSDKImageResources.bundle */,
-				92EE16DD1C3B641200F37519 /* AdobeCreativeSDKFoundation.framework */,
-				92EE16DE1C3B641200F37519 /* AdobeCreativeSDKFoundationResources.bundle */,
-				92EE16D41C3B640500F37519 /* AdobeCreativeSDKColorComponent.framework */,
-				92EE16D51C3B640500F37519 /* AdobeCreativeSDKBehance.framework */,
-				92EE16D61C3B640500F37519 /* AdobeCreativeSDKDevice.framework */,
-				92EE16D71C3B640500F37519 /* AdobeCreativeSDKImage.framework */,
 				92CFB5C61BE75688001B7B78 /* libc++.dylib */,
 				92CFB5C41BE7567E001B7B78 /* UIKit.framework */,
 				92CFB5C01BE75670001B7B78 /* StoreKit.framework */,
@@ -5101,7 +5075,6 @@
 				927410531BD0B3DA0031460B /* button_facebook_sign-in@2x.png in Resources */,
 				92F68D0F1BE9BF970085D748 /* horizontal_line_moving@2x.png in Resources */,
 				927AADD61BE1FC730088CDB9 /* SetupViewController.xib in Resources */,
-				92EE16DF1C3B641200F37519 /* AdobeCreativeSDKImageResources.bundle in Resources */,
 				92F89AF31BBE73D400565908 /* pinpin_0.png in Resources */,
 				922A4AFE1BD622EA006D5A36 /* 2-01bg@2x.png in Resources */,
 				924A92CE1BD4D15100E3D610 /* icon_arrowdown@2x.png in Resources */,
@@ -5197,7 +5170,6 @@
 				541B0D39200125D200890879 /* CreaterVC.storyboard in Resources */,
 				9274102A1BD0A6FC0031460B /* icon_plus@2x.png in Resources */,
 				D747C4CA1D65BCC600F6B70E /* laking-Android＆IOS-2.jpg in Resources */,
-				92EE16E11C3B641200F37519 /* AdobeCreativeSDKFoundationResources.bundle in Resources */,
 				926E3BCF1CE5DC8700724B56 /* button_track@2x.png in Resources */,
 				922D92CE1BD9D3D400640639 /* second_menu@2x.png in Resources */,
 				54B9F49C1FE6CA3C00A694E4 /* ChangeCellPhoneNumberVC.storyboard in Resources */,

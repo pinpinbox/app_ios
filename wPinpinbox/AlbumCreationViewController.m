@@ -10,7 +10,6 @@
 #import "AlbumCollectionViewController.h"
 #import "O_drag.h"
 #import "PhotosViewController.h"
-#import <AdobeCreativeSDKFoundation/AdobeCreativeSDKFoundation.h>
 #import "wTools.h"
 #import "boxAPI.h"
 #import "AsyncImageView.h"
@@ -67,7 +66,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate,AdobeUXImageEditorViewControllerDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate>
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate>
 {
     __weak IBOutlet UIButton *refreshBtn;
     __weak IBOutlet UIButton *conbtn;
@@ -270,16 +269,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
     NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
-    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
-    
-    //The authManager caches our login, so check on startup
-    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
-    
-    if(loggedIn) {
-        [[AdobeUXAuthManager sharedManager] logout:nil onError:nil];
-        AdobeAuthUserProfile *up = [AdobeUXAuthManager sharedManager].userProfile;
-        NSLog(@"User Profile: %@", up);
-    }
+//    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
+//
+//    //The authManager caches our login, so check on startup
+//    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
+//
+//    if(loggedIn) {
+//        [[AdobeUXAuthManager sharedManager] logout:nil onError:nil];
+//        AdobeAuthUserProfile *up = [AdobeUXAuthManager sharedManager].userProfile;
+//        NSLog(@"User Profile: %@", up);
+//    }
     
     [self audioSetUp];
     [self photoSetup];
@@ -3052,39 +3051,39 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 -(void)displayEditorForImahe:(UIImage *)imageToEdit{
     NSLog(@"displayEditorForImahe");
     
-    @try {
-        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:imageToEdit];
-        [editorController setDelegate:self];
-        [self presentViewController:editorController animated:YES completion:nil];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason);
-        return;
-    }
+//    @try {
+//        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:imageToEdit];
+//        [editorController setDelegate:self];
+//        [self presentViewController:editorController animated:YES completion:nil];
+//    } @catch (NSException *exception) {
+//        // Print exception information
+//        NSLog( @"NSException caught" );
+//        NSLog( @"Name: %@", exception.name);
+//        NSLog( @"Reason: %@", exception.reason);
+//        return;
+//    }
 }
 
-- (void)photoEditor:(AdobeUXImageEditorViewController *)editor
-  finishedWithImage:(UIImage *)image
-{
-    // Handle the result image here
-    //[ImageDataArr replaceObjectAtIndex:selectItem withObject:image];
-    //    [self myshowimage];
-    //    [mycollection reloadData];
-    
-    NSLog(@"finishedWithImage");
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
-    [self callUpdatePhotoOfDiyWithPhoto: image];
-}
-
-- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor
-{
-    NSLog(@"photoEditorCanceled");
-    // Handle cancellation here
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+//- (void)photoEditor:(AdobeUXImageEditorViewController *)editor
+//  finishedWithImage:(UIImage *)image
+//{
+//    // Handle the result image here
+//    //[ImageDataArr replaceObjectAtIndex:selectItem withObject:image];
+//    //    [self myshowimage];
+//    //    [mycollection reloadData];
+//
+//    NSLog(@"finishedWithImage");
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//
+//    [self callUpdatePhotoOfDiyWithPhoto: image];
+//}
+//
+//- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor
+//{
+//    NSLog(@"photoEditorCanceled");
+//    // Handle cancellation here
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
 
 - (void)callUpdatePhotoOfDiyWithPhoto: (UIImage *)image
 {

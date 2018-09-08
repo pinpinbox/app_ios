@@ -9,7 +9,6 @@
 #import "FastViewController.h"
 #import "O_drag.h"
 #import "PhotosViewController.h"
-#import <AdobeCreativeSDKFoundation/AdobeCreativeSDKFoundation.h>
 #import "wTools.h"
 #import "boxAPI.h"
 #import "AsyncImageView.h"
@@ -58,7 +57,7 @@
 #define kCellHeightForPreview 170
 #define kViewHeightForPreview 568
 
-@interface FastViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate,AdobeUXImageEditorViewControllerDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MKDropdownMenuDelegate, MKDropdownMenuDataSource, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate>
+@interface FastViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, MKDropdownMenuDelegate, MKDropdownMenuDataSource, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate>
 {
     __weak IBOutlet UICollectionView *mycollection;
     __weak IBOutlet UIButton *adobeEidt;
@@ -226,18 +225,18 @@
     
     //  NSString* const CreativeSDKClientId = @"5d7ab289e4a74aa8bba84475395f552c";
     //  NSString* const CreativeSDKClientSecret = @"a5b4e46a-96df-4cfa-a18e-5c99c4e8cf91";
-    NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
-    NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
-    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
-    
-    //The authManager caches our login, so check on startup
-    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
-    
-    if(loggedIn) {
-        [[AdobeUXAuthManager sharedManager] logout:nil onError:nil];
-        AdobeAuthUserProfile *up = [AdobeUXAuthManager sharedManager].userProfile;
-        NSLog(@"User Profile: %@", up);
-    }
+//    NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
+//    NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
+//    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
+//
+//    //The authManager caches our login, so check on startup
+//    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
+//
+//    if(loggedIn) {
+//        [[AdobeUXAuthManager sharedManager] logout:nil onError:nil];
+//        AdobeAuthUserProfile *up = [AdobeUXAuthManager sharedManager].userProfile;
+//        NSLog(@"User Profile: %@", up);
+//    }
     
     [self reload:nil];
     [self audioSetUp];
@@ -2553,14 +2552,7 @@
 //                    
 //                });
 //                
-//                
-//                
-//                
-//                
-//                
-//               
-//                
-//                
+////
 //            }else{
 //                
 //                [self myshowimage];
@@ -2579,91 +2571,89 @@
 }
 
 -(void)AdobeSDK {
-    
-    NSLog(@"AdobeSDK");
-    
-    [self displayEditorForImahe:selectimage];
-    return;
-    
-    NSLog(@"Check Login");
-    
-    //Are we logged in?
-    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
-   
-    if(!loggedIn) {
-        
-        [[AdobeUXAuthManager sharedManager] login:self
-                                        onSuccess: ^(AdobeAuthUserProfile * userProfile) {
-                                            NSLog(@"success for login");
-                                            
-                                            [self displayEditorForImahe:oview.image];
-                                        }
-                                          onError: ^(NSError * error) {
-                                              NSLog(@"Error in Login: %@", error);
-                                          }];
-    } else {
-        
-        [self displayEditorForImahe:oview.image];
-    }
-
+//    NSLog(@"AdobeSDK");
+//
+//    [self displayEditorForImahe:selectimage];
+//    return;
+//
+//    NSLog(@"Check Login");
+//
+//    //Are we logged in?
+//    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
+//
+//    if(!loggedIn) {
+//
+//        [[AdobeUXAuthManager sharedManager] login:self
+//                                        onSuccess: ^(AdobeAuthUserProfile * userProfile) {
+//                                            NSLog(@"success for login");
+//
+//                                            [self displayEditorForImahe:oview.image];
+//                                        }
+//                                          onError: ^(NSError * error) {
+//                                              NSLog(@"Error in Login: %@", error);
+//                                          }];
+//    } else {
+//
+//        [self displayEditorForImahe:oview.image];
+//    }
 }
 
 -(void)displayEditorForImahe:(UIImage *)imageToEdit{
     NSLog(@"displayEditorForImahe");
     
-    AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:imageToEdit];
-    [editorController setDelegate:self];
-    [self presentViewController:editorController animated:YES completion:nil];
+//    AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:imageToEdit];
+//    [editorController setDelegate:self];
+//    [self presentViewController:editorController animated:YES completion:nil];
 }
 
-- (void)photoEditor:(AdobeUXImageEditorViewController *)editor finishedWithImage:(UIImage *)image
-{
-    // Handle the result image here
-    //[ImageDataArr replaceObjectAtIndex:selectItem withObject:image];
-//    [self myshowimage];
-//    [mycollection reloadData];
-    
-    NSLog(@"finishedWithImage");
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
-    //更新照片
-    NSString *pid=[ImageDataArr[selectItem][@"photo_id"] stringValue];
-    
-    //上傳照片
-    [wTools ShowMBProgressHUD];
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
-        NSString *respone=@"";
-        
-        respone = [boxAPI updatephotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid photo_id: pid image: image setting: textForDescription];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [wTools HideMBProgressHUD];
-            
-            if (respone!=nil) {
-                NSLog(@"Adobe PhotoEditor Response: %@",respone);
-                NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                if ([dic[@"result"] intValue] == 1) {
-                    ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                    [self myshowimage];
-                    [_dataCollectionView reloadData];
-                } else if ([dic[@"result"] boolValue] == 0) {
-                    [self showPermission];
-                } else {
-                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                }
-            }            
-        });
-    });
-}
-
-- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor
-{
-    NSLog(@"photoEditorCanceled");
-    // Handle cancellation here
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+//- (void)photoEditor:(AdobeUXImageEditorViewController *)editor finishedWithImage:(UIImage *)image
+//{
+//    // Handle the result image here
+//    //[ImageDataArr replaceObjectAtIndex:selectItem withObject:image];
+////    [self myshowimage];
+////    [mycollection reloadData];
+//
+//    NSLog(@"finishedWithImage");
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//
+//    //更新照片
+//    NSString *pid=[ImageDataArr[selectItem][@"photo_id"] stringValue];
+//
+//    //上傳照片
+//    [wTools ShowMBProgressHUD];
+//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//
+//        NSString *respone=@"";
+//
+//        respone = [boxAPI updatephotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: _albumid photo_id: pid image: image setting: textForDescription];
+//
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//
+//            [wTools HideMBProgressHUD];
+//
+//            if (respone!=nil) {
+//                NSLog(@"Adobe PhotoEditor Response: %@",respone);
+//                NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+//                if ([dic[@"result"] intValue] == 1) {
+//                    ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
+//                    [self myshowimage];
+//                    [_dataCollectionView reloadData];
+//                } else if ([dic[@"result"] boolValue] == 0) {
+//                    [self showPermission];
+//                } else {
+//                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+//                }
+//            }
+//        });
+//    });
+//}
+//
+//- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor
+//{
+//    NSLog(@"photoEditorCanceled");
+//    // Handle cancellation here
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
 
 //共用
 -(IBAction)coppertation:(id)sender{
