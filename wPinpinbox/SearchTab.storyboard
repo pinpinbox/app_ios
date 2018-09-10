@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="1QH-ax-UCd">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="1QH-ax-UCd">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -129,7 +128,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FgH-MK-6gi">
-                                            <rect key="frame" x="154" y="30" width="205" height="1"/>
+                                            <rect key="frame" x="154" y="30.5" width="205" height="0.5"/>
                                             <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="W9Z-7l-9qs"/>
@@ -156,14 +155,14 @@
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="W5J-gc-Qnq">
-                                                                <rect key="frame" x="12" y="10" width="72" height="72"/>
+                                                                <rect key="frame" x="12" y="30" width="72" height="72"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="72" id="0N8-wF-4fQ"/>
                                                                     <constraint firstAttribute="height" constant="72" id="yaw-z8-1b4"/>
                                                                 </constraints>
                                                             </imageView>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7RB-hd-c8W">
-                                                                <rect key="frame" x="0.0" y="90" width="96" height="19.5"/>
+                                                                <rect key="frame" x="0.0" y="110" width="96" height="19.5"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -195,7 +194,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7B3-rl-NfW">
-                                            <rect key="frame" x="129.5" y="229" width="229.5" height="1"/>
+                                            <rect key="frame" x="129.5" y="229.5" width="229.5" height="0.5"/>
                                             <color key="backgroundColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="aaT-ag-c4V"/>
@@ -260,7 +259,7 @@
                                                     <constraint firstAttribute="width" constant="36" id="mEk-iy-tXE"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                                <state key="normal" title="Button" image="ic200_cancel_light.png"/>
+                                                <state key="normal" title="Button" image="ic200_cancel_light"/>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -286,7 +285,7 @@
                                             <constraint firstAttribute="width" constant="36" id="Pmn-bq-Jxc"/>
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_scancamera_dark.png"/>
+                                        <state key="normal" image="ic200_scancamera_dark"/>
                                         <connections>
                                             <action selector="toScanCode:" destination="wuA-pA-1f6" eventType="touchUpInside" id="yIu-XX-PYe"/>
                                         </connections>
@@ -365,8 +364,8 @@
     <resources>
         <image name="SearchSelectedTab" width="25" height="25"/>
         <image name="SearchTab" width="25" height="25"/>
-        <image name="ic200_cancel_light.png" width="144" height="144"/>
-        <image name="ic200_scancamera_dark.png" width="144" height="144"/>
+        <image name="ic200_cancel_light" width="144" height="144"/>
+        <image name="ic200_scancamera_dark" width="144" height="144"/>
         <image name="ic200_search_dark" width="144" height="144"/>
     </resources>
 </document>

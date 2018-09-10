@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,7 +28,7 @@
                                             <constraint firstAttribute="height" constant="42" id="dNZ-v0-6j5"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark.png">
+                                        <state key="normal" image="ic200_arrow_left_dark">
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -43,7 +42,7 @@
                                             <constraint firstAttribute="width" constant="42" id="YuK-G8-sEf"/>
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_photosize_light.png"/>
+                                        <state key="normal" image="ic200_photosize_light"/>
                                         <connections>
                                             <action selector="compressionBtnPress:" destination="l1v-4M-Lg6" eventType="touchUpInside" id="Cgg-c2-rgH"/>
                                         </connections>
@@ -96,7 +95,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="77" height="77"/>
                                                     <color key="backgroundColor" red="0.66666666669999997" green="0.66666666669999997" blue="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </view>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_circle_select_alpha.png" translatesAutoresizingMaskIntoConstraints="NO" id="gw9-Gh-3mm">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_circle_select_alpha" translatesAutoresizingMaskIntoConstraints="NO" id="gw9-Gh-3mm">
                                                     <rect key="frame" x="49" y="0.0" width="28" height="28"/>
                                                 </imageView>
                                             </subviews>
@@ -137,7 +136,7 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="0n3-ga-EEB"/>
                                         </constraints>
-                                        <state key="normal" title=" 確 認 選 取（ 1 / 34 ）" image="2-01icon_confirm.png">
+                                        <state key="normal" title=" 確 認 選 取（ 1 / 34 ）" image="2-01icon_confirm">
                                             <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -210,10 +209,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="77" height="77"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="button_take-photo.png" translatesAutoresizingMaskIntoConstraints="NO" id="aPO-ca-MZU">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="button_take-photo" translatesAutoresizingMaskIntoConstraints="NO" id="aPO-ca-MZU">
                                                     <rect key="frame" x="0.0" y="0.0" width="77" height="77"/>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="camera.png" translatesAutoresizingMaskIntoConstraints="NO" id="tSC-3E-sO7">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="tSC-3E-sO7">
                                                     <rect key="frame" x="16" y="16" width="45" height="45"/>
                                                 </imageView>
                                             </subviews>
@@ -222,8 +221,8 @@
                                             <constraint firstItem="aPO-ca-MZU" firstAttribute="centerY" secondItem="tSC-3E-sO7" secondAttribute="centerY" id="9rn-TA-Bmi"/>
                                             <constraint firstAttribute="trailing" secondItem="aPO-ca-MZU" secondAttribute="trailing" id="GZa-dU-CnJ"/>
                                             <constraint firstItem="aPO-ca-MZU" firstAttribute="top" secondItem="OQX-oA-Zzj" secondAttribute="top" id="OOu-iX-OMI"/>
-                                            <constraint firstItem="tSC-3E-sO7" firstAttribute="top" secondItem="OQX-oA-Zzj" secondAttribute="topMargin" constant="-4" id="UW3-VA-LS4"/>
-                                            <constraint firstItem="tSC-3E-sO7" firstAttribute="leading" secondItem="OQX-oA-Zzj" secondAttribute="leadingMargin" id="cJD-a4-Zar"/>
+                                            <constraint firstItem="tSC-3E-sO7" firstAttribute="top" secondItem="OQX-oA-Zzj" secondAttribute="top" constant="16" id="UW3-VA-LS4"/>
+                                            <constraint firstItem="tSC-3E-sO7" firstAttribute="leading" secondItem="OQX-oA-Zzj" secondAttribute="leading" constant="16" id="cJD-a4-Zar"/>
                                             <constraint firstAttribute="bottom" secondItem="aPO-ca-MZU" secondAttribute="bottom" id="dZy-KN-xMk"/>
                                             <constraint firstItem="aPO-ca-MZU" firstAttribute="centerX" secondItem="tSC-3E-sO7" secondAttribute="centerX" id="iUo-DA-YlJ"/>
                                             <constraint firstItem="aPO-ca-MZU" firstAttribute="leading" secondItem="OQX-oA-Zzj" secondAttribute="leading" id="tJX-NX-4nn"/>
@@ -244,9 +243,13 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="77" height="77"/>
                                                     <color key="backgroundColor" red="0.66666666669999997" green="0.66666666669999997" blue="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </view>
-                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCw-pK-Y9P">
-                                                    <rect key="frame" x="47" y="2" width="28" height="28"/>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCw-pK-Y9P">
+                                                    <rect key="frame" x="47" y="0.0" width="28" height="28"/>
                                                     <color key="backgroundColor" red="0.19747388360000001" green="0.8660383224" blue="0.76430773740000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="28" id="8YJ-Xf-9KW"/>
+                                                        <constraint firstAttribute="width" constant="28" id="TFj-NC-wBg"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -258,11 +261,10 @@
                                             <constraint firstItem="zGG-fW-1q6" firstAttribute="bottom" secondItem="XST-GY-IhF" secondAttribute="bottom" id="2ik-u5-Gc3"/>
                                             <constraint firstItem="XST-GY-IhF" firstAttribute="leading" secondItem="zGG-fW-1q6" secondAttribute="leading" id="6o3-UL-mnF"/>
                                             <constraint firstItem="XST-GY-IhF" firstAttribute="trailing" secondItem="zGG-fW-1q6" secondAttribute="trailing" id="Vcb-CT-FmG"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="gCw-pK-Y9P" secondAttribute="trailing" constant="-14" id="fK3-bc-D08"/>
-                                            <constraint firstItem="gCw-pK-Y9P" firstAttribute="leading" secondItem="DK9-K5-U6Q" secondAttribute="leadingMargin" constant="31" id="ltA-Uu-YSB"/>
-                                            <constraint firstAttribute="bottomMargin" secondItem="gCw-pK-Y9P" secondAttribute="bottom" constant="47" id="nhY-sO-Hfj"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="gCw-pK-Y9P" secondAttribute="trailing" constant="-6" id="fK3-bc-D08"/>
+                                            <constraint firstItem="gCw-pK-Y9P" firstAttribute="leading" secondItem="DK9-K5-U6Q" secondAttribute="leadingMargin" constant="39" id="ltA-Uu-YSB"/>
                                             <constraint firstItem="zGG-fW-1q6" firstAttribute="top" secondItem="DK9-K5-U6Q" secondAttribute="top" id="w2S-N5-2sL"/>
-                                            <constraint firstItem="gCw-pK-Y9P" firstAttribute="top" secondItem="DK9-K5-U6Q" secondAttribute="topMargin" constant="-18" id="x2v-ia-gEc"/>
+                                            <constraint firstItem="gCw-pK-Y9P" firstAttribute="top" secondItem="DK9-K5-U6Q" secondAttribute="top" id="x2v-ia-gEc"/>
                                             <constraint firstAttribute="bottom" secondItem="XST-GY-IhF" secondAttribute="bottom" id="z0q-yZ-xCq"/>
                                             <constraint firstItem="XST-GY-IhF" firstAttribute="leading" secondItem="DK9-K5-U6Q" secondAttribute="leading" id="z5Q-Xa-4d7"/>
                                             <constraint firstAttribute="trailing" secondItem="XST-GY-IhF" secondAttribute="trailing" id="zGP-Dg-r4d"/>
@@ -308,7 +310,7 @@
                                             <constraint firstAttribute="height" constant="42" id="g4L-OH-eyM"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
-                                        <state key="normal" image="ic200_arrow_left_dark.png">
+                                        <state key="normal" image="ic200_arrow_left_dark">
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -361,12 +363,12 @@
         </scene>
     </scenes>
     <resources>
-        <image name="2-01icon_confirm.png" width="30" height="30"/>
-        <image name="button_take-photo.png" width="128" height="128"/>
-        <image name="camera.png" width="60" height="54"/>
-        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
+        <image name="2-01icon_confirm" width="30" height="30"/>
+        <image name="button_take-photo" width="128" height="128"/>
+        <image name="camera" width="60" height="54"/>
+        <image name="ic200_arrow_left_dark" width="144" height="144"/>
         <image name="ic200_camera_dark" width="144" height="144"/>
-        <image name="ic200_circle_select_alpha.png" width="144" height="144"/>
-        <image name="ic200_photosize_light.png" width="144" height="144"/>
+        <image name="ic200_circle_select_alpha" width="144" height="144"/>
+        <image name="ic200_photosize_light" width="144" height="144"/>
     </resources>
 </document>

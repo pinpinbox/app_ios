@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "bg200_inviteFBFriend.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "bg200_inviteFBFriend.png",
       "scale" : "2x"
     },
     {

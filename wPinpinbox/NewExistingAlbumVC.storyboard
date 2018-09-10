@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qmt-MG-xMH">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qmt-MG-xMH">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -36,13 +36,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="hmV-e8-IFX">
-                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="169"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="168.5"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" tag="100" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="diM-Av-78t">
-                                                            <rect key="frame" x="0.0" y="0.0" width="120" height="169"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="120" height="168.5"/>
                                                         </imageView>
                                                         <view alpha="0.0" tag="300" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IcA-Br-Avg">
-                                                            <rect key="frame" x="0.0" y="0.0" width="120" height="169"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="120" height="168.5"/>
                                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="123" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="取消投稿" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hKD-eh-2Y2">
@@ -69,7 +69,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="200" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" verticalCompressionResistancePriority="500" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p5A-sd-pRc">
-                                                    <rect key="frame" x="0.0" y="173" width="120" height="14.5"/>
+                                                    <rect key="frame" x="0.0" y="172.5" width="120" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -107,13 +107,13 @@
                                             <constraint firstAttribute="width" constant="42" id="grN-Pm-7Xm"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark.png"/>
+                                        <state key="normal" image="ic200_arrow_left_dark"/>
                                         <connections>
                                             <action selector="backBtnPress:" destination="Qmt-MG-xMH" eventType="touchUpInside" id="Y89-Pc-DTq"/>
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="6Ef-EH-W8c">
-                                        <rect key="frame" x="114.5" y="8.5" width="92" height="35.5"/>
+                                        <rect key="frame" x="114" y="8.5" width="92" height="35.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="選擇現有作品" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5jX-OG-05a">
                                                 <rect key="frame" x="0.0" y="0.0" width="92" height="18"/>
@@ -142,7 +142,7 @@
                                 <rect key="frame" x="0.0" y="519" width="320" height="49"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PM9-qN-eoX">
-                                        <rect key="frame" x="16" y="2.5" width="288" height="45"/>
+                                        <rect key="frame" x="16" y="2" width="288" height="45"/>
                                         <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="k5C-z7-KmW"/>
@@ -196,6 +196,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="144" height="144"/>
     </resources>
 </document>

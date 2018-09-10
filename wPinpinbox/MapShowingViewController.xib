@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -63,7 +63,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <inset key="imageEdgeInsets" minX="16" minY="16" maxX="16" maxY="16"/>
-                            <state key="normal" title="Button" image="ic200_arrow_2_down_white.png"/>
+                            <state key="normal" title="Button" image="ic200_arrow_2_down_white"/>
                             <connections>
                                 <action selector="dismissBtnPress:" destination="-1" eventType="touchUpInside" id="xYd-mZ-ARa"/>
                             </connections>
@@ -76,6 +76,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic200_arrow_2_down_white.png" width="144" height="144"/>
+        <image name="ic200_arrow_2_down_white" width="144" height="144"/>
     </resources>
 </document>

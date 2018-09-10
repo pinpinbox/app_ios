@@ -12,7 +12,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "GlobalVars.h"
 
-@interface ScanCodeForAdvancedSettingViewController ()
+@interface ScanCodeForAdvancedSettingViewController ()<AVCaptureMetadataOutputObjectsDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *viewPreview;
 @property (nonatomic, strong) AVCaptureSession *captureSession;

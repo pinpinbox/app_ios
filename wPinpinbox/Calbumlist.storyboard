@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="3-05bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="vxB-bm-hXB">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="3-05bg" translatesAutoresizingMaskIntoConstraints="NO" id="vxB-bm-hXB">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -59,11 +59,11 @@
                                                             <color key="textColor" red="0.35614264011383057" green="0.35613197088241577" blue="0.35613799095153809" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_imgLine.png" translatesAutoresizingMaskIntoConstraints="NO" id="z8U-wQ-Leh">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_imgLine" translatesAutoresizingMaskIntoConstraints="NO" id="z8U-wQ-Leh">
                                                             <rect key="frame" x="8" y="223" width="111" height="6"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         </imageView>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_download.png" translatesAutoresizingMaskIntoConstraints="NO" id="Wq1-Ot-rMt">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_download" translatesAutoresizingMaskIntoConstraints="NO" id="Wq1-Ot-rMt">
                                                             <rect key="frame" x="9" y="230" width="13" height="14"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         </imageView>
@@ -79,7 +79,7 @@
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </view>
-                                                        <imageView userInteractionEnabled="NO" tag="3388" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="qbc-9X-OdH">
+                                                        <imageView userInteractionEnabled="NO" tag="3388" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_lock" translatesAutoresizingMaskIntoConstraints="NO" id="qbc-9X-OdH">
                                                             <rect key="frame" x="8" y="8" width="20" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         </imageView>
@@ -123,7 +123,7 @@
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" highlighted="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MNf-Fd-DXC">
                                 <rect key="frame" x="275" y="10" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="button_search.png">
+                                <state key="normal" image="button_search">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                             </button>
@@ -136,14 +136,14 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title="我上傳的相本" image="icon_uploadphoto.png" backgroundImage="downbutton.png">
+                                        <state key="normal" title="我上傳的相本" image="icon_uploadphoto.png" backgroundImage="downbutton">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="selected" image="icon_uploadphoto_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="selected" image="icon_uploadphoto_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="highlighted" image="icon_uploadphoto_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="highlighted" image="icon_uploadphoto_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -155,14 +155,14 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title="其他收藏" image="icon_othercollection.png" backgroundImage="downbutton.png">
+                                        <state key="normal" title="其他收藏" image="icon_othercollection" backgroundImage="downbutton">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="selected" image="icon_othercollection_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="selected" image="icon_othercollection_click.png" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="highlighted" image="icon_othercollection_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="highlighted" image="icon_othercollection_click" backgroundImage="downbutton_click.png">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -174,14 +174,14 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title="共用收藏" image="icon_sharecollection.png" backgroundImage="downbutton.png">
+                                        <state key="normal" title="共用收藏" image="icon_sharecollection" backgroundImage="downbutton">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="selected" image="icon_sharecollection_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="selected" image="icon_sharecollection_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="highlighted" image="icon_sharecollection_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="highlighted" image="icon_sharecollection_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -194,7 +194,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mee-bl-apc">
                                 <rect key="frame" x="13" y="10" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="button_menu2.png">
+                                <state key="normal" image="button_menu2">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                             </button>
@@ -255,11 +255,11 @@
                                                     <color key="textColor" red="0.35614264011383057" green="0.35613197088241577" blue="0.35613799095153809" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_imgLine.png" translatesAutoresizingMaskIntoConstraints="NO" id="oZv-HH-RU1">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_imgLine" translatesAutoresizingMaskIntoConstraints="NO" id="oZv-HH-RU1">
                                                     <rect key="frame" x="8" y="223" width="111" height="6"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_download-already.png" translatesAutoresizingMaskIntoConstraints="NO" id="oKy-zu-O5k">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_download-already" translatesAutoresizingMaskIntoConstraints="NO" id="oKy-zu-O5k">
                                                     <rect key="frame" x="9" y="230" width="13" height="14"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -338,7 +338,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="3-05bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="Cik-U7-mZX">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="3-05bg" translatesAutoresizingMaskIntoConstraints="NO" id="Cik-U7-mZX">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -379,11 +379,11 @@
                                                             <color key="textColor" red="0.35614264011383057" green="0.35613197088241577" blue="0.35613799095153809" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_imgLine.png" translatesAutoresizingMaskIntoConstraints="NO" id="DKV-Bi-vQk">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_imgLine" translatesAutoresizingMaskIntoConstraints="NO" id="DKV-Bi-vQk">
                                                             <rect key="frame" x="8" y="223" width="111" height="6"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         </imageView>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_download.png" translatesAutoresizingMaskIntoConstraints="NO" id="52a-4v-v1O">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_download" translatesAutoresizingMaskIntoConstraints="NO" id="52a-4v-v1O">
                                                             <rect key="frame" x="9" y="230" width="13" height="14"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         </imageView>
@@ -398,7 +398,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="127" height="189"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" tag="3388" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="Vnm-kV-eJO">
+                                                                <imageView userInteractionEnabled="NO" tag="3388" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_lock" translatesAutoresizingMaskIntoConstraints="NO" id="Vnm-kV-eJO">
                                                                     <rect key="frame" x="8" y="8" width="20" height="20"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 </imageView>
@@ -436,7 +436,7 @@
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" highlighted="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qf2-Ir-NvX">
                                 <rect key="frame" x="275" y="10" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="button_search.png">
+                                <state key="normal" image="button_search">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                             </button>
@@ -449,14 +449,14 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title="我上傳的相本" image="icon_uploadphoto.png" backgroundImage="downbutton.png">
+                                        <state key="normal" title="我上傳的相本" image="icon_uploadphoto" backgroundImage="downbutton">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="selected" image="icon_uploadphoto_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="selected" image="icon_uploadphoto_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="highlighted" image="icon_uploadphoto_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="highlighted" image="icon_uploadphoto_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -468,14 +468,14 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title="其他收藏" image="icon_othercollection.png" backgroundImage="downbutton.png">
+                                        <state key="normal" title="其他收藏" image="icon_othercollection" backgroundImage="downbutton">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="selected" image="icon_othercollection_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="selected" image="icon_othercollection_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="highlighted" image="icon_othercollection_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="highlighted" image="icon_othercollection_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -487,14 +487,14 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title="共用收藏" image="icon_sharecollection.png" backgroundImage="downbutton.png">
+                                        <state key="normal" title="共用收藏" image="icon_sharecollection" backgroundImage="downbutton">
                                             <color key="titleColor" red="0.87326538562774658" green="0.87323927879333496" blue="0.87325406074523926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="selected" image="icon_sharecollection_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="selected" image="icon_sharecollection_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
-                                        <state key="highlighted" image="icon_sharecollection_click.png" backgroundImage="downbutton_click.png">
+                                        <state key="highlighted" image="icon_sharecollection_click" backgroundImage="downbutton_click">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
@@ -507,7 +507,7 @@
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qrD-Se-hln">
                                 <rect key="frame" x="13" y="10" width="35" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="button_menu2.png">
+                                <state key="normal" image="button_menu2">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -538,7 +538,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="3-05bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="Qmu-pQ-kVM">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="3-05bg" translatesAutoresizingMaskIntoConstraints="NO" id="Qmu-pQ-kVM">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gPj-Ba-eIj">
@@ -577,13 +577,13 @@
                                                             <color key="textColor" red="0.35614264010000002" green="0.35613197089999998" blue="0.35613799099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_imgLine.png" translatesAutoresizingMaskIntoConstraints="NO" id="JiH-BT-R9o">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_imgLine" translatesAutoresizingMaskIntoConstraints="NO" id="JiH-BT-R9o">
                                                             <rect key="frame" x="8" y="223" width="111" height="6"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="6" id="MtF-pz-3RN"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_download.png" translatesAutoresizingMaskIntoConstraints="NO" id="X40-8s-A8a">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_download" translatesAutoresizingMaskIntoConstraints="NO" id="X40-8s-A8a">
                                                             <rect key="frame" x="9" y="230" width="13" height="14"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="14" id="jE4-2k-41E"/>
@@ -600,7 +600,7 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="127" height="189"/>
                                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </view>
-                                                        <imageView userInteractionEnabled="NO" tag="3388" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_lock.png" translatesAutoresizingMaskIntoConstraints="NO" id="ums-4c-DBI">
+                                                        <imageView userInteractionEnabled="NO" tag="3388" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_lock" translatesAutoresizingMaskIntoConstraints="NO" id="ums-4c-DBI">
                                                             <rect key="frame" x="8" y="8" width="20" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         </imageView>
@@ -705,20 +705,23 @@
         </scene>
     </scenes>
     <resources>
-        <image name="3-05bg.png" width="540" height="960"/>
-        <image name="button_menu2.png" width="60" height="60"/>
-        <image name="button_search.png" width="60" height="60"/>
-        <image name="downbutton.png" width="270" height="72"/>
+        <image name="3-05bg" width="540" height="960"/>
+        <image name="button_menu2" width="60" height="60"/>
+        <image name="button_search" width="60" height="60"/>
+        <image name="downbutton" width="270" height="72"/>
+        <image name="downbutton_click" width="270" height="72"/>
         <image name="downbutton_click.png" width="270" height="72"/>
-        <image name="icon_download-already.png" width="30" height="30"/>
-        <image name="icon_download.png" width="30" height="30"/>
-        <image name="icon_imgLine.png" width="195" height="7"/>
-        <image name="icon_lock.png" width="50" height="50"/>
-        <image name="icon_othercollection.png" width="22" height="22"/>
+        <image name="icon_download" width="30" height="30"/>
+        <image name="icon_download-already" width="30" height="30"/>
+        <image name="icon_imgLine" width="195" height="7"/>
+        <image name="icon_lock" width="50" height="50"/>
+        <image name="icon_othercollection" width="22" height="22"/>
+        <image name="icon_othercollection_click" width="22" height="22"/>
         <image name="icon_othercollection_click.png" width="22" height="22"/>
-        <image name="icon_sharecollection.png" width="22" height="22"/>
-        <image name="icon_sharecollection_click.png" width="22" height="22"/>
+        <image name="icon_sharecollection" width="22" height="22"/>
+        <image name="icon_sharecollection_click" width="22" height="22"/>
+        <image name="icon_uploadphoto" width="22" height="22"/>
         <image name="icon_uploadphoto.png" width="22" height="22"/>
-        <image name="icon_uploadphoto_click.png" width="22" height="22"/>
+        <image name="icon_uploadphoto_click" width="22" height="22"/>
     </resources>
 </document>

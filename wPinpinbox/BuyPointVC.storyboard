@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="購買P點" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CiL-PA-fto">
-                                <rect key="frame" x="16" y="84" width="174.66666666666666" height="58"/>
+                                <rect key="frame" x="16" y="84" width="174.66666666666666" height="57.666666666666657"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="57.5" id="pZZ-yu-0nT"/>
                                 </constraints>
@@ -40,7 +39,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="還有P點可使用" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akL-T9-ydp">
-                                <rect key="frame" x="16" y="150" width="108" height="20"/>
+                                <rect key="frame" x="16" y="149.66666666666666" width="108" height="19.333333333333343"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="19.5" id="AFQ-VW-qU1"/>
                                 </constraints>
@@ -49,7 +48,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="選擇一項" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fqm-ve-xTF">
-                                <rect key="frame" x="16" y="202" width="73.666666666666671" height="21"/>
+                                <rect key="frame" x="16" y="201" width="73.666666666666671" height="21.666666666666657"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21.5" id="8LE-dl-nrh"/>
                                 </constraints>
@@ -58,7 +57,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="rGN-mI-Gyo">
-                                <rect key="frame" x="16" y="239" width="382" height="48"/>
+                                <rect key="frame" x="16" y="238.66666666666663" width="382" height="48"/>
                                 <subviews>
                                     <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="29v-Zg-ed0">
                                         <rect key="frame" x="0.0" y="0.0" width="116.66666666666667" height="48"/>
@@ -108,7 +107,7 @@
                                 </constraints>
                             </stackView>
                             <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kjY-5l-TQs">
-                                <rect key="frame" x="16.000000000000007" y="303" width="116.66666666666669" height="48"/>
+                                <rect key="frame" x="16.000000000000007" y="302.66666666666669" width="116.66666666666669" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="6gT-nZ-mcp"/>
                                 </constraints>
@@ -120,7 +119,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="5" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AD9-hp-6u6">
-                                <rect key="frame" x="148.66666666666666" y="303" width="116.66666666666666" height="48"/>
+                                <rect key="frame" x="148.66666666666666" y="302.66666666666669" width="116.66666666666666" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="ipp-tx-PwY"/>
                                 </constraints>
@@ -132,7 +131,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="6" contentMode="scaleToFill" placeholderIntrinsicWidth="85" placeholderIntrinsicHeight="48" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZmQ-Ws-Ohs">
-                                <rect key="frame" x="281.33333333333331" y="303" width="116.66666666666669" height="48"/>
+                                <rect key="frame" x="281.33333333333331" y="302.66666666666669" width="116.66666666666669" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="lHK-Hg-mM1"/>
                                 </constraints>
@@ -144,7 +143,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="總結為" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v1g-Qo-BW8">
-                                <rect key="frame" x="16" y="383" width="52" height="21"/>
+                                <rect key="frame" x="16" y="383" width="52" height="20.666666666666686"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20.5" id="Umr-a6-HFO"/>
                                 </constraints>
@@ -153,7 +152,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="58" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pm1-rj-Iip">
-                                <rect key="frame" x="16" y="420" width="382" height="58"/>
+                                <rect key="frame" x="16" y="419.66666666666669" width="382" height="58"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="58" id="aeJ-Rh-VS8"/>
                                 </constraints>
@@ -182,7 +181,7 @@
                                             <constraint firstAttribute="width" constant="42" id="sc6-gk-c2i"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark.png"/>
+                                        <state key="normal" image="ic200_arrow_left_dark"/>
                                         <connections>
                                             <action selector="backBtnPress:" destination="IJX-ww-TQt" eventType="touchUpInside" id="xcy-MA-4fd"/>
                                         </connections>
@@ -272,6 +271,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="144" height="144"/>
     </resources>
 </document>

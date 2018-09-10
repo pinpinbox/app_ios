@@ -80,7 +80,7 @@
     // For Ad
     NSArray *adArray;
     NSInteger selectItem;
-    UIPageControl *pageControl;
+    //UIPageControl *pageControl;
     
     // For Showing Message of Getting Point
     NSString *missionTopicStr;
@@ -171,7 +171,7 @@
 @property (weak, nonatomic) UICollectionView *followUserCollectionView;
 @property (weak, nonatomic) UICollectionView *followAlbumCollectionView;
 
-@property (weak, nonatomic) UIPageControl *pageControl;
+@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (weak, nonatomic) UIImageView *zoomView;
 
 // For Search
@@ -2984,7 +2984,8 @@ replacementString:(NSString *)string {
         
         if ([option isEqualToString: @"mustUpdate"]) {
             if (buttonIndex == 0) {
-                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl]];
+                //[[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl]];
+                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl] options:@{} completionHandler:nil];
                 //[weakAlertUpdateView close];
             }
         } else if ([option isEqualToString: @"canUpdateLater"]) {
@@ -2996,7 +2997,8 @@ replacementString:(NSString *)string {
                 [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"hasNewVersion"];
                 [defaults synchronize];
             } else {
-                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl]];
+                //[[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl]];
+                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl] options:@{} completionHandler:nil];
                 //[weakAlertUpdateView close];
             }
         }

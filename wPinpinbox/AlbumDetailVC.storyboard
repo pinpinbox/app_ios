@@ -43,7 +43,7 @@
                                                     <constraint firstAttribute="height" constant="42" id="z2o-Uo-LL7"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                                <state key="normal" image="ic200_message_dark.png"/>
+                                                <state key="normal" image="ic200_message_dark"/>
                                                 <connections>
                                                     <action selector="messageBtnPress:" destination="Ja5-HS-H21" eventType="touchUpInside" id="G6F-uC-Gwx"/>
                                                 </connections>
@@ -67,7 +67,7 @@
                                                     <constraint firstAttribute="width" constant="42" id="fDu-PK-6XT"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                                <state key="normal" image="ic200_more_dark.png"/>
+                                                <state key="normal" image="ic200_more_dark"/>
                                                 <connections>
                                                     <action selector="moreBtnPress:" destination="Ja5-HS-H21" eventType="touchUpInside" id="QsR-HX-Rvm"/>
                                                 </connections>
@@ -168,7 +168,7 @@
     <resources>
         <image name="ic200_arrow_down_dark" width="144" height="144"/>
         <image name="ic200_ding_dark" width="144" height="144"/>
-        <image name="ic200_message_dark.png" width="144" height="144"/>
-        <image name="ic200_more_dark.png" width="128" height="128"/>
+        <image name="ic200_message_dark" width="48" height="48"/>
+        <image name="ic200_more_dark" width="144" height="144"/>
     </resources>
 </document>

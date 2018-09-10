@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -42,7 +42,7 @@
                                     <constraint firstAttribute="trailing" secondItem="R5k-9c-pT7" secondAttribute="trailing" constant="16" id="wvz-3s-XTI"/>
                                 </constraints>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg200_inviteFBFriend.png" translatesAutoresizingMaskIntoConstraints="NO" id="DHU-UA-8AU">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg200_inviteFBFriend" translatesAutoresizingMaskIntoConstraints="NO" id="DHU-UA-8AU">
                                 <rect key="frame" x="59.5" y="36" width="256" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="256" id="20E-ea-D48"/>
@@ -50,7 +50,7 @@
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qth-87-Hmd">
-                                <rect key="frame" x="57" y="353" width="260" height="120"/>
+                                <rect key="frame" x="57.5" y="353" width="260" height="120"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Zc-nY-nG6">
                                         <rect key="frame" x="23" y="8" width="224" height="104"/>
@@ -100,6 +100,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="bg200_inviteFBFriend.png" width="128" height="128"/>
+        <image name="bg200_inviteFBFriend" width="64" height="64"/>
     </resources>
 </document>

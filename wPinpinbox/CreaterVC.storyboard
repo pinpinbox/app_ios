@@ -168,7 +168,7 @@
                                                                 <constraint firstAttribute="height" constant="30" id="1vR-hV-3Za"/>
                                                                 <constraint firstAttribute="width" constant="30" id="l0k-uk-QPj"/>
                                                             </constraints>
-                                                            <state key="normal" title="Button" image="icon_2_0_0_link_facebook.png"/>
+                                                            <state key="normal" title="Button" image="icon_2_0_0_link_facebook"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                     <real key="value" value="0.0"/>
@@ -187,7 +187,7 @@
                                                                 <constraint firstAttribute="width" constant="30" id="laj-b5-4En"/>
                                                                 <constraint firstAttribute="height" constant="30" id="u6Y-xS-j8P"/>
                                                             </constraints>
-                                                            <state key="normal" title="Button" image="icon_2_0_0_link_google.png"/>
+                                                            <state key="normal" title="Button" image="icon_2_0_0_link_google"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                     <real key="value" value="2"/>
@@ -206,7 +206,7 @@
                                                                 <constraint firstAttribute="width" constant="30" id="2dt-0a-NMV"/>
                                                                 <constraint firstAttribute="height" constant="30" id="2js-GR-DAa"/>
                                                             </constraints>
-                                                            <state key="normal" title="Button" image="icon_2_0_0_link_nstagrame.png"/>
+                                                            <state key="normal" title="Button" image="icon_2_0_0_link_nstagrame"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                     <real key="value" value="2"/>
@@ -225,7 +225,7 @@
                                                                 <constraint firstAttribute="height" constant="30" id="3vm-JR-80Y"/>
                                                                 <constraint firstAttribute="width" constant="30" id="fTE-Dt-nLE"/>
                                                             </constraints>
-                                                            <state key="normal" title="Button" image="icon_2_0_0_link_linkedin.png"/>
+                                                            <state key="normal" title="Button" image="icon_2_0_0_link_linkedin"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                     <real key="value" value="2"/>
@@ -244,7 +244,7 @@
                                                                 <constraint firstAttribute="height" constant="30" id="KOW-Zv-lRV"/>
                                                                 <constraint firstAttribute="width" constant="30" id="t2G-ZR-lk7"/>
                                                             </constraints>
-                                                            <state key="normal" title="Button" image="icon_2_0_0_link_pintrest.png"/>
+                                                            <state key="normal" title="Button" image="icon_2_0_0_link_pintrest"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                     <real key="value" value="2"/>
@@ -263,7 +263,7 @@
                                                                 <constraint firstAttribute="width" constant="30" id="JYZ-b3-VvF"/>
                                                                 <constraint firstAttribute="height" constant="30" id="Lno-6b-nV5"/>
                                                             </constraints>
-                                                            <state key="normal" title="Button" image="icon_2_0_0_link_twitter.png"/>
+                                                            <state key="normal" title="Button" image="icon_2_0_0_link_twitter"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                     <real key="value" value="2"/>
@@ -282,7 +282,7 @@
                                                                 <constraint firstAttribute="height" constant="30" id="SEh-GK-9aP"/>
                                                                 <constraint firstAttribute="width" constant="30" id="tW1-4T-0w7"/>
                                                             </constraints>
-                                                            <state key="normal" title="Button" image="icon_2_0_0_link_home.png"/>
+                                                            <state key="normal" title="Button" image="icon_2_0_0_link_home"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                     <real key="value" value="2"/>
@@ -301,7 +301,7 @@
                                                                 <constraint firstAttribute="width" constant="30" id="sys-O6-g1b"/>
                                                                 <constraint firstAttribute="height" constant="30" id="vxu-z9-koR"/>
                                                             </constraints>
-                                                            <state key="normal" title="Button" image="icon_2_0_0_link_youtube.png"/>
+                                                            <state key="normal" title="Button" image="icon_2_0_0_link_youtube"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                     <real key="value" value="2"/>
@@ -541,7 +541,7 @@
                                             <constraint firstAttribute="height" constant="44" id="fEH-19-z5r"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark.png"/>
+                                        <state key="normal" image="ic200_arrow_left_dark"/>
                                         <connections>
                                             <action selector="backBtnPress:" destination="Upt-m0-7JY" eventType="touchUpInside" id="bPD-Ox-vb2"/>
                                         </connections>
@@ -556,7 +556,7 @@
                                                     <constraint firstAttribute="height" constant="44" id="tBD-aB-gmy"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                                <state key="normal" image="ic200_message_dark.png"/>
+                                                <state key="normal" image="ic200_message_dark"/>
                                                 <connections>
                                                     <action selector="messageBtnPressed:" destination="Upt-m0-7JY" eventType="touchUpInside" id="Lkh-3T-RFJ"/>
                                                 </connections>
@@ -568,7 +568,7 @@
                                                     <constraint firstAttribute="width" constant="44" id="rtF-YH-0R3"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                                <state key="normal" image="ic200_user_about_dark.png"/>
+                                                <state key="normal" image="ic200_user_about_dark"/>
                                                 <connections>
                                                     <action selector="myPageBtnPressed:" destination="Upt-m0-7JY" eventType="touchUpInside" id="8IB-y4-NRf"/>
                                                 </connections>
@@ -580,7 +580,7 @@
                                                     <constraint firstAttribute="height" constant="44" id="uy4-bD-7tP"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                                <state key="normal" image="ic200_share_dark.png"/>
+                                                <state key="normal" image="ic200_share_dark"/>
                                                 <connections>
                                                     <action selector="shareBtnPress:" destination="Upt-m0-7JY" eventType="touchUpInside" id="eM9-P2-tzL"/>
                                                 </connections>
@@ -647,17 +647,17 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
-        <image name="ic200_message_dark.png" width="144" height="144"/>
-        <image name="ic200_share_dark.png" width="144" height="144"/>
-        <image name="ic200_user_about_dark.png" width="144" height="144"/>
-        <image name="icon_2_0_0_link_facebook.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_google.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_home.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_linkedin.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_nstagrame.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_pintrest.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_twitter.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_youtube.png" width="120" height="120"/>
+        <image name="ic200_arrow_left_dark" width="144" height="144"/>
+        <image name="ic200_message_dark" width="48" height="48"/>
+        <image name="ic200_share_dark" width="48" height="48"/>
+        <image name="ic200_user_about_dark" width="48" height="48"/>
+        <image name="icon_2_0_0_link_facebook" width="120" height="120"/>
+        <image name="icon_2_0_0_link_google" width="120" height="120"/>
+        <image name="icon_2_0_0_link_home" width="120" height="120"/>
+        <image name="icon_2_0_0_link_linkedin" width="120" height="120"/>
+        <image name="icon_2_0_0_link_nstagrame" width="120" height="120"/>
+        <image name="icon_2_0_0_link_pintrest" width="120" height="120"/>
+        <image name="icon_2_0_0_link_twitter" width="120" height="120"/>
+        <image name="icon_2_0_0_link_youtube" width="120" height="120"/>
     </resources>
 </document>

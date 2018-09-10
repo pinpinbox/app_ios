@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -70,7 +70,7 @@
                                         </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OK" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEU-55-tus">
-                                        <rect key="frame" x="309" y="14.5" width="18" height="18"/>
+                                        <rect key="frame" x="309" y="15" width="18" height="18"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="18" id="QH2-6k-nUm"/>
                                             <constraint firstAttribute="width" constant="18" id="ez0-RX-YLS"/>
@@ -103,8 +103,8 @@
                                             <outlet property="delegate" destination="CvJ-ee-edl" id="uT4-cm-Wm1"/>
                                         </connections>
                                     </textField>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="OK" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="muI-qI-lhv">
-                                        <rect key="frame" x="309" y="17" width="18" height="15"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OK" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="muI-qI-lhv">
+                                        <rect key="frame" x="309" y="15" width="18" height="18"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="18" id="4pJ-eK-Ydm"/>
                                             <constraint firstAttribute="width" constant="18" id="OHh-2O-NZ2"/>
@@ -118,6 +118,7 @@
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="b0W-8Z-On2" secondAttribute="bottom" constant="8" id="8Qk-EO-c5J"/>
                                     <constraint firstItem="b0W-8Z-On2" firstAttribute="leading" secondItem="53s-Kj-bf5" secondAttribute="leading" constant="8" id="HMS-5o-SPh"/>
+                                    <constraint firstItem="muI-qI-lhv" firstAttribute="centerY" secondItem="b0W-8Z-On2" secondAttribute="centerY" id="HYH-u4-4nq"/>
                                     <constraint firstAttribute="height" constant="48" id="RhH-K0-SBE"/>
                                     <constraint firstItem="b0W-8Z-On2" firstAttribute="top" secondItem="53s-Kj-bf5" secondAttribute="top" constant="8" id="Vta-QR-haV"/>
                                     <constraint firstItem="muI-qI-lhv" firstAttribute="leading" secondItem="b0W-8Z-On2" secondAttribute="trailing" constant="8" id="vwU-nL-x0F"/>
@@ -176,7 +177,7 @@
                                             <constraint firstAttribute="width" constant="42" id="SyK-Qu-yD9"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark.png"/>
+                                        <state key="normal" image="ic200_arrow_left_dark"/>
                                         <connections>
                                             <action selector="backbtnPress:" destination="CvJ-ee-edl" eventType="touchUpInside" id="xpm-gR-Ong"/>
                                         </connections>
@@ -258,6 +259,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="144" height="144"/>
     </resources>
 </document>

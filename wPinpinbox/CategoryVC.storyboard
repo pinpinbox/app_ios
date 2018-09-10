@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gYz-xh-ScQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gYz-xh-ScQ">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -208,14 +207,14 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qyZ-bA-bjH">
-                                                            <rect key="frame" x="12" y="10" width="72" height="72"/>
+                                                            <rect key="frame" x="12" y="30" width="72" height="72"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="72" id="Wv2-YF-cM9"/>
                                                                 <constraint firstAttribute="width" constant="72" id="cmu-hs-8Hz"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Asq-c0-3zd">
-                                                            <rect key="frame" x="0.0" y="90" width="96" height="14.5"/>
+                                                            <rect key="frame" x="0.0" y="110" width="96" height="14.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -261,7 +260,7 @@
                                         <rect key="frame" x="8" y="6" width="42" height="42"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark.png"/>
+                                        <state key="normal" image="ic200_arrow_left_dark"/>
                                         <connections>
                                             <action selector="backBtnPressed:" destination="gYz-xh-ScQ" eventType="touchUpInside" id="zzo-Ed-Xr4"/>
                                         </connections>
@@ -326,6 +325,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="144" height="144"/>
     </resources>
 </document>

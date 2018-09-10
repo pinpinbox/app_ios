@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -51,7 +51,7 @@
                                                         <rect key="frame" x="16" y="0.0" width="90" height="90"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <subviews>
-                                                            <imageView userInteractionEnabled="NO" alpha="0.10000000149011612" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="05.png" translatesAutoresizingMaskIntoConstraints="NO" id="9Oo-aw-4J2" customClass="AsyncImageView">
+                                                            <imageView userInteractionEnabled="NO" alpha="0.10000000149011612" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="05" translatesAutoresizingMaskIntoConstraints="NO" id="9Oo-aw-4J2" customClass="AsyncImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             </imageView>
@@ -604,7 +604,7 @@
                                                 <rect key="frame" x="16" y="990" width="288" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_facebook.png" translatesAutoresizingMaskIntoConstraints="NO" id="paN-LB-8CX">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_facebook" translatesAutoresizingMaskIntoConstraints="NO" id="paN-LB-8CX">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <userDefinedRuntimeAttributes>
@@ -714,7 +714,7 @@
                                                 <rect key="frame" x="16" y="1040" width="288" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_google.png" translatesAutoresizingMaskIntoConstraints="NO" id="sQt-mf-nxE">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_google" translatesAutoresizingMaskIntoConstraints="NO" id="sQt-mf-nxE">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <userDefinedRuntimeAttributes>
@@ -824,7 +824,7 @@
                                                 <rect key="frame" x="16" y="1080" width="288" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_nstagrame.png" translatesAutoresizingMaskIntoConstraints="NO" id="oom-vc-9Iw">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_nstagrame" translatesAutoresizingMaskIntoConstraints="NO" id="oom-vc-9Iw">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <userDefinedRuntimeAttributes>
@@ -934,7 +934,7 @@
                                                 <rect key="frame" x="16" y="1120" width="288" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_linkedin.png" translatesAutoresizingMaskIntoConstraints="NO" id="Wek-Mo-u63">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_linkedin" translatesAutoresizingMaskIntoConstraints="NO" id="Wek-Mo-u63">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <userDefinedRuntimeAttributes>
@@ -1044,7 +1044,7 @@
                                                 <rect key="frame" x="16" y="1170" width="288" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_pintrest.png" translatesAutoresizingMaskIntoConstraints="NO" id="69W-0a-gOy">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_pintrest" translatesAutoresizingMaskIntoConstraints="NO" id="69W-0a-gOy">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <userDefinedRuntimeAttributes>
@@ -1154,7 +1154,7 @@
                                                 <rect key="frame" x="16" y="1220" width="288" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_twitter.png" translatesAutoresizingMaskIntoConstraints="NO" id="5xV-aV-HTU">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_twitter" translatesAutoresizingMaskIntoConstraints="NO" id="5xV-aV-HTU">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <userDefinedRuntimeAttributes>
@@ -1264,7 +1264,7 @@
                                                 <rect key="frame" x="16" y="1260" width="288" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_youtube.png" translatesAutoresizingMaskIntoConstraints="NO" id="5wI-tn-PBx">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_youtube" translatesAutoresizingMaskIntoConstraints="NO" id="5wI-tn-PBx">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <userDefinedRuntimeAttributes>
@@ -1374,7 +1374,7 @@
                                                 <rect key="frame" x="16" y="1300" width="288" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_home.png" translatesAutoresizingMaskIntoConstraints="NO" id="VkZ-l7-URG">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_home" translatesAutoresizingMaskIntoConstraints="NO" id="VkZ-l7-URG">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <userDefinedRuntimeAttributes>
@@ -1498,7 +1498,7 @@
                                             <constraint firstAttribute="height" constant="42" id="eNd-oi-8l6"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark.png"/>
+                                        <state key="normal" image="ic200_arrow_left_dark"/>
                                         <connections>
                                             <action selector="backBtnPress:" destination="F7N-fX-J4g" eventType="touchUpInside" id="e4v-dp-nRC"/>
                                         </connections>
@@ -1619,16 +1619,16 @@
         </scene>
     </scenes>
     <resources>
-        <image name="05.png" width="1920" height="862"/>
-        <image name="ic200_arrow_left_dark.png" width="144" height="144"/>
+        <image name="05" width="1920" height="862"/>
+        <image name="ic200_arrow_left_dark" width="144" height="144"/>
         <image name="ic200_camera_dark" width="144" height="144"/>
-        <image name="icon_2_0_0_link_facebook.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_google.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_home.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_linkedin.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_nstagrame.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_pintrest.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_twitter.png" width="120" height="120"/>
-        <image name="icon_2_0_0_link_youtube.png" width="120" height="120"/>
+        <image name="icon_2_0_0_link_facebook" width="120" height="120"/>
+        <image name="icon_2_0_0_link_google" width="120" height="120"/>
+        <image name="icon_2_0_0_link_home" width="120" height="120"/>
+        <image name="icon_2_0_0_link_linkedin" width="120" height="120"/>
+        <image name="icon_2_0_0_link_nstagrame" width="120" height="120"/>
+        <image name="icon_2_0_0_link_pintrest" width="120" height="120"/>
+        <image name="icon_2_0_0_link_twitter" width="120" height="120"/>
+        <image name="icon_2_0_0_link_youtube" width="120" height="120"/>
     </resources>
 </document>

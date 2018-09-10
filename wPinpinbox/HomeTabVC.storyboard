@@ -754,7 +754,7 @@
                                             <constraint firstAttribute="width" constant="36" id="7Ic-O3-pfy"/>
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_scancamera_dark.png"/>
+                                        <state key="normal" image="ic200_scancamera_dark"/>
                                         <connections>
                                             <action selector="toScanCode:" destination="Zwb-XH-WiX" eventType="touchUpInside" id="e4J-FZ-aYw"/>
                                         </connections>
@@ -805,7 +805,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_scancamera_dark.png" width="16" height="16"/>
+        <image name="ic200_scancamera_dark" width="144" height="144"/>
         <image name="ic200_search_dark" width="144" height="144"/>
     </resources>
 </document>

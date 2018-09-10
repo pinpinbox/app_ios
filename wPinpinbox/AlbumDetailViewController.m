@@ -1835,7 +1835,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)showCustomAlert: (NSString *)msg btnName: (NSString *)btnName
 {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    [alertView setContainerView: [self createCustomContainerView: msg]];
+    
+    [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    
+    //[alertView setContainerView: [self createCustomContainerView: msg]];
     
     [alertView setButtonTitles: [NSMutableArray arrayWithObject: btnName]];
     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];

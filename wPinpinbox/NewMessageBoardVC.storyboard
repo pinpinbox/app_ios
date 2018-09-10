@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -33,7 +33,7 @@
                                         <rect key="frame" x="282" y="-1" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <inset key="imageEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
-                                        <state key="normal" image="ic200_cancel_dark.png"/>
+                                        <state key="normal" image="ic200_cancel_dark"/>
                                         <connections>
                                             <action selector="exitBtnPress:" destination="7Ox-Zh-EFc" eventType="touchUpInside" id="UQU-Nw-cSB"/>
                                         </connections>
@@ -55,7 +55,7 @@
                                 <rect key="frame" x="0.0" y="164" width="320" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="member_back_head.png" translatesAutoresizingMaskIntoConstraints="NO" id="wof-zo-hOC" customClass="AsyncImageView">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="member_back_head" translatesAutoresizingMaskIntoConstraints="NO" id="wof-zo-hOC" customClass="AsyncImageView">
                                         <rect key="frame" x="16" y="0.0" width="36" height="36"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <userDefinedRuntimeAttributes>
@@ -155,7 +155,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="374" height="103"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="member_back_head.png" translatesAutoresizingMaskIntoConstraints="NO" id="f8a-PE-CzP" customClass="AsyncImageView">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="member_back_head" translatesAutoresizingMaskIntoConstraints="NO" id="f8a-PE-CzP" customClass="AsyncImageView">
                                                             <rect key="frame" x="16" y="8" width="36" height="36"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <userDefinedRuntimeAttributes>
@@ -279,7 +279,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_cancel_dark.png" width="16" height="16"/>
-        <image name="member_back_head.png" width="16" height="16"/>
+        <image name="ic200_cancel_dark" width="144" height="144"/>
+        <image name="member_back_head" width="160" height="160"/>
     </resources>
 </document>
