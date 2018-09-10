@@ -12,7 +12,6 @@
 #import <SafariServices/SafariServices.h>
 #import "wTools.h"
 #import "boxAPI.h"
-#import "Setup2ViewController.h"
 #import "CustomIOSAlertView.h"
 #import "OldCustomAlertView.h"
 #import "DDAUIActionSheetViewController.h"
@@ -33,7 +32,7 @@
 
 @interface NewEventPostViewController () <DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate>
 {
-    Setup2ViewController *s2VC;
+//    Setup2ViewController *s2VC;
     ChooseTemplateViewController *chooseTemplateVC;
     CustomIOSAlertView *alertViewForButton;
     NSMutableDictionary *dict;

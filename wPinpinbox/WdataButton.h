@@ -1,5 +1,5 @@
 //
-//  WdataButton.h
+//  wd.h
 //  wPinpinbox
 //
 //  Created by Angus on 2015/10/26.

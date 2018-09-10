@@ -12,9 +12,7 @@
 #import "wTools.h"
 #import "boxAPI.h"
 #import "AsyncImageView.h"
-#import "BookdetViewController.h"
 #import "CooperationViewController.h"
-#import "FastViewController.h"
 
 #import "UIColor+Extensions.m"
 #import "CustomIOSAlertView.h"
@@ -1133,18 +1131,18 @@
 }
 
 -(IBAction)nextbtn:(id)sender{
-    for (UIViewController *vc in [self.navigationController viewControllers] ) {
-        if ([vc isKindOfClass:[FastViewController class]]) {
-            [self.navigationController popToViewController:vc animated:YES];
-            return;
-        }
-    }
-    
-    FastViewController *fvc=[[UIStoryboard storyboardWithName:@"Fast" bundle:nil]instantiateViewControllerWithIdentifier:@"FastViewController"];
-    fvc.selectrow=[wTools userbook];
-    fvc.albumid=_albumid;
-    fvc.booktype=1000;
-    [self.navigationController pushViewController:fvc animated:YES];
+//    for (UIViewController *vc in [self.navigationController viewControllers] ) {
+//        if ([vc isKindOfClass:[FastViewController class]]) {
+//            [self.navigationController popToViewController:vc animated:YES];
+//            return;
+//        }
+//    }
+//    
+//    FastViewController *fvc=[[UIStoryboard storyboardWithName:@"Fast" bundle:nil]instantiateViewControllerWithIdentifier:@"FastViewController"];
+//    fvc.selectrow=[wTools userbook];
+//    fvc.albumid=_albumid;
+//    fvc.booktype=1000;
+//    [self.navigationController pushViewController:fvc animated:YES];
 }
 
 #pragma mark - Custom AlertView

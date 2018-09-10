@@ -11,17 +11,12 @@
 
 #import "wTools.h"
 #import "boxAPI.h"
-#import "SetupViewController.h"
 #import "TaobanViewController.h"
-#import "homeViewController.h"
-#import "FastViewController.h"
 #import "CustomIOSAlertView.h"
 #import "VersionUpdate.h"
 #import "TWMessageBarManager.h"
-#import "PageCollectionViewController.h"
 #import "ViewController.h"
 #import "MyTabBarController.h"
-//#import "NewReadBookViewController.h"
 #import "AlbumDetailViewController.h"
 #import "BuyPPointViewController.h"
 #import "AlbumCollectionViewController.h"
@@ -469,8 +464,8 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
         returnValue = YES;
     }
     
-    homeViewController *hVC = [[homeViewController alloc] init];
-    hVC.urlString = url.absoluteString;
+//    homeViewController *hVC = [[homeViewController alloc] init];
+//    hVC.urlString = url.absoluteString;
     
     return returnValue;
 }
@@ -650,20 +645,20 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
                     NSLog(@"");
                     NSLog(@"FastViewController");
                     
-                    FastViewController *fvc=[[UIStoryboard storyboardWithName:@"Fast" bundle:nil] instantiateViewControllerWithIdentifier:@"FastViewController"];
-                    fvc.selectrow=[wTools userbook];
-                    fvc.albumid = pairs[@"album_id"];
-                    fvc.templateid = pairs[@"template_id"];
-                    
-                    if ([pairs[@"template_id"] isEqualToString:@"0"]) {
-                        fvc.booktype = 0;
-                        fvc.choice = @"Fast";
-                    } else {
-                        fvc.booktype = 1000;
-                        fvc.choice = @"Template";
-                    }
-                    
-                    [self.myNav pushViewController:fvc animated:YES];
+//                    FastViewController *fvc=[[UIStoryboard storyboardWithName:@"Fast" bundle:nil] instantiateViewControllerWithIdentifier:@"FastViewController"];
+//                    fvc.selectrow=[wTools userbook];
+//                    fvc.albumid = pairs[@"album_id"];
+//                    fvc.templateid = pairs[@"template_id"];
+//                    
+//                    if ([pairs[@"template_id"] isEqualToString:@"0"]) {
+//                        fvc.booktype = 0;
+//                        fvc.choice = @"Fast";
+//                    } else {
+//                        fvc.booktype = 1000;
+//                        fvc.choice = @"Template";
+//                    }
+//                    
+//                    [self.myNav pushViewController:fvc animated:YES];
                 }
             }
         }

@@ -14,14 +14,14 @@
 #import "AsyncImageView.h"
 #import "Remind.h"
 #import "CooperationAddViewController.h"
-#import "SBookSelectViewController.h"
+//#import "SBookSelectViewController.h"
 #import "UIViewController+CWPopup.h"
 
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
 #import "UIViewController+ErrorAlert.h"
 
-@interface CooperationViewController () <UITableViewDataSource,UITableViewDelegate,SBookSelectViewController>
+@interface CooperationViewController () <UITableViewDataSource,UITableViewDelegate>
 {
     NSMutableArray *mydataarr;
     NSDictionary *adminuser;
@@ -370,11 +370,11 @@
         if ([_identity isEqualToString:@"admin"] || [_identity isEqualToString: @"approver"]) {
             //修改權限
             selectuserid=[dic[@"user"][@"user_id"] stringValue];
-            SBookSelectViewController *SBSVC=[[SBookSelectViewController alloc]initWithNibName:@"SBookSelectViewController" bundle:nil];
-            SBSVC.mytitletext=NSLocalizedString(@"CreateAlbumText-tipAssignRole", @"");
-            SBSVC.delegate=self;
-            SBSVC.data=@[NSLocalizedString(@"CreateAlbumText-admin2", @""),NSLocalizedString(@"CreateAlbumText-sharer", @""),NSLocalizedString(@"CreateAlbumText-viewer", @"")];
-            SBSVC.topViewController=self;                        
+//            SBookSelectViewController *SBSVC=[[SBookSelectViewController alloc]initWithNibName:@"SBookSelectViewController" bundle:nil];
+//            SBSVC.mytitletext=NSLocalizedString(@"CreateAlbumText-tipAssignRole", @"");
+//            SBSVC.delegate=self;
+//            SBSVC.data=@[NSLocalizedString(@"CreateAlbumText-admin2", @""),NSLocalizedString(@"CreateAlbumText-sharer", @""),NSLocalizedString(@"CreateAlbumText-viewer", @"")];
+//            SBSVC.topViewController=self;
             
             NSString *identityStr = mydataarr[indexPath.row][@"cooperation"][@"identity"];
             NSLog(@"identityStr: %@", identityStr);
@@ -389,11 +389,11 @@
                     [alert addAction: okBtn];
                     [self presentViewController: alert animated: YES completion: nil];
                 } else {
-                    [self wu2presentPopupViewController:SBSVC animated:YES completion:nil];
+//                    [self wu2presentPopupViewController:SBSVC animated:YES completion:nil];
                 }
                 
             } else {
-                [self wu2presentPopupViewController:SBSVC animated:YES completion:nil];
+//                [self wu2presentPopupViewController:SBSVC animated:YES completion:nil];
             }
             
         } else {

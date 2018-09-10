@@ -7,10 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MenuViewController.h"
 #import <CoreLocation/CoreLocation.h>
 #import <CoreData/CoreData.h>
-#import "homeViewController.h"
 #import "ViewController.h"
 #import <UserNotifications/UserNotifications.h>
 
@@ -23,7 +21,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (weak, nonatomic) UINavigationController *myNav;
-@property (weak, nonatomic) MenuViewController *menu;
 @property (strong, nonatomic) NSString *coordinate;
 @property (copy) void (^backgroundSessionCompletionHandler)(void);
 

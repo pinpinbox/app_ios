@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#define fileDest [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches/data/Download"]
+#define filepinpinboxDest [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches/data/pinpinbox"]
+#define DownloadCompletedNotif @"DownloadCompletedNotif"
+
 extern NSString *timeOutErrorCode;
 extern NSString *timeOutErrorCode1;
 

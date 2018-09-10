@@ -18,7 +18,6 @@
 #import "AsyncImageView.h"
 #import "CreaterViewController.h"
 #import "QrcordViewController.h"
-#import "RetrievealbumpViewController.h"
 #import "AlbumDetailViewController.h"
 #import "CustomIOSAlertView.h"
 #import "GlobalVars.h"

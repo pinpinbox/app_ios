@@ -27,7 +27,6 @@
 #import "FollowListsViewController.h"
 #import "RecentBrowsingViewController.h"
 #import "BuyPPointViewController.h"
-#import "RetrievealbumpViewController.h"
 
 #import "CustomIOSAlertView.h"
 #import "OldCustomAlertView.h"
