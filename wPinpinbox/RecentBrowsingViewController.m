@@ -10,13 +10,10 @@
 #import "UIColor+Extensions.h"
 #import "RecentBrowsingTableViewCell.h"
 #import <CoreData/CoreData.h>
-#import "MZUtility.h"
 #import "wTools.h"
-#import "ReadBookViewController.h"
 #import "AppDelegate.h"
 #import "boxAPI.h"
 #import "CustomIOSAlertView.h"
-#import "TestReadBookViewController.h"
 #import "ContentCheckingViewController.h"
 #import "GlobalVars.h"
 #import <SDWebImage/UIImageView+WebCache.h>

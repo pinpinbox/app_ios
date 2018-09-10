@@ -13,6 +13,7 @@
 #import "Remind.h"
 #import "AppDelegate.h"
 #import "boxAPI.h"
+#import "GlobalVars.h"
 
 @implementation CalbumlistCollectionViewCell
 - (void)awakeFromNib
@@ -119,10 +120,10 @@
             //編輯
             if ([_identity isEqualToString:@"viewer"]) {
                 AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+                Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                 [rv addtitletext:@"權限不足"];
                 [rv addBackTouch];
-                [rv showView:app.menu.view];
+                [rv showView:app.window];
 
                 return;
             }
@@ -162,10 +163,10 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     //檢查資料夾是否存在
     if ([fileManager fileExistsAtPath:docDirectoryPath]) {
-        Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+        Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
         [rv addtitletext:@"確定要刪除相本?"];
         [rv addSelectBtntext:@"是" btn2:@"否"];
-        [rv showView:app.menu.view];
+        [rv showView:app.window];
         rv.btn1select=^(BOOL bo){
             if (bo) {
                 [fileManager removeItemAtPath:docDirectoryPath error:nil];
@@ -173,10 +174,10 @@
             }
         };
     }else{
-        Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+        Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
         [rv addtitletext:@"確定要刪除相本?"];
         [rv addSelectBtntext:@"是" btn2:@"否"];
-        [rv showView:app.menu.view];
+        [rv showView:app.window];
         rv.btn1select=^(BOOL bo){
             if (bo) {
                 [self deletebook:_albumid];
@@ -210,17 +211,17 @@
                     [_delegate reloadData];
                 } else if ([dic[@"result"] intValue] == 0) {
                     AppDelegate *app=[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext:dic[@"message"]];
                      [rv addBackTouch];
-                    [rv showView:app.menu.view];
+                    [rv showView:app.window];
                     [_delegate reloadData];
                 } else {
                     AppDelegate *app=[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
                     [rv addBackTouch];
-                    [rv showView:app.menu.view];
+                    [rv showView:app.window];
                     [_delegate reloadData];
                 }
             }
@@ -245,17 +246,17 @@
                     [self deletePlist: albumid];
                 } else if ([dic[@"result"] intValue] == 0) {
                     AppDelegate *app=[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext:dic[@"message"]];
                     [rv addBackTouch];
-                    [rv showView:app.menu.view];
+                    [rv showView:app.window];
                     [_delegate reloadData];
                 } else {
                     AppDelegate *app=[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext:NSLocalizedString(@"Host-NotAvailable", @"")];
                     [rv addBackTouch];
-                    [rv showView:app.menu.view];
+                    [rv showView:app.window];
                     [_delegate reloadData];
                 }
             }
@@ -313,10 +314,10 @@
                     [_delegate reloadData];
                 }else{
                     AppDelegate *app=[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext:dic[@"message"]];
                     [rv addBackTouch];
-                    [rv showView:app.menu.view];
+                    [rv showView:app.window];
                     [_delegate reloadData];
                 }
             }

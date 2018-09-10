@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "AsyncImageView.h"
 #import "Remind.h"
+#import "GlobalVars.h"
 
 @interface OfflineViewController ()<CalbumlistDelegate>
 {

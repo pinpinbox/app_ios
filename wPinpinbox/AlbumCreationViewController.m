@@ -13,7 +13,6 @@
 #import "wTools.h"
 #import "boxAPI.h"
 #import "AsyncImageView.h"
-#import "BookdetViewController.h"
 #import "CooperationViewController.h"
 #import "TaobanViewController.h"
 #import "TemplateViewController.h"
@@ -32,7 +31,6 @@
 #import "ProgressView.h"
 #import "AppDelegate.h"
 #import <Photos/Photos.h>
-#import "BookdetViewController.h"
 #import "UIImage+Extras.h"
 #import "MBProgressHUD.h"
 #import "UIView+Toast.h"

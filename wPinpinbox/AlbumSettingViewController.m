@@ -17,7 +17,6 @@
 #import "TouchDetectedScrollView.h"
 #import "AlbumCollectionViewController.h"
 #import <SafariServices/SafariServices.h>
-#import "TestReadBookViewController.h"
 #import "ContentCheckingViewController.h"
 #import "AlbumCreationViewController.h"
 #import "GlobalVars.h"

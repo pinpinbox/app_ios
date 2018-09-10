@@ -9,23 +9,10 @@
 #import "wTools.h"
 #import "AppDelegate.h"
 #import "MBProgressHUD.h"
-#import "RetrievealbumpViewController.h"
 #import "boxAPI.h"
-#import "CurrencyViewController.h"
-#import "CreativeViewController.h"
 #import "Remind.h"
-#import "BookViewController.h"
-#import "PreviewbookViewController.h"
-//#import "MessageboardViewController.h"
-#import "BookdetViewController.h"
-#import "FastViewController.h"
-
-#import "ReadBookViewController.h"
-
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
-
-//#import "TestReadBookViewController.h"
 #import "ContentCheckingViewController.h"
 
 #import "GlobalVars.h"
@@ -104,7 +91,7 @@ static wTools *instance =nil;
 }
 +(void)myMenu{
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [app.menu showMenu];
+//        [app.menu showMenu];
 }
 
 +(UINavigationController *)myNavigationController{
@@ -181,13 +168,13 @@ static wTools *instance =nil;
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         
-                        RetrievealbumpViewController *rev=[[RetrievealbumpViewController alloc]initWithNibName:@"RetrievealbumpViewController" bundle:nil];
-                        rev.data=[dic[@"data"] mutableCopy];
-                        
-                        NSLog(@"rev.data: %@", rev.data);
-                        
-                        rev.albumid=albumid;
-                        [app.myNav pushViewController:rev animated:YES];
+//                        RetrievealbumpViewController *rev=[[RetrievealbumpViewController alloc]initWithNibName:@"RetrievealbumpViewController" bundle:nil];
+//                        rev.data=[dic[@"data"] mutableCopy];
+//                        
+//                        NSLog(@"rev.data: %@", rev.data);
+//                        
+//                        rev.albumid=albumid;
+//                        [app.myNav pushViewController:rev animated:YES];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
@@ -213,9 +200,9 @@ static wTools *instance =nil;
 //Ｐ不足
 +(void)InsufficientP{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    CurrencyViewController *cvc=[[UIStoryboard storyboardWithName:@"Main" bundle:nil]instantiateViewControllerWithIdentifier:@"CurrencyViewController"];
-    
-    [app.myNav pushViewController:cvc animated:YES];
+//    CurrencyViewController *cvc=[[UIStoryboard storyboardWithName:@"Main" bundle:nil]instantiateViewControllerWithIdentifier:@"CurrencyViewController"];
+//
+//    [app.myNav pushViewController:cvc animated:YES];
 }
 
 //作者介紹
@@ -224,10 +211,10 @@ static wTools *instance =nil;
     NSLog(@"albumid: %@", albumid);
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    CreativeViewController *cvc=[[UIStoryboard storyboardWithName:@"Creative" bundle:nil]instantiateViewControllerWithIdentifier:@"CreativeViewController"];
-    //CreativeViewController *cvc = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"CreativeViewController"];
-    cvc.albumid=albumid;
-    [app.myNav pushViewController:cvc animated:YES];
+//    CreativeViewController *cvc=[[UIStoryboard storyboardWithName:@"Creative" bundle:nil]instantiateViewControllerWithIdentifier:@"CreativeViewController"];
+//    //CreativeViewController *cvc = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"CreativeViewController"];
+//    cvc.albumid=albumid;
+//    [app.myNav pushViewController:cvc animated:YES];
 
 }
 
@@ -235,10 +222,10 @@ static wTools *instance =nil;
 +(void)showCreativeViewuserid:(NSString *)userid  isfollow:(BOOL)follow{
     NSLog(@"showCreativeViewuserid");
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    CreativeViewController *cvc=[[UIStoryboard storyboardWithName:@"Creative" bundle:nil]instantiateViewControllerWithIdentifier:@"CreativeViewController"];
-    cvc.userid=userid;
-    cvc.follow=follow;
-    [app.myNav pushViewController:cvc animated:YES];
+//    CreativeViewController *cvc=[[UIStoryboard storyboardWithName:@"Creative" bundle:nil]instantiateViewControllerWithIdentifier:@"CreativeViewController"];
+//    cvc.userid=userid;
+//    cvc.follow=follow;
+//    [app.myNav pushViewController:cvc animated:YES];
 }
 
 //分享
@@ -247,7 +234,7 @@ static wTools *instance =nil;
     
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:message, nil] applicationActivities:nil];
 
-    [app.menu presentViewController:activityVC animated:YES completion:nil];    
+//    [app.menu presentViewController:activityVC animated:YES completion:nil];
 }
 
 //留言板
@@ -265,36 +252,36 @@ static wTools *instance =nil;
 //快件相本
 +(void)FastBook:(NSString *)alid{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    FastViewController *fvc=[[UIStoryboard storyboardWithName:@"Fast" bundle:nil]instantiateViewControllerWithIdentifier:@"FastViewController"];
-    fvc.selectrow=[wTools userbook];
-    fvc.albumid=alid;
-    fvc.booktype=1000;
-    [app.myNav pushViewController:fvc animated:YES];
+//    FastViewController *fvc=[[UIStoryboard storyboardWithName:@"Fast" bundle:nil]instantiateViewControllerWithIdentifier:@"FastViewController"];
+//    fvc.selectrow=[wTools userbook];
+//    fvc.albumid=alid;
+//    fvc.booktype=1000;
+//    [app.myNav pushViewController:fvc animated:YES];
 }
 
 +(void)FastBook:(NSString *)alid choice: (NSString *)choice {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    FastViewController *fvc = [[UIStoryboard storyboardWithName:@"Fast" bundle:nil]instantiateViewControllerWithIdentifier:@"FastViewController"];
-    fvc.selectrow = [wTools userbook];
-    fvc.albumid = alid;
-    fvc.booktype = 1000;
-    fvc.choice = choice;
-    [app.myNav pushViewController:fvc animated:YES];
+//    FastViewController *fvc = [[UIStoryboard storyboardWithName:@"Fast" bundle:nil]instantiateViewControllerWithIdentifier:@"FastViewController"];
+//    fvc.selectrow = [wTools userbook];
+//    fvc.albumid = alid;
+//    fvc.booktype = 1000;
+//    fvc.choice = choice;
+//    [app.myNav pushViewController:fvc animated:YES];
 }
 
 // Check Album Sample
 + (void)readSampleBook:(NSString *)albumId dictionary: (NSDictionary *)data isFree: (BOOL)isFree {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    ReadBookViewController *readBookVC = [[ReadBookViewController alloc] initWithNibName: @"ReadBookViewController" bundle: nil];
-    readBookVC.dic = data;
-    
-    NSLog(@"data: %@", data);
-    
-    readBookVC.isDownloaded = NO;
-    readBookVC.albumid = albumId;
-    readBookVC.isFree = isFree;
-    
-    [app.myNav pushViewController: readBookVC animated: YES];
+//    ReadBookViewController *readBookVC = [[ReadBookViewController alloc] initWithNibName: @"ReadBookViewController" bundle: nil];
+//    readBookVC.dic = data;
+//
+//    NSLog(@"data: %@", data);
+//
+//    readBookVC.isDownloaded = NO;
+//    readBookVC.albumid = albumId;
+//    readBookVC.isFree = isFree;
+//
+//    [app.myNav pushViewController: readBookVC animated: YES];
 }
 
 //預覽本地書本
@@ -405,42 +392,42 @@ static wTools *instance =nil;
                               
                               if (![unixt isEqualToString:[dic[@"data"][@"modifytime"] stringValue]]) {
                                   //已過期 下載新檔案
-                                  PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
-                                  rv.albumid=albumid;
-                                  rv.userbook=userbook;
-                                  [app.myNav pushViewController:rv animated:YES];
+//                                  PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
+//                                  rv.albumid=albumid;
+//                                  rv.userbook=userbook;
+//                                  [app.myNav pushViewController:rv animated:YES];
                                   
                                   return;
                               }
                               
-                              BookViewController *bv=[[BookViewController alloc]initWithNibName:@"BookViewController" bundle:nil];
-                              bv.albumid=albumid;
-                              bv.DirectoryPath=docDirectoryPath;
-                              bv.postMode = postMode;
-                              bv.eventId = eventId;
-                              bv.fromEventPostVC = fromEventPostVC;                              
-                              [app.myNav pushViewController:bv animated:YES];
+//                              BookViewController *bv=[[BookViewController alloc]initWithNibName:@"BookViewController" bundle:nil];
+//                              bv.albumid=albumid;
+//                              bv.DirectoryPath=docDirectoryPath;
+//                              bv.postMode = postMode;
+//                              bv.eventId = eventId;
+//                              bv.fromEventPostVC = fromEventPostVC;
+//                              [app.myNav pushViewController:bv animated:YES];
                               
                           }else{
                               
-                              BookViewController *bv=[[BookViewController alloc]initWithNibName:@"BookViewController" bundle:nil];
-                              bv.albumid=albumid;
-                              bv.DirectoryPath=docDirectoryPath;
-                              bv.postMode = postMode;
-                              bv.eventId = eventId;
-                              bv.fromEventPostVC = fromEventPostVC;
-                              [app.myNav pushViewController:bv animated:YES];
+//                              BookViewController *bv=[[BookViewController alloc]initWithNibName:@"BookViewController" bundle:nil];
+//                              bv.albumid=albumid;
+//                              bv.DirectoryPath=docDirectoryPath;
+//                              bv.postMode = postMode;
+//                              bv.eventId = eventId;
+//                              bv.fromEventPostVC = fromEventPostVC;
+//                              [app.myNav pushViewController:bv animated:YES];
                           }
                           
                       }else{
                           
-                          BookViewController *bv=[[BookViewController alloc]initWithNibName:@"BookViewController" bundle:nil];
-                          bv.albumid=albumid;
-                          bv.DirectoryPath=docDirectoryPath;
-                          bv.postMode = postMode;
-                          bv.eventId = eventId;
-                          bv.fromEventPostVC = fromEventPostVC;
-                          [app.myNav pushViewController:bv animated:YES];
+//                          BookViewController *bv=[[BookViewController alloc]initWithNibName:@"BookViewController" bundle:nil];
+//                          bv.albumid=albumid;
+//                          bv.DirectoryPath=docDirectoryPath;
+//                          bv.postMode = postMode;
+//                          bv.eventId = eventId;
+//                          bv.fromEventPostVC = fromEventPostVC;
+//                          [app.myNav pushViewController:bv animated:YES];
                       }
                   });
                   
@@ -461,10 +448,10 @@ static wTools *instance =nil;
           }
     } else {
       //檢查下載
-        PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
-        rv.albumid=albumid;
-        rv.userbook=userbook;
-        [app.myNav pushViewController:rv animated:YES];
+//        PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
+//        rv.albumid=albumid;
+//        rv.userbook=userbook;
+//        [app.myNav pushViewController:rv animated:YES];
     }
 
 }
@@ -497,14 +484,14 @@ static wTools *instance =nil;
 +(void)editphotoinfo:(NSString *)albumid templateid:(NSString *)templateid eventId: (NSString *)eventId postMode: (BOOL)postMode {
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    BookdetViewController *bdv = [[BookdetViewController alloc]initWithNibName:@"BookdetViewController" bundle:nil];
-    //bdv.data=[dic[@"data"] mutableCopy];
-    bdv.album_id = albumid;
-    bdv.templateid = templateid;
-    bdv.postMode = postMode;
-    bdv.eventId = eventId;
-    
-    [app.myNav pushViewController:bdv animated:YES];
+//    BookdetViewController *bdv = [[BookdetViewController alloc]initWithNibName:@"BookdetViewController" bundle:nil];
+//    //bdv.data=[dic[@"data"] mutableCopy];
+//    bdv.album_id = albumid;
+//    bdv.templateid = templateid;
+//    bdv.postMode = postMode;
+//    bdv.eventId = eventId;
+//    
+//    [app.myNav pushViewController:bdv animated:YES];
     
     /*
     [wTools ShowMBProgressHUD];

@@ -16,8 +16,6 @@
 #import "AsyncImageView.h"
 #import "WdataButton.h"
 #import "Remind.h"
-#import "CurrencyViewController.h"
-#import "FastViewController.h"
 #import "TemplateViewController.h"
 #import "UIViewController+CWPopup.h"
 #import "SelectBarViewController.h"
@@ -79,9 +77,9 @@
                         
                         rv.btn1select=^(BOOL bo){
                             if (bo) {
-                                CurrencyViewController *cvc=[[UIStoryboard storyboardWithName:@"Home" bundle:nil]instantiateViewControllerWithIdentifier:@"CurrencyViewController"];
-                                
-                                [self.navigationController pushViewController:cvc animated:YES];
+//                                CurrencyViewController *cvc=[[UIStoryboard storyboardWithName:@"Home" bundle:nil]instantiateViewControllerWithIdentifier:@"CurrencyViewController"];
+//                                
+//                                [self.navigationController pushViewController:cvc animated:YES];
                             }
                         };
                         
@@ -193,16 +191,16 @@
                     tvc.postMode = _postMode;
                     NSLog(@"postMode: %d", _postMode);
                     
-                    FastViewController *fVC = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"FastViewController"];
-                    fVC.selectrow = [wTools userbook];
-                    fVC.albumid = tempalbum_id;
-                    fVC.event_id = _event_id;
-                    fVC.postMode = _postMode;
-                    fVC.choice = @"Template";
-                    fVC.navigationItem.title = @"版 型 建 立";
-                    fVC.navigationController.navigationBar.titleTextAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize:18 weight:UIFontWeightLight], NSForegroundColorAttributeName: [UIColor whiteColor]};
-                    
-                    [self.navigationController pushViewController: fVC animated: YES];
+//                    FastViewController *fVC = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"FastViewController"];
+//                    fVC.selectrow = [wTools userbook];
+//                    fVC.albumid = tempalbum_id;
+//                    fVC.event_id = _event_id;
+//                    fVC.postMode = _postMode;
+//                    fVC.choice = @"Template";
+//                    fVC.navigationItem.title = @"版 型 建 立";
+//                    fVC.navigationController.navigationBar.titleTextAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize:18 weight:UIFontWeightLight], NSForegroundColorAttributeName: [UIColor whiteColor]};
+//
+//                    [self.navigationController pushViewController: fVC animated: YES];
                     
                     
                     // Check whether getting Download Template point or not

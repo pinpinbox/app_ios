@@ -19,7 +19,7 @@
     [super viewDidLoad];
     AppDelegate *app=[[UIApplication sharedApplication]delegate];
     // Do any additional setup after loading the view from its nib.
-     self.view.bounds=CGRectMake(0, 0, app.menu.view.bounds.size.width, self.view.bounds.size.height);
+     self.view.bounds=CGRectMake(0, 0, app.window.bounds.size.width, self.view.bounds.size.height);
     datepicker.maximumDate=[NSDate date];
     if (_selectdate) {
         datepicker.date=_selectdate;

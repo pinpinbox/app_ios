@@ -9,16 +9,10 @@
 #import "QrcordViewController.h"
 #import "AppDelegate.h"
 #import "wTools.h"
-#import "SearchViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "boxAPI.h"
 #import "Remind.h"
-#import "RetrievealbumpViewController.h"
-
 #import "CustomIOSAlertView.h"
-
-#import "PreviewbookViewController.h"
-
 #import "MBProgressHUD.h"
 #import "UIColor+Extensions.h"
 
@@ -144,15 +138,15 @@
 -(IBAction)SearchViewController:(id)sender{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    for (UIViewController *temp in app.myNav.viewControllers) {
-        if ([temp isKindOfClass:[SearchViewController class]]) {
-            [app.myNav popToViewController:temp animated:NO];
-            return;
-        }
-    }
-    SearchViewController*mvc=[[SearchViewController alloc]initWithNibName:@"SearchViewController" bundle:nil];
-    
-    [app.myNav pushViewController:mvc animated:NO];
+//    for (UIViewController *temp in app.myNav.viewControllers) {
+//        if ([temp isKindOfClass:[SearchViewController class]]) {
+//            [app.myNav popToViewController:temp animated:NO];
+//            return;
+//        }
+//    }
+//    SearchViewController*mvc=[[SearchViewController alloc]initWithNibName:@"SearchViewController" bundle:nil];
+//
+//    [app.myNav pushViewController:mvc animated:NO];
 }
 
 - (IBAction)startStopReading:(id)sender{
@@ -580,15 +574,15 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                 if ([d[@"album"][@"zipped"] boolValue]) {
                                     NSLog(@"zipped boolValue is: %d", [d[@"album"][@"zipped"] boolValue]);
                                     
-                                    PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
-                                    //PreviewbookViewController *rv = [[UIStoryboard storyboardWithName: @"Home" bundle: nil]  instantiateViewControllerWithIdentifier: @"PreviewbookViewController"];
-                                    rv.albumid = albumId;
-                                    rv.userbook = @"Y";
-                                    
-                                    //[self.navigationController pushViewController: rv animated: YES];
-                                    
-                                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                                    [appDelegate.myNav pushViewController: rv animated: YES];
+//                                    PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
+//                                    
+//                                    rv.albumid = albumId;
+//                                    rv.userbook = @"Y";
+//                                    
+//                                    //[self.navigationController pushViewController: rv animated: YES];
+//                                    
+//                                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//                                    [appDelegate.myNav pushViewController: rv animated: YES];
                                 } else {
                                     NSLog(@"zipped boolValue is: %d", [d[@"album"][@"zipped"] boolValue]);
                                     

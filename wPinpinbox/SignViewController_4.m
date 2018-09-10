@@ -11,7 +11,6 @@
 #import "UICustomLineLabel.h"
 #import "wTools.h"
 #import "boxAPI.h"
-#import "homeViewController.h"
 #import "AppDelegate.h"
 #import "MBProgressHUD.h"
 #import "UIView+Toast.h"

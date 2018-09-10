@@ -130,10 +130,10 @@ static InAppPurchaseManager *instance =nil;
         
         
         AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
+        Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
         [rv addtitletext:@"查無資料，請重新嘗試"];
         [rv addBackTouch];
-        [rv showView:app.menu.view];
+        [rv showView:app.window];
         
         //[WTools showAlertTile:wNoNet3 Message:nil ButtonTitle:wDone];
     }

@@ -16,7 +16,6 @@
 #import "CreaterViewController.h"
 #import "CustomIOSAlertView.h"
 #import "MyLinearLayout.h"
-#import "RetrievealbumpViewController.h"
 #import "AlbumDetailViewController.h"
 #import "GlobalVars.h"
 #import "AppDelegate.h"
