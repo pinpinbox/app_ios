@@ -181,6 +181,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) NSMutableDictionary *slotDicData;
 @property (strong, nonatomic) NSMutableArray *slotArray;
 @property (nonatomic) UIImageView *giftImageView;
+
+@property (strong) NSMutableArray *browseArray;
 @end
 
 @implementation ContentCheckingViewController
@@ -194,6 +196,90 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         context = [delegate managedObjectContext];
     }
     return context;
+}
+
+#pragma mark - Browsing Data
+- (void)checkBrowsingDataInDatabaseOrNot {
+    // Fetch the data from persistent data store
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName: @"Browse"];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey: @"browseDate" ascending: NO];
+    [fetchRequest setSortDescriptors: @[sortDescriptor]];
+    
+    self.browseArray = [[managedObjectContext executeFetchRequest: fetchRequest error: nil] mutableCopy];
+    //NSLog(@"self.browseArray: %@", self.browseArray);
+    
+    for (int i = 0; i < self.browseArray.count; i++) {
+        NSManagedObject *browseData = [self.browseArray objectAtIndex: i];
+        
+        if ([[browseData valueForKey: @"albumId"] isEqualToString: self.albumId]) {
+            //NSLog(@"browseData valueForKey albumId is: %@", [browseData valueForKey: @"albumId"]);
+            [managedObjectContext deleteObject: [self.browseArray objectAtIndex: i]];
+        } else {
+            //NSLog(@"browseData valueForKey albumId is not equalToString self.albumId");
+        }
+    }
+}
+
+#pragma mark - Browsing Data
+- (void)checkBrowsingDataReachMax {
+    //NSLog(@"checkBrowseDataReachMax");
+    
+    // Fetch the data from persistent data store
+    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName: @"Browse"];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey: @"browseDate" ascending: NO];
+    [fetchRequest setSortDescriptors: @[sortDescriptor]];
+    
+    self.browseArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    
+    if (self.browseArray.count >= 20) {
+        NSLog(@"browseArray.count is more than 20, so need to be removed the last object");
+        [managedObjectContext deleteObject: [self.browseArray lastObject]];
+    }
+}
+
+- (void)saveBrowsingData: (NSDictionary *)bookData {
+    NSLog(@"saveBrowseData");
+    NSArray *photoArr = bookData[@"photo"];
+    NSString *imageUrlThumbnail = photoArr[0][@"image_url_thumbnail"];
+    //NSLog(@"imageUrlThumbnail: %@", photoArr[0][@"image_url_thumbnail"]);
+    
+    //NSString *imageFolderName = [NSString stringWithFormat: @"%@%@", [wTools getUserID], self.albumid];
+    //NSLog(@"imageFolderName: %@", imageFolderName);
+    
+    // Save data to Core Data
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObject *newData = [NSEntityDescription insertNewObjectForEntityForName: @"Browse" inManagedObjectContext: context];
+    
+    NSLog(@"album name: %@", bookData[@"album"][@"name"]);
+    
+    if (![self.albumId isKindOfClass: [NSNull class]]) {
+        [newData setValue: self.albumId forKey: @"albumId"];
+    }
+    if (![bookData[@"user"][@"name"] isKindOfClass: [NSNull class]]) {
+        [newData setValue: bookData[@"user"][@"name"] forKey: @"author"];
+    }
+    if (![bookData[@"album"][@"description"] isKindOfClass: [NSNull class]]) {
+        [newData setValue: bookData[@"album"][@"description"] forKey: @"descriptionInfo"];
+    }
+    if (![bookData[@"album"][@"name"] isKindOfClass: [NSNull class]]) {
+        [newData setValue: bookData[@"album"][@"name"] forKey: @"title"];
+    }
+    if (![imageUrlThumbnail isKindOfClass: [NSNull class]]) {
+        [newData setValue: imageUrlThumbnail forKey: @"imageUrlThumbnail"];
+    }
+    if (![[NSDate date] isKindOfClass: [NSNull class]]) {
+        [newData setValue: [NSDate date] forKey: @"browseDate"];
+    }
+    
+    NSError *error = nil;
+    
+    // Save the object to persistent store
+    if (![context save: &error]) {
+        //NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    }
 }
 
 #pragma mark - Slot Data
@@ -826,6 +912,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         isDataLoaded = YES;
                         self.bookdata = [dic[@"data"] copy];
 //                        NSLog(@"self.bookdata: %@", self.bookdata);
+                        
+                        // Core Data Setting for RecentBrowsingViewController
+                        [self checkBrowsingDataInDatabaseOrNot];
+                        [self checkBrowsingDataReachMax];
+                        [self saveBrowsingData: self.bookdata];
+                        
                         self.photoArray = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
                         [self checkIsOwnedOrNot: dic[@"data"]];
                         
