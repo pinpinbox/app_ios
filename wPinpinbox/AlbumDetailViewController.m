@@ -59,7 +59,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 #define animateConstant 0.1
 
-@interface AlbumDetailViewController () <FBSDKSharingDelegate, SelectBarDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIScrollViewDelegate, ContentCheckingViewControllerDelegate, UITextViewDelegate, NewMessageBoardViewControllerDelegate, MessageboardViewControllerDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate, AlbumSettingViewControllerDelegate, ParallaxViewControllerDelegate>
+@interface AlbumDetailViewController () <FBSDKSharingDelegate, SelectBarDelegate, UIGestureRecognizerDelegate, SFSafariViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIScrollViewDelegate, ContentCheckingViewControllerDelegate, UITextViewDelegate, NewMessageBoardViewControllerDelegate, MessageboardViewControllerDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate, AlbumSettingViewControllerDelegate, ParallaxViewControllerDelegate,UINavigationControllerDelegate>
 {
     // For Showing Message of Getting Point
     NSString *missionTopicStr;
@@ -130,7 +130,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 @end
 
 @implementation AlbumDetailViewController
-
 - (void)checkAlbumId:(NSString *)albumId {
     NSLog(@"checkAlbumId: albumId: %@", albumId);
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -177,6 +176,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // Do any additional setup after loading the view.
     NSLog(@"AlbumDetailViewController");
     NSLog(@"viewDidLoad");    
+    
+    if (self.navigationController)
+        self.navigationController.delegate = self;
     
     isMessageShowing = NO;
     
@@ -228,7 +230,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [self.view addGestureRecognizer: pgr];
     self.delegate = self;
     
-    [self retrieveAlbum];
+    self.sponsorView.hidden = YES;
+    self.messageTrail.constant = -16;
+    //[self retrieveAlbum];
+}
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (self == viewController )
+        [self retrieveAlbum];
+    navigationController.delegate = nil;
 }
 
 - (void)panGestureRecognizerHandler:(UIPanGestureRecognizer *)gestureRecognizer {
@@ -335,6 +344,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [super viewDidAppear:animated];
 //    [self retrieveAlbum];
     [wTools sendScreenTrackingWithScreenName:@"作品資訊頁"];
+    
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -383,6 +394,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             self.toolBarViewHeight.constant = kToolBarViewHeightForX;
     }
     self.snapshotImageView.image = self.snapShotImage;
+
 }
 
 - (void)setBtnBackgroundColorToClear {
@@ -463,12 +475,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSInteger systemUserId = [[wTools getUserID] integerValue];
     
     if (albumUserId == systemUserId) {
+        
         self.sponsorView.hidden = NO;
-    } else {
-        self.sponsorView.hidden = YES;
-        self.messageTrail.constant = -16;
+        self.messageTrail.constant = -80;
     }
-    
     // Likes Section
     isLikes = [self.data[@"album"][@"is_likes"] boolValue];
     likesInt = [self.data[@"albumstatistics"][@"likes"] integerValue];
@@ -1732,6 +1742,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                                                 uid: [wTools getUserID]
                                               token: [wTools getUserToken]
                                              viewed: viewedString];
+
+//    [boxAPI retrieveAlbum:self.albumId uid:[wTools getUserID] token:[wTools getUserToken] viewed:viewedString completionBlock:^(NSString * _Nullable result, NSError * _Nullable error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1782,6 +1794,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 }
             }
         });
+    //}];
     });
 }
 
@@ -3184,5 +3197,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         self.bottomScroll.scrollEnabled = YES;
     }
 }
-
+- (void)animationDidStop:(CAAnimation *)theAnimation finished:(BOOL)flag
+{
+    [self retrieveAlbum];
+}
 @end
