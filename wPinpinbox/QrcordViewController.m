@@ -137,7 +137,7 @@
 }
 
 -(IBAction)SearchViewController:(id)sender{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
 //    for (UIViewController *temp in app.myNav.viewControllers) {
 //        if ([temp isKindOfClass:[SearchViewController class]]) {

@@ -3407,7 +3407,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSString *refer = self.photoArray[indexPath.row][@"video_refer"];
         
         if ([useFor isEqualToString: @"video"]) {
-            NSURL *url = [NSURL URLWithString: self.photoArray[indexPath.row][@"video_target"]];
+//            NSURL *url = [NSURL URLWithString: self.photoArray[indexPath.row][@"video_target"]];
             
             if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
                 cell.alphaBgV.hidden = YES;

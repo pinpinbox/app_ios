@@ -96,7 +96,7 @@ static wTools *instance =nil;
     
 }
 +(void)myMenu{
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //        [app.menu showMenu];
 }
 
@@ -166,7 +166,7 @@ static wTools *instance =nil;
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//                    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
@@ -205,7 +205,7 @@ static wTools *instance =nil;
 
 //Ｐ不足
 +(void)InsufficientP{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    CurrencyViewController *cvc=[[UIStoryboard storyboardWithName:@"Main" bundle:nil]instantiateViewControllerWithIdentifier:@"CurrencyViewController"];
 //
 //    [app.myNav pushViewController:cvc animated:YES];
@@ -216,7 +216,7 @@ static wTools *instance =nil;
     NSLog(@"showCreativeViewController");
     NSLog(@"albumid: %@", albumid);
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    CreativeViewController *cvc=[[UIStoryboard storyboardWithName:@"Creative" bundle:nil]instantiateViewControllerWithIdentifier:@"CreativeViewController"];
 //    //CreativeViewController *cvc = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"CreativeViewController"];
 //    cvc.albumid=albumid;
@@ -227,7 +227,7 @@ static wTools *instance =nil;
 //作者介紹 依據作者ID 是否關注
 +(void)showCreativeViewuserid:(NSString *)userid  isfollow:(BOOL)follow{
     NSLog(@"showCreativeViewuserid");
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    CreativeViewController *cvc=[[UIStoryboard storyboardWithName:@"Creative" bundle:nil]instantiateViewControllerWithIdentifier:@"CreativeViewController"];
 //    cvc.userid=userid;
 //    cvc.follow=follow;
@@ -236,9 +236,9 @@ static wTools *instance =nil;
 
 //分享
 +(void)Activitymessage:(NSString *)message {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:message, nil] applicationActivities:nil];
+//    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:message, nil] applicationActivities:nil];
 
 //    [app.menu presentViewController:activityVC animated:YES completion:nil];
 }
@@ -257,7 +257,7 @@ static wTools *instance =nil;
 
 //快件相本
 +(void)FastBook:(NSString *)alid{
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 //    FastViewController *fvc=[[UIStoryboard storyboardWithName:@"Fast" bundle:nil]instantiateViewControllerWithIdentifier:@"FastViewController"];
 //    fvc.selectrow=[wTools userbook];
 //    fvc.albumid=alid;
@@ -266,7 +266,7 @@ static wTools *instance =nil;
 }
 
 +(void)FastBook:(NSString *)alid choice: (NSString *)choice {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
 //    FastViewController *fvc = [[UIStoryboard storyboardWithName:@"Fast" bundle:nil]instantiateViewControllerWithIdentifier:@"FastViewController"];
 //    fvc.selectrow = [wTools userbook];
 //    fvc.albumid = alid;
@@ -277,7 +277,7 @@ static wTools *instance =nil;
 
 // Check Album Sample
 + (void)readSampleBook:(NSString *)albumId dictionary: (NSDictionary *)data isFree: (BOOL)isFree {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    ReadBookViewController *readBookVC = [[ReadBookViewController alloc] initWithNibName: @"ReadBookViewController" bundle: nil];
 //    readBookVC.dic = data;
 //
@@ -489,7 +489,7 @@ static wTools *instance =nil;
 
 +(void)editphotoinfo:(NSString *)albumid templateid:(NSString *)templateid eventId: (NSString *)eventId postMode: (BOOL)postMode {
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 //    BookdetViewController *bdv = [[BookdetViewController alloc]initWithNibName:@"BookdetViewController" bundle:nil];
 //    //bdv.data=[dic[@"data"] mutableCopy];
 //    bdv.album_id = albumid;

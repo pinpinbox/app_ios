@@ -174,14 +174,14 @@ static NSString *canUpdateLater = @"canUpdateLater";
         if ([option isEqualToString: mustUpdate]) {
             if (buttonIndex == 0) {
                 NSLog(@"option is mustUpdate and openURL AppStore");
-                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl]];
+                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl] options:@{} completionHandler:nil];
                 [weakAlertUpdateView close];
             }
         } else if ([option isEqualToString: canUpdateLater]) {
             if (buttonIndex == 0) {
                 [weakAlertUpdateView close];
             } else {
-                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl]];
+                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl] options:@{} completionHandler:nil];
                 [weakAlertUpdateView close];
             }
         }

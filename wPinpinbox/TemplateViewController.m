@@ -77,8 +77,8 @@
     imagearr=[NSMutableArray new];
     [[_ShowView layer]setMasksToBounds:YES];
     
-    NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
-    NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
+//    NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
+//    NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
     
     
     [self getAlbumOfDiy];

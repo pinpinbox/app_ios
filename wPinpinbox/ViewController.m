@@ -1766,13 +1766,13 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         
         if ([option isEqualToString: @"mustUpdate"]) {
             if (buttonIndex == 0) {
-                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl]];
+                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl] options:@{} completionHandler:nil];
             }
         } else if ([option isEqualToString: @"canUpdateLater"]) {
             if (buttonIndex == 0) {
                 [self redirectionCheck];
             } else {
-                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl]];
+                [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl] options:@{} completionHandler:nil];
             }
         }
     }];
