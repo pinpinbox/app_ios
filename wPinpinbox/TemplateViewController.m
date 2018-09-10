@@ -9,7 +9,6 @@
 #import "TemplateViewController.h"
 #import "O_drag.h"
 #import "PhotosViewController.h"
-#import <AdobeCreativeSDKFoundation/AdobeCreativeSDKFoundation.h>
 #import "wTools.h"
 #import "boxAPI.h"
 #import "AsyncImageView.h"
@@ -30,9 +29,11 @@
 
 #import "AppDelegate.h"
 
+
 #import "UIViewController+ErrorAlert.h"
 
-@interface TemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,PhotosViewDelegate,AdobeUXImageEditorViewControllerDelegate, UIGestureRecognizerDelegate>
+@interface TemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,PhotosViewDelegate, UIGestureRecognizerDelegate>
+
 {
     __weak IBOutlet UICollectionView *mycollection;
     __weak IBOutlet UIButton *conbtn;
@@ -81,16 +82,6 @@
     NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
     NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
     
-    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
-    
-    //The authManager caches our login, so check on startup
-    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
-    
-    if(loggedIn) {
-        [[AdobeUXAuthManager sharedManager] logout:nil onError:nil];
-        AdobeAuthUserProfile *up = [AdobeUXAuthManager sharedManager].userProfile;
-        NSLog(@"User Profile: %@", up);
-    }
     
     [self getAlbumOfDiy];
 }
@@ -925,23 +916,7 @@
 
 -(void)displayEditorForImahe:(UIImage *)imageToEdit {
     
-    AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:imageToEdit];
-    [editorController setDelegate:self];
-    [self presentViewController:editorController animated:YES completion:nil];
     
-}
-
-- (void)photoEditor:(AdobeUXImageEditorViewController *)editor finishedWithImage:(UIImage *)image
-{
-    [self addimagetoitem:image];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor
-{
-    // Handle cancellation here
-    [self addimagetoitem: imgForCancel];
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
