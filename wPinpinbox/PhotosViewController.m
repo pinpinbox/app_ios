@@ -1170,6 +1170,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                 hud.detailsLabel.text = @"網路不穩";
                 hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
             });
+            dispatch_semaphore_signal(semaphore);
             return;
         }
         if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
@@ -1177,6 +1178,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             
             if (statusCode != 200) {
                 NSLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
+                dispatch_semaphore_signal(semaphore);
                 return;
             }
         }

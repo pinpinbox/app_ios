@@ -454,10 +454,10 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IC5-Wb-m6r">
-                                                    <rect key="frame" x="0.0" y="112" width="343" height="42"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Testing" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IC5-Wb-m6r">
+                                                    <rect key="frame" x="0.0" y="112" width="343" height="48"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="42" id="SKm-7g-CpY"/>
+                                                        <constraint firstAttribute="height" constant="48" id="SKm-7g-CpY"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="42"/>
                                                     <nil key="textColor"/>
