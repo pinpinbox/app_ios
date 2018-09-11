@@ -1395,9 +1395,6 @@
 		54672DD620FF23E10045DD7E /* ContentCheckingVC */ = {
 			isa = PBXGroup;
 			children = (
-				CB071CF1213E4754003D01D8 /* DMVC.storyboard */,
-				CB071CF0213E4754003D01D8 /* DMViewController.h */,
-				CB071CF2213E4754003D01D8 /* DMViewController.m */,
 				54B08C7C2105B8B500ADC09A /* ContentCheckingViewController.h */,
 				54B08C7D2105B8B500ADC09A /* ContentCheckingViewController.m */,
 				54B08C7A2105B8A700ADC09A /* ContentCheckingVC.storyboard */,
@@ -1408,6 +1405,9 @@
 				54659A66212FA49300311FF4 /* YoutubePlayerViewController.h */,
 				54659A67212FA49300311FF4 /* YoutubePlayerViewController.m */,
 				54659A69212FA91F00311FF4 /* YoutubePlayerVC.storyboard */,
+				CB071CF0213E4754003D01D8 /* DMViewController.h */,
+				CB071CF2213E4754003D01D8 /* DMViewController.m */,
+				CB071CF1213E4754003D01D8 /* DMVC.storyboard */,
 				54B8CF3A2119E69A006DFE06 /* AlbumInfoVC */,
 			);
 			name = ContentCheckingVC;
