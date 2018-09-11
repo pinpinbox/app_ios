@@ -129,16 +129,15 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
     [self.view addGestureRecognizer:self.doubleTapGestureRecognizer];
     [self.view addGestureRecognizer:self.rotationGestureRecognizer];
 }
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    UIApplication *application = [UIApplication rsk_sharedApplication];
-    if (application) {
-        self.originalStatusBarHidden = application.statusBarHidden;
-        [application setStatusBarHidden:YES];
-    }
+//    UIApplication *application = [UIApplication rsk_sharedApplication];
+//    if (application) {
+//        self.originalStatusBarHidden = application.statusBarHidden;
+//        [application setStatusBarHidden:YES];
+//    }
     
     self.originalNavigationControllerNavigationBarHidden = self.navigationController.navigationBarHidden;
     [self.navigationController setNavigationBarHidden:YES animated:NO];
@@ -159,10 +158,10 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 {
     [super viewWillDisappear:animated];
     
-    UIApplication *application = [UIApplication rsk_sharedApplication];
-    if (application) {
-        [application setStatusBarHidden:self.originalStatusBarHidden];
-    }
+//    UIApplication *application = [UIApplication rsk_sharedApplication];
+//    if (application) {
+//        [application setStatusBarHidden:self.originalStatusBarHidden];
+//    }
     
     [self.navigationController setNavigationBarHidden:self.originalNavigationControllerNavigationBarHidden animated:animated];
     self.navigationController.navigationBar.shadowImage = self.originalNavigationControllerNavigationBarShadowImage;

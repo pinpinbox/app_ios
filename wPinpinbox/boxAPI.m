@@ -3132,13 +3132,15 @@ static NSString *hostURL = @"www.pinpinbox.com";
 {
     //NSLog(@"percentEscapeString");
     //NSLog(@"string: %@", string);
-    
+#if __IPHONE_9_0
+    NSString *result = [string stringByAddingPercentEscapesUsingEncoding:[NSCharacterSet URLQueryAllowedCharacterSet]];
+#else
     NSString *result = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                                  (CFStringRef)string,
                                                                                  (CFStringRef)@" ",
                                                                                  (CFStringRef)@":/?@!$&'()*+,;=",
                                                                                  kCFStringEncodingUTF8));
-    
+#endif
     //NSLog(@"result: %@", result);
     
     //NSLog(@"result stringByReplacingOccurrencesOfString withString: %@", [result stringByReplacingOccurrencesOfString:@" " withString:@"+"]);

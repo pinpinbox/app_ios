@@ -254,7 +254,7 @@
     return cell;
 }
 
-- (void)loadData:(UIAlertView *) alert{
+- (void)loadData {//:(UIAlertView *) alert{
     NSLog(@"loadData");
     
     if (!isLoading) {
@@ -289,8 +289,8 @@
                         }
                         nextId = nextId+s;
                         
-                        if (alert != nil)
-                            [alert dismissWithClickedButtonIndex:-1 animated:YES];
+//                        if (alert != nil)
+//                            [alert dismissWithClickedButtonIndex:-1 animated:YES];
                         [mytable reloadData];
                         
                         if (nextId  >= 0)
@@ -314,7 +314,7 @@
         return;
     
     if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
-        [self loadData:nil];
+        [self loadData];
     }
 }
 

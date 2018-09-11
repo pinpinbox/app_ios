@@ -97,6 +97,9 @@
     
     // Avoid loading data twice for showing same data in PageCollectionViewController
 }
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleDefault;
+}
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -105,7 +108,7 @@
     NSLog(@"viewWillAppear");
     NSLog(@"Test");
     [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 1.0]];
-    [[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
+    //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
     
     //[_collectioview reloadData];    
     //[self refresh];

@@ -17,7 +17,7 @@
 #import "GlobalVars.h"
 
 #import "AppDelegate.h"
-#import "UIViewController+ErrorAlert.h""
+#import "UIViewController+ErrorAlert.h"
 
 @interface BuyPPointViewController () <SFSafariViewControllerDelegate, UIGestureRecognizerDelegate>
 {

@@ -13,6 +13,8 @@
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
 
+#import "UIViewController+ErrorAlert.h"
+
 #define kIAP_AppleSandbox @"https://sandbox.itunes.apple.com/verifyReceipt"
 #define kIAP_AppleStoreVerify @"https://buy.itunes.apple.com/verfyReceipt"
 static InAppPurchaseManager *instance =nil;
@@ -551,8 +553,11 @@ static InAppPurchaseManager *instance =nil;
 // 獲得商品列表失敗
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error
 {
-    UIAlertView *alerView =  [[UIAlertView alloc] initWithTitle:@"Alert" message:[error localizedDescription]  delegate:nil cancelButtonTitle:NSLocalizedString(@"Close",nil)  otherButtonTitles:nil];
-    [alerView show];
+//    UIAlertView *alerView =  [[UIAlertView alloc] initWithTitle:@"Alert" message:[error localizedDescription]  delegate:nil cancelButtonTitle:NSLocalizedString(@"Close",nil)  otherButtonTitles:nil];
+//    [alerView show];
+    [UIViewController showCustomErrorAlertWithMessage:[error localizedDescription]   onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+        [customAlertView close];
+    }];
 }
 
 -(void)StoreInfoError:(NSString*)info

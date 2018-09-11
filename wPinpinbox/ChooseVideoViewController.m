@@ -268,10 +268,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *mediaType = AVMediaTypeVideo;
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType: mediaType];
-    
+#if __IPHONE_9_0
+    if (authStatus == PHAuthorizationStatusRestricted || authStatus == PHAuthorizationStatusDenied) {
+        [wTools showAlertTile: NSLocalizedString(@"PicText-tipAccessPrivacy", @"") Message: @"" ButtonTitle: nil];
+    }
+#else
     if (authStatus == ALAuthorizationStatusRestricted || authStatus == ALAuthorizationStatusDenied) {
         [wTools showAlertTile: NSLocalizedString(@"PicText-tipAccessPrivacy", @"") Message: @"" ButtonTitle: nil];
     }
+#endif
     if (indexPath.item == 0) {
         NSLog(@"recorded button pressed");
         

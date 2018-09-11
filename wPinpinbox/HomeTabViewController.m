@@ -1051,6 +1051,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     if (![dic[@"result"] boolValue]) {
+                        NSLog(@"showUserRecommendedList result: %@", dic[@"result"]);
                         return ;
                     }
                     

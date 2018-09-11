@@ -346,7 +346,11 @@ static NSString *const DMAPIVersion = @"2.9.3";
 #pragma mark - Open In Safari
 - (void)openURLInSafari:(NSURL *)URL {
   if (self.autoOpenExternalURLs) {
+#if __IPHONE_10_0
+    [[UIApplication sharedApplication] openURL:URL options:@{} completionHandler:nil];
+#else
     [[UIApplication sharedApplication] openURL:URL];
+#endif
   }
   else {
     self.safariURL = URL;

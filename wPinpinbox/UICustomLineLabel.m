@@ -38,7 +38,7 @@
 - (void)drawTextInRect:(CGRect)rect{
     [super drawTextInRect:rect];
     
-    CGSize textSize = [[self text] sizeWithFont:[self font]];
+    CGSize textSize = [[self text] sizeWithAttributes:@{NSFontAttributeName:[self font].fontName}];//[[self text] sizeWithFont:[self font]];
     CGFloat strikeWidth = textSize.width;
     CGRect lineRect;
     CGFloat origin_x;
