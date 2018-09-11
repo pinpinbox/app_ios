@@ -238,7 +238,9 @@
     isViewLoading = YES;    
     
     self.searchView.layer.cornerRadius = 8;
+    self.searchView.backgroundColor = [UIColor thirdGrey];
     self.scanBtn.layer.cornerRadius = kCornerRadius;
+    self.scanBtn.backgroundColor = [UIColor thirdGrey];
     
     oldNavBarViewYValue = self.navBarView.frame.origin.y;
     NSLog(@"self.navBarView.frame.origin.y: %f", self.navBarView.frame.origin.y);

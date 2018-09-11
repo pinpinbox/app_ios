@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7eV-yR-QAC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7eV-yR-QAC">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,7 +32,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QGs-kY-GLe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2561.25" y="519.71830985915494"/>
+            <point key="canvasLocation" x="-2421" y="-1"/>
         </scene>
         <!--Scan Code View Controller-->
         <scene sceneID="LwD-Qe-mnl">
@@ -149,7 +150,7 @@
                     <state key="normal" image="ic200_cancel_dark.png"/>
                 </button>
             </objects>
-            <point key="canvasLocation" x="862.5" y="341.19718309859155"/>
+            <point key="canvasLocation" x="-45" y="-832"/>
         </scene>
         <!--Album Setting View Controller-->
         <scene sceneID="FAk-xx-j0A">
@@ -1030,7 +1031,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vkE-Qs-JjJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7025.625" y="1040.4929577464789"/>
+            <point key="canvasLocation" x="1543" y="58"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="LbS-Sx-6no">
@@ -1046,7 +1047,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yMx-W9-QUU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1639" y="501"/>
+            <point key="canvasLocation" x="-1500" y="-20"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tUA-ha-2Hl">
@@ -1066,7 +1067,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZJ8-Zt-LES">
-                                <rect key="frame" x="16" y="179" width="136" height="48"/>
+                                <rect key="frame" x="16" y="115" width="136" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="JGz-3L-Apf"/>
                                 </constraints>
@@ -1076,10 +1077,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bz4-kv-pwp">
-                                <rect key="frame" x="168" y="179" width="136" height="48"/>
-                                <state key="normal" title="建立帳號"/>
+                                <rect key="frame" x="168" y="115" width="136" height="48"/>
+                                <state key="normal" title="邀請碼註冊"/>
                                 <connections>
-                                    <segue destination="5B3-tc-nUu" kind="show" id="eN3-dd-Znh"/>
+                                    <action selector="cameraBtnPress:" destination="y35-3S-o7o" eventType="touchUpInside" id="Kkx-YG-k90"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pib-sW-517">
@@ -1095,6 +1096,13 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AU6-0M-j5G">
+                                <rect key="frame" x="185" y="269" width="135" height="0.5"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="0.5" id="dWF-rk-IWj"/>
+                                </constraints>
+                            </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SnH-n5-XhT">
                                 <rect key="frame" x="16" y="312" width="288" height="48"/>
                                 <subviews>
@@ -1191,55 +1199,48 @@
                                     <action selector="toAboutVC:" destination="y35-3S-o7o" eventType="touchUpInside" id="IPx-Km-X4v"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j9x-oX-A5o">
-                                <rect key="frame" x="16" y="139" width="24" height="24"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JYL-Ca-LYg">
+                                <rect key="frame" x="16" y="179" width="288" height="48"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="24" id="O0Y-lg-PwE"/>
-                                    <constraint firstAttribute="width" constant="24" id="nIS-1Z-lYC"/>
+                                    <constraint firstAttribute="height" constant="48" id="cgv-Mg-gRK"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="ic200_scancamera_light"/>
+                                <state key="normal" title="建立帳號"/>
                                 <connections>
-                                    <action selector="cameraBtnPress:" destination="y35-3S-o7o" eventType="touchUpInside" id="mKL-f3-OwP"/>
+                                    <segue destination="5B3-tc-nUu" kind="show" id="Vnx-j1-Pd5"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AU6-0M-j5G">
-                                <rect key="frame" x="185" y="269.5" width="135" height="0.5"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="0.5" id="dWF-rk-IWj"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="stO-wp-BHQ" firstAttribute="top" secondItem="ZJ8-Zt-LES" secondAttribute="bottom" constant="32" id="2YH-5y-HYr"/>
                             <constraint firstItem="AU6-0M-j5G" firstAttribute="leading" secondItem="stO-wp-BHQ" secondAttribute="trailing" constant="16" id="8vX-fK-Abd"/>
                             <constraint firstItem="ZJ8-Zt-LES" firstAttribute="width" secondItem="Bz4-kv-pwp" secondAttribute="width" id="AlP-Ss-cko"/>
                             <constraint firstItem="Bz4-kv-pwp" firstAttribute="baseline" secondItem="ZJ8-Zt-LES" secondAttribute="baseline" id="CNH-pc-sSB"/>
                             <constraint firstItem="ZJ8-Zt-LES" firstAttribute="leading" secondItem="Hll-7V-TvQ" secondAttribute="leading" constant="16" id="Cpb-bg-STM"/>
                             <constraint firstItem="WxY-5D-Wh8" firstAttribute="leading" secondItem="Hll-7V-TvQ" secondAttribute="leading" constant="16" id="DTg-KM-xYW"/>
+                            <constraint firstItem="JYL-Ca-LYg" firstAttribute="top" secondItem="ZJ8-Zt-LES" secondAttribute="bottom" constant="16" id="Dpi-SQ-zo0"/>
                             <constraint firstItem="AU6-0M-j5G" firstAttribute="centerY" secondItem="stO-wp-BHQ" secondAttribute="centerY" id="F2j-Qs-AEt"/>
-                            <constraint firstItem="j9x-oX-A5o" firstAttribute="leading" secondItem="Hll-7V-TvQ" secondAttribute="leading" constant="16" id="Hhc-LE-JzP"/>
                             <constraint firstItem="TM9-VB-93K" firstAttribute="top" secondItem="yLy-fs-YiA" secondAttribute="top" id="JTT-cc-Mwl"/>
                             <constraint firstItem="G1b-2V-s3N" firstAttribute="leading" secondItem="Hll-7V-TvQ" secondAttribute="leading" constant="16" id="JXP-14-gaU"/>
-                            <constraint firstItem="SnH-n5-XhT" firstAttribute="top" secondItem="stO-wp-BHQ" secondAttribute="bottom" constant="32" id="Jp0-ce-K3C"/>
                             <constraint firstItem="Wbi-Lu-q8H" firstAttribute="top" secondItem="WxY-5D-Wh8" secondAttribute="bottom" constant="16" id="Paq-1m-cAJ"/>
                             <constraint firstItem="ZJ8-Zt-LES" firstAttribute="height" secondItem="Bz4-kv-pwp" secondAttribute="height" id="QSP-bh-Mqy"/>
                             <constraint firstItem="pib-sW-517" firstAttribute="leading" secondItem="Hll-7V-TvQ" secondAttribute="leading" id="Ru0-Ux-8xw"/>
+                            <constraint firstItem="SnH-n5-XhT" firstAttribute="top" secondItem="stO-wp-BHQ" secondAttribute="bottom" constant="32" id="SBB-jI-PbY"/>
                             <constraint firstAttribute="trailing" secondItem="AU6-0M-j5G" secondAttribute="trailing" id="UwL-VM-eJQ"/>
                             <constraint firstItem="WxY-5D-Wh8" firstAttribute="top" secondItem="G1b-2V-s3N" secondAttribute="bottom" constant="16" id="WXN-AQ-qFp"/>
                             <constraint firstItem="giS-RR-8q7" firstAttribute="leading" secondItem="Hll-7V-TvQ" secondAttribute="leading" constant="16" id="Wlx-PU-h9h"/>
                             <constraint firstItem="stO-wp-BHQ" firstAttribute="leading" secondItem="pib-sW-517" secondAttribute="trailing" constant="16" id="YOC-Kf-XwW"/>
+                            <constraint firstItem="Hll-7V-TvQ" firstAttribute="trailing" secondItem="JYL-Ca-LYg" secondAttribute="trailing" constant="16" id="YdS-HP-1H8"/>
                             <constraint firstItem="Wbi-Lu-q8H" firstAttribute="centerX" secondItem="yLy-fs-YiA" secondAttribute="centerX" id="Zgf-fQ-cfQ"/>
                             <constraint firstItem="Hll-7V-TvQ" firstAttribute="trailing" secondItem="WxY-5D-Wh8" secondAttribute="trailing" constant="16" id="Zjg-Bu-pGv"/>
                             <constraint firstItem="Hll-7V-TvQ" firstAttribute="trailing" secondItem="giS-RR-8q7" secondAttribute="trailing" constant="16" id="brz-C8-rCC"/>
                             <constraint firstItem="Hll-7V-TvQ" firstAttribute="bottom" secondItem="Wbi-Lu-q8H" secondAttribute="bottom" constant="16" id="e30-dz-F5A"/>
                             <constraint firstItem="giS-RR-8q7" firstAttribute="top" secondItem="Hll-7V-TvQ" secondAttribute="top" constant="16" id="hy2-Zj-vbb"/>
                             <constraint firstItem="SnH-n5-XhT" firstAttribute="leading" secondItem="Hll-7V-TvQ" secondAttribute="leading" constant="16" id="iCL-M4-VBd"/>
-                            <constraint firstItem="ZJ8-Zt-LES" firstAttribute="top" secondItem="j9x-oX-A5o" secondAttribute="bottom" constant="16" id="ikl-bq-SZr"/>
                             <constraint firstAttribute="trailing" secondItem="G1b-2V-s3N" secondAttribute="trailing" constant="16" id="kMC-1d-MnE"/>
                             <constraint firstItem="Hll-7V-TvQ" firstAttribute="trailing" secondItem="Bz4-kv-pwp" secondAttribute="trailing" constant="16" id="nSy-vK-2TL"/>
+                            <constraint firstItem="JYL-Ca-LYg" firstAttribute="leading" secondItem="Hll-7V-TvQ" secondAttribute="leading" constant="16" id="o3u-cP-KRi"/>
                             <constraint firstItem="Hll-7V-TvQ" firstAttribute="trailing" secondItem="TM9-VB-93K" secondAttribute="trailing" id="oid-mr-up8"/>
+                            <constraint firstItem="stO-wp-BHQ" firstAttribute="top" secondItem="JYL-Ca-LYg" secondAttribute="bottom" constant="32" id="qSp-uA-xbi"/>
                             <constraint firstItem="G1b-2V-s3N" firstAttribute="top" secondItem="SnH-n5-XhT" secondAttribute="bottom" constant="16" id="rl6-30-aaH"/>
                             <constraint firstItem="Hll-7V-TvQ" firstAttribute="bottom" secondItem="TM9-VB-93K" secondAttribute="bottom" id="uX6-P3-qYn"/>
                             <constraint firstItem="pib-sW-517" firstAttribute="centerY" secondItem="stO-wp-BHQ" secondAttribute="centerY" id="v94-B9-AWV"/>
@@ -1253,7 +1254,7 @@
                     <navigationItem key="navigationItem" id="JYX-fU-5hE"/>
                     <connections>
                         <outlet property="aboutBtn" destination="Wbi-Lu-q8H" id="Pb8-wk-nD8"/>
-                        <outlet property="createAccountBtn" destination="Bz4-kv-pwp" id="sMJ-vD-KWB"/>
+                        <outlet property="createAccountBtn" destination="JYL-Ca-LYg" id="GZo-h3-X0r"/>
                         <outlet property="emailTextBgView" destination="SnH-n5-XhT" id="NwT-ga-Rzh"/>
                         <outlet property="emailTextField" destination="wFk-YN-BdR" id="jQ7-6G-dvN"/>
                         <outlet property="facebookLoginBtn" destination="ZJ8-Zt-LES" id="yTW-NP-cGk"/>
@@ -1263,7 +1264,7 @@
                         <outlet property="middleTextLabel" destination="stO-wp-BHQ" id="fFL-Ko-Rqm"/>
                         <outlet property="pwdTextBgView" destination="G1b-2V-s3N" id="Wq5-Ii-j5e"/>
                         <outlet property="pwdTextField" destination="CHs-O4-gNa" id="LIf-Nb-ZHw"/>
-                        <outlet property="scanBtn" destination="j9x-oX-A5o" id="BtV-jt-99l"/>
+                        <outlet property="scanBtn" destination="Bz4-kv-pwp" id="oDS-2r-zIj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AXj-pb-W9c" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1849,7 +1850,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ko-R8-HgU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2165.625" y="-3433.0985915492956"/>
+            <point key="canvasLocation" x="-114" y="-1730"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="a65-Md-40r">
@@ -1870,7 +1871,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5JC-24-T02" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1638.75" y="-364.43661971830983"/>
+            <point key="canvasLocation" x="-1498" y="-885"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="IoR-m3-Cba">
@@ -2003,7 +2004,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vvT-HW-lDr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5437.5" y="1040.4929577464789"/>
+            <point key="canvasLocation" x="-45" y="58"/>
         </scene>
         <!--Other Collection View Controller-->
         <scene sceneID="MVy-kK-hR4">
@@ -2090,7 +2091,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jz6-pD-M4Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6240" y="1040.4929577464789"/>
+            <point key="canvasLocation" x="756" y="58"/>
         </scene>
         <!--版 型 建 立-->
         <scene sceneID="TWW-Mr-UCE">
@@ -2292,7 +2293,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Fx-YZ-lJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7828.125" y="1040.4929577464789"/>
+            <point key="canvasLocation" x="2346" y="58"/>
         </scene>
         <!--NotifTab-->
         <scene sceneID="oIs-cN-GK5">
@@ -2302,7 +2303,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lHs-Za-BpG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1650" y="986"/>
+            <point key="canvasLocation" x="-1509" y="465"/>
         </scene>
         <!--MeTab-->
         <scene sceneID="Mor-ja-E7N">
@@ -2312,7 +2313,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wll-L8-Dpn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1662" y="80"/>
+            <point key="canvasLocation" x="-1522" y="-442"/>
         </scene>
         <!--HomeTabVC-->
         <scene sceneID="chO-pz-Ro8">
@@ -2322,7 +2323,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zDt-ut-db0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-847.5" y="-364.43661971830983"/>
+            <point key="canvasLocation" x="-708" y="-885"/>
         </scene>
         <!--RetrievePasswordVC-->
         <scene sceneID="hnC-3f-fzL">
@@ -2330,7 +2331,7 @@
                 <viewControllerPlaceholder storyboardName="RetrievePasswordVC" id="gox-yT-vXX" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OFY-NO-egc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1511" y="-996"/>
+            <point key="canvasLocation" x="-1511" y="-1307"/>
         </scene>
         <!--SignVC_1-->
         <scene sceneID="QAG-0k-B3S">
@@ -2338,7 +2339,7 @@
                 <viewControllerPlaceholder storyboardName="SignVC_1" id="5B3-tc-nUu" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pxx-xV-IbF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-716" y="-1730"/>
+            <point key="canvasLocation" x="-941" y="-1730"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Tlt-te-Vtv">
@@ -2359,7 +2360,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WYR-2V-Wl6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1650" y="1488"/>
+            <point key="canvasLocation" x="-1509" y="967"/>
         </scene>
         <!--MoreTabViewController-->
         <scene sceneID="bLn-mS-aBs">
@@ -2369,7 +2370,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mzh-wb-fJd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1021" y="1488"/>
+            <point key="canvasLocation" x="-882" y="967"/>
         </scene>
     </scenes>
     <resources>
@@ -2409,7 +2410,6 @@
         <image name="ic200_message_light.png" width="144" height="144"/>
         <image name="ic200_more_white.png" width="128" height="128"/>
         <image name="ic200_password_normal_dark" width="144" height="144"/>
-        <image name="ic200_scancamera_light" width="144" height="144"/>
         <image name="ic200_setting_light.png" width="144" height="144"/>
         <image name="ic200_template_photo_change_light.png" width="144" height="144"/>
         <image name="pinpin_logo.png" width="401" height="82"/>

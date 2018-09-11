@@ -102,8 +102,11 @@
 - (void)viewSetup
 {
     countryCodeView.layer.cornerRadius = kCornerRadius;
+    countryCodeView.backgroundColor = [UIColor thirdGrey];
     mobilePhoneView.layer.cornerRadius = kCornerRadius;
+    mobilePhoneView.backgroundColor = [UIColor thirdGrey];
     emailView.layer.cornerRadius = kCornerRadius;
+    emailView.backgroundColor = [UIColor thirdGrey];
     sendBtn.layer.cornerRadius = kCornerRadius;
 }
 

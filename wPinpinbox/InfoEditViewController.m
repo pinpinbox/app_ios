@@ -424,6 +424,7 @@
     self.emailTextField.inputAccessoryView = toolBarForDoneBtn;
     self.emailView.layer.cornerRadius = kCornerRadius;
     self.emailView.clipsToBounds = YES;
+    self.emailView.backgroundColor = [UIColor thirdGrey];
     
     // PWD Change Button Setting
     self.pwdChangeBtn.backgroundColor = [UIColor thirdGrey];
@@ -569,48 +570,56 @@
     self.facebookBgView.hidden = NO;
     self.facebookView.layer.cornerRadius = kCornerRadius;
     self.facebookView.clipsToBounds = YES;
+    self.facebookView.backgroundColor = [UIColor thirdGrey];
     self.facebookTextField.textColor = [UIColor firstGrey];
     self.facebookTextField.text = self.userDic[@"sociallink"][@"facebook"];
     
     self.googleBgView.hidden = NO;
     self.googleView.layer.cornerRadius = kCornerRadius;
     self.googleView.clipsToBounds = YES;
+    self.googleView.backgroundColor = [UIColor thirdGrey];
     self.googleTextField.textColor = [UIColor firstGrey];
     self.googleTextField.text = self.userDic[@"sociallink"][@"google"];
     
     self.instagramBgView.hidden = NO;
     self.instagramView.layer.cornerRadius = kCornerRadius;
     self.instagramView.clipsToBounds = YES;
+    self.instagramView.backgroundColor = [UIColor thirdGrey];
     self.instagramTextField.textColor = [UIColor firstGrey];
     self.instagramTextField.text = self.userDic[@"sociallink"][@"instagram"];
     
     self.linkedInBgView.hidden = NO;
     self.linkedInView.layer.cornerRadius = kCornerRadius;
     self.linkedInView.clipsToBounds = YES;
+    self.linkedInView.backgroundColor = [UIColor thirdGrey];
     self.linkedInTextField.textColor = [UIColor firstGrey];
     self.linkedInTextField.text = self.userDic[@"sociallink"][@"linkedin"];
     
     self.pinterestBgView.hidden = NO;
     self.pinterestView.layer.cornerRadius = kCornerRadius;
     self.pinterestView.clipsToBounds = YES;
+    self.pinterestView.backgroundColor = [UIColor thirdGrey];
     self.pinterestTextField.textColor = [UIColor firstGrey];
     self.pinterestTextField.text = self.userDic[@"sociallink"][@"pinterest"];
     
     self.twitterBgView.hidden = NO;
     self.twitterView.layer.cornerRadius = kCornerRadius;
     self.twitterView.clipsToBounds = YES;
+    self.twitterView.backgroundColor = [UIColor thirdGrey];
     self.twitterTextField.textColor = [UIColor firstGrey];
     self.twitterTextField.text = self.userDic[@"sociallink"][@"twitter"];
     
     self.youtubeBgView.hidden = NO;
     self.youtubeView.layer.cornerRadius = kCornerRadius;
     self.youtubeView.clipsToBounds = YES;
+    self.youtubeView.backgroundColor = [UIColor thirdGrey];
     self.youtubeTextField.textColor = [UIColor firstGrey];
     self.youtubeTextField.text = self.userDic[@"sociallink"][@"youtube"];
     
     self.homeBgView.hidden = NO;
     self.homeView.layer.cornerRadius = kCornerRadius;
     self.homeView.clipsToBounds = YES;
+    self.homeView.backgroundColor = [UIColor thirdGrey];
     self.homeTextField.textColor = [UIColor firstGrey];
     self.homeTextField.text = self.userDic[@"sociallink"][@"web"];
 }

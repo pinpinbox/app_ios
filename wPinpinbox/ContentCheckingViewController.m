@@ -118,6 +118,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     float offsetAfterRotating;
     UIInterfaceOrientation orientation;
 }
+@property (weak, nonatomic) IBOutlet UIView *navBarBgView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarBgViewHeight;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarViewTopConstraint;
 @property (weak, nonatomic) IBOutlet UILabel *pageOrderLabel;
@@ -395,6 +397,35 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self.imageScrollCV setContentOffset: CGPointMake(offsetAfterRotating, 0)];
         }
     }
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            case 1136:
+                printf("iPhone 5 or 5S or 5C");
+                self.navBarBgViewHeight.constant = 58;
+                break;
+            case 1334:
+                printf("iPhone 6/6S/7/8");
+                self.navBarBgViewHeight.constant = 58;
+                break;
+            case 1920:
+                printf("iPhone 6+/6S+/7+/8+");
+                self.navBarBgViewHeight.constant = 58;
+                break;
+            case 2208:
+                printf("iPhone 6+/6S+/7+/8+");
+                self.navBarBgViewHeight.constant = 58;
+                break;
+            case 2436:
+                printf("iPhone X");
+                self.navBarBgViewHeight.constant = navBarHeightConstant;
+                break;
+            default:
+                printf("unknown");
+                self.navBarBgViewHeight.constant = 58;
+                break;
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -569,6 +600,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 #pragma mark - UI Setup
 - (void)setupNavBarRelated {
+    // Grident Effect for NavBarView
+    self.navBarBgView.backgroundColor = [UIColor blackColor];
+    self.navBarBgView.alpha = 0.5;
+    
     self.navBarView.backgroundColor = [UIColor clearColor];
     self.navBarHorzLayout.gravity = MyMarginGravity_Horz_Right;
 }
@@ -710,6 +745,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"handleSingleTap");
     
     [UIView animateWithDuration: 0.2 animations:^{
+        self.navBarBgView.hidden = !self.navBarBgView.hidden;
         self.navBarView.hidden = !self.navBarView.hidden;
         self.textAndImageVertLayout.hidden = !self.textAndImageVertLayout.hidden;
         self.textViewBgView.hidden = !self.textViewBgView.hidden;
@@ -721,7 +757,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if ((self.videoPlayer.rate != 0) && (self.videoPlayer.error == nil)) {
             NSLog(@"self.videoPlayer.rate: %f", self.videoPlayer.rate);
         }
-        
         if (self.navBarView.hidden) {
             self.videoPlayerViewController.showsPlaybackControls = YES;
         } else {

@@ -579,8 +579,6 @@
 		92CBCC821BD7606100F1F27A /* frame_click@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CBCC801BD7606100F1F27A /* frame_click@2x.png */; };
 		92CBCC861BD7624200F1F27A /* 2-02bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CBCC851BD7624200F1F27A /* 2-02bg@2x.png */; };
 		92CBCC931BD7854900F1F27A /* 2-08key-frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CBCC921BD7854900F1F27A /* 2-08key-frame@2x.png */; };
-		92CBCCB21BD79DBF00F1F27A /* DateSelectBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CBCCB01BD79DBF00F1F27A /* DateSelectBarViewController.m */; };
-		92CBCCB31BD79DBF00F1F27A /* DateSelectBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92CBCCB11BD79DBF00F1F27A /* DateSelectBarViewController.xib */; };
 		92CD63BF1C0810F6000A2279 /* ModeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CD63BD1C0810F6000A2279 /* ModeTableViewCell.m */; };
 		92CD63C01C0810F6000A2279 /* ModeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92CD63BE1C0810F6000A2279 /* ModeTableViewCell.xib */; };
 		92CD63C21C08127B000A2279 /* 4-17test.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CD63C11C08127B000A2279 /* 4-17test.png */; };
@@ -684,8 +682,6 @@
 		CB071CF3213E4754003D01D8 /* DMVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB071CF1213E4754003D01D8 /* DMVC.storyboard */; };
 		CB071CF4213E4754003D01D8 /* DMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB071CF2213E4754003D01D8 /* DMViewController.m */; };
 		CB071CF8213E476A003D01D8 /* DMPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB071CF7213E476A003D01D8 /* DMPlayerViewController.m */; };
-		CBE815F3213649D30043AEFA /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE815EF213649D30043AEFA /* FLAnimatedImage.m */; };
-		CBE815F4213649D30043AEFA /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE815F0213649D30043AEFA /* FLAnimatedImageView.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D743E9041D2CB5F500652A97 /* icon_exchanged.png in Resources */ = {isa = PBXBuildFile; fileRef = D743E9031D2CB5F500652A97 /* icon_exchanged.png */; };
@@ -1499,9 +1495,6 @@
 		92CBCC801BD7606100F1F27A /* frame_click@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "frame_click@2x.png"; sourceTree = "<group>"; };
 		92CBCC851BD7624200F1F27A /* 2-02bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "2-02bg@2x.png"; sourceTree = "<group>"; };
 		92CBCC921BD7854900F1F27A /* 2-08key-frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "2-08key-frame@2x.png"; sourceTree = "<group>"; };
-		92CBCCAF1BD79DBF00F1F27A /* DateSelectBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateSelectBarViewController.h; sourceTree = "<group>"; };
-		92CBCCB01BD79DBF00F1F27A /* DateSelectBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateSelectBarViewController.m; sourceTree = "<group>"; };
-		92CBCCB11BD79DBF00F1F27A /* DateSelectBarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateSelectBarViewController.xib; sourceTree = "<group>"; };
 		92CD63BC1C0810F6000A2279 /* ModeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModeTableViewCell.h; sourceTree = "<group>"; };
 		92CD63BD1C0810F6000A2279 /* ModeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModeTableViewCell.m; sourceTree = "<group>"; };
 		92CD63BE1C0810F6000A2279 /* ModeTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ModeTableViewCell.xib; sourceTree = "<group>"; };
@@ -1625,10 +1618,6 @@
 		CB071CF2213E4754003D01D8 /* DMViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMViewController.m; sourceTree = "<group>"; };
 		CB071CF6213E476A003D01D8 /* DMPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMPlayerViewController.h; sourceTree = "<group>"; };
 		CB071CF7213E476A003D01D8 /* DMPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMPlayerViewController.m; sourceTree = "<group>"; };
-		CBE815EF213649D30043AEFA /* FLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImage.m; sourceTree = "<group>"; };
-		CBE815F0213649D30043AEFA /* FLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImageView.m; sourceTree = "<group>"; };
-		CBE815F1213649D30043AEFA /* FLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImage.h; sourceTree = "<group>"; };
-		CBE815F2213649D30043AEFA /* FLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImageView.h; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -1900,6 +1889,7 @@
 				54951AF22005E6A0001FFAF9 /* AlbumDetailViewController.h */,
 				54951AF32005E6A0001FFAF9 /* AlbumDetailViewController.m */,
 				54138323200461110043D6CC /* AlbumDetailVC.storyboard */,
+				633BC3921EE0F97B006FB6F8 /* Parallax */,
 			);
 			name = AlbumDetail;
 			sourceTree = "<group>";
@@ -2348,7 +2338,6 @@
 				540DE2BE20283BCF0090F584 /* CategoryDetail */,
 				540DE2BF20283BDD0090F584 /* AlbumDetail */,
 				540DE2C020283BF20090F584 /* NewMessageBoard */,
-				633BC3921EE0F97B006FB6F8 /* Parallax */,
 				54885DAD20DA83E200644A82 /* LikeListVC */,
 				54885DB720DAA7FF00644A82 /* AlbumSponsorList */,
 				54F46D5720A54ADD0048B0A9 /* CreaterVC */,
@@ -3199,7 +3188,7 @@
 				54877CF01F905B030050C077 /* GlobalVars.m */,
 				63C8DA611E30CB7E00AFBC2B /* DataModel.xcdatamodeld */,
 				929ED4961B78446C00D21CF0 /* Lib */,
-				92D362E41BE0678A0084C746 /* 預覽器(包含下載指示器) */,
+				92D362E41BE0678A0084C746 /* 閱讀器 */,
 				929ED4971B78448500D21CF0 /* wTools.h */,
 				929ED4981B78448500D21CF0 /* wTools.m */,
 				9299FFBF1BCB696700BB9D84 /* boxAPI.h */,
@@ -3398,7 +3387,6 @@
 			isa = PBXGroup;
 			children = (
 				CB071CF5213E476A003D01D8 /* dailymotion-player-objc */,
-				CBE815EE213649D30043AEFA /* FLAnimatedImage */,
 				630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */,
 				D78F73861D226C8700D8A271 /* youtube-ios-player-helper */,
 				9295A3B51C22521300317FEA /* 圖片放大預覽器 */,
@@ -3408,7 +3396,6 @@
 				922557261BDF221E00CD4E9B /* 警告視窗 */,
 				922D92FB1BDA305D00640639 /* 文字底線 */,
 				924A92E61BD4F88300E3D610 /* AsyncImageView */,
-				92CBCCAE1BD79DB100F1F27A /* 日期選擇 */,
 				92D526001BCF9E47002C157B /* 選擇器 */,
 				92D525FC1BCF9E37002C157B /* 彈跳視窗 */,
 				6319A35F1DABB60C001CB8BD /* JCCollectionView */,
@@ -3653,16 +3640,6 @@
 			name = "2-08";
 			sourceTree = "<group>";
 		};
-		92CBCCAE1BD79DB100F1F27A /* 日期選擇 */ = {
-			isa = PBXGroup;
-			children = (
-				92CBCCAF1BD79DBF00F1F27A /* DateSelectBarViewController.h */,
-				92CBCCB01BD79DBF00F1F27A /* DateSelectBarViewController.m */,
-				92CBCCB11BD79DBF00F1F27A /* DateSelectBarViewController.xib */,
-			);
-			name = "日期選擇";
-			sourceTree = "<group>";
-		};
 		92CD63BB1C0810AF000A2279 /* cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -3686,13 +3663,13 @@
 			name = "共用";
 			sourceTree = "<group>";
 		};
-		92D362E41BE0678A0084C746 /* 預覽器(包含下載指示器) */ = {
+		92D362E41BE0678A0084C746 /* 閱讀器 */ = {
 			isa = PBXGroup;
 			children = (
 				54672DD620FF23E10045DD7E /* ContentCheckingVC */,
 				92D362F71BE06C170084C746 /* TYMProgressBarView */,
 			);
-			name = "預覽器(包含下載指示器)";
+			name = "閱讀器";
 			sourceTree = "<group>";
 		};
 		92D362EA1BE0691F0084C746 /* 3-08 */ = {
@@ -3936,17 +3913,6 @@
 			path = "dailymotion-player-objc";
 			sourceTree = "<group>";
 		};
-		CBE815EE213649D30043AEFA /* FLAnimatedImage */ = {
-			isa = PBXGroup;
-			children = (
-				CBE815EF213649D30043AEFA /* FLAnimatedImage.m */,
-				CBE815F0213649D30043AEFA /* FLAnimatedImageView.m */,
-				CBE815F1213649D30043AEFA /* FLAnimatedImage.h */,
-				CBE815F2213649D30043AEFA /* FLAnimatedImageView.h */,
-			);
-			path = FLAnimatedImage;
-			sourceTree = "<group>";
-		};
 		D70145001D1A7F20005D8CDE /* Email 驗證 */ = {
 			isa = PBXGroup;
 			children = (
@@ -4157,7 +4123,6 @@
 				92F89B261BBE79CF00565908 /* install_03.png in Resources */,
 				928348A41C62FD4F002DBC6A /* 3-01icon_line.png in Resources */,
 				927410411BD0A6FC0031460B /* icon_art_click@2x.png in Resources */,
-				92CBCCB31BD79DBF00F1F27A /* DateSelectBarViewController.xib in Resources */,
 				92D362F21BE06A5D0084C746 /* loading@2x.png in Resources */,
 				927410331BD0A6FC0031460B /* icon_nature_click@2x.png in Resources */,
 				92A384AB1CFEC34600C1CDBC /* gift_00001.png in Resources */,
@@ -4682,7 +4647,6 @@
 				5427BBD31F4FE237000B438D /* UIColor+HexString.m in Sources */,
 				543043D320B2A5F600018AF4 /* BannerCollectionViewCell.m in Sources */,
 				63B340E81EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m in Sources */,
-				CBE815F4213649D30043AEFA /* FLAnimatedImageView.m in Sources */,
 				92C4D50C1B74578000504B57 /* SignViewController_1.m in Sources */,
 				54885DBA20DB413E00644A82 /* AlbumSponsorListViewController.m in Sources */,
 				54FA3EF3202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.m in Sources */,
@@ -4724,7 +4688,6 @@
 				544DA7C41F4B271C00E80C45 /* MapShowingViewController.m in Sources */,
 				549EC78D1F7B466600260EB0 /* ChooseTemplateViewController.m in Sources */,
 				63C8DA631E30CB7E00AFBC2B /* DataModel.xcdatamodeld in Sources */,
-				92CBCCB21BD79DBF00F1F27A /* DateSelectBarViewController.m in Sources */,
 				92F6CCE01B79AB9F002E547C /* RSKTouchView.m in Sources */,
 				926037101B81D5CE009B3B5A /* ShowImageViewController.m in Sources */,
 				6319A36A1DABB60C001CB8BD /* JCCollectionFooterView.m in Sources */,
@@ -4747,7 +4710,6 @@
 				920279B41C4500B200A63027 /* CooperationAddViewController.m in Sources */,
 				630B8F931EDD0F16009D72FB /* CategoryDetailViewController.m in Sources */,
 				6306D6501DB4CEA5005EC98C /* UIImage+AverageColor.m in Sources */,
-				CBE815F3213649D30043AEFA /* FLAnimatedImage.m in Sources */,
 				63175B1E1EA54CF6008ADEC4 /* FBFriendsListViewController.m in Sources */,
 				928348A11C62F53C002DBC6A /* SearchuserTableViewCell.m in Sources */,
 				920279A21C449D8500A63027 /* CoopTopTableViewCell.m in Sources */,

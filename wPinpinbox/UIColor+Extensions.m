@@ -88,17 +88,22 @@
 
 + (UIColor *)secondGrey
 {
-    return [UIColor colorWithRed: 212.0/255.0
-                           green: 212.0/255.0
-                            blue: 212.0/255.0
+//    return [UIColor colorWithRed: 212.0/255.0
+//                           green: 212.0/255.0
+//                            blue: 212.0/255.0
+//                           alpha: 1];
+    
+    return [UIColor colorWithRed: 232.0/255.0
+                           green: 232.0/255.0
+                            blue: 232.0/255.0
                            alpha: 1];
 }
 
 + (UIColor *)thirdGrey
 {
-    return [UIColor colorWithRed: 232.0/255.0
-                           green: 232.0/255.0
-                            blue: 232.0/255.0
+    return [UIColor colorWithRed: 242.0/255.0
+                           green: 242.0/255.0
+                            blue: 242.0/255.0
                            alpha: 1];
 }
 

@@ -13,6 +13,7 @@ target 'wPinpinbox' do
   pod 'TTTAttributedLabel'
   pod 'SSFadingScrollView', '~> 1.1'
 
+  pod 'FLAnimatedImage', '~> 1.0'
   pod 'Fabric'
   pod 'Crashlytics'
   pod 'FBSDKShareKit'
