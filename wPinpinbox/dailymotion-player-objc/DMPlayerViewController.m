@@ -140,13 +140,13 @@ static NSString *const DMAPIVersion = @"2.9.3";
     for (NSString *param in [self.params keyEnumerator]) {
         id value = self.params[param];
         if ([value isKindOfClass:NSString.class]) {
-            value = [value stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            value = [value stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];//stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         }
         [url appendFormat:@"&%@=%@", param, value];
     }
 
     NSString *appName = NSBundle.mainBundle.bundleIdentifier;
-    [url appendFormat:@"&app=%@", [appName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    [url appendFormat:@"&app=%@", [appName stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];//stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
     [webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 
@@ -170,7 +170,7 @@ static NSString *const DMAPIVersion = @"2.9.3";
             NSString *key = [component substringToIndex:pos];
             NSString *val = [component substringFromIndex:pos + 1];
 
-            val = [[val stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+            val = [[val stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]//stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
                     stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 
             if ([key isEqualToString:@"event"]) {
@@ -354,24 +354,42 @@ static NSString *const DMAPIVersion = @"2.9.3";
   }
   else {
     self.safariURL = URL;
+    
     NSString *safariAlertTitle = [NSString stringWithFormat:NSLocalizedString(@"You are about to leave %@", nil), [[NSBundle mainBundle] infoDictionary][@"CFBundleExecutable"]];
     NSString *safariAlertMessage = [NSString stringWithFormat:NSLocalizedString(@"Do you want to open %@ in Safari?", nil), URL.host];
-    UIAlertView *safariAlertView = [[UIAlertView alloc] initWithTitle:safariAlertTitle
-                                                              message:safariAlertMessage
-                                                             delegate:self
-                                                    cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-                                                    otherButtonTitles:NSLocalizedString(@"Open", nil), nil];
-    [safariAlertView show];
+    UIAlertController *safariAlert = [UIAlertController alertControllerWithTitle:safariAlertTitle message:safariAlertMessage preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *act1 = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    UIAlertAction *act2 = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[UIApplication sharedApplication] openURL:URL options:@{} completionHandler:nil];
+    }];
+    [safariAlert addAction:act1];
+    [safariAlert addAction:act2];
+    [self presentViewController:safariAlert animated:YES completion:nil];
+      
+      
+      
+      
+//    UIAlertView *safariAlertView = [[UIAlertView alloc] initWithTitle:safariAlertTitle
+//                                                              message:safariAlertMessage
+//                                                             delegate:self
+//                                                    cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+//                                                    otherButtonTitles:NSLocalizedString(@"Open", nil), nil];
+//    [safariAlertView show];
+
   }
 }
 
-#pragma mark UIAlertViewDelegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-  if (buttonIndex != alertView.cancelButtonIndex) {
-    [[UIApplication sharedApplication] openURL:self.safariURL];
-  }
-  self.safariURL = nil;
-}
-
-
+//#pragma mark UIAlertViewDelegate
+//#ifndef __IPHONE_9_0
+//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+//  if (buttonIndex != alertView.cancelButtonIndex) {
+//    [[UIApplication sharedApplication] openURL:self.safariURL];
+//  }
+//  self.safariURL = nil;
+//}
+//
+//#endif
 @end

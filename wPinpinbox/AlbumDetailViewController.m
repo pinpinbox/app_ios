@@ -664,6 +664,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     // Step 1: Define a normal attributed string for non-link texts
     NSString *string = self.data[@"album"][@"description"];
+
     NSLog(@"description string: %@", string);
 //    NSDictionary *attributes = @{NSForegroundColorAttributeName :[UIColor blackColor], NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline]};
     //descriptionLabel.attributedText = [[NSAttributedString alloc] initWithString: string attributes: attributes];
@@ -689,19 +690,24 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // Step 3: Add link descriptionStr
     
     NSRegularExpression *exp1 = [NSRegularExpression regularExpressionWithPattern:@"http://[^\\s]*" options:NSRegularExpressionCaseInsensitive error:nil];
-    
-    NSArray *urls1 = [exp1 matchesInString:string options:0 range:NSMakeRange(0, string.length)];
-    
+
+    NSArray *urls11 = [exp1 matchesInString:string options:0 range:NSMakeRange(0, string.length)];
+
     NSRegularExpression *exp2 = [NSRegularExpression regularExpressionWithPattern:@"https://[^\\s]*" options:NSRegularExpressionCaseInsensitive error:nil];
-    
-    NSArray *urls2 = [exp2 matchesInString:string options:0 range:NSMakeRange(0, string.length)];
+
+    NSArray *urls21 = [exp2 matchesInString:string options:0 range:NSMakeRange(0, string.length)];
     
     //NSArray *urls1 = [string componentsMatchedByRegex: @"http://[^\\s]*"];
     //NSArray *urls2 = [string componentsMatchedByRegex: @"https://[^\\s]*"];
     NSMutableArray *array = [NSMutableArray new];
-    [array addObjectsFromArray: urls1];
-    [array addObjectsFromArray: urls2];
-    
+    for (NSTextCheckingResult *t in urls11) {
+        NSString *str = [string substringWithRange:t.range];
+        [array addObject: str];
+    }
+    for (NSTextCheckingResult *t in urls21) {
+        NSString *str = [string substringWithRange:t.range];
+        [array addObject:str];
+    }
     NSLog(@"array: %@", array);
     
     [descriptionLabel setLinksForSubstrings: array withLinkHandler: handler];

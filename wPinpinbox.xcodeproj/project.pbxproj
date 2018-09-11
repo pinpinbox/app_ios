@@ -80,7 +80,6 @@
 		549765D01F7EA0B300E2CBEF /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549765CF1F7EA0B300E2CBEF /* SettingViewController.m */; };
 		5498BF751FC7200A007BD033 /* ActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5498BF741FC7200A007BD033 /* ActivityDetailViewController.m */; };
 		549A18A120AE714D00532E1E /* APNS Banner Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */; };
-		549B48A91F6EC2F60012FE13 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 549B48A81F6EC2F60012FE13 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		549B48AC1F6EC3190012FE13 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 549B48AB1F6EC3190012FE13 /* libicucore.tbd */; };
 		549EC78D1F7B466600260EB0 /* ChooseTemplateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549EC78C1F7B466600260EB0 /* ChooseTemplateViewController.m */; };
 		54A2645A201873760066DD09 /* SetupMusicVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54A26459201873760066DD09 /* SetupMusicVC.storyboard */; };
@@ -494,8 +493,6 @@
 		5498BF731FC72007007BD033 /* ActivityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityDetailViewController.h; sourceTree = "<group>"; };
 		5498BF741FC7200A007BD033 /* ActivityDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityDetailViewController.m; sourceTree = "<group>"; };
 		549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "APNS Banner Images.xcassets"; path = "Image Resources/APNS Banner Images.xcassets"; sourceTree = "<group>"; };
-		549B48A71F6EC2F60012FE13 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
-		549B48A81F6EC2F60012FE13 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		549B48AB1F6EC3190012FE13 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		549EC78B1F7B466600260EB0 /* ChooseTemplateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseTemplateViewController.h; sourceTree = "<group>"; };
 		549EC78C1F7B466600260EB0 /* ChooseTemplateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseTemplateViewController.m; sourceTree = "<group>"; };
@@ -2368,8 +2365,6 @@
 				5486C25E205122B50016BB9D /* BFPaperButton */,
 				54C198F61F6EBFED0063F7D6 /* FRHyperLabel.h */,
 				54C198F71F6EBFED0063F7D6 /* FRHyperLabel.m */,
-				549B48A71F6EC2F60012FE13 /* RegexKitLite.h */,
-				549B48A81F6EC2F60012FE13 /* RegexKitLite.m */,
 				54E00F111FF39B69007881ED /* customLayout.h */,
 				54E00F121FF39B6D007881ED /* customLayout.m */,
 				54A857542008BC3400D87843 /* LabelAttributeStyle.h */,
@@ -3007,7 +3002,6 @@
 				630A83E41EB1D07300AC8479 /* MyLinearLayout.m in Sources */,
 				543B11A7205619A900111102 /* ZOZolaZoomTransition.m in Sources */,
 				630AD8521EA7659000825BBA /* FBFriendNotFoundViewController.m in Sources */,
-				549B48A91F6EC2F60012FE13 /* RegexKitLite.m in Sources */,
 				6308C4591EACA84C00F99AC0 /* ScanCodeViewController.m in Sources */,
 				CB071CF8213E476A003D01D8 /* DMPlayerViewController.m in Sources */,
 				630A83DE1EB1D07300AC8479 /* MyFloatLayout.m in Sources */,

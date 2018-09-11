@@ -234,7 +234,7 @@
     
     [wTools ShowMBProgressHUD];
     
-    NSString *limit=[NSString stringWithFormat:@"%ld,%ld",(long)nextId, 10];
+    NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 10];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSArray *arr = @[@"mine",@"other",@"cooperation"];
@@ -328,7 +328,7 @@
         UILabel *lab1;
         
         @try {
-            NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%i",type+1] owner:self options:nil];
+            NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%li",type+1] owner:self options:nil];
             backview = [subviewArray objectAtIndex:0];
             [collectionView addSubview:backview];
             

@@ -268,7 +268,7 @@
         //[data setObject:searchText.text forKey:@"searchkey"];
         [data setObject: self.searchController.searchBar.text forKey: @"searchkey"];
         
-        NSString *limit=[NSString stringWithFormat:@"%d,%d",nextId,nextId+10];
+        NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId,nextId+10];
         [data setObject:limit forKey:@"limit"];
         
         respone=[boxAPI search:[wTools getUserID] token:[wTools getUserToken] data:data];

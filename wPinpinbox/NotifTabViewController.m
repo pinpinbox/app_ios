@@ -96,7 +96,7 @@
 
 - (void)handleNewVersionLabelTap {
 //    NSLog(@"handleNewVersionLabelTap");
-    [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl]];
+    [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl] options:@{} completionHandler:nil];
 }
 
 #pragma mark -

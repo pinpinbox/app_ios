@@ -313,7 +313,7 @@
         return;
     }
     
-    NSString *limit = [NSString stringWithFormat: @"%ld,%ld", (long)nextId, 10];
+    NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 10];
     NSLog(@"limit: %@", limit);
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){

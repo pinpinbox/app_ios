@@ -219,7 +219,7 @@ static InAppPurchaseManager *instance =nil;
 {
     NSMutableArray *purchasedItemIDs = [[NSMutableArray alloc] init];
     
-    NSLog(@"received restored transactions: %i", queue.transactions.count);
+    NSLog(@"received restored transactions: %lu", (unsigned long)queue.transactions.count);
     
     for (SKPaymentTransaction *transaction in queue.transactions)
     {
@@ -348,7 +348,7 @@ static InAppPurchaseManager *instance =nil;
                     NSLog(@"Error = %@", error);
                     NSLog(@"error.userInfo: %@", error.userInfo);
                     NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-                    NSLog(@"error code: %@", [NSString stringWithFormat: @"%d", error.code]);
+                    NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
                 }
             }];
             
