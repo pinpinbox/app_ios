@@ -1173,7 +1173,7 @@
         } else {
             UIView *v=[_ShowView viewWithTag: sender.tag-100];
             CGRect frame = v.frame;
-            int tag = sender.tag;
+            int tag = (int)sender.tag;
             [v removeFromSuperview];
             [sender removeFromSuperview];
             

@@ -83,9 +83,9 @@
             if (radius % 2 != 1) {
                 radius += 1; // force radius to be odd so that the three box-blur methodology works.
             }
-            vImageBoxConvolve_ARGB8888(&effectInBuffer, &effectOutBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
-            vImageBoxConvolve_ARGB8888(&effectOutBuffer, &effectInBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
-            vImageBoxConvolve_ARGB8888(&effectInBuffer, &effectOutBuffer, NULL, 0, 0, radius, radius, 0, kvImageEdgeExtend);
+            vImageBoxConvolve_ARGB8888(&effectInBuffer, &effectOutBuffer, NULL, 0, 0, (unsigned int)radius, (unsigned int)radius, 0, kvImageEdgeExtend);
+            vImageBoxConvolve_ARGB8888(&effectOutBuffer, &effectInBuffer, NULL, 0, 0, (unsigned int)radius, (unsigned int)radius, 0, kvImageEdgeExtend);
+            vImageBoxConvolve_ARGB8888(&effectInBuffer, &effectOutBuffer, NULL, 0, 0, (unsigned int)radius, (unsigned int)radius, 0, kvImageEdgeExtend);
         }
         BOOL effectImageBuffersAreSwapped = NO;
         if (hasSaturationChange) {
@@ -167,11 +167,17 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
 @dynamic popupViewController, useBlurForPopup;
 
 #pragma mark - blur view methods
-
+//  check if current app orientation is portrait/portrait upsidedown
++ (BOOL) isOrientationPortrait {
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    return (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown);
+}
 - (UIImage *)getScreenImage {
     // frame without status bar
     CGRect frame;
-    if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+    
+    if ([UIViewController isOrientationPortrait]){
+    //if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
         frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     } else {
         frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
@@ -200,7 +206,9 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
 
 - (void)addBlurView {
     UIImageView *blurView = [UIImageView new];
-    if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+    
+    if ([UIViewController isOrientationPortrait]){
+        //UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
         blurView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     } else {
         blurView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
@@ -248,7 +256,8 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
             [self addBlurView];
         } else {
             UIView *fadeView = [UIView new];
-            if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+            if ([UIViewController isOrientationPortrait]){
+            //if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
                 fadeView.frame = [UIScreen mainScreen].bounds;
             } else {
                 fadeView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
@@ -316,7 +325,8 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
             [self addBlurView];
         } else {
             UIView *fadeView = [UIView new];
-            if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+            if ([UIViewController isOrientationPortrait]){
+                //if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
                 fadeView.frame = [UIScreen mainScreen].bounds;
             } else {
                 fadeView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
@@ -387,7 +397,8 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
             [self addBlurView];
         } else {
             UIView *fadeView = [UIView new];
-            if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+            if ([UIViewController isOrientationPortrait]){
+            //if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
                 fadeView.frame = [UIScreen mainScreen].bounds;
             } else {
                 fadeView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
@@ -465,7 +476,8 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
             [self addBlurView];
         } else {
             UIView *fadeView = [UIView new];
-            if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+            if ([UIViewController isOrientationPortrait]){
+            //if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
                 fadeView.frame = [UIScreen mainScreen].bounds;
             } else {
                 fadeView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
@@ -562,7 +574,8 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
     CGRect frame = viewController.view.frame;
     CGFloat x;
     CGFloat y;
-    if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+    if ([UIViewController isOrientationPortrait]){
+    //if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
         x = ([UIScreen mainScreen].bounds.size.width - frame.size.width)/2;
         y = ([UIScreen mainScreen].bounds.size.height - frame.size.height)/2;
     } else {
@@ -575,7 +588,8 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
     CGRect frame = viewController.view.frame;
     CGFloat x;
     CGFloat y;
-    if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+    if ([UIViewController isOrientationPortrait]){
+    //if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
         x = ([UIScreen mainScreen].bounds.size.width - frame.size.width)/2;
         y = ([UIScreen mainScreen].bounds.size.height - frame.size.height);
     } else {
@@ -588,7 +602,8 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
     CGRect frame = viewController.view.frame;
     CGFloat x;
     CGFloat y;
-    if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+    if ([UIViewController isOrientationPortrait]){
+    //if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
         x = ([UIScreen mainScreen].bounds.size.width - frame.size.width)/2;
         y =0;
     } else {
@@ -602,7 +617,8 @@ NSString const *CWUseBlurForPopup = @"CWUseBlurForPopup";
     UIView *blurView = objc_getAssociatedObject(self, &CWBlurViewKey);
     [UIView animateWithDuration:ANIMATION_TIME animations:^{
         self.popupViewController.view.frame = [self getPopupFrameForViewController:self.popupViewController];
-        if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+        if ([UIViewController isOrientationPortrait]){
+        //if (UIDeviceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
             blurView.frame = [UIScreen mainScreen].bounds;
         } else {
             blurView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);

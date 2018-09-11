@@ -113,7 +113,7 @@
     if (_isShow) {
 //        _imagelist.count+1;
     }
-    return _imagelist.count;
+    return (int)_imagelist.count;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
