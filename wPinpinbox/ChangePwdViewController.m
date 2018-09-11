@@ -84,8 +84,11 @@
     self.pwdTextField2.textColor = [UIColor firstGrey];
     
     self.currentPwdView.layer.cornerRadius = kCornerRadius;
+    self.currentPwdView.backgroundColor = [UIColor thirdGrey];
     self.pwdView1.layer.cornerRadius = kCornerRadius;
+    self.pwdView1.backgroundColor = [UIColor thirdGrey];
     self.pwdView2.layer.cornerRadius = kCornerRadius;
+    self.pwdView2.backgroundColor = [UIColor thirdGrey];
     
     self.pwdCheckLabel1.hidden = YES;
     self.pwdCheckLabel2.hidden = YES;

@@ -546,6 +546,13 @@
                                     <constraint firstItem="irG-WU-tpb" firstAttribute="top" secondItem="Quh-ym-aFB" secondAttribute="top" id="dfR-6v-1uW"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eds-XN-Ulm">
+                                <rect key="frame" x="0.0" y="20" width="414" height="64"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="Qbx-eF-3ox"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TxV-bv-Xq8">
                                 <rect key="frame" x="0.0" y="20" width="414" height="95"/>
                                 <subviews>
@@ -671,6 +678,7 @@
                         <constraints>
                             <constraint firstItem="MS8-GD-iEh" firstAttribute="baseline" secondItem="gD8-9M-Iko" secondAttribute="baseline" id="0Ak-Lo-QOM"/>
                             <constraint firstItem="gD8-9M-Iko" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" constant="32" id="6AO-Qf-gAO"/>
+                            <constraint firstItem="eds-XN-Ulm" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" id="6Ze-HZ-l0v"/>
                             <constraint firstItem="MS8-GD-iEh" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" id="74o-rB-5db"/>
                             <constraint firstItem="6iW-5Y-gqn" firstAttribute="trailing" secondItem="gD8-9M-Iko" secondAttribute="trailing" constant="32" id="AdL-kC-nxF"/>
                             <constraint firstItem="6iW-5Y-gqn" firstAttribute="trailing" secondItem="MS8-GD-iEh" secondAttribute="trailing" id="EFr-9v-yOA"/>
@@ -680,11 +688,13 @@
                             <constraint firstItem="2zQ-kJ-JFQ" firstAttribute="top" secondItem="6iW-5Y-gqn" secondAttribute="top" id="VLs-j8-UdL"/>
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" id="VVS-Pc-52B"/>
                             <constraint firstItem="2zQ-kJ-JFQ" firstAttribute="bottom" secondItem="6iW-5Y-gqn" secondAttribute="bottom" id="WjV-Lx-g3c"/>
+                            <constraint firstItem="TxV-bv-Xq8" firstAttribute="top" secondItem="6iW-5Y-gqn" secondAttribute="top" id="WkV-f3-ZR5"/>
                             <constraint firstItem="TxV-bv-Xq8" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="ZzB-9r-oEe"/>
                             <constraint firstItem="MS8-GD-iEh" firstAttribute="height" secondItem="gD8-9M-Iko" secondAttribute="height" id="dIW-ZZ-mpQ"/>
                             <constraint firstItem="6iW-5Y-gqn" firstAttribute="bottom" secondItem="Quh-ym-aFB" secondAttribute="bottom" id="ftN-Xn-39t"/>
                             <constraint firstItem="TxV-bv-Xq8" firstAttribute="top" secondItem="qmy-ED-Q2i" secondAttribute="top" constant="20" symbolic="YES" id="jX4-Yx-oqS"/>
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="top" secondItem="gD8-9M-Iko" secondAttribute="bottom" id="lZg-mo-sr9"/>
+                            <constraint firstItem="eds-XN-Ulm" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="nV1-FK-AaJ"/>
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="peX-90-NYJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6iW-5Y-gqn"/>
@@ -705,6 +715,8 @@
                         <outlet property="mScrubber" destination="78d-pv-Smr" id="RMf-Mw-MuV"/>
                         <outlet property="messageBtn" destination="0BU-K2-Dhi" id="ydk-rv-C13"/>
                         <outlet property="moreBtn" destination="y97-5h-gOJ" id="gXQ-J2-TIV"/>
+                        <outlet property="navBarBgView" destination="eds-XN-Ulm" id="srj-RT-6hh"/>
+                        <outlet property="navBarBgViewHeight" destination="Qbx-eF-3ox" id="ezk-cJ-cVq"/>
                         <outlet property="navBarHorzLayout" destination="rNV-Fm-ZMq" id="ch1-mY-1uq"/>
                         <outlet property="navBarView" destination="TxV-bv-Xq8" id="Qbq-5O-ZBQ"/>
                         <outlet property="navBarViewTopConstraint" destination="jX4-Yx-oqS" id="Q3A-tK-l8h"/>

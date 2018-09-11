@@ -106,8 +106,11 @@
     self.cellPhoneNumberLabel.text = myData[@"cellphone"];
     
     self.countryCodeView.layer.cornerRadius = kCornerRadius;
+    self.countryCodeView.backgroundColor = [UIColor thirdGrey];
     self.cellPhoneView.layer.cornerRadius = kCornerRadius;
+    self.cellPhoneView.backgroundColor = [UIColor thirdGrey];
     self.smsView.layer.cornerRadius = kCornerRadius;
+    self.smsView.backgroundColor = [UIColor thirdGrey];
     self.countDownLabel.hidden = YES;
     
     self.sendBtn.layer.cornerRadius = kCornerRadius;

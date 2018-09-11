@@ -322,8 +322,6 @@
 		92C4D50F1B74591100504B57 /* SignViewController_2.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C4D50E1B74591100504B57 /* SignViewController_2.m */; };
 		92C4D5121B745D2D00504B57 /* SignViewController_3.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C4D5111B745D2D00504B57 /* SignViewController_3.m */; };
 		92C4D5151B745E8900504B57 /* SignViewController_4.m in Sources */ = {isa = PBXBuildFile; fileRef = 92C4D5141B745E8900504B57 /* SignViewController_4.m */; };
-		92CBCCB21BD79DBF00F1F27A /* DateSelectBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CBCCB01BD79DBF00F1F27A /* DateSelectBarViewController.m */; };
-		92CBCCB31BD79DBF00F1F27A /* DateSelectBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92CBCCB11BD79DBF00F1F27A /* DateSelectBarViewController.xib */; };
 		92CD63BF1C0810F6000A2279 /* ModeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CD63BD1C0810F6000A2279 /* ModeTableViewCell.m */; };
 		92CD63C01C0810F6000A2279 /* ModeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92CD63BE1C0810F6000A2279 /* ModeTableViewCell.xib */; };
 		92CFB5B11BE7562B001B7B78 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92CFB5B01BE7562B001B7B78 /* Foundation.framework */; };
@@ -908,9 +906,6 @@
 		92C4D5111B745D2D00504B57 /* SignViewController_3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignViewController_3.m; sourceTree = "<group>"; };
 		92C4D5131B745E8900504B57 /* SignViewController_4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignViewController_4.h; sourceTree = "<group>"; };
 		92C4D5141B745E8900504B57 /* SignViewController_4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignViewController_4.m; sourceTree = "<group>"; };
-		92CBCCAF1BD79DBF00F1F27A /* DateSelectBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateSelectBarViewController.h; sourceTree = "<group>"; };
-		92CBCCB01BD79DBF00F1F27A /* DateSelectBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateSelectBarViewController.m; sourceTree = "<group>"; };
-		92CBCCB11BD79DBF00F1F27A /* DateSelectBarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateSelectBarViewController.xib; sourceTree = "<group>"; };
 		92CD63BC1C0810F6000A2279 /* ModeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModeTableViewCell.h; sourceTree = "<group>"; };
 		92CD63BD1C0810F6000A2279 /* ModeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModeTableViewCell.m; sourceTree = "<group>"; };
 		92CD63BE1C0810F6000A2279 /* ModeTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ModeTableViewCell.xib; sourceTree = "<group>"; };
@@ -2308,7 +2303,6 @@
 				922557261BDF221E00CD4E9B /* 警告視窗 */,
 				922D92FB1BDA305D00640639 /* 文字底線 */,
 				924A92E61BD4F88300E3D610 /* AsyncImageView */,
-				92CBCCAE1BD79DB100F1F27A /* 日期選擇 */,
 				92D526001BCF9E47002C157B /* 選擇器 */,
 				92D525FC1BCF9E37002C157B /* 彈跳視窗 */,
 				6319A35F1DABB60C001CB8BD /* JCCollectionView */,
@@ -2465,16 +2459,6 @@
 				9251190D1CEAF615002D4678 /* 平台規範 */,
 			);
 			name = "註冊";
-			sourceTree = "<group>";
-		};
-		92CBCCAE1BD79DB100F1F27A /* 日期選擇 */ = {
-			isa = PBXGroup;
-			children = (
-				92CBCCAF1BD79DBF00F1F27A /* DateSelectBarViewController.h */,
-				92CBCCB01BD79DBF00F1F27A /* DateSelectBarViewController.m */,
-				92CBCCB11BD79DBF00F1F27A /* DateSelectBarViewController.xib */,
-			);
-			name = "日期選擇";
 			sourceTree = "<group>";
 		};
 		92CD63BB1C0810AF000A2279 /* cell */ = {
@@ -2732,7 +2716,6 @@
 				925119701CEEFFF2002D4678 /* CalbumV1.xib in Resources */,
 				630BE4741E8A8D2A007C4810 /* Info-iOS.plist in Resources */,
 				CB0C0DB42146509F00FAF438 /* image00.xcassets in Resources */,
-				92CBCCB31BD79DBF00F1F27A /* DateSelectBarViewController.xib in Resources */,
 				54331A9A1FE4ED90005E6ACE /* NotifTab.storyboard in Resources */,
 				92A155A01C33A81700E83EC5 /* TaobantextTableViewCell.xib in Resources */,
 				54138324200461110043D6CC /* AlbumDetailVC.storyboard in Resources */,
@@ -3055,7 +3038,6 @@
 				544DA7C41F4B271C00E80C45 /* MapShowingViewController.m in Sources */,
 				549EC78D1F7B466600260EB0 /* ChooseTemplateViewController.m in Sources */,
 				63C8DA631E30CB7E00AFBC2B /* DataModel.xcdatamodeld in Sources */,
-				92CBCCB21BD79DBF00F1F27A /* DateSelectBarViewController.m in Sources */,
 				92F6CCE01B79AB9F002E547C /* RSKTouchView.m in Sources */,
 				926037101B81D5CE009B3B5A /* ShowImageViewController.m in Sources */,
 				6319A36A1DABB60C001CB8BD /* JCCollectionFooterView.m in Sources */,

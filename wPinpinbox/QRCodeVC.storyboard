@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -23,7 +23,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scan-frame" translatesAutoresizingMaskIntoConstraints="NO" id="8vR-eU-hUU">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scan-frame.png" translatesAutoresizingMaskIntoConstraints="NO" id="8vR-eU-hUU">
                                 <rect key="frame" x="87.5" y="233.5" width="200" height="200"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="200" id="0V5-09-UDv"/>
@@ -37,7 +37,7 @@
                                         <rect key="frame" x="5" y="16" width="40" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark"/>
+                                        <state key="normal" image="ic200_arrow_left_white.png"/>
                                         <connections>
                                             <action selector="back:" destination="qhH-eM-Hb6" eventType="touchUpInside" id="PRG-1i-aVo"/>
                                         </connections>
@@ -50,7 +50,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GAY-Wd-pQU">
                                 <rect key="frame" x="0.0" y="603" width="375" height="64"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinpin_logo" translatesAutoresizingMaskIntoConstraints="NO" id="BBv-GY-6X0">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinpin_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="BBv-GY-6X0">
                                         <rect key="frame" x="67.5" y="9.5" width="240" height="45"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="240" id="ONI-DZ-IzU"/>
@@ -84,7 +84,7 @@
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="lDy-j0-iO7">
                                 <rect key="frame" x="16" y="-6" width="55" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="icon_back_white_120x120">
+                                <state key="normal" image="icon_back_white_120x120.png">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                             </button>
@@ -101,9 +101,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
-        <image name="icon_back_white_120x120" width="120" height="120"/>
-        <image name="pinpin_logo" width="401" height="82"/>
-        <image name="scan-frame" width="350" height="350"/>
+        <image name="ic200_arrow_left_white.png" width="16" height="16"/>
+        <image name="icon_back_white_120x120.png" width="120" height="120"/>
+        <image name="pinpin_logo.png" width="16" height="16"/>
+        <image name="scan-frame.png" width="350" height="350"/>
     </resources>
 </document>

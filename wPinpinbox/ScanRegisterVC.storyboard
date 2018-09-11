@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -23,8 +23,8 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scan-frame" translatesAutoresizingMaskIntoConstraints="NO" id="FVl-Lv-Swu">
-                                <rect key="frame" x="87.5" y="233.5" width="200" height="200"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scan-frame.png" translatesAutoresizingMaskIntoConstraints="NO" id="FVl-Lv-Swu">
+                                <rect key="frame" x="88" y="234" width="200" height="200"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="Jg7-YI-S6S"/>
                                     <constraint firstAttribute="height" constant="200" id="eqy-mM-cdz"/>
@@ -33,7 +33,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drY-ED-fRb">
                                 <rect key="frame" x="0.0" y="603" width="375" height="64"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinpin_logo" translatesAutoresizingMaskIntoConstraints="NO" id="9Re-t3-VWn">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinpin_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="9Re-t3-VWn">
                                         <rect key="frame" x="67.5" y="8" width="240" height="48"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="Mez-rK-fTz"/>
@@ -58,7 +58,7 @@
                                             <constraint firstAttribute="height" constant="42" id="pyN-AH-6qA"/>
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
-                                        <state key="normal" image="ic200_arrow_left_dark"/>
+                                        <state key="normal" image="ic200_arrow_left_white.png"/>
                                         <connections>
                                             <action selector="backBtnPress:" destination="DZv-kO-AWV" eventType="touchUpInside" id="w5V-3k-m37"/>
                                         </connections>
@@ -96,8 +96,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
-        <image name="pinpin_logo" width="401" height="82"/>
-        <image name="scan-frame" width="350" height="350"/>
+        <image name="ic200_arrow_left_white.png" width="16" height="16"/>
+        <image name="pinpin_logo.png" width="401" height="82"/>
+        <image name="scan-frame.png" width="350" height="350"/>
     </resources>
 </document>

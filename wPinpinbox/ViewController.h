@@ -9,11 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface ViewController : UIViewController
-{
-//    __weak IBOutlet UITextField *email;
-//    __weak IBOutlet UITextField *pwd;
-}
-
 - (void)setTimerForUrlScheme: (NSString *)BUID;
-
 @end

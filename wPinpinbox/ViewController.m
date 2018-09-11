@@ -38,8 +38,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 //static NSString *pinpinbox = @"https://www.pinpinbox.com/";
 
-@interface ViewController () <UIScrollViewDelegate, UITextFieldDelegate, UIApplicationDelegate, CLLocationManagerDelegate>
-{
+@interface ViewController () <UIScrollViewDelegate, UITextFieldDelegate, UIApplicationDelegate, CLLocationManagerDelegate> {
     UIPageControl *pageControl;
     
     UITextField *selectText;
@@ -60,10 +59,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     UIImageView *bg;
 }
-@property (weak, nonatomic) IBOutlet UIButton *scanBtn;
 
 @property (weak, nonatomic) IBOutlet UIButton *createAccountBtn;
 @property (weak, nonatomic) IBOutlet UIButton *facebookLoginBtn;
+@property (weak, nonatomic) IBOutlet UIButton *scanBtn;
 
 @property (weak, nonatomic) IBOutlet UIView *horizontalLineView1;
 @property (weak, nonatomic) IBOutlet UILabel *middleTextLabel;
@@ -85,12 +84,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 #pragma mark - View Related Methods
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     NSLog(@"");
     NSLog(@"ViewController viewDidLoad");
-    
-    // For temporary
-//    self.scanBtn.hidden = YES;
     
     self.navigationController.navigationBar.hidden = YES;
     
@@ -116,6 +111,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     [self faceBookLoginBtnSetup];
     [self createAccountBtnSetup];
+    [self scanBtnSetup];
+    
     [self emailTextFieldAndViewSetup];
     [self pwdTextFieldAndViewSetup];
     [self loginBtnSetup];
@@ -141,16 +138,25 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [self.createAccountBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
 }
 
+- (void)scanBtnSetup {
+    self.scanBtn.layer.cornerRadius = kCornerRadius;
+    self.scanBtn.backgroundColor = [UIColor thirdGrey];
+    self.scanBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    [self.scanBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
+}
+
 - (void)emailTextFieldAndViewSetup {
     self.emailTextField.textColor = [UIColor firstGrey];
     self.emailTextBgView.layer.cornerRadius = kCornerRadius;
     self.emailTextBgView.layer.masksToBounds = YES;
+    self.emailTextBgView.backgroundColor = [UIColor thirdGrey];
 }
 
 - (void)pwdTextFieldAndViewSetup {
     self.pwdTextField.textColor = [UIColor firstGrey];
     self.pwdTextBgView.layer.cornerRadius = kCornerRadius;
     self.pwdTextBgView.layer.masksToBounds = YES;
+    self.pwdTextBgView.backgroundColor = [UIColor thirdGrey];
 }
 
 - (void)loginBtnSetup {
