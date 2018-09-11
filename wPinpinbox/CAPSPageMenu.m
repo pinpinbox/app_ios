@@ -730,10 +730,10 @@ NSString * const CAPSPageMenuOptionHideTopMenuBar                       = @"hide
             
             // Move controller scroll view when tapping menu item
             double duration = _scrollAnimationDurationOnMenuItemTap / 1000.0;
-            
+            __block typeof(_controllerScrollView) scrollview = _controllerScrollView;
             [UIView animateWithDuration:duration animations:^{
-                CGFloat xOffset = (CGFloat)itemIndex * _controllerScrollView.frame.size.width;
-                [_controllerScrollView setContentOffset:CGPointMake(xOffset, _controllerScrollView.contentOffset.y)];
+                CGFloat xOffset = (CGFloat)itemIndex * scrollview.frame.size.width;
+                [scrollview setContentOffset:CGPointMake(xOffset, scrollview.contentOffset.y)];
             }];
             
             if (_tapTimer != nil) {

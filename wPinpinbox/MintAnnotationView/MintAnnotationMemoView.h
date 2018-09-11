@@ -26,7 +26,7 @@
 @property UIColor           *nameTagLineColor;
 @property NSMutableArray    *annotationList;
 @property UIImage           *nameTagImage;
-@property NSObject<MintAnnotationMemoViewDelegate> *delegate;
+@property NSObject<MintAnnotationMemoViewDelegate> *MAdelegate;
 
 - (NSString *)annotationWithMemo:(NSString *)memo;
 - (void) removeAnnotations;

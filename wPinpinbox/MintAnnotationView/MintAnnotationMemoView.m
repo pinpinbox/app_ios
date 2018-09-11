@@ -152,9 +152,9 @@
 
 - (void) touchedTag:(id) sender
 {
-    if (self.delegate != nil){
+    if (self.MAdelegate != nil){
         UIButton * tagButton = (UIButton*) sender;
-        [self.delegate touchedMintAnnotationTag:tagButton.titleLabel.text];
+        [self.MAdelegate touchedMintAnnotationTag:tagButton.titleLabel.text];
     }
 }
 

@@ -297,6 +297,7 @@ static InAppPurchaseManager *instance =nil;
             [req setTimeoutInterval: 8];
             
             NSURLSession *session = [NSURLSession sharedSession];
+            __block typeof(self) weakself = self;
             NSURLSessionTask *task = [session dataTaskWithRequest: req completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 
                 if (data.length > 0 && error == nil) {                    
@@ -310,15 +311,15 @@ static InAppPurchaseManager *instance =nil;
                     id status = [logDict objectForKey:@"status"];
                     int verifyReceiptStatus = (int)[status integerValue];
                     
-                    if ((verifyReceiptStatus==0) && ([verifyJsonData length] != 0)) //status = 0 正常 and 有驗證碼
+                    if ((verifyReceiptStatus==0) && ([weakself->verifyJsonData length] != 0)) //status = 0 正常 and 有驗證碼
                     {
-                        NSString* verifyCode = [[NSString alloc] initWithData:verifyJsonData encoding:NSUTF8StringEncoding];
-                        [delegate purchaseComplete:productStr withDic:logDict appendString:verifyCode flag:0];
+                        NSString* verifyCode = [[NSString alloc] initWithData:weakself->verifyJsonData encoding:NSUTF8StringEncoding];
+                        [weakself.delegate purchaseComplete:weakself->productStr withDic:logDict appendString:verifyCode flag:0];
                     }
                     else //問題兒童 顯示購買異常
                     {
-                        NSString* verifyCode = [[NSString alloc] initWithData:verifyJsonData encoding:NSUTF8StringEncoding];
-                        [delegate purchaseComplete:productStr withDic:logDict appendString:verifyCode flag:1];
+                        NSString* verifyCode = [[NSString alloc] initWithData:weakself->verifyJsonData encoding:NSUTF8StringEncoding];
+                        [weakself->delegate purchaseComplete:weakself->productStr withDic:logDict appendString:verifyCode flag:1];
                     }
                     
                     switch([(NSHTTPURLResponse *)response statusCode]) {

@@ -83,14 +83,16 @@ BOOL CGAffineTransformEqualToTransformWithAccuracy (CGAffineTransform firstTrans
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGesture:)];
     [self.superview addGestureRecognizer:longPress];
 }
-
+- (void)setCurrentAngle:(CGFloat)angle {
+    currentAngle = angle;
+}
 - (void)addMenuItem:(MTMenuItem *)item
 {
-    
+    __block typeof(self) wself = self;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-         currentAngle = _startingAngle ?: 10.0;
-        
+         //currentAngle = _startingAngle ?: 10.0;
+        [wself setCurrentAngle:wself.startingAngle?:10.0];
     });
     if (currentAngle == 0) {
         currentAngle = _startingAngle ?: 10.0;

@@ -11,6 +11,7 @@
 @implementation CopperatiocTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
 }
 -(void)layoutSubviews{

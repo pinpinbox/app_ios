@@ -26,10 +26,10 @@
     BOOL isReloading;
     NSInteger nextId;
     
-    NSMutableArray *dataArray;
 }
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
+@property (nonatomic, strong) NSMutableArray *dataArray;
 @end
 
 @implementation OtherCollectionViewController
@@ -60,7 +60,7 @@
     isLoading = NO;
     isReloading = NO;
     
-    dataArray = [NSMutableArray new];
+    _dataArray = [NSMutableArray new];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget: self
@@ -102,7 +102,7 @@
 
 - (void)getcalbumlist {
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 10];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //NSArray *array = @[@"mine", @"other", @"cooperation"];
         NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
@@ -132,7 +132,7 @@
                                     protocolName: @"getcalbumlist"
                                          albumId: @""];
                     [self.refreshControl endRefreshing];
-                    isReloading = NO;
+                    wself->isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     
@@ -141,44 +141,44 @@
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"get result from getcalbumlist");
                         
-                        if (nextId == 0) {
-                            dataArray = [NSMutableArray new];
+                        if (wself->nextId == 0) {
+                            [wself.dataArray removeAllObjects];
                         }
                         int s = 0;
                         
                         for (NSMutableDictionary *collectDic in [dic objectForKey: @"data"]) {
                             s++;
-                            [dataArray addObject: collectDic];
+                            [wself.dataArray addObject: collectDic];
                         }
-                        nextId = nextId + s;
+                        wself->nextId = wself->nextId + s;
                         
-                        NSLog(@"dataArray: %@", dataArray);
-                        NSLog(@"dataArray.count: %lu", (unsigned long)dataArray.count);
+                        NSLog(@"dataArray: %@", wself.dataArray);
+                        NSLog(@"dataArray.count: %lu", (unsigned long)wself.dataArray.count);
                         
-                        [self.refreshControl endRefreshing];
-                        [self.tableView reloadData];
+                        [wself.refreshControl endRefreshing];
+                        [wself.tableView reloadData];
                         
-                        if (nextId >= 0) {
-                            isLoading = NO;
+                        if (wself->nextId >= 0) {
+                            wself->isLoading = NO;
                         }
                         if (s == 0) {
-                            isLoading = YES;
+                            wself->isLoading = YES;
                         }
-                        isReloading = NO;
+                        wself->isReloading = NO;
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
+                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [wself.refreshControl endRefreshing];
+                        wself->isReloading = NO;
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself.refreshControl endRefreshing];
+                        wself->isReloading = NO;
                     }
                 }
             } else {
-                [self.refreshControl endRefreshing];
-                isReloading = NO;
+                [wself.refreshControl endRefreshing];
+                wself->isReloading = NO;
             }
         });
     });
@@ -191,8 +191,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"dataArray.count: %lu", (unsigned long)dataArray.count);
-    return dataArray.count;
+    NSLog(@"dataArray.count: %lu", (unsigned long)_dataArray.count);
+    return _dataArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -200,7 +200,7 @@
     
     OtherCollectionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"cell" forIndexPath: indexPath];
     
-    NSDictionary *dic = [dataArray[indexPath.row] copy];
+    NSDictionary *dic = [_dataArray[indexPath.row] copy];
     NSLog(@"dic: %@", dic);
     
     NSString *imageUrl = dic[@"album"][@"cover"];
@@ -268,7 +268,7 @@
 {
     NSLog(@"didSelectRowAtIndexPath");
     
-    NSDictionary *dic = [dataArray[indexPath.row] copy];
+    NSDictionary *dic = [_dataArray[indexPath.row] copy];
     NSLog(@"dic: %@", dic);
     
     if ([self.delegate respondsToSelector: @selector(toReadBookController:)]) {
@@ -283,7 +283,7 @@
 {
     NSLog(@"willDisplayCell");
     
-    if (indexPath.item == (dataArray.count - 1)) {
+    if (indexPath.item == (_dataArray.count - 1)) {
         [self loadData];
     }
 }

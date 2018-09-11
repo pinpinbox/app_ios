@@ -156,21 +156,23 @@
 
 //刪除事件
 -(void)deletebook{
-    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //取得資料ID
     NSString * name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],_albumid ];
     NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     //檢查資料夾是否存在
+    __block typeof(self) wself = self;
     if ([fileManager fileExistsAtPath:docDirectoryPath]) {
         Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
         [rv addtitletext:@"確定要刪除相本?"];
         [rv addSelectBtntext:@"是" btn2:@"否"];
         [rv showView:app.window];
+        
         rv.btn1select=^(BOOL bo){
             if (bo) {
                 [fileManager removeItemAtPath:docDirectoryPath error:nil];
-                [self deletebook:_albumid];
+                [wself deletebook:wself.albumid];
             }
         };
     }else{
@@ -180,7 +182,7 @@
         [rv showView:app.window];
         rv.btn1select=^(BOOL bo){
             if (bo) {
-                [self deletebook:_albumid];
+                [wself deletebook:wself.albumid];
             }
         };
     }
@@ -199,6 +201,7 @@
     }
     
     [wTools ShowMBProgressHUD];
+    __block typeof(self.delegate) wdelegate = self.delegate;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *respone = [boxAPI delalbum:[wTools getUserID] token:[wTools getUserToken] albumid:albumid];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -208,21 +211,21 @@
                  NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
                 if ([dic[@"result"] intValue] == 1) {
-                    [_delegate reloadData];
+                    [wdelegate reloadData];
                 } else if ([dic[@"result"] intValue] == 0) {
-                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext:dic[@"message"]];
                      [rv addBackTouch];
                     [rv showView:app.window];
-                    [_delegate reloadData];
+                    [wdelegate reloadData];
                 } else {
-                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
                     [rv addBackTouch];
                     [rv showView:app.window];
-                    [_delegate reloadData];
+                    [wdelegate reloadData];
                 }
             }
         });
@@ -231,33 +234,34 @@
 
 -(void)hidealbumqueue:(NSString *)albumid{
     [wTools ShowMBProgressHUD];
+    __block typeof(self.delegate) wdelegate = self.delegate;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *respone=@"";
         respone=[boxAPI hidealbumqueue:[wTools getUserID] token:[wTools getUserToken] albumid:albumid];
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             if (respone!=nil) {
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
                 if ([dic[@"result"] intValue] == 1) {
-                    [_delegate reloadData];
+                    [wdelegate reloadData];
                     [self deletePlist: albumid];
                 } else if ([dic[@"result"] intValue] == 0) {
-                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext:dic[@"message"]];
                     [rv addBackTouch];
                     [rv showView:app.window];
-                    [_delegate reloadData];
+                    [wdelegate reloadData];
                 } else {
-                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext:NSLocalizedString(@"Host-NotAvailable", @"")];
                     [rv addBackTouch];
                     [rv showView:app.window];
-                    [_delegate reloadData];
+                    [wdelegate reloadData];
                 }
             }
         });
@@ -296,13 +300,15 @@
 //刪除共用-共用
 -(void)deletecooperation:(NSString *)albumid{
     [wTools ShowMBProgressHUD];
+    __block typeof(self.delegate) wdelegate = self.delegate;
+    __block typeof(self.albumid) walbumid = self.albumid;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *respone=@"";
         NSMutableDictionary *data=[NSMutableDictionary new];
         [data setObject:[wTools getUserID] forKey:@"user_id"];
         [data setObject:@"album" forKey:@"type"];
-        [data setObject:_albumid forKey:@"type_id"];
+        [data setObject:walbumid forKey:@"type_id"];
             respone=[boxAPI deletecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -311,14 +317,14 @@
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
                 if ([dic[@"result"]boolValue]) {
-                    [_delegate reloadData];
+                    [wdelegate reloadData];
                 }else{
-                    AppDelegate *app=[[UIApplication sharedApplication]delegate];
+                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
                     Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
                     [rv addtitletext:dic[@"message"]];
                     [rv addBackTouch];
                     [rv showView:app.window];
-                    [_delegate reloadData];
+                    [wdelegate reloadData];
                 }
             }
         });

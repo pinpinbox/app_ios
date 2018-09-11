@@ -11,6 +11,7 @@
 @implementation TaobantextTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
 }
 
