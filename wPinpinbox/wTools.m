@@ -54,7 +54,7 @@ static wTools *instance =nil;
     //[instance release];
     instance = nil;
 }
-+(wTools*)getInstance
++(wTools * _Nonnull )getInstance
 {
     if( instance == nil )
     {

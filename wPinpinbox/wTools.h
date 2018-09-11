@@ -11,7 +11,7 @@
 
 @interface wTools : NSObject
 
-+(wTools*)getInstance;
++(wTools * _Nonnull)getInstance;
 //圖片按鈕
 +(UIButton *)W_Button:(id)sender frame:(CGRect)frame imgname:(NSString *)imgname SELL:(SEL)sel tag:(int)tag;
 +(void)showAlertTile:(NSString *)title Message:(NSString *)message ButtonTitle:(NSString *)buttonTitle;
