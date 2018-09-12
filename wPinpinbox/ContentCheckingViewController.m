@@ -122,7 +122,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (weak, nonatomic) IBOutlet UIView *navBarBgView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarBgViewHeight;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarViewHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarViewTopConstraint;
+
 @property (weak, nonatomic) IBOutlet UILabel *pageOrderLabel;
 @property (weak, nonatomic) IBOutlet MyLinearLayout *navBarHorzLayout;
 @property (weak, nonatomic) IBOutlet UIButton *locationBtn;
@@ -407,27 +409,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
             case 1136:
                 printf("iPhone 5 or 5S or 5C");
-                self.navBarBgViewHeight.constant = 58;
+                self.navBarViewHeight.constant = 48;
                 break;
             case 1334:
                 printf("iPhone 6/6S/7/8");
-                self.navBarBgViewHeight.constant = 58;
+                self.navBarViewHeight.constant = 48;
                 break;
             case 1920:
                 printf("iPhone 6+/6S+/7+/8+");
-                self.navBarBgViewHeight.constant = 58;
+                self.navBarViewHeight.constant = 48;
                 break;
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
-                self.navBarBgViewHeight.constant = 58;
+                self.navBarViewHeight.constant = 48;
                 break;
             case 2436:
                 printf("iPhone X");
-                self.navBarBgViewHeight.constant = navBarHeightConstant;
+                self.navBarViewHeight.constant = 48;
                 break;
             default:
                 printf("unknown");
-                self.navBarBgViewHeight.constant = 58;
+                self.navBarViewHeight.constant = 48;
                 break;
         }
     }
@@ -752,6 +754,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [UIView animateWithDuration: 0.2 animations:^{
         self.navBarBgView.hidden = !self.navBarBgView.hidden;
         self.navBarView.hidden = !self.navBarView.hidden;
+        self.mScrubber.hidden = !self.mScrubber.hidden;
+        
         self.textAndImageVertLayout.hidden = !self.textAndImageVertLayout.hidden;
         self.textViewBgView.hidden = !self.textViewBgView.hidden;
         self.textView.hidden = !self.textView.hidden;

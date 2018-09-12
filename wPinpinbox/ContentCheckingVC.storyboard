@@ -547,18 +547,18 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eds-XN-Ulm">
-                                <rect key="frame" x="0.0" y="20" width="414" height="64"/>
+                                <rect key="frame" x="0.0" y="20" width="414" height="48"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="64" id="Qbx-eF-3ox"/>
-                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TxV-bv-Xq8">
-                                <rect key="frame" x="0.0" y="20" width="414" height="95"/>
+                                <rect key="frame" x="0.0" y="20" width="414" height="48"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WgM-qn-ZE2">
-                                        <rect key="frame" x="0.0" y="12" width="42" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <rect key="frame" x="0.0" y="12" width="44" height="44"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="NIf-9l-CQD"/>
+                                            <constraint firstAttribute="width" constant="44" id="pJm-ck-xa9"/>
+                                        </constraints>
                                         <inset key="contentEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                         <state key="normal" image="ic200_arrow_left_light.png"/>
                                         <connections>
@@ -566,14 +566,16 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t8p-EQ-BPW">
-                                        <rect key="frame" x="50" y="22" width="42" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <rect key="frame" x="50" y="22" width="50" height="22"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="5mS-NE-cSE"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rNV-Fm-ZMq" customClass="MyLinearLayout">
-                                        <rect key="frame" x="80" y="0.0" width="334" height="64"/>
+                                        <rect key="frame" x="80" y="0.0" width="334" height="48"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PlB-i2-mQR">
@@ -656,23 +658,29 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="78d-pv-Smr">
-                                        <rect key="frame" x="14" y="64" width="386" height="31"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <connections>
-                                            <action selector="beginScrubbing:" destination="ZUu-YK-KeO" eventType="touchDown" id="RSt-7R-dtD"/>
-                                            <action selector="endScrubbing:" destination="ZUu-YK-KeO" eventType="touchCancel" id="7nV-MK-1yQ"/>
-                                            <action selector="endScrubbing:" destination="ZUu-YK-KeO" eventType="touchUpInside" id="JeH-4g-qey"/>
-                                            <action selector="endScrubbing:" destination="ZUu-YK-KeO" eventType="touchUpOutside" id="mMA-Ur-1EN"/>
-                                            <action selector="scrub:" destination="ZUu-YK-KeO" eventType="touchDragInside" id="KrP-ol-2U4"/>
-                                            <action selector="scrub:" destination="ZUu-YK-KeO" eventType="valueChanged" id="b9v-wn-FiZ"/>
-                                        </connections>
-                                    </slider>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="95" id="xZU-0O-S3V"/>
+                                    <constraint firstItem="t8p-EQ-BPW" firstAttribute="leading" secondItem="WgM-qn-ZE2" secondAttribute="trailing" constant="8" id="Yx3-iA-gqw"/>
+                                    <constraint firstItem="WgM-qn-ZE2" firstAttribute="leading" secondItem="TxV-bv-Xq8" secondAttribute="leading" constant="8" id="l0S-JK-oRw"/>
+                                    <constraint firstAttribute="height" constant="48" id="xZU-0O-S3V"/>
+                                    <constraint firstItem="t8p-EQ-BPW" firstAttribute="centerY" secondItem="TxV-bv-Xq8" secondAttribute="centerY" id="xn8-pf-qBU"/>
+                                    <constraint firstItem="WgM-qn-ZE2" firstAttribute="centerY" secondItem="TxV-bv-Xq8" secondAttribute="centerY" id="zXM-PA-Af0"/>
                                 </constraints>
                             </view>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="78d-pv-Smr">
+                                <rect key="frame" x="14" y="352" width="386" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="EbM-Gr-3or"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="beginScrubbing:" destination="ZUu-YK-KeO" eventType="touchDown" id="RSt-7R-dtD"/>
+                                    <action selector="endScrubbing:" destination="ZUu-YK-KeO" eventType="touchCancel" id="7nV-MK-1yQ"/>
+                                    <action selector="endScrubbing:" destination="ZUu-YK-KeO" eventType="touchUpInside" id="JeH-4g-qey"/>
+                                    <action selector="endScrubbing:" destination="ZUu-YK-KeO" eventType="touchUpOutside" id="mMA-Ur-1EN"/>
+                                    <action selector="scrub:" destination="ZUu-YK-KeO" eventType="touchDragInside" id="KrP-ol-2U4"/>
+                                    <action selector="scrub:" destination="ZUu-YK-KeO" eventType="valueChanged" id="b9v-wn-FiZ"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -689,13 +697,18 @@
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" id="VVS-Pc-52B"/>
                             <constraint firstItem="2zQ-kJ-JFQ" firstAttribute="bottom" secondItem="6iW-5Y-gqn" secondAttribute="bottom" id="WjV-Lx-g3c"/>
                             <constraint firstItem="TxV-bv-Xq8" firstAttribute="top" secondItem="6iW-5Y-gqn" secondAttribute="top" id="WkV-f3-ZR5"/>
+                            <constraint firstItem="eds-XN-Ulm" firstAttribute="top" secondItem="6iW-5Y-gqn" secondAttribute="top" id="ZEv-KX-lRV"/>
                             <constraint firstItem="TxV-bv-Xq8" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="ZzB-9r-oEe"/>
                             <constraint firstItem="MS8-GD-iEh" firstAttribute="height" secondItem="gD8-9M-Iko" secondAttribute="height" id="dIW-ZZ-mpQ"/>
+                            <constraint firstItem="eds-XN-Ulm" firstAttribute="height" secondItem="TxV-bv-Xq8" secondAttribute="height" id="dMI-Jk-uDf"/>
+                            <constraint firstItem="78d-pv-Smr" firstAttribute="top" secondItem="TxV-bv-Xq8" secondAttribute="bottom" constant="8" id="e6h-vQ-7e6"/>
+                            <constraint firstItem="TxV-bv-Xq8" firstAttribute="top" secondItem="6iW-5Y-gqn" secondAttribute="top" id="eox-WF-aha"/>
                             <constraint firstItem="6iW-5Y-gqn" firstAttribute="bottom" secondItem="Quh-ym-aFB" secondAttribute="bottom" id="ftN-Xn-39t"/>
-                            <constraint firstItem="TxV-bv-Xq8" firstAttribute="top" secondItem="qmy-ED-Q2i" secondAttribute="top" constant="20" symbolic="YES" id="jX4-Yx-oqS"/>
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="top" secondItem="gD8-9M-Iko" secondAttribute="bottom" id="lZg-mo-sr9"/>
                             <constraint firstItem="eds-XN-Ulm" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="nV1-FK-AaJ"/>
+                            <constraint firstItem="6iW-5Y-gqn" firstAttribute="trailing" secondItem="78d-pv-Smr" secondAttribute="trailing" constant="16" id="pYS-I8-Kbs"/>
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="peX-90-NYJ"/>
+                            <constraint firstItem="78d-pv-Smr" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" constant="16" id="vA7-da-huU"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6iW-5Y-gqn"/>
                     </view>
@@ -716,10 +729,9 @@
                         <outlet property="messageBtn" destination="0BU-K2-Dhi" id="ydk-rv-C13"/>
                         <outlet property="moreBtn" destination="y97-5h-gOJ" id="gXQ-J2-TIV"/>
                         <outlet property="navBarBgView" destination="eds-XN-Ulm" id="srj-RT-6hh"/>
-                        <outlet property="navBarBgViewHeight" destination="Qbx-eF-3ox" id="ezk-cJ-cVq"/>
                         <outlet property="navBarHorzLayout" destination="rNV-Fm-ZMq" id="ch1-mY-1uq"/>
                         <outlet property="navBarView" destination="TxV-bv-Xq8" id="Qbq-5O-ZBQ"/>
-                        <outlet property="navBarViewTopConstraint" destination="jX4-Yx-oqS" id="Q3A-tK-l8h"/>
+                        <outlet property="navBarViewHeight" destination="xZU-0O-S3V" id="AB5-wl-xdX"/>
                         <outlet property="pageOrderLabel" destination="t8p-EQ-BPW" id="Pod-l1-OTS"/>
                         <outlet property="soundBtn" destination="Yea-wh-43s" id="lLG-AU-BuO"/>
                         <outlet property="textAndImageVertLayout" destination="Quh-ym-aFB" id="aab-r1-riy"/>
