@@ -295,6 +295,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 - (void)fbLoginHandler
 {
     // Try to login with permissions
+    __block typeof(self) wself = self;
     [self loginAndRequestPermissionsWithSuccessHandler:^{
         NSLog(@"loginAndRequestPermissionsWithSuccessHandler");
         
@@ -313,7 +314,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
              if (!error) {
                  NSLog(@"fetched user: %@", result);
                  
-                 [locationManager stopUpdatingLocation];
+                 [wself->locationManager stopUpdatingLocation];
                  
                  // Get FB Personal Data
                  NSString *emailAccount = result[@"email"];
@@ -344,24 +345,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                      [paramDic setObject: name forKey: @"name"];
                  }
                  
-                 NSLog(@"currentLocation: %@", currentLocation);
-                 
-                 if (currentLocation != nil) {
-                     NSString *latStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.latitude];
-                     NSString *longStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.longitude];
-                     
-                     NSString *locationStr = [NSString stringWithFormat: @"%@,%@", latStr, longStr];
-                     NSLog(@"locationStr: %@", locationStr);
-                     
-                     [paramDic setObject: locationStr forKey: @"coordinate"];
-                 }
-                 
-                 NSLog(@"paramDic: %@", paramDic);
-                 
-                 NSData *jsonData = [NSJSONSerialization dataWithJSONObject: paramDic options: 0 error: nil];
-                 NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
-                 
-                 [self buisnessSubUserFastRegister: fbid jsonStr: jsonStr];
+                 [wself handleFBLoginParam:paramDic fbid:fbid];
              } else {
                  NSLog(@"%@",error.localizedDescription);
              }
@@ -379,8 +363,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                  [defaults setObject: @"" forKey: @"businessUserId"];
                                  [defaults synchronize];
                                  
-                                 [self alertDeclinedPublishActionsWithCompletion:^{
-                                     [self loginAndRequestPermissionsWithSuccessHandler:nil
+                                 [wself alertDeclinedPublishActionsWithCompletion:^{
+                                     [wself loginAndRequestPermissionsWithSuccessHandler:nil
                                                               declinedOrCanceledHandler:nil
                                                                            errorHandler:^(NSError * error) {
                                                                                NSLog(@"Error: %@", error.description);
@@ -391,7 +375,27 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                               NSLog(@"Error: %@", error.description);
                                           }];
 }
-
+- (void)handleFBLoginParam:(NSMutableDictionary *)paramDic fbid:(NSString *)fbid{
+    
+    NSLog(@"currentLocation: %@", currentLocation);
+    
+    if (currentLocation != nil) {
+        NSString *latStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.latitude];
+        NSString *longStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.longitude];
+        
+        NSString *locationStr = [NSString stringWithFormat: @"%@,%@", latStr, longStr];
+        NSLog(@"locationStr: %@", locationStr);
+        
+        [paramDic setObject: locationStr forKey: @"coordinate"];
+    }
+    
+    NSLog(@"paramDic: %@", paramDic);
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject: paramDic options: 0 error: nil];
+    NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
+    
+    [self buisnessSubUserFastRegister: fbid jsonStr: jsonStr];
+}
 - (void)buisnessSubUserFastRegister:(NSString *)fbId jsonStr:(NSString *)jsonStr
 {
     NSLog(@"buisnessSubUserFastRegister");

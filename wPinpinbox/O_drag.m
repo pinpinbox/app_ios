@@ -8,6 +8,10 @@
 
 #import "O_drag.h"
 #import "UIImage+Rotation.h"
+
+@interface O_drag()<UIGestureRecognizerDelegate>
+@end
+
 @implementation O_drag
 
 /*

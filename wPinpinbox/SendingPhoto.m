@@ -104,7 +104,7 @@
     
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSString *responseStr;
-    
+    __block typeof(self) wself = self;
     NSURLSession *session = [NSURLSession sharedSession];
     self.task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
@@ -123,23 +123,24 @@
                     NSLog(@"dic result boolValue: %d", [dic[@"result"] boolValue]);
                     
                     NSLog(@"Sending Data Successfully");
+                    [wself processSendingPhoto:dic];
                     
-                    imageInfoArray = [NSMutableArray new];
-                    
-                    for (NSMutableDictionary *photo in dic[@"data"][@"photo"]) {
-                        [imageInfoArray addObject: photo[@"photo_id"]];
-                    }
-                    
-                    NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
-                    totalImage = imageInfoArray.count;
-                    [imageInfoArray removeAllObjects];
-                    imageInfoArray = nil;
-                    
-                    NSLog(@"totalImage: %ld", (long)totalImage);
-                    
-                    if ([self.delegate respondsToSelector: @selector(sendingPhotoSucceeded:imgNumber:imgAmount:)]) {
-                        [self.delegate sendingPhotoSucceeded: self imgNumber: self.imgNumber imgAmount: totalImage];
-                    }
+//                    imageInfoArray = [NSMutableArray new];
+//
+//                    for (NSMutableDictionary *photo in dic[@"data"][@"photo"]) {
+//                        [imageInfoArray addObject: photo[@"photo_id"]];
+//                    }
+//
+//                    NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
+//                    totalImage = imageInfoArray.count;
+//                    [imageInfoArray removeAllObjects];
+//                    imageInfoArray = nil;
+//
+//                    NSLog(@"totalImage: %ld", (long)totalImage);
+//
+//                    if ([self.delegate respondsToSelector: @selector(sendingPhotoSucceeded:imgNumber:imgAmount:)]) {
+//                        [self.delegate sendingPhotoSucceeded: self imgNumber: self.imgNumber imgAmount: totalImage];
+//                    }
                     
                 } else {
                     NSLog(@"Error Message: %@", dic[@"message"]);
@@ -172,7 +173,25 @@
     
     return responseStr;
 }
-
+- (void)processSendingPhoto:(NSDictionary *)dic {
+    
+    imageInfoArray = [NSMutableArray new];
+    
+    for (NSMutableDictionary *photo in dic[@"data"][@"photo"]) {
+        [imageInfoArray addObject: photo[@"photo_id"]];
+    }
+    
+    NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
+    totalImage = imageInfoArray.count;
+    [imageInfoArray removeAllObjects];
+    imageInfoArray = nil;
+    
+    NSLog(@"totalImage: %ld", (long)totalImage);
+    
+    if ([self.delegate respondsToSelector: @selector(sendingPhotoSucceeded:imgNumber:imgAmount:)]) {
+        [self.delegate sendingPhotoSucceeded: self imgNumber: self.imgNumber imgAmount: totalImage];
+    }
+}
 /*
 #pragma mark - NSURLSessionDelegate Methods
 - (void)URLSession:(NSURLSession *)session

@@ -18,6 +18,7 @@
 }
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
     [[_titel layer] setMasksToBounds:YES];
     [[_titel layer]setCornerRadius:_titel.bounds.size.height/2];
 }

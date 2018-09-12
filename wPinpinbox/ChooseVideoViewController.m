@@ -123,17 +123,18 @@
     PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
     options.version = PHVideoRequestOptionsVersionCurrent;
     options.deliveryMode = PHVideoRequestOptionsDeliveryModeFastFormat;
-    
+    __block typeof(self) wself = self;
     [imageManager requestAVAssetForVideo: asset options: options resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+        __strong typeof(wself) sself = wself;
         if ([asset isKindOfClass: [AVURLAsset class]]) {
             NSURL *url = [(AVURLAsset *)asset URL];
             NSData *data = [NSData dataWithContentsOfURL: url];
-            [videos addObject: data];
+            [sself->videos addObject: data];
             
-            if ((se + 1) >= videoArray.count) {
-                [self okVideo];
+            if ((se + 1) >= sself->videoArray.count) {
+                [sself okVideo];
             } else {
-                [self addNewVideo: se + 1];
+                [sself addNewVideo: se + 1];
             }
         }
     }];

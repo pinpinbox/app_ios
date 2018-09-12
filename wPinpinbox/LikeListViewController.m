@@ -156,7 +156,7 @@
     [wTools ShowMBProgressHUD];
     
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getAlbum2LikesList: self.albumId
                                                   limit: limit
@@ -177,102 +177,106 @@
                                           userId: 0
                                             cell: nil];
                     [self.refreshControl endRefreshing];
-                    isReloading = NO;
+                    wself->isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"SYSTEM_OK");
-                        
-                        NSLog(@"dic data: %@", dic[@"data"]);
-                        
-                        NSLog(@"Before");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        
-                        if (nextId == 0) {
-                            likeListArray = [[NSMutableArray alloc] init];
-                        }
-                        
-                        // s for counting how much data is loaded
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *likesFromDic in [dic objectForKey: @"data"]) {
-                            NSLog(@"likesFromDic: %@", likesFromDic);
-                            s++;
-                            [likeListArray addObject: likesFromDic];
-                        }
-                        
-                        NSLog(@"After");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        
-                        // If data keeps loading then the nextId is accumulating
-                        nextId = nextId + s;
-                        
-                        // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (nextId >= 0) {
-                            isLoading = NO;
-                        }
-                        
-                        // If s is 0, that means dic data is empty.
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        NSLog(@"self.tableView reloadData");
-                        
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                        
-                        [self.tableView reloadData];
-                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"SYSTEM_ERROR");
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-                        NSLog(@"TOKEN_ERROR");
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
-                        
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
-                        
-                        [NSTimer scheduledTimerWithTimeInterval: 1.0
-                                                         target: self
-                                                       selector: @selector(logOut)
-                                                       userInfo: nil
-                                                        repeats: NO];
-                        
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    } else if ([dic[@"result"] isEqualToString: @"USER_ERROR"]) {
-                        NSLog(@"錯誤：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    }
+                    [wself processLikeList:dic];
                 }
             }
         });
     });
 }
-
+- (void)processLikeList:(NSDictionary *)dic {
+    
+    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+        NSLog(@"SYSTEM_OK");
+        
+        NSLog(@"dic data: %@", dic[@"data"]);
+        
+        NSLog(@"Before");
+        NSLog(@"nextId: %ld", (long)nextId);
+        
+        if (nextId == 0) {
+            likeListArray = [[NSMutableArray alloc] init];
+        }
+        
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *likesFromDic in [dic objectForKey: @"data"]) {
+            NSLog(@"likesFromDic: %@", likesFromDic);
+            s++;
+            [likeListArray addObject: likesFromDic];
+        }
+        
+        NSLog(@"After");
+        NSLog(@"nextId: %ld", (long)nextId);
+        
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0) {
+            isLoading = NO;
+        }
+        
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        NSLog(@"self.tableView reloadData");
+        
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+        
+        [self.tableView reloadData];
+    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+        NSLog(@"SYSTEM_ERROR");
+        NSLog(@"失敗：%@",dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: dic[@"message"]];
+        
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+        NSLog(@"TOKEN_ERROR");
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor thirdPink];
+        
+        [self.view makeToast: @"用戶驗證異常請重新登入"
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+        
+        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                         target: self
+                                       selector: @selector(logOut)
+                                       userInfo: nil
+                                        repeats: NO];
+        
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else if ([dic[@"result"] isEqualToString: @"USER_ERROR"]) {
+        NSLog(@"錯誤：%@",dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: dic[@"message"]];
+        
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    }
+    
+}
 - (void)logOut {
     [wTools logOut];
 }

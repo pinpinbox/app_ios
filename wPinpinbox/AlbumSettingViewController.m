@@ -862,7 +862,7 @@
 {
     NSLog(@"numberOfItemsInSection");
     
-    NSInteger numberOfItems;
+    NSInteger numberOfItems = 0;
     
     if (collectionView == self.firstCategoryCollectionView) {
         NSLog(@"collectionView == self.firstCategoryCollectionView");

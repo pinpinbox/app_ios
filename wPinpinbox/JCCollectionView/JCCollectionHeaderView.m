@@ -9,12 +9,6 @@
 #import "JCCollectionHeaderView.h"
 
 @implementation JCCollectionHeaderView
-
-- (void)awakeFromNib
-{
-    
-}
-
 - (void)prepareForReuse
 {
     [super prepareForReuse];

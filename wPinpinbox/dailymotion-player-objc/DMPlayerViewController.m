@@ -339,9 +339,9 @@ static NSString *const DMAPIVersion = @"2.9.3";
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
-}
+//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+//    return YES;
+//}
 
 #pragma mark - Open In Safari
 - (void)openURLInSafari:(NSURL *)URL {

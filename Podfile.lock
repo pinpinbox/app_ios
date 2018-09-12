@@ -32,7 +32,7 @@ DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
-  - FLAnimatedImage
+  - FLAnimatedImage (~> 1.0)
   - Flurry-iOS-SDK/FlurryAds
   - Flurry-iOS-SDK/FlurrySDK
   - GoogleAnalytics
@@ -72,6 +72,6 @@ SPEC CHECKSUMS:
   SSFadingScrollView: ac908f565594b1faa748d2d55973f2dde919f754
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: a97a96bb7fa21e2b8d25af4fd5e9e5d66c8e7ee2
+PODFILE CHECKSUM: be5515577b09d1930db1a7f80f9f0ef56c96d922
 
 COCOAPODS: 1.5.3

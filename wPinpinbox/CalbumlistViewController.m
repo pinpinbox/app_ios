@@ -233,14 +233,15 @@
     NSLog(@"getcalbumlist");
     
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(self) wself = self;
+    __block typeof(type) wt = type;
     NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 10];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSArray *arr = @[@"mine",@"other",@"cooperation"];
         NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
                                              token: [wTools getUserToken]
-                                              rank: arr[type]
+                                              rank: arr[wt]//type]
                                              limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -254,59 +255,62 @@
                     NSLog(@"CalbumlistViewController");
                     NSLog(@"getcalbumlist");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcalbumlist"
                                          albumId: @""];
-                    [self.refreshControl endRefreshing];
-                    isreload = NO;
+                    [wself.refreshControl endRefreshing];
+                    wself->isreload = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     NSLog(@"dic: %@", dic);
+                    [wself processCalbumlist:dic];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        if (nextId==0) {
-                            dataarr=[NSMutableArray new];
-                        }
-                        int s=0;
-                        for (NSMutableDictionary *picture in [dic objectForKey:@"data"]) {
-                            s++;
-                            [dataarr addObject: picture];
-                        }
-                        nextId = nextId+s;
-                        // dataarr=[dic[@"data"] mutableCopy];
-                        
-                        //NSLog(@"dataarr: %@", dataarr);
-                        
-                        [_refreshControl endRefreshing];
-                        [_collectioview reloadData];
-                        
-                        if (nextId  >= 0)
-                            isLoading = NO;
-                        
-                        if (s==0) {
-                            isLoading = YES;
-                        }
-                        
-                        isreload = NO;
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        [_refreshControl endRefreshing];
-                        isreload = NO;
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [_refreshControl endRefreshing];
-                        isreload = NO;
-                    }
                 }
             }else{
-                [_refreshControl endRefreshing];
-                isreload = NO;
+                [wself.refreshControl endRefreshing];
+                wself->isreload = NO;
             }
         });
     });
+}
+- (void)processCalbumlist:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        if (nextId==0) {
+            dataarr=[NSMutableArray new];
+        }
+        int s=0;
+        for (NSMutableDictionary *picture in [dic objectForKey:@"data"]) {
+            s++;
+            [dataarr addObject: picture];
+        }
+        nextId = nextId+s;
+        // dataarr=[dic[@"data"] mutableCopy];
+        
+        //NSLog(@"dataarr: %@", dataarr);
+        
+        [_refreshControl endRefreshing];
+        [_collectioview reloadData];
+        
+        if (nextId  >= 0)
+            isLoading = NO;
+        
+        if (s==0) {
+            isLoading = YES;
+        }
+        
+        isreload = NO;
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        [_refreshControl endRefreshing];
+        isreload = NO;
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [_refreshControl endRefreshing];
+        isreload = NO;
+    }
 }
 
 //沒有資料產生的畫面

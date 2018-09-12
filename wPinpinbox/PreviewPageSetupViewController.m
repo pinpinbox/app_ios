@@ -319,10 +319,10 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: identifier forIndexPath: indexPath];
     
     UIImageView *imageView = (UIImageView *)[cell viewWithTag: 100];
-    
+    NSString *thumbStr = _imageArray[indexPath.row][@"image_url_thumbnail"];
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
     dispatch_async(queue, ^{
-        NSData *data = [NSData dataWithContentsOfURL: [NSURL URLWithString: _imageArray[indexPath.row][@"image_url_thumbnail"]]];
+        NSData *data = [NSData dataWithContentsOfURL: [NSURL URLWithString:thumbStr ]];
         dispatch_async(dispatch_get_main_queue(), ^{
             imageView.image = [UIImage imageWithData: data];
         });

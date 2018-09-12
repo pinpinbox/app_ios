@@ -110,7 +110,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getHobbyList: [wTools getUserID] token: [wTools getUserToken]];
         
@@ -134,7 +134,7 @@
                     NSLog(@"ChooseHobbyViewController");
                     NSLog(@"getHobbyList");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getHobbyList"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -146,34 +146,37 @@
                         
                         NSLog(@"data: %@", data);
                         
-                        hobbyArray = data[@"data"];
-                        
-                        NSInteger hobbyId;
-                        
-                        for (int i = 0; i < hobbyArray.count; i++) {
-                            NSMutableDictionary *dic = [NSMutableDictionary new];
-                            
-                            hobbyId = [hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
-                            [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
-                            [dic setValue: [NSNumber numberWithInteger: hobbyId] forKey: @"hobbyId"];
-                            [checkSelectedArray addObject: dic];
-                        }
-                        NSLog(@"checkSelectedArray: %@", checkSelectedArray);
-                        
-                        NSLog(@"hobbyArray: %@", hobbyArray);
-                        
-                        [self.collectionView reloadData];
+                        [wself loadHobby:data];
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
                         NSString *msg = data[@"message"];
-                        [self showCustomErrorAlert: msg];
+                        [wself showCustomErrorAlert: msg];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
         });
     });
+}
+- (void)loadHobby:(NSDictionary *)data {
+    hobbyArray = data[@"data"];
+    
+    NSInteger hobbyId;
+    
+    for (int i = 0; i < hobbyArray.count; i++) {
+        NSMutableDictionary *dic = [NSMutableDictionary new];
+        
+        hobbyId = [hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
+        [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+        [dic setValue: [NSNumber numberWithInteger: hobbyId] forKey: @"hobbyId"];
+        [checkSelectedArray addObject: dic];
+    }
+    NSLog(@"checkSelectedArray: %@", checkSelectedArray);
+    
+    NSLog(@"hobbyArray: %@", hobbyArray);
+    
+    [self.collectionView reloadData];
 }
 
 #pragma mark - UICollectionViewDataSource Methods

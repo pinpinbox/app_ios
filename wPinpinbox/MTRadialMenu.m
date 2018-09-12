@@ -139,7 +139,7 @@ BOOL CGAffineTransformEqualToTransformWithAccuracy (CGAffineTransform firstTrans
    // NSLog(@"%f,%f",_startingAngle,_radius);
     // Animate self
     //self.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(0));
-
+    __block typeof(self) wself = self;
     [UIView animateWithDuration:1.0 delay:0.0 usingSpringWithDamping:0.4 initialSpringVelocity:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         
         int sun=0;
@@ -152,7 +152,7 @@ BOOL CGAffineTransformEqualToTransformWithAccuracy (CGAffineTransform firstTrans
                 sun++;
              
                 
-                [itempoint addObject: [ NSValue valueWithCGPoint :item.center]];
+                [wself->itempoint addObject: [ NSValue valueWithCGPoint :item.center]];
                 //item.transform = CGAffineTransformOrientOnAngle(DEGREES_TO_RADIANS([objc_getAssociatedObject(item, "display_angle") floatValue]), _radius ?: 60.0);
             }
         }
@@ -233,6 +233,7 @@ BOOL CGAffineTransformEqualToTransformWithAccuracy (CGAffineTransform firstTrans
     }
     
     int sun=0;
+    __block typeof(self) wself = self;
     for (MTMenuItem *view in self.subviews) {
         if ([view isKindOfClass:[MTMenuItem class]]) {
             CGPoint touch = [reg locationInView:view];
@@ -262,11 +263,11 @@ BOOL CGAffineTransformEqualToTransformWithAccuracy (CGAffineTransform firstTrans
                  } else {
                    
                 [UIView animateWithDuration:0.2 animations:^{
-                    CGPoint center=[itempoint[sun] CGPointValue];
+                    CGPoint center=[wself->itempoint[sun] CGPointValue];
                     view.center=center;
                     view.transform=CGAffineTransformIdentity;
-                    if (view==selectitem) {
-                        selectitem=nil;
+                    if (view == wself->selectitem) {
+                        wself->selectitem=nil;
                     }
                     //view.transform = CGAffineTransformOrientOnAngle(DEGREES_TO_RADIANS([objc_getAssociatedObject(view, "display_angle") floatValue]), _radius ?: 60.0);
                     

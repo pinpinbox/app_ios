@@ -175,6 +175,11 @@
     }
     
     switch (self.imageOrientation) {
+        case UIImageOrientationDown:
+        case UIImageOrientationUp:
+        case UIImageOrientationRight:
+        case UIImageOrientationLeft:
+            break;
         case UIImageOrientationUpMirrored:     // EXIF = 2
         case UIImageOrientationDownMirrored:   // EXIF = 4
             transform = CGAffineTransformTranslate(transform, newSize.width, 0);

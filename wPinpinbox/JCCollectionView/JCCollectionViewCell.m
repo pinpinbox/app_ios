@@ -10,10 +10,6 @@
 
 @implementation JCCollectionViewCell
 
-- (void)awakeFromNib
-{
-    
-}
 
 - (void)prepareForReuse
 {

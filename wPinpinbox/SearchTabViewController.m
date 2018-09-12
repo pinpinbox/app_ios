@@ -215,9 +215,9 @@ static NSString *hostURL = @"www.pinpinbox.com";
     userRecommendationLabel.text = @"創作人推薦";
     
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        isUserLoading = YES;
+        wself->isUserLoading = YES;
         
         NSString *response = @"";
         
@@ -263,25 +263,25 @@ static NSString *hostURL = @"www.pinpinbox.com";
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
-                        if (nextUserId >= 0) {
-                            isUserLoading = NO;
+                        if (wself->nextUserId >= 0) {
+                            wself->isUserLoading = NO;
                         } else {
-                            isUserLoading = YES;
+                            wself->isUserLoading = YES;
                         }
                         NSLog(@"");
                         NSLog(@"");
                         
-                        userData = [NSMutableArray arrayWithArray:dic[@"data"]];
-                        nextUserId = userData.count;
+                        wself->userData = [NSMutableArray arrayWithArray:dic[@"data"]];
+                        wself->nextUserId = wself->userData.count;
                         
-                        [self.userCollectionView reloadData];
+                        [wself.userCollectionView reloadData];
                         
-                        [self showAlbumRecommendedList];
+                        [wself showAlbumRecommendedList];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -294,9 +294,9 @@ static NSString *hostURL = @"www.pinpinbox.com";
     albumRecommendationLabel.text = @"人氣精選";
     
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        isAlbumLoading = YES;
+        wself->isAlbumLoading = YES;
         
         NSString *response = @"";
         
@@ -307,7 +307,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
         response = [boxAPI getRecommendedList: [wTools getUserID]
                                         token: [wTools getUserToken]
                                          data: data];
-        
+        __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             
@@ -338,20 +338,20 @@ static NSString *hostURL = @"www.pinpinbox.com";
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
-                        if (nextAlbumId >= 0) {
-                            isAlbumLoading = NO;
+                        if (sself->nextAlbumId >= 0) {
+                            sself->isAlbumLoading = NO;
                         } else {
-                            isAlbumLoading = YES;
+                            sself->isAlbumLoading = YES;
                         }                        
-                        albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
-                        nextAlbumId = albumData.count;
+                        sself->albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
+                        sself->nextAlbumId = wself->albumData.count;
                         
-                        [self.albumCollectionView reloadData];
+                        [wself.albumCollectionView reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -851,9 +851,9 @@ replacementString:(NSString *)string
     NSLog(@"text: %@", text);
     
     NSString *string = text;
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        isUserLoading = YES;
+        wself->isUserLoading = YES;
         
         NSString *response = @"";
         
@@ -865,7 +865,7 @@ replacementString:(NSString *)string
         response = [boxAPI search: [wTools getUserID]
                             token: [wTools getUserToken]
                              data: data];
-        
+        __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (response != nil) {
                 NSLog(@"filterUserContentForSearchText");
@@ -876,9 +876,9 @@ replacementString:(NSString *)string
                     NSLog(@"SearchTableViewController");
                     NSLog(@"filterUserContentForSearchText");
                     
-                    [self dismissKeyboard];
+                    [wself dismissKeyboard];
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"filterUserContentForSearchText"
                                             text: text
                                          albumId: @""];
@@ -901,38 +901,38 @@ replacementString:(NSString *)string
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         
-                        if (nextUserId >= 0) {
-                            isUserLoading = NO;
+                        if (wself->nextUserId >= 0) {
+                            wself->isUserLoading = NO;
                         } else {
-                            isUserLoading = YES;
+                            wself->isUserLoading = YES;
                         }
                         
                         NSLog(@"");
                         NSLog(@"");
                         
-                        userData = [NSMutableArray arrayWithArray:dic[@"data"]];
-                        nextUserId = userData.count;
+                        sself->userData = [NSMutableArray arrayWithArray:dic[@"data"]];
+                        sself->nextUserId = sself->userData.count;
                         
 //                        NSLog(@"userData: %@", userData);
-                        NSLog(@"userData.count: %lu", (unsigned long)userData.count);
+                        NSLog(@"userData.count: %lu", (unsigned long)sself->userData.count);
                         
-                        if (userData.count == 0) {
-                            if (!isNoInfoHorzViewCreate) {
-                                [self addNoInfoViewOnHorizontalCollectionView: @"沒有符合關鍵字的創作人"];
+                        if (sself->userData.count == 0) {
+                            if (!sself->isNoInfoHorzViewCreate) {
+                                [sself addNoInfoViewOnHorizontalCollectionView: @"沒有符合關鍵字的創作人"];
                             }
-                            noInfoHorzView.hidden = NO;
-                        } else if (userData.count > 0) {
-                            noInfoHorzView.hidden = YES;
+                            sself->noInfoHorzView.hidden = NO;
+                        } else if (sself->userData.count > 0) {
+                            sself->noInfoHorzView.hidden = YES;
                         }
                         
-                        [self.userCollectionView reloadData];
+                        [sself.userCollectionView reloadData];
                         
-                        [self filterAlbumContentForSearchText: text];
+                        [sself filterAlbumContentForSearchText: text];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [sself showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -945,9 +945,9 @@ replacementString:(NSString *)string
     NSLog(@"text: %@", text);
     
     NSString *string = text;
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        isAlbumLoading = YES;
+        wself->isAlbumLoading = YES;
         
         NSString *response = @"";
         
@@ -959,7 +959,7 @@ replacementString:(NSString *)string
         response = [boxAPI search: [wTools getUserID]
                             token: [wTools getUserToken]
                              data: data];
-        
+        __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (response != nil) {
                 NSLog(@"filterAlbumContentForSearchText");
@@ -970,9 +970,9 @@ replacementString:(NSString *)string
                     NSLog(@"SearchTableViewController");
                     NSLog(@"filterAlbumContentForSearchText");
                     
-                    [self dismissKeyboard];
+                    [sself dismissKeyboard];
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [sself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"filterAlbumContentForSearchText"
                                             text: text
                                          albumId: @""];
@@ -990,42 +990,45 @@ replacementString:(NSString *)string
                     if (![data[@"searchtype"] isEqualToString: @"album"]) {
                         return;
                     }
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"dic result boolValue is 1");
-                        
-                        if (nextAlbumId >= 0) {
-                            isAlbumLoading = NO;
-                        } else {
-                            isAlbumLoading = YES;
-                        }
-                        NSLog(@"");
-                        NSLog(@"");
-                        
-                        albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
-                        nextAlbumId = albumData.count;
-                        
-                        if (albumData.count == 0) {
-                            if (!isNoInfoVertViewCreate) {
-                                [self addNoInfoViewOnVerticalCollectionView: @"沒有符合關鍵字的作品"];
-                            }
-                            noInfoVertView.hidden = NO;
-                        } else if (albumData.count > 0) {
-                            noInfoVertView.hidden = YES;
-                        }
-                        
-                        [self.albumCollectionView reloadData];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself filterAlbumContentWithResult:dic];
                 }
             }
         });
     });
 }
-
+- (void)filterAlbumContentWithResult:(NSDictionary *) dic{
+    
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"dic result boolValue is 1");
+        
+        if (nextAlbumId >= 0) {
+            isAlbumLoading = NO;
+        } else {
+            isAlbumLoading = YES;
+        }
+        NSLog(@"");
+        NSLog(@"");
+        
+        albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
+        nextAlbumId = albumData.count;
+        
+        if (albumData.count == 0) {
+            if (!isNoInfoVertViewCreate) {
+                [self addNoInfoViewOnVerticalCollectionView: @"沒有符合關鍵字的作品"];
+            }
+            noInfoVertView.hidden = NO;
+        } else if (albumData.count > 0) {
+            noInfoVertView.hidden = YES;
+        }
+        
+        [self.albumCollectionView reloadData];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 #pragma mark - Method Only Called Once
 - (void)addNoInfoViewOnHorizontalCollectionView:(NSString *)msg {
     NSLog(@"addNoInfoViewOnHorizontalCollectionView");

@@ -1525,11 +1525,11 @@
     return NO;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-{
-    NSLog(@"shouldAutorotateToInterfaceOrientation");
-    return NO;
-}
+//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+//{
+//    NSLog(@"shouldAutorotateToInterfaceOrientation");
+//    return NO;
+//}
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
