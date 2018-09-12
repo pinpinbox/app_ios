@@ -365,6 +365,7 @@
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
 		D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78F738D1D226D8700D8A271 /* YTPlayerView.m */; };
 		E7BC74DF2212D7B03A675C53 /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D94C7EC45380C902C8A4B8C /* libPods-wPinpinbox.a */; };
+		F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F039BD192148B8C6007AEA85 /* SystemImages.xcassets */; };
 		F0AC57542142353D00F63B82 /* UIViewController+ErrorAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */; };
 /* End PBXBuildFile section */
 
@@ -978,6 +979,7 @@
 		D78F73891D226C8700D8A271 /* YouTubeiOSPlayerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeiOSPlayerHelper.h; sourceTree = "<group>"; };
 		D78F738C1D226D8700D8A271 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
 		D78F738D1D226D8700D8A271 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
+		F039BD192148B8C6007AEA85 /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SystemImages.xcassets; sourceTree = "<group>"; };
 		F0AC57522142353D00F63B82 /* UIViewController+ErrorAlert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ErrorAlert.h"; sourceTree = "<group>"; };
 		F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ErrorAlert.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1899,6 +1901,7 @@
 		638F88B91E02458500316123 /* Image Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F039BD192148B8C6007AEA85 /* SystemImages.xcassets */,
 				CB0C0DB5214653BA00FAF438 /* Images.xcassets */,
 				CB0C0DB22146509F00FAF438 /* image00.xcassets */,
 				CB0C0DB12146509F00FAF438 /* image01.xcassets */,
@@ -2787,6 +2790,7 @@
 				D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */,
 				54B9F4981FE6C27300A694E4 /* InfoEditVC.storyboard in Resources */,
 				54A2645C20187B230066DD09 /* PreviewPageSetupVC.storyboard in Resources */,
+				F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */,
 				54E00ED11FF35B41007881ED /* CategoryDetailVC.storyboard in Resources */,
 				54B9F49A1FE6C59300A694E4 /* ChangePwdVC.storyboard in Resources */,
 				54885DBC20DB415F00644A82 /* AlbumSponsorVC.storyboard in Resources */,

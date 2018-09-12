@@ -339,6 +339,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // Do any additional setup after loading the view.
     [self initialValueSetup];
     [self retrieveAlbum];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

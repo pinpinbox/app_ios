@@ -229,7 +229,7 @@ CGFloat buttonSpacerHeight = 0;
 
     CGFloat dialogWidth = containerView.frame.size.width;
     //CGFloat dialogHeight = containerView.frame.size.height + (buttonHeight + buttonSpacerHeight) * [buttonTitles count];
-    CGFloat dialogHeight;
+    CGFloat dialogHeight = containerView.frame.size.height;
     
     if ([self.arrangeStyle isEqualToString: @"Horizontal"]) {
         dialogHeight = containerView.frame.size.height + (buttonHeight + buttonSpacerHeight) + 16;
@@ -744,7 +744,7 @@ CGFloat buttonSpacerHeight = 0;
             image = [UIImage imageNamed:@"icon_2_0_0_dialog_error"];
     }
     [imageView setImage:image];
-
+    imageView.alpha = 0.4;
 
     // ContentView Setting
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
