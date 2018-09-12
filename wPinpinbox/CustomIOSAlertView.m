@@ -834,9 +834,8 @@ CGFloat buttonSpacerHeight = 0;
         if (!image)
             image = [UIImage imageNamed:@"icon_2_0_0_dialog_error"];
     }
-    [imageView setImage:image];
-    
-    
+    [imageView setImage:image];    
+    imageView.alpha = 0.4;
     // ContentView Setting
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
     contentView.backgroundColor = cntBackgroundColor;//[UIColor firstPink];
