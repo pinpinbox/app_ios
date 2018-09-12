@@ -125,7 +125,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     self.facebookLoginBtn.layer.cornerRadius = kCornerRadius;
     self.facebookLoginBtn.backgroundColor = [UIColor colorFromHexString: @"3b5998"];
     self.facebookLoginBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
-//    [self.facebookLoginBtn setTitle:NSLocalizedString(@"LoginText-FBlogin", @"") forState:UIControlStateNormal];
+    //    [self.facebookLoginBtn setTitle:NSLocalizedString(@"LoginText-FBlogin", @"") forState:UIControlStateNormal];
     self.facebookLoginBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     [self.facebookLoginBtn setTitle: @"Facebook" forState: UIControlStateNormal];
     [self.facebookLoginBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
@@ -318,18 +318,17 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
             NSLog( @"Reason: %@", exception.reason );
             return;
         }
-        __block typeof(self) wself = self;
-        __block typeof(bg) wbg = bg;
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
             //BOOL respone = [boxAPI checktoken:token usid:uid];
             NSString *response = [boxAPI checktoken: token usid: uid];
             /*
-            NSString *response = [PinPinBoxAPI checkToken: token
-                                                     usid: uid];
-            */
+             NSString *response = [PinPinBoxAPI checkToken: token
+             usid: uid];
+             */
             dispatch_async(dispatch_get_main_queue(), ^{
                 @try {
-                    [MBProgressHUD hideHUDForView: wself.view  animated:YES];
+                    [MBProgressHUD hideHUDForView: self.view  animated:YES];
                 } @catch (NSException *exception) {
                     // Print exception information
                     NSLog( @"NSException caught" );
@@ -347,7 +346,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         NSLog(@"ViewController");
                         NSLog(@"checkToken");
                         
-                        [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                        [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                         protocolName: @"checkToken"
                                                 fbId: @""
                                              jsonStr: @""
@@ -366,26 +365,26 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                             NSLog(@"dic result boolValue is 1");
                             //[self toMyTabBarController];
                             //[self getProfile];
-                            [wself refreshToken];
+                            [self refreshToken];
                         } else if ([dic[@"result"] intValue] == 0) {
                             NSLog(@"失敗： %@", dic[@"message"]);
                             NSString *msg = dic[@"message"];
                             NSLog(@"msg: %@", msg);
-                            [wself showCustomErrorAlert: msg];
+                            [self showCustomErrorAlert: msg];
                         } else {
-                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
                     }
                 } else {
                     NSLog(@"response == nil");
                     if (![boxAPI hostAvailable: pinpinbox]) {
                         //[self showCustomAlertForOptions: @"是否離線瀏覽相本?"];
-                        [wself showCustomErrorAlert: @"伺服器連線失敗"];
+                        [self showCustomErrorAlert: @"伺服器連線失敗"];
                     } else {
                         [UIView animateWithDuration:2.0 animations:^{
-                            wbg.alpha=0;
+                            bg.alpha=0;
                         } completion:^(BOOL anim){
-                            [wbg removeFromSuperview];
+                            [bg removeFromSuperview];
                         }];
                     }
                 }
@@ -393,11 +392,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         });
     } else {
         [self checkBusinessUserId];
-        __block typeof(bg) wbg = bg;
+        
         [UIView animateWithDuration:2.0 animations:^{
-            wbg.alpha=0;
+            bg.alpha=0;
         } completion:^(BOOL anim){
-            [wbg removeFromSuperview];
+            [bg removeFromSuperview];
         }];
     }
 }
@@ -406,8 +405,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)checkBusinessUserId {
     NSLog(@"checkBusinessUserId");
     
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    businessUserId = [defaults objectForKey: @"businessUserId"];
+    //    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    //    businessUserId = [defaults objectForKey: @"businessUserId"];
     
     if (businessUserId != nil) {
         NSLog(@"businessUserId != nil");
@@ -481,12 +480,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     [self loginAccount];
 }
-- (void)setTokenStr:(NSString *)tk {
-    
-}
-- (void)setIdStr:(NSString *) ids {
-    
-}
+
 - (void)loginAccount {
     NSLog(@"loginAccount");
     @try {
@@ -498,21 +492,18 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-        
+    
     NSLog(@"self.pwdTextField.text: %@", self.pwdTextField.text);
     
     NSString *emailStr = self.emailTextField.text;
     NSString *pwdStr = self.pwdTextField.text;
-    __block typeof(self) wself = self;
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *respone = [boxAPI LoginAccount: emailStr Pwd: pwdStr];
-        __strong typeof(wself) sself = wself;
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            
-            
             @try {
-                [MBProgressHUD hideHUDForView: sself.view  animated:YES];
+                [MBProgressHUD hideHUDForView: self.view  animated:YES];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -530,7 +521,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog(@"ViewController");
                     NSLog(@"loginbtn");
                     
-                    [sself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"loginAccount"
                                             fbId: @""
                                          jsonStr: @""
@@ -544,21 +535,21 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-
-                        sself->tokenStr = dic[@"data"][@"token"];
-                        sself->idStr = [dic[@"data"][@"id"] stringValue];
-
-                        [sself saveDataAfterLogin: @"emailLogin"];
+                        
+                        tokenStr = dic[@"data"][@"token"];
+                        idStr = [dic[@"data"][@"id"] stringValue];
+                        
+                        [self saveDataAfterLogin: @"emailLogin"];
                         //[self toMyTabBarController];
                         //[self getProfile];
-                        [sself refreshToken];
+                        [self refreshToken];
                         //[self setupPushNotification];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSString *msg = dic[@"message"];
                         NSLog(@"msg: %@", msg);
-                        [sself showCustomErrorAlert: msg];
+                        [self showCustomErrorAlert: msg];
                     } else {
-                        [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -594,7 +585,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSLog(@"fbLoginHandler");
     
     // Try to login with permissions
-    __block typeof(self) wself = self;
     [self loginAndRequestPermissionsWithSuccessHandler:^{
         NSLog(@"");
         NSLog(@"loginAndRequestPermissionsWithSuccessHandler");
@@ -605,14 +595,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog(@"FB ID: %@", fbId);
         NSLog(@"FB Token: %@", fbtoken);
         
-//        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//        businessUserId = [defaults objectForKey: @"businessUserId"];
+        //        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        //        businessUserId = [defaults objectForKey: @"businessUserId"];
         
-        if (wself->businessUserId != nil) {
+        if (businessUserId != nil) {
             NSLog(@"businessUserId != nil");
             
             // If businessUserId is empty string
-            if ([wself->businessUserId isEqualToString: @""]) {
+            if ([businessUserId isEqualToString: @""]) {
                 [self facebookLogin: fbId];
             } else {
                 // If businessUserId is not empty
@@ -657,14 +647,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue: @"id, email, birthday, gender, name" forKey: @"fields"];
-    __block typeof(self) wself = self;
+    
     [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters: parameters]
      startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
          
          if (!error) {
              NSLog(@"fetched user: %@", result);
              
-             [wself->locationManager stopUpdatingLocation];
+             [locationManager stopUpdatingLocation];
              
              // Get FB Personal Data
              NSString *emailAccount = result[@"email"];
@@ -694,12 +684,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
              if (name != nil)
                  [paramDic setObject: name forKey: @"name"];
              
-             NSLog(@"currentLocation: %@", wself->currentLocation);
+             NSLog(@"currentLocation: %@", currentLocation);
              
              // Get Location Data
-             if (wself->currentLocation != nil) {
-                 NSString *latStr = [NSString stringWithFormat: @"%.8f", wself->currentLocation.coordinate.latitude];
-                 NSString *longStr = [NSString stringWithFormat: @"%.8f", wself->currentLocation.coordinate.longitude];
+             if (currentLocation != nil) {
+                 NSString *latStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.latitude];
+                 NSString *longStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.longitude];
                  
                  NSString *locationStr = [NSString stringWithFormat: @"%@,%@", latStr, longStr];
                  NSLog(@"locationStr: %@", locationStr);
@@ -712,7 +702,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
              NSData *jsonData = [NSJSONSerialization dataWithJSONObject: paramDic options: 0 error: nil];
              NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
              
-             [wself buisnessSubUserFastRegister: fbId jsonStr: jsonStr];
+             [self buisnessSubUserFastRegister: fbId jsonStr: jsonStr];
          } else {
              NSLog(@"%@",error.localizedDescription);
          }
@@ -732,12 +722,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI buisnessSubUserFastRegister: wself->businessUserId fbId: fbId timeStamp: wself->timeStamp param: jsonStr];
-        __strong typeof(wself) sself = wself;
+        NSString *response = [boxAPI buisnessSubUserFastRegister: businessUserId fbId: fbId timeStamp: timeStamp param: jsonStr];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             @try {
                 [MBProgressHUD hideHUDForView: self.view animated:YES];
             } @catch (NSException *exception) {
@@ -772,15 +760,15 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         
                         NSLog(@"新用戶");
                         
-                        sself->tokenStr = dic[@"data"][@"token"][@"token"];
-                        sself->idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+                        tokenStr = dic[@"data"][@"token"][@"token"];
+                        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
                         
-                        NSLog(@"tokenStr: %@", sself->tokenStr);
-                        NSLog(@"idStr: %@", sself->idStr);
+                        NSLog(@"tokenStr: %@", tokenStr);
+                        NSLog(@"idStr: %@", idStr);
                         
-                        [sself saveDataAfterLogin: @"facebookLogin"];
+                        [self saveDataAfterLogin: @"facebookLogin"];
                         //[self setupPushNotification];
-                        [sself toFbFindingVCAndResetData];
+                        [self toFbFindingVCAndResetData];
                         
                     } else if ([dic[@"result"] isEqualToString: @"USER_EXISTS"]) {
                         NSLog(@"USER_EXISTS");
@@ -790,16 +778,16 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         NSLog(@"已有帳號");
                         
                         //isCreator = [dic[@"data"][@"creative"] boolValue];
-                        sself->tokenStr = dic[@"data"][@"token"][@"token"];
-                        sself->idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+                        tokenStr = dic[@"data"][@"token"][@"token"];
+                        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
                         
-                        NSLog(@"tokenStr: %@", sself->tokenStr);
-                        NSLog(@"idStr: %@", sself->idStr);
+                        NSLog(@"tokenStr: %@", tokenStr);
+                        NSLog(@"idStr: %@", idStr);
                         
-                        [sself saveDataAfterLogin: @"facebookLogin"];
+                        [self saveDataAfterLogin: @"facebookLogin"];
                         //[self toMyTabBarController];
                         //[self getProfile];
-                        [sself refreshToken];
+                        [self refreshToken];
                         //[self setupPushNotification];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
@@ -809,7 +797,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         if (msg == nil) {
                             msg = NSLocalizedString(@"Host-NotAvailable", @"");
                         }
-                        [sself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         NSString *msg = dic[@"message"];
@@ -817,7 +805,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         if (msg == nil) {
                             msg = NSLocalizedString(@"Host-NotAvailable", @"");
                         }
-                        [sself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     }
                 }
             }
@@ -837,10 +825,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI FacebookLoginAccount: fbId];
-        __strong typeof(wself) sself = wself;
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
                 [MBProgressHUD hideHUDForView: self.view  animated:YES];
@@ -886,13 +874,13 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                     position: CSToastPositionBottom
                                        style: style];
                         
-                        sself->tokenStr = data[@"data"][@"token"];
-                        sself->idStr = [data[@"data"][@"id"] stringValue];
+                        tokenStr = data[@"data"][@"token"];
+                        idStr = [data[@"data"][@"id"] stringValue];
                         
-                        [sself saveDataAfterLogin: @"facebookLogin"];
+                        [self saveDataAfterLogin: @"facebookLogin"];
                         //[self toMyTabBarController];
                         //[self getProfile];
-                        [sself refreshToken];
+                        [self refreshToken];
                         //[self setupPushNotification];
                         
                     } else if([data[@"result"] intValue] == 2) {
@@ -917,7 +905,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                  style.messageColor = [UIColor whiteColor];
                                  style.backgroundColor = [UIColor thirdPink];
                                  
-                                 [sself.view makeToast: @"註冊去"
+                                 [self.view makeToast: @"註冊去"
                                              duration: 2.0
                                              position: CSToastPositionBottom
                                                 style: style];
@@ -928,7 +916,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         
                     } else {
                         //[wTools showAlertTile:@"" Message:data[@"message"] ButtonTitle:@"確定"];
-                        [sself showCustomErrorAlert: data[@"message"]];
+                        [self showCustomErrorAlert: data[@"message"]];
                     }
                 }
             }
@@ -958,7 +946,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *respone = [boxAPI registration:dic];
         
@@ -993,17 +981,17 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog(@"%@",respone);
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        wself->tokenStr = dic[@"data"][@"token"];
-                        wself->idStr = [dic[@"data"][@"id"] stringValue];
+                        tokenStr = dic[@"data"][@"token"];
+                        idStr = [dic[@"data"][@"id"] stringValue];
                         
-                        [wself saveDataAfterLogin: @"facebookLogin"];
+                        [self saveDataAfterLogin: @"facebookLogin"];
                         //[self setupPushNotification];
-                        [wself toFbFindingVCAndResetData];
+                        [self toFbFindingVCAndResetData];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1105,7 +1093,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         return;
     }
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    __block typeof(self) wself = self;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI refreshToken: [userPrefs objectForKey: @"id"]];
         
@@ -1142,15 +1130,15 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"result SYSTEM_OK");
                         
-                        wself->tokenStr = dic[@"data"][@"token"][@"token"];
+                        tokenStr = dic[@"data"][@"token"][@"token"];
                         
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-                        [userPrefs setObject: wself->tokenStr forKey: @"token"];
+                        [userPrefs setObject: tokenStr forKey: @"token"];
                         
-                        [wself getProfile];
+                        [self getProfile];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         
@@ -1159,7 +1147,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         if (msg == nil) {
                             msg = NSLocalizedString(@"Host-NotAvailable", @"");
                         }
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        [self showCustomErrorAlert: dic[@"message"]];
                     }
                 }
             }
@@ -1338,11 +1326,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.myNav pushViewController: myTabC animated: NO];
-    __block typeof(bg) wbg = bg;
+    
     [UIView animateWithDuration:2.0 animations:^{
-        wbg.alpha=0;
+        bg.alpha=0;
     } completion:^(BOOL anim){
-        [wbg removeFromSuperview];
+        [bg removeFromSuperview];
     }];
     
     [self stopLocationAndNotificationFunction];
@@ -1563,7 +1551,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     }];
     
 }
-/*
+
 - (UIView *)createErrorContainerView: (NSString *)msg
 {
     // TextView Setting
@@ -1638,7 +1626,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     return contentView;
 }
-*/
+
 #pragma mark - Custom AlertView for Yes and No
 - (void)showCustomAlertForOptions: (NSString *)msg
 {
@@ -1725,7 +1713,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         viewHeight = 96;
     }
     NSLog(@"demoHeight: %f", viewHeight);
-        
+    
     // ContentView Setting
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
     //contentView.backgroundColor = [UIColor firstPink];
@@ -1914,7 +1902,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 NSLog(@"protocolName isEqualToString checkToken");
                 [self closeApp];
             }
-        } else {            
+        } else {
             if ([protocolName isEqualToString: @"checkToken"]) {
                 [weakSelf checkToken];
             } else if ([protocolName isEqualToString: @"loginAccount"]) {
@@ -1936,6 +1924,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     }];
     [alertTimeOutView setUseMotionEffects: YES];
     [alertTimeOutView show];
+
 }
 
 - (UIView *)createTimeOutContainerView: (NSString *)msg
