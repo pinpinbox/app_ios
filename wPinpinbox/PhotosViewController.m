@@ -116,32 +116,35 @@
     
     // Requests the user’s permission, if needed, for accessing the Photos library.
     //__block PHFetchResult *wresult = assetsFetchResults;
-    __block UICollectionView *cov = mycov;
+    __block typeof(self) wself = self;
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"dispatch_async");
             
             if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
                 NSLog(@"authorized");
+                [wself processPhotoList];
                 
-                // A set of options that affect the filtering, sorting, and management of results that Photos returns when you fetch asset or collection objects.
-                PHFetchOptions *options = [[PHFetchOptions alloc] init];
-                options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:NO]];
-                options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-                
-                // An ordered list of assets or collections returned from a Photos fetch method.
-                assetsFetchResults = [PHAsset fetchAssetsWithOptions:options];
-                
-                [cov reloadData];
             } else {
                 NSLog(@"Not Authorized");
                 
-                [self showNoAccessAlertAndCancel];
+                [wself showNoAccessAlertAndCancel];
             }
         });
     }];
     
     return;
+}
+- (void)processPhotoList {
+    // A set of options that affect the filtering, sorting, and management of results that Photos returns when you fetch asset or collection objects.
+    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+    options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:NO]];
+    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+    
+    // An ordered list of assets or collections returned from a Photos fetch method.
+    assetsFetchResults = [PHAsset fetchAssetsWithOptions:options];
+    
+    [mycov reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -380,7 +383,7 @@
     NSLog(@"------------");
     
     __block UIImage *img;
-    
+    __block NSInteger c = imageArray.count;
     [self.imageManager requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
         NSLog(@"requestImageDataForAsset");
         
@@ -391,9 +394,9 @@
             img = [UIImage imageWithData:imageData];
             [imgs addObject:img];
             
-            if ((se+1)>=imageArray.count) {
+            if ((se+1)>=c) {//imageArray.count) {
                 NSLog(@"se: %d", se);
-                NSLog(@"imageArray.count: %lu", (unsigned long)imageArray.count);
+                NSLog(@"imageArray.count: %lu", (unsigned long)c);//imageArray.count);
                 [self OKimage];
             } else {
                 NSLog(@"");

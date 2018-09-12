@@ -307,7 +307,60 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self getCreatorInfo];
     }
 }
-
+- (void)processCreatorInfo:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        self.identity = dic[@"data"][@"split"][@"identity"];
+        self.sum = [dic[@"data"][@"split"][@"sum"] integerValue];
+        self.sumOfSettlement = [dic[@"data"][@"split"][@"sumofsettlement"] integerValue];
+        self.sumOfUnsettlement = [dic[@"data"][@"split"][@"sumofunsettlement"] integerValue];
+        self.userDic = dic[@"data"][@"user"];
+        
+        if (nextId == 0) {
+            pictures = [NSMutableArray new];
+        }
+        
+        int s = 0;
+        
+        for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
+            s++;
+            [pictures addObject: picture];
+        }
+        NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
+        
+        nextId = nextId + s;
+        
+        NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
+        followDic = dic[@"data"][@"follow"];
+        
+        sponsorDic = dic[@"data"][@"userstatistics"];
+        
+        //                        [self.refreshControl endRefreshing];
+        [self.collectionView reloadData];
+        
+        NSLog(@"nextId: %ld", (long)nextId);
+        NSLog(@"s: %d", s);
+        
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        if (s == 0) {
+            isLoading = YES;
+        }
+        NSLog(@"After getting data");
+        NSLog(@"\n\nisLoading: %d", isLoading);
+        [self layoutSetup];
+        [self getProfile];
+        
+        isReloading = NO;
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        isReloading = NO;
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        isReloading = NO;
+    }
+}
 - (void)getCreatorInfo {
     NSLog(@"getCreatorInfo");
     
@@ -325,7 +378,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSString *limit = [NSString stringWithFormat:@"%ld,%d", (long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
     [data setObject: [wTools getUserID] forKey: @"authorid"];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI getcreative:[wTools getUserID]
                                            token:[wTools getUserToken]
@@ -349,81 +402,54 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"MeTabViewController");
                     NSLog(@"getCreatorInfo");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcreative"
                                          albumId: @""];
 //                    [self.refreshControl endRefreshing];
-                    isReloading = NO;
+                    wself->isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     NSLog(@"response from getCreative");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     NSLog(@"dic: %@", dic);
+                    [wself processCreatorInfo:dic];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        self.identity = dic[@"data"][@"split"][@"identity"];
-                        self.sum = [dic[@"data"][@"split"][@"sum"] integerValue];
-                        self.sumOfSettlement = [dic[@"data"][@"split"][@"sumofsettlement"] integerValue];
-                        self.sumOfUnsettlement = [dic[@"data"][@"split"][@"sumofunsettlement"] integerValue];
-                        self.userDic = dic[@"data"][@"user"];
-                        
-                        if (nextId == 0) {
-                            pictures = [NSMutableArray new];
-                        }
-                        
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
-                            s++;
-                            [pictures addObject: picture];
-                        }
-                        NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
-                        
-                        nextId = nextId + s;
-                        
-                        NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
-                        followDic = dic[@"data"][@"follow"];
-                        
-                        sponsorDic = dic[@"data"][@"userstatistics"];
-                        
-//                        [self.refreshControl endRefreshing];
-                        [self.collectionView reloadData];
-                        
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        NSLog(@"s: %d", s);
-                        
-                        if (nextId >= 0)
-                            isLoading = NO;
-                        
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        NSLog(@"After getting data");
-                        NSLog(@"\n\nisLoading: %d", isLoading);
-                        [self layoutSetup];                    
-                        [self getProfile];
-                        
-                        isReloading = NO;
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        isReloading = NO;
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        isReloading = NO;
-                    }
                 }
             } else {
 //                [self.refreshControl endRefreshing];
-                isReloading = NO;
+                wself->isReloading = NO;
             }
-            [self.refreshControl endRefreshing];
-            isReloading = NO;
+            [wself.refreshControl endRefreshing];
+            wself->isReloading = NO;
         });
     });
 }
-
+- (void)processProfile:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
+        
+        for (NSString *key in [dataIc allKeys]) {
+            id objective = [dataIc objectForKey: key];
+            
+            if ([objective isKindOfClass: [NSNull class]]) {
+                [dataIc setObject: @"" forKey: key];
+            }
+        }
+        [userPrefs setValue: dataIc forKey: @"profile"];
+        [userPrefs synchronize];
+        
+        myData = [dataIc mutableCopy];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        [self.refreshControl endRefreshing];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [self.refreshControl endRefreshing];
+    }
+}
 - (void)getProfile {
     NSLog(@"getProfile");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -436,7 +462,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getprofile: [userPrefs objectForKey: @"id"] token: [userPrefs objectForKey: @"token"]];
         
@@ -457,10 +483,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"MeTabViewController");
                     NSLog(@"getProfile");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getprofile"
                                          albumId: @""];
-                    [self.refreshControl endRefreshing];
+                    [wself.refreshControl endRefreshing];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -468,32 +494,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"responseFromGetProfile != nil");
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-                        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
-                        
-                        for (NSString *key in [dataIc allKeys]) {
-                            id objective = [dataIc objectForKey: key];
-                            
-                            if ([objective isKindOfClass: [NSNull class]]) {
-                                [dataIc setObject: @"" forKey: key];
-                            }
-                        }
-                        [userPrefs setValue: dataIc forKey: @"profile"];
-                        [userPrefs synchronize];
-                        
-                        myData = [dataIc mutableCopy];                                                
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        [self.refreshControl endRefreshing];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [self.refreshControl endRefreshing];
-                    }
+                    [wself processProfile:dic];
                 }
             } else {
-                [self.refreshControl endRefreshing];
+                [wself.refreshControl endRefreshing];
             }
         });
     });
@@ -562,6 +566,48 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - Check Point Method
+- (void)processCheckPoint:(NSDictionary *) data{
+    if ([data[@"result"] intValue] == 1) {
+        
+        missionTopicStr = data[@"data"][@"task"][@"name"];
+        NSLog(@"name: %@", missionTopicStr);
+        
+        rewardType = data[@"data"][@"task"][@"reward"];
+        NSLog(@"reward type: %@", rewardType);
+        
+        rewardValue = data[@"data"][@"task"][@"reward_value"];
+        NSLog(@"reward value: %@", rewardValue);
+        
+        eventUrl = data[@"data"][@"event"][@"url"];
+        NSLog(@"event: %@", eventUrl);
+        
+        restriction = data[@"data"][@"task"][@"restriction"];
+        NSLog(@"restriction: %@", restriction);
+        
+        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
+        NSLog(@"restrictionValue: %@", restrictionValue);
+        
+        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
+        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
+        
+        [self showAlertView];
+        [self getUrPoints];
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+        
+        // Save data for first edit profile
+        BOOL firsttime_edit_profile = YES;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject: [NSNumber numberWithBool: firsttime_edit_profile]
+                     forKey: @"firsttime_edit_profile"];
+        [defaults synchronize];
+    } else if ([data[@"result"] intValue] == 0) {
+        NSString *errorMessage = data[@"message"];
+        NSLog(@"error messsage: %@", errorMessage);
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)checkPoint {
     NSLog(@"checkPoint");
     
@@ -574,7 +620,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
         NSString *response = [boxAPI doTask1: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_edit_profile" platform: @"apple"];
@@ -598,53 +644,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"MeTabViewController");
                     NSLog(@"checkPoint");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"doTask1"
                                          albumId: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([data[@"result"] intValue] == 1) {
-                        
-                        missionTopicStr = data[@"data"][@"task"][@"name"];
-                        NSLog(@"name: %@", missionTopicStr);
-                        
-                        rewardType = data[@"data"][@"task"][@"reward"];
-                        NSLog(@"reward type: %@", rewardType);
-                        
-                        rewardValue = data[@"data"][@"task"][@"reward_value"];
-                        NSLog(@"reward value: %@", rewardValue);
-                        
-                        eventUrl = data[@"data"][@"event"][@"url"];
-                        NSLog(@"event: %@", eventUrl);
-                        
-                        restriction = data[@"data"][@"task"][@"restriction"];
-                        NSLog(@"restriction: %@", restriction);
-                        
-                        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
-                        NSLog(@"restrictionValue: %@", restrictionValue);
-                        
-                        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
-                        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
-                        
-                        [self showAlertView];
-                        [self getUrPoints];
-                    } else if ([data[@"result"] intValue] == 2) {
-                        NSLog(@"message: %@", data[@"message"]);
-                        
-                        // Save data for first edit profile
-                        BOOL firsttime_edit_profile = YES;
-                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                        [defaults setObject: [NSNumber numberWithBool: firsttime_edit_profile]
-                                     forKey: @"firsttime_edit_profile"];
-                        [defaults synchronize];
-                    } else if ([data[@"result"] intValue] == 0) {
-                        NSString *errorMessage = data[@"message"];
-                        NSLog(@"error messsage: %@", errorMessage);
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processCheckPoint:data];
                 }
             }
         });

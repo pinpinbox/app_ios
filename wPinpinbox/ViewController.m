@@ -539,35 +539,33 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    [wself processLoginAccount:dic];
+                    NSLog(@"dic: %@", dic);
+                    NSLog(@"result intValue: %d", [dic[@"result"] intValue]);
+                    
+                    if ([dic[@"result"] intValue] == 1) {
+                        NSLog(@"dic result boolValue is 1");
+
+                        sself->tokenStr = dic[@"data"][@"token"];
+                        sself->idStr = [dic[@"data"][@"id"] stringValue];
+
+                        [sself saveDataAfterLogin: @"emailLogin"];
+                        //[self toMyTabBarController];
+                        //[self getProfile];
+                        [sself refreshToken];
+                        //[self setupPushNotification];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSString *msg = dic[@"message"];
+                        NSLog(@"msg: %@", msg);
+                        [sself showCustomErrorAlert: msg];
+                    } else {
+                        [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
                 }
             }
         });
     });
 }
-- (void)processLoginAccount:(NSDictionary *)dic {
-    NSLog(@"dic: %@", dic);
-    NSLog(@"result intValue: %d", [dic[@"result"] intValue]);
-    
-    if ([dic[@"result"] intValue] == 1) {
-        NSLog(@"dic result boolValue is 1");
-        
-        tokenStr = dic[@"data"][@"token"];
-        idStr = [dic[@"data"][@"id"] stringValue];
-        
-        [self saveDataAfterLogin: @"emailLogin"];
-        //[self toMyTabBarController];
-        //[self getProfile];
-        [self refreshToken];
-        //[self setupPushNotification];
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSString *msg = dic[@"message"];
-        NSLog(@"msg: %@", msg);
-        [self showCustomErrorAlert: msg];
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-    }
-}
+
 #pragma mark - IBAction - Facebook Button Press
 
 //Facebook
@@ -615,15 +613,15 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
             
             // If businessUserId is empty string
             if ([wself->businessUserId isEqualToString: @""]) {
-                [wself facebookLogin: fbId];
+                [self facebookLogin: fbId];
             } else {
                 // If businessUserId is not empty
                 // then it must be called from other App by scanning QRCode
-                [wself getFbDataAndLocation: fbId];
+                [self getFbDataAndLocation: fbId];
             }
         } else {
             NSLog(@"businessUserId == nil");
-            [wself facebookLogin: fbId];
+            [self facebookLogin: fbId];
         }
     }
                              declinedOrCanceledHandler:^{
@@ -633,14 +631,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                  // If the user declined permissions tell them why we need permissions
                                  // and ask for permissions again if they want to grant permissions.
                                  
-                                 [wself resetBusinessUserId];
-                                 [wself stopLocationAndNotificationFunction];
+                                 [self resetBusinessUserId];
+                                 [self stopLocationAndNotificationFunction];
                                  
-                                 [wself alertDeclinedPublishActionsWithCompletion:^{
+                                 [self alertDeclinedPublishActionsWithCompletion:^{
                                      NSLog(@"");
                                      NSLog(@"alertDeclinedPublishActionsWithCompletion");
                                      NSLog(@"Before calling loginAndRequestPermissionsWithSuccessHandler");
-                                     [wself loginAndRequestPermissionsWithSuccessHandler:nil
+                                     [self loginAndRequestPermissionsWithSuccessHandler:nil
                                                               declinedOrCanceledHandler:nil
                                                                            errorHandler:^(NSError * error) {
                                                                                NSLog(@"Error: %@", error.description);
@@ -758,7 +756,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog(@"ViewController");
                     NSLog(@"buisnessSubUserFastRegister fbId jonStr");
                     
-                    [sself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"buisnessSubUserFastRegister"
                                             fbId: fbId
                                          jsonStr: jsonStr
@@ -768,68 +766,65 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    [sself processBusinessSubUserRegResult:dic];
+                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        NSLog(@"SYSTEM_OK");
+                        NSLog(@"dic: %@", dic);
+                        
+                        NSLog(@"新用戶");
+                        
+                        sself->tokenStr = dic[@"data"][@"token"][@"token"];
+                        sself->idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+                        
+                        NSLog(@"tokenStr: %@", sself->tokenStr);
+                        NSLog(@"idStr: %@", sself->idStr);
+                        
+                        [sself saveDataAfterLogin: @"facebookLogin"];
+                        //[self setupPushNotification];
+                        [sself toFbFindingVCAndResetData];
+                        
+                    } else if ([dic[@"result"] isEqualToString: @"USER_EXISTS"]) {
+                        NSLog(@"USER_EXISTS");
+                        NSLog(@"dic: %@", dic);
+                        
+                        //已有帳號
+                        NSLog(@"已有帳號");
+                        
+                        //isCreator = [dic[@"data"][@"creative"] boolValue];
+                        sself->tokenStr = dic[@"data"][@"token"][@"token"];
+                        sself->idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+                        
+                        NSLog(@"tokenStr: %@", sself->tokenStr);
+                        NSLog(@"idStr: %@", sself->idStr);
+                        
+                        [sself saveDataAfterLogin: @"facebookLogin"];
+                        //[self toMyTabBarController];
+                        //[self getProfile];
+                        [sself refreshToken];
+                        //[self setupPushNotification];
+                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+                        NSLog(@"SYSTEM_ERROR");
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [sself showCustomErrorAlert: dic[@"message"]];
+                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+                        NSLog(@"TOKEN_ERROR");
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [sself showCustomErrorAlert: dic[@"message"]];
+                    }
                 }
             }
         });
     });
 }
-- (void)processBusinessSubUserRegResult:(NSDictionary *)dic{
-    
-    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-        NSLog(@"SYSTEM_OK");
-        NSLog(@"dic: %@", dic);
-        
-        NSLog(@"新用戶");
-        
-        tokenStr = dic[@"data"][@"token"][@"token"];
-        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
-        
-        NSLog(@"tokenStr: %@", tokenStr);
-        NSLog(@"idStr: %@", idStr);
-        
-        [self saveDataAfterLogin: @"facebookLogin"];
-        //[self setupPushNotification];
-        [self toFbFindingVCAndResetData];
-        
-    } else if ([dic[@"result"] isEqualToString: @"USER_EXISTS"]) {
-        NSLog(@"USER_EXISTS");
-        NSLog(@"dic: %@", dic);
-        
-        //已有帳號
-        NSLog(@"已有帳號");
-        
-        //isCreator = [dic[@"data"][@"creative"] boolValue];
-        tokenStr = dic[@"data"][@"token"][@"token"];
-        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
-        
-        NSLog(@"tokenStr: %@", tokenStr);
-        NSLog(@"idStr: %@", idStr);
-        
-        [self saveDataAfterLogin: @"facebookLogin"];
-        //[self toMyTabBarController];
-        //[self getProfile];
-        [self refreshToken];
-        //[self setupPushNotification];
-    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-        NSLog(@"SYSTEM_ERROR");
-        NSLog(@"失敗：%@",dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-        }
-        [self showCustomErrorAlert: dic[@"message"]];
-    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-        NSLog(@"TOKEN_ERROR");
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-        }
-        [self showCustomErrorAlert: dic[@"message"]];
-    }
-}
+
 -(void)facebookLogin:(NSString *)fbId {
     NSLog(@"\nfacebookLogin");
     
@@ -866,7 +861,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog(@"ViewController");
                     NSLog(@"getProfile");
                     
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"FacebookLoginAccount"
                                             fbId: fbId
                                          jsonStr: @""
@@ -877,73 +872,70 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                     NSLog(@"data: %@", data);
                     
-                    [sself processFBLogin:data fbId:fbId];
+                    if ([data[@"result"]intValue] == 1) {
+                        //已有帳號
+                        NSLog(@"已有帳號");
+                        
+                        // Show Message to Tester
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor thirdPink];
+                        
+                        [self.view makeToast: @"已有帳號"
+                                    duration: 2.0
+                                    position: CSToastPositionBottom
+                                       style: style];
+                        
+                        sself->tokenStr = data[@"data"][@"token"];
+                        sself->idStr = [data[@"data"][@"id"] stringValue];
+                        
+                        [sself saveDataAfterLogin: @"facebookLogin"];
+                        //[self toMyTabBarController];
+                        //[self getProfile];
+                        [sself refreshToken];
+                        //[self setupPushNotification];
+                        
+                    } else if([data[@"result"] intValue] == 2) {
+                        
+                        NSLog(@"");
+                        NSLog(@"data result intValue == 2");
+                        
+                        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+                        [parameters setValue: @"id, email, birthday, gender, name" forKey: @"fields"];
+                        
+                        [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters: parameters]
+                         startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                             
+                             if (!error) {
+                                 NSString *userName = [result valueForKey:@"name"];
+                                 [self FBSign: fbId name: userName];
+                                 
+                                 NSLog(@"註冊去");
+                                 
+                                 // Show Message to Tester
+                                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                                 style.messageColor = [UIColor whiteColor];
+                                 style.backgroundColor = [UIColor thirdPink];
+                                 
+                                 [sself.view makeToast: @"註冊去"
+                                             duration: 2.0
+                                             position: CSToastPositionBottom
+                                                style: style];
+                             } else {
+                                 NSLog(@"%@", error.localizedDescription);
+                             }
+                         }];
+                        
+                    } else {
+                        //[wTools showAlertTile:@"" Message:data[@"message"] ButtonTitle:@"確定"];
+                        [sself showCustomErrorAlert: data[@"message"]];
+                    }
                 }
             }
         });
     });
 }
-- (void)processFBLogin:(NSDictionary *)data fbId:(NSString *)fbId{
-    
-    if ([data[@"result"]intValue] == 1) {
-        //已有帳號
-        NSLog(@"已有帳號");
-        
-        // Show Message to Tester
-        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-        style.messageColor = [UIColor whiteColor];
-        style.backgroundColor = [UIColor thirdPink];
-        
-        [self.view makeToast: @"已有帳號"
-                    duration: 2.0
-                    position: CSToastPositionBottom
-                       style: style];
-        
-        tokenStr = data[@"data"][@"token"];
-        idStr = [data[@"data"][@"id"] stringValue];
-        
-        [self saveDataAfterLogin: @"facebookLogin"];
-        //[self toMyTabBarController];
-        //[self getProfile];
-        [self refreshToken];
-        //[self setupPushNotification];
-        
-    } else if([data[@"result"] intValue] == 2) {
-        
-        NSLog(@"");
-        NSLog(@"data result intValue == 2");
-        
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-        [parameters setValue: @"id, email, birthday, gender, name" forKey: @"fields"];
-        
-        [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters: parameters]
-         startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-             
-             if (!error) {
-                 NSString *userName = [result valueForKey:@"name"];
-                 [self FBSign: fbId name: userName];
-                 
-                 NSLog(@"註冊去");
-                 
-                 // Show Message to Tester
-                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                 style.messageColor = [UIColor whiteColor];
-                 style.backgroundColor = [UIColor thirdPink];
-                 
-                 [self.view makeToast: @"註冊去"
-                              duration: 2.0
-                              position: CSToastPositionBottom
-                                 style: style];
-             } else {
-                 NSLog(@"%@", error.localizedDescription);
-             }
-         }];
-        
-    } else {
-        //[wTools showAlertTile:@"" Message:data[@"message"] ButtonTitle:@"確定"];
-        [self showCustomErrorAlert: data[@"message"]];
-    }
-}
+
 -(void)FBSign:(NSString *)_facebookID name:(NSString *)wname {
     NSMutableDictionary *dic = [NSMutableDictionary new];
     
@@ -1000,28 +992,25 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"%@",respone);
                     
-                    [wself processSignIn:dic];
+                    if ([dic[@"result"] intValue] == 1) {
+                        wself->tokenStr = dic[@"data"][@"token"];
+                        wself->idStr = [dic[@"data"][@"id"] stringValue];
+                        
+                        [wself saveDataAfterLogin: @"facebookLogin"];
+                        //[self setupPushNotification];
+                        [wself toFbFindingVCAndResetData];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [wself showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
                 }
             }
         });
     });
 }
-- (void)processSignIn:(NSDictionary *)dic {
-    
-    if ([dic[@"result"] intValue] == 1) {
-        tokenStr = dic[@"data"][@"token"];
-        idStr = [dic[@"data"][@"id"] stringValue];
-        
-        [self saveDataAfterLogin: @"facebookLogin"];
-        //[self setupPushNotification];
-        [self toFbFindingVCAndResetData];
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-    }
-}
+
 - (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock) successHandler
                            declinedOrCanceledHandler:(FBBlock) declinedOrCanceledHandler
                                         errorHandler:(void (^)(NSError *)) errorHandler
@@ -1150,38 +1139,34 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                     NSLog(@"dic: %@", dic);
                     
-                    [wself processRefreshToken:dic];
+                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        NSLog(@"result SYSTEM_OK");
+                        
+                        wself->tokenStr = dic[@"data"][@"token"][@"token"];
+                        
+                        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+                        [userPrefs setObject: wself->tokenStr forKey: @"token"];
+                        
+                        [wself getProfile];
+                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [wself showCustomErrorAlert: dic[@"message"]];
+                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+                        NSLog(@"TOKEN_ERROR");
+                        
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [wself showCustomErrorAlert: dic[@"message"]];
+                    }
                 }
             }
         });
     });
 }
-- (void)processRefreshToken:(NSDictionary *)dic {
-    
-    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-        NSLog(@"result SYSTEM_OK");
-        
-        tokenStr = dic[@"data"][@"token"][@"token"];
-        
-        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-        [userPrefs setObject: tokenStr forKey: @"token"];
-        
-        [self getProfile];
-    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-        NSLog(@"TOKEN_ERROR");
-        
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-        }
-        [self showCustomErrorAlert: dic[@"message"]];
-    }
-    
-}
+
 #pragma mark - Web Service - GetProfile
 - (void)getProfile {
     NSLog(@"");

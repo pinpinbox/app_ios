@@ -107,7 +107,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.collectionView.showsHorizontalScrollIndicator = NO;
 }
-
+- (void)processAlbumDataOptions:(NSDictionary *)dic {
+    
+    if ([dic[@"result"] intValue] == 1) {
+        mdata = [dic[@"data"] mutableCopy];
+        //NSLog(@"mdata: %@", mdata);
+        [self getAlbumSettings];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)getAlbumDataOptions {
     NSLog(@"getAlbumDataOptions");
     @try {
@@ -119,6 +131,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getalbumdataoptions: [wTools getUserID]
                                                    token: [wTools getUserToken]];
@@ -139,7 +152,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"SetupMusicViewController");
                     NSLog(@"getAlbumDataOptions");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getalbumdataoptions"
                                          jsonStr: @""];
                 } else {
@@ -147,16 +160,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"getalbumdataoptions");
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        mdata = [dic[@"data"] mutableCopy];
-                        //NSLog(@"mdata: %@", mdata);                        
-                        [self getAlbumSettings];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processAlbumDataOptions:dic];
                 }
             }
         });
@@ -939,7 +943,51 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [self callAlbumSettings: jsonStr];
 }
-
+- (void)processCallAlbumSettings:(NSDictionary *)dic {
+    
+    //if ([dic[@"result"]boolValue]) {
+    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+        NSLog(@"dic: %@", dic);
+        
+        if ([self.audioMode isEqualToString: oldAudioMode]) {
+            isAudioModeChanged = NO;
+        } else {
+            isAudioModeChanged = YES;
+        }
+        
+        NSLog(@"isAudioModeChanged: %d", isAudioModeChanged);
+        
+        if ([self.delegate respondsToSelector: @selector(dismissFromSetupMusicVC:audioModeChanged:)]) {
+            [self.delegate dismissFromSetupMusicVC: self audioModeChanged: isAudioModeChanged];
+        }
+        
+        [self dismissViewControllerAnimated: YES completion: nil];
+    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+        NSLog(@"失敗： %@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: msg];
+    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+        NSLog(@"TOKEN_ERROR");
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor thirdPink];
+        
+        [self.view makeToast: @"用戶驗證異常請重新登入"
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+        
+        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                         target: self
+                                       selector: @selector(logOut)
+                                       userInfo: nil
+                                        repeats: NO];
+    }
+}
 - (void)callAlbumSettings: (NSString *)jsonStr
 {
     NSLog(@"callAlbumSettings");
@@ -952,11 +1000,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI albumsettings: [wTools getUserID]
                                             token: [wTools getUserToken]
-                                         album_id: self.albumId
+                                         album_id: wself.albumId
                                          settings: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -978,55 +1026,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"SetupMusicViewController");
                     NSLog(@"callAlbumSettings");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"albumsettings"
                                          jsonStr: jsonStr];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    //if ([dic[@"result"]boolValue]) {
-                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"dic: %@", dic);
-                        
-                        if ([self.audioMode isEqualToString: oldAudioMode]) {
-                            isAudioModeChanged = NO;
-                        } else {
-                            isAudioModeChanged = YES;
-                        }
-                        
-                        NSLog(@"isAudioModeChanged: %d", isAudioModeChanged);
-                        
-                        if ([self.delegate respondsToSelector: @selector(dismissFromSetupMusicVC:audioModeChanged:)]) {
-                            [self.delegate dismissFromSetupMusicVC: self audioModeChanged: isAudioModeChanged];
-                        }
-                        
-                        [self dismissViewControllerAnimated: YES completion: nil];
-                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
-                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-                        NSLog(@"TOKEN_ERROR");
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
-                        
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
-                        
-                        [NSTimer scheduledTimerWithTimeInterval: 1.0
-                                                         target: self
-                                                       selector: @selector(logOut)
-                                                       userInfo: nil
-                                                        repeats: NO];
-                    }
+                    [wself processCallAlbumSettings:dic];
                 }
             }
         });

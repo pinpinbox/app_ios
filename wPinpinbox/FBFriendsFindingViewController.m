@@ -89,21 +89,24 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     if ([FBSDKAccessToken currentAccessToken]) {
         [self facebookFriends];
     } else {
+        __block typeof(self) wself = self;
         // Try to login with permissions
         [self loginAndRequestPermissionsWithSuccessHandler:^{
-            [self facebookFriends];
+            [wself facebookFriends];
         } declinedOrCanceledHandler:^{
             // If the user declined permissions tell them why we need permissions
             // and ask for permissions again if they want to grant permissions.
-            [self alertDeclinedPublishActionsWithCompletion:^{
-                [self loginAndRequestPermissionsWithSuccessHandler: nil declinedOrCanceledHandler: nil errorHandler:^(NSError * error) {
-                    isLoading = YES;
+            [wself alertDeclinedPublishActionsWithCompletion:^{
+                [wself loginAndRequestPermissionsWithSuccessHandler: nil declinedOrCanceledHandler: nil errorHandler:^(NSError * error) {
+                    __strong typeof(wself) sself = wself;
+                    sself->isLoading = YES;
                     NSLog(@"Error: %@", error.description);
                 }];
             }];
         } errorHandler:^(NSError * error) {
+            __strong typeof(wself) sself = wself;
             NSLog(@"Error: %@", error.description);
-            isLoading = YES;
+            sself->isLoading = YES;
         }];
     }
 }

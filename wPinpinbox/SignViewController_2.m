@@ -95,13 +95,14 @@
      TERMS => 平台規範"
      */
       [wTools ShowMBProgressHUD];
+    __block typeof(webview) wwebview = webview;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString * respone=[boxAPI getsettings:@"TERMS"];
         dispatch_async(dispatch_get_main_queue(), ^{
             
             NSDictionary *data= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
             if ([data[@"result"]boolValue]) {                
-                [webview loadHTMLString:data[@"data"] baseURL:nil];
+                [wwebview loadHTMLString:data[@"data"] baseURL:nil];
                  [wTools HideMBProgressHUD];
             }else{
                  [wTools HideMBProgressHUD];
@@ -253,12 +254,13 @@
         return;
     }
     [wTools ShowMBProgressHUD];
+    __block typeof(_facebookID) fid = _facebookID;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *email = @"";
-        if (_facebookID == nil) {
+        if (fid == nil) {
             email=tmp[@"email"];
         }else{
-            email=_facebookID;
+            email= fid;
         }
         NSString *respone=[boxAPI requsetsmspwd:tmp[@"phone"] Account:email];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -268,8 +270,8 @@
                  NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 if ([dic[@"result"] intValue] == 1) {
                    SignViewController_3 *sv3= [[UIStoryboard storyboardWithName:@"SignVC_3" bundle:nil]instantiateViewControllerWithIdentifier:@"SignViewController_3"];
-                    if (_facebookID!=nil) {
-                        sv3.facebookID=_facebookID;
+                    if (fid!=nil) {
+                        sv3.facebookID=fid;
                     }
                     [self.navigationController pushViewController:sv3 animated:YES];
                 } else if ([dic[@"result"] intValue] == 0) {

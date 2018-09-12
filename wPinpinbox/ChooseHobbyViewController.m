@@ -100,7 +100,38 @@
     }
     self.startUsingPinpinboxBtnHeight.constant = kToolBarButtonHeight;
 }
-
+- (void)processHobbyListResult:(NSDictionary *)data {
+    
+    if ([data[@"result"] intValue] == 1) {
+        NSLog(@"getHobbyList Success");
+        
+        NSLog(@"data: %@", data);
+        
+        hobbyArray = data[@"data"];
+        
+        NSInteger hobbyId;
+        
+        for (int i = 0; i < hobbyArray.count; i++) {
+            NSMutableDictionary *dic = [NSMutableDictionary new];
+            
+            hobbyId = [hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
+            [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+            [dic setValue: [NSNumber numberWithInteger: hobbyId] forKey: @"hobbyId"];
+            [checkSelectedArray addObject: dic];
+        }
+        NSLog(@"checkSelectedArray: %@", checkSelectedArray);
+        NSLog(@"hobbyArray: %@", hobbyArray);
+        
+        [self.collectionView reloadData];
+    } else if ([data[@"result"] intValue] == 0) {
+        NSLog(@"失敗： %@", data[@"message"]);
+        NSString *msg = data[@"message"];
+        [self showCustomErrorAlert: msg];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+    
+}
 - (void)getHobbyList {
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated: YES];
@@ -111,13 +142,13 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getHobbyList: [wTools getUserID] token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [MBProgressHUD hideHUDForView: wself.view animated: YES];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -135,41 +166,15 @@
                     NSLog(@"ChooseHobbyViewController");
                     NSLog(@"getHobbyList");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getHobbyList"];
                 } else {
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
                     
-                    if ([data[@"result"] intValue] == 1) {
-                        NSLog(@"getHobbyList Success");
-                        
-                        NSLog(@"data: %@", data);
-                        
-                        hobbyArray = data[@"data"];
-                        
-                        NSInteger hobbyId;
-                        
-                        for (int i = 0; i < hobbyArray.count; i++) {
-                            NSMutableDictionary *dic = [NSMutableDictionary new];
-                            
-                            hobbyId = [hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
-                            [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
-                            [dic setValue: [NSNumber numberWithInteger: hobbyId] forKey: @"hobbyId"];
-                            [checkSelectedArray addObject: dic];
-                        }
-                        NSLog(@"checkSelectedArray: %@", checkSelectedArray);
-                        NSLog(@"hobbyArray: %@", hobbyArray);
-                        
-                        [self.collectionView reloadData];
-                    } else if ([data[@"result"] intValue] == 0) {
-                        NSLog(@"失敗： %@", data[@"message"]);
-                        NSString *msg = data[@"message"];
-                        [self showCustomErrorAlert: msg];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processHobbyListResult:data];
+                    
                 }
             }
         });

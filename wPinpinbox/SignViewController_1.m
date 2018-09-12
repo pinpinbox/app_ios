@@ -277,7 +277,7 @@ typedef void (^FBBlock)(void);
         }
         
         NSString *emailStr = email.text;
-        
+        __block typeof(emailBtn) btn = emailBtn;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
             //BOOL response = [boxAPI check: @"account" checkValue: email.text];
             NSString *response = [boxAPI check: @"account" checkValue: emailStr];
@@ -315,10 +315,10 @@ typedef void (^FBBlock)(void);
                             NSLog(@"check成功");
                             
                             // Change Button
-                            emailBtn.backgroundColor = [UIColor clearColor];
-                            [emailBtn setTitle: @"OK" forState: UIControlStateNormal];
-                            [emailBtn setTitleColor: [UIColor firstMain] forState: UIControlStateNormal];
-                            emailBtn.userInteractionEnabled = NO;
+                            btn.backgroundColor = [UIColor clearColor];
+                            [btn setTitle: @"OK" forState: UIControlStateNormal];
+                            [btn setTitleColor: [UIColor firstMain] forState: UIControlStateNormal];
+                            btn.userInteractionEnabled = NO;
                         } else {                                                        
                             NSLog(@"失敗： %@", dic[@"message"]);
                             NSString *msg = dic[@"message"];
