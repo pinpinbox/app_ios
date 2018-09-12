@@ -254,7 +254,46 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [pictures removeAllObjects];
     [self loadData: rank];
 }
-
+- (void)processFBResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        int s = 0;
+        
+        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
+            s++;
+            [pictures addObject: picture];
+        }
+        
+        nextId = nextId + s;
+        
+        if (nextId >= 0) {
+            isLoading = NO;
+        }
+        
+        NSLog(@"dic: %@", dic);
+        NSLog(@"pictures: %@", pictures);
+        
+        if (pictures.count == 0) {
+            FBFriendNotFoundViewController *fbFriendNotFoundVC = [[UIStoryboard storyboardWithName: @"FBFriendNotFoundVC" bundle: nil] instantiateViewControllerWithIdentifier: @"FBFriendNotFoundViewController"];
+            
+            //[self.navigationController pushViewController: fbFriendNotFoundVC animated: YES];
+            
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav pushViewController: fbFriendNotFoundVC animated: YES];
+        } else if (pictures.count > 0) {
+            FBFriendsListViewController *fbFriendsVC = [[UIStoryboard storyboardWithName: @"FBFriendsListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"FBFriendsListViewController"];
+            fbFriendsVC.fbArray = [pictures mutableCopy];
+            
+            //[self.navigationController pushViewController: fbFriendsVC animated: YES];
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav pushViewController: fbFriendsVC animated: YES];
+        }
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)loadData: (NSString *)rank
 {
     NSLog(@"loadData: rank: %@", rank);
@@ -282,7 +321,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         } else {
             [data setObject: rank forKey: @"rank"];
         }
-        
+        __block typeof(self) wself = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
             NSString *response = [boxAPI getrecommended: [wTools getUserID] token: [wTools getUserToken] data: data];
             
@@ -306,52 +345,15 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         NSLog(@"FBFriendsFindingViewController");
                         NSLog(@"loadData rank");
                         
-                        [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                        [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                         protocolName: @"getrecommended"
                                                 rank: rank];
                     } else {
                         NSLog(@"Get Real Response");
                         
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                        [wself processFBResult:dic];
                         
-                        if ([dic[@"result"] intValue] == 1) {
-                            int s = 0;
-                            
-                            for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
-                                s++;
-                                [pictures addObject: picture];
-                            }
-                            
-                            nextId = nextId + s;
-                            
-                            if (nextId >= 0) {
-                                isLoading = NO;
-                            }
-                            
-                            NSLog(@"dic: %@", dic);
-                            NSLog(@"pictures: %@", pictures);
-                            
-                            if (pictures.count == 0) {
-                                FBFriendNotFoundViewController *fbFriendNotFoundVC = [[UIStoryboard storyboardWithName: @"FBFriendNotFoundVC" bundle: nil] instantiateViewControllerWithIdentifier: @"FBFriendNotFoundViewController"];
-                                
-                                //[self.navigationController pushViewController: fbFriendNotFoundVC animated: YES];
-                                
-                                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                                [appDelegate.myNav pushViewController: fbFriendNotFoundVC animated: YES];
-                            } else if (pictures.count > 0) {
-                                FBFriendsListViewController *fbFriendsVC = [[UIStoryboard storyboardWithName: @"FBFriendsListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"FBFriendsListViewController"];
-                                fbFriendsVC.fbArray = [pictures mutableCopy];
-                                
-                                //[self.navigationController pushViewController: fbFriendsVC animated: YES];
-                                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                                [appDelegate.myNav pushViewController: fbFriendsVC animated: YES];
-                            }
-                        } else if ([dic[@"result"] intValue] == 0) {
-                            NSLog(@"失敗：%@",dic[@"message"]);
-                            [self showCustomErrorAlert: dic[@"message"]];
-                        } else {
-                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        }
                     }                                        
                 }
             });

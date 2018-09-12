@@ -942,9 +942,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)retrieveAlbum {
     NSLog(@"retrieveAlbum");
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(self.albumId) aid = self.albumId;
+    __block typeof(oldCurrentPage) opage = oldCurrentPage;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI retrievealbump: self.albumId
+        NSString *response = [boxAPI retrievealbump: aid//self.albumId
                                                 uid: [wTools getUserID]
                                               token: [wTools getUserToken]];
         
@@ -968,7 +970,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        isDataLoaded = YES;
+                        wself->isDataLoaded = YES;
                         self.bookdata = [dic[@"data"] copy];
 //                        NSLog(@"self.bookdata: %@", self.bookdata);
                         
@@ -981,8 +983,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self checkIsOwnedOrNot: dic[@"data"]];
                         
                         [self getGoogleAPI];
-                        [self checkLocationBtn: oldCurrentPage];
-                        [self checkAudio: oldCurrentPage];
+                        [self checkLocationBtn: opage];
+                        [self checkAudio: opage];
                         [self.imageScrollCV reloadData];
                         [self.thumbnailImageScrollCV reloadData];
                         
@@ -1000,7 +1002,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                 
                                 // To old current page
                                 NSLog(@"To old current page");
-                                indexPath = [NSIndexPath indexPathForItem: oldCurrentPage inSection: 0];
+                                indexPath = [NSIndexPath indexPathForItem: opage inSection: 0];
                                 [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
                                 [self.thumbnailImageScrollCV reloadData];
                             }
@@ -1021,15 +1023,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                 self.descriptionScrollView.alpha = 1;
                                 
                                 // Cell need to be successfully initialized then can play
-                                NSLog(@"oldCurrentPage: %lu", (unsigned long)oldCurrentPage);
-                                [self checkVideo: oldCurrentPage];
+                                NSLog(@"oldCurrentPage: %lu", (unsigned long)opage);
+                                [self checkVideo: opage];
                                 
                                 // cell.giftViewBgV need to be successfully initialized then can play
-                                NSIndexPath *indexPath = [NSIndexPath indexPathForItem: oldCurrentPage inSection: 0];
+                                NSIndexPath *indexPath = [NSIndexPath indexPathForItem: opage inSection: 0];
                                 ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
                                 NSLog(@"cell: %@", cell);
                                 NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
-                                [self checkSlotAndExchangeInfo: oldCurrentPage];
+                                [self checkSlotAndExchangeInfo: opage];
                             }];
                             
                             [self textViewContentSetup: [self getCurrentPage]];
@@ -1540,11 +1542,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             float value = [slider value];
             
             double time = duration * (value - minValue) / (maxValue - minValue);
-            
+            __block typeof(self) wself = self;
             [self.avPlayer seekToTime: CMTimeMakeWithSeconds(time, NSEC_PER_SEC) completionHandler:^(BOOL finished) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSLog(@"isSeeking = NO");
-                    isSeeking = NO;
+                    wself->isSeeking = NO;
                 });
             }];
         }
@@ -1768,13 +1770,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"");
         NSLog(@"FBSDKAccessToken currentAccessToken is TRUE");
         self.isPresentingOrPushingVC = YES;
-        
+        __block typeof(self) wself = self;
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath: videoStr parameters: @{@"fields" : @"id,source"} HTTPMethod: @"GET"];
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             NSLog(@"FBSDKGraphRequest startWithCompletionHandler");
             
             if (connection) {
-                fbVideoUrl = url;
+                //fbVideoUrl = url;
+                [wself setFBVidURL:url];
                 NSLog(@"url: %@", url);
                 
                 if ([url isEqual: [NSNull null]]) {
@@ -1782,12 +1785,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     style.messageColor = [UIColor whiteColor];
                     style.backgroundColor = [UIColor thirdPink];
                     
-                    [self.view makeToast: @"FB影片連結有錯誤"
+                    [wself.view makeToast: @"FB影片連結有錯誤"
                                 duration: 2.0
                                 position: CSToastPositionBottom
                                    style: style];
                 } else {
-                    [self openSafari: url];
+                    [wself openSafari: url];
                 }
             } else if (!connection) {
                 NSLog(@"Get Video Error");
@@ -1795,7 +1798,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 style.messageColor = [UIColor whiteColor];
                 style.backgroundColor = [UIColor thirdPink];
                 
-                [self.view makeToast: @"FB影片連結有錯誤"
+                [wself.view makeToast: @"FB影片連結有錯誤"
                             duration: 2.0
                             position: CSToastPositionBottom
                                style: style];
@@ -1806,6 +1809,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"FBSDKAccessToken currentAccessToken is not TRUE");
         NSLog(@"login with permissions");
         self.isPresentingOrPushingVC = YES;
+        __block typeof(self) wself = self;
         
         // Try to login with permissions
         [self loginAndRequestPermissionsWithSuccessHandler:^{
@@ -1815,7 +1819,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 NSLog(@"FBSDKGraphRequest startWithCompletionHandler");
                 
                 if (connection) {
-                    fbVideoUrl = url;
+                    //fbVideoUrl = url;
+                    [wself setFBVidURL:url];
                     NSLog(@"url: %@", url);
                     
                     if ([url isEqual: [NSNull null]]) {
@@ -1823,12 +1828,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor thirdPink];
                         
-                        [self.view makeToast: @"FB影片連結有錯誤"
+                        [wself.view makeToast: @"FB影片連結有錯誤"
                                     duration: 2.0
                                     position: CSToastPositionBottom
                                        style: style];
                     } else {
-                        [self openSafari: url];
+                        [wself openSafari: url];
                     }
                 } else if (!connection) {
                     NSLog(@"Get Video Error");
@@ -1836,7 +1841,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     style.messageColor = [UIColor whiteColor];
                     style.backgroundColor = [UIColor thirdPink];
                     
-                    [self.view makeToast: @"FB影片連結有錯誤"
+                    [wself.view makeToast: @"FB影片連結有錯誤"
                                 duration: 2.0
                                 position: CSToastPositionBottom
                                    style: style];
@@ -1846,8 +1851,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             NSLog(@"declinedOrCanceledHandler");
             // If the user declined permissions tell them why we need permissions
             // and ask for permissions again if they want to grant permissions.
-            [self alertDeclinedPublishActionsWithCompletion:^{
-                [self loginAndRequestPermissionsWithSuccessHandler: nil
+            [wself alertDeclinedPublishActionsWithCompletion:^{
+                [wself loginAndRequestPermissionsWithSuccessHandler: nil
                                          declinedOrCanceledHandler: nil
                                                       errorHandler:^(NSError * error) {
                                                           NSLog(@"Error: %@", error.description);
@@ -1858,7 +1863,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }];
     }
 }
-
+- (void)setFBVidURL:(NSURL *)url {
+    fbVideoUrl = [url mutableCopy];
+}
 #pragma mark - FaceBook Handler Methods
 - (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock) successHandler
                            declinedOrCanceledHandler:(FBBlock) declinedOrCanceledHandler
@@ -2058,7 +2065,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)getPoint: (NSString *)pointStr {
     NSLog(@"getPoint");
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(albumPoint) ap = albumPoint;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [wTools getUserID] token: [wTools getUserToken]];
         
@@ -2071,7 +2079,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"ContentCheckingViewController");
                     NSLog(@"getPoint pointStr");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getPoint"
                                         pointStr: pointStr
                                              btn: nil
@@ -2083,20 +2091,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     if ([dic[@"result"] intValue] == 1) {
                         NSInteger point = [dic[@"data"] integerValue];
                         NSLog(@"point: %ld", (long)point);
-                        NSLog(@"albumPoint: %ld", (long)albumPoint);
+                        NSLog(@"albumPoint: %ld", (long)ap);
                         
-                        if (point >= albumPoint) {
+                        if (point >= ap) {
                             NSLog(@"point is bigger than albumPoint");
-                            [self newBuyAlbum: pointStr];
+                            [wself newBuyAlbum: pointStr];
                         } else {
                             NSLog(@"point is not enough");
-                            [self showBuyAlbumCustomAlert: @"你的P點不足，前往購點?" option: @"buyPoint" pointStr: @""];
+                            [wself showBuyAlbumCustomAlert: @"你的P點不足，前往購點?" option: @"buyPoint" pointStr: @""];
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -2192,7 +2200,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if (![location isEqualToString:@""]) {
         [wTools ShowMBProgressHUD];
-        
+        __block typeof(self) wself = self;
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             NSString *response = [boxAPI api_GET:[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?address=%@&sensor=false",location ] ];
             
@@ -2207,7 +2215,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         NSLog(@"ContentCheckingViewController");
                         NSLog(@"getGoogleAPI");
                         
-                        [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                        [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                         protocolName: @"api_GET"
                                             pointStr: @""
                                                  btn: nil
@@ -2216,15 +2224,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         NSLog(@"Get Real Response");
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
-                        locdata = [dic mutableCopy];
-                        NSLog(@"locdata: %@", locdata);
+                        [wself setLocdata:dic];
+                        
                     }
                 }
             });
         });
     }
 }
-
+- (void)setLocdata:(NSDictionary *)dic {
+    locdata = [dic mutableCopy];
+    NSLog(@"locdata: %@", locdata);
+}
 #pragma mark - Check Point Task
 - (void)checkTaskComplete {
     NSLog(@"checkTask");
@@ -2482,7 +2493,49 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
     }
 }
-
+- (void)processCheckPoint:(NSDictionary *)data {
+    if ([data[@"result"] intValue] == 1) {
+        missionTopicStr = data[@"data"][@"task"][@"name"];
+        NSLog(@"name: %@", missionTopicStr);
+        
+        rewardType = data[@"data"][@"task"][@"reward"];
+        NSLog(@"reward type: %@", rewardType);
+        
+        rewardValue = data[@"data"][@"task"][@"reward_value"];
+        NSLog(@"reward value: %@", rewardValue);
+        
+        eventUrl = data[@"data"][@"event"][@"url"];
+        NSLog(@"eventUrl: %@", eventUrl);
+        
+        restriction = data[@"data"][@"task"][@"restriction"];
+        NSLog(@"restriction: %@", restriction);
+        
+        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
+        NSLog(@"restrictionValue: %@", restrictionValue);
+        
+        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
+        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
+        
+        [self showAlertViewForGettingPoint];
+        
+        [self saveCollectInfoToDevice: NO];
+        
+        //[self getPointStore];
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+        
+        [self saveCollectInfoToDevice: YES];
+        
+    } else if ([data[@"result"] intValue] == 0) {
+        NSLog(@"失敗： %@", data[@"message"]);
+        [self saveCollectInfoToDevice: YES];
+        
+    } else if ([data[@"result"] intValue] == 3) {
+        NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)checkPoint {
     NSLog(@"checkPoint");
     
@@ -2495,20 +2548,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(task_for) task = task_for;
+    __block typeof(self.albumId) aid = self.albumId;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI doTask2: [wTools getUserID]
                                        token: [wTools getUserToken]
-                                    task_for: task_for
+                                    task_for: task
                                     platform: @"apple"
                                         type: @"album"
-                                     type_id: self.albumId];
+                                     type_id: aid];
         
         NSLog(@"User ID: %@", [wTools getUserID]);
         NSLog(@"Token: %@", [wTools getUserToken]);
-        NSLog(@"Task_For: %@", task_for);
-        NSLog(@"Album ID: %@", self.albumId);
+        NSLog(@"Task_For: %@", task);
+        NSLog(@"Album ID: %@", aid);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -2527,7 +2582,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"ContentCheckingViewController");
                     NSLog(@"checkPoint");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"doTask2"
                                         pointStr: @""
                                              btn: nil
@@ -2537,48 +2592,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     NSLog(@"data: %@", data);
+                    [wself processCheckPoint:data];
                     
-                    if ([data[@"result"] intValue] == 1) {
-                        missionTopicStr = data[@"data"][@"task"][@"name"];
-                        NSLog(@"name: %@", missionTopicStr);
-                        
-                        rewardType = data[@"data"][@"task"][@"reward"];
-                        NSLog(@"reward type: %@", rewardType);
-                        
-                        rewardValue = data[@"data"][@"task"][@"reward_value"];
-                        NSLog(@"reward value: %@", rewardValue);
-                        
-                        eventUrl = data[@"data"][@"event"][@"url"];
-                        NSLog(@"eventUrl: %@", eventUrl);
-                        
-                        restriction = data[@"data"][@"task"][@"restriction"];
-                        NSLog(@"restriction: %@", restriction);
-                        
-                        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
-                        NSLog(@"restrictionValue: %@", restrictionValue);
-                        
-                        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
-                        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
-                        
-                        [self showAlertViewForGettingPoint];
-                        
-                        [self saveCollectInfoToDevice: NO];
-                        
-                        //[self getPointStore];
-                    } else if ([data[@"result"] intValue] == 2) {
-                        NSLog(@"message: %@", data[@"message"]);
-                        
-                        [self saveCollectInfoToDevice: YES];
-                        
-                    } else if ([data[@"result"] intValue] == 0) {
-                        NSLog(@"失敗： %@", data[@"message"]);
-                        [self saveCollectInfoToDevice: YES];
-                        
-                    } else if ([data[@"result"] intValue] == 3) {
-                        NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }                    
                 }
             }
         });
@@ -3171,16 +3186,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // ImageView
     if (![dicData[@"photousefor"][@"image"] isEqual: [NSNull null]]) {
         __block UIImageView *imageView = [[UIImageView alloc] init];
+        __block typeof(self) wself = self;
         [imageView sd_setImageWithURL: [NSURL URLWithString: dicData[@"photousefor"][@"image"]] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            isGiftImageLoaded = YES;
+            wself->isGiftImageLoaded = YES;
             
-            imageView = [self calculateImageViewSize: cell.giftViewBgV imgV: imageView];
+            imageView = [wself calculateImageViewSize: cell.giftViewBgV imgV: imageView];
             imageView.myTopMargin = imageView.myBottomMargin = 8;
             imageView.myLeftMargin = imageView.myRightMargin = 16;
             imageView.layer.cornerRadius = kCornerRadius;
             imageView.layer.masksToBounds = YES;
             
-            self.giftImageView = imageView;
+            wself.giftImageView = imageView;
             
             [contentLayout addSubview: imageView];
             
@@ -3642,8 +3658,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         cell.collectBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
             [self buyAlbum];
         };
+        __block NSString *inputText = inputField.text;
+        __block typeof(inputField) input = inputField;
+        __block typeof(albumPoint) ap = albumPoint;
+        __block typeof(userPoint) up = userPoint;
+        __block typeof(self) wself = self;
         cell.sponsorBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
-            NSString *inputText = inputField.text;
+            //NSString *inputText = inputField.text;
             NSLog(@"inputText: %@", inputText);
             
             if ([inputText isEqualToString: @""]) {
@@ -3651,32 +3672,32 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 style.messageColor = [UIColor whiteColor];
                 style.backgroundColor = [UIColor thirdPink];
                 
-                [self.view makeToast: @"請輸入贊助數量"
+                [wself.view makeToast: @"請輸入贊助數量"
                             duration: 2.0
                             position: CSToastPositionBottom
                                style: style];
                 
-                [inputField resignFirstResponder];
-            } else if ([inputText intValue] < albumPoint) {
+                [input resignFirstResponder];
+            } else if ([inputText intValue] < ap) {
                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                 style.messageColor = [UIColor whiteColor];
                 style.backgroundColor = [UIColor thirdPink];
                 
-                [self.view makeToast: [NSString stringWithFormat: @"最低額度：%lu", (unsigned long)albumPoint]
+                [wself.view makeToast: [NSString stringWithFormat: @"最低額度：%lu", (unsigned long)ap]
                             duration: 2.0
                             position: CSToastPositionBottom
                                style: style];
                 
-                [inputField resignFirstResponder];
+                [input resignFirstResponder];
             } else {
-                [self checkBuyingAlbum: albumPoint
-                             userPoint: userPoint];
+                [wself checkBuyingAlbum: ap
+                             userPoint: up];
             }
         };
         
         __weak MyLinearLayout *weakGiftViewBgV = cell.giftViewBgV;
         cell.giftImageBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
-            [self showSlot: btn giftViewBgV: weakGiftViewBgV indexPathRow: indexPath.row];
+            [wself showSlot: btn giftViewBgV: weakGiftViewBgV indexPathRow: indexPath.row];
         };
         return cell;
     } else {

@@ -443,10 +443,10 @@ CGFloat btnSpacerHeight = 0;
             rotation = CGAffineTransformMakeRotation(-startRotation + 0.0);
             break;
     }
-    
+    __block typeof(dialogView) dialog = dialogView;
     [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionTransitionNone
                      animations:^{
-                         dialogView.transform = rotation;
+                         dialog.transform = rotation;
                          
                      }
                      completion:nil
@@ -459,13 +459,14 @@ CGFloat btnSpacerHeight = 0;
     
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-    
+    __block typeof(self) wself = self;
+    __block typeof(dialogView) dialog = dialogView;
     [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionTransitionNone
                      animations:^{
-                         CGSize dialogSize = [self countDialogSize];
+                         CGSize dialogSize = [wself countDialogSize];
                          CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-                         self.frame = CGRectMake(0, 0, screenWidth, screenHeight);
-                         dialogView.frame = CGRectMake((screenWidth - dialogSize.width) / 2, (screenHeight - keyboardSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
+                         wself.frame = CGRectMake(0, 0, screenWidth, screenHeight);
+                         dialog.frame = CGRectMake((screenWidth - dialogSize.width) / 2, (screenHeight - keyboardSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
                      }
                      completion:nil
      ];
@@ -517,10 +518,10 @@ CGFloat btnSpacerHeight = 0;
         keyboardSize.height = keyboardSize.width;
         keyboardSize.width = tmp;
     }
-    
+    __block typeof(dialogView) dialog = dialogView;
     [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionTransitionNone
                      animations:^{
-                         dialogView.frame = CGRectMake((screenSize.width - dialogSize.width) / 2, (screenSize.height - keyboardSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
+                         dialog.frame = CGRectMake((screenSize.width - dialogSize.width) / 2, (screenSize.height - keyboardSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
                      }
                      completion:nil
      ];
@@ -534,10 +535,10 @@ CGFloat btnSpacerHeight = 0;
     
     CGSize screenSize = [self countScreenSize];
     CGSize dialogSize = [self countDialogSize];
-    
+    __block typeof(dialogView) dialog = dialogView;
     [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionTransitionNone
                      animations:^{
-                         dialogView.frame = CGRectMake((screenSize.width - dialogSize.width) / 2, (screenSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
+                         dialog.frame = CGRectMake((screenSize.width - dialogSize.width) / 2, (screenSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
                      }
                      completion:nil
      ];        

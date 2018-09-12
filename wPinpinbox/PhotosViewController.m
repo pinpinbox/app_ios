@@ -48,7 +48,7 @@
     //CustomIOSAlertView *alertViewForButton;
     
     // For Observing NSOperationQueue
-    NSString *responseImageStr;
+    //NSString *responseImageStr;
     
     MBProgressHUD *hud;
     
@@ -384,6 +384,7 @@
     
     __block UIImage *img;
     __block NSInteger c = imageArray.count;
+    __block typeof(self) wself = self;
     [self.imageManager requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
         NSLog(@"requestImageDataForAsset");
         
@@ -392,20 +393,22 @@
         if (![info[PHImageResultIsDegradedKey] boolValue]) {
             NSLog(@"imageData: %@", imageData);
             img = [UIImage imageWithData:imageData];
-            [imgs addObject:img];
+            [wself addImage:img];
             
             if ((se+1)>=c) {//imageArray.count) {
                 NSLog(@"se: %d", se);
                 NSLog(@"imageArray.count: %lu", (unsigned long)c);//imageArray.count);
-                [self OKimage];
+                [wself OKimage];
             } else {
                 NSLog(@"");
-                [self addnewimage:se+1];
+                [wself addnewimage:se+1];
             }
         }
     }];
 }
-
+- (void)addImage:(UIImage *) image {
+    [imgs addObject:image];
+}
 - (void)OKimage {
     NSLog(@"OKimage");
     NSLog(@"choice: %@", _choice);
@@ -430,9 +433,9 @@
 - (void)cancelWork:(id)sender {
     NSLog(@"");
     NSLog(@"cancelWork");
-    
+    __block typeof(hud) whud = hud;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [hud hideAnimated: YES];
+        [whud hideAnimated: YES];
     });
     
     for (NSURLSessionDataTask *task in dataTaskArray) {
@@ -515,8 +518,8 @@
             response = [self insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: weakSelf.albumId image: image];
             
             NSLog(@"response: %@", response);
-            responseImageStr = response;
-            NSLog(@"responseImageStr: %@", responseImageStr);
+            //responseImageStr = response;
+            //NSLog(@"responseImageStr: %@", responseImageStr);
         }];
         
         [operation setCompletionBlock:^{
@@ -650,11 +653,12 @@
     if (object == self.queue && [keyPath isEqualToString: @"operations"]) {
         if (self.queue.operations.count == 0) {
             NSLog(@"queue has completed");
-            
+            __block typeof(hud) whud = hud;
+            __block typeof(dataTaskArray) array = dataTaskArray;
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [hud hideAnimated: YES];
+                [whud hideAnimated: YES];
                 
-                [dataTaskArray removeAllObjects];
+                [array removeAllObjects];
                 
                 [self.navigationController popViewControllerAnimated: YES];
                 
@@ -736,7 +740,7 @@
         [options setDeliveryMode: PHImageRequestOptionsDeliveryModeOpportunistic];
         
         NSString *identifier = asset.localIdentifier;
-        
+        __block typeof(imagesCache) cache = imagesCache;
         // Requests an image representation for the specified asset.
         [self.imageManager requestImageForAsset: asset
                                      targetSize: self.assetThumbnailSize
@@ -757,7 +761,8 @@
                                               if (![info[PHImageResultIsDegradedKey] boolValue]) {
                                                   if (result != nil) {
                                                       // Set Image Cache
-                                                      [imagesCache setObject: result forKey: identifier];
+                                                      //[imagesCache setObject: result forKey: identifier];
+                                                      [cache setObject:result forKey:identifier];
                                                   }
                                               }
                                           });
@@ -964,6 +969,18 @@ CGSize cellSize(UICollectionView *collectionView) {
 
 #pragma mark -
 #pragma mark 開啟照相機
+- (void)processPickerFinished {
+    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+    options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:NO]];
+    options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
+    assetsFetchResults = [PHAsset fetchAssetsWithOptions:options];
+    NSLog(@"assetsFetchResults.count: %lu", (unsigned long)assetsFetchResults.count);
+    NSLog(@"mycov reloadData");
+    
+    [imageArray addObject: assetsFetchResults[0]];
+    
+    [mycov reloadData];
+}
 -(void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info {
     // 取得使用者拍攝的照片
@@ -971,21 +988,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     // 存檔
     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
     // 關閉拍照程式
+    __block typeof(self) wself = self;
     [self dismissViewControllerAnimated:YES completion:^(void){
         // For old device such as iPod Touch 5 & iPhone5s
         double delayInSeconds = 0.5;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^{
-            PHFetchOptions *options = [[PHFetchOptions alloc] init];
-            options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:NO]];
-            options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
-            assetsFetchResults = [PHAsset fetchAssetsWithOptions:options];
-            NSLog(@"assetsFetchResults.count: %lu", (unsigned long)assetsFetchResults.count);
-            NSLog(@"mycov reloadData");
-            
-            [imageArray addObject: assetsFetchResults[0]];
-            
-            [mycov reloadData];
+            [wself processPickerFinished];
         });
     }];
 }
@@ -1163,15 +1172,16 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     config.timeoutIntervalForResource = [kTimeOutForPhoto floatValue];
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration: config];
-    
+    __block typeof(hud) whud = hud;
+    __block typeof(self) wself = self;
     dataTask = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
         
         if (error) {
             NSLog(@"dataTaskWithRequest error: %@", error);
             dispatch_async(dispatch_get_main_queue(), ^{
-                hud.detailsLabel.text = @"網路不穩";
-                hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+                whud.detailsLabel.text = @"網路不穩";
+                whud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
             });
             dispatch_semaphore_signal(semaphore);
             return;
@@ -1202,20 +1212,20 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                 }
                 NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
                 
-                photoFinished = imageInfoArray.count;
+                wself->photoFinished = imageInfoArray.count;
                 
                 [imageInfoArray removeAllObjects];
                 imageInfoArray = nil;
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    hud.detailsLabel.text = @"";
+                    whud.detailsLabel.text = @"";
                 });
             } else {
                 NSLog(@"Error Message: %@", dic[@"message"]);
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    hud.detailsLabel.text = @"網路不穩";
-                    hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+                    whud.detailsLabel.text = @"網路不穩";
+                    whud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
                 });
             }
         }
@@ -1228,7 +1238,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        hud.label.text = [NSString stringWithFormat: @"%ld 張照片上傳完成", (long)photoFinished];
+        whud.label.text = [NSString stringWithFormat: @"%ld 張照片上傳完成", (long)wself->photoFinished];
     });
     
     return str;

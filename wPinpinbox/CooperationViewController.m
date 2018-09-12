@@ -103,14 +103,49 @@
 {
     [self reload];
 }
-
+- (void)processCooperator:(NSDictionary *)dic dicQR:(NSDictionary *)dicQR{
+    
+    if ([dic[@"result"] intValue] == 1) {
+        mydataarr=[NSMutableArray arrayWithArray:dic[@"data"]];
+        
+        for (NSDictionary *userdic in mydataarr) {
+            NSLog(@"userdic cooperation identity: %@", userdic[@"cooperation"][@"identity"]);
+            
+            if ([userdic[@"cooperation"][@"identity"] isEqualToString:@"admin"]) {
+                adminuser=userdic;
+                [mydataarr removeObject:userdic];
+                break;
+            }
+        }
+        [self.refreshControl endRefreshing];
+        [mytable reloadData];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        [self.refreshControl endRefreshing];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [self.refreshControl endRefreshing];
+    }
+    
+    if ([dicQR[@"result"] intValue] == 1) {
+        qrImageStr = dicQR[@"data"];
+    } else if ([dicQR[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dicQR[@"message"]);
+        [self showCustomErrorAlert: dicQR[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+    
+}
 -(void)reload {
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(_albumid) aid = _albumid;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSMutableDictionary *data=[NSMutableDictionary new];
-        [data setObject:_albumid forKey:@"type_id"];
+        [data setObject:aid forKey:@"type_id"];
         [data setObject:@"album" forKey:@"type"];
         NSString *respone = [boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
         
@@ -127,7 +162,7 @@
         NSString *jsonStr = [[NSString alloc] initWithData: jsonData
                                                   encoding: NSUTF8StringEncoding];
         
-        NSString *responseQRCode = [boxAPI getQRCode: [wTools getUserID] token: [wTools getUserToken] type: @"album" type_id: _albumid effect: @"execute" is: jsonStr];
+        NSString *responseQRCode = [boxAPI getQRCode: [wTools getUserID] token: [wTools getUserToken] type: @"album" type_id: aid effect: @"execute" is: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
           
@@ -140,39 +175,10 @@
                 NSLog(@"response from getQRCode: %@", responseQRCode);
                 NSLog(@"dicQR: %@", dicQR);
                 
-                if ([dic[@"result"] intValue] == 1) {
-                    mydataarr=[NSMutableArray arrayWithArray:dic[@"data"]];
-                    
-                    for (NSDictionary *userdic in mydataarr) {
-                        NSLog(@"userdic cooperation identity: %@", userdic[@"cooperation"][@"identity"]);
-                        
-                        if ([userdic[@"cooperation"][@"identity"] isEqualToString:@"admin"]) {
-                            adminuser=userdic;
-                            [mydataarr removeObject:userdic];
-                            break;
-                        }
-                    }
-                    [self.refreshControl endRefreshing];
-                    [mytable reloadData];
-                } else if ([dic[@"result"] intValue] == 0) {
-                    NSLog(@"失敗：%@",dic[@"message"]);
-                    [self showCustomErrorAlert: dic[@"message"]];
-                    [self.refreshControl endRefreshing];
-                } else {
-                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    [self.refreshControl endRefreshing];
-                }
-
-                if ([dicQR[@"result"] intValue] == 1) {
-                    qrImageStr = dicQR[@"data"];
-                } else if ([dicQR[@"result"] intValue] == 0) {
-                    NSLog(@"失敗：%@",dicQR[@"message"]);
-                    [self showCustomErrorAlert: dicQR[@"message"]];
-                } else {
-                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                }
+                [wself processCooperator:dic dicQR:dicQR];
+                
             } else {
-                [self.refreshControl endRefreshing];
+                [wself.refreshControl endRefreshing];
             }
             
             [wTools HideMBProgressHUD];
@@ -235,7 +241,58 @@
     }
     return 56;
 }
-
+- (void)topcBtn2Action {
+    dimBackgroundUIView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    dimBackgroundUIView.backgroundColor = [UIColor whiteColor];
+    dimBackgroundUIView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    
+    [self.view addSubview: dimBackgroundUIView];
+    
+    /*
+     if (!UIAccessibilityIsReduceTransparencyEnabled()) {
+     dimBackgroundUIView.backgroundColor = [UIColor clearColor];
+     
+     UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleLight];
+     UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+     blurEffectView.frame = self.view.bounds;
+     blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+     
+     [dimBackgroundUIView addSubview: blurEffectView];
+     } else {
+     dimBackgroundUIView.backgroundColor = [UIColor blackColor];
+     }
+     */
+    //CIImage *qrcodeImage = [self createQRForString: qrImageStr];
+    //CIImage *qrcodeImage = [self createQRForString: @"http://www.appcoda.com"];
+    
+    //UIImage *image = [UIImage imageWithCIImage: qrcodeImage scale: [UIScreen mainScreen].scale orientation: UIImageOrientationUp];
+    
+    imageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 200, 200)];
+    imageView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    
+    /*
+     CGFloat scaleX = imageView.frame.size.width / qrcodeImage.extent.size.width;
+     CGFloat scaleY = imageView.frame.size.height / qrcodeImage.extent.size.height;
+     CIImage *transformedImage = [qrcodeImage imageByApplyingTransform: CGAffineTransformMakeScale(scaleX, scaleY)];
+     */
+    
+    //imageView.image = [UIImage imageWithCIImage: transformedImage];
+    
+    imageView.image = [self decodeBase64ToImage: qrImageStr];
+    
+    [UIView beginAnimations: nil context: nil];
+    [UIView setAnimationDuration: 1.0];
+    [UIView setAnimationDelay: 1.0];
+    [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
+    [self.view addSubview: imageView];
+    [UIView commitAnimations];
+    
+    //containerView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 220, 220)];
+    //containerView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    
+    //[dimBackgroundUIView addSubview: imageView];
+    //[containerView addSubview: imageView];
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     // NSString *identifier = [NSString stringWithFormat:@"HomeTableViewCell_%@", [[[pictures objectAtIndex:indexPath.row] objectForKey:@"album"]objectForKey:@"album_id" ]];
     
@@ -260,13 +317,14 @@
             topc.photo.imageURL=[NSURL URLWithString:dic[@"user"][@"picture"]];
             [[topc.photo layer]setMasksToBounds:YES];
         }
-        
+        __block typeof(_albumid) aid = _albumid;
+        __block typeof(self) wself = self;
         topc.btn1select=^(BOOL bo){
             //CooperationAddViewController *cadd=[[CooperationAddViewController alloc]initWithNibName:@"CooperationAddViewController" bundle:nil];
             CooperationAddViewController *cadd = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"CooperationAddViewController"];
             
-            cadd.albumid=_albumid;
-            [self.navigationController pushViewController:cadd animated:YES];
+            cadd.albumid=aid;
+            [wself.navigationController pushViewController:cadd animated:YES];
             
             //[self performSegueWithIdentifier: @"showCooperationAddViewController" sender: self];
         };
@@ -274,56 +332,7 @@
         topc.btn2select = ^(BOOL bo) {
             NSLog(@"qrCodeScan Touch");
             
-            dimBackgroundUIView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-            dimBackgroundUIView.backgroundColor = [UIColor whiteColor];
-            dimBackgroundUIView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-            
-            [self.view addSubview: dimBackgroundUIView];
-            
-            /*
-            if (!UIAccessibilityIsReduceTransparencyEnabled()) {
-                dimBackgroundUIView.backgroundColor = [UIColor clearColor];
-                
-                UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleLight];
-                UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-                blurEffectView.frame = self.view.bounds;
-                blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-                
-                [dimBackgroundUIView addSubview: blurEffectView];
-            } else {
-                dimBackgroundUIView.backgroundColor = [UIColor blackColor];
-            }
-            */
-            //CIImage *qrcodeImage = [self createQRForString: qrImageStr];
-            //CIImage *qrcodeImage = [self createQRForString: @"http://www.appcoda.com"];
-            
-            //UIImage *image = [UIImage imageWithCIImage: qrcodeImage scale: [UIScreen mainScreen].scale orientation: UIImageOrientationUp];
-            
-            imageView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, 200, 200)];
-            imageView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-            
-            /*
-            CGFloat scaleX = imageView.frame.size.width / qrcodeImage.extent.size.width;
-            CGFloat scaleY = imageView.frame.size.height / qrcodeImage.extent.size.height;
-            CIImage *transformedImage = [qrcodeImage imageByApplyingTransform: CGAffineTransformMakeScale(scaleX, scaleY)];
-            */
-            
-            //imageView.image = [UIImage imageWithCIImage: transformedImage];
-            
-            imageView.image = [self decodeBase64ToImage: qrImageStr];
-            
-            [UIView beginAnimations: nil context: nil];
-            [UIView setAnimationDuration: 1.0];
-            [UIView setAnimationDelay: 1.0];
-            [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
-            [self.view addSubview: imageView];
-            [UIView commitAnimations];
-            
-            //containerView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 220, 220)];
-            //containerView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-            
-            //[dimBackgroundUIView addSubview: imageView];
-            //[containerView addSubview: imageView];
+            [wself topcBtn2Action];
             
         };
         
@@ -414,13 +423,14 @@
     NSString *type = [NSString stringWithFormat:@"%@", arr[row]];
     
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(_albumid) aid = _albumid;
+    __block typeof(selectuserid) sid = selectuserid;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSMutableDictionary *data=[NSMutableDictionary new];
-        [data setObject:_albumid forKey:@"type_id"];
+        [data setObject:aid forKey:@"type_id"];
         [data setObject:@"album" forKey:@"type"];
         [data setObject:type forKey:@"identity"];
-        [data setObject:selectuserid forKey:@"user_id"];
+        [data setObject:sid forKey:@"user_id"];
         NSString *respone=[boxAPI updatecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -458,12 +468,13 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
           {
             //刪除動作
            [wTools ShowMBProgressHUD];
+              __block typeof(_albumid) aid = _albumid;
+              __block NSDictionary *dic= mydataarr[indexPath.row];
            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
                
-               
-                NSDictionary *dic=mydataarr[indexPath.row];
+            
             NSMutableDictionary *data=[NSMutableDictionary new];
-                  [data setObject:_albumid forKey:@"type_id"];
+                  [data setObject:aid forKey:@"type_id"];
                   [data setObject:@"album" forKey:@"type"];
                   [data setObject:[dic[@"user"][@"user_id"] stringValue] forKey:@"user_id"];
                NSString *respone=[boxAPI deletecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];

@@ -1536,13 +1536,43 @@ shouldChangeTextInRange:(NSRange)range
 }
 
 #pragma mark - Call Server for Searching
+- (void)processFilterUser:(NSDictionary *)dic {
+    
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"dic result boolValue is 1");
+        
+        userData = [NSMutableArray arrayWithArray: dic[@"data"]];
+        
+        NSLog(@"[wTools getUserID]: %@", [wTools getUserID]);
+        NSLog(@"userData: %@", userData);
+        
+        NSLog(@"userData.count: %lu", (unsigned long)userData.count);
+        
+        NSMutableArray *tempArray = [[NSMutableArray alloc] init];
+        for (NSDictionary *d in userData) {
+            if ([d[@"user"][@"user_id"] intValue] == [[wTools getUserID] intValue]) {
+                [tempArray addObject: d];
+            }
+        }
+        NSLog(@"tempArray: %@", tempArray);
+        
+        [userData removeObjectsInArray: tempArray];
+        [collectionView reloadData];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+    
+}
 - (void)filterUserContentForSearchText: (NSString *)text {
     NSLog(@"");
     NSLog(@"filterUserContentForSearchText");
     NSLog(@"text: %@", text);
     
     NSString *string = text;
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = @"";
         
@@ -1564,7 +1594,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"SearchTableViewController");
                     NSLog(@"filterUserContentForSearchText");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"filterUserContentForSearchText"
                                             text: text];
                     
@@ -1585,33 +1615,8 @@ shouldChangeTextInRange:(NSRange)range
                     if (![data[@"searchtype"] isEqualToString: @"user"]) {
                         return;
                     }
+                    [wself processFilterUser:dic];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"dic result boolValue is 1");
-                        
-                        userData = [NSMutableArray arrayWithArray: dic[@"data"]];
-                        
-                        NSLog(@"[wTools getUserID]: %@", [wTools getUserID]);
-                        NSLog(@"userData: %@", userData);
-                        
-                        NSLog(@"userData.count: %lu", (unsigned long)userData.count);
-                        
-                        NSMutableArray *tempArray = [[NSMutableArray alloc] init];
-                        for (NSDictionary *d in userData) {
-                            if ([d[@"user"][@"user_id"] intValue] == [[wTools getUserID] intValue]) {
-                                [tempArray addObject: d];
-                            }
-                        }
-                        NSLog(@"tempArray: %@", tempArray);
-                        
-                        [userData removeObjectsInArray: tempArray];                        
-                        [collectionView reloadData];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
                 }
             }
         });
