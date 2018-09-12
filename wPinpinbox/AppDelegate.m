@@ -469,7 +469,7 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
     self.backgroundSessionCompletionHandler = completionHandler;
 }
 
-#ifndef __IPHONE_10_0
+
 - (BOOL)application:(UIApplication *)application
       handleOpenURL:(NSURL *)url
 {
@@ -783,7 +783,7 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
                                                        annotation:annotation
             ];
 }
-#endif
+
 
 #pragma  mark - APNS
 #if __IPHONE_10_0
