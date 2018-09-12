@@ -20,5 +20,4 @@ target 'wPinpinbox' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'GoogleAnalytics'
-  pod 'FLAnimatedImage'
 end
