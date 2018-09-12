@@ -132,16 +132,19 @@ CGFloat btnSpacerHeight = 0;
     
     dialogView.layer.opacity = 0.5f;
     dialogView.layer.transform = CATransform3DMakeScale(1.3f, 1.3f, 1.0);
-    
+    __block typeof(self) wself = self;
     [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4f];
-                         dialogView.layer.opacity = 1.0f;
-                         dialogView.layer.transform = CATransform3DMakeScale(1, 1, 1);
+                         [wself showAnimationCompletion];
                      }
                      completion:NULL
      ];
     
+}
+- (void)showAnimationCompletion {
+    self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4f];
+    dialogView.layer.opacity = 1.0f;
+    dialogView.layer.transform = CATransform3DMakeScale(1, 1, 1);
 }
 
 // Button has been touched
@@ -176,22 +179,24 @@ CGFloat btnSpacerHeight = 0;
     }
     
     dialogView.layer.opacity = 1.0f;
-    
+    __block typeof(self) wself = self;
     [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionTransitionNone
                      animations:^{
-                         self.backgroundColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f];
-                         dialogView.layer.transform = CATransform3DConcat(currentTransform, CATransform3DMakeScale(0.6f, 0.6f, 1.0));
-                         dialogView.layer.opacity = 0.0f;
+                         [wself closeAnimationCompletion:currentTransform];
                      }
                      completion:^(BOOL finished) {
-                         for (UIView *v in [self subviews]) {
+                         for (UIView *v in [wself subviews]) {
                              [v removeFromSuperview];
                          }
-                         [self removeFromSuperview];
+                         [wself removeFromSuperview];
                      }
      ];
 }
-
+- (void)closeAnimationCompletion:(CATransform3D )currentTransform {
+    self.backgroundColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f];
+    dialogView.layer.transform = CATransform3DConcat(currentTransform, CATransform3DMakeScale(0.6f, 0.6f, 1.0));
+    dialogView.layer.opacity = 0.0f;
+}
 - (void)setSubView: (UIView *)subView
 {
     containerView = subView;

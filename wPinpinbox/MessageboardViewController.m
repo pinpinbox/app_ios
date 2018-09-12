@@ -151,13 +151,13 @@
     
     NSLog(@"self.type: %@", self.type);
     NSLog(@"self.typeId: %@", self.typeId);
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = @"";
         response = [boxAPI getMessageBoardList: [wTools getUserID]
                                          token: [wTools getUserToken]
-                                          type: self.type
-                                        typeId: self.typeId
+                                          type: wself.type
+                                        typeId: wself.typeId
                                          limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -172,96 +172,179 @@
                     NSLog(@"NewMessageBoardViewController");
                     NSLog(@"getMessageBoardList");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getMessageBoardList"
                                             text: @""];
                     
-                    NSLog(@"self.tableView: %@", self.tableView);
+                    NSLog(@"self.tableView: %@", wself.tableView);
                     
-                    if (![self.tableView isEqual: [NSNull null]] || self.tableView != nil) {
-                        self.tableView.userInteractionEnabled = YES;
+                    if (![wself.tableView isEqual: [NSNull null]] || wself.tableView != nil) {
+                        wself.tableView.userInteractionEnabled = YES;
                     }
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"Before");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        
-                        if (nextId == 0)
-                            messageArray = [NSMutableArray new];
-                        
-                        // s for counting how much data is loaded
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *messageData in [dic objectForKey: @"data"]) {
-                            s++;
-                            [messageArray addObject: messageData];
-                        }
-                        
-                        NSLog(@"After");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        NSLog(@"s: %d", s);
-                        
-                        // If data keeps loading then the nextId is accumulating
-                        //nextId = nextId + s;
-                        nextId = nextId + s;
-                        NSLog(@"nextId is: %ld", (long)nextId);
-                        
-                        // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (nextId >= 0)
-                            isLoading = NO;
-                        
-                        // If s is 0, that means dic data is empty.
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        
-                        NSLog(@"");
-                        NSLog(@"isSlided: %d", isSlided);
-                        
-                        if (!isSlided) {
-                            NSLog(@"self slideIn");
-                            
-                            if ([self.delegate respondsToSelector: @selector(gotMessageData)]) {
-                                [self.delegate gotMessageData];
-                            }
-//                            [self slideIn];
-                            isSlided = YES;
-                        }
-                        
-                        NSLog(@"");
-                        NSLog(@"check messageArray.count");
-                        NSLog(@"self.tableView: %@", self.tableView);
-                        
-                        if (![self.tableView isEqual: [NSNull null]] || self.tableView != nil) {
-                            if (messageArray.count == 0) {
-                                self.tableView.hidden = YES;
-                            } else {
-                                self.tableView.hidden = NO;
-                                [self.tableView reloadData];
-                            }
-                            // Set userInteractionEnabled to YES for scrolling
-                            self.tableView.userInteractionEnabled = YES;
-                        }
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        if (![self.tableView isEqual: [NSNull null]] || self.tableView != nil) {
-                            self.tableView.userInteractionEnabled = YES;
-                        }
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        [self showCustomErrorAlert: msg];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processMsgboardList:dic];
                 }
             }
         });
     });
 }
-
+- (void)processMsgboardList:(NSDictionary *)dic {
+    
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"Before");
+        NSLog(@"nextId: %ld", (long)nextId);
+        
+        if (nextId == 0)
+            messageArray = [NSMutableArray new];
+        
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *messageData in [dic objectForKey: @"data"]) {
+            s++;
+            [messageArray addObject: messageData];
+        }
+        
+        NSLog(@"After");
+        NSLog(@"nextId: %ld", (long)nextId);
+        NSLog(@"s: %d", s);
+        
+        // If data keeps loading then the nextId is accumulating
+        //nextId = nextId + s;
+        nextId = nextId + s;
+        NSLog(@"nextId is: %ld", (long)nextId);
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        
+        NSLog(@"");
+        NSLog(@"isSlided: %d", isSlided);
+        
+        if (!isSlided) {
+            NSLog(@"self slideIn");
+            
+            if ([self.delegate respondsToSelector: @selector(gotMessageData)]) {
+                [self.delegate gotMessageData];
+            }
+            //                            [self slideIn];
+            isSlided = YES;
+        }
+        
+        NSLog(@"");
+        NSLog(@"check messageArray.count");
+        NSLog(@"self.tableView: %@", self.tableView);
+        
+        if (![self.tableView isEqual: [NSNull null]] || self.tableView != nil) {
+            if (messageArray.count == 0) {
+                self.tableView.hidden = YES;
+            } else {
+                self.tableView.hidden = NO;
+                [self.tableView reloadData];
+            }
+            // Set userInteractionEnabled to YES for scrolling
+            self.tableView.userInteractionEnabled = YES;
+        }
+    } else if ([dic[@"result"] intValue] == 0) {
+        if (![self.tableView isEqual: [NSNull null]] || self.tableView != nil) {
+            self.tableView.userInteractionEnabled = YES;
+        }
+        NSLog(@"失敗： %@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        [self showCustomErrorAlert: msg];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
+- (void)processInserMessageResult:(NSDictionary *)dic {
+    
+    if ([dic[@"result"] intValue] == 1) {
+        tempStr = @"";
+        
+        NSLog(@"Before");
+        NSLog(@"nextId: %ld", (long)nextId);
+        
+        // If response from server is TRUE
+        // then reset array
+        messageArray = [NSMutableArray new];
+        //                        rowHeightArray = [NSMutableArray new];
+        
+        // After resetting array, tableView has to reload data to reset indexPath.row to 0
+        // Otherwise, the program will crash when adding data to indexPath.row bigger than 0
+        [self.tableView reloadData];
+        
+        //[messageArray removeAllObjects];
+        //[rowHeightArray removeAllObjects];
+        
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *messageData in [dic objectForKey: @"data"])
+        {
+            s++;
+            [messageArray addObject: messageData];
+        }
+        
+        NSLog(@"After");
+        NSLog(@"nextId: %ld", (long)nextId);
+        NSLog(@"s: %d", s);
+        
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        NSLog(@"nextId is: %ld", (long)nextId);
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        
+        NSLog(@"check messageArray.count");
+        
+        if (messageArray.count == 0) {
+            self.tableView.hidden = YES;
+        } else {
+            self.tableView.hidden = NO;
+            [self.tableView reloadData];
+        }
+        
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor firstMain];
+        
+        [self.view.superview makeToast: @"留言已送出"
+                              duration: 2.0
+                              position: CSToastPositionBottom
+                                 style: style];
+        
+        // Scroll to the Top when message is added
+        NSLog(@"self.tableView setContentOffset");
+        [self.tableView setContentOffset: CGPointZero animated: YES];
+        
+        // Set userInteractionEnabled to YES for scrolling
+        self.tableView.userInteractionEnabled = YES;
+        
+    } else if ([dic[@"result"] intValue] == 0) {
+        self.tableView.userInteractionEnabled = YES;
+        NSLog(@"失敗： %@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        [self showCustomErrorAlert: msg];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)insertMessage: (NSString *)text {
     NSLog(@"");
     NSLog(@"insertMessage");
@@ -281,13 +364,13 @@
     
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 10];
     NSLog(@"limit: %@", limit);
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
         response = [boxAPI insertMessageBoard: [wTools getUserID]
                                         token: [wTools getUserToken]
-                                         type: self.type
-                                       typeId: self.typeId
+                                         type: wself.type
+                                       typeId: wself.typeId
                                          text: text
                                         limit: limit];
         
@@ -303,7 +386,7 @@
                     NSLog(@"NewMessageBoardViewController");
                     NSLog(@"insertMessage");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"insertMessageBoard"
                                             text: text];
                 } else {
@@ -312,83 +395,7 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        tempStr = @"";
-                        
-                        NSLog(@"Before");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        
-                        // If response from server is TRUE
-                        // then reset array
-                        messageArray = [NSMutableArray new];
-//                        rowHeightArray = [NSMutableArray new];
-                        
-                        // After resetting array, tableView has to reload data to reset indexPath.row to 0
-                        // Otherwise, the program will crash when adding data to indexPath.row bigger than 0
-                        [self.tableView reloadData];
-                        
-                        //[messageArray removeAllObjects];
-                        //[rowHeightArray removeAllObjects];
-                        
-                        // s for counting how much data is loaded
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *messageData in [dic objectForKey: @"data"])
-                        {
-                            s++;
-                            [messageArray addObject: messageData];
-                        }
-                        
-                        NSLog(@"After");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        NSLog(@"s: %d", s);
-                        
-                        // If data keeps loading then the nextId is accumulating
-                        nextId = nextId + s;
-                        NSLog(@"nextId is: %ld", (long)nextId);
-                        
-                        // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (nextId >= 0)
-                            isLoading = NO;
-                        
-                        // If s is 0, that means dic data is empty.
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        
-                        NSLog(@"check messageArray.count");
-                        
-                        if (messageArray.count == 0) {
-                            self.tableView.hidden = YES;
-                        } else {
-                            self.tableView.hidden = NO;
-                            [self.tableView reloadData];
-                        }
-                        
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor firstMain];
-                        
-                        [self.view.superview makeToast: @"留言已送出"
-                                              duration: 2.0
-                                              position: CSToastPositionBottom
-                                                 style: style];
-                        
-                        // Scroll to the Top when message is added
-                        NSLog(@"self.tableView setContentOffset");
-                        [self.tableView setContentOffset: CGPointZero animated: YES];
-                        
-                        // Set userInteractionEnabled to YES for scrolling
-                        self.tableView.userInteractionEnabled = YES;
-                        
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        self.tableView.userInteractionEnabled = YES;
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];                        
-                        [self showCustomErrorAlert: msg];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processInserMessageResult:dic];
                 }
             }
         });

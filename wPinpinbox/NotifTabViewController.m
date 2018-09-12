@@ -155,7 +155,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 10];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
@@ -182,11 +182,11 @@
                     NSLog(@"NotifTabTableViewController");
                     NSLog(@"getPushQueue");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getPushQueue"
                                          albumId: @""];
-                    [self.refreshControl endRefreshing];
-                    isReloading = NO;
+                    [wself.refreshControl endRefreshing];
+                    wself->isReloading = NO;
                     
                 } else {
                     NSLog(@"Get Real Response");
@@ -196,80 +196,82 @@
                     NSLog(@"response from getPushQueue");
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        if (nextId == 0)
-                            [notificationData removeAllObjects];
-                        
-                        // s for counting how much data is loaded
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *notifData in [dic objectForKey: @"data"]) {
-                            s++;
-                            [notificationData addObject: notifData];
-                        }
-                        
-                        // If data keeps loading then the nextId is accumulating
-                        nextId = nextId + s;
-                        NSLog(@"nextId is: %ld", (long)nextId);
-                        
-                        // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (nextId >= 0)
-                            isLoading = NO;
-                        
-                        // If s is 0, that means dic data is empty.
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        
-                        if (notificationData.count == 0) {
-                            [self addNoInfoView];
-                        } else if (notificationData.count > 0) {
-                            [view removeFromSuperview];
-                        }
-                        
-                        [self.refreshControl endRefreshing];
-                        [self.tableView reloadData];
-                        
-                        isReloading = NO;
-                        
-                        
-                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                        NSLog(@"badgeCount: %d", [[defaults objectForKey: @"badgeCount"] intValue]);
-                        
-                        [defaults setObject: [NSNumber numberWithInteger: 0] forKey: @"badgeCount"];
-                        [defaults synchronize];
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        
-                        // Set Badge to 0 for tabBarItem
-                        for (UIViewController *vc in appDelegate.myNav.viewControllers) {
-                            NSLog(@"vc: %@", vc);
-                            if ([vc isKindOfClass: [MyTabBarController class]]) {
-                                MyTabBarController *myTabBarC = (MyTabBarController *)vc;
-                                [[myTabBarC.viewControllers objectAtIndex: kNotifTabIndex] tabBarItem].badgeValue = nil;
-                            }
-                        }
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        [self showCustomErrorAlert: msg];
-                        
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    }
+                    
                 }
             } else {
-                [self.refreshControl endRefreshing];
-                isReloading = NO;
+                [wself.refreshControl endRefreshing];
+                wself->isReloading = NO;
             }
         });
     });
 }
-
+- (void)processPushQueue:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        if (nextId == 0)
+            [notificationData removeAllObjects];
+        
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *notifData in [dic objectForKey: @"data"]) {
+            s++;
+            [notificationData addObject: notifData];
+        }
+        
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        NSLog(@"nextId is: %ld", (long)nextId);
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        
+        if (notificationData.count == 0) {
+            [self addNoInfoView];
+        } else if (notificationData.count > 0) {
+            [view removeFromSuperview];
+        }
+        
+        [self.refreshControl endRefreshing];
+        [self.tableView reloadData];
+        
+        isReloading = NO;
+        
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSLog(@"badgeCount: %d", [[defaults objectForKey: @"badgeCount"] intValue]);
+        
+        [defaults setObject: [NSNumber numberWithInteger: 0] forKey: @"badgeCount"];
+        [defaults synchronize];
+        
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+        // Set Badge to 0 for tabBarItem
+        for (UIViewController *vc in appDelegate.myNav.viewControllers) {
+            NSLog(@"vc: %@", vc);
+            if ([vc isKindOfClass: [MyTabBarController class]]) {
+                MyTabBarController *myTabBarC = (MyTabBarController *)vc;
+                [[myTabBarC.viewControllers objectAtIndex: kNotifTabIndex] tabBarItem].badgeValue = nil;
+            }
+        }
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗： %@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        [self showCustomErrorAlert: msg];
+        
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    }
+}
 - (void)addNoInfoView
 {
     UILabel *label;

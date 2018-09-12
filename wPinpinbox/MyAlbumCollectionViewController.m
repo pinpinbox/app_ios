@@ -251,15 +251,15 @@
     
     cell.userId = dic[@"album"][@"album_id"];
     cell.albumId = dic[@"user"][@"user_id"];
-    
+    __block typeof(self) wself = self;
     cell.customBlock = ^(BOOL select, NSString *userId, NSString *albumId) {
         NSLog(@"select: %d", select);
         NSLog(@"userId: %@", userId);
         NSLog(@"albumId: %@", albumId);
         
-        isCellSubViewHidden = !isCellSubViewHidden;
+        wself->isCellSubViewHidden = !(wself->isCellSubViewHidden);
         
-        [self.tableView reloadData];
+        [wself.tableView reloadData];
     };
     
     cell.cellSubView.hidden = isCellSubViewHidden;

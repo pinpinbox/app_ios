@@ -247,9 +247,10 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    NSString *pwd = [NSString stringWithFormat:@"%@,%@",countrstr,phone.text];
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI requsetsmspwd: [NSString stringWithFormat:@"%@,%@",countrstr,phone.text] Account:email];
+        NSString *response = [boxAPI requsetsmspwd: pwd Account:email];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -270,46 +271,48 @@
                     NSLog(@"SignViewController_3");
                     NSLog(@"cellapi");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"requsetsmspwd"];
                 } else {
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor secondMain];
-                        
-                        [self.view makeToast: NSLocalizedString(@"RegText-successSent", @"")
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
-                        
-                        countDownLabel.hidden = NO;
-                        btn_send.userInteractionEnabled = NO;
-                        [btn_send setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
-                        btn_send.backgroundColor = [UIColor clearColor];
-                        btn_send.layer.borderWidth = 1.0f;
-                        btn_send.layer.borderColor = [UIColor secondGrey].CGColor;
-                        
-                        timeTick = 59;
-                        [timer invalidate];
-                        timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector: @selector(tickForSMS) userInfo: nil repeats: YES];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        [self showCustomErrorAlert: msg];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processValidResult:dic];
                 }
             }
         });
     });
 }
-
+- (void)processValidResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor secondMain];
+        
+        [self.view makeToast: NSLocalizedString(@"RegText-successSent", @"")
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+        
+        countDownLabel.hidden = NO;
+        btn_send.userInteractionEnabled = NO;
+        [btn_send setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
+        btn_send.backgroundColor = [UIColor clearColor];
+        btn_send.layer.borderWidth = 1.0f;
+        btn_send.layer.borderColor = [UIColor secondGrey].CGColor;
+        
+        timeTick = 59;
+        [timer invalidate];
+        timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector: @selector(tickForSMS) userInfo: nil repeats: YES];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗： %@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        [self showCustomErrorAlert: msg];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)tickForSMS
 {
     NSLog(@"tick");

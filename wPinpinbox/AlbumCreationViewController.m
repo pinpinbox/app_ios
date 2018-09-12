@@ -4328,6 +4328,13 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 */
 #pragma mark - Custom Method for TimeOut
+- (void)processUpdate{
+    [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+    audioBgView.hidden = YES;
+    deleteAudioBtn.hidden = YES;
+    
+    isRecorded = NO;
+}
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                        textStr: (NSString *)textStr
@@ -4362,11 +4369,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         
         if (buttonIndex == 0) {
             if ([protocolName isEqualToString: @"updateAudioOfDiy"]) {
-                [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
-                audioBgView.hidden = YES;
-                deleteAudioBtn.hidden = YES;
-                
-                isRecorded = NO;
+                [weakSelf processUpdate];
             }
         } else {
             if ([protocolName isEqualToString: @"callUpdatePhotoOfDiyWithoutPhoto"]) {

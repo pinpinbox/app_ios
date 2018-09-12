@@ -195,7 +195,8 @@
         myCell.thumbnailImage = [videosCache objectForKey: asset.localIdentifier];
     } else {
         myCell.thumbnailImage = nil;
-        
+        __block typeof(imageManager) wmanager = imageManager;
+        __block typeof(videosCache) wvcache = videosCache;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
             [options setVersion: PHImageRequestOptionsVersionCurrent];
@@ -207,7 +208,7 @@
             size = CGSizeMake(size.width * scale, size.height * scale);
             NSString *identifier = asset.localIdentifier;
             
-            [imageManager requestImageForAsset: asset
+            [wmanager requestImageForAsset: asset
                                     targetSize: size
                                    contentMode: PHImageContentModeAspectFill
                                        options: options
@@ -220,7 +221,7 @@
                                              
                                              if (![info[PHImageResultIsDegradedKey] boolValue]) {
                                                  if (result != nil) {
-                                                     [videosCache setObject:result forKey:identifier];
+                                                     [wvcache setObject:result forKey:identifier];
                                                  }
                                              }
                                          });
@@ -302,13 +303,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
         //@"icon_v_click.png" @"icon_v.png"
         
         if (!isSelected) {
+            __block typeof(assetsFetchResults) results = assetsFetchResults;
+            __block typeof(imageManager) imgr = imageManager;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                PHAsset *asset = assetsFetchResults[indexPath.item - 1];
+                PHAsset *asset = results[indexPath.item - 1];
                 PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
                 options.version = PHVideoRequestOptionsVersionCurrent;
                 options.deliveryMode = PHVideoRequestOptionsDeliveryModeFastFormat;
                 
-                [imageManager requestPlayerItemForVideo: asset options: options resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
+                [imgr requestPlayerItemForVideo: asset options: options resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
                     AVPlayer *avPlayer = [[AVPlayer alloc] initWithPlayerItem: playerItem];
                     AVPlayerViewController *playerViewController = [AVPlayerViewController new];
                     playerViewController.player = avPlayer;
@@ -404,18 +407,21 @@ CGSize cellSize1(UICollectionView *collectionView) {
 
 #pragma mark -
 #pragma mark UIImagePickerController Delegate Methods
+- (void)postprocessDismiss {
+    PHFetchOptions *options = [[PHFetchOptions alloc] init];
+    options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey: @"creationDate" ascending: NO]];
+    options.predicate = [NSPredicate predicateWithFormat: @"mediaType == %d AND duration <= %f", 2, 30.0];
+    assetsFetchResults = [PHAsset fetchAssetsWithOptions: options];
+    
+    [myCov reloadData];
+}
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
 {
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
-    
+    __block typeof(self) wself = self;
     [self dismissViewControllerAnimated: YES completion:^(void){
-        PHFetchOptions *options = [[PHFetchOptions alloc] init];
-        options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey: @"creationDate" ascending: NO]];
-        options.predicate = [NSPredicate predicateWithFormat: @"mediaType == %d AND duration <= %f", 2, 30.0];
-        assetsFetchResults = [PHAsset fetchAssetsWithOptions: options];
-        
-        [myCov reloadData];
+        [wself postprocessDismiss];
     }];
     
     if (CFStringCompare((__bridge_retained CFStringRef) mediaType, kUTTypeMovie, 0) == kCFCompareEqualTo) {

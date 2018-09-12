@@ -194,7 +194,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-        
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getalbumdataoptions: [wTools getUserID]
                                                    token: [wTools getUserToken]];
@@ -216,7 +216,7 @@
                     NSLog(@"AlbumSettingViewController");
                     NSLog(@"getAlbumDataOptions");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getalbumdataoptions"
                                          jsonStr: @""
                                          albumId: @""];
@@ -227,22 +227,24 @@
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        mdata = [[dic objectForKey: @"data"] mutableCopy];
-                        NSLog(@"mdata: %@", mdata);
+                        [wself setMData:dic];
                         
-                        [self getAlbumSettings];
+                        [wself getAlbumSettings];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
         });
     });
 }
-
+- (void)setMData:(NSDictionary *)dic {
+    mdata = [[dic objectForKey: @"data"] mutableCopy];
+    NSLog(@"mdata: %@", mdata);
+}
 - (void)getAlbumSettings
 {
     NSLog(@"getAlbumSettings");
@@ -328,7 +330,7 @@
     NSLog(@"checkPoint");
     
     //[wTools ShowMBProgressHUD];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI doTask2: [wTools getUserID]
@@ -355,7 +357,7 @@
                     NSLog(@"AlbumSettingViewController");
                     NSLog(@"checkPoint");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"doTask2"
                                          jsonStr: @""
                                          albumId: @""];
@@ -364,50 +366,54 @@
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"data: %@", data);
                     
-                    if ([data[@"result"] intValue] == 1) {
-                        missionTopicStr = data[@"data"][@"task"][@"name"];
-                        NSLog(@"name: %@", missionTopicStr);
-                        
-                        rewardType = data[@"data"][@"task"][@"reward"];
-                        NSLog(@"reward type: %@", rewardType);
-                        
-                        rewardValue = data[@"data"][@"task"][@"reward_value"];
-                        NSLog(@"reward value: %@", rewardValue);
-                        
-                        eventUrl = data[@"data"][@"event"][@"url"];
-                        NSLog(@"event: %@", eventUrl);
-                        
-                        restriction = data[@"data"][@"task"][@"restriction"];
-                        NSLog(@"restriction: %@", restriction);
-                        
-                        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
-                        NSLog(@"restrictionValue: %@", restrictionValue);
-                        
-                        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
-                        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
-                        
-                        [self showTaskAlertView];
-                        [self getUrPoints];
-                        //[self getPointStore];
-                        
-                    } else if ([data[@"result"] intValue] == 2) {
-                        NSLog(@"message: %@", data[@"message"]);
-                        
-                        // Save data for creating album first time
-                        BOOL create_free_album = YES;
-                        
-                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                        [defaults setObject: [NSNumber numberWithBool: create_free_album]  forKey: @"create_free_album"];
-                        [defaults synchronize];
-                    } else if ([data[@"result"] intValue] == 0) {
-                        NSLog(@"失敗： %@", data[@"message"]);                        
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processCheckPoint:data];
                 }
             }
         });
     });
+}
+- (void)processCheckPoint:(NSDictionary *)data {
+    
+    if ([data[@"result"] intValue] == 1) {
+        missionTopicStr = data[@"data"][@"task"][@"name"];
+        NSLog(@"name: %@", missionTopicStr);
+        
+        rewardType = data[@"data"][@"task"][@"reward"];
+        NSLog(@"reward type: %@", rewardType);
+        
+        rewardValue = data[@"data"][@"task"][@"reward_value"];
+        NSLog(@"reward value: %@", rewardValue);
+        
+        eventUrl = data[@"data"][@"event"][@"url"];
+        NSLog(@"event: %@", eventUrl);
+        
+        restriction = data[@"data"][@"task"][@"restriction"];
+        NSLog(@"restriction: %@", restriction);
+        
+        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
+        NSLog(@"restrictionValue: %@", restrictionValue);
+        
+        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
+        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
+        
+        [self showTaskAlertView];
+        [self getUrPoints];
+        //[self getPointStore];
+        
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+        
+        // Save data for creating album first time
+        BOOL create_free_album = YES;
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject: [NSNumber numberWithBool: create_free_album]  forKey: @"create_free_album"];
+        [defaults synchronize];
+    } else if ([data[@"result"] intValue] == 0) {
+        NSLog(@"失敗： %@", data[@"message"]);
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
 }
 
 #pragma mark - Get P Point
@@ -1549,12 +1555,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         return;
     }
     
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){        
         NSLog(@"self.albumId: %@", self.albumId);
         
         NSString *response = [boxAPI albumsettings: [wTools getUserID]
                                              token: [wTools getUserToken]
-                                          album_id: self.albumId
+                                          album_id: wself.albumId
                                           settings: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1576,7 +1583,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"AlbumSettingViewController");
                     NSLog(@"callAlbumSettings");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"albumsettings"
                                          jsonStr: jsonStr
                                          albumId: @""];
@@ -1587,78 +1594,82 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"self.postMode: %d", self.postMode);
-                        
-                        if (albumEditBtnPress) {
-                            NSLog(@"albumEditBtnPress: %d", albumEditBtnPress);
-                            [self checkBeforeGoingToAlbumCreationVC];
-                        } else {
-                            if (self.postMode) {
-                                [self postAlbum];
-                            } else {
-                                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                                NSLog(@"");
-                                NSLog(@"appDelegate.myNav.viewControllers: %@", appDelegate.myNav.viewControllers);
-                                
-                                for (UIViewController *vc in appDelegate.myNav.viewControllers) {
-                                    if ([vc isKindOfClass: [AlbumDetailViewController class]]) {
-                                        NSLog(@"vc is AlbumDetailVC");
-                                        
-                                        if ([self.delegate respondsToSelector: @selector(albumSettingViewControllerUpdate:)]) {
-                                            [self.delegate albumSettingViewControllerUpdate: self];
-                                        }
-                                        [appDelegate.myNav popToViewController: vc animated: YES];
-                                        
-                                        return;
-                                    } else if ([vc isKindOfClass: [AlbumCollectionViewController class]]) {
-                                        NSLog(@"vc is AlbumCollectionVC");
-                                        [appDelegate.myNav popToViewController: vc animated: YES];
-                                        
-                                        return;
-                                    }
-                                }
-                                
-                                //AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
-                                
-                                AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];                                
-                                [appDelegate.myNav pushViewController: albumCollectionVC animated: YES];
-                                
-                                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                                [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"modifyAlbum"];
-                                [defaults synchronize];
-                            }
-                        }
-                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
-                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
-                        
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
-                        
-                        [NSTimer scheduledTimerWithTimeInterval: 1.0
-                                                         target: self
-                                                       selector: @selector(logOut)
-                                                       userInfo: nil
-                                                        repeats: NO];
-                    }
+                    [wself processCallAlbumSetting:dic];
                 }
             }
         });
     });
 }
-
+- (void)processCallAlbumSetting:(NSDictionary *)dic {
+    
+    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+        NSLog(@"self.postMode: %d", self.postMode);
+        
+        if (albumEditBtnPress) {
+            NSLog(@"albumEditBtnPress: %d", albumEditBtnPress);
+            [self checkBeforeGoingToAlbumCreationVC];
+        } else {
+            if (self.postMode) {
+                [self postAlbum];
+            } else {
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                NSLog(@"");
+                NSLog(@"appDelegate.myNav.viewControllers: %@", appDelegate.myNav.viewControllers);
+                
+                for (UIViewController *vc in appDelegate.myNav.viewControllers) {
+                    if ([vc isKindOfClass: [AlbumDetailViewController class]]) {
+                        NSLog(@"vc is AlbumDetailVC");
+                        
+                        if ([self.delegate respondsToSelector: @selector(albumSettingViewControllerUpdate:)]) {
+                            [self.delegate albumSettingViewControllerUpdate: self];
+                        }
+                        [appDelegate.myNav popToViewController: vc animated: YES];
+                        
+                        return;
+                    } else if ([vc isKindOfClass: [AlbumCollectionViewController class]]) {
+                        NSLog(@"vc is AlbumCollectionVC");
+                        [appDelegate.myNav popToViewController: vc animated: YES];
+                        
+                        return;
+                    }
+                }
+                
+                //AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
+                
+                AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
+                [appDelegate.myNav pushViewController: albumCollectionVC animated: YES];
+                
+                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"modifyAlbum"];
+                [defaults synchronize];
+            }
+        }
+    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+        NSLog(@"失敗： %@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: msg];
+    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor thirdPink];
+        
+        [self.view makeToast: @"用戶驗證異常請重新登入"
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+        
+        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                         target: self
+                                       selector: @selector(logOut)
+                                       userInfo: nil
+                                        repeats: NO];
+    }
+    
+}
 - (void)logOut {
     [wTools logOut];
 }

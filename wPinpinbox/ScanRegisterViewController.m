@@ -410,9 +410,11 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         return;
     }
     
-    
+    __block typeof(self) wself = self;
+    __block typeof(businessUserId) bid = businessUserId;
+    __block typeof(timeStamp) wtimestamp = timeStamp;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI buisnessSubUserFastRegister: businessUserId fbId: fbId timeStamp: timeStamp param: jsonStr];
+        NSString *response = [boxAPI buisnessSubUserFastRegister: bid fbId: fbId timeStamp: wtimestamp param: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -433,7 +435,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"ScanRegisterViewController");
                     NSLog(@"buisnessSubUserFastRegister");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"buisnessSubUserFastRegister"
                                             fbId: fbId
                                          jsonStr: jsonStr];
@@ -442,77 +444,79 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"SYSTEM_OK");
-                        NSLog(@"dic: %@", dic);
-                        
-                        NSLog(@"新用戶");
-                        
-                        tokenStr = dic[@"data"][@"token"][@"token"];
-                        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
-                        
-                        tokenStr = dic[@"data"][@"token"][@"token"];
-                        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
-                        
-                        NSLog(@"tokenStr: %@", tokenStr);
-                        NSLog(@"idStr: %@", idStr);
-                        
-                        [self saveDataAfterLogin];
-                        [self setupPushNotification];
-                        
-                        FBFriendsFindingViewController *fbFindingVC = [[UIStoryboard storyboardWithName:@"FBFriendsFindingVC" bundle:nil]instantiateViewControllerWithIdentifier:@"FBFriendsFindingViewController"];
-                        //[self.navigationController pushViewController: fbFindingVC animated:YES];
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: fbFindingVC animated: YES];
-                        
-                        /*
-                         ChooseHobbyViewController *chooseHobbyVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"ChooseHobbyViewController"];
-                         [self.navigationController pushViewController: chooseHobbyVC animated: YES];
-                         */
-                    } else if ([dic[@"result"] isEqualToString: @"USER_EXISTS"]) {
-                        NSLog(@"USER_EXISTS");
-                        NSLog(@"dic: %@", dic);
-                        
-                        //已有帳號
-                        NSLog(@"已有帳號");
-                        
-                        //isCreator = [dic[@"data"][@"creative"] boolValue];
-                        tokenStr = dic[@"data"][@"token"][@"token"];
-                        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
-                        
-                        NSLog(@"tokenStr: %@", tokenStr);
-                        NSLog(@"idStr: %@", idStr);
-                        
-                        [self saveDataAfterLogin];
-                        //[self toMyTabBarController];
-                        //[self getProfile];
-                        [self refreshToken];
-                        [self setupPushNotification];
-                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"SYSTEM_ERROR");
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-                        NSLog(@"TOKEN_ERROR");
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    }
+                    [wself processBusinessSubUserResult:dic];
                 }
             }
         });
     });
 }
-
+- (void)processBusinessSubUserResult:(NSDictionary *)dic {
+    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+        NSLog(@"SYSTEM_OK");
+        NSLog(@"dic: %@", dic);
+        
+        NSLog(@"新用戶");
+        
+        tokenStr = dic[@"data"][@"token"][@"token"];
+        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+        
+        tokenStr = dic[@"data"][@"token"][@"token"];
+        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+        
+        NSLog(@"tokenStr: %@", tokenStr);
+        NSLog(@"idStr: %@", idStr);
+        
+        [self saveDataAfterLogin];
+        [self setupPushNotification];
+        
+        FBFriendsFindingViewController *fbFindingVC = [[UIStoryboard storyboardWithName:@"FBFriendsFindingVC" bundle:nil]instantiateViewControllerWithIdentifier:@"FBFriendsFindingViewController"];
+        //[self.navigationController pushViewController: fbFindingVC animated:YES];
+        
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav pushViewController: fbFindingVC animated: YES];
+        
+        /*
+         ChooseHobbyViewController *chooseHobbyVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"ChooseHobbyViewController"];
+         [self.navigationController pushViewController: chooseHobbyVC animated: YES];
+         */
+    } else if ([dic[@"result"] isEqualToString: @"USER_EXISTS"]) {
+        NSLog(@"USER_EXISTS");
+        NSLog(@"dic: %@", dic);
+        
+        //已有帳號
+        NSLog(@"已有帳號");
+        
+        //isCreator = [dic[@"data"][@"creative"] boolValue];
+        tokenStr = dic[@"data"][@"token"][@"token"];
+        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+        
+        NSLog(@"tokenStr: %@", tokenStr);
+        NSLog(@"idStr: %@", idStr);
+        
+        [self saveDataAfterLogin];
+        //[self toMyTabBarController];
+        //[self getProfile];
+        [self refreshToken];
+        [self setupPushNotification];
+    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+        NSLog(@"SYSTEM_ERROR");
+        NSLog(@"失敗：%@",dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+        NSLog(@"TOKEN_ERROR");
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: dic[@"message"]];
+    }
+}
 - (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock) successHandler
                            declinedOrCanceledHandler:(FBBlock) declinedOrCanceledHandler
                                         errorHandler:(void (^)(NSError *)) errorHandler
@@ -609,13 +613,13 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         return;
     }
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI refreshToken: [userPrefs objectForKey: @"id"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [MBProgressHUD hideHUDForView: wself.view animated: YES];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -630,7 +634,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"AlbumSettingViewController");
                     NSLog(@"refreshToken");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"refreshToken"
                                             fbId: @""
                                          jsonStr: @""];
@@ -641,32 +645,34 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     NSLog(@"dic: %@", dic);
+                    [wself processRefreshToken:dic];
                     
-                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        tokenStr = dic[@"data"][@"token"][@"token"];
-                        
-                        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-                        [userPrefs setObject: tokenStr forKey: @"token"];
-                        
-                        [self getProfile];
-                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-                        NSLog(@"TOKEN_ERROR");
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    }
                 }
             }
         });
     });
 }
-
+- (void)processRefreshToken:(NSDictionary *)dic {
+    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+        tokenStr = dic[@"data"][@"token"][@"token"];
+        
+        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+        [userPrefs setObject: tokenStr forKey: @"token"];
+        
+        [self getProfile];
+    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+        NSLog(@"TOKEN_ERROR");
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: dic[@"message"]];
+    }
+}
 #pragma mark - Web Service - GetProfile
 - (void)getProfile
 {

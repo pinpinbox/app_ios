@@ -425,9 +425,10 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 
 -(void)ToRetrievealbumpViewControllerproductn {
     [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-    
+    __block NSString *pn  = productn;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI retrievealbumpbypn: productn
+        NSString *response = [boxAPI retrievealbumpbypn: pn
                                                    uid: [wTools getUserID]
                                                  token: [wTools getUserToken]];
         
@@ -440,7 +441,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"QrcordViewController");
                     NSLog(@"ToRetrievealbumpViewControllerproductn");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"retrievealbumpbypn"
                                          albumId: @""];
                 } else {
@@ -448,24 +449,25 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        [MBProgressHUD hideHUDForView: self.view animated: YES];
-                        
-                        albumId = [dic[@"data"][@"albumid"] stringValue];
-                        [self ToRetrievealbumpViewControlleralbumid: albumId];
+                        [MBProgressHUD hideHUDForView: wself.view animated: YES];
+                        [wself processAlbumID:[dic[@"data"][@"albumid"] stringValue]];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             } else {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [MBProgressHUD hideHUDForView: wself.view animated: YES];
             }
         });
     });
 }
-
+- (void) processAlbumID:(NSString *)aid {
+    albumId = aid;//[NSString stringWithString:aid];
+    [self ToRetrievealbumpViewControlleralbumid: albumId];
+}
 #pragma mark - Protocol Method Section
 
 - (void)insertCooperation
@@ -474,7 +476,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     
     [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     NSLog(@"wTools ShowMBProgressHUD");
-    
+    __block typeof(self) wself = self;
     NSMutableDictionary *data = [NSMutableDictionary new];
     
     [data setObject: [wTools getUserID] forKey: @"user_id"];
@@ -500,7 +502,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"QrcordViewController");
                     NSLog(@"insertCooperation");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"addcooperation"
                                          albumId: @""];
                 } else {
@@ -510,7 +512,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result is 1");
                         
-                        [self getcalbumlist];
+                        [wself getcalbumlist];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         //[self.navigationController popViewControllerAnimated: YES];
@@ -518,12 +520,12 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav popViewControllerAnimated: YES];
                         
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     } else {
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav popViewControllerAnimated: YES];
                         
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -536,7 +538,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     
     [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     NSLog(@"wTools ShowMBProgressHUD");
-    
+    __block NSString *aid = albumId;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
                                              token: [wTools getUserToken]
@@ -555,7 +558,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"QrcordViewController");
                     NSLog(@"getcalbumlist");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcalbumlist"
                                          albumId: @""];
                 } else {
@@ -571,7 +574,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                             
                             NSString *albumIdStr = [d[@"album"][@"album_id"] stringValue];
                             
-                            if ([albumIdStr isEqualToString: albumId]) {
+                            if ([albumIdStr isEqualToString: aid]) {
                                 if ([d[@"album"][@"zipped"] boolValue]) {
                                     NSLog(@"zipped boolValue is: %d", [d[@"album"][@"zipped"] boolValue]);
                                     
@@ -592,7 +595,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                     [appDelegate.myNav popViewControllerAnimated: YES];
                                     
                                     //[self showAlertView: @"作品尚未有儲存的動作"];
-                                    [self showCustomErrorAlert: @"作品尚未有儲存的動作"];
+                                    [wself showCustomErrorAlert: @"作品尚未有儲存的動作"];
                                 }
                             }
                         }
@@ -600,11 +603,11 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                         NSLog(@"失敗：%@",dic[@"message"]);
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav popViewControllerAnimated: YES];
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     } else {
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav popViewControllerAnimated: YES];
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];                                            
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
