@@ -83,7 +83,43 @@
     
     [self getAlbumOfDiy];
 }
-
+- (void)processAlbumDiyResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        _templatelist = [dic[@"data"][@"frame"]mutableCopy];
+        // ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
+        selectItem = 0;
+        NSDictionary *data = _templatelist[selectItem];
+        NSLog(@"data: %@", data);
+        NSArray *frame = data[@"blank"];
+        
+        for (int i = 0; i < frame.count; i++) {
+            NSMutableDictionary *dic = [NSMutableDictionary new];
+            [dic setObject: frame[i] forKey: @"frame"];
+            [imagearr addObject: dic];
+        }
+        
+        [self showimageview];
+        [mycollection reloadData];
+        
+        @try {
+            [wTools HideMBProgressHUD];
+        } @catch (NSException *exception) {
+            // Print exception information
+            NSLog( @"NSException caught" );
+            NSLog( @"Name: %@", exception.name);
+            NSLog( @"Reason: %@", exception.reason );
+            return;
+        }
+        [self getCooperation];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        [wTools HideMBProgressHUD];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [wTools HideMBProgressHUD];
+    }
+}
 - (void)getAlbumOfDiy
 {
     @try {
@@ -95,11 +131,12 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(_albumid) aid = _albumid;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
                                              token: [wTools getUserToken]
-                                          album_id: _albumid];
+                                          album_id: aid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -119,7 +156,7 @@
                     NSLog(@"TemplateViewController");
                     NSLog(@"getAlbumOfDiy");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getalbumofdiy"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -127,41 +164,7 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        _templatelist = [dic[@"data"][@"frame"]mutableCopy];
-                        // ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
-                        selectItem = 0;
-                        NSDictionary *data = _templatelist[selectItem];
-                        NSLog(@"data: %@", data);
-                        NSArray *frame = data[@"blank"];
-                        
-                        for (int i = 0; i < frame.count; i++) {
-                            NSMutableDictionary *dic = [NSMutableDictionary new];
-                            [dic setObject: frame[i] forKey: @"frame"];
-                            [imagearr addObject: dic];
-                        }
-                        
-                        [self showimageview];
-                        [mycollection reloadData];
-                        
-                        @try {
-                            [wTools HideMBProgressHUD];
-                        } @catch (NSException *exception) {
-                            // Print exception information
-                            NSLog( @"NSException caught" );
-                            NSLog( @"Name: %@", exception.name);
-                            NSLog( @"Reason: %@", exception.reason );
-                            return;
-                        }
-                        [self getCooperation];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        [wTools HideMBProgressHUD];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [wTools HideMBProgressHUD];
-                    }
+                    [wself processAlbumDiyResult:dic];
                 }
             }
         });
@@ -186,7 +189,7 @@
     [data setObject: _albumid forKey: @"type_id"];
     [data setObject: [wTools getUserID] forKey: @"user_id"];
     [data setObject: @"album" forKey: @"type"];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI getcooperation: [wTools getUserID]
                                               token: [wTools getUserToken]
@@ -219,10 +222,10 @@
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] boolValue]) {
-                        _identity = dic[@"data"];
+                        wself.identity = dic[@"data"];
                     } else {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     }
                 }
             }
@@ -919,6 +922,39 @@
 
 
 //上傳相片
+- (void)processUploadPhotoResult:(NSDictionary *)dic{
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"dic result boolValue: %d", [dic[@"result"] boolValue]);
+        NSLog(@"self.navigationController.viewControllers: %@", self.navigationController.viewControllers);
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        
+        for (UIViewController *vc in [appDelegate.myNav viewControllers] ) {
+            if ([vc isKindOfClass:[AlbumCreationViewController class]]) {
+                NSLog(@"_templateid: %@", _templateid);
+                
+                if ([self.delegate respondsToSelector: @selector(uploadPhotoDidComplete:)]) {
+                    [self.delegate uploadPhotoDidComplete: self];
+                }
+                AlbumCreationViewController *albumCreationVC = (AlbumCreationViewController *)vc;
+                [albumCreationVC reloaddatat: [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]]];
+                [albumCreationVC reloadItem: [dic[@"data"][@"photo"] count] - 1];
+                albumCreationVC.albumid = _albumid;
+                albumCreationVC.templateid = _templateid;
+                albumCreationVC.event_id = _event_id;
+                albumCreationVC.postMode = _postMode;
+                albumCreationVC.choice = @"Template";
+                
+                [appDelegate.myNav popToViewController: vc animated: YES];
+                return;
+            }
+        }
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 -(void)upphoto {
     NSLog(@"upPhoto");
     NSLog(@"imagearr: %@", imagearr);
@@ -1059,12 +1095,14 @@
     
     UIImage *newImg = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-            
+    __block typeof(self) wself = self;
+    __block typeof(_albumid) aid = _albumid;
+    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
         response = [boxAPI insertphotoofdiy: [wTools getUserID]
                                       token: [wTools getUserToken]
-                                   album_id: _albumid
+                                   album_id: aid
                                       image: newImg
                                 compression: 0.0];
         
@@ -1087,43 +1125,13 @@
                     NSLog(@"TemplateViewController");
                     NSLog(@"upphoto");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"insertphotoofdiy"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"dic result boolValue: %d", [dic[@"result"] boolValue]);
-                        NSLog(@"self.navigationController.viewControllers: %@", self.navigationController.viewControllers);                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        
-                        for (UIViewController *vc in [appDelegate.myNav viewControllers] ) {
-                            if ([vc isKindOfClass:[AlbumCreationViewController class]]) {
-                                NSLog(@"_templateid: %@", _templateid);
-                                
-                                if ([self.delegate respondsToSelector: @selector(uploadPhotoDidComplete:)]) {
-                                    [self.delegate uploadPhotoDidComplete: self];
-                                }
-                                AlbumCreationViewController *albumCreationVC = (AlbumCreationViewController *)vc;
-                                [albumCreationVC reloaddatat: [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]]];
-                                [albumCreationVC reloadItem: [dic[@"data"][@"photo"] count] - 1];
-                                albumCreationVC.albumid = _albumid;
-                                albumCreationVC.templateid = _templateid;
-                                albumCreationVC.event_id = _event_id;
-                                albumCreationVC.postMode = _postMode;
-                                albumCreationVC.choice = @"Template";
-                                
-                                [appDelegate.myNav popToViewController: vc animated: YES];
-                                return;
-                            }
-                        }
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processUploadPhotoResult:dic];
                 }
             }
         });
@@ -1149,8 +1157,8 @@
 - (void)showCustomForDeletingImage: (NSString *)msg btn:(UIButton *)sender
 {
     CustomIOSAlertView *alertViewForDeletingImage = [[CustomIOSAlertView alloc] init];
-    [alertViewForDeletingImage setContainerView: [self createDeletingImageContainerView: msg]];
-    
+    //[alertViewForDeletingImage setContainerView: [self createDeletingImageContainerView: msg]];
+    [alertViewForDeletingImage setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -1158,11 +1166,12 @@
     
     [alertViewForDeletingImage setButtonTitles: [NSMutableArray arrayWithObjects: NSLocalizedString(@"GeneralText-no", @""), NSLocalizedString(@"GeneralText-yes", @""), nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertViewForDeletingImage setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertViewForDeletingImage setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertViewForDeletingImage setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertViewForDeletingImage setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertViewForDeletingImage setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
     
+    __block typeof(_ShowView) sv = _ShowView;
     [alertViewForDeletingImage setOnButtonTouchUpInside:^(CustomIOSAlertView *alertViewForDeletingImage, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForDeletingImage tag]);
         
@@ -1171,7 +1180,7 @@
         if (buttonIndex == 0) {
             
         } else {
-            UIView *v=[_ShowView viewWithTag: sender.tag-100];
+            UIView *v=[sv viewWithTag: sender.tag-100];
             CGRect frame = v.frame;
             int tag = (int)sender.tag;
             [v removeFromSuperview];
@@ -1180,7 +1189,7 @@
             v = [[UIView alloc] initWithFrame: frame];
             v.backgroundColor = [UIColor firstGrey];
             v.tag = sender.tag - 100;
-            [_ShowView addSubview:v];
+            [sv addSubview:v];
             
             //沒圖片用按鈕
             //icon_creatnewframe_plus.png
@@ -1198,8 +1207,8 @@
             [btn addTarget: self action: @selector(addimage:) forControlEvents: UIControlEventTouchUpInside];
             [v addSubview: btn];
             
-            UIView *asyncv = [_ShowView viewWithTag: 200];
-            [_ShowView bringSubviewToFront: asyncv];
+            UIView *asyncv = [sv viewWithTag: 200];
+            [sv bringSubviewToFront: asyncv];
         }
     }];
     [alertViewForDeletingImage setUseMotionEffects: YES];
@@ -1284,8 +1293,8 @@
 - (void)showCustomForChangeTemplate: (NSString *)msg indexPathRow:(NSInteger)indexPathRow
 {
     CustomIOSAlertView *alertViewForTemplate = [[CustomIOSAlertView alloc] init];
-    [alertViewForTemplate setContainerView: [self createTemplateContainerView: msg]];
-    
+    //[alertViewForTemplate setContainerView: [self createTemplateContainerView: msg]];
+    [alertViewForTemplate setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -1293,11 +1302,11 @@
     
     [alertViewForTemplate setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertViewForTemplate setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
-    [alertViewForTemplate setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [alertViewForTemplate setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertViewForTemplate setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertViewForTemplate setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
-    
+    __block typeof(self) wself = self;
     [alertViewForTemplate setOnButtonTouchUpInside:^(CustomIOSAlertView *alertViewForTemplate, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForTemplate tag]);
         
@@ -1306,24 +1315,28 @@
         if (buttonIndex == 0) {
             
         } else {
-            selectItem = indexPathRow;
-            imagearr = [NSMutableArray new];
-            
-            NSDictionary *data = _templatelist[selectItem];
-            NSArray *frame = data[@"blank"];
-            
-            for (int i = 0; i < frame.count; i++) {
-                NSMutableDictionary *dic = [NSMutableDictionary new];
-                [dic setObject: frame[i] forKey: @"frame"];
-                [imagearr addObject: dic];
-            }
-            
-            [self showimageview];
-            [self.dataCollectionView reloadData];
+            [wself processChangeTemplate:indexPathRow];
         }
     }];
     [alertViewForTemplate setUseMotionEffects: YES];
     [alertViewForTemplate show];
+}
+- (void)processChangeTemplate:(NSInteger)indexPathRow {
+    selectItem = indexPathRow;
+    imagearr = [NSMutableArray new];
+    
+    NSDictionary *data = _templatelist[selectItem];
+    NSArray *frame = data[@"blank"];
+    
+    for (int i = 0; i < frame.count; i++) {
+        NSMutableDictionary *dic = [NSMutableDictionary new];
+        [dic setObject: frame[i] forKey: @"frame"];
+        [imagearr addObject: dic];
+    }
+    
+    [self showimageview];
+    [self.dataCollectionView reloadData];
+    
 }
 
 - (UIView *)createTemplateContainerView: (NSString *)msg

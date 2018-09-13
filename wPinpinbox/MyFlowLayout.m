@@ -108,32 +108,32 @@
 }
 
 
--(void)setAverageArrange:(BOOL)averageArrange
-{
-    if (self.orientation == MyLayoutViewOrientation_Vert)
-    {
-        if (averageArrange)
-            self.gravity = (self.gravity & MyMarginGravity_Horz_Mask) | MyMarginGravity_Horz_Fill;
-        else
-            self.gravity = (self.gravity & MyMarginGravity_Horz_Mask) | MyMarginGravity_None;
-    }
-    else
-    {
-        if (averageArrange)
-            self.gravity = (self.gravity & MyMarginGravity_Vert_Mask) | MyMarginGravity_Vert_Fill;
-        else
-            self.gravity = (self.gravity & MyMarginGravity_Vert_Mask) | MyMarginGravity_None;
-    }
-
-}
-
--(BOOL)averageArrange
-{
-    if (self.orientation == MyLayoutViewOrientation_Vert)
-        return (self.gravity & MyMarginGravity_Vert_Mask) == MyMarginGravity_Horz_Fill;
-    else
-        return (self.gravity & MyMarginGravity_Horz_Mask) == MyMarginGravity_Vert_Fill;
-}
+//-(void)setAverageArrange:(BOOL)averageArrange
+//{
+//    if (self.orientation == MyLayoutViewOrientation_Vert)
+//    {
+//        if (averageArrange)
+//            self.gravity = (self.gravity & MyMarginGravity_Horz_Mask) | MyMarginGravity_Horz_Fill;
+//        else
+//            self.gravity = (self.gravity & MyMarginGravity_Horz_Mask) | MyMarginGravity_None;
+//    }
+//    else
+//    {
+//        if (averageArrange)
+//            self.gravity = (self.gravity & MyMarginGravity_Vert_Mask) | MyMarginGravity_Vert_Fill;
+//        else
+//            self.gravity = (self.gravity & MyMarginGravity_Vert_Mask) | MyMarginGravity_None;
+//    }
+//
+//}
+//
+//-(BOOL)averageArrange
+//{
+//    if (self.orientation == MyLayoutViewOrientation_Vert)
+//        return (self.gravity & MyMarginGravity_Vert_Mask) == MyMarginGravity_Horz_Fill;
+//    else
+//        return (self.gravity & MyMarginGravity_Horz_Mask) == MyMarginGravity_Vert_Fill;
+//}
 
 -(void)setAutoArrange:(BOOL)autoArrange
 {

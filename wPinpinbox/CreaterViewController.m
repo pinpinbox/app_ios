@@ -217,6 +217,52 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self getCreator];
     }
 }
+- (void)processCreatorResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        userDic = dic[@"data"][@"user"];
+        sponsorInt = [dic[@"data"][@"userstatistics"][@"besponsored"] intValue];
+        NSLog(@"sponsorInt: %ld", (long)sponsorInt);
+        
+        if (nextId == 0) {
+            pictures = [NSMutableArray new];
+        }
+        int s = 0;
+        
+        for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
+            s++;
+            [pictures addObject: picture];
+        }
+        nextId = nextId + s;
+        
+        NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
+        followDic = dic[@"data"][@"follow"];
+        _follow = [dic[@"data"][@"follow"][@"follow"] boolValue];
+        sponsorDic = dic[@"data"][@"userstatistics"];
+        
+        self.followBtn = [self changeFollowBtn: self.followBtn];
+        
+        [self.collectionView reloadData];
+        [self.refreshControl endRefreshing];
+        
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        if (s == 0) {
+            isLoading = YES;
+        }
+        [self layoutSetup];
+        isReloading = NO;
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    }
+}
 
 - (void)getCreator {
     NSLog(@"");
@@ -227,7 +273,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSString *limit = [NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
     [data setObject: self.userId forKey: @"authorid"];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *respnose = [boxAPI getcreative: [wTools getUserID]
                                            token: [wTools getUserToken]
@@ -252,67 +298,24 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"CreaterViewController");
                     NSLog(@"getCreator");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcreative"
                                          albumId: @""];
                     
-                    isReloading = NO;
+                    wself->isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     NSLog(@"response from getCreative");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respnose dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        userDic = dic[@"data"][@"user"];
-                        sponsorInt = [dic[@"data"][@"userstatistics"][@"besponsored"] intValue];
-                        NSLog(@"sponsorInt: %ld", (long)sponsorInt);
-                        
-                        if (nextId == 0) {
-                            pictures = [NSMutableArray new];
-                        }
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
-                            s++;
-                            [pictures addObject: picture];
-                        }
-                        nextId = nextId + s;
-                        
-                        NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
-                        followDic = dic[@"data"][@"follow"];
-                        _follow = [dic[@"data"][@"follow"][@"follow"] boolValue];
-                        sponsorDic = dic[@"data"][@"userstatistics"];
-                        
-                        self.followBtn = [self changeFollowBtn: self.followBtn];
-                        
-                        [self.collectionView reloadData];
-                        [self.refreshControl endRefreshing];
-                        
-                        if (nextId >= 0)
-                            isLoading = NO;
-                        
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        [self layoutSetup];
-                        isReloading = NO;
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    }
+                    [wself processCreatorResult:dic];
                 }
             } else {
-                [self.refreshControl endRefreshing];
-                isReloading = NO;
+                [wself.refreshControl endRefreshing];
+                wself->isReloading = NO;
             }
-            [self.refreshControl endRefreshing];
-            isReloading = NO;
+            [wself.refreshControl endRefreshing];
+            wself->isReloading = NO;
         });
     });
 }

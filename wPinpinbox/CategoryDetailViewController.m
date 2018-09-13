@@ -132,7 +132,51 @@
         [self retrieveHotRank];
     }
 }
-
+- (void)processHotRankResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"dic data: %@", dic[@"data"]);
+        
+        NSLog(@"Before");
+        NSLog(@"nextId: %ld", (long)nextId);
+        
+        if (nextId == 0) {
+            categoryArray = [NSMutableArray new];
+        }
+        
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
+            s++;
+            [categoryArray addObject: picture];
+        }
+        
+        NSLog(@"After");
+        NSLog(@"nextId: %ld", (long)nextId);
+        NSLog(@"s: %d", s);
+        
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0) {
+            isLoading = NO;
+        }
+        
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        NSLog(@"self.collectionView reloadData");
+        
+        [self.collectionView reloadData];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)retrieveHotRank {
     NSLog(@"retrieveHotRank");
     
@@ -149,11 +193,11 @@
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrieveHotRank: [wTools getUserID]
                                                token: [wTools getUserToken]
-                                      categoryAreaId: self.categoryAreaId
+                                      categoryAreaId: wself.categoryAreaId
                                                 data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -173,55 +217,13 @@
                     NSLog(@"CategoryDetailViewController");
                     NSLog(@"retrieveHotRank");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"retrieveHotRank"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"dic data: %@", dic[@"data"]);
-                        
-                        NSLog(@"Before");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        
-                        if (nextId == 0) {
-                            categoryArray = [NSMutableArray new];
-                        }
-                        
-                        // s for counting how much data is loaded
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
-                            s++;
-                            [categoryArray addObject: picture];
-                        }
-                        
-                        NSLog(@"After");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        NSLog(@"s: %d", s);
-                        
-                        // If data keeps loading then the nextId is accumulating
-                        nextId = nextId + s;
-                        
-                        // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (nextId >= 0) {
-                            isLoading = NO;
-                        }
-                        
-                        // If s is 0, that means dic data is empty.
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        NSLog(@"self.collectionView reloadData");
-                        
-                        [self.collectionView reloadData];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processHotRankResult:dic];
                 }
             }
         });

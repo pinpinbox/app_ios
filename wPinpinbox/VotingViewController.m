@@ -208,7 +208,82 @@
         [self getEventVoteList];
     }
 }
-
+- (void)processEventVoteList:(NSDictionary *)dic {
+    NSString *resultStr = dic[@"result"];
+    
+    if ([resultStr isEqualToString: @"SYSTEM_OK"]) {
+        NSLog(@"resultStr isEqualToString SYSTEM_OK");
+        
+        if (nextId == 0) {
+            voteArray = [NSMutableArray new];
+        }
+        
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *vote in [dic objectForKey: @"data"][@"eventjoin"]) {
+            s++;
+            [voteArray addObject: vote];
+        }
+        
+        NSLog(@"voteArray.count: %lu", (unsigned long)voteArray.count);
+        
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0) {
+            isLoading = NO;
+        }
+        
+        // If s is 0, that means dic data is empty
+        if (s == 0) {
+            isLoading = YES;
+        }
+        
+        [self.collectionView reloadData];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+        
+        voteLeft = [dic[@"data"][@"event"][@"vote_left"] intValue];
+        [self updateRemainingVoteLabel];
+        
+    } else if ([resultStr isEqualToString: @"SYSTEM_ERROR"]) {
+        NSLog(@"resultStr isEqualToString SYSTEM_ERROR");
+        [self showCustomErrorAlert: @"不明錯誤"];
+        
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
+        NSLog(@"resultStr isEqualToString USER_ERROR");
+        NSLog(@"失敗： %@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: msg];
+        
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+        NSLog(@"resultStr isEqualToString TOKEN_ERROR");
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor thirdPink];
+        
+        [self.view makeToast: @"用戶驗證異常請重新登入"
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+        
+        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                         target: self
+                                       selector: @selector(logOut)
+                                       userInfo: nil
+                                        repeats: NO];
+    }
+}
 - (void)getEventVoteList
 {
     NSLog(@"");
@@ -224,7 +299,7 @@
         return;
     }
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getEventVoteList: self.eventId
                                                 limit: limit
@@ -250,96 +325,23 @@
                     NSLog(@"VotingViewController");
                     NSLog(@"getEventVoteList");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getEventVoteList"
                                          albumId: @""
                                        indexPath: nil];
-                    [self.refreshControl endRefreshing];
-                    isReloading = NO;
+                    [wself.refreshControl endRefreshing];
+                    wself->isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     //NSLog(@"dic: %@", dic);
                     
-                    NSString *resultStr = dic[@"result"];
-                    
-                    if ([resultStr isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"resultStr isEqualToString SYSTEM_OK");
-                        
-                        if (nextId == 0) {
-                            voteArray = [NSMutableArray new];
-                        }
-                        
-                        // s for counting how much data is loaded
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *vote in [dic objectForKey: @"data"][@"eventjoin"]) {
-                            s++;
-                            [voteArray addObject: vote];
-                        }
-                        
-                        NSLog(@"voteArray.count: %lu", (unsigned long)voteArray.count);
-                        
-                        // If data keeps loading then the nextId is accumulating
-                        nextId = nextId + s;
-                        
-                        // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (nextId >= 0) {
-                            isLoading = NO;
-                        }
-                        
-                        // If s is 0, that means dic data is empty
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        
-                        [self.collectionView reloadData];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                        
-                        voteLeft = [dic[@"data"][@"event"][@"vote_left"] intValue];
-                        [self updateRemainingVoteLabel];
-                        
-                    } else if ([resultStr isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"resultStr isEqualToString SYSTEM_ERROR");
-                        [self showCustomErrorAlert: @"不明錯誤"];
-                        
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
-                        NSLog(@"resultStr isEqualToString USER_ERROR");
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
-                        
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-                        NSLog(@"resultStr isEqualToString TOKEN_ERROR");
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
-                        
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
-                        
-                        [NSTimer scheduledTimerWithTimeInterval: 1.0
-                                                         target: self
-                                                       selector: @selector(logOut)
-                                                       userInfo: nil
-                                                        repeats: NO];
-                    }
+                    [wself processEventVoteList:dic];
                 }
             } else {
-                [self.refreshControl endRefreshing];
-                isReloading = NO;
+                [wself.refreshControl endRefreshing];
+                wself->isReloading = NO;
             }
         });
     });
@@ -363,7 +365,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI vote: albumId
                                   eventId: self.eventId
@@ -389,7 +391,7 @@
                     NSLog(@"VotingViewController");
                     NSLog(@"Vote");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"vote"
                                          albumId: albumId
                                        indexPath: indexPath];
@@ -399,54 +401,56 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    NSString *resultStr = dic[@"result"];
-                    
-                    if ([resultStr isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"resultStr isEqualToString SYSTEM_OK");
-                        voteLeft = [dic[@"data"][@"event"][@"vote_left"] intValue];
-                        [self updateRemainingVoteLabel];
-                        
-                        VotingCollectionViewCell *cell = (VotingCollectionViewCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
-                        cell.votedLabel.hidden = NO;
-                        cell.voteBtn.hidden = YES;
-                        
-                        [self refresh];
-                    } else if ([resultStr isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"resultStr isEqualToString SYSTEM_ERROR");
-                        [self showCustomErrorAlert: @"不明錯誤"];
-                    } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
-                        NSLog(@"resultStr isEqualToString USER_ERROR");
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: msg];
-                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-                        NSLog(@"resultStr isEqualToString TOKEN_ERROR");
-                        
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
-                        
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
-                        
-                        [NSTimer scheduledTimerWithTimeInterval: 1.0
-                                                         target: self
-                                                       selector: @selector(logOut)
-                                                       userInfo: nil
-                                                        repeats: NO];
-                    }
+                    [wself processVoteResult:dic indexPath:indexPath];
                 }
             }
         });
     });
 }
-
+- (void)processVoteResult:(NSDictionary *)dic indexPath:(NSIndexPath *)indexPath{
+    NSString *resultStr = dic[@"result"];
+    
+    if ([resultStr isEqualToString: @"SYSTEM_OK"]) {
+        NSLog(@"resultStr isEqualToString SYSTEM_OK");
+        voteLeft = [dic[@"data"][@"event"][@"vote_left"] intValue];
+        [self updateRemainingVoteLabel];
+        
+        VotingCollectionViewCell *cell = (VotingCollectionViewCell *)[self.collectionView cellForItemAtIndexPath: indexPath];
+        cell.votedLabel.hidden = NO;
+        cell.voteBtn.hidden = YES;
+        
+        [self refresh];
+    } else if ([resultStr isEqualToString: @"SYSTEM_ERROR"]) {
+        NSLog(@"resultStr isEqualToString SYSTEM_ERROR");
+        [self showCustomErrorAlert: @"不明錯誤"];
+    } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
+        NSLog(@"resultStr isEqualToString USER_ERROR");
+        NSLog(@"失敗： %@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: msg];
+    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+        NSLog(@"resultStr isEqualToString TOKEN_ERROR");
+        
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor thirdPink];
+        
+        [self.view makeToast: @"用戶驗證異常請重新登入"
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+        
+        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                         target: self
+                                       selector: @selector(logOut)
+                                       userInfo: nil
+                                        repeats: NO];
+    }
+}
 #pragma mark - UICollectionViewDataSource Methods
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {

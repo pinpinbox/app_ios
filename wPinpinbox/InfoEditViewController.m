@@ -173,7 +173,7 @@
     NSLog(@"getProfile");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getprofile: [userPrefs objectForKey: @"id"] token: [userPrefs objectForKey: @"token"]];
         
@@ -196,35 +196,37 @@
                     NSLog(@"responseFromGetProfile != nil");
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-                        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
-                        
-                        for (NSString *key in [dataIc allKeys]) {
-                            id objective = [dataIc objectForKey: key];
-                            
-                            if ([objective isKindOfClass: [NSNull class]]) {
-                                [dataIc setObject: @"" forKey: key];
-                            }
-                        }
-                        [userPrefs setValue: dataIc forKey: @"profile"];
-                        [userPrefs synchronize];
-                        
-                        myData = [dataIc mutableCopy];
-                        
-                        [self checkSocialData];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processProfileResult:dic];
                 }
             }
         });
     });
 }
-
+- (void)processProfileResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
+        
+        for (NSString *key in [dataIc allKeys]) {
+            id objective = [dataIc objectForKey: key];
+            
+            if ([objective isKindOfClass: [NSNull class]]) {
+                [dataIc setObject: @"" forKey: key];
+            }
+        }
+        [userPrefs setValue: dataIc forKey: @"profile"];
+        [userPrefs synchronize];
+        
+        myData = [dataIc mutableCopy];
+        
+        [self checkSocialData];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 #pragma mark - UI Setup Section
 - (void)initialValueSetup {
     // Get the profile data
@@ -774,7 +776,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(selectImage) simage = selectImage;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //NSString *response = [boxAPI updateprofile: [wTools getUserID] token: [wTools getUserToken] data: data];
         NSString *response = [boxAPI updateUser: [wTools getUserID] token: [wTools getUserToken] param: jsonStr];
@@ -806,7 +808,7 @@
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"dic: %@", dic);
                         
-                        if (selectImage == nil) {
+                        if (simage == nil) {
                             NSLog(@"update 1");
                             
                             [self checkPointTask];

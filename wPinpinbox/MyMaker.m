@@ -269,12 +269,14 @@
 -(MyMaker* (^)(id val))equalTo
 {
     _clear = YES;
+    __block typeof(_keys) keys = _keys;
+    __block typeof(_myViews) myviews= _myViews;
     return ^id(id val) {
         
-        for (NSString *key in _keys)
+        for (NSString *key in keys)
         {
             
-            for (UIView * myView in _myViews)
+            for (UIView * myView in myviews)
             {
                 if ([val isKindOfClass:[NSNumber class]])
                 {
@@ -330,12 +332,13 @@
 -(MyMaker* (^)(CGFloat val))offset
 {
     _clear = YES;
-    
+    __block typeof(_keys) keys = _keys;
+    __block typeof(_myViews) myviews= _myViews;
     return ^id(CGFloat val) {
         
-        for (NSString *key in _keys)
+        for (NSString *key in keys)
         {
-            for (UIView *myView in _myViews)
+            for (UIView *myView in myviews)
             {
                 
                 [((MyLayoutPos*)[myView valueForKey:key]) __offset:val];
@@ -349,11 +352,13 @@
 -(MyMaker* (^)(CGFloat val))multiply
 {
     _clear = YES;
+    __block typeof(_keys) keys = _keys;
+    __block typeof(_myViews) myviews= _myViews;
     return ^id(CGFloat val) {
         
-        for (NSString *key in _keys)
+        for (NSString *key in keys)
         {
-            for (UIView *myView in _myViews)
+            for (UIView *myView in myviews)
             {
                 
                 [((MyLayoutSize*)[myView valueForKey:key]) __multiply:val];
@@ -367,12 +372,14 @@
 -(MyMaker* (^)(CGFloat val))add
 {
     _clear = YES;
+    __block typeof(_keys) keys = _keys;
+    __block typeof(_myViews) myviews= _myViews;
     return ^id(CGFloat val) {
         
-        for (NSString *key in _keys)
+        for (NSString *key in keys)
         {
             
-            for (UIView *myView in _myViews)
+            for (UIView *myView in myviews)
             {
                 
                 [((MyLayoutSize*)[myView valueForKey:key]) __add:val];
@@ -386,12 +393,14 @@
 -(MyMaker* (^)(id val))min
 {
     _clear = YES;
+    __block typeof(_keys) keys = _keys;
+    __block typeof(_myViews) myviews= _myViews;
     return ^id(id val) {
         
-        for (NSString *key in _keys)
+        for (NSString *key in keys)
         {
             
-            for (UIView *myView in _myViews)
+            for (UIView *myView in myviews)
             {
                 
                 
@@ -420,11 +429,13 @@
 -(MyMaker* (^)(id val))max
 {
     _clear = YES;
+    __block typeof(_keys) keys = _keys;
+    __block typeof(_myViews) myviews= _myViews;
     return ^id(id val) {
         
-        for (NSString *key in _keys)
+        for (NSString *key in keys)
         {
-            for (UIView *myView in _myViews)
+            for (UIView *myView in myviews)
             {
                 id val2 = val;
                 if ([val isKindOfClass:[UIView class]])

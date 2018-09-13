@@ -821,15 +821,15 @@ static const CGFloat kScrollViewBottomSpace = 5;
         if (_menu.adjustsContentInset) {
             height = MAX(height, contentMaxY);
         }
-        
+        __block typeof(self) wself = self;
         scrollViewAdjustBlock = ^{
-            if (_menu.adjustsContentInset && inset > 0) {
-                _previousScrollViewBottomInset = scrollView.contentInset.bottom;
+            if (wself.menu.adjustsContentInset && inset > 0) {
+                wself->_previousScrollViewBottomInset = scrollView.contentInset.bottom;
                 UIEdgeInsets contentInset = scrollView.contentInset;
                 contentInset.bottom += inset;
                 scrollView.contentInset = contentInset;
             }
-            if (_menu.adjustsContentOffset && scrollView.contentOffset.y < offset) {
+            if (wself.menu.adjustsContentOffset && scrollView.contentOffset.y < offset) {
                 scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, offset);
             }
         };
@@ -857,20 +857,20 @@ static const CGFloat kScrollViewBottomSpace = 5;
     self.controller.view.alpha = 0.0;
     
     _isAnimating = YES;
-    
+    __block typeof(self) wself = self;
     [UIView animateWithDuration:self.duration
                           delay:0.0
          usingSpringWithDamping:1.0
           initialSpringVelocity:0.0
                         options:kNilOptions
                      animations:^{
-                         self.controller.view.alpha = 1.0;
-                         self.controller.containerView.transform = CGAffineTransformIdentity;
+                         wself.controller.view.alpha = 1.0;
+                         wself.controller.containerView.transform = CGAffineTransformIdentity;
                          scrollViewAdjustBlock();
                      }
                      completion:^(BOOL finished) {
-                         [self.controller endAppearanceTransition];
-                         _isAnimating = NO;
+                         [wself.controller endAppearanceTransition];
+                         wself->_isAnimating = NO;
                          if (completion) {
                              completion();
                          }
@@ -885,12 +885,13 @@ static const CGFloat kScrollViewBottomSpace = 5;
     
     if ([self.containerView isKindOfClass:[UIScrollView class]]) {
         UIScrollView *scrollView = (UIScrollView *)self.containerView;
+        __block typeof(self) wself = self;
         scrollViewResetBlock = ^{
-            if (_previousScrollViewBottomInset != CGFLOAT_MAX) {
+            if (wself->_previousScrollViewBottomInset != CGFLOAT_MAX) {
                 UIEdgeInsets contentInset = scrollView.contentInset;
-                contentInset.bottom = _previousScrollViewBottomInset;
+                contentInset.bottom = wself->_previousScrollViewBottomInset;
                 scrollView.contentInset = contentInset;
-                _previousScrollViewBottomInset = CGFLOAT_MAX;
+                wself->_previousScrollViewBottomInset = CGFLOAT_MAX;
             }
         };
     }
@@ -909,7 +910,7 @@ static const CGFloat kScrollViewBottomSpace = 5;
     t = CGAffineTransformTranslate(t, 0, -2 * CGRectGetHeight(self.controller.containerView.frame));
     
     _isAnimating = YES;
-    
+    __block typeof(self) wself = self;
     [UIView animateWithDuration:self.duration
                           delay:0.0
          usingSpringWithDamping:1.0
@@ -925,7 +926,7 @@ static const CGFloat kScrollViewBottomSpace = 5;
                          self.controller.view.alpha = 1.0;
                          self.controller.containerView.transform = CGAffineTransformIdentity;
                          [self.controller endAppearanceTransition];
-                         _isAnimating = NO;
+                         wself->_isAnimating = NO;
                          if (completion) {
                              completion();
                          }

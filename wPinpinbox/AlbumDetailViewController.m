@@ -1178,17 +1178,17 @@ static NSString *autoPlayStr = @"&autoplay=1";
     } else {
         collectStr = @"已收藏";
     }
-    
+    __block typeof(self) wself = self;
     UIAlertAction *collectBtn = [UIAlertAction
                                  actionWithTitle: collectStr
                                  style:UIAlertActionStyleDefault
                                  handler:^(UIAlertAction * action)
                                  {
-                                     if (albumPoint == 0) {
-                                         [self buyAlbum];
+                                     if (wself->albumPoint == 0) {
+                                         [wself buyAlbum];
                                      } else {
-                                         NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)albumPoint];
-                                         [self showCustomAlert: msgStr option: @"buyAlbum"];
+                                         NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)wself->albumPoint];
+                                         [wself showCustomAlert: msgStr option: @"buyAlbum"];
                                      }
                                  }];
     
@@ -1250,7 +1250,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI geturpoints: [wTools getUserID]
                                            token: [wTools getUserToken]];
@@ -1275,7 +1275,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"AlbumDetailViewController");
                     NSLog(@"getPoint");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"geturpoints"
                                              row: 0
                                          eventId: @""];
@@ -1287,10 +1287,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         NSInteger point = [dic[@"data"] integerValue];
                         NSLog(@"%ld", (long)point);
                         
-                        if (point >= albumPoint) {
-                            [self buyAlbum];
+                        if (point >= wself->albumPoint) {
+                            [wself buyAlbum];
                         } else {
-                            [self showCustomAlert: @"你的P點不足，前往購點?" option: @"buyPoint"];
+                            [wself showCustomAlert: @"你的P點不足，前往購點?" option: @"buyPoint"];
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -1316,7 +1316,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI buyalbum: [wTools getUserID]
                                         token: [wTools getUserToken]
@@ -1355,24 +1355,24 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor firstMain];
                         
-                        [self.view makeToast: @"成功加入收藏"
+                        [wself.view makeToast: @"成功加入收藏"
                                     duration: 2.0
                                     position: CSToastPositionBottom
                                        style: style];
                         
-                        [self checkAlbumCollectTask];
+                        [wself checkAlbumCollectTask];
                         
-                        isCollected = YES;
+                        wself->isCollected = YES;
                         
                         //[self retrieveAlbum];
                     } else if ([dic[@"result"] intValue] == 2) {
-                        [self showCustomErrorAlert: @"已擁有該相本"];
+                        [wself showCustomErrorAlert: @"已擁有該相本"];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];                        
-                        [self showCustomErrorAlert: msg];
+                        [wself showCustomErrorAlert: msg];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -1434,19 +1434,19 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI doTask2: [wTools getUserID]
                                        token: [wTools getUserToken]
-                                    task_for: task_for
+                                    task_for: wself->task_for
                                     platform: @"apple"
                                         type: @"album"
-                                     type_id: self.albumId];
+                                     type_id: wself.albumId];
         
         NSLog(@"User ID: %@", [wTools getUserID]);
         NSLog(@"Token: %@", [wTools getUserToken]);
-        NSLog(@"Task_For: %@", task_for);
-        NSLog(@"Album ID: %@", self.albumId);
+        NSLog(@"Task_For: %@", wself->task_for);
+        NSLog(@"Album ID: %@", wself.albumId);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1467,7 +1467,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"AlbumDetailViewController");
                     NSLog(@"checkPoint");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"doTask2"
                                              row: 0
                                          eventId: @""];
@@ -1475,55 +1475,57 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([data[@"result"] intValue] == 1) {
-                        
-                        missionTopicStr = data[@"data"][@"task"][@"name"];
-                        NSLog(@"name: %@", missionTopicStr);
-                        
-                        rewardType = data[@"data"][@"task"][@"reward"];
-                        NSLog(@"reward type: %@", rewardType);
-                        
-                        rewardValue = data[@"data"][@"task"][@"reward_value"];
-                        NSLog(@"reward value: %@", rewardValue);
-                        
-                        eventUrl = data[@"data"][@"event"][@"url"];
-                        NSLog(@"event: %@", eventUrl);
-                        
-                        restriction = data[@"data"][@"task"][@"restriction"];
-                        NSLog(@"restriction: %@", restriction);
-                        
-                        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
-                        NSLog(@"restrictionValue: %@", restrictionValue);
-                        
-                        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
-                        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
-                        
-                        [self showAlertPointView];
-                        [self saveCollectInfoToDevice: NO];
-                        [self retrieveAlbum];
-                        
-                        //[self getPointStore];
-                        
-                    } else if ([data[@"result"] intValue] == 2) {
-                        NSLog(@"message: %@", data[@"message"]);
-                        
-                        [self saveCollectInfoToDevice: YES];
-                        
-                    } else if ([data[@"result"] intValue] == 0) {
-                        NSLog(@"失敗： %@", data[@"message"]);
-                        
-                        [self saveCollectInfoToDevice: YES];
-                    } else if ([data[@"result"] intValue] == 3) {
-                        NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processCheckPointResult:data];
                 }
             }
         });
     });
 }
-
+- (void)processCheckPointResult:(NSDictionary *)data {
+    if ([data[@"result"] intValue] == 1) {
+        
+        missionTopicStr = data[@"data"][@"task"][@"name"];
+        NSLog(@"name: %@", missionTopicStr);
+        
+        rewardType = data[@"data"][@"task"][@"reward"];
+        NSLog(@"reward type: %@", rewardType);
+        
+        rewardValue = data[@"data"][@"task"][@"reward_value"];
+        NSLog(@"reward value: %@", rewardValue);
+        
+        eventUrl = data[@"data"][@"event"][@"url"];
+        NSLog(@"event: %@", eventUrl);
+        
+        restriction = data[@"data"][@"task"][@"restriction"];
+        NSLog(@"restriction: %@", restriction);
+        
+        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
+        NSLog(@"restrictionValue: %@", restrictionValue);
+        
+        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
+        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
+        
+        [self showAlertPointView];
+        [self saveCollectInfoToDevice: NO];
+        [self retrieveAlbum];
+        
+        //[self getPointStore];
+        
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+        
+        [self saveCollectInfoToDevice: YES];
+        
+    } else if ([data[@"result"] intValue] == 0) {
+        NSLog(@"失敗： %@", data[@"message"]);
+        
+        [self saveCollectInfoToDevice: YES];
+    } else if ([data[@"result"] intValue] == 3) {
+        NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)saveCollectInfoToDevice: (BOOL)isCollect
 {
     if ([task_for isEqualToString: @"collect_free_album"]) {
@@ -1564,7 +1566,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI getreportintentlist: [wTools getUserID]
                                                    token: [wTools getUserToken]];
@@ -1586,7 +1588,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"AlbumDetailViewController");
                     NSLog(@"insertReport");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getreportintentlist"
                                              row: 0
                                          eventId: @""];
@@ -1597,29 +1599,32 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        reportIntentList = dic[@"data"];
-                        SelectBarViewController *mv = [[SelectBarViewController alloc] initWithNibName: @"SelectBarViewController" bundle: nil];
-                        
-                        NSMutableArray *strArr = [NSMutableArray new];
-                        
-                        for (int i = 0; i < reportIntentList.count; i++) {
-                            [strArr addObject: reportIntentList[i][@"name"]];
-                        }
-                        mv.data = strArr;
-                        mv.delegate = self;
-                        mv.topViewController = self;
-                        [self wpresentPopupViewController: mv animated: YES completion: nil];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processReportResult:dic];
                 }
             }
         });
     });
+}
+- (void)processReportResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        reportIntentList = dic[@"data"];
+        SelectBarViewController *mv = [[SelectBarViewController alloc] initWithNibName: @"SelectBarViewController" bundle: nil];
+        
+        NSMutableArray *strArr = [NSMutableArray new];
+        
+        for (int i = 0; i < reportIntentList.count; i++) {
+            [strArr addObject: reportIntentList[i][@"name"]];
+        }
+        mv.data = strArr;
+        mv.delegate = self;
+        mv.topViewController = self;
+        [self wpresentPopupViewController: mv animated: YES completion: nil];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
 }
 
 - (void)SaveDataRow:(NSInteger)row {
@@ -1747,12 +1752,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)retrieveAlbum {
     NSLog(@"retrieveAlbum");
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(isViewed) isv = isViewed;
+    __block typeof(self.albumId) aid = self.albumId;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSLog(@"isViewed: %d", isViewed);
+        NSLog(@"isViewed: %d", isv);
         
-        NSString *viewedString = [NSString stringWithFormat: @"%d", isViewed];
-        NSString *response = [boxAPI retrievealbump: self.albumId
+        NSString *viewedString = [NSString stringWithFormat: @"%d", isv];
+        NSString *response = [boxAPI retrievealbump: aid
                                                 uid: [wTools getUserID]
                                               token: [wTools getUserToken]
                                              viewed: viewedString];
@@ -2315,7 +2321,25 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - insertAlbumToLikes
-
+- (void)processInsertAlbumLikesResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        likesInt++;
+        
+        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
+        self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
+        
+        isLikes = !isLikes;
+        NSLog(@"isLikes: %d", isLikes);
+        
+        [self retrieveAlbum];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        [self showCustomErrorAlert: msg];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)insertAlbumToLikes
 {
     NSLog(@"insertAlbumToLikes");
@@ -2328,7 +2352,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI insertAlbum2Likes: [wTools getUserID]
                                                  token: [wTools getUserToken]
@@ -2361,29 +2385,29 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        likesInt++;
-                        
-                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
-                        self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
-                        
-                        isLikes = !isLikes;
-                        NSLog(@"isLikes: %d", isLikes);
-                        
-                        [self retrieveAlbum];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        [self showCustomErrorAlert: msg];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processInsertAlbumLikesResult:dic];
                 }
             }
         });
     });
 }
-
+- (void)processDeleteAlbumLikesResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        likesInt--;
+        
+        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_dark"] forState: UIControlStateNormal];
+        self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
+        
+        isLikes = !isLikes;
+        
+        [self retrieveAlbum];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@", dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)deleteAlbumToLikes
 {
     NSLog(@"deleteAlbumToLikes");
@@ -2397,9 +2421,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI deleteAlbum2Likes: [wTools getUserID] token: [wTools getUserToken] albumId: self.albumId];
+        NSString *response = [boxAPI deleteAlbum2Likes: [wTools getUserID] token: [wTools getUserToken] albumId: wself.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -2419,7 +2443,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"AlbumDetailViewController");
                     NSLog(@"deleteAlbumToLikes");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"deleteAlbum2Likes"
                                              row: 0
                                          eventId: @""];
@@ -2427,21 +2451,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        likesInt--;
-                        
-                        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_dark"] forState: UIControlStateNormal];
-                        self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
-                        
-                        isLikes = !isLikes;
-                        
-                        [self retrieveAlbum];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@", dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processDeleteAlbumLikesResult:dic];
                 }
             }
         });

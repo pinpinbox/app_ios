@@ -10,11 +10,6 @@
 
 @implementation JCCollectionFooterView
 
-- (void)awakeFromNib
-{
-    
-}
-
 - (void)prepareForReuse
 {
     [super prepareForReuse];

@@ -200,15 +200,15 @@
     [self setNeedsLayout];
 }
 
--(void)setSubviewFloatMargin:(CGFloat)subviewSize minMargin:(CGFloat)minMargin
-{
-    [self setSubviewsSize:subviewSize minSpace:minMargin maxSpace:CGFLOAT_MAX];
-}
-
--(void)setSubviewFloatMargin:(CGFloat)subviewSize minMargin:(CGFloat)minMargin inSizeClass:(MySizeClass)sizeClass
-{
-    [self setSubviewsSize:subviewSize minSpace:minMargin maxSpace:CGFLOAT_MAX inSizeClass:sizeClass];
-}
+//-(void)setSubviewFloatMargin:(CGFloat)subviewSize minMargin:(CGFloat)minMargin
+//{
+//    [self setSubviewsSize:subviewSize minSpace:minMargin maxSpace:CGFLOAT_MAX];
+//}
+//
+//-(void)setSubviewFloatMargin:(CGFloat)subviewSize minMargin:(CGFloat)minMargin inSizeClass:(MySizeClass)sizeClass
+//{
+//    [self setSubviewsSize:subviewSize minSpace:minMargin maxSpace:CGFLOAT_MAX inSizeClass:sizeClass];
+//}
 
 
 

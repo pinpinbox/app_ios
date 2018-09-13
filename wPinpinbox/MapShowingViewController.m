@@ -73,7 +73,40 @@
 - (IBAction)dismissBtnPress:(id)sender {    
     [self slideOut];
 }
-
+- (void)processGeoDataResult:(NSDictionary *)locationData {
+    
+    if (locationData == nil) {
+        NSLog(@"locationData == nil");
+    } else {
+        NSLog(@"locationData != nil");
+        
+        if (locationData) {
+            if (locationData[@"results"]) {
+                NSArray *result = locationData[@"results"];
+                
+                if (result.count > 0) {
+                    NSDictionary *dic = result[0];
+                    NSDictionary *location = dic[@"geometry"][@"location"];
+                    lat = [location[@"lat"] floatValue];
+                    lon = [location[@"lng"] floatValue];
+                    
+                    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(lat, lon), 3000, 3000);
+                    [self.mapView setRegion: [self.mapView regionThatFits: region] animated: YES];
+                    
+                    NSLog(@"formatted_address: %@", dic[@"formatted_address"]);
+                    NSString *formattedAddress = dic[@"formatted_address"];
+                    
+                    // Add an annotation
+                    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+                    point.coordinate = CLLocationCoordinate2DMake(lat, lon);
+                    point.title = formattedAddress;
+                    
+                    [self.mapView addAnnotation: point];
+                }
+            }
+        }
+    }
+}
 - (void)slideIn {
     self.view.frame = [[UIScreen mainScreen] bounds];
     
@@ -126,10 +159,10 @@
     // MapView Data Setting
     if (![self.locationStr isEqualToString:@""]) {
         //[MBProgressHUD showHUDAddedTo: self.view animated: YES];
-        
+        __block typeof(self) wself = self;
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             
-            NSString *respone=[boxAPI api_GET:[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?address=%@&sensor=false", self.locationStr] ];
+            NSString *respone=[boxAPI api_GET:[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?address=%@&sensor=false", wself.locationStr] ];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 //[MBProgressHUD hideHUDForView: self.view animated: YES];
@@ -143,38 +176,8 @@
                     locationData = [dic mutableCopy];
                     
                     NSLog(@"locationData: %@", locationData);
+                    [wself processGeoDataResult:locationData];
                     
-                    if (locationData == nil) {
-                        NSLog(@"locationData == nil");
-                    } else {
-                        NSLog(@"locationData != nil");
-                        
-                        if (locationData) {
-                            if (locationData[@"results"]) {
-                                NSArray *result = locationData[@"results"];
-                                
-                                if (result.count > 0) {
-                                    NSDictionary *dic = result[0];
-                                    NSDictionary *location = dic[@"geometry"][@"location"];
-                                    lat = [location[@"lat"] floatValue];
-                                    lon = [location[@"lng"] floatValue];
-                                    
-                                    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(lat, lon), 3000, 3000);
-                                    [self.mapView setRegion: [self.mapView regionThatFits: region] animated: YES];
-                                    
-                                    NSLog(@"formatted_address: %@", dic[@"formatted_address"]);
-                                    NSString *formattedAddress = dic[@"formatted_address"];
-                                    
-                                    // Add an annotation
-                                    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-                                    point.coordinate = CLLocationCoordinate2DMake(lat, lon);
-                                    point.title = formattedAddress;
-                                    
-                                    [self.mapView addAnnotation: point];
-                                }
-                            }
-                        }
-                    }
                 }
             });
         });

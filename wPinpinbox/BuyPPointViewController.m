@@ -21,7 +21,7 @@
 
 @interface BuyPPointViewController () <SFSafariViewControllerDelegate, UIGestureRecognizerDelegate>
 {
-    NSString *pointstr;
+    //NSString *pointstr;
     NSDictionary *pointlist;
     NSArray *listdata;
     NSArray *totalArray;
@@ -166,7 +166,69 @@
         }
     }
 }
-
+- (void)processPointStoreResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        pointlist = [dic[@"data"] mutableCopy];
+        
+        NSMutableArray *testarr=[NSMutableArray new];
+        NSMutableArray *testarr2=[NSMutableArray new];
+        NSMutableArray *testarr3 = [NSMutableArray new];
+        
+        for (NSDictionary *pointdic in pointlist) {
+            NSString *platform_flag = pointdic[@"platform_flag"];
+            NSString *obtain = [pointdic[@"obtain"] stringValue];
+            NSString *total = pointdic[@"total"];
+            
+            NSArray *strArray = [total componentsSeparatedByString: @"."];
+            NSString *newTotal = [strArray objectAtIndex: 0];
+            
+            [testarr addObject: platform_flag];
+            [testarr2 addObject: obtain];
+            [testarr3 addObject: newTotal];
+        }
+        datakey = [NSArray arrayWithArray:testarr];
+        NSLog(@"datakey: %@", datakey);
+        
+        listdata = [NSArray arrayWithArray:testarr2];
+        NSLog(@"listdata: %@", listdata);
+        
+        totalArray = [NSArray arrayWithArray: testarr3];
+        NSLog(@"totalArray: %@", totalArray);
+        
+        //NSString *str = [NSString stringWithFormat: @"還有%ldP點可使用", (long)point];
+        //self.userPointLabel.text = str;
+        
+        // Setup Btn Title for P Point
+        [self.firstBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[0]]
+                       forState: UIControlStateNormal];
+        [self.secondBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[1]]
+                        forState: UIControlStateNormal];
+        [self.thirdBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[2]]
+                       forState: UIControlStateNormal];
+        [self.fourthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[3]]
+                        forState: UIControlStateNormal];
+        [self.fifthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[4]]
+                       forState: UIControlStateNormal];
+        
+        if (pointlist.count <= 5) {
+            self.sixthBtn.hidden = YES;
+        } else {
+            self.sixthBtn.hidden = NO;
+            [self.sixthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[5]]
+                           forState: UIControlStateNormal];
+        }
+        self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[0]];
+        
+        selectproductid = datakey[0];
+        
+        [self getUrPoints];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)getPointStore
 {
     NSLog(@"getPointStore");
@@ -182,6 +244,7 @@
     }
     
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getpointstore: [userPrefs objectForKey: @"id"]
                                             token: [userPrefs objectForKey: @"token"]];
@@ -204,7 +267,7 @@
                     NSLog(@"BuyPPointViewController");
                     NSLog(@"getPointStore");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getpointstore"
                                  selectProductId: @""
                                    dataSignature: @""];
@@ -213,67 +276,7 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        pointlist = [dic[@"data"] mutableCopy];
-                        
-                        NSMutableArray *testarr=[NSMutableArray new];
-                        NSMutableArray *testarr2=[NSMutableArray new];
-                        NSMutableArray *testarr3 = [NSMutableArray new];
-                        
-                        for (NSDictionary *pointdic in pointlist) {
-                            NSString *platform_flag = pointdic[@"platform_flag"];
-                            NSString *obtain = [pointdic[@"obtain"] stringValue];
-                            NSString *total = pointdic[@"total"];
-                            
-                            NSArray *strArray = [total componentsSeparatedByString: @"."];
-                            NSString *newTotal = [strArray objectAtIndex: 0];
-                            
-                            [testarr addObject: platform_flag];
-                            [testarr2 addObject: obtain];
-                            [testarr3 addObject: newTotal];
-                        }
-                        datakey = [NSArray arrayWithArray:testarr];
-                        NSLog(@"datakey: %@", datakey);
-                        
-                        listdata = [NSArray arrayWithArray:testarr2];
-                        NSLog(@"listdata: %@", listdata);
-                        
-                        totalArray = [NSArray arrayWithArray: testarr3];
-                        NSLog(@"totalArray: %@", totalArray);
-                        
-                        //NSString *str = [NSString stringWithFormat: @"還有%ldP點可使用", (long)point];
-                        //self.userPointLabel.text = str;
-                        
-                        // Setup Btn Title for P Point
-                        [self.firstBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[0]]
-                                       forState: UIControlStateNormal];
-                        [self.secondBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[1]]
-                                        forState: UIControlStateNormal];
-                        [self.thirdBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[2]]
-                                       forState: UIControlStateNormal];
-                        [self.fourthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[3]]
-                                        forState: UIControlStateNormal];
-                        [self.fifthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[4]]
-                                       forState: UIControlStateNormal];
-                        
-                        if (pointlist.count <= 5) {
-                            self.sixthBtn.hidden = YES;
-                        } else {
-                            self.sixthBtn.hidden = NO;
-                            [self.sixthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[5]]
-                                           forState: UIControlStateNormal];
-                        }
-                        self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[0]];
-                        
-                        selectproductid = datakey[0];
-                        
-                        [self getUrPoints];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processPointStoreResult:dic];
                 }
             }
         });
@@ -283,8 +286,9 @@
 - (void)getUrPoints {
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    __block typeof(datakey) wd = datakey;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        pointstr = [boxAPI geturpoints: [userPrefs objectForKey: @"id"]
+        NSString *pointstr = [boxAPI geturpoints: [userPrefs objectForKey: @"id"]
                                  token: [userPrefs objectForKey: @"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -308,14 +312,14 @@
                     [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                     [userPrefs synchronize];
                     
-                    pointstr = [NSString stringWithFormat:@"%ld",(long)point];
+                    //pointstr = [NSString stringWithFormat:@"%ld",(long)point];
                     
                     NSString *str = [NSString stringWithFormat: @"還有%ldP點可使用", (long)point];
                     NSLog(@"str: %@", str);
                     self.userPointLabel.text = str;
                     
                     [InAppPurchaseManager getInstance].delegate = self;
-                    [InAppPurchaseManager getInstance].priceid = datakey;
+                    [InAppPurchaseManager getInstance].priceid = wd;//datakey;
                     [[InAppPurchaseManager getInstance] loadStore]; //讀取商店資訊
                 }
             }
@@ -663,11 +667,12 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(selectProductId) sid = selectProductId;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){        
         NSString *response = [boxAPI getpayload: [wTools getUserID]
                                           token: [wTools getUserToken]
-                                      productid: selectproductid];
+                                      productid: sid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -698,10 +703,10 @@
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        orderid = dic[@"data"];
-                        NSLog(@"orderid: %@", orderid);
+                        wself->orderid = dic[@"data"];
+                        NSLog(@"orderid: %@", wself->orderid);
                         
-                        [[InAppPurchaseManager getInstance] purchaseProUpgrade2:selectproductid];
+                        [[InAppPurchaseManager getInstance] purchaseProUpgrade2:sid];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
@@ -789,11 +794,11 @@
     NSLog(@"finishPurchase");
     //[wTools ShowMBProgressHUD];
     NSLog(@"after wTools ShowMBProgressHUD");
-    
+    __block typeof(orderid) oid = orderid;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI finishpurchased: [wTools getUserID]
                                                token: [wTools getUserToken]
-                                             orderid: orderid
+                                             orderid: oid
                                        dataSignature: str];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -824,7 +829,7 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        pointstr = [dic[@"data"] stringValue];
+                        NSString *pointstr = [dic[@"data"] stringValue];
                         NSLog(@"old pointstr: %@", pointstr);
                         
                         NSString *str = [NSString stringWithFormat: @"還有%@P點可使用", pointstr];
@@ -885,7 +890,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI doTask1: [wTools getUserID]
@@ -915,7 +920,7 @@
                     NSLog(@"BuyPPointViewController");
                     NSLog(@"checkPoint");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"doTask1"
                                  selectProductId: @""
                                    dataSignature: @""];
@@ -923,51 +928,54 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([data[@"result"] intValue] == 1) {
-                        missionTopicStr = data[@"data"][@"task"][@"name"];
-                        NSLog(@"name: %@", missionTopicStr);
-                        
-                        rewardType = data[@"data"][@"task"][@"reward"];
-                        NSLog(@"reward type: %@", rewardType);
-                        
-                        rewardValue = data[@"data"][@"task"][@"reward_value"];
-                        NSLog(@"reward value: %@", rewardValue);
-                        
-                        eventUrl = data[@"data"][@"event"][@"url"];
-                        NSLog(@"event: %@", eventUrl);
-                        
-                        restriction = data[@"data"][@"task"][@"restriction"];
-                        NSLog(@"restriction: %@", restriction);
-                        
-                        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
-                        NSLog(@"restrictionValue: %@", restrictionValue);
-                        
-                        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
-                        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
-                        [self showAlertView];
-                        [self pointsUPdate];
-                    } else if ([data[@"result"] intValue] == 2) {
-                        NSLog(@"message: %@", data[@"message"]);
-                        
-                        // Save data for first collect album
-                        BOOL firsttime_buy_point = YES;
-                        
-                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                        [defaults setObject: [NSNumber numberWithBool: firsttime_buy_point]
-                                     forKey: @"firsttime_buy_point"];
-                        [defaults synchronize];
-                    } else if ([data[@"result"] intValue] == 0) {
-                        NSString *errorMessage = data[@"message"];
-                        NSLog(@"error messsage: %@", errorMessage);
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processCheckPointResult:data];
                 }
             }
         });
     });
 }
-
+- (void)processCheckPointResult:(NSDictionary *)data {
+    
+    if ([data[@"result"] intValue] == 1) {
+        missionTopicStr = data[@"data"][@"task"][@"name"];
+        NSLog(@"name: %@", missionTopicStr);
+        
+        rewardType = data[@"data"][@"task"][@"reward"];
+        NSLog(@"reward type: %@", rewardType);
+        
+        rewardValue = data[@"data"][@"task"][@"reward_value"];
+        NSLog(@"reward value: %@", rewardValue);
+        
+        eventUrl = data[@"data"][@"event"][@"url"];
+        NSLog(@"event: %@", eventUrl);
+        
+        restriction = data[@"data"][@"task"][@"restriction"];
+        NSLog(@"restriction: %@", restriction);
+        
+        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
+        NSLog(@"restrictionValue: %@", restrictionValue);
+        
+        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
+        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
+        [self showAlertView];
+        [self pointsUPdate];
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+        
+        // Save data for first collect album
+        BOOL firsttime_buy_point = YES;
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject: [NSNumber numberWithBool: firsttime_buy_point]
+                     forKey: @"firsttime_buy_point"];
+        [defaults synchronize];
+    } else if ([data[@"result"] intValue] == 0) {
+        NSString *errorMessage = data[@"message"];
+        NSLog(@"error messsage: %@", errorMessage);
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 #pragma mark - Custom AlertView for Getting Point
 - (void)showAlertView
 {
@@ -1081,7 +1089,7 @@
     // Call geturpoints for right value
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        pointstr = [boxAPI geturpoints: [userPrefs objectForKey: @"id"]
+        NSString *pointstr = [boxAPI geturpoints: [userPrefs objectForKey: @"id"]
                                  token: [userPrefs objectForKey: @"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1107,8 +1115,8 @@
                     [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                     [userPrefs synchronize];
                     
-                    pointstr = [NSString stringWithFormat: @"%ld", (long)point];
-                    NSLog(@"new pointstr: %@", pointstr);
+                    //pointstr = [NSString stringWithFormat: @"%ld", (long)point];
+                    //NSLog(@"new pointstr: %@", pointstr);
                     
                     //_mypoint.text=pointstr;
                     

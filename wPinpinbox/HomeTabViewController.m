@@ -642,7 +642,67 @@ sourceController:(UIViewController *)source
         [self updateList];
     }
 }
-
+- (void)processUpdateListResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        //NSLog(@"dic: %@", dic[@"data"]);
+        
+        NSLog(@"Before");
+        NSLog(@"nextId: %ld", (long)nextId);
+        
+        if (nextId == 0) {
+            //[pictures removeAllObjects];
+            pictures = [NSMutableArray new];
+        }
+        
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
+            s++;
+            [pictures addObject: picture];
+        }
+        
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        
+        NSLog(@"After");
+        NSLog(@"nextId: %ld", (long)nextId);
+        NSLog(@"s: %d", s);
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0) {
+            isLoading = NO;
+        }
+        
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        
+        [self.refreshControl endRefreshing];
+        [self.homeCollectionView reloadData];
+        
+        isReloading = NO;
+        
+        if (isScrollingDown) {
+            isScrollingDown = NO;
+        } else {
+            [self checkAd];
+        }
+        
+        NSLog(@"-------------------------");
+        NSLog(@"nextId: %ld", (long)nextId);
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    }
+}
 - (void)updateList {
     NSLog(@"");
     NSLog(@"updateList");
@@ -665,12 +725,13 @@ sourceController:(UIViewController *)source
     NSLog(@"limit: %@", limit);
     
     [data setValue: limit forKey: @"limit"];
-    
+    __block typeof(rankType) rtype = rankType;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI updatelist: [wTools getUserID]
                                           token: [wTools getUserToken]
                                            data: data
-                                           rank: rankType];
+                                           rank: rtype];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -684,12 +745,12 @@ sourceController:(UIViewController *)source
                     NSLog(@"HomeTabViewController");
                     NSLog(@"updateList");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"updatelist"
                                          eventId: @""
                                             text: @""];
-                    [self.refreshControl endRefreshing];
-                    isReloading = NO;
+                    [wself.refreshControl endRefreshing];
+                    wself->isReloading = NO;
                     
                 } else {
                     NSLog(@"Get Real Response");
@@ -698,75 +759,40 @@ sourceController:(UIViewController *)source
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        //NSLog(@"dic: %@", dic[@"data"]);
-                        
-                        NSLog(@"Before");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        
-                        if (nextId == 0) {
-                            //[pictures removeAllObjects];
-                            pictures = [NSMutableArray new];
-                        }
-                        
-                        // s for counting how much data is loaded
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
-                            s++;
-                            [pictures addObject: picture];
-                        }
-                        
-                        // If data keeps loading then the nextId is accumulating
-                        nextId = nextId + s;
-                        
-                        NSLog(@"After");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                        NSLog(@"s: %d", s);
-                        
-                        // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (nextId >= 0) {
-                            isLoading = NO;
-                        }
-                        
-                        // If s is 0, that means dic data is empty.
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        
-                        [self.refreshControl endRefreshing];
-                        [self.homeCollectionView reloadData];
-                        
-                        isReloading = NO;
-                        
-                        if (isScrollingDown) {
-                            isScrollingDown = NO;
-                        } else {
-                            [self checkAd];
-                        }
-                        
-                        NSLog(@"-------------------------");
-                        NSLog(@"nextId: %ld", (long)nextId);
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    }
+                    
                 }
             } else {
-                [self.refreshControl endRefreshing];
-                isReloading = NO;
+                [wself.refreshControl endRefreshing];
+                wself->isReloading = NO;
             }
         });
     });
 }
 
 #pragma mark - Web Service - GetAdList
+- (void)processCheckAdResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"GetAd Success");
+        adArray = dic[@"data"];
+        
+        // Check array data is 0 or more than 0
+        NSLog(@"adArray: %@", adArray);
+        NSLog(@"adArray.count: %lu", (unsigned long)adArray.count);
+        
+        [self.bannerCollectionView reloadData];
+        self.pageControl.numberOfPages = adArray.count;
+        self.pageControl.hidden = NO;
+        
+        [self getCategoryList];
+        
+        //[self checkFirstTimeLogin];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)checkAd {
     NSLog(@"");
     NSLog(@"");
@@ -781,7 +807,7 @@ sourceController:(UIViewController *)source
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getAdList: [wTools getUserID]
                                          token: [wTools getUserToken]
@@ -789,7 +815,7 @@ sourceController:(UIViewController *)source
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [MBProgressHUD hideHUDForView: wself.view animated: YES];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -807,7 +833,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"HomeTabViewController");
                     NSLog(@"checkAd");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getAdList"
                                          eventId: @""
                                             text: @""];
@@ -816,33 +842,36 @@ sourceController:(UIViewController *)source
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"GetAd Success");
-                        adArray = dic[@"data"];
-                        
-                        // Check array data is 0 or more than 0
-                        NSLog(@"adArray: %@", adArray);
-                        NSLog(@"adArray.count: %lu", (unsigned long)adArray.count);
-                        
-                        [self.bannerCollectionView reloadData];
-                        self.pageControl.numberOfPages = adArray.count;
-                        self.pageControl.hidden = NO;
-                        
-                        [self getCategoryList];
-                        
-                        //[self checkFirstTimeLogin];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processCheckAdResult:dic];
                 }
             }
         });
     });
 }
-
+- (void)processGetCategoryListResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"dic: %@", dic);
+        NSLog(@"dic data: %@", dic[@"data"]);
+        categoryArray = [NSMutableArray arrayWithArray: dic[@"data"]];
+        
+        followUserLabel.hidden = NO;
+        followUserHorzView.hidden = NO;
+        followAlbumLabel.hidden = NO;
+        followAlbumHorzView.hidden = NO;
+        
+        recommendationLabel.hidden = NO;
+        recommendationHorzView.hidden = NO;
+        
+        //[self.categoryCollectionView reloadData];
+        
+        [self getTheMeArea];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)getCategoryList {
     NSLog(@"getCategoryList");
     
@@ -855,6 +884,7 @@ sourceController:(UIViewController *)source
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrievecatgeorylist: [wTools getUserID] token: [wTools getUserToken]];
         
@@ -877,7 +907,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"HomeTabVC");
                     NSLog(@"getCategoryList");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"retrievecatgeorylist"
                                          eventId: @""
                                             text: @""];
@@ -886,34 +916,76 @@ sourceController:(UIViewController *)source
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"dic: %@", dic);
-                        NSLog(@"dic data: %@", dic[@"data"]);
-                        categoryArray = [NSMutableArray arrayWithArray: dic[@"data"]];
-                        
-                        followUserLabel.hidden = NO;
-                        followUserHorzView.hidden = NO;
-                        followAlbumLabel.hidden = NO;
-                        followAlbumHorzView.hidden = NO;
-                        
-                        recommendationLabel.hidden = NO;
-                        recommendationHorzView.hidden = NO;
-                        
-                        //[self.categoryCollectionView reloadData];
-                        
-                        [self getTheMeArea];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processGetCategoryListResult:dic];
                 }
             }
         });
     });
 }
-
+- (void)processGetMeAreaResult:(NSDictionary *)dic {
+    
+    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+        NSLog(@"SYSTEM_OK");
+        NSLog(@"dic: %@", dic);
+        getTheMeAreaDic = dic;
+        
+        NSLog(@"dic data albumexplore: %@", dic[@"data"][@"albumexplore"]);
+        NSLog(@"data themearea: %@", dic[@"data"][@"themearea"]);
+        
+        NSLog(@"Before");
+        NSLog(@"categoryArray: %@", categoryArray);
+        
+        NSString *colorHexStr = dic[@"data"][@"themearea"][@"colorhex"];
+        NSString *nameStr = dic[@"data"][@"themearea"][@"name"];
+        NSString *imageStr = dic[@"data"][@"themearea"][@"image_360x360"];
+        
+        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+        [dic setObject: [NSNumber numberWithInteger: -1] forKey: @"categoryarea_id"];
+        [dic setObject: colorHexStr forKey: @"colorhex"];
+        [dic setObject: nameStr forKey: @"name"];
+        [dic setObject: imageStr forKey: @"image_360x360"];
+        NSLog(@"dic: %@", dic);
+        
+        NSMutableDictionary *dicData = [[NSMutableDictionary alloc] init];
+        [dicData setObject: dic forKey: @"categoryarea"];
+        
+        NSLog(@"dicData: %@", dicData);
+        
+        [categoryArray insertObject: dicData atIndex: 0];
+        NSLog(@"After");
+        NSLog(@"categoryArray: %@", categoryArray);
+        
+        [self.categoryCollectionView reloadData];
+        
+        [self showUserRecommendedList];
+        //                        [self checkFirstTimeLogin];
+    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+        NSLog(@"SYSTEM_ERROR");
+        NSLog(@"失敗：%@",dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+        NSLog(@"TOKEN_ERROR");
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor thirdPink];
+        
+        [self.view makeToast: @"用戶驗證異常請重新登入"
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+        
+        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                         target: self
+                                       selector: @selector(logOut)
+                                       userInfo: nil
+                                        repeats: NO];
+    }
+}
 - (void)getTheMeArea {
     NSLog(@"\ngetTheMeArea");
     
@@ -926,6 +998,7 @@ sourceController:(UIViewController *)source
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getTheMeArea: [wTools getUserToken] userId: [wTools getUserID]];
         
@@ -940,7 +1013,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"HomeTabVC");
                     NSLog(@"getTheMeArea");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getTheMeArea"
                                          eventId: @""
                                             text: @""];
@@ -949,67 +1022,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"Get response from getTheMeArea");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"SYSTEM_OK");
-                        NSLog(@"dic: %@", dic);
-                        getTheMeAreaDic = dic;
-                        
-                        NSLog(@"dic data albumexplore: %@", dic[@"data"][@"albumexplore"]);
-                        NSLog(@"data themearea: %@", dic[@"data"][@"themearea"]);
-                        
-                        NSLog(@"Before");
-                        NSLog(@"categoryArray: %@", categoryArray);
-                        
-                        NSString *colorHexStr = dic[@"data"][@"themearea"][@"colorhex"];
-                        NSString *nameStr = dic[@"data"][@"themearea"][@"name"];
-                        NSString *imageStr = dic[@"data"][@"themearea"][@"image_360x360"];
-                        
-                        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-                        [dic setObject: [NSNumber numberWithInteger: -1] forKey: @"categoryarea_id"];
-                        [dic setObject: colorHexStr forKey: @"colorhex"];
-                        [dic setObject: nameStr forKey: @"name"];
-                        [dic setObject: imageStr forKey: @"image_360x360"];
-                        NSLog(@"dic: %@", dic);
-                        
-                        NSMutableDictionary *dicData = [[NSMutableDictionary alloc] init];
-                        [dicData setObject: dic forKey: @"categoryarea"];
-                        
-                        NSLog(@"dicData: %@", dicData);
-                        
-                        [categoryArray insertObject: dicData atIndex: 0];
-                        NSLog(@"After");
-                        NSLog(@"categoryArray: %@", categoryArray);
-                        
-                        [self.categoryCollectionView reloadData];
-                        
-                        [self showUserRecommendedList];
-//                        [self checkFirstTimeLogin];
-                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"SYSTEM_ERROR");
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-                        NSLog(@"TOKEN_ERROR");
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
-                        
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
-                        
-                        [NSTimer scheduledTimerWithTimeInterval: 1.0
-                                                         target: self
-                                                       selector: @selector(logOut)
-                                                       userInfo: nil
-                                                        repeats: NO];
-                    }
+                    [wself processGetMeAreaResult:dic];
                 }
             }
         });
@@ -1021,9 +1034,23 @@ sourceController:(UIViewController *)source
 }
 
 #pragma mark - Get Recommended User List
+- (void)processUserRecommandedListResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        followUserData = [NSMutableArray arrayWithArray: dic[@"data"]];
+        NSLog(@"followUserData: %@", followUserData);
+        [self.followUserCollectionView reloadData];
+        
+        [self showAlbumRecommendedList];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)showUserRecommendedList {
     [wTools ShowMBProgressHUD];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = @"";
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -1045,7 +1072,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"HomeTabViewController");
                     NSLog(@"showUserRecommendedList");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"showUserRecommendedList"
                                          eventId: @""
                                             text: @""];
@@ -1057,27 +1084,30 @@ sourceController:(UIViewController *)source
                         return ;
                     }
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        followUserData = [NSMutableArray arrayWithArray: dic[@"data"]];
-                        NSLog(@"followUserData: %@", followUserData);
-                        [self.followUserCollectionView reloadData];
-                        
-                        [self showAlbumRecommendedList];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processUserRecommandedListResult:dic];
                 }
             }
         });
     });
 }
-
+- (void)processAlbumRecommandedListResult:(NSDictionary *)dic {
+    
+    if ([dic[@"result"] intValue] == 1) {
+        followAlbumData = [NSMutableArray arrayWithArray: dic[@"data"]];
+        NSLog(@"followAlbumData.count: %lu", (unsigned long)followAlbumData.count);
+        [self.followAlbumCollectionView reloadData];
+        [self checkFirstTimeLogin];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)showAlbumRecommendedList {
     [wTools ShowMBProgressHUD];
     
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = @"";
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -1119,17 +1149,7 @@ sourceController:(UIViewController *)source
                         return;
                     }
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        followAlbumData = [NSMutableArray arrayWithArray: dic[@"data"]];
-                        NSLog(@"followAlbumData.count: %lu", (unsigned long)followAlbumData.count);
-                        [self.followAlbumCollectionView reloadData];
-                        [self checkFirstTimeLogin];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processAlbumRecommandedListResult:dic];
                 }
             }
         });
@@ -1255,9 +1275,50 @@ sourceController:(UIViewController *)source
 }
 
 #pragma mark - Check Point Method
+- (void)processCheckPointResult:(NSDictionary *)data {
+    if ([data[@"result"] intValue] == 1) {
+        
+        missionTopicStr = data[@"data"][@"task"][@"name"];
+        //NSLog(@"name: %@", missionTopicStr);
+        
+        rewardType = data[@"data"][@"task"][@"reward"];
+        //NSLog(@"reward type: %@", rewardType);
+        
+        rewardValue = data[@"data"][@"task"][@"reward_value"];
+        //NSLog(@"reward value: %@", rewardValue);
+        
+        eventUrl = data[@"data"][@"event"][@"url"];
+        //NSLog(@"event: %@", eventUrl);
+        
+        restriction = data[@"data"][@"task"][@"restriction"];
+        //NSLog(@"restriction: %@", restriction);
+        
+        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
+        //NSLog(@"restrictionValue: %@", restrictionValue);
+        
+        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
+        //NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
+        
+        [self showAlertView];
+        [self getUrPoints];
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+        
+        // Save setting for login successfully
+        BOOL firsttime_login = YES;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject: [NSNumber numberWithBool: firsttime_login] forKey: @"firsttime_login"];
+        [defaults synchronize];
+    } else if ([data[@"result"] intValue] == 0) {
+        NSString *errorMessage = data[@"message"];
+        NSLog(@"error messsage: %@", errorMessage);
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)checkPoint {
     NSLog(@"checkPoint");
-    
+    __block typeof(self)wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI doTask1: [wTools getUserID]
                                        token: [wTools getUserToken]
@@ -1273,7 +1334,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"HomeTabViewController");
                     NSLog(@"checkPoint");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"doTask1"
                                          eventId: @""
                                             text: @""];
@@ -1282,45 +1343,7 @@ sourceController:(UIViewController *)source
                     
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([data[@"result"] intValue] == 1) {
-                        
-                        missionTopicStr = data[@"data"][@"task"][@"name"];
-                        //NSLog(@"name: %@", missionTopicStr);
-                        
-                        rewardType = data[@"data"][@"task"][@"reward"];
-                        //NSLog(@"reward type: %@", rewardType);
-                        
-                        rewardValue = data[@"data"][@"task"][@"reward_value"];
-                        //NSLog(@"reward value: %@", rewardValue);
-                        
-                        eventUrl = data[@"data"][@"event"][@"url"];
-                        //NSLog(@"event: %@", eventUrl);
-                        
-                        restriction = data[@"data"][@"task"][@"restriction"];
-                        //NSLog(@"restriction: %@", restriction);
-                        
-                        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
-                        //NSLog(@"restrictionValue: %@", restrictionValue);
-                        
-                        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
-                        //NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
-                        
-                        [self showAlertView];
-                        [self getUrPoints];
-                    } else if ([data[@"result"] intValue] == 2) {
-                        NSLog(@"message: %@", data[@"message"]);
-                        
-                        // Save setting for login successfully
-                        BOOL firsttime_login = YES;
-                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                        [defaults setObject: [NSNumber numberWithBool: firsttime_login] forKey: @"firsttime_login"];
-                        [defaults synchronize];
-                    } else if ([data[@"result"] intValue] == 0) {
-                        NSString *errorMessage = data[@"message"];
-                        NSLog(@"error messsage: %@", errorMessage);
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processCheckPointResult:data];
                 }
             }
         });
@@ -2697,15 +2720,51 @@ replacementString:(NSString *)string {
 //    }
 //    NSLog(@"isSearching: %d", isSearching);
 }
-
+- (void)processFilterUserContentResult:(NSDictionary *)dic text:(NSString *)text{
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"dic result boolValue is 1");
+        
+        if (nextUserId >= 0) {
+            isUserLoading = NO;
+        } else {
+            isUserLoading = YES;
+        }
+        
+        NSLog(@"");
+        NSLog(@"");
+        
+        userData = [NSMutableArray arrayWithArray:dic[@"data"]];
+        nextUserId = userData.count;
+        
+        //                        NSLog(@"userData: %@", userData);
+        NSLog(@"userData.count: %lu", (unsigned long)userData.count);
+        
+        if (userData.count == 0) {
+            if (!isNoInfoHorzViewCreate) {
+                [self addNoInfoViewOnHorizontalCollectionView: @"沒有符合關鍵字的創作人"];
+            }
+            noInfoHorzView.hidden = NO;
+        } else if (userData.count > 0) {
+            noInfoHorzView.hidden = YES;
+        }
+        [self.userCollectionView reloadData];
+        [self filterAlbumContentForSearchText: text];
+        
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)filterUserContentForSearchText: (NSString *)text {
     NSLog(@"filterUserContentForSearchText");
     NSLog(@"text: %@", text);
     
     NSString *string = text;
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        isUserLoading = YES;
+        wself->isUserLoading = YES;
         
         NSString *response = @"";
         
@@ -2732,9 +2791,9 @@ replacementString:(NSString *)string {
                     NSLog(@"SearchTableViewController");
                     NSLog(@"filterUserContentForSearchText");
                     
-                    [self dismissKeyboard];
+                    [wself dismissKeyboard];
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"filterUserContentForSearchText"
                                          eventId: @""
                                             text: text];
@@ -2754,53 +2813,51 @@ replacementString:(NSString *)string {
                         return;
                     }
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"dic result boolValue is 1");
-                        
-                        if (nextUserId >= 0) {
-                            isUserLoading = NO;
-                        } else {
-                            isUserLoading = YES;
-                        }
-                        
-                        NSLog(@"");
-                        NSLog(@"");
-                        
-                        userData = [NSMutableArray arrayWithArray:dic[@"data"]];
-                        nextUserId = userData.count;
-                        
-                        //                        NSLog(@"userData: %@", userData);
-                        NSLog(@"userData.count: %lu", (unsigned long)userData.count);
-                        
-                        if (userData.count == 0) {
-                            if (!isNoInfoHorzViewCreate) {
-                                [self addNoInfoViewOnHorizontalCollectionView: @"沒有符合關鍵字的創作人"];
-                            }
-                            noInfoHorzView.hidden = NO;
-                        } else if (userData.count > 0) {
-                            noInfoHorzView.hidden = YES;
-                        }
-                        [self.userCollectionView reloadData];
-                        [self filterAlbumContentForSearchText: text];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processFilterUserContentResult:dic text:text];
                 }
             }
         });
     });
 }
-
+- (void)processfilterAlbumContentResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"dic result boolValue is 1");
+        
+        if (nextAlbumId >= 0) {
+            isAlbumLoading = NO;
+        } else {
+            isAlbumLoading = YES;
+        }
+        NSLog(@"");
+        NSLog(@"");
+        
+        albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
+        nextAlbumId = albumData.count;
+        
+        if (albumData.count == 0) {
+            if (!isNoInfoVertViewCreate) {
+                [self addNoInfoViewOnVerticalCollectionView: @"沒有符合關鍵字的作品"];
+            }
+            noInfoVertView.hidden = NO;
+        } else if (albumData.count > 0) {
+            noInfoVertView.hidden = YES;
+        }
+        
+        [self.albumCollectionView reloadData];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)filterAlbumContentForSearchText: (NSString *)text {
     NSLog(@"filterAlbumContentForSearchText");
     NSLog(@"text: %@", text);
     NSString *string = text;
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        isAlbumLoading = YES;
+        wself->isAlbumLoading = YES;
         
         NSString *response = @"";
         
@@ -2824,9 +2881,9 @@ replacementString:(NSString *)string {
                     NSLog(@"SearchTableViewController");
                     NSLog(@"filterAlbumContentForSearchText");
                     
-                    [self dismissKeyboard];
+                    [wself dismissKeyboard];
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"filterAlbumContentForSearchText"
                                          eventId: @""
                                             text: text];
@@ -2845,36 +2902,7 @@ replacementString:(NSString *)string {
                         return;
                     }
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"dic result boolValue is 1");
-                        
-                        if (nextAlbumId >= 0) {
-                            isAlbumLoading = NO;
-                        } else {
-                            isAlbumLoading = YES;
-                        }
-                        NSLog(@"");
-                        NSLog(@"");
-                        
-                        albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
-                        nextAlbumId = albumData.count;
-                        
-                        if (albumData.count == 0) {
-                            if (!isNoInfoVertViewCreate) {
-                                [self addNoInfoViewOnVerticalCollectionView: @"沒有符合關鍵字的作品"];
-                            }
-                            noInfoVertView.hidden = NO;
-                        } else if (albumData.count > 0) {
-                            noInfoVertView.hidden = YES;
-                        }
-                        
-                        [self.albumCollectionView reloadData];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processfilterAlbumContentResult:dic];
                 }
             }
         });

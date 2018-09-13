@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 @protocol SelectBarDelegate <NSObject>
+@optional
 - (void)SaveDataRow:(NSInteger)row;
 - (void)cancelButtonPressed;
 @end

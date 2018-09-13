@@ -167,7 +167,49 @@
         [self getFollowToList];
     }
 }
-
+- (void)processFollowListResult:(NSDictionary *) dic{
+    if ([dic[@"result"] intValue] == 1) {
+        if (nextId == 0)
+            [followListData removeAllObjects];
+        
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *followData in [dic objectForKey: @"data"]) {
+            s++;
+            [followListData addObject: followData];
+        }
+        
+        NSLog(@"followListData: %@", followListData);
+        
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        NSLog(@"nextId is: %ld", (long)nextId);
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        
+        [self.refreshControl endRefreshing];
+        [self.collectionView reloadData];
+        
+        isReloading = NO;
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    }
+}
 - (void)getFollowToList {
     @try {
         [wTools ShowMBProgressHUD];
@@ -180,7 +222,7 @@
     }
     
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
         response = [boxAPI getFollowToList: [wTools getUserID]
@@ -207,58 +249,18 @@
                                     protocolName: @"getFollowToList"
                                           userId: @""
                                             name: @""];
-                    [self.refreshControl endRefreshing];
-                    isReloading = NO;
+                    [wself.refreshControl endRefreshing];
+                    wself->isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"dic: %@", dic);
+                    [wself processFollowListResult:dic];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        if (nextId == 0)
-                            [followListData removeAllObjects];
-                        
-                        // s for counting how much data is loaded
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *followData in [dic objectForKey: @"data"]) {
-                            s++;
-                            [followListData addObject: followData];
-                        }
-                        
-                        NSLog(@"followListData: %@", followListData);
-                        
-                        // If data keeps loading then the nextId is accumulating
-                        nextId = nextId + s;
-                        NSLog(@"nextId is: %ld", (long)nextId);
-                        
-                        // If nextId is bigger than 0, that means there are some data loaded already.
-                        if (nextId >= 0)
-                            isLoading = NO;
-                        
-                        // If s is 0, that means dic data is empty.
-                        if (s == 0) {
-                            isLoading = YES;
-                        }
-                        
-                        [self.refreshControl endRefreshing];
-                        [self.collectionView reloadData];
-                        
-                        isReloading = NO;
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        [self.refreshControl endRefreshing];
-                        isReloading = NO;
-                    }
                 }
             } else {
-                [self.refreshControl endRefreshing];
-                isReloading = NO;
+                [wself.refreshControl endRefreshing];
+                wself->isReloading = NO;
             }
         });
     });

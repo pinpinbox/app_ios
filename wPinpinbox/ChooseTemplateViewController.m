@@ -119,7 +119,32 @@
         [self getTemplateList];
     }
 }
-
+- (void)processTemplateListResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        int s = 0;
+        
+        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
+            s++;
+            [pictures addObject: picture];
+        }
+        nextId = nextId + s;
+        
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        if (s == 0)
+            isLoading = YES;
+        
+        NSLog(@"pictures: %@", pictures);
+        
+        [self.collectionView reloadData];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)getTemplateList
 {
     NSLog(@"getTemplateList");
@@ -138,13 +163,13 @@
     NSString *limit = [NSString stringWithFormat: @"%ld, %d", (long)nextId, 10];
     [data setObject: self.rank forKey: @"rank"];
     [data setValue: limit forKey: @"limit"];
-    
+    __block typeof (self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI gettemplatelist: [wTools getUserID]
                                                token: [wTools getUserToken]
                                                 data: data
-                                               event: self.event_id
-                                               style: self.style_id];
+                                               event: wself.event_id
+                                               style: wself.style_id];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -164,7 +189,7 @@
                     NSLog(@"ChooseTemplateViewController");
                     NSLog(@"getTemplateList");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getTemplateList"
                                          albumId: @""];
                 } else {
@@ -173,30 +198,7 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        int s = 0;
-                        
-                        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
-                            s++;
-                            [pictures addObject: picture];
-                        }
-                        nextId = nextId + s;
-                        
-                        if (nextId >= 0)
-                            isLoading = NO;
-                        
-                        if (s == 0)
-                            isLoading = YES;
-                        
-                        NSLog(@"pictures: %@", pictures);
-                        
-                        [self.collectionView reloadData];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processTemplateListResult:dic];
                 }
             }
         });
@@ -358,6 +360,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI geturpoints: [wTools getUserID]
                                            token: [wTools getUserToken]];
@@ -378,18 +381,18 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     NSLog(@"ChooseTemplateViewController");
                     NSLog(@"getPoint");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getPoint"
                                          albumId: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if (pointValue > [dic[@"data"] intValue]) {
+                    if (wself->pointValue > [dic[@"data"] intValue]) {
                         NSString *errorMsg = @"P點不足，無法取得套版";
-                        [self showCustomErrorAlert: errorMsg];
+                        [wself showCustomErrorAlert: errorMsg];
                     } else {
-                        [self showCustomCheckTaobanAlert: @"確定取得套版?"];
+                        [wself showCustomCheckTaobanAlert: @"確定取得套版?"];
                     }
                 }
             }
@@ -407,10 +410,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+    __block typeof(self) wself = self;
+    __block typeof(templateId) tid = templateId;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI buytemplate: [wTools getUserID]
                                            token: [wTools getUserToken]
-                                      templateid: templateId];
+                                      templateid: tid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -428,7 +433,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     NSLog(@"ChooseTemplateViewController");
                     NSLog(@"buyapi");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"buytemplate"
                                          albumId: @""];
                 } else {
@@ -437,12 +442,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         //開始製作
-                        [self editTaoban];
+                        [wself editTaoban];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -589,12 +594,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
+    __block typeof(templateId) tid = templateId;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI insertalbumofdiy: [wTools getUserID]
                                                 token: [wTools getUserToken]
-                                          template_id: templateId];
+                                          template_id: tid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -615,7 +621,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     NSLog(@"ChooseTemplateViewController");
                     NSLog(@"addNewTaobanMod");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"insertalbumofdiy"
                                          albumId: @""];
                 } else {
@@ -628,9 +634,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                         
                         AlbumCreationViewController *albumCreationVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
                         albumCreationVC.albumid = tempAlbumId;
-                        albumCreationVC.templateid = templateId;
-                        albumCreationVC.event_id = self.event_id;
-                        albumCreationVC.postMode = self.postMode;
+                        albumCreationVC.templateid = tid;
+                        albumCreationVC.event_id = wself.event_id;
+                        albumCreationVC.postMode = wself.postMode;
                         albumCreationVC.choice = @"Template";
                         //[self.navigationController pushViewController: albumCreationVC animated: YES];
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -645,7 +651,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                         if (firsttime_download_template) {
                             NSLog(@"Get the First Time Download Template Point Already");
                         } else {
-                            [self checkPoint];
+                            [wself checkPoint];
                         }
                         
                         // Save data for first edit profile
@@ -661,7 +667,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                         if (msg == nil) {
                             msg = NSLocalizedString(@"Host-NotAvailable", @"");
                         }
-                        [self showCustomErrorAlert: msg];
+                        [wself showCustomErrorAlert: msg];
                     }
                 }
             }
@@ -684,14 +690,15 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
+    __block typeof(templateId) tid = templateId;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *response = [boxAPI doTask2: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_download_template" platform: @"apple" type: @"template" type_id: templateId];
+        NSString *response = [boxAPI doTask2: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_download_template" platform: @"apple" type: @"template" type_id: tid];
         
         NSLog(@"User ID: %@", [wTools getUserID]);
         NSLog(@"Token: %@", [wTools getUserToken]);
-        NSLog(@"Template ID: %@", templateId);
+        NSLog(@"Template ID: %@", tid);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -719,43 +726,45 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([data[@"result"] intValue] == 1) {
-                        
-                        missionTopicStr = data[@"data"][@"task"][@"name"];
-                        NSLog(@"name: %@", missionTopicStr);
-                        
-                        rewardType = data[@"data"][@"task"][@"reward"];
-                        NSLog(@"reward type: %@", rewardType);
-                        
-                        rewardValue = data[@"data"][@"task"][@"reward_value"];
-                        NSLog(@"reward value: %@", rewardValue);
-                        
-                        eventUrl = data[@"data"][@"event"][@"url"];
-                        NSLog(@"event: %@", eventUrl);
-                        
-                        [self showAlertView];
-                        [self getUrPoints];
-                        
-                    } else if ([data[@"result"] intValue] == 2) {
-                        NSLog(@"message: %@", data[@"message"]);
-                        
-                        // Save setting for login successfully
-                        BOOL firsttime_download_template = YES;
-                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                        [defaults setObject: [NSNumber numberWithBool: firsttime_download_template] forKey: @"firsttime_download_template"];
-                        [defaults synchronize];
-                        
-                    } else if ([data[@"result"] intValue] == 0) {
-                        NSLog(@"失敗： %@", data[@"message"]);
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processCheckPointResult:data];
                 }
             }
         });
     });
 }
-
+- (void)processCheckPointResult:(NSDictionary *)data {
+    if ([data[@"result"] intValue] == 1) {
+        
+        missionTopicStr = data[@"data"][@"task"][@"name"];
+        NSLog(@"name: %@", missionTopicStr);
+        
+        rewardType = data[@"data"][@"task"][@"reward"];
+        NSLog(@"reward type: %@", rewardType);
+        
+        rewardValue = data[@"data"][@"task"][@"reward_value"];
+        NSLog(@"reward value: %@", rewardValue);
+        
+        eventUrl = data[@"data"][@"event"][@"url"];
+        NSLog(@"event: %@", eventUrl);
+        
+        [self showAlertView];
+        [self getUrPoints];
+        
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+        
+        // Save setting for login successfully
+        BOOL firsttime_download_template = YES;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject: [NSNumber numberWithBool: firsttime_download_template] forKey: @"firsttime_download_template"];
+        [defaults synchronize];
+        
+    } else if ([data[@"result"] intValue] == 0) {
+        NSLog(@"失敗： %@", data[@"message"]);
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 #pragma mark - Get P Point
 - (void)getUrPoints {
     NSLog(@"");

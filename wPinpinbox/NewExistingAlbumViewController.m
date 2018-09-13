@@ -44,7 +44,7 @@
     NSInteger miniInteriorSpacing;
     BOOL checkPost;
     
-    NSMutableDictionary *dict1;
+    //NSMutableDictionary *dict1;
     
     NSInteger currentContributionNumber;
     
@@ -141,6 +141,99 @@
 }
 
 #pragma mark - Protocol Methods
+- (void)processExistedAlbumResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSArray *array = dic[@"data"];
+        NSLog(@"array: %@", array);
+        
+        NSLog(@"array.count: %lu", (unsigned long)array.count);
+        
+        for (int i = 0; i < array.count; i++) {
+            NSLog(@"array template: %@", array[i][@"template"][@"template_id"]);
+            
+            NSString *act = array[i][@"album"][@"act"];
+            NSLog(@"act: %@", act);
+            
+            if ([act isEqualToString: @"open"]) {
+                for (int j = 0; j < self.templateArray.count; j++) {
+                    NSLog(@"templateArray: %@", [self.templateArray[j] stringValue]);
+                    NSLog(@"array[i] template template_id: %@", array[i][@"template"][@"template_id"]);
+                    
+                    NSString *currentTemplateId = [array[i][@"template"][@"template_id"] stringValue];
+                    
+                    if ([currentTemplateId isEqualToString: [self.templateArray[j] stringValue]]) {
+                        NSLog(@"same template");
+                        
+                        NSLog(@"array[i]: %@", array[i]);
+                        
+                        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                        [dict setValue: array[i][@"album"][@"album_id"] forKey: @"albumId"];
+                        [dict setValue: array[i][@"album"][@"cover"] forKey: @"cover"];
+                        [dict setValue: array[i][@"album"][@"description"] forKey: @"description"];
+                        [dict setValue: array[i][@"album"][@"name"] forKey: @"name"];
+                        
+                        NSArray *eventArray = [[NSArray alloc] init];
+                        eventArray = array[i][@"event"];
+                        
+                        NSMutableArray *eventArrayData = [[NSMutableArray alloc] init];
+                        
+                        for (int k = 0; k < eventArray.count; k++) {
+                            [eventArrayData addObject: array[i][@"event"][k]];
+                            NSLog(@"eventArrayData: %@", eventArrayData);
+                        }
+                        
+                        [dict setValue: eventArrayData forKey: @"eventArrayData"];
+                        
+                        [existedAlbumArray addObject: dict];
+                    }
+                }
+            }
+        }
+        
+        NSLog(@"existedAlbumArray: %@", existedAlbumArray);
+        NSLog(@"existedAlbumArray.count: %lu", (unsigned long)existedAlbumArray.count);
+        
+        currentContributionNumber = 0;
+        NSLog(@"check contribution");
+        
+        NSMutableArray *arrayForRemove = [[NSMutableArray alloc] init];
+        
+        for (int i = 0; i < existedAlbumArray.count; i++) {
+            NSDictionary *d1 = existedAlbumArray[i];
+            NSLog(@"name: %@", d1[@"name"]);
+            NSArray *array = d1[@"eventArrayData"];
+            NSLog(@"array: %@", array);
+            
+            NSDictionary *d2;
+            
+            for (int j = 0; j < array.count; j++) {
+                d2 = array[j];
+                NSLog(@"d2: %@", d2);
+                
+                if ([d2[@"contributionstatus"] integerValue] == 1) {
+                    if ([self.eventId integerValue] == [d2[@"event_id"] integerValue]) {
+                        NSLog(@"Event ID is the same");
+                        ++currentContributionNumber;
+                        NSLog(@"currentContributionNumber: %ld", (long)currentContributionNumber);
+                    } else {
+                        NSLog(@"Event ID is not the same");
+                        NSLog(@"Album Event ID is not the same: %@", existedAlbumArray[i]);
+                        [arrayForRemove addObject: existedAlbumArray[i]];
+                    }
+                }
+            }
+        }
+        NSLog(@"currentContributionNumber: %ld", (long)currentContributionNumber);
+        [existedAlbumArray removeObjectsInArray: arrayForRemove];
+        [self.collectionView reloadData];
+        
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
 - (void)getExistedAlbum {
     NSLog(@"getExistedAlbum");    
     existedAlbumArray = [[NSMutableArray alloc] init];
@@ -156,7 +249,7 @@
     }
     
     NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
                                              token: [wTools getUserToken]
@@ -182,104 +275,14 @@
                     NSLog(@"NewExistingAlbumViewController");
                     NSLog(@"getExistedAlbum");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcalbumlist"
                                             cell: nil];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSArray *array = dic[@"data"];
-                        NSLog(@"array: %@", array);
-                        
-                        NSLog(@"array.count: %lu", (unsigned long)array.count);
-                        
-                        for (int i = 0; i < array.count; i++) {
-                            NSLog(@"array template: %@", array[i][@"template"][@"template_id"]);
-                            
-                            NSString *act = array[i][@"album"][@"act"];
-                            NSLog(@"act: %@", act);
-                            
-                            if ([act isEqualToString: @"open"]) {
-                                for (int j = 0; j < self.templateArray.count; j++) {
-                                    NSLog(@"templateArray: %@", [self.templateArray[j] stringValue]);
-                                    NSLog(@"array[i] template template_id: %@", array[i][@"template"][@"template_id"]);
-                                    
-                                    NSString *currentTemplateId = [array[i][@"template"][@"template_id"] stringValue];
-                                    
-                                    if ([currentTemplateId isEqualToString: [self.templateArray[j] stringValue]]) {
-                                        NSLog(@"same template");
-                                        
-                                        NSLog(@"array[i]: %@", array[i]);
-                                        
-                                        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-                                        [dict setValue: array[i][@"album"][@"album_id"] forKey: @"albumId"];
-                                        [dict setValue: array[i][@"album"][@"cover"] forKey: @"cover"];
-                                        [dict setValue: array[i][@"album"][@"description"] forKey: @"description"];
-                                        [dict setValue: array[i][@"album"][@"name"] forKey: @"name"];
-                                        
-                                        NSArray *eventArray = [[NSArray alloc] init];
-                                        eventArray = array[i][@"event"];
-                                        
-                                        NSMutableArray *eventArrayData = [[NSMutableArray alloc] init];
-                                        
-                                        for (int k = 0; k < eventArray.count; k++) {
-                                            [eventArrayData addObject: array[i][@"event"][k]];
-                                            NSLog(@"eventArrayData: %@", eventArrayData);
-                                        }
-                                        
-                                        [dict setValue: eventArrayData forKey: @"eventArrayData"];
-                                        
-                                        [existedAlbumArray addObject: dict];
-                                    }
-                                }
-                            }
-                        }
-                        
-                        NSLog(@"existedAlbumArray: %@", existedAlbumArray);
-                        NSLog(@"existedAlbumArray.count: %lu", (unsigned long)existedAlbumArray.count);
-                        
-                        currentContributionNumber = 0;
-                        NSLog(@"check contribution");
-
-                        NSMutableArray *arrayForRemove = [[NSMutableArray alloc] init];
-                        
-                        for (int i = 0; i < existedAlbumArray.count; i++) {
-                            NSDictionary *d1 = existedAlbumArray[i];
-                            NSLog(@"name: %@", d1[@"name"]);
-                            NSArray *array = d1[@"eventArrayData"];
-                            NSLog(@"array: %@", array);
-
-                            NSDictionary *d2;
-
-                            for (int j = 0; j < array.count; j++) {
-                                d2 = array[j];
-                                NSLog(@"d2: %@", d2);
-
-                                if ([d2[@"contributionstatus"] integerValue] == 1) {
-                                    if ([self.eventId integerValue] == [d2[@"event_id"] integerValue]) {
-                                        NSLog(@"Event ID is the same");
-                                        ++currentContributionNumber;
-                                        NSLog(@"currentContributionNumber: %ld", (long)currentContributionNumber);
-                                    } else {
-                                        NSLog(@"Event ID is not the same");
-                                        NSLog(@"Album Event ID is not the same: %@", existedAlbumArray[i]);
-                                        [arrayForRemove addObject: existedAlbumArray[i]];
-                                    }
-                                }
-                            }
-                        }
-                        NSLog(@"currentContributionNumber: %ld", (long)currentContributionNumber);
-                        [existedAlbumArray removeObjectsInArray: arrayForRemove];
-                        [self.collectionView reloadData];
-                        
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
+                    [wself processExistedAlbumResult:dic];
                 }
             }
         });
@@ -296,12 +299,14 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(_eventId) eid = _eventId;
+    __block typeof(albumId) aid = albumId;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI switchstatusofcontribution: [wTools getUserID]
                                                           token: [wTools getUserToken]
-                                                       event_id: _eventId
-                                                       album_id: albumId];
+                                                       event_id: eid
+                                                       album_id: aid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -336,7 +341,7 @@
                         NSLog(@"contributionCheck: %d", contributionCheck);
                         
                         NSString *checkPost;
-                        NSIndexPath *indexPath = [self.collectionView indexPathForCell: cell];
+                        NSIndexPath *indexPath = [wself.collectionView indexPathForCell: cell];
                         
                         if (contributionCheck) {
                             checkPost = @"1";
@@ -346,7 +351,7 @@
                             style.messageColor = [UIColor whiteColor];
                             style.backgroundColor = [UIColor secondMain];
                             
-                            [self.view makeToast: @"投稿成功"
+                            [wself.view makeToast: @"投稿成功"
                                         duration: 2.0
                                         position: CSToastPositionBottom
                                            style: style];
@@ -364,14 +369,14 @@
                                            style: style];
                         }
                         
-                        checkPostArray[indexPath.row] = checkPost;
+                        wself->checkPostArray[indexPath.row] = checkPost;
                         
-                        [self getExistedAlbum];
+                        [wself getExistedAlbum];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        [wself showCustomErrorAlert: dic[@"message"]];
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -508,13 +513,13 @@
                                             
                                             //checkPost = YES;
                                             
-                                            dict1 = [[NSMutableDictionary alloc] init];
-                                            [dict1 setValue: array[i][@"album"][@"album_id"] forKey: @"albumId"];
-                                            [dict1 setValue: array[i][@"album"][@"cover"] forKey: @"cover"];
-                                            [dict1 setValue: array[i][@"album"][@"description"] forKey: @"description"];
-                                            [dict1 setValue: array[i][@"album"][@"name"] forKey: @"name"];
-                                            
-                                            NSLog(@"match eventId, posted already, dict1:%@", dict1);
+//                                            dict1 = [[NSMutableDictionary alloc] init];
+//                                            [dict1 setValue: array[i][@"album"][@"album_id"] forKey: @"albumId"];
+//                                            [dict1 setValue: array[i][@"album"][@"cover"] forKey: @"cover"];
+//                                            [dict1 setValue: array[i][@"album"][@"description"] forKey: @"description"];
+//                                            [dict1 setValue: array[i][@"album"][@"name"] forKey: @"name"];
+//
+//                                            NSLog(@"match eventId, posted already, dict1:%@", dict1);
                                         }
                                     }
                                 }

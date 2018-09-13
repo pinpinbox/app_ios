@@ -369,30 +369,32 @@
     }else{
         cell.typetitle.text=NSLocalizedString(@"CreateAlbumText-viewer", @"");
     }
-    
+    __block typeof(_identity) wid = _identity;
+    __block typeof(mydataarr) array = mydataarr;
+    __block typeof(self) wself = self;
     cell.btn1select=^(BOOL bo){
-        NSLog(@"identity: %@", _identity);
-        NSLog(@"mydataarr: %@", mydataarr);
+        NSLog(@"identity: %@", wid);
+        NSLog(@"mydataarr: %@", array);//mydataarr);
         NSLog(@"indexPath.row: %ld", (long)indexPath.row);
-        NSLog(@"mydataarr row: %@", mydataarr[indexPath.row]);
+        NSLog(@"mydataarr row: %@", array[indexPath.row]);
         
-        if ([_identity isEqualToString:@"admin"] || [_identity isEqualToString: @"approver"]) {
+        if ([wid isEqualToString:@"admin"] || [wid isEqualToString: @"approver"]) {
             //修改權限
-            selectuserid=[dic[@"user"][@"user_id"] stringValue];
+            wself->selectuserid=[dic[@"user"][@"user_id"] stringValue];
 //            SBookSelectViewController *SBSVC=[[SBookSelectViewController alloc]initWithNibName:@"SBookSelectViewController" bundle:nil];
 //            SBSVC.mytitletext=NSLocalizedString(@"CreateAlbumText-tipAssignRole", @"");
 //            SBSVC.delegate=self;
 //            SBSVC.data=@[NSLocalizedString(@"CreateAlbumText-admin2", @""),NSLocalizedString(@"CreateAlbumText-sharer", @""),NSLocalizedString(@"CreateAlbumText-viewer", @"")];
 //            SBSVC.topViewController=self;
             
-            NSString *identityStr = mydataarr[indexPath.row][@"cooperation"][@"identity"];
+            NSString *identityStr = array[indexPath.row][@"cooperation"][@"identity"];
             NSLog(@"identityStr: %@", identityStr);
             
             // Check the array member whether is approver or not
             if ([identityStr isEqualToString: @"approver"]) {
                 
                 // Check the user of editing album is approver or not
-                if (![_identity isEqualToString: @"admin"]) {
+                if (![wid isEqualToString: @"admin"]) {
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: @"副管理者不能變更副管理者的權限" preferredStyle: UIAlertControllerStyleAlert];
                     UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確認" style: UIAlertActionStyleDefault handler:nil];
                     [alert addAction: okBtn];
@@ -464,12 +466,15 @@
 
 -(NSArray *)tableView:(UITableView *)tableView
 editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    __block typeof(_albumid) aid = _albumid;
+    __block NSDictionary *dic= mydataarr[indexPath.row];
+    
     UITableViewRowAction *button = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:NSLocalizedString(@"GeneralText-del", @"") handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
           {
             //刪除動作
            [wTools ShowMBProgressHUD];
-              __block typeof(_albumid) aid = _albumid;
-              __block NSDictionary *dic= mydataarr[indexPath.row];
+              
            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
                
             

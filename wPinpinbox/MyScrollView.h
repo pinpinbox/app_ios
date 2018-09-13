@@ -10,7 +10,7 @@
 
 @class MyScrollView;
 @protocol MyScrollViewDataSource1
-
+@optional
 -(UIView *)ScrollView:(MyScrollView *)scrollView atPage:(int)pageId;
 -(CGSize)ContentSizeInScrollView:(MyScrollView *)scrollView;
 -(int)TotalPageInScrollView:(MyScrollView *)scrollView;

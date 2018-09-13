@@ -10,6 +10,7 @@
 
 @class NewMessageBoardViewController;
 @protocol NewMessageBoardViewControllerDelegate <NSObject>
+@optional
 - (void)newMessageBoardViewControllerDisappear: (NewMessageBoardViewController *)controller msgNumber:(NSUInteger)msgNumber;
 @end
 

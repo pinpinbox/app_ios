@@ -778,6 +778,55 @@
 }
 
 // 110
+- (void)processExchangeResult:(NSDictionary *)dic {
+    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+        NSLog(@"SYSTEM_OK");
+        NSLog(@"dic: %@", dic);
+        
+        @try {
+            photoUseForUserId = [dic[@"data"][@"photousefor_user"][@"photousefor_user_id"] integerValue];
+            NSLog(@"photoUseForUserId: %ld", (long)photoUseForUserId);
+            [self gainPhotoUseForUser];
+        } @catch (NSException *exception) {
+            // Print exception information
+            NSLog( @"NSException caught" );
+            NSLog( @"Name: %@", exception.name);
+            NSLog( @"Reason: %@", exception.reason );
+            return;
+        }
+    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+        NSLog(@"SYSTEM_ERROR");
+        [self showDicMessage: dic];
+    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+        NSLog(@"TOKEN_ERROR");
+        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+        style.messageColor = [UIColor whiteColor];
+        style.backgroundColor = [UIColor thirdPink];
+        
+        [self.view makeToast: @"用戶驗證異常請重新登入"
+                    duration: 2.0
+                    position: CSToastPositionBottom
+                       style: style];
+        
+        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                         target: self
+                                       selector: @selector(logOut)
+                                       userInfo: nil
+                                        repeats: NO];
+    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_EXPIRED"]) {
+        [self showDicMessage: dic];
+    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
+        [self showDicMessage: dic];
+    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_NOT_YET_STARTED"]) {
+        [self showDicMessage: dic];
+    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
+        [self showDicMessage: dic];
+    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
+        [self showDicMessage: dic];
+    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_SLOTTED"]) {
+        [self showDicMessage: dic];
+    }
+}
 - (void)exchangePhotoUseFor {
     NSLog(@"exchangePhotoUseFor");
     
@@ -788,7 +837,7 @@
     
     NSInteger photoId = [self.exchangeDic[@"photo"][@"photo_id"] integerValue];
     NSString *photoIdStr = [NSString stringWithFormat: @"%ld", (long)photoId];
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI exchangePhotoUseFor: currentDeviceId
                                                  photoId: photoIdStr
@@ -806,7 +855,7 @@
                     NSLog(@"ExchangeInfoEditViewController");
                     NSLog(@"exchangePhotoUseFor");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"exchangePhotoUseFor"];
                 } else {
                     NSLog(@"Get Real Response");
@@ -815,53 +864,7 @@
                     
                     NSLog(@"dic: %@", dic);
                     
-                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"SYSTEM_OK");
-                        NSLog(@"dic: %@", dic);
-                        
-                        @try {
-                            photoUseForUserId = [dic[@"data"][@"photousefor_user"][@"photousefor_user_id"] integerValue];
-                            NSLog(@"photoUseForUserId: %ld", (long)photoUseForUserId);
-                            [self gainPhotoUseForUser];
-                        } @catch (NSException *exception) {
-                            // Print exception information
-                            NSLog( @"NSException caught" );
-                            NSLog( @"Name: %@", exception.name);
-                            NSLog( @"Reason: %@", exception.reason );
-                            return;
-                        }                                                                        
-                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"SYSTEM_ERROR");                        
-                        [self showDicMessage: dic];
-                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-                        NSLog(@"TOKEN_ERROR");
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
-                        
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
-                        
-                        [NSTimer scheduledTimerWithTimeInterval: 1.0
-                                                         target: self
-                                                       selector: @selector(logOut)
-                                                       userInfo: nil
-                                                        repeats: NO];
-                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_EXPIRED"]) {
-                        [self showDicMessage: dic];
-                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
-                        [self showDicMessage: dic];
-                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_NOT_YET_STARTED"]) {
-                        [self showDicMessage: dic];
-                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
-                        [self showDicMessage: dic];
-                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
-                        [self showDicMessage: dic];
-                    } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_SLOTTED"]) {
-                        [self showDicMessage: dic];
-                    }
+                    [wself processExchangeResult:dic];
                 }
             }
         });
