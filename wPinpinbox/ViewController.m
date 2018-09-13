@@ -45,8 +45,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     FBBlock _alertOkHandler;
     
-    NSString *tokenStr;
-    NSString *idStr;
+    
     BOOL isCreator;
     
     NSString *businessUserId;
@@ -75,6 +74,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 @property (weak, nonatomic) IBOutlet UIButton *loginBtn;
 @property (weak, nonatomic) IBOutlet UIButton *aboutBtn;
+
+@property (nonatomic) NSString *tokenStr;
+@property (nonatomic) NSString *idStr;
 @end
 
 @implementation ViewController
@@ -481,12 +483,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     [self loginAccount];
 }
-- (void)setTokenStr:(NSString *)tk {
-    
-}
-- (void)setIdStr:(NSString *) ids {
-    
-}
 - (void)loginAccount {
     NSLog(@"loginAccount");
     @try {
@@ -545,8 +541,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
 
-                        sself->tokenStr = dic[@"data"][@"token"];
-                        sself->idStr = [dic[@"data"][@"id"] stringValue];
+                        sself.tokenStr = dic[@"data"][@"token"];
+                        sself.idStr = [dic[@"data"][@"id"] stringValue];
 
                         [sself saveDataAfterLogin: @"emailLogin"];
                         //[self toMyTabBarController];
@@ -772,11 +768,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         
                         NSLog(@"新用戶");
                         
-                        sself->tokenStr = dic[@"data"][@"token"][@"token"];
-                        sself->idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+                        sself.tokenStr = dic[@"data"][@"token"][@"token"];
+                        sself.idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
                         
-                        NSLog(@"tokenStr: %@", sself->tokenStr);
-                        NSLog(@"idStr: %@", sself->idStr);
+                        NSLog(@"tokenStr: %@", sself.tokenStr);
+                        NSLog(@"idStr: %@", sself.idStr);
                         
                         [sself saveDataAfterLogin: @"facebookLogin"];
                         //[self setupPushNotification];
@@ -790,11 +786,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         NSLog(@"已有帳號");
                         
                         //isCreator = [dic[@"data"][@"creative"] boolValue];
-                        sself->tokenStr = dic[@"data"][@"token"][@"token"];
-                        sself->idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+                        sself.tokenStr = dic[@"data"][@"token"][@"token"];
+                        sself.idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
                         
-                        NSLog(@"tokenStr: %@", sself->tokenStr);
-                        NSLog(@"idStr: %@", sself->idStr);
+                        NSLog(@"tokenStr: %@", sself.tokenStr);
+                        NSLog(@"idStr: %@", sself.idStr);
                         
                         [sself saveDataAfterLogin: @"facebookLogin"];
                         //[self toMyTabBarController];
@@ -886,8 +882,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                     position: CSToastPositionBottom
                                        style: style];
                         
-                        sself->tokenStr = data[@"data"][@"token"];
-                        sself->idStr = [data[@"data"][@"id"] stringValue];
+                        sself.tokenStr = data[@"data"][@"token"];
+                        sself.idStr = [data[@"data"][@"id"] stringValue];
                         
                         [sself saveDataAfterLogin: @"facebookLogin"];
                         //[self toMyTabBarController];
@@ -993,8 +989,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog(@"%@",respone);
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        wself->tokenStr = dic[@"data"][@"token"];
-                        wself->idStr = [dic[@"data"][@"id"] stringValue];
+                        wself.tokenStr = dic[@"data"][@"token"];
+                        wself.idStr = [dic[@"data"][@"id"] stringValue];
                         
                         [wself saveDataAfterLogin: @"facebookLogin"];
                         //[self setupPushNotification];
@@ -1070,11 +1066,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog(@"loginType: %@", loginType);
         
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-        [userPrefs setObject: tokenStr forKey:@"token"];
-        [userPrefs setObject: idStr forKey:@"id"];
+        [userPrefs setObject: _tokenStr forKey:@"token"];
+        [userPrefs setObject: _idStr forKey:@"id"];
         [userPrefs setObject: self.pwdTextField.text forKey: @"pwd"];
         
-        NSLog(@"idStr: %@", idStr);
+        NSLog(@"idStr: %@", _idStr);
         NSLog(@"self.pwdTextField.text: %@", self.pwdTextField.text);
         
         NSLog(@"userPrefs: %@", userPrefs);
@@ -1084,8 +1080,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog(@"loginType: %@", loginType);
         
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-        [userPrefs setObject: tokenStr forKey: @"token"];
-        [userPrefs setObject: idStr forKey: @"id"];
+        [userPrefs setObject: _tokenStr forKey: @"token"];
+        [userPrefs setObject: _idStr forKey: @"id"];
         [userPrefs setObject: @"FB" forKey: @"FB"];
         [userPrefs synchronize];
     }
@@ -1142,10 +1138,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"result SYSTEM_OK");
                         
-                        wself->tokenStr = dic[@"data"][@"token"][@"token"];
+                        wself.tokenStr = dic[@"data"][@"token"][@"token"];
                         
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-                        [userPrefs setObject: wself->tokenStr forKey: @"token"];
+                        [userPrefs setObject: wself.tokenStr forKey: @"token"];
                         
                         [wself getProfile];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {

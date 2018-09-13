@@ -32,7 +32,7 @@
     //價格表
     NSDictionary *pointdata;
     
-    NSString *orderid;
+    
     
     // For Showing Message of Getting Point
     NSString *missionTopicStr;
@@ -62,7 +62,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *buyBtn;
 
 @property (weak, nonatomic) IBOutlet UIButton *backBtn;
-
+@property (nonatomic,strong) NSString *orderid;
 @end
 
 @implementation BuyPPointViewController
@@ -703,8 +703,8 @@
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        wself->orderid = dic[@"data"];
-                        NSLog(@"orderid: %@", wself->orderid);
+                        wself.orderid = dic[@"data"];
+                        NSLog(@"orderid: %@", wself.orderid);
                         
                         [[InAppPurchaseManager getInstance] purchaseProUpgrade2:sid];
                     } else if ([dic[@"result"] intValue] == 0) {
@@ -794,7 +794,7 @@
     NSLog(@"finishPurchase");
     //[wTools ShowMBProgressHUD];
     NSLog(@"after wTools ShowMBProgressHUD");
-    __block typeof(orderid) oid = orderid;
+    __block typeof(_orderid) oid = _orderid;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI finishpurchased: [wTools getUserID]
                                                token: [wTools getUserToken]

@@ -38,7 +38,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSString *businessUserId;
     NSString *timeStamp;
     
-    CLLocationManager *locationManager;
+    
     CLLocation *currentLocation;
     
     NSString *tokenStr;
@@ -50,6 +50,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
+@property (nonatomic) CLLocationManager *locationManager;
 @end
 
 @implementation ScanRegisterViewController
@@ -65,16 +66,16 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     timeStamp = [NSString stringWithFormat: @"%f", [[NSDate date] timeIntervalSince1970] * 1000];
     NSLog(@"timeStamp: %@", timeStamp);
     
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone;
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager.delegate = self;
+    _locationManager.distanceFilter = kCLDistanceFilterNone;
+    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-        [locationManager requestWhenInUseAuthorization];
+        [_locationManager requestWhenInUseAuthorization];
     }
     
-    [locationManager startUpdatingLocation];
+    [_locationManager startUpdatingLocation];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -135,7 +136,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 - (IBAction)backBtnPress:(id)sender {
-    [locationManager stopUpdatingLocation];
+    [_locationManager stopUpdatingLocation];
     //[self.navigationController popViewControllerAnimated: YES];
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -314,7 +315,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
              if (!error) {
                  NSLog(@"fetched user: %@", result);
                  
-                 [wself->locationManager stopUpdatingLocation];
+                 [wself.locationManager stopUpdatingLocation];
                  
                  // Get FB Personal Data
                  NSString *emailAccount = result[@"email"];

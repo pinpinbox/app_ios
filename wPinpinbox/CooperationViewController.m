@@ -25,7 +25,7 @@
 {
     NSMutableArray *mydataarr;
     NSDictionary *adminuser;
-    NSString *selectuserid;
+    
     
     NSString *qrImageStr;
     
@@ -35,7 +35,7 @@
 }
 
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
-
+@property (nonatomic, strong) NSString *selectuserid;
 @end
 
 @implementation CooperationViewController
@@ -380,7 +380,7 @@
         
         if ([wid isEqualToString:@"admin"] || [wid isEqualToString: @"approver"]) {
             //修改權限
-            wself->selectuserid=[dic[@"user"][@"user_id"] stringValue];
+            wself.selectuserid=[dic[@"user"][@"user_id"] stringValue];
 //            SBookSelectViewController *SBSVC=[[SBookSelectViewController alloc]initWithNibName:@"SBookSelectViewController" bundle:nil];
 //            SBSVC.mytitletext=NSLocalizedString(@"CreateAlbumText-tipAssignRole", @"");
 //            SBSVC.delegate=self;
@@ -426,7 +426,7 @@
     
     [wTools ShowMBProgressHUD];
     __block typeof(_albumid) aid = _albumid;
-    __block typeof(selectuserid) sid = selectuserid;
+    __block typeof(_selectuserid) sid = _selectuserid;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSMutableDictionary *data=[NSMutableDictionary new];
         [data setObject:aid forKey:@"type_id"];

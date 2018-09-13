@@ -30,6 +30,7 @@ BOOL CGAffineTransformEqualToTransformWithAccuracy (CGAffineTransform firstTrans
     (fabs(firstTransform.tx - secondTransform.tx) <= epsilon) &&
     (fabs(firstTransform.ty - secondTransform.ty) <= epsilon);
 }
+
 @implementation MTRadialMenu
 {
     CGFloat currentAngle;

@@ -1801,15 +1801,8 @@ sourceController:(UIViewController *)source
         return cell;
     } else if (collectionView.tag == 3) {
         NSLog(@"collectionView.tag == 3");
-        HomeCategoryCollectionViewCell *cell = nil;
-        @try {
-            cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
-        } @catch (NSException *exception) {
-            NSLog(@"%@",exception);
-        } @finally {
-            
-        }
-        
+        HomeCategoryCollectionViewCell *cell = nil;        
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
         NSDictionary *dic = categoryArray[indexPath.row][@"categoryarea"];
         NSLog(@"dic: %@", dic);
         NSLog(@"dic name: %@", dic[@"name"]);
