@@ -3273,6 +3273,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = "-Wno-nullability-completeness";
 			};
 			name = Debug;
 		};
@@ -3314,6 +3315,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "wPinpinbox/wPinpinbox-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = "-Wno-nullability-completeness";
 			};
 			name = Release;
 		};

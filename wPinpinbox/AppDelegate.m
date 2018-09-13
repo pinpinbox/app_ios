@@ -468,8 +468,23 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
     
     self.backgroundSessionCompletionHandler = completionHandler;
 }
-
-//#ifndef __IPHONE_10_0
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    NSString *source = [options objectForKey:UIApplicationOpenURLOptionsSourceApplicationKey];
+    if (source) {
+        id annotation = [options objectForKey:UIApplicationOpenURLOptionsAnnotationKey];
+        return [self processOpenURL:app url:url sourceApplication:source annotation:annotation];
+    }
+    
+    BOOL returnValue = NO;
+    NSString *urlString = [url absoluteString];
+    
+    if ([urlString hasPrefix: @"pinpinbox://"]) {
+        returnValue = YES;
+    }
+    
+    return returnValue;
+}
+#ifndef __IPHONE_10_0
 - (BOOL)application:(UIApplication *)application
       handleOpenURL:(NSURL *)url
 {
@@ -494,6 +509,13 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     
+    return [self processOpenURL:application url:url sourceApplication:sourceApplication annotation:annotation];
+}
+#endif
+- (BOOL)processOpenURL:(UIApplication *)application
+                   url:(NSURL *)url
+     sourceApplication:(NSString *)sourceApplication
+            annotation:(id)annotation {
     NSLog(@"");
     NSLog(@"");
     NSLog(@"openURL sourceApplication");
