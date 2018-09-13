@@ -80,7 +80,7 @@
                         <viewLayoutGuide key="safeArea" id="DWz-xA-7nE"/>
                     </view>
                     <navigationItem key="navigationItem" id="UDc-TM-HHs">
-                        <barButtonItem key="leftBarButtonItem" style="plain" id="twc-1l-Xfx">
+                        <barButtonItem key="leftBarButtonItem" id="twc-1l-Xfx">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="lDy-j0-iO7">
                                 <rect key="frame" x="16" y="-6" width="55" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

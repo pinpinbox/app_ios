@@ -759,6 +759,7 @@ sourceController:(UIViewController *)source
                     
                     NSLog(@"dic: %@", dic);
                     
+                    [wself processUpdateListResult:dic];
                     
                 }
             } else {
@@ -1800,7 +1801,15 @@ sourceController:(UIViewController *)source
         return cell;
     } else if (collectionView.tag == 3) {
         NSLog(@"collectionView.tag == 3");
-        HomeCategoryCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
+        HomeCategoryCollectionViewCell *cell = nil;
+        @try {
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
+        } @catch (NSException *exception) {
+            NSLog(@"%@",exception);
+        } @finally {
+            
+        }
+        
         NSDictionary *dic = categoryArray[indexPath.row][@"categoryarea"];
         NSLog(@"dic: %@", dic);
         NSLog(@"dic name: %@", dic[@"name"]);
