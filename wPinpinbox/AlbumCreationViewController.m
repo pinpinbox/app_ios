@@ -2243,10 +2243,18 @@ didFinishSavingWithError:(NSError *)error
                             
                             if (![response isKindOfClass: [NSNull class]]) {
                                 if (![response isEqualToString: @""]) {
-                                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: response message: @"目前網路不穩定，請確認網路品質再繼續使用pinpinbox唷!" preferredStyle: UIAlertControllerStyleAlert];
-                                    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
-                                    [alert addAction: okBtn];
-                                    [stSelf presentViewController: alert animated: YES completion: nil];
+//                                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: response message: @"目前網路不穩定，請確認網路品質再繼續使用pinpinbox唷!" preferredStyle: UIAlertControllerStyleAlert];
+//                                    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
+//                                    [alert addAction: okBtn];
+//                                    [stSelf presentViewController: alert animated: YES completion: nil];
+                                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                                    protocolName: @"insertVideoOfDiy"
+                                                         textStr: @""
+                                                            data: data
+                                                           image: nil
+                                                         jsonStr: @""
+                                                       audioMode: @""
+                                                          option: @""];
                                 }
                             }
                         } else {
