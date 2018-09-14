@@ -107,7 +107,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     BOOL isSeeking;
     NSString *useFor;
     BOOL videoIsPlaying;
-    NSURL *fbVideoUrl;
+    
     
     CGFloat giftViewWidth;
     CGFloat giftViewHeight;
@@ -189,6 +189,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) UIImageView *giftImageView;
 
 @property (strong) NSMutableArray *browseArray;
+@property (nonatomic) NSURL *fbVideoUrl;
 @end
 
 @implementation ContentCheckingViewController
@@ -1726,7 +1727,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     if (!([[url host] rangeOfString: @"facebook"].location == NSNotFound)) {
         NSLog(@"url host contains facebook");
-        fbVideoUrl = url;
+        self.fbVideoUrl = url;
         cell.imageView.alpha = 1;
         cell.alphaBgV.hidden = NO;
         cell.videoBtn.hidden = NO;
@@ -1864,7 +1865,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 - (void)setFBVidURL:(NSURL *)url {
-    fbVideoUrl = [url mutableCopy];
+    self.fbVideoUrl = url;//[url mutableCopy];
 }
 #pragma mark - FaceBook Handler Methods
 - (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock) successHandler
