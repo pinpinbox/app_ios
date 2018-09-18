@@ -193,7 +193,7 @@
     Cell.delegate=self;
     Cell.type=type;
     
-    [Cell reloadmenu];
+    //[Cell reloadmenu];
     
     NSDictionary *data=dataarr[indexPath.row];
     

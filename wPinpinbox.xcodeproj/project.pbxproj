@@ -872,7 +872,7 @@
 		9299FFC81BCBBA3A00BB9D84 /* ReqHTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReqHTTP.h; sourceTree = "<group>"; };
 		929ED4971B78448500D21CF0 /* wTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wTools.h; sourceTree = "<group>"; };
 		929ED4981B78448500D21CF0 /* wTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = wTools.m; sourceTree = "<group>"; };
-		929ED49A1B7849DE00D21CF0 /* wPinpInbox-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "wPinpInbox-Prefix.pch"; sourceTree = "<group>"; };
+		929ED49A1B7849DE00D21CF0 /* wPinpinbox-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "wPinpinbox-Prefix.pch"; sourceTree = "<group>"; };
 		929ED4AB1B78A2E200D21CF0 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		929ED4AD1B78A2F300D21CF0 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		92A1558D1C3386E000E83EC5 /* TaobanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaobanViewController.h; sourceTree = "<group>"; };
@@ -2226,7 +2226,7 @@
 				925119EC1CF57E99002D4678 /* Hobby_lang.plist */,
 				9276DFA41B72FDC000E6ACC9 /* Info.plist */,
 				9276DFA51B72FDC000E6ACC9 /* main.m */,
-				929ED49A1B7849DE00D21CF0 /* wPinpInbox-Prefix.pch */,
+				929ED49A1B7849DE00D21CF0 /* wPinpinbox-Prefix.pch */,
 				9251197D1CF2B4DB002D4678 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
@@ -3254,7 +3254,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "";
+				GCC_PREFIX_HEADER = "wpinpinbox/wPinpinbox-Prefix.pch";
 				INFOPLIST_FILE = wPinpinbox/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

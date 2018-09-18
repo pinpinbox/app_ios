@@ -236,11 +236,11 @@ static wTools *instance =nil;
 
 //分享
 +(void)Activitymessage:(NSString *)message {
-//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-//    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:message, nil] applicationActivities:nil];
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:message, nil] applicationActivities:nil];
 
-//    [app.menu presentViewController:activityVC animated:YES completion:nil];
+    [app.myNav presentViewController:activityVC animated:YES completion:nil];
 }
 
 //留言板

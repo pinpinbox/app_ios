@@ -445,4 +445,11 @@ doneHandler fail:(void(^)(NSInteger status)) failHandler;
 //GET
 +(NSString *)api_GET:(NSString *)url;
 
+
+
+#pragma mark - get albumsettings with completionBlock
++ (void)getAlbumSettingsWithAlbumId:(NSString *)albumid completionBlock:(void(^)(NSDictionary *settings, NSError *error))completionBlock;
++ (void)getAlbumDiyWithAlbumId:(NSString *)albumid completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
++ (void)setAlbumSettingsWithDictionary:(NSString *)settingString albumid:(NSString *)albumid
+                       completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 @end

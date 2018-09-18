@@ -22,7 +22,69 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIViewController+ErrorAlert.h"
 
-@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+#import "DDAUIActionSheetViewController.h"
+
+#import "AlbumCreationViewController.h"
+#import "AlbumSettingViewController.h"
+#import "UIView+Toast.h"
+#import "CreaterViewController.h"
+#import <FBSDKShareKit/FBSDKShareKit.h>
+
+@interface CalbumlistCollectionViewLayout : UICollectionViewFlowLayout
+@property (nonatomic) CGFloat itemHeight;
+@end
+@implementation CalbumlistCollectionViewLayout
+- (id)init {
+    self = [super init];
+    [self layoutAlbumList];
+    return  self;
+}
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    [self layoutAlbumList];
+    return self;
+}
+- (void)layoutAlbumList {
+    
+    self.minimumInteritemSpacing = 0;
+    self.minimumLineSpacing = 0.5;
+    self.scrollDirection = UICollectionViewScrollDirectionVertical;
+    
+}
+- (CGSize)itemSize {
+    CGFloat contentWidth = self.collectionView.bounds.size.width;
+    return CGSizeMake(contentWidth, 96);
+}
+- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
+{
+    return YES;
+}
+- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat contentWidth = self.collectionView.bounds.size.width;
+    UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+    attributes.frame = CGRectMake(0, indexPath.row*96,contentWidth , 96);//[self frameForEvent:event];
+    return attributes;
+}
+- (CGSize)collectionViewContentSize {
+    CGFloat contentWidth = self.collectionView.bounds.size.width;
+    
+    // Scroll vertically to display a full day
+    NSInteger count = [self.collectionView numberOfItemsInSection:0];
+    CGFloat contentHeight =  (96 * count);
+    if (count == 0) {
+        int n = self.collectionView.bounds.size.height/96;
+        contentHeight = 96*n;
+    }
+    
+    
+    CGSize contentSize = CGSizeMake(contentWidth, contentHeight);
+    return contentSize;
+}
+@end
+
+#pragma mark
+@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AlbumCreationViewControllerDelegate,DDAUIActionSheetViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKSharingDelegate>
 {
     NSInteger type;
     NSMutableArray *dataarr;
@@ -35,11 +97,13 @@
     BOOL isLoadbtn;
 }
 
-@property (nonatomic, strong) JCCollectionViewWaterfallLayout *layout;
+//@property (nonatomic, strong) JCCollectionViewWaterfallLayout *layout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewBottomConstraint;
 //  contextmenu selection index (-1,0,1,2)
-@property (nonatomic) NSInteger contextMenuIndex;
+//@property (nonatomic) NSInteger contextMenuIndex;
+@property (nonatomic, strong) DDAUIActionSheetViewController *customEditActionSheet;
+@property (nonatomic) UIVisualEffectView *effectView;
 @end
 
 @implementation CalbumlistViewController
@@ -60,12 +124,12 @@
     isLoadbtn = NO;
     //type=0;
     type = self.collectionType;
-    self.contextMenuIndex = -1;
+    //self.contextMenuIndex = -1;
     
-    self.layout = (JCCollectionViewWaterfallLayout *)self.collectioview.collectionViewLayout;
-    self.layout.headerHeight = 0.0f;
-    self.layout.footerHeight = 0.0f;
-    //self.layout.sectionInset=UIEdgeInsetsMake(0, 25, 0, 25);
+//    self.layout = (JCCollectionViewWaterfallLayout *)self.collectioview.collectionViewLayout;
+//    self.layout.headerHeight = 0.0f;
+//    self.layout.footerHeight = 0.0f;
+//    //self.layout.sectionInset=UIEdgeInsetsMake(0, 25, 0, 25);
 
     // Do any additional setup after loading the view from its nib.
     
@@ -84,18 +148,15 @@
     _btn3.exclusiveTouch=YES;
     _collectioview.exclusiveTouch=YES;
     
-    GHContextMenuView *overlay = [[GHContextMenuView alloc] init];
-    overlay.dataSource = self;
-    overlay.delegate = self;
-    overlay.menuActionType = GHContextMenuActionTypeTap;
-    
-    UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget: overlay
-                                                                                                      action: @selector(longPressDetected:)];
-    [_collectioview addGestureRecognizer: longPressRecognizer];
-    
     self.collectioview.showsVerticalScrollIndicator = NO;
     
     // Avoid loading data twice for showing same data in PageCollectionViewController
+    
+    // CustomActionSheet
+    self.customEditActionSheet = [[DDAUIActionSheetViewController alloc] init];
+    self.customEditActionSheet.delegate = self;
+    self.customEditActionSheet.topicStr = @"編輯作品";
+//
 }
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleDefault;
@@ -129,29 +190,29 @@
 
 - (void)viewDidLayoutSubviews {
     NSLog(@"viewDidLayoutSubviews");
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-            case 1136:
-                printf("iPhone 5 or 5S or 5C");
-                break;
-            case 1334:
-                printf("iPhone 6/6S/7/8");
-                break;
-            case 1920:
-                printf("iPhone 6+/6S+/7+/8+");
-                break;
-            case 2208:
-                printf("iPhone 6+/6S+/7+/8+");
-                break;
-            case 2436:
-                printf("iPhone X");
-                self.collectionViewBottomConstraint.constant = -40;
-                break;
-            default:
-                printf("unknown");
-                break;
-        }
-    }
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+//            case 1136:
+//                printf("iPhone 5 or 5S or 5C");
+//                break;
+//            case 1334:
+//                printf("iPhone 6/6S/7/8");
+//                break;
+//            case 1920:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                break;
+//            case 2208:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                break;
+//            case 2436:
+//                printf("iPhone X");
+//                self.collectionViewBottomConstraint.constant = -40;
+//                break;
+//            default:
+//                printf("unknown");
+//                break;
+//        }
+//    }
 }
 
 #pragma mark -
@@ -206,7 +267,7 @@
             NSLog(@"共用收藏");
         }
         
-        dataarr=[NSMutableArray new];
+        //dataarr=[NSMutableArray new];
         nextId = 0;
         isLoading = NO;
         
@@ -235,7 +296,7 @@
     [wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
     __block typeof(type) wt = type;
-    NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 10];
+    NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSArray *arr = @[@"mine",@"other",@"cooperation"];
@@ -244,9 +305,10 @@
                                               rank: arr[wt]//type]
                                              limit: limit];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
-            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wTools HideMBProgressHUD];
+            });
+        
             if (response != nil) {
                 NSLog(@"response from getcalbumlist");
                 
@@ -254,37 +316,45 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CalbumlistViewController");
                     NSLog(@"getcalbumlist");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getcalbumlist"
-                                         albumId: @""];
-                    [wself.refreshControl endRefreshing];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                        protocolName: @"getcalbumlist"
+                                             albumId: @""];
+                        [wself.refreshControl endRefreshing];
+                    });
                     wself->isreload = NO;
+                    
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     NSLog(@"dic: %@", dic);
-                    [wself processCalbumlist:dic];
-                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself processCalbumlist:dic];
+                    });
                 }
             }else{
-                [wself.refreshControl endRefreshing];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself.refreshControl endRefreshing];
+                });
                 wself->isreload = NO;
             }
-        });
+        //});
     });
 }
 - (void)processCalbumlist:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         if (nextId==0) {
-            dataarr=[NSMutableArray new];
+            [dataarr removeAllObjects];//=[NSMutableArray new];
         }
         int s=0;
-        for (NSMutableDictionary *picture in [dic objectForKey:@"data"]) {
-            s++;
-            [dataarr addObject: picture];
-        }
+        NSArray *list = [dic objectForKey:@"data"];
+        s = (int)[list count];
+//        for (NSMutableDictionary *picture in [dic objectForKey:@"data"]) {
+//            s++;
+//            [dataarr addObject: picture];
+//        }
+        [dataarr addObjectsFromArray:list];
         nextId = nextId+s;
         // dataarr=[dic[@"data"] mutableCopy];
         
@@ -311,6 +381,9 @@
         [_refreshControl endRefreshing];
         isreload = NO;
     }
+}
+- (void)logOut {
+    [wTools logOut];
 }
 
 //沒有資料產生的畫面
@@ -381,7 +454,7 @@
     if (dataarr.count < indexPath.row + 1) {
         return Cell;
     }
-    
+    Cell.dataIndex = indexPath.row;
     NSLog(@"cellForItemAtIndexPath");
     NSLog(@"dataArr: %@", dataarr);
     
@@ -400,7 +473,7 @@
     
     img.imageURL = nil;
     img.image = nil;
-    img.contentMode = UIViewContentModeScaleAspectFit;
+    img.contentMode = UIViewContentModeCenter;//UIViewContentModeScaleAspectFit;
     img.image = [UIImage imageNamed:@"123"];
     
     if (![data[@"cover"] isKindOfClass:[NSNull class]]) {
@@ -410,34 +483,38 @@
     } else {
         img.imageURL = nil;
     }
+    img.layer.masksToBounds = YES;
+    img.layer.cornerRadius = 6;
     
+    Cell.opMenuLeading.constant = collectionView.bounds.size.width;
     Cell.zipped = [data[@"zipped"] boolValue];
     //Cell.stopview.hidden = YES;
     
     NSLog(@"data zipped boolvalue: %d", [data[@"zipped"] boolValue]);
     
     if ([data[@"zipped"] boolValue]) {
-        img.alpha = 1;
-        Cell.lockImgV.hidden = YES;
+        //img.alpha = 1;
+        Cell.lockBtn.hidden = YES;
         Cell.unfinishedLabel.hidden = YES;
     } else {
-        img.alpha = 0.3;
-        Cell.lockImgV.hidden = NO;
+        //img.alpha = 0.3;
+        Cell.lockBtn.hidden = NO;
         Cell.unfinishedLabel.hidden = NO;
     }
     
-    /*
+    
     NSLog(@"act: %@", data[@"act"]);
-    if ([data[@"act"] isEqualToString: @"close"]) {
-        img.alpha = 0.3;
-        Cell.lockImgV.hidden = NO;
+    if (![data[@"act"] isEqualToString: @"open"]) {
+        //img.alpha = 0.3;
+        Cell.lockBtn.hidden = NO;
+        [Cell.lockBtn setImage:[UIImage imageNamed: @"ic200_act_close_pink"] forState:UIControlStateNormal];//image = ;
         Cell.unfinishedLabel.hidden = NO;
     } else {
-        img.alpha = 1;
-        Cell.lockImgV.hidden = YES;
+        //img.alpha = 1;
+        Cell.lockBtn.hidden = YES;
         Cell.unfinishedLabel.hidden = YES;
     }
-    */
+    
     
     if (![data[@"insertdate"] isEqual: [NSNull null]]) {
         Cell.mydate.text = data[@"insertdate"];
@@ -463,8 +540,8 @@
     
     NSString *myString=[NSString stringWithFormat:@"    %@",data[@"name"]];
     
-    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:11]};
-    CGSize size = [myString boundingRectWithSize:CGSizeMake(111, MAXFLOAT) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+    //NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:11]};
+    //CGSize size = [myString boundingRectWithSize:CGSizeMake(111, MAXFLOAT) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
     
     //UILabel *label=(UILabel *)[Cell.bgview viewWithTag:1111];
     
@@ -495,8 +572,9 @@
 
     //個人資料
     NSDictionary *userdata=dataarr[indexPath.row][@"user"];
-    Cell.userid=userdata[@"user_id"];
-    img=Cell.picture;
+    //  convert to NSString first
+    Cell.userid=[userdata[@"user_id"] stringValue];
+    img=Cell.userAvatar;
     img.image=[UIImage imageNamed:@"2-01aaphoto.png"];
     
     if (![userdata[@"picture"] isKindOfClass:[NSNull class]]) {
@@ -507,21 +585,29 @@
     }else{
         img.image=[UIImage imageNamed:@""];
     }
-
+    img.layer.masksToBounds = YES;
+    img.layer.cornerRadius = 12;
+    
     if (![userdata[@"name"] isEqual:[NSNull null]]) {
         Cell.mytitle.text=userdata[@"name"];
     }
     
     //取得資料ID
-    NSString *name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],[data[@"album_id"] stringValue]];
-    NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    NSString *name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],[data[@"album_id"] stringValue]];
+//    NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//
     
-    //檢查資料夾是否存在
-    if ([fileManager fileExistsAtPath:docDirectoryPath]) {
-        Cell.downimage.image=[UIImage imageNamed:@"icon_download-already.png"];
-    }else{
-        Cell.downimage.image=[UIImage imageNamed :@"icon_download.png"];
+    switch (self.collectionType) {
+        case 0:
+            [Cell selfAlbumMode];
+            break;
+        case 1:
+            [Cell favAlbumMode];
+            break;
+        case 2:
+            [Cell coopAlbumMode];
+            break;
     }
     
     return Cell;
@@ -579,52 +665,53 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - UICollectionViewFlowLayoutDelegate
--(CGSize)collectionView:(UICollectionView *)collectionView
-                 layout:(UICollectionViewLayout *)collectionViewLayout
- sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"collectionViewLayout sizeForItemAtIndexPath");
-    
-    int i = 0;
-    //i=arc4random() % 50;
-    NSDictionary *data=dataarr[indexPath.row][@"album"];
-    NSString *myString=[NSString stringWithFormat:@"    %@",data[@"description"]];
-    
-    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:11]};
-    CGSize size = [myString boundingRectWithSize:CGSizeMake(111, MAXFLOAT) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
-    i = size.height;
-    
-    NSLog(@"i: %d", i);
-    NSLog(@"%@", NSStringFromCGSize(CGSizeMake(128, 242+15+i)));
-    
-    if (i > 50) {
-        i = 50;
-    }
-    
-    NSLog(@"i: %d", i);
-    NSLog(@"%@", NSStringFromCGSize(CGSizeMake(128, 242+15+i)));
-    
-    return CGSizeMake(128, 242+15+i);
-}
-
-- (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(UICollectionViewLayout *)collectionViewLayout
-minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    return 16.0;
-}
-
-- (CGFloat)collectionView:(UICollectionView *)collectionView
-                   layout:(UICollectionViewLayout *)collectionViewLayout
-minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-    return 16.0;
-}
-
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
-                        layout:(UICollectionViewLayout *)collectionViewLayout
-        insetForSectionAtIndex:(NSInteger)section
-{
-    return UIEdgeInsetsMake(0, 16, 0, 16);
-}
+//-(CGSize)collectionView:(UICollectionView *)collectionView
+//                 layout:(UICollectionViewLayout *)collectionViewLayout
+// sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+////    NSLog(@"collectionViewLayout sizeForItemAtIndexPath");
+////
+////    int i = 0;
+////    //i=arc4random() % 50;
+////    NSDictionary *data=dataarr[indexPath.row][@"album"];
+////    NSString *myString=[NSString stringWithFormat:@"    %@",data[@"description"]];
+////
+////    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:11]};
+////    CGSize size = [myString boundingRectWithSize:CGSizeMake(111, MAXFLOAT) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+////    i = size.height;
+////
+////    NSLog(@"i: %d", i);
+////    NSLog(@"%@", NSStringFromCGSize(CGSizeMake(128, 242+15+i)));
+////
+////    if (i > 50) {
+////        i = 50;
+////    }
+////
+////    NSLog(@"i: %d", i);
+////    NSLog(@"%@", NSStringFromCGSize(CGSizeMake(128, 242+15+i)));
+////
+//    CGFloat w = collectionView.frame.size.width;
+//    return CGSizeMake(w+10, 96);//128, 242+15+i);
+//}
+//
+//- (CGFloat)collectionView:(UICollectionView *)collectionView
+//                   layout:(UICollectionViewLayout *)collectionViewLayout
+//minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+//    return 0;
+//}
+//
+//- (CGFloat)collectionView:(UICollectionView *)collectionView
+//                   layout:(UICollectionViewLayout *)collectionViewLayout
+//minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+//    return 1;
+//}
+//
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+//                        layout:(UICollectionViewLayout *)collectionViewLayout
+//        insetForSectionAtIndex:(NSInteger)section
+//{
+//    return UIEdgeInsetsMake(0, 0, 0, 0);
+//}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (isLoading)
@@ -634,17 +721,23 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         [self reloaddata];
     }
 }
-
+- (void)refreshCellAtIndex:(NSInteger) index {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //[self.collectioview reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
+        [self reloaddata];
+    });
+}
 #pragma mark - GHMenu Methods
 
 - (BOOL)shouldShowMenuAtPoint:(CGPoint)point {
-    NSIndexPath *indexPath = [_collectioview indexPathForItemAtPoint: point];
-    UICollectionViewCell *cell = [_collectioview cellForItemAtIndexPath: indexPath];
-    _contextMenuIndex = -1;
-    if (cell )
-        _contextMenuIndex = indexPath.row;
-    
-    return cell != nil;
+//    NSIndexPath *indexPath = [_collectioview indexPathForItemAtPoint: point];
+//    UICollectionViewCell *cell = [_collectioview cellForItemAtIndexPath: indexPath];
+//    //_contextMenuIndex = -1;
+//    if (cell )
+//        _contextMenuIndex = indexPath.row;
+//
+//    return cell != nil;
+    return NO;
 }
 
 - (NSInteger)numberOfMenuItems {
@@ -711,112 +804,112 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 //  no valid selection is made
 - (void)menuCancelled {
-    _contextMenuIndex = -1;
+//    _contextMenuIndex = -1;
 }
 - (void)didSelectItemAtIndex:(NSInteger)selectedIndex forMenuAtPoint:(CGPoint)point {
-    NSLog(@"didSelectItemAtIndex");
-    NSIndexPath *indexPath = [_collectioview indexPathForItemAtPoint: point];
-    NSLog(@"indexPath.row: %ld", (unsigned long)indexPath.row);
-    
-    NSString *msg = nil;
-    
-    //if (self.collectionType == 0 || self.collectionType == 2) {
-    if (self.collectionType == 0) {
-        switch (selectedIndex) {
-            case 0:
-                msg = @"Delete";
-                break;
-            case 1:
-                msg = @"PhotoEdit";
-                break;
-            case 2:
-                msg = @"Share";
-                break;
-            case 3:
-                msg = @"Cooperation";
-            default:
-                break;
-        }
-    } else if (self.collectionType == 1) {
-        switch (selectedIndex) {
-            case 0:
-                msg = @"Delete";
-                break;
-            case 1:
-                msg = @"Share";
-            default:
-                break;
-        }
-    }
-    if (_contextMenuIndex == -1)
-        _contextMenuIndex = indexPath.row;
-    NSDictionary *data = dataarr[_contextMenuIndex][@"album"];
-    NSString *albumId = [data[@"album_id"] stringValue];
-    NSString *templateId = [dataarr[_contextMenuIndex][@"template"][@"template_id"] stringValue];
-    NSLog(@"templateId: %@", templateId);
-    NSDictionary *userdata = dataarr[_contextMenuIndex][@"user"];
-    NSString *identity = dataarr[_contextMenuIndex][@"cooperation"][@"identity"];
-    
-    
-    BOOL hasImage = [data[@"usefor"][@"image"] boolValue];
-    NSLog(@"hasImage: %d", hasImage);
-    
-    if ([msg isEqualToString: @"Delete"]) {
-        NSLog(@"msg isEqualToString: Delete");
-        NSIndexPath *i = [NSIndexPath indexPathForRow:_contextMenuIndex inSection:0];
-        [self deleteBook:i ];//indexPath];
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"deleteAlbum"];
-        [defaults synchronize];
-    }
-    if ([msg isEqualToString: @"PhotoEdit"]) {
-        if (self.collectionType == 2) {
-            if ([identity isEqualToString: @"viewer"]) {
-                [self showCustomAlertNormal: NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
-                return;
-            }
-            if ([self.delegate respondsToSelector: @selector(editPhoto:templateId:shareCollection:hasImage:)]) {
-                NSLog(@"self.delegate respondsToSelector editphotoinfo:templateid:eventId:postMode:");
-                [self.delegate editPhoto: albumId templateId: templateId shareCollection: YES hasImage: hasImage];
-            }
-        } else if (self.collectionType == 0) {
-            if ([self.delegate respondsToSelector: @selector(editPhoto:templateId:shareCollection:hasImage:)]) {
-                NSLog(@"self.delegate respondsToSelector editphotoinfo:templateid:eventId:postMode:");
-                [self.delegate editPhoto: albumId templateId: templateId shareCollection: NO hasImage: hasImage];
-            }
-        }
-    }
-    if ([msg isEqualToString: @"Share"]) {
-        NSString *sharingStr = [NSString stringWithFormat:@"%@ http://www.pinpinbox.com/index/album/content/?album_id=%@", userdata[@"name"], albumId];
-        
-        if ([self.delegate respondsToSelector: @selector(shareLink:albumId:)]) {
-            [self.delegate shareLink: sharingStr
-                             albumId: albumId];
-        }
-    }
-    if ([msg isEqualToString: @"Cooperation"]) {
-        if (self.collectionType == 2) {
-            NSLog(@"identity: %@", identity);
-            
-            if ([identity isEqualToString: @"viewer"] || [identity isEqualToString: @"editor"]) {
-                [self showCustomAlertNormal: NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
-                return;
-            }
-            if ([self.delegate respondsToSelector: @selector(editCooperation:identity:)]) {
-                NSLog(@"self.delegate respondsToSelector editCooperation");
-                [self.delegate editCooperation: albumId identity: identity];
-            }
-        } else if (self.collectionType == 0) {
-            NSLog(@"identity: %@", identity);
-            
-            if ([self.delegate respondsToSelector: @selector(editCooperation:identity:)]) {
-                NSLog(@"self.delegate respondsToSelector editCooperation");
-                [self.delegate editCooperation: albumId identity: @"admin"];
-            }
-        }
-    }
-    _contextMenuIndex = -1;
+//    NSLog(@"didSelectItemAtIndex");
+//    NSIndexPath *indexPath = [_collectioview indexPathForItemAtPoint: point];
+//    NSLog(@"indexPath.row: %ld", (unsigned long)indexPath.row);
+//
+//    NSString *msg = nil;
+//
+//    //if (self.collectionType == 0 || self.collectionType == 2) {
+//    if (self.collectionType == 0) {
+//        switch (selectedIndex) {
+//            case 0:
+//                msg = @"Delete";
+//                break;
+//            case 1:
+//                msg = @"PhotoEdit";
+//                break;
+//            case 2:
+//                msg = @"Share";
+//                break;
+//            case 3:
+//                msg = @"Cooperation";
+//            default:
+//                break;
+//        }
+//    } else if (self.collectionType == 1) {
+//        switch (selectedIndex) {
+//            case 0:
+//                msg = @"Delete";
+//                break;
+//            case 1:
+//                msg = @"Share";
+//            default:
+//                break;
+//        }
+//    }
+////    if (_contextMenuIndex == -1)
+////        _contextMenuIndex = indexPath.row;
+//    NSDictionary *data = dataarr[_contextMenuIndex][@"album"];
+//    NSString *albumId = [data[@"album_id"] stringValue];
+//    NSString *templateId = [dataarr[_contextMenuIndex][@"template"][@"template_id"] stringValue];
+//    NSLog(@"templateId: %@", templateId);
+//    NSDictionary *userdata = dataarr[_contextMenuIndex][@"user"];
+//    //NSString *identity = dataarr[_contextMenuIndex][@"cooperation"][@"identity"];
+//
+//
+//    BOOL hasImage = [data[@"usefor"][@"image"] boolValue];
+//    NSLog(@"hasImage: %d", hasImage);
+//
+//    if ([msg isEqualToString: @"Delete"]) {
+//        NSLog(@"msg isEqualToString: Delete");
+//        NSIndexPath *i = [NSIndexPath indexPathForRow:_contextMenuIndex inSection:0];
+//        [self deleteBook:i ];//indexPath];
+//
+//        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//        [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"deleteAlbum"];
+//        [defaults synchronize];
+//    }
+//    if ([msg isEqualToString: @"PhotoEdit"]) {
+//        if (self.collectionType == 2) {
+//            if ([identity isEqualToString: @"viewer"]) {
+//                [self showCustomAlertNormal: NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
+//                return;
+//            }
+//            if ([self.delegate respondsToSelector: @selector(editPhoto:templateId:shareCollection:hasImage:)]) {
+//                NSLog(@"self.delegate respondsToSelector editphotoinfo:templateid:eventId:postMode:");
+//                [self.delegate editPhoto: albumId templateId: templateId shareCollection: YES hasImage: hasImage];
+//            }
+//        } else if (self.collectionType == 0) {
+//            if ([self.delegate respondsToSelector: @selector(editPhoto:templateId:shareCollection:hasImage:)]) {
+//                NSLog(@"self.delegate respondsToSelector editphotoinfo:templateid:eventId:postMode:");
+//                [self.delegate editPhoto: albumId templateId: templateId shareCollection: NO hasImage: hasImage];
+//            }
+//        }
+//    }
+//    if ([msg isEqualToString: @"Share"]) {
+//        NSString *sharingStr = [NSString stringWithFormat:@"%@ http://www.pinpinbox.com/index/album/content/?album_id=%@", userdata[@"name"], albumId];
+//
+//        if ([self.delegate respondsToSelector: @selector(shareLink:albumId:)]) {
+//            [self.delegate shareLink: sharingStr
+//                             albumId: albumId];
+//        }
+//    }
+//    if ([msg isEqualToString: @"Cooperation"]) {
+//        if (self.collectionType == 2) {
+//            NSLog(@"identity: %@", identity);
+//
+//            if ([identity isEqualToString: @"viewer"] || [identity isEqualToString: @"editor"]) {
+//                [self showCustomAlertNormal: NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
+//                return;
+//            }
+//            if ([self.delegate respondsToSelector: @selector(editCooperation:identity:)]) {
+//                NSLog(@"self.delegate respondsToSelector editCooperation");
+//                [self.delegate editCooperation: albumId identity: identity];
+//            }
+//        } else if (self.collectionType == 0) {
+//            NSLog(@"identity: %@", identity);
+//
+//            if ([self.delegate respondsToSelector: @selector(editCooperation:identity:)]) {
+//                NSLog(@"self.delegate respondsToSelector editCooperation");
+//                [self.delegate editCooperation: albumId identity: @"admin"];
+//            }
+//        }
+//    }
+//    _contextMenuIndex = -1;
 }
 
 - (void)getIdentity:(NSString *)albumId templateId:(NSString *)templateId msg:(NSString *)msg
@@ -1589,5 +1682,413 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     return contentView;
 }
+#pragma mark - Tap userAvatar
+- (void)showCreatorPageWithUserid:(NSString *)userid {
+    
+    CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+    cVC.userId = userid;
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: cVC animated: YES];
+}
+#pragma mark - change album act with albumid & index
+- (void)changeAlbumAct:(NSString *)albumid index:(NSInteger)index {
+    if (index < dataarr.count) {
+        NSDictionary *data = dataarr[index][@"album"];
+        NSString *al = [data[@"album_id"] stringValue];
+        if ([al isEqualToString:albumid]) {
+            __block typeof(self) wself = self;
+            [boxAPI getAlbumSettingsWithAlbumId:albumid completionBlock:^(NSDictionary *settings, NSError *error) {
+                if (!error) {
+                    //NSLog(@"%@",settings);
+                    NSDictionary *dt = settings[@"data"];
+                    NSString *t = dt[@"title"];
+                    NSNumber *f = dt[@"firstpaging"];
+                    NSNumber *s = dt[@"secondpaging"];
+                    if (t && t.length > 0 && f && s) {
+                        [boxAPI getAlbumDiyWithAlbumId:albumid completionBlock:^(NSDictionary *result, NSError *error) {
+                            if (!error) {
+                                NSDictionary *d = result[@"data"];
+                                if (d) {
+                                    NSArray *a = d[@"photo"];
+                                    if (a.count < 1)
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [wself showCustomErrorAlert:@"你的作品還沒有內容"];
+                                        });
+                                    else {
+                                        NSMutableDictionary *va = [NSMutableDictionary dictionaryWithDictionary:settings];
+                                        //  modify "act" value in settings
+                                        [va setObject:@"open" forKey:@"act"];
+                                        //NSString *setting = [NSJSONSerialization dataWithJSONObject:va options: error:]
+                                        NSData *jsonData = [NSJSONSerialization dataWithJSONObject: va options: 0 error: nil];
+                                        NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
+                                        
+                                        [boxAPI setAlbumSettingsWithDictionary:jsonStr albumid:albumid completionBlock:^(NSDictionary *result, NSError *error) {
+                                            if (!error) {
+                                                [wself refreshCellAtIndex:index];
+                                            } else if (error.code == 1111) {
+                                                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                                                style.messageColor = [UIColor whiteColor];
+                                                style.backgroundColor = [UIColor thirdPink];
+                                                
+                                                [wself.view makeToast: @"用戶驗證異常請重新登入"
+                                                            duration: 2.0
+                                                            position: CSToastPositionBottom
+                                                               style: style];
+                                                
+                                                [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                                                                 target: self
+                                                                               selector: @selector(logOut)
+                                                                               userInfo: nil
+                                                                                repeats: NO];
+                                            } else {
+                                                NSString *alert = [error localizedDescription];
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    [wself showCustomErrorAlert:alert];
+                                                });
+                                            }
+                                        }];
+                                        
+                                    }
+                                } else {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        [wself showCustomErrorAlert:@"作品資訊不完整不能公開"];
+                                    });
+                                }
+                            } else {
+                                NSString *alert = [error localizedDescription];
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [wself showCustomErrorAlert:alert];
+                                });
+                            }
+                        }];
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [wself showCustomErrorAlert:@"作品資訊不完整不能公開"];
+                        });
+                    }
+                } else {
+                    NSString *alert = [error localizedDescription];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself showCustomErrorAlert:alert];
+                    });
+                }
+            }];
+        }
+    }
+}
+#pragma mark - cell opMenu action related
+- (void)opMenuAction:(OpMenuActionType)action index:(NSInteger )index {
+    
+    if (index < dataarr.count) {
+        NSDictionary *data = dataarr[index][@"album"];
+        switch (action) {
+            case OPEdit:
+                if (![data[@"album_id"] isEqual: [NSNull null]])
+                    [self showCustomEditActionSheet:[data[@"album_id"] stringValue]];
+                break;
+            case OPShare: {
+                if ([data[@"zipped"] intValue] != 1) {
+                   [self showCustomAlertNormal:@"作品尚未完成"];
+                } else if (![data[@"act"] isEqualToString:@"open"]){
+                   [self showCustomAlertNormal:@"隱私必須開啟才能分享"];
+                } else {
+                    //  proceed to share
+                    if (![data[@"album_id"] isEqual: [NSNull null]])
+                        [self handleShare:[data[@"album_id"] stringValue]];
+                }
+            }
+                break;
+            case OPDelete:
+                break;
+            case OPInvite: {
+                NSDictionary *co = dataarr[index][@"cooperation"];
+                if (co && co[@"identity"]) {
+                    NSString *i = co[@"identity"];
+                    if (![co[@"identity"] isKindOfClass:[NSNull class]]) {
+                        if ([i isEqualToString:@"admin"] || [i isEqualToString:@"approver"]) {
+                            //  proceed to invite
+                        }
+                    }
+                }
+                [self showCustomAlertNormal:@"權限不足"];
+            }
+                break;
+            default:
+                break;
+        }
+        
+    }
+    
+    
+}
+#pragma mark - opMenu edit
+- (void)showCustomEditActionSheet:(NSString *)albumid {
+    
+    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+    
+    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+    }];
+    
+    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
+    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
+    self.effectView.alpha = 0.8;
+    
+    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
+    [[UIApplication sharedApplication].keyWindow addSubview: self.customEditActionSheet.view];
+    [self.customEditActionSheet viewWillAppear: NO];
+    
+    [self.customEditActionSheet addSelectItem: @"" title: @"作品編輯" btnStr: @"" tagInt: 1 identifierStr: @"albumEdit"];
+    [self.customEditActionSheet addSelectItem: @"" title: @"修改資訊" btnStr: @"" tagInt: 2 identifierStr: @"modifyInfo"];
+    
+    __block typeof(self) weakSelf = self;
+    self.customEditActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
+        if ([identifierStr isEqualToString: @"albumEdit"]) {
+            NSLog(@"albumEdit item is pressed");
+            [weakSelf toAlbumCreationViewController: albumid
+                                         templateId: @"0"
+                                    shareCollection: NO];
+        } else if ([identifierStr isEqualToString: @"modifyInfo"]) {
+            NSLog(@"modifyInfo item is pressed");
+            [weakSelf toAlbumSettingViewController: albumid
+                                        templateId: @"0"
+                                   shareCollection: NO];
+        }
+    };
+    
+    
+    
+}
+- (void)toAlbumCreationViewController: (NSString *)albumId
+                           templateId: (NSString *)templateId
+                      shareCollection: (BOOL)shareCollection
+{
+    NSLog(@"toAlbumCreationViewController");
+    
+    AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
+    //acVC.selectrow = [wTools userbook];
+    acVC.albumid = albumId;
+    acVC.templateid = [NSString stringWithFormat:@"%@", templateId];
+    acVC.shareCollection = shareCollection;
+    acVC.postMode = NO;
+    acVC.fromVC = @"CalbumlistViewController";
+    acVC.delegate = self;
+    
+    if ([templateId isEqualToString:@"0"]) {
+        acVC.booktype = 0;
+        acVC.choice = @"Fast";
+    } else {
+        acVC.booktype = 1000;
+        acVC.choice = @"Template";
+    }
+    
+    //[self.navigationController pushViewController: acVC animated: YES];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: acVC animated: YES];
+}
+
+- (void)toAlbumSettingViewController: (NSString *)albumId
+                          templateId: (NSString *)templateId
+                     shareCollection: (BOOL)shareCollection
+{
+    NSLog(@"toAlbumSettingViewController");
+    
+    AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
+    aSVC.albumId = albumId;
+    aSVC.postMode = NO;
+    aSVC.templateId = [NSString stringWithFormat:@"%@", templateId];
+    aSVC.shareCollection = shareCollection;
+    aSVC.fromVC = @"AlbumDetailVC";
+    aSVC.delegate = self;
+    aSVC.hasImage = YES;
+    //[self.navigationController pushViewController: aSVC animated: YES];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: aSVC animated: YES];
+}
+#pragma mark - opMenu share
+- (void)handleShare:(NSString *)albumId {
+    
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        
+        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+                                                  token: [wTools getUserToken]
+                                               task_for: @"share_to_fb"
+                                               platform: @"apple"];
+        
+        NSString *albumDetail = [boxAPI retrievealbump:albumId uid:[wTools getUserID] token:[wTools getUserToken]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            
+            if (response != nil) {
+                NSLog(@"");
+                NSLog(@"");
+                NSLog(@"response from checkTaskCompleted");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"AlbumDetailViewController");
+                    NSLog(@"checkTaskComplete");
+                    
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"checkTaskCompleted" albumId:albumId];
+                     
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *detail = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [albumDetail dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSDictionary *dt = detail[@"data"];
+                    NSDictionary *eventjoin = [dt objectForKey:@"eventjoin"];
+                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    NSLog(@"data: %@", data);
+                    NSString *autoPlayStr = @"&autoplay=1";
+                    if ([data[@"result"] intValue] == 1) {
+                        
+                        // Task is completed, so calling the original sharing function
+                        //[wTools Activitymessage:[NSString stringWithFormat: sharingLink , _album_id, autoPlayStr]];
+                        
+                        NSString *message;
+                        
+                        if (eventjoin) {
+                            
+                            message = [NSString stringWithFormat: sharingLinkWithAutoPlay, albumId, autoPlayStr];
+                        } else {
+                            message = [NSString stringWithFormat: sharingLinkWithoutAutoPlay, albumId];
+                        }
+                        UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems: [NSArray arrayWithObjects: message, nil] applicationActivities: nil];
+                        [wself presentViewController: activityVC animated: YES completion: nil];
+                        
+                    } else if ([data[@"result"] intValue] == 2) {
+                        NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
+                        
+                        // Task is not completed, so pop ups alert view
+                        //[self showSharingAlertView];
+                        //[self showShareActionSheet];
+                        [self showCustomShareActionSheet:eventjoin albumid:albumId autoplayStr:autoPlayStr];
+                        
+                    } else if ([data[@"result"] intValue] == 0) {
+                        NSString *message;
+                        
+                        if ([eventjoin isEqual: [NSNull null]]) {
+                            message = [NSString stringWithFormat: sharingLinkWithAutoPlay, albumId, autoPlayStr];
+                        } else {
+                            message = [NSString stringWithFormat: sharingLinkWithoutAutoPlay, albumId];
+                        }
+                        UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems: [NSArray arrayWithObjects: message, nil] applicationActivities: nil];
+                        [wself presentViewController: activityVC animated: YES completion: nil];
+                    } else {
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
+                }
+            }
+        });
+    });
+    
+}
+- (void)showCustomShareActionSheet:(NSDictionary *)eventjoin albumid:(NSString *)albumid autoplayStr:(NSString *)autoplayStr {
+    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+    
+    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+    }];
+    
+    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
+    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    self.effectView.alpha = 0.8;
+    
+    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
+    [[UIApplication sharedApplication].keyWindow addSubview: self.customEditActionSheet.view];
+    [self.customEditActionSheet viewWillAppear: NO];
+    
+    [self.customEditActionSheet addSelectItem: @"" title: @"獎勵分享(facebook)" btnStr: @"" tagInt: 1 identifierStr: @"fbSharing"];
+    [self.customEditActionSheet addSelectItem: @"" title: @"一般分享" btnStr: @"" tagInt: 2 identifierStr: @"normalSharing"];
+    
+    __weak typeof(self) weakSelf = self;
+    
+    self.customEditActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
+        NSLog(@"");
+        NSLog(@"customShareActionSheet.customViewBlock executes");
+        NSLog(@"tagId: %ld", (long)tagId);
+        NSLog(@"isTouchDown: %d", isTouchDown);
+        NSLog(@"identifierStr: %@", identifierStr);
+        
+        if ([identifierStr isEqualToString: @"fbSharing"]) {
+            NSLog(@"fbSharing is pressed");
+            FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+            
+            if (eventjoin){//[weakSelf.data[@"eventjoin"] isEqual: [NSNull null]]) {
+                NSLog(@"eventjoin is null");
+                content.contentURL = [NSURL URLWithString: [NSString stringWithFormat: sharingLinkWithAutoPlay, albumid, autoplayStr]];
+            } else {
+                NSLog(@"eventjoin is not null");
+                content.contentURL = [NSURL URLWithString: [NSString stringWithFormat: sharingLinkWithoutAutoPlay, albumid]];
+            }
+            
+            [FBSDKShareDialog showFromViewController: weakSelf
+                                         withContent: content
+                                            delegate: weakSelf];
+        } else if ([identifierStr isEqualToString: @"normalSharing"]) {
+            NSLog(@"normalSharing is pressed");
+            NSString *message;
+            
+            if ([eventjoin isEqual: [NSNull null]]) {
+                NSLog(@"eventjoin is null");
+                message = [NSString stringWithFormat: sharingLinkWithAutoPlay, albumid, autoplayStr];
+            } else {
+                NSLog(@"eventjoin is not null");
+                message = [NSString stringWithFormat: sharingLinkWithoutAutoPlay, albumid];
+            }
+            
+            NSLog(@"message: %@", message);
+            
+            UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems: [NSArray arrayWithObjects: message, nil] applicationActivities: nil];
+            [weakSelf presentViewController: activityVC animated: YES completion: nil];
+        }
+    };
+    
+}
+- (void)albumSettingViewControllerUpdate:(AlbumSettingViewController *)controller {
+    [self reloaddata];
+}
+- (void)albumCreationViewControllerBackBtnPressed:(AlbumCreationViewController *)controller {
+    [self reloaddata];
+}
+- (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
+    
+    [self.effectView removeFromSuperview];
+    self.effectView = nil;
+}
+#pragma mark - FB share SDK
+- (void)sharer:(id<FBSDKSharing>)sharer didCompleteWithResults:(NSDictionary *)results {
+    
+}
+
+- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error {
+    
+}
+
+- (void)sharerDidCancel:(id<FBSDKSharing>)sharer {
+    
+}
 @end

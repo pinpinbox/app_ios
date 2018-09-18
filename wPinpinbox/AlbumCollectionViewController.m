@@ -41,7 +41,7 @@
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 
-@property (nonatomic, strong) UIView *underLineView;
+//@property (nonatomic, strong) UIView *underLineView;
 @property (nonatomic, copy) void(^action)(NSInteger index);
 
 @property (nonatomic, strong) UILabel *leftLabel;
@@ -110,29 +110,36 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewDidLayoutSubviews {
-    NSLog(@"viewDidLayoutSubviews");
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-            case 1136:
-                printf("iPhone 5 or 5S or 5C");
-                break;
-            case 1334:
-                printf("iPhone 6/6S/7/8");
-                break;
-            case 1920:
-                printf("iPhone 6+/6S+/7+/8+");
-                break;
-            case 2208:
-                printf("iPhone 6+/6S+/7+/8+");
-                break;
-            case 2436:
-                printf("iPhone X");
-                break;
-            default:
-                printf("unknown");
-                break;
-        }
+- (void)viewWillLayoutSubviews {
+    
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+//            case 1136:
+//                printf("iPhone 5 or 5S or 5C");
+//                break;
+//            case 1334:
+//                printf("iPhone 6/6S/7/8");
+//                break;
+//            case 1920:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                break;
+//            case 2208:
+//                printf("iPhone 6+/6S+/7+/8+");
+//                break;
+//            case 2436:
+//                printf("iPhone X");
+//                break;
+//            default:
+//                printf("unknown");
+//                break;
+//        }
+//    }
+    
+    if (@available(iOS 11.0, *)) {
+        CGFloat y = self.view.safeAreaLayoutGuide.layoutFrame.origin.y;
+        self.pageMenu.view.frame = CGRectMake(0,y , self.view.safeAreaLayoutGuide.layoutFrame.size.width,  self.view.safeAreaLayoutGuide.layoutFrame.size.height);
+    } else {
+        // Fallback on earlier versions
     }
 }
 
@@ -140,12 +147,12 @@
 - (void)initialValueSetup {
     NSLog(@"");
     NSLog(@"initialValueSetup");
-    self.navBarView.backgroundColor = [UIColor barColor];
+    //self.navBarView.backgroundColor = [UIColor barColor];
     [self createPageMenu];
     [self createAnimateSegmentView];
 }
-
 - (void)createPageMenu {
+    if (self.pageMenu != nil) return;
     NSLog(@"");
     NSLog(@"createPageMenu");
     // ViewController Array Setup
@@ -173,7 +180,7 @@
                                  CAPSPageMenuOptionSelectionIndicatorColor: [UIColor clearColor],
                                  CAPSPageMenuOptionBottomMenuHairlineColor: [UIColor clearColor],
                                  CAPSPageMenuOptionMenuItemFont: [UIFont fontWithName:@"HelveticaNeue" size:13.0],
-                                 CAPSPageMenuOptionMenuHeight: @(64.0),
+                                 CAPSPageMenuOptionMenuHeight: @(48.0),///64.0),
                                  CAPSPageMenuOptionMenuItemWidth: @(90.0),
                                  CAPSPageMenuOptionCenterMenuItems: @(YES)
                                  };
@@ -198,15 +205,16 @@
                 printf("iPhone 6+/6S+c/7+/8+");
                 y = 4;
                 break;
-            case 2436:
+            //case 2436:
+            default:
                 printf("iPhone X");
-                self.navBarHeight.constant = navBarHeightConstant;
+                self.navBarHeight.constant = 48;//navBarHeightConstant;
                 y = 22.0;
                 break;
-            default:
-                printf("unknown");
-                y = 4;
-                break;
+//            default:
+//                printf("unknown");
+//                y = 4;
+//                break;
         }
     }
     
@@ -229,6 +237,7 @@
 }
 
 - (void)createAnimateSegmentView {
+    if (self.leftLabel != nil) return;
     NSLog(@"");
     NSLog(@"createAnimateSegmentView");
     [self setItemChangedAction:^(NSInteger index) {
@@ -264,7 +273,7 @@
     
     // Center Label
     self.centerLabel = [UILabel new];
-    self.centerLabel.text = @"其他收藏";
+    self.centerLabel.text = @"收藏▪︎贊助";
     self.centerLabel.font = [UIFont systemFontOfSize:15];
     [self.centerLabel sizeToFit];
     self.centerLabel.centerXPos.equalTo(@0);
@@ -287,7 +296,7 @@
     
     // Right Label
     self.rightLabel = [UILabel new];
-    self.rightLabel.text = @"共用協作";
+    self.rightLabel.text = @"群組作品";
     self.rightLabel.font = [UIFont systemFontOfSize:15];
     [self.rightLabel sizeToFit];
     self.rightLabel.centerXPos.equalTo(@0);
@@ -307,16 +316,16 @@
     [rightItemLayout addSubview: self.rightLabel];
     [rootLayout addSubview:rightItemLayout];
     
-    //底部的横线
-    _underLineView = [UIView new];
-    _underLineView.backgroundColor = [UIColor darkMain];
-    _underLineView.widthDime.equalTo(rootLayout.widthDime).multiply(1/3.0);
-    _underLineView.heightDime.equalTo(@2);
-    _underLineView.bottomPos.equalTo(@0);
-    _underLineView.leftPos.equalTo(@0).active = YES;   //设置左边位置有效
-    _underLineView.centerXPos.equalTo(@0).active = NO;  //设置水平中间位置无效
-    _underLineView.rightPos.equalTo(@0).active = NO;    //设置右边位置无效
-    [rootLayout addSubview:_underLineView];
+//    //底部的横线
+//    _underLineView = [UIView new];
+//    _underLineView.backgroundColor = [UIColor darkMain];
+//    _underLineView.widthDime.equalTo(rootLayout.widthDime).multiply(1/3.0);
+//    _underLineView.heightDime.equalTo(@2);
+//    _underLineView.bottomPos.equalTo(@0);
+//    _underLineView.leftPos.equalTo(@0).active = YES;   //设置左边位置有效
+//    _underLineView.centerXPos.equalTo(@0).active = NO;  //设置水平中间位置无效
+//    _underLineView.rightPos.equalTo(@0).active = NO;    //设置右边位置无效
+//    [rootLayout addSubview:_underLineView];
 }
 
 - (void)setItemChangedAction:(void(^)(NSInteger index))action {
@@ -346,10 +355,10 @@
 {
     switch (sender.tag) {
         case 0:
-            self.underLineView.leftPos.active = YES;
-            self.underLineView.centerXPos.active = NO;
-            self.underLineView.rightPos.active = NO;
-            
+//            self.underLineView.leftPos.active = YES;
+//            self.underLineView.centerXPos.active = NO;
+//            self.underLineView.rightPos.active = NO;
+//
             self.leftLabel.textColor = [UIColor blackColor];
             self.centerLabel.textColor = [UIColor thirdGrey];
             self.rightLabel.textColor = [UIColor thirdGrey];
@@ -357,9 +366,9 @@
             [self.pageMenu moveToPage: 0];
             break;
         case 1:
-            self.underLineView.leftPos.active = NO;
-            self.underLineView.centerXPos.active = YES;
-            self.underLineView.rightPos.active = NO;
+//            self.underLineView.leftPos.active = NO;
+//            self.underLineView.centerXPos.active = YES;
+//            self.underLineView.rightPos.active = NO;
             
             self.leftLabel.textColor = [UIColor thirdGrey];
             self.centerLabel.textColor = [UIColor blackColor];
@@ -369,9 +378,9 @@
             break;
         case 2:
             
-            self.underLineView.leftPos.active = NO;
-            self.underLineView.centerXPos.active = NO;
-            self.underLineView.rightPos.active = YES;
+//            self.underLineView.leftPos.active = NO;
+//            self.underLineView.centerXPos.active = NO;
+//            self.underLineView.rightPos.active = YES;
             
             self.leftLabel.textColor = [UIColor thirdGrey];
             self.centerLabel.textColor = [UIColor thirdGrey];
@@ -425,33 +434,34 @@
 
 - (void)changeViewAndLabel: (NSInteger)index
 {
+    //self.underLineView.hidden = YES;
     switch (index) {
         case 0:
-            self.underLineView.leftPos.active = YES;
-            self.underLineView.centerXPos.active = NO;
-            self.underLineView.rightPos.active = NO;
+//            self.underLineView.leftPos.active = YES;
+//            self.underLineView.centerXPos.active = NO;
+//            self.underLineView.rightPos.active = NO;
             
-            self.leftLabel.textColor = [UIColor blackColor];
-            self.centerLabel.textColor = [UIColor thirdGrey];
-            self.rightLabel.textColor = [UIColor thirdGrey];
+            self.leftLabel.textColor = [UIColor firstGrey];
+            self.centerLabel.textColor = [UIColor secondGrey];
+            self.rightLabel.textColor = [UIColor secondGrey];
             break;
         case 1:
-            self.underLineView.leftPos.active = NO;
-            self.underLineView.centerXPos.active = YES;
-            self.underLineView.rightPos.active = NO;
+//            self.underLineView.leftPos.active = NO;
+//            self.underLineView.centerXPos.active = YES;
+//            self.underLineView.rightPos.active = NO;
             
-            self.leftLabel.textColor = [UIColor thirdGrey];
-            self.centerLabel.textColor = [UIColor blackColor];
-            self.rightLabel.textColor = [UIColor thirdGrey];
+            self.leftLabel.textColor = [UIColor secondGrey];
+            self.centerLabel.textColor = [UIColor firstGrey];
+            self.rightLabel.textColor = [UIColor secondGrey];
             break;
         case 2:
-            self.underLineView.leftPos.active = NO;
-            self.underLineView.centerXPos.active = NO;
-            self.underLineView.rightPos.active = YES;
+//            self.underLineView.leftPos.active = NO;
+//            self.underLineView.centerXPos.active = NO;
+//            self.underLineView.rightPos.active = YES;
             
-            self.leftLabel.textColor = [UIColor thirdGrey];
-            self.centerLabel.textColor = [UIColor thirdGrey];
-            self.rightLabel.textColor = [UIColor blackColor];
+            self.leftLabel.textColor = [UIColor secondGrey];
+            self.centerLabel.textColor = [UIColor secondGrey];
+            self.rightLabel.textColor = [UIColor firstGrey];
             break;
         default:
             break;

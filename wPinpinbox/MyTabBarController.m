@@ -133,6 +133,11 @@ const CGFloat kBarHeight = 56;
 - (void)viewWillLayoutSubviews {    
     NSLog(@"MyTabBarController viewWillLayoutSubviews");
     
+    //CGPoint center = self.tabBar.center;
+    
+    centerButton.center = CGPointMake(self.tabBar.center.x, (self.tabBar.center.y+self.tabBar.frame.origin.y)/2);
+    
+    
     [self.view bringSubviewToFront: centerButton];
 }
 
@@ -149,30 +154,17 @@ const CGFloat kBarHeight = 56;
     [centerButton setBackgroundImage: hightlightImage forState: UIControlStateHighlighted];
     centerButton.tag = 104;
     
-    CGFloat heightDifference = buttonImage.size.height - self.tabBar.frame.size.height;
+//    CGFloat heightDifference = buttonImage.size.height - self.tabBar.frame.size.height;
 //    NSLog(@"");
 //    NSLog(@"self.tabBar.frame.size.height: %f", self.tabBar.frame.size.height);
 //    NSLog(@"buttonImage.size.height: %f", buttonImage.size.height);
 //    NSLog(@"heightDifference: %f", heightDifference);
 //    NSLog(@"");
     
-    NSLog(@"heightDifference: %f", heightDifference);
+//    NSLog(@"heightDifference: %f", heightDifference);
+//    
+//    [self checkDevice];
     
-    [self checkDevice];
-    
-    if (heightDifference < 0) {
-        if (isiPhoneX) {
-            centerButton.center = CGPointMake(self.tabBar.center.x, self.tabBar.center.y - 35);
-        } else {
-            centerButton.center = CGPointMake(self.tabBar.center.x, self.tabBar.center.y - 5);
-        }
-        NSLog(@"centerButton.center.y: %f", centerButton.center.y);
-    } else {
-        CGPoint center = self.tabBar.center;
-        center.y = center.y - heightDifference / 2.0;
-        NSLog(@"center.y: %f", center.y);
-        centerButton.center = center;
-    }
     
     [centerButton addTarget: self action: @selector(centerBtnPress) forControlEvents: UIControlEventTouchUpInside];
     

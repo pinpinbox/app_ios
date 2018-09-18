@@ -10,13 +10,23 @@
 #import "MTRadialMenu.h"
 #import "AsyncImageView.h"
 
+typedef NS_ENUM(NSInteger, OpMenuActionType){
+    OPEdit,
+    OPInvite,
+    OPShare,
+    OPDelete
+};
+
 @protocol CalbumlistDelegate <NSObject>
--(void)reloadData;
+- (void)reloadData;
+- (void)opMenuAction:(OpMenuActionType)action index:(NSInteger )index;
+- (void)changeAlbumAct:(NSString *)albumid index:(NSInteger)index;
+- (void)showCreatorPageWithUserid:(NSString *)userid;
 @end
 
 @interface CalbumlistCollectionViewCell : UICollectionViewCell
 {
-    MTRadialMenu *menu;
+    //MTRadialMenu *menu;
 }
 @property (weak) id <CalbumlistDelegate> delegate;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
@@ -26,8 +36,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *mydate;
 @property (weak, nonatomic) IBOutlet UIImageView *downimage;
 @property (weak, nonatomic) IBOutlet UIView *stopview;
-@property (weak, nonatomic) IBOutlet UIImageView *lockImgV;
+@property (weak, nonatomic) IBOutlet UIButton *lockBtn;
 @property (weak, nonatomic) IBOutlet UILabel *unfinishedLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *coopConstraint;
 
 @property (nonatomic) NSString *templateid;
 @property (nonatomic) NSString *albumid;
@@ -35,8 +46,20 @@
 @property (nonatomic, assign) NSInteger type;
 @property (nonatomic) NSString *identity;
 @property (nonatomic, assign) BOOL zipped;
+@property (nonatomic, assign) NSInteger dataIndex;
 
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
--(void)reloadmenu;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *opMenuLeading;
+@property (weak, nonatomic) IBOutlet UIView *opMenu;
+@property (weak, nonatomic) IBOutlet UIButton *opMenuClose;
+@property (weak, nonatomic) IBOutlet UIButton *opMenuEdit;
+@property (weak, nonatomic) IBOutlet UIButton *opMenuInvite;
+@property (weak, nonatomic) IBOutlet UIButton *opMenuShare;
+@property (weak, nonatomic) IBOutlet UIButton *opMenuDelete;
 
+@property (weak, nonatomic) IBOutlet UIImageView *userAvatar;
+
+- (void)selfAlbumMode;
+- (void)coopAlbumMode;
+- (void)favAlbumMode;
 @end

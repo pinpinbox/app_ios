@@ -3146,5 +3146,103 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     return [result stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 }
++ (void)getAlbumDiyWithAlbumId:(NSString *)albumid completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
+                                                token: [wTools getUserToken]
+                                             album_id: albumid];
+        if (response != nil) {
+            if ([response isEqualToString: timeOutErrorCode]) {
+                if (completionBlock)
+                    completionBlock(nil, [NSError errorWithDomain:@"getAlbumDiyWithAlbumId" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
+            } else {
+                //NSLog(@"Get Real Response");
+                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                
+                if ([dic[@"result"] intValue] == 1) {
+                    if (completionBlock)
+                        completionBlock(dic,nil);
+                } else if ([dic[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"getAlbumDiyWithAlbumId" code:9001 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
+                } else {
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"getAlbumDiyWithAlbumId" code:9001 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Host-NotAvailable", @"")}]) ;
+                }
+            }
+        } else {
+            if (completionBlock)
+                completionBlock(nil, [NSError errorWithDomain:@"getAlbumDiyWithAlbumId" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+        }
+    });
+        
+}
++ (void)getAlbumSettingsWithAlbumId:(NSString *)albumid completionBlock:(void(^)(NSDictionary *settings, NSError *error))completionBlock  {
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI getalbumsettings: [wTools getUserID]
+                                                token: [wTools getUserToken]
+                                             album_id: albumid];
+        if (response != nil) {
+            if ([response isEqualToString: timeOutErrorCode]) {
+                if (completionBlock)
+                    completionBlock(nil, [NSError errorWithDomain:@"getAlbumSettingsWithAlbumId" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
+            } else {
+                NSLog(@"Get Real Response");
+                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                
+                if ([dic[@"result"] intValue] == 1) {
+                    if (completionBlock)
+                        completionBlock(dic,nil);
+                } else if ([dic[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"getAlbumSettingsWithAlbumId" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
+                } else {
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"getAlbumSettingsWithAlbumId" code:9000 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Host-NotAvailable", @"")}]) ;
+                }
+            }
+        } else {
+            if (completionBlock)
+                completionBlock(nil, [NSError errorWithDomain:@"getAlbumSettingsWithAlbumId" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+        }
+    });
+}
 
++ (void)setAlbumSettingsWithDictionary:(NSString *)settingString albumid:(NSString *)albumid
+                       completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI albumsettings:[wTools getUserID] token:[wTools getUserToken] album_id:albumid settings:settingString];
+        
+        if (response != nil) {
+            if ([response isEqualToString: timeOutErrorCode]) {
+                if (completionBlock)
+                    completionBlock(nil, [NSError errorWithDomain:@"setAlbumSettings" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
+            } else {
+                NSLog(@"Get Real Response");
+                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                
+                if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                    if (completionBlock)
+                        completionBlock(dic,nil);
+                } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"setAlbumSettings" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
+                } else if ([dic[@"result"] isEqualToString:@"TOKEN_ERROR"] ) {
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"setAlbumSettings" code:1111 userInfo:nil]) ;
+                }
+                    
+
+            }
+        } else {
+            if (completionBlock)
+                completionBlock(nil, [NSError errorWithDomain:@"setAlbumSettings" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+        }
+    });
+}
 @end

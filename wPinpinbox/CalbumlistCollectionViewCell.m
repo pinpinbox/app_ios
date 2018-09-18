@@ -14,25 +14,45 @@
 #import "AppDelegate.h"
 #import "boxAPI.h"
 #import "GlobalVars.h"
+#import "CustomIOSAlertView.h"
+#import "UIColor+Extensions.h"
 
 @implementation CalbumlistCollectionViewCell
 - (void)awakeFromNib
 {
-    [_bgview.layer setCornerRadius:5];
-    [_bgview.layer setBorderWidth:1];
-    [_bgview.layer setBorderColor:[UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:0.9].CGColor];
-    [_bgview.layer setMasksToBounds:YES];
-    
-    [[_picture layer] setMasksToBounds:YES];
-    [[_picture layer]setCornerRadius:_picture.bounds.size.height/2];
-    
-//    UITapGestureRecognizer *gr = [[UITapGestureRecognizer alloc] init];
-//    [gr setNumberOfTapsRequired:1];
-//
-//    [gr addTarget:self action:@selector(addto)];
-//    [_imageView addGestureRecognizer:gr];
     
     [super awakeFromNib];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapViewUserInfo:)];
+    self.userInteractionEnabled = YES;
+    self.userAvatar.userInteractionEnabled = YES;
+    self.userAvatar.multipleTouchEnabled = YES;
+    [self.userAvatar addGestureRecognizer:tap];
+}
+#pragma mark - arrange cell sub views by collectionViewType
+- (void)selfAlbumMode {
+    _userAvatar.hidden = YES;
+    _opMenuDelete.enabled = YES;
+    _opMenuInvite.enabled = YES;
+    _coopConstraint.constant = 8;
+    
+}
+- (void)coopAlbumMode {
+    
+    _userAvatar.hidden = NO;
+    _userAvatar.userInteractionEnabled = YES;
+    _userAvatar.multipleTouchEnabled = YES;
+    _opMenuDelete.enabled = YES;
+    _opMenuInvite.enabled = YES;
+    _coopConstraint.constant = 40;
+}
+- (void)favAlbumMode {
+    _userAvatar.hidden = NO;
+    _userAvatar.userInteractionEnabled = YES;
+    _userAvatar.multipleTouchEnabled = YES;
+    _opMenuInvite.enabled = NO;
+    _opMenuEdit.enabled = NO;
+    _coopConstraint.constant = 40;
 }
 
 -(void)addto{
@@ -69,123 +89,96 @@
         }
     }
 }
-
-- (void)menuSelected:(MTRadialMenu *)sender
-{
-    NSLog(@"menuSelected");
-    NSLog(@"TAG:% ld == SELECT = %@",(long)sender.tag,sender.selectedIdentifier);
-    
-    if (_type==0) {
-        NSLog(@"type == 0");
-        
-        //本人相本
-        if ([sender.selectedIdentifier isEqualToString:@"A"]) {
-            [self deletebook];
-        }
-        if ([sender.selectedIdentifier isEqualToString:@"B"]) {
-            //編輯
-            //[wTools editphotoinfo:_albumid templateid:_templateid];
-            [wTools editphotoinfo: _albumid templateid: _templateid eventId: nil postMode: nil];
-        }
-        if ([sender.selectedIdentifier isEqualToString:@"C"]) {
-            [wTools Activitymessage:[NSString stringWithFormat:@"%@ http://www.pinpinbox.com/index/album/content/?album_id=%@",_mytitle.text,_albumid]];
-        }
-        if ([sender.selectedIdentifier isEqualToString:@"D"]) {
-           // [wTools messageboard:_albumid];
-        }
+//  Tap userAvatar to show user info page
+- (void)tapViewUserInfo:(UITapGestureRecognizer *)gesture {
+    // delegate push userinfo
+    if (_delegate && self.userid && self.userid.length) {
+        [self.delegate showCreatorPageWithUserid:self.userid];
     }
+}
+//  change album act
+- (IBAction)changeAlbumActStatus:(id)sender {
+    NSLog(@"%@",self.albumid);
+    if (self.delegate)
+        [self.delegate changeAlbumAct:self.albumid index:self.dataIndex];
+}
+#pragma mark - opMenu Actions
+// edit
+- (IBAction)opMenuEditTap:(id)sender {
+    if (self.delegate)
+        [self.delegate opMenuAction:OPEdit index:self.dataIndex];
     
-    if (_type==1) {
-        NSLog(@"type == 1");
-        
-        if ([sender.selectedIdentifier isEqualToString:@"A"]) {
-            [self deletebook];
-        }
-        if ([sender.selectedIdentifier isEqualToString:@"B"]) {
-           [wTools Activitymessage:[NSString stringWithFormat:@"%@ http://www.pinpinbox.com/index/album/content/?album_id=%@",_mytitle.text,_albumid]];
-        }
-        if ([sender.selectedIdentifier isEqualToString:@"C"]) {
-           // [wTools messageboard:_albumid];
-        }
-
-    }
-    //共用
-    if (_type==2) {
-        NSLog(@"type == 2");
-        
-        if ([sender.selectedIdentifier isEqualToString:@"A"]) {
-            [self deletebook];
-        }
-        if ([sender.selectedIdentifier isEqualToString:@"B"]) {
-            //編輯
-            if ([_identity isEqualToString:@"viewer"]) {
-                AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
-                [rv addtitletext:@"權限不足"];
-                [rv addBackTouch];
-                [rv showView:app.window];
-
-                return;
-            }
+    [self opMenuSwitch:nil];
+}
+// delete
+- (IBAction)opMenuDeleteTap:(id)sender {
+    [self deletebook];
+    
+    [self opMenuSwitch:nil];
+}
+// share
+- (IBAction)opMenuShareTap:(id)sender{
+    if (self.delegate)
+        [self.delegate opMenuAction:OPShare index:self.dataIndex];
+    
+    [self opMenuSwitch:nil];
+}
+// invite
+- (IBAction)opMenuInviteTap:(id)sender{
+    switch (_type) {
+        case 0:
+        case 2:{
+            if (self.delegate)
+                [self.delegate opMenuAction:OPInvite index:self.dataIndex];
+        } break;
+        case 1:{
             
-            if ([_identity isEqualToString:@"admin"]) {
-                NSLog(@"identity is admin");
-                //[wTools editphotoinfo:_albumid templateid:_templateid];
-                [wTools editphotoinfo: _albumid templateid: _templateid eventId: nil postMode: nil];
-            } else {
-                NSLog(@"identity is not admin");
-                if ([_templateid isEqualToString: @"0"]) {
-                    [wTools FastBook: _albumid choice: @"Fast"];
-                } else {
-                    [wTools FastBook: _albumid choice: @"Template"];
-                }
-                //[wTools FastBook:_albumid];
-            }
-        }
-        if ([sender.selectedIdentifier isEqualToString:@"C"]) {
-            [wTools Activitymessage:[NSString stringWithFormat:@"%@ http://www.pinpinbox.com/index/album/content/?album_id=%@",_mytitle.text,_albumid]];
-        }
-        if ([sender.selectedIdentifier isEqualToString:@"D"]) {
-           // [wTools messageboard:_albumid];
-        }
+        } break;
+        
     }
-    
-    // [wTools Activitymessage:@"分享訊息"];
-    // [wTools messageboard:_albumid];
+    [self opMenuSwitch:nil];
 }
 
 //刪除事件
--(void)deletebook{
-    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+-(void)deletebook  {
+    //AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //取得資料ID
     NSString * name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],_albumid ];
     NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     //檢查資料夾是否存在
+    
+    BOOL localcopy = [fileManager fileExistsAtPath:docDirectoryPath];
+    
     __block typeof(self) wself = self;
-    if ([fileManager fileExistsAtPath:docDirectoryPath]) {
-        Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
-        [rv addtitletext:@"確定要刪除相本?"];
-        [rv addSelectBtntext:@"是" btn2:@"否"];
-        [rv showView:app.window];
+    CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
+    [alertTimeOutView setContentViewWithMsg:@"確定要刪除作品?" contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    alertTimeOutView.arrangeStyle = @"Horizontal";
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    alertTimeOutView.parentView = appDelegate.window;
+    [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: @"是",@"否", nil]];
+
+    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
+    [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
+
+    __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
+        //NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         
-        rv.btn1select=^(BOOL bo){
-            if (bo) {
+        if (buttonIndex == 1) {
+            [weakAlertTimeOutView close];
+        } else {
+            [weakAlertTimeOutView close];
+            if (localcopy)
                 [fileManager removeItemAtPath:docDirectoryPath error:nil];
-                [wself deletebook:wself.albumid];
-            }
-        };
-    }else{
-        Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
-        [rv addtitletext:@"確定要刪除相本?"];
-        [rv addSelectBtntext:@"是" btn2:@"否"];
-        [rv showView:app.window];
-        rv.btn1select=^(BOOL bo){
-            if (bo) {
-                [wself deletebook:wself.albumid];
-            }
-        };
-    }
+            [wself deletebook:wself.albumid];
+        }
+    }];
+    [alertTimeOutView setUseMotionEffects: YES];
+    [alertTimeOutView show];
+        
+    
 }
 
 //刪除相本
@@ -231,7 +224,7 @@
         });
     });
 }
-
+//  remove fav album
 -(void)hidealbumqueue:(NSString *)albumid{
     [wTools ShowMBProgressHUD];
     __block typeof(self.delegate) wdelegate = self.delegate;
@@ -267,7 +260,7 @@
         });
     });
 }
-
+//  delete local entry
 - (void)deletePlist: (NSString *)albumId
 {
     NSLog(@"deletePlist");
@@ -296,7 +289,7 @@
     }
 }
 
-
+// remove coop
 //刪除共用-共用
 -(void)deletecooperation:(NSString *)albumid{
     [wTools ShowMBProgressHUD];
@@ -330,14 +323,6 @@
         });
     });
 }
-
-- (void)menuAppear:(MTRadialMenu *)sender
-{
-    NSLog(@"!!!");
-    
-    [self bringSubviewToFront:sender];
-    
-}
 - (void)prepareForReuse
 {
     [super prepareForReuse];
@@ -346,69 +331,88 @@
 }
 
 - (void)reloadmenu {
-    NSLog(@"reload menu");
-    
-    if (menu!=nil) {
-        [menu removeFromSuperview];
-    }
-    
-    menu = [MTRadialMenu new];
-    
-    menu.startingAngle =  305;
-    
-    int item = 4;
-    NSArray *imgarr = nil;
-    
-    switch (_type) {
-        case 0:
-            item = 3;
-            //imgarr = @[@"wbutton_delete.png",@"wbutton_photoedit.png",@"wbutton_share.png",@"wbutton_upbook"];
-            imgarr = @[@"wbutton_delete.png",@"wbutton_photoedit.png",@"wbutton_share.png"];
-            break;
-        case 1:
-            item = 2;
-            imgarr = @[@"wbutton_delete.png",@"wbutton_share.png",@"wbutton_message.png"];
-            break;
-        case 2:
-            item = 3;
-            imgarr = @[@"wbutton_delete.png",@"wbutton_photoedit.png",@"wbutton_share.png",@"wbutton_message.png"];
-            break;
-        default:
-            break;
-    }
-    
-    
-    NSArray *arr=@[@"A",@"B",@"C",@"D"];
-    
-    for (int i=0; i<item; i++) {
-        AddNote *note = [AddNote new];
-        note.identifier = arr[i];
-        note.img=[UIImage imageNamed:imgarr[i]];
-
-        [menu addMenuItem:note];
-    }
-    
-    // Register the UIControlEvents
-    [menu addTarget:self action:@selector(menuSelected:) forControlEvents:UIControlEventTouchUpInside];
-    
-    // If you want to do anything when the menu appears (like bring it to the front)
-    //[menu addTarget:self action:@selector(menuAppear:) forControlEvents:UIControlEventTouchDown];
-    [menu addTarget:self action:@selector(menuAppear:) forControlEvents: UIControlEventTouchUpInside];
-    
-    menu.center = CGPointMake(_imageView.bounds.size.width / 2, _imageView.bounds.size.height / 2);
-    
-    menu.frame = _imageView.bounds;
-    
-    NSLog(@"imageView width: %f, height: %f", _imageView.bounds.size.width, _imageView.bounds.size.height);
-    NSLog(@"menu width: %f, height: %f", menu.bounds.size.width, menu.bounds.size.height);
-    
-    NSLog(@"imageView rect: %@", _imageView);
-    NSLog(@"menu rect: %@", menu);
-    
-    //menu.backgroundColor = [UIColor lightGrayColor];
-    //menu.alpha = 0.5;
-    // The add to the view
-    [_imageView addSubview:menu];
+//    NSLog(@"reload menu");
+//
+//    if (menu!=nil) {
+//        [menu removeFromSuperview];
+//    }
+//
+//    menu = [MTRadialMenu new];
+//
+//    menu.startingAngle =  305;
+//
+//    int item = 4;
+//    NSArray *imgarr = nil;
+//
+//    switch (_type) {
+//        case 0:
+//            item = 3;
+//            //imgarr = @[@"wbutton_delete.png",@"wbutton_photoedit.png",@"wbutton_share.png",@"wbutton_upbook"];
+//            imgarr = @[@"wbutton_delete.png",@"wbutton_photoedit.png",@"wbutton_share.png"];
+//            break;
+//        case 1:
+//            item = 2;
+//            imgarr = @[@"wbutton_delete.png",@"wbutton_share.png",@"wbutton_message.png"];
+//            break;
+//        case 2:
+//            item = 3;
+//            imgarr = @[@"wbutton_delete.png",@"wbutton_photoedit.png",@"wbutton_share.png",@"wbutton_message.png"];
+//            break;
+//        default:
+//            break;
+//    }
+//
+//
+//    NSArray *arr=@[@"A",@"B",@"C",@"D"];
+//
+//    for (int i=0; i<item; i++) {
+//        AddNote *note = [AddNote new];
+//        note.identifier = arr[i];
+//        note.img=[UIImage imageNamed:imgarr[i]];
+//
+//        [menu addMenuItem:note];
+//    }
+//
+//    // Register the UIControlEvents
+//    [menu addTarget:self action:@selector(menuSelected:) forControlEvents:UIControlEventTouchUpInside];
+//
+//    // If you want to do anything when the menu appears (like bring it to the front)
+//    //[menu addTarget:self action:@selector(menuAppear:) forControlEvents:UIControlEventTouchDown];
+//    [menu addTarget:self action:@selector(menuAppear:) forControlEvents: UIControlEventTouchUpInside];
+//
+//    menu.center = CGPointMake(_imageView.bounds.size.width / 2, _imageView.bounds.size.height / 2);
+//
+//    menu.frame = _imageView.bounds;
+//
+//    NSLog(@"imageView width: %f, height: %f", _imageView.bounds.size.width, _imageView.bounds.size.height);
+//    NSLog(@"menu width: %f, height: %f", menu.bounds.size.width, menu.bounds.size.height);
+//
+//    NSLog(@"imageView rect: %@", _imageView);
+//    NSLog(@"menu rect: %@", menu);
+//
+//    //menu.backgroundColor = [UIColor lightGrayColor];
+//    //menu.alpha = 0.5;
+//    // The add to the view
+//    [_imageView addSubview:menu];
 }
 
+// show or hide opMenu with animation
+- (IBAction)opMenuSwitch:(id)sender {
+    CGFloat c = self.opMenuLeading.constant;
+    
+    if (c == 0) {
+        CGFloat w = self.bounds.size.width;
+        self.opMenuLeading.constant = w;
+        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            
+            [self layoutIfNeeded];
+        } completion:nil];
+    } else {
+        self.opMenuLeading.constant = 0;
+        [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [self layoutIfNeeded];
+            
+        } completion:nil];
+    }
+}
 @end
