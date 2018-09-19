@@ -912,6 +912,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //        }
 //        NSLog(@"After");
 //        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
+        
         offsetAfterRotating = self.pageBeforePresentingOrPushing * currentSize.width;
         NSLog(@"offsetAfterRotating: %f", offsetAfterRotating);
         [self.imageScrollCV setContentOffset: CGPointMake(offsetAfterRotating, 0)];
@@ -922,9 +923,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             self.imageScrollCV.alpha = 1.0f;
         }];
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.pageBeforePresentingOrPushing inSection: 0];
+        [self.imageScrollCV reloadData];
         [self.thumbnailImageScrollCV reloadData];
         [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
 
+        NSLog(@"self.videoPlayerViewController: %@", self.videoPlayerViewController.view);
+        
 //        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated: NO];
         isRotating = NO;
     }];
@@ -1938,6 +1942,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Play Uploaded Video
 - (void)playUploadedVideo:(ImageCollectionViewCell *)cell
                      page:(NSInteger)page {
+    NSLog(@"playUploadedVideo");
     NSURL *videoUrl = [NSURL URLWithString: self.photoArray[page][@"video_target"]];
     [self setupVideoPlayer: cell
                   videoUrl: videoUrl
@@ -1949,6 +1954,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 videoUrl:(NSURL *)videoUrl
                 platform:(NSString *)platform {
     NSLog(@"setupVideoPlayer");
+    NSLog(@"platform: %@", platform);
 //    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL: videoUrl];
 //    NSLog(@"playerItem: %@", playerItem);
     self.videoPlayerViewController.view.hidden = NO;
@@ -1988,6 +1994,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.videoPlayer play];
     
     if (![platform isEqualToString: @"general"]) {
+        NSLog(@"platform is not equal to general");
+        NSLog(@"self.videoPlayer pause");
         [self.videoPlayer pause];
     }
 }
@@ -3725,6 +3733,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
+    NSLog(@"currentPage: %ld", (long)[self getCurrentPage]);
+    NSLog(@"indexPath.row: %ld", (long)indexPath.row);
     
     if (collectionView.tag == 100) {
         NSLog(@"collectionView.tag == 100");
@@ -3733,21 +3743,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         [self handleSingleTap];
     } else {
         NSLog(@"collectionView.tag == 200");
-        [self checkLocationBtn: indexPath.row];
-        [self checkAudio: indexPath.row];
-        
-        // Set delay for playing video, otherwise, there is only sound no video
-        double delayInSeconds = 0.5;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^{
-            NSLog(@"Do some work");
-            [self checkVideo: indexPath.row];
-            [self checkSlotAndExchangeInfo: indexPath.row];
-        });        
-        [self updateOldCurrentPage: indexPath.row];
-        [self textViewContentSetup: indexPath.row];
-        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-        [self.thumbnailImageScrollCV reloadData];
+        if ([self getCurrentPage] != indexPath.row) {
+            [self checkLocationBtn: indexPath.row];
+            [self checkAudio: indexPath.row];
+            
+            // Set delay for playing video, otherwise, there is only sound no video
+            double delayInSeconds = 0.5;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^{
+                NSLog(@"Do some work");
+                [self checkVideo: indexPath.row];
+                [self checkSlotAndExchangeInfo: indexPath.row];
+            });
+            [self updateOldCurrentPage: indexPath.row];
+            [self textViewContentSetup: indexPath.row];
+            [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+            [self.thumbnailImageScrollCV reloadData];
+        }
     }
 }
 
@@ -3832,7 +3844,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     [self pageCalculation: page];
                 }
             }
-            
             if (scrollView == self.imageScrollCV) {
                 NSLog(@"scrollView == self.imageScrollCV");
                 [self checkSlotAndExchangeInfo: [self getCurrentPage]];
@@ -4016,6 +4027,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     [self.videoPlayer pause];
     self.videoPlay = nil;
+    self.videoPlayerItem = nil;
+    self.videoPlayerViewController.player = nil;
+    self.videoPlayerViewController = nil;
     
     [self removeObserverForPlayerAndItem];
     [[NSNotificationCenter defaultCenter] removeObserver: self];
