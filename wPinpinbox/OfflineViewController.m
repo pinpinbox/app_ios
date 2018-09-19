@@ -238,16 +238,16 @@
     Cell.mytitle.text=data[@"name"];
     
     //取得資料ID
-    NSString * name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],[data[@"album_id"] stringValue]];
-    NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    //檢查資料夾是否存在
-    if ([fileManager fileExistsAtPath:docDirectoryPath]) {
-        Cell.downimage.image=[UIImage imageNamed:@"icon_download-already.png"];
-    }else{
-        Cell.downimage.image=[UIImage imageNamed:@"icon_download.png"];
-    }
-    
+//    NSString * name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],[data[@"album_id"] stringValue]];
+//    NSString *doc DirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    //檢查資料夾是否存在
+//    if ([fileManager fileExistsAtPath:docDirectoryPath]) {
+//        Cell.downimage.image=[UIImage imageNamed:@"icon_download-already.png"];
+//    }else{
+//        Cell.downimage.image=[UIImage imageNamed:@"icon_download.png"];
+//    }
+//
     return Cell;
     
 }

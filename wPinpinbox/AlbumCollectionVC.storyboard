@@ -36,7 +36,7 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="7mw-bf-HEd"/>
-                                    <constraint firstAttribute="bottom" secondItem="0gp-YA-ZZc" secondAttribute="bottom" id="DfH-eU-bzn"/>
+                                    <constraint firstItem="0gp-YA-ZZc" firstAttribute="bottom" secondItem="6P0-J8-wqe" secondAttribute="bottom" id="DfH-eU-bzn"/>
                                     <constraint firstItem="0gp-YA-ZZc" firstAttribute="leading" secondItem="6P0-J8-wqe" secondAttribute="leading" constant="8" id="GEs-vd-mFU"/>
                                 </constraints>
                             </view>
@@ -60,6 +60,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="72" height="72"/>
     </resources>
 </document>

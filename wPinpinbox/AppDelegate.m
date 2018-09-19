@@ -261,8 +261,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                 [[UIApplication sharedApplication] registerForRemoteNotifications];
             });
     }];
-    
-    [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet set]];
+    UNNotificationAction *a = [UNNotificationAction actionWithIdentifier:UNNotificationDefaultActionIdentifier title:@"pinpinBox" options:UNNotificationActionOptionNone];
+    UNNotificationCategory *c = [UNNotificationCategory categoryWithIdentifier:@"GENERAL" actions:@[a] intentIdentifiers:@[UNNotificationDefaultActionIdentifier] options:UNNotificationCategoryOptionCustomDismissAction];
+    [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObject:c]];
     
 #else
     UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil];

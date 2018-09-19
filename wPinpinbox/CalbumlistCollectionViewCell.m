@@ -54,7 +54,11 @@
     _opMenuEdit.enabled = NO;
     _coopConstraint.constant = 40;
 }
-
+- (void)setCoopNumber:(int)number{
+    self.coopLabel.text = [NSString stringWithFormat:@"%00d", number];
+    _coopIcon.hidden = number <= 1;
+    _coopLabel.hidden = number <= 1;
+}
 -(void)addto{
     NSLog(@"CalbumlistCollectionViewCell");
     NSLog(@"addTo");

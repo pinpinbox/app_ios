@@ -414,7 +414,7 @@
     NSLog(@"didMoveToPage index: %ld", (long)index);
     [self changeViewAndLabel: index];
     
-    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 1.0]];
+    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 1.0]];
     //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
 }
 

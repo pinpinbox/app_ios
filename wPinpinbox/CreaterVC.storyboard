@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -624,7 +624,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="QqF-Rf-Azt" firstAttribute="top" secondItem="khm-X3-mrN" secondAttribute="top" constant="20" symbolic="YES" id="AJS-Pl-i6P"/>
+                            <constraint firstItem="QqF-Rf-Azt" firstAttribute="top" secondItem="xty-1j-kS9" secondAttribute="top" id="AJS-Pl-i6P"/>
                             <constraint firstItem="QqF-Rf-Azt" firstAttribute="bottom" secondItem="xty-1j-kS9" secondAttribute="bottom" id="IrX-eF-HGo"/>
                             <constraint firstItem="Fh5-QD-tWv" firstAttribute="top" secondItem="xty-1j-kS9" secondAttribute="top" id="S4P-I8-SPc"/>
                             <constraint firstItem="QqF-Rf-Azt" firstAttribute="trailing" secondItem="xty-1j-kS9" secondAttribute="trailing" id="WoX-uN-xbC"/>

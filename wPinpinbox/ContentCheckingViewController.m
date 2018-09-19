@@ -371,7 +371,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //            isRotated = NO;
 //        }
 //    }
-    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 0.0]];
+    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 0.0]];
     //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
     [self addKeyboardNotification];
 }
@@ -1961,6 +1961,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark - Setup Video Player
+- (void)listenAVPlayerError:(NSNotification *)n {
+    NSLog(@"AVPlayerItemNewErrorLogEntryNotification \n %@ \n", n.userInfo);
+}
 - (void)setupVideoPlayer:(ImageCollectionViewCell *)cell
                 videoUrl:(NSURL *)videoUrl
                 platform:(NSString *)platform {
@@ -1990,6 +1993,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         self.videoPlayerViewController = [AVPlayerViewController new];
         self.videoPlayerViewController.player = self.videoPlayer;
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(listenAVPlayerError:) name:AVPlayerItemNewErrorLogEntryNotification object:nil];
+    
     self.videoPlayerViewController.view.frame = CGRectMake(0, 40, cell.videoView.bounds.size.width, cell.videoView.bounds.size.height - 40);
     self.videoPlayerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.videoPlayerViewController.view.center = cell.videoView.center;

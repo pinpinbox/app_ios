@@ -29,6 +29,7 @@
 #import "UIView+Toast.h"
 #import "CreaterViewController.h"
 #import <FBSDKShareKit/FBSDKShareKit.h>
+#import "CoCreatorListViewController.h"
 
 @interface CalbumlistCollectionViewLayout : UICollectionViewFlowLayout
 @property (nonatomic) CGFloat itemHeight;
@@ -168,7 +169,7 @@
     NSLog(@"CalbumlistViewController");
     NSLog(@"viewWillAppear");
     NSLog(@"Test");
-    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 1.0]];
+    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 1.0]];
     //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
     
     //[_collectioview reloadData];    
@@ -179,7 +180,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];    
     NSLog(@"viewWillDisappear");
-    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 0.0]];
+    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.0]];
     //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
 }
 
@@ -533,7 +534,11 @@
     }else{
         Cell.identity = nil;
     }
-    
+    int coop = 0;
+    if (dataarr[indexPath.row][@"cooperationstatistics"][@"count"]  ){
+        coop = [dataarr[indexPath.row][@"cooperationstatistics"][@"count"] intValue];
+    }
+    [Cell setCoopNumber:coop];
     NSLog(@"");
     NSLog(@"");
     NSLog(@"data: %@", data);
@@ -1777,6 +1782,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 #pragma mark - cell opMenu action related
+
 - (void)opMenuAction:(OpMenuActionType)action index:(NSInteger )index {
     
     if (index < dataarr.count) {
@@ -1801,12 +1807,26 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             case OPDelete:
                 break;
             case OPInvite: {
+                
+                CoCreatorListViewController *cv = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CoCreatorListViewController"];
+                
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                
+                
+                appDelegate.myNav.navigationBar.barTintColor = [UIColor whiteColor];
+                [appDelegate.myNav pushViewController:cv animated:YES];
+                return;
                 NSDictionary *co = dataarr[index][@"cooperation"];
                 if (co && co[@"identity"]) {
                     NSString *i = co[@"identity"];
                     if (![co[@"identity"] isKindOfClass:[NSNull class]]) {
                         if ([i isEqualToString:@"admin"] || [i isEqualToString:@"approver"]) {
                             //  proceed to invite
+                            CoCreatorListViewController *cv = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CoCreatorListViewController"];
+                            
+                            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                            [appDelegate.myNav pushViewController:cv animated: YES];
+                            
                         }
                     }
                 }

@@ -98,7 +98,7 @@
 //    UIWindow *statusBarWindow = (UIWindow *)[[UIApplication sharedApplication] valueForKey: @"statusBarWindow"];
     //statusBarWindow.alpha = 1.0;
     //[self setStatusBarBackgroundColor: [UIColor whiteColor]];
-    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: 0.0]];
+    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 0.0]];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -282,7 +282,7 @@
 //    statusBarWindow.alpha = self.alphaValue;
     
     UIView *statusBar = [[[UIApplication sharedApplication] valueForKey: @"statusBarWindow"] valueForKey: @"statusBar"];
-    statusBar.backgroundColor = [UIColor colorWithRed: 255.0 green: 255.0 blue: 255.0 alpha: self.alphaValue * 0.01];
+    statusBar.backgroundColor = [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: self.alphaValue * 0.01];
     
     self.headerImageView.alpha = 1 - self.alphaValue;
     self.scrollDirectionValue = value;

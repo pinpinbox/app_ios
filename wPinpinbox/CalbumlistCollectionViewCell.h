@@ -34,7 +34,6 @@ typedef NS_ENUM(NSInteger, OpMenuActionType){
 @property (weak, nonatomic) IBOutlet AsyncImageView *picture;
 @property (weak, nonatomic) IBOutlet UILabel *mytitle;
 @property (weak, nonatomic) IBOutlet UILabel *mydate;
-@property (weak, nonatomic) IBOutlet UIImageView *downimage;
 @property (weak, nonatomic) IBOutlet UIView *stopview;
 @property (weak, nonatomic) IBOutlet UIButton *lockBtn;
 @property (weak, nonatomic) IBOutlet UILabel *unfinishedLabel;
@@ -58,8 +57,11 @@ typedef NS_ENUM(NSInteger, OpMenuActionType){
 @property (weak, nonatomic) IBOutlet UIButton *opMenuDelete;
 
 @property (weak, nonatomic) IBOutlet UIImageView *userAvatar;
+@property (weak, nonatomic) IBOutlet UIImageView *coopIcon;
+@property (weak, nonatomic) IBOutlet UILabel *coopLabel;
 
 - (void)selfAlbumMode;
 - (void)coopAlbumMode;
 - (void)favAlbumMode;
+- (void)setCoopNumber:(int)number;
 @end
