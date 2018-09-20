@@ -10,20 +10,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol CoCreatorManageDelegate <NSObject>
+@optional
+- (void)processInviteUserWithIndex:(NSInteger)index;
+- (void)processDeleteUserWithIndex:(NSInteger)index;
+- (void)processChangeCoCreatorRankWithIndex:(NSInteger)index;
+@end
+
 @interface CoCreatorCell : UICollectionViewCell
+@property (nonatomic) id<CoCreatorManageDelegate> coDelegate;
+@property (nonatomic) NSInteger cindex;
 @property (nonatomic) IBOutlet UIImageView *avatar;
 @property (nonatomic) IBOutlet UILabel *userName;
 @property (nonatomic) IBOutlet UIButton *inviteButton;
 @end
 
 @interface CoAdminCell : UICollectionViewCell
+@property (nonatomic) id<CoCreatorManageDelegate> coDelegate;
+@property (nonatomic) NSInteger cindex;
 @property (nonatomic) IBOutlet UIImageView *avatar;
 @property (nonatomic) IBOutlet UILabel *userName;
 @property (nonatomic) IBOutlet UIButton *editButton;
 @property (nonatomic) IBOutlet UIButton *manageButton;
 @end
 
-@interface CoCreatorListViewController : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource>
+@interface CoCreatorListViewController : UIViewController<UICollectionViewDelegate, UICollectionViewDataSource,CoCreatorManageDelegate>
 @property (nonatomic) IBOutlet UICollectionView *creatorListView;
 @property (nonatomic) IBOutlet UICollectionView *adminListView;
 @property (nonatomic) IBOutlet UIView *searchView;

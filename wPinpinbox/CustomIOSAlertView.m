@@ -96,7 +96,7 @@ CGFloat buttonSpacerHeight = 0;
     // Attached to a view:
     if (parentView != NULL) {        
         [parentView addSubview:self];
-
+        [parentView bringSubviewToFront:self];
     // Attached to the top most window
     } else {
 

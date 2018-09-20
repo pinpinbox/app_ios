@@ -21,16 +21,49 @@
 
 @implementation CoCreatorCell
 - (IBAction)inviteCreator:(id)sender {
-    
+    if (self.coDelegate && [self.coDelegate respondsToSelector:@selector(processInviteUserWithIndex:)]) {
+        [self.coDelegate processInviteUserWithIndex:self.cindex];
+    }
 }
 @end
 
 @implementation CoAdminCell
 - (IBAction)editAdmin:(id)sender {
-    
+    if (self.coDelegate && [self.coDelegate respondsToSelector:@selector(processDeleteUserWithIndex:)]) {
+        [self.coDelegate processDeleteUserWithIndex:self.cindex];
+    }
+}
+- (void)setViewerMode :(BOOL)edit {
+    self.manageButton.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.manageButton.layer.borderWidth = 1;
+    self.manageButton.enabled = NO;
+    [self.manageButton setBackgroundColor:[UIColor whiteColor]];
+    [self.manageButton setTitleColor:[UIColor thirdGrey] forState:UIControlStateNormal];
+    self.editButton.hidden = !edit;
+}
+- (void)setAdminMode:(BOOL)edit selfRank:(NSString *)selfRank userRank:(NSString *)userRank {
+    self.manageButton.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.manageButton.layer.borderWidth = 1;
+    self.manageButton.enabled = ![userRank isEqualToString:@"admin"];
+    if (self.manageButton.enabled) {
+        [self.manageButton setBackgroundColor:[UIColor thirdGrey]];
+        [self.manageButton setTitleColor:[UIColor firstGrey] forState:UIControlStateNormal];
+    } else {
+        [self.manageButton setBackgroundColor:[UIColor whiteColor]];
+        [self.manageButton setTitleColor:[UIColor thirdGrey] forState:UIControlStateNormal];
+    }
+    self.editButton.hidden = NO;
+    if ([selfRank isEqualToString:@"admin"])
+        self.editButton.hidden = !edit;
+    else {
+        self.editButton.hidden = ![userRank isEqualToString:@"admin"];
+    }
+        
 }
 - (IBAction)manageAdmin:(id)sender {
-    
+    if (self.coDelegate && [self.coDelegate respondsToSelector:@selector(processChangeCoCreatorRankWithIndex:)]) {
+        [self.coDelegate processChangeCoCreatorRankWithIndex:self.cindex];
+    }
 }
 @end
 
@@ -40,6 +73,7 @@
 @property (nonatomic) NSMutableArray *coCreators;
 @property (nonatomic) NSMutableArray *searchUsers;
 @property (nonatomic,strong) NSString *albumId;
+@property (nonatomic) NSString *curRank;
 @end
 
 @implementation CoCreatorListViewController
@@ -104,6 +138,7 @@
 }
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     UICollectionViewCell *cell = nil;
+    //  search result list
     if (collectionView == self.creatorListView) {
         if (indexPath.row < _searchUsers.count) {
             NSDictionary *user = _searchUsers[indexPath.row][@"user"];
@@ -117,20 +152,60 @@
             }
             ccell.userName.text = user[@"name"];
             [ccell.inviteButton setTitle:@"邀請" forState:UIControlStateNormal];
+            ccell.coDelegate = self;
+            ccell.cindex = indexPath.row;
             return ccell;
         }
         
-    } else if (collectionView == self.adminListView) {
-        
-        CoAdminCell *ccell = (CoAdminCell *) [collectionView dequeueReusableCellWithReuseIdentifier:@"CoAdminCell" forIndexPath:indexPath];
-        ccell.avatar.image = [UIImage imageNamed:@"36"];
-        ccell.userName.text = @"123456";
-        return ccell;
+    } else if (collectionView == self.adminListView) { //  cooperator list
+        if (indexPath.row < _coCreators.count) {
+            NSDictionary *creator = _coCreators[indexPath.row];
+            NSDictionary *user = creator[@"user"];
+            NSString *uid = [user[@"user_id"] stringValue];
+            CoAdminCell *ccell = (CoAdminCell *) [collectionView dequeueReusableCellWithReuseIdentifier:@"CoAdminCell" forIndexPath:indexPath];
+            
+            
+            if ([user[@"picture"] isEqual: [NSNull null]]) {
+                ccell.avatar.image = [UIImage imageNamed: @"member_back_head.png"];
+            } else {
+                [ccell.avatar sd_setImageWithURL: [NSURL URLWithString: user[@"picture"]]
+                                placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
+            }
+            ccell.userName.text = user[@"name"];
+            ccell.coDelegate = self;
+            ccell.cindex = indexPath.row;
+            NSString *c = creator[@"cooperation"][@"identity"];
+            if ([CoCreatorListViewController isNonAdminRank:self.curRank]) {
+                [ccell setViewerMode:[uid isEqualToString:[wTools getUserID]]];
+            } else {
+                [ccell setAdminMode:[uid isEqualToString:[wTools getUserID]] selfRank:self.curRank userRank:c];
+            }
+            
+            [ccell.manageButton setTitle:[CoCreatorListViewController getRankName:c] forState:UIControlStateNormal];
+            return ccell;
+        }
     }
     
     return cell;
 }
+//  check if rank is editor or viewer
++ (BOOL) isNonAdminRank:(NSString *)rank {
+    if ([rank isEqualToString:@"admin"] || [rank isEqualToString:@"approver"])
+        return NO;
+    
+    return YES;
+}
++ (NSString *)getRankName:(NSString *)rank {
+    //identity (string, 身分, admin<管理者> / approver<副管理者> / editor<共用者> / viewer<瀏覽者>)
+    if ([rank isEqualToString:@"admin"])
+        return @"管理者";
+    else if ([rank isEqualToString:@"approver"])
+        return @"副管理者";
+    else if ([rank isEqualToString:@"editor"])
+        return @"共用者";
 
+    return @"瀏覽者";
+}
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (collectionView == _creatorListView)
         return _searchUsers.count;
@@ -148,6 +223,19 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
     appDelegate.myNav.navigationBarHidden = YES;
+}
+- (void)findCurrentRank {
+    for (NSDictionary *op in self.coCreators) {
+        NSDictionary *u  = op[@"user"];
+        if (u && ![u[@"user_id"] isKindOfClass:[NSNull class]]) {
+            NSString *uid = [u[@"user_id"] stringValue];
+            if ([uid isEqualToString:[wTools getUserID]]){
+                self.curRank = op[@"cooperation"][@"identity"];
+                return;
+            }
+        }
+            
+    }
 }
 #pragma mark - 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -180,7 +268,7 @@
         NSMutableDictionary *data=[NSMutableDictionary new];
         [data setObject:aid forKey:@"type_id"];
         [data setObject:@"album" forKey:@"type"];
-        NSString *respone = [boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
+        NSString *response = [boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
         
 //        NSMutableDictionary *qrDic = [NSMutableDictionary new];
 //        [qrDic setObject: [NSNumber numberWithBool: YES] forKey: @"is_cooperation"];
@@ -199,16 +287,26 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            if (respone != nil) {
-                NSLog(@"response from getCooperationList: %@", respone);
-                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    
+                    [wself.view endEditing:YES];
+                    
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"getCooperatorList"
+                                          eventId: @""
+                                             text: @""];
+                } else {
                 
-                //NSDictionary *dicQR = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [responseQRCode dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                
-                //NSLog(@"response from getQRCode: %@", responseQRCode);
-                //NSLog(@"dicQR: %@", dicQR);
-                
-                [wself processCooperator:dic]; //dicQR:dicQR];
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    
+                    //NSDictionary *dicQR = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [responseQRCode dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    //NSLog(@"response from getQRCode: %@", responseQRCode);
+                    //NSLog(@"dicQR: %@", dicQR);
+                    
+                    [wself processCooperator:dic]; //dicQR:dicQR];
+                }
             }
 //            } else {
 //                [wself.refreshControl endRefreshing];
@@ -224,19 +322,49 @@
     int r = [result[@"result"] intValue];
     if (r  == 1) {
         NSArray *list = (NSArray *)result[@"data"];
-        //  sort array by identity //
-        //  reload //
+        
+        //  sort array by identity
         if (list)
-            [self.coCreators addObjectsFromArray:list];
+            [self rearrangeCooperators:list];
+        [self findCurrentRank];
         //  coCreatorCell button usage?
         [self.adminListView reloadData];
+        if (self.searchUsers.count) {
+            [self.creatorListView reloadData];
+        }
     } else if (r == 0) {
-        
         [self showCustomErrorAlert: result[@"message"]];
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 
+}
+//  sort creators by identity
+- (void)rearrangeCooperators:(NSArray *)list {
+    [self.coCreators removeAllObjects];
+    NSMutableArray *admin = [NSMutableArray array];
+    NSMutableArray *apr = [NSMutableArray array];
+    NSMutableArray *editor = [NSMutableArray array];
+    NSMutableArray *viewer = [NSMutableArray array];
+    [list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSDictionary *d = (NSDictionary *)obj;
+        NSDictionary *c = d[@"cooperation"];
+        NSString *i = c[@"identity"];
+        if ([i isEqualToString:@"admin"])
+            [admin addObject:d];
+        else if ([i isEqualToString:@"approver"])
+            [apr addObject:d];
+        else if ([i isEqualToString:@"editor"])
+            [editor addObject:d];
+        else
+            [viewer addObject:d];
+    }];
+    
+    [self.coCreators addObjectsFromArray:admin];
+    [self.coCreators addObjectsFromArray:apr];
+    [self.coCreators addObjectsFromArray:editor];
+    [self.coCreators addObjectsFromArray:viewer];
+    
 }
 //  search users
 - (void)searchUserByKeyword:(NSString *)keyword {
@@ -321,7 +449,63 @@
     
 }
 //  generate QRCode
+
 //  add cooperators
+- (void)inviteUserWithUserId:(NSString *)uid albumId:(NSString *)albumId {
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        
+        NSString *response=@"";
+        NSMutableDictionary *data=[NSMutableDictionary new];
+        [data setObject:uid forKey:@"user_id"];
+        [data setObject:@"album" forKey:@"type"];
+        [data setObject:albumId forKey:@"type_id"];
+        
+        
+        response=[boxAPI addcooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //[wTools HideMBProgressHUD];
+            if (response!=nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    
+                    //[wself.view endEditing:YES];
+                    
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"inviteUserWithUserId"
+                                          eventId: @""
+                                             text: uid];
+                } else {
+                    NSLog(@"%@",respone);
+                    NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    
+                    [wself processInsertCoopResult:dic userid:uid];
+                }
+            }
+        });
+    });
+}
+- (void)processInsertCoopResult:(NSDictionary *)result userid:(NSString *)userid {
+    NSLog(@"%@",result);
+    if (result) {
+        int r = [result[@"result"] intValue];
+        if (r == 1) {
+            //  get cooperatorlist
+            //  reload
+            [self.coCreators removeAllObjects];
+            [self getCooperatorList];
+
+        } else {
+            NSString *msg = result[@"message"];
+            if (!msg || msg.length < 1)
+                msg = @"邀請用戶失敗，請重試";
+            [self showCustomErrorAlert:msg];
+            
+        }
+        
+    }
+}
 //  delete cooperators
 #pragma mark - Show QRCode
 
@@ -351,9 +535,6 @@
     [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     
-    
-    //__weak typeof(self) weakSelf = self;
-    
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         
@@ -362,5 +543,19 @@
     [alertTimeOutView setUseMotionEffects: YES];
     [alertTimeOutView show];
 }
-
+#pragma mark - CoCreatorManageDelegate
+- (void)processInviteUserWithIndex:(NSInteger)index {
+    if (index < self.searchUsers.count) {
+        NSDictionary *user = _searchUsers[index][@"user"];
+        NSString *uid = user[@"user_id"];
+        NSString *aid = self.albumId;
+        [self inviteUserWithUserId:uid albumId:aid];
+    }
+}
+- (void)processDeleteUserWithIndex:(NSInteger)index {
+    
+}
+- (void)processChangeCoCreatorRankWithIndex:(NSInteger)index {
+    
+}
 @end

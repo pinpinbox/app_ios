@@ -1610,6 +1610,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         }
     }];
     [alertTimeOutView setUseMotionEffects: YES];
+    alertTimeOutView.parentView = nil;
     [alertTimeOutView show];
 }
 
