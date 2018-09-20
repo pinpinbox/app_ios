@@ -23,6 +23,7 @@ CGFloat kCornerRadius = 6.0;
 NSString *appStoreUrl = @"https://itunes.apple.com/tw/app/pinpinbox/id1057840696?mt=8";
 
 NSString *ServerURL = @"https://w3.pinpinbox.com/index/api";
+
 NSString *pinpinbox = @"https://www.pinpinbox.com/";
 
 NSString *sharingLinkWithAutoPlay = @"http://w3.pinpinbox.com/index/album/content/?album_id=%@%@";
@@ -30,7 +31,7 @@ NSString *sharingLinkWithoutAutoPlay = @"http://w3.pinpinbox.com/index/album/con
 
 NSString *userIdSharingLink = @"http://w3.pinpinbox.com/index/creative/content/?user_id=%@%@";
 
-NSString *aboutPageLink = @"https://www.pinpinbox.com/index/about";
+NSString *aboutPageLink = @"https://w3.pinpinbox.com/index/about";
 
 NSString *wwwFlurryAPIKey = @"GBGHQY4398WCV4X6HSZN";
 NSString *w3FlurryAPIKey = @"GSPHT8B4KV8F89VHQ6D8";
