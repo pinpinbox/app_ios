@@ -772,7 +772,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if ([useFor isEqualToString: @"video"]) {
         if ((self.videoPlayer.rate != 0) && (self.videoPlayer.error == nil)) {
             NSLog(@"self.videoPlayer.rate: %f", self.videoPlayer.rate);
-        }
+        }        
         if (self.navBarView.hidden) {
             self.videoPlayerViewController.showsPlaybackControls = YES;
         } else {
@@ -884,37 +884,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self settingSizeBasedOnDevice];
         
         CGSize currentSize = self.imageScrollCV.frame.size;
-//        NSLog(@"Before");
-//        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
-//        CGFloat width;
-//        CGFloat height;
-//
-//        if (size.height > size.width) {
-//            NSLog(@"Background in Portrait");
-//            if (currentSize.height > currentSize.width) {
-//                NSLog(@"imageScrollCV in Portrait");
-//            } else if (currentSize.width > currentSize.height) {
-//                NSLog(@"imageScrollCV in Landscape");
-//                height = currentSize.width;
-//                width = currentSize.height;
-//                currentSize = CGSizeMake(width, height);
-//            }
-//        } else if (size.width > size.height) {
-//            NSLog(@"Background in Landscape");
-//            if (currentSize.width > currentSize.height) {
-//                NSLog(@"imageScrollCV in Landscape");
-//            } else if (currentSize.height > currentSize.width) {
-//                NSLog(@"imageScrollCV in Portrait");
-//                width = currentSize.height;
-//                height = currentSize.width;
-//                currentSize = CGSizeMake(width, height);
-//            }
-//        }
-//        NSLog(@"After");
-//        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
-        
         offsetAfterRotating = self.pageBeforePresentingOrPushing * currentSize.width;
         NSLog(@"offsetAfterRotating: %f", offsetAfterRotating);
+        // Offset for iPhoneX
         [self.imageScrollCV setContentOffset: CGPointMake(offsetAfterRotating, 0)];
         NSLog(@"");
         NSLog(@"self.imageScrollCV.contentOffset: %@", NSStringFromCGPoint(self.imageScrollCV.contentOffset));
@@ -922,12 +894,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [UIView animateWithDuration: 0.1f animations:^{
             self.imageScrollCV.alpha = 1.0f;
         }];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.pageBeforePresentingOrPushing inSection: 0];
-        [self.imageScrollCV reloadData];
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.pageBeforePresentingOrPushing inSection: 0];
         [self.thumbnailImageScrollCV reloadData];
-        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-
-        NSLog(@"self.videoPlayerViewController: %@", self.videoPlayerViewController.view);
+//        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+        
+        NSLog(@"");
+        NSLog(@"self.videoPlayerViewController.view.hidden: %d", self.videoPlayerViewController.view.hidden);
         
 //        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated: NO];
         isRotating = NO;
@@ -1665,7 +1637,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     // Reset
     [self.videoPlayer pause];
-//    self.videoPlayerViewController.view.hidden = YES;
     
     if ([useFor isEqualToString: @"video"]) {
         if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
@@ -1958,7 +1929,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL: videoUrl];
 //    NSLog(@"playerItem: %@", playerItem);
     self.videoPlayerViewController.view.hidden = NO;
-    cell.videoView.hidden = NO;
+    cell.videoView.hidden = NO;    
     videoIsPlaying = YES;
     
     [self.avPlayer pause];
@@ -1983,13 +1954,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.videoPlayerViewController.view.frame = CGRectMake(0, 40, cell.videoView.bounds.size.width, cell.videoView.bounds.size.height - 40);
     self.videoPlayerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.videoPlayerViewController.view.center = cell.videoView.center;
-    self.videoPlayerViewController.videoGravity = AVLayerVideoGravityResizeAspect;
-    [self.videoPlayerViewController.view sizeToFit];
+    self.videoPlayerViewController.videoGravity = AVLayerVideoGravityResizeAspect;    
+//    [self.videoPlayerViewController.view sizeToFit];
     
     for (UIView *view in cell.videoView.subviews) {
         [view removeFromSuperview];
     }
-    [self addChildViewController: self.videoPlayerViewController];
     [cell.videoView addSubview: self.videoPlayerViewController.view];
     [self.videoPlayer play];
     
@@ -3553,20 +3523,37 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         cell.checkCollectionLayout.hidden = YES;
         
         NSString *refer = self.photoArray[indexPath.row][@"video_refer"];
+        NSLog(@"refer: %@", refer);
+        NSLog(@"useFor: %@", useFor);
         
         if ([useFor isEqualToString: @"video"]) {
+            NSLog(@"useFor is equal to video");
 //            NSURL *url = [NSURL URLWithString: self.photoArray[indexPath.row][@"video_target"]];
             
             if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
+                NSLog(@"refer is equal to file or system");
                 cell.alphaBgV.hidden = YES;
                 cell.videoBtn.hidden = YES;
                 cell.videoView.hidden = NO;
-                self.videoPlayerViewController.view.hidden = NO;
+                
+                for (UIView *view in cell.videoView.subviews) {
+                    NSLog(@"view: %@", view);
+//                    view.backgroundColor = [UIColor redColor];
+                    view.hidden = NO;
+                }
+//                self.videoPlayerViewController.view.hidden = NO;
             } else if ([refer isEqualToString: @"embed"]) {
+                NSLog(@"refer is equal to embed");
                 cell.alphaBgV.hidden = NO;
                 cell.videoBtn.hidden = NO;
                 cell.videoView.hidden = YES;
-                self.videoPlayerViewController.view.hidden = YES;
+                
+                for (UIView *view in cell.videoView.subviews) {
+                    NSLog(@"view: %@", view);
+//                    view.backgroundColor = [UIColor redColor];
+                    view.hidden = YES;
+                }
+//                self.videoPlayerViewController.view.hidden = YES;
             }
         }
         
@@ -3763,6 +3750,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
+- (CGPoint)collectionView:(UICollectionView *)collectionView targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset {
+    // Method below is to avoid AVPlayerViewController disappear when rotate especially the last view in UICollectionViewCell
+    if (collectionView == self.imageScrollCV) {
+        return CGPointMake(self.view.bounds.size.width * self.pageBeforePresentingOrPushing, 0);
+    } else {
+        return proposedContentOffset;
+    }
+}
+
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
@@ -3816,7 +3812,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
                   willDecelerate:(BOOL)decelerate {
-//    self.videoPlayerViewController.view.hidden = YES;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
