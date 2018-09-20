@@ -19,6 +19,7 @@
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
+#import "DDAUIActionSheetViewController.h"
 @implementation CoCreatorCell
 - (IBAction)inviteCreator:(id)sender {
     if (self.coDelegate && [self.coDelegate respondsToSelector:@selector(processInviteUserWithIndex:)]) {
@@ -56,7 +57,7 @@
     if ([selfRank isEqualToString:@"admin"])
         self.editButton.hidden = !edit;
     else {
-        self.editButton.hidden = ![userRank isEqualToString:@"admin"];
+        self.editButton.hidden = [userRank isEqualToString:@"admin"];
     }
         
 }
@@ -68,12 +69,16 @@
 @end
 
 
-@interface CoCreatorListViewController ()<UITextFieldDelegate>
+@interface CoCreatorListViewController ()<UITextFieldDelegate,DDAUIActionSheetViewControllerDelegate>
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *searchViewWidth;
 @property (nonatomic) NSMutableArray *coCreators;
 @property (nonatomic) NSMutableArray *searchUsers;
 @property (nonatomic,strong) NSString *albumId;
 @property (nonatomic) NSString *curRank;
+@property (nonatomic) UIVisualEffectView *effectView;
+@property (nonatomic) DDAUIActionSheetViewController *customActionSheet;
+@property (nonatomic) IBOutlet UIView *QRCover;
+@property (nonatomic) IBOutlet UIImageView *QRCodeView;
 @end
 
 @implementation CoCreatorListViewController
@@ -84,6 +89,8 @@
     
     _coCreators = [NSMutableArray array];
     _searchUsers = [NSMutableArray array];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapQRCView:)];
+    [self.QRCover addGestureRecognizer:tap];
 }
 - (BOOL)prefersStatusBarHidden {
     return NO;
@@ -107,7 +114,7 @@
     UIBarButtonItem *l = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_arrow_left_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onBackButton:)];
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:self.searchView];
-    UIBarButtonItem *r1 = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_scancamera_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onBackButton:)];
+    UIBarButtonItem *r1 = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_scancamera_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onShowQRCode:)];
     r1.title = @"";
     l.title = @"";
     l.tintColor = [UIColor firstGrey];
@@ -216,6 +223,21 @@
     
 }
 #pragma mark -
+- (void)showQRCode:(NSString *)qrs {
+    
+    NSData *data = [[NSData alloc] initWithBase64EncodedString: qrs options: NSDataBase64DecodingIgnoreUnknownCharacters];
+    UIImage *img = [UIImage imageWithData: data];
+    
+    self.QRCodeView.image = img;
+    
+    [UIView beginAnimations: nil context: nil];
+    [UIView setAnimationDuration: 1.0];
+    [UIView setAnimationDelay: 1.0];
+    [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
+    self.QRCover.hidden = NO;
+    [UIView commitAnimations];
+}
+
 - (void)setAlbumId:(NSString *)aid {
     _albumId = aid;
 }
@@ -223,6 +245,9 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
     appDelegate.myNav.navigationBarHidden = YES;
+}
+- (IBAction)onShowQRCode:(id)sender {
+    [self queryQRCode];
 }
 - (void)findCurrentRank {
     for (NSDictionary *op in self.coCreators) {
@@ -236,6 +261,15 @@
         }
             
     }
+}
+- (void)tapQRCView:(UITapGestureRecognizer *)gesture {
+    
+    [UIView beginAnimations: nil context: nil];
+    [UIView setAnimationDuration: 1.0];
+    [UIView setAnimationDelay: 1.0];
+    [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
+    self.QRCover.hidden = YES;
+    [UIView commitAnimations];
 }
 #pragma mark - 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -449,7 +483,44 @@
     
 }
 //  generate QRCode
+- (void)queryQRCode {
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        
+        NSMutableDictionary *qrDic = [NSMutableDictionary new];
+        [qrDic setObject: [NSNumber numberWithBool: YES] forKey: @"is_cooperation"];
+        [qrDic setObject: [NSNumber numberWithBool: NO] forKey: @"is_follow"];
 
+        NSLog(@"generate jSON data for getQRCode");
+        NSLog(@"qrDic: %@", qrDic);
+
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject: qrDic
+                                                       options: 0
+                                                         error: nil];
+        NSString *jsonStr = [[NSString alloc] initWithData: jsonData
+                                              encoding: NSUTF8StringEncoding];
+
+        NSString *response = [boxAPI getQRCode: [wTools getUserID] token: [wTools getUserToken] type: @"album" type_id: wself.albumId effect: @"execute" is: jsonStr];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (response!=nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"getQRCode"
+                                          eventId: @""
+                                             text: @""];
+                } else {
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    
+                    NSString *qrs = dic[@"data"];
+                    [wself showQRCode:qrs];
+                }
+            } else {
+                
+            }
+        });
+    });
+}
 //  add cooperators
 - (void)inviteUserWithUserId:(NSString *)uid albumId:(NSString *)albumId {
     __block typeof(self) wself = self;
@@ -508,6 +579,68 @@
 }
 //  delete cooperators
 #pragma mark - Show QRCode
+#pragma mark - Show actionsheet
+- (void)showManagementActionSheet:(NSString *)userid {
+    
+    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+    
+    _effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+    
+    //[UIView animateWithDuration: kAnimateActionSheet animations:^{
+        
+    //}];
+    
+    
+    _effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
+    _effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    _effectView.alpha = 0.8;
+    
+    
+    _customActionSheet = [[DDAUIActionSheetViewController alloc] init];
+    _customActionSheet.topicStr = @"權限管理";
+    _customActionSheet.delegate = self;
+    [[UIApplication sharedApplication].keyWindow addSubview: _effectView];
+    [[UIApplication sharedApplication].keyWindow addSubview: _customActionSheet.view];
+    [_customActionSheet viewWillAppear: NO];
+    if ([self.curRank isEqualToString:@"admin"]) {
+        [_customActionSheet addSelectItem: @"" title: @"副管理者" btnStr: @"" tagInt: 1 identifierStr: @"approver"];
+        [_customActionSheet addSelectItem: @"" title: @"共用" btnStr: @"" tagInt: 2 identifierStr: @"editor"];
+        [_customActionSheet addSelectItem: @"" title: @"瀏覽" btnStr: @"" tagInt: 2 identifierStr: @"viewer"];
+        
+        __block typeof(self) weakSelf = self;
+        _customActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
+            if ([identifierStr isEqualToString: @"editor"]) {
+                
+                
+            } else if ([identifierStr isEqualToString: @"viewer"]) {
+                
+                
+            } else {
+                
+            }
+        };
+    } else if ([self.curRank isEqualToString:@"approver"]) {
+        [_customActionSheet addSelectItem: @"" title: @"共用" btnStr: @"" tagInt: 2 identifierStr: @"editor"];
+        [_customActionSheet addSelectItem: @"" title: @"瀏覽" btnStr: @"" tagInt: 2 identifierStr: @"viewer"];
+        
+        _customActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
+            if ([identifierStr isEqualToString: @"editor"]) {
+                
+                
+            } else if ([identifierStr isEqualToString: @"viewer"]) {
+                
+                
+            }
+        };
+    }
+}
+
+- (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
+    
+    [_effectView removeFromSuperview];
+    _effectView = nil;
+}
 
 #pragma mark - show alert
 - (void)showCustomErrorAlert: (NSString *)msg {
@@ -547,15 +680,37 @@
 - (void)processInviteUserWithIndex:(NSInteger)index {
     if (index < self.searchUsers.count) {
         NSDictionary *user = _searchUsers[index][@"user"];
-        NSString *uid = user[@"user_id"];
+        NSString *uid = [user[@"user_id"] stringValue];
         NSString *aid = self.albumId;
         [self inviteUserWithUserId:uid albumId:aid];
     }
 }
 - (void)processDeleteUserWithIndex:(NSInteger)index {
-    
+    if (index < self.coCreators.count) {
+        //NSDictionary *user = _coCreators[index][@"user"];
+        //NSString *uid = [user[@"user_id"] stringValue];
+        NSString *val = _coCreators[index][@"cooperation"][@"identity"];
+        if ([val isEqualToString:@"approver"] && [val isEqualToString:self.curRank]) {
+            [self showCustomErrorAlert:@"副管理者之間不能互相移除"];
+        } else {
+            
+        }
+        
+    }
 }
 - (void)processChangeCoCreatorRankWithIndex:(NSInteger)index {
-    
+    if (index < self.coCreators.count) {
+        NSDictionary *user = _coCreators[index][@"user"];
+        NSString *uid = [user[@"user_id"] stringValue];
+        NSString *val = _coCreators[index][@"cooperation"][@"identity"];
+        if (![uid isEqualToString:[wTools getUserID]] &&
+            [val isEqualToString:@"approver"] &&
+            [val isEqualToString:self.curRank]) {
+            [self showCustomErrorAlert:@"副管理者之間不能互相變更權限"];
+        } else {
+            [self showManagementActionSheet:uid];
+        }
+        
+    }
 }
 @end

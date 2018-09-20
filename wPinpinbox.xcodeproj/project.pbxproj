@@ -2664,9 +2664,8 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = 392DCPHLMM;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -3252,8 +3251,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 392DCPHLMM;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3271,7 +3270,7 @@
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vmage2.pinpinbox;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3295,8 +3294,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 392DCPHLMM;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3314,7 +3313,7 @@
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vmage2.pinpinbox;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
