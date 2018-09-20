@@ -11,6 +11,7 @@
 @implementation UIColor (HexString)
 + (UIColor *)colorFromHexString:(NSString *)hexString
 {
+    if ([hexString isEqualToString:@"<null>"]) return [UIColor clearColor];
     NSString *cString = [[hexString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
     
     // String should be 6 or 8 characters

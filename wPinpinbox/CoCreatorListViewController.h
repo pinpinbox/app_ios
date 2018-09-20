@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) IBOutlet UICollectionView *creatorListView;
 @property (nonatomic) IBOutlet UICollectionView *adminListView;
 @property (nonatomic) IBOutlet UIView *searchView;
+@property (nonatomic) IBOutlet UILabel *infoView;
+- (void)setAlbumId:(NSString *)aid;
 @end
 
 NS_ASSUME_NONNULL_END

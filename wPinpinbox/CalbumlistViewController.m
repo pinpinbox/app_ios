@@ -1807,15 +1807,16 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             case OPDelete:
                 break;
             case OPInvite: {
-                
-                CoCreatorListViewController *cv = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CoCreatorListViewController"];
-                
-                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                
-                
-                appDelegate.myNav.navigationBar.barTintColor = [UIColor whiteColor];
-                [appDelegate.myNav pushViewController:cv animated:YES];
-                return;
+                if (![data[@"album_id"] isEqual: [NSNull null]]) {
+                    CoCreatorListViewController *cv = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CoCreatorListViewController"];
+                    
+                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                    [cv setAlbumId:[data[@"album_id"] stringValue]];
+                    
+                    appDelegate.myNav.navigationBar.barTintColor = [UIColor whiteColor];
+                    [appDelegate.myNav pushViewController:cv animated:YES];
+                    return;
+                }
                 NSDictionary *co = dataarr[index][@"cooperation"];
                 if (co && co[@"identity"]) {
                     NSString *i = co[@"identity"];
