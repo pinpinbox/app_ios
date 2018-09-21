@@ -1652,6 +1652,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             msg = NSLocalizedString(@"Host-NotAvailable", @"");
         }
         [self showCustomErrorAlert: msg];
+    } else if ([dic[@"result"] isEqualToString: @"USER_ERROR"]) {
+        NSLog(@"失敗： %@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        
+        if (msg == nil) {
+            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        }
+        [self showCustomErrorAlert: msg];
+        
     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];

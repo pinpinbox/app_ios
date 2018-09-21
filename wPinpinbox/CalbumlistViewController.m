@@ -1789,9 +1789,25 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     if (index < dataarr.count) {
         NSDictionary *data = dataarr[index][@"album"];
         switch (action) {
-            case OPEdit:
-                if (![data[@"album_id"] isEqual: [NSNull null]])
-                    [self showCustomEditActionSheet:[data[@"album_id"] stringValue]];
+            case OPEdit:{
+                NSDictionary *co = dataarr[index][@"cooperation"];
+                NSDictionary *user = dataarr[index][@"user"];
+                BOOL isSelfWork = [[user[@"user_id"] stringValue] isEqualToString:[wTools getUserID]];
+                
+                if (![data[@"album_id"] isEqual: [NSNull null]] && co && co[@"identity"]) {
+                    NSString *i = co[@"identity"];
+                    if (isSelfWork || ![co[@"identity"] isKindOfClass:[NSNull class]]) {
+                        if (isSelfWork || ![i isEqualToString:@"viewer"]) {
+                            if (![data[@"album_id"] isEqual: [NSNull null]])
+                                [self showCustomEditActionSheet:[data[@"album_id"] stringValue]];
+                            return;
+                        }
+                    }
+                }
+                
+                [self showCustomAlertNormal:@"權限不足"];
+                
+            }
                 break;
             case OPShare: {
                 if ([data[@"zipped"] intValue] != 1) {
@@ -1809,16 +1825,18 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 break;
             case OPInvite: {
                 NSDictionary *co = dataarr[index][@"cooperation"];
+                NSDictionary *user = dataarr[index][@"user"];
+                BOOL isSelfWork = [[user[@"user_id"] stringValue] isEqualToString:[wTools getUserID]];
                 if (![data[@"album_id"] isEqual: [NSNull null]] && co && co[@"identity"]) {
                     NSString *i = co[@"identity"];
-                    if (![co[@"identity"] isKindOfClass:[NSNull class]]) {
-                        if ([i isEqualToString:@"admin"] || [i isEqualToString:@"approver"]) {
+                    if (isSelfWork || ![co[@"identity"] isKindOfClass:[NSNull class]]) {
+                        if (isSelfWork || [i isEqualToString:@"admin"] || [i isEqualToString:@"approver"]) {
                             //  proceed to invite
                             CoCreatorListViewController *cv = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CoCreatorListViewController"];
                             [cv setAlbumId:[data[@"album_id"] stringValue]];
                             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                             [appDelegate.myNav pushViewController:cv animated: YES];
-                            
+                            return;
                         }
                     }
                 }

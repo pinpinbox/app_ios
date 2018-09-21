@@ -742,6 +742,7 @@
                         <outlet property="adminListView" destination="LVr-nR-8Qq" id="pzU-QK-TPl"/>
                         <outlet property="creatorListView" destination="erz-EG-9WL" id="tUk-ii-DFL"/>
                         <outlet property="infoView" destination="oBs-jx-9rT" id="TZD-1P-NHv"/>
+                        <outlet property="searchField" destination="qwz-ga-e02" id="9bD-Tj-WhD"/>
                         <outlet property="searchView" destination="Jgh-xB-8VQ" id="gN3-PR-egb"/>
                         <outlet property="searchViewWidth" destination="0bW-rb-5mU" id="guY-Hh-na9"/>
                     </connections>
@@ -752,7 +753,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Hd-Vr-g83">
-                            <rect key="frame" x="63.5" y="209.5" width="248" height="248"/>
+                            <rect key="frame" x="63.5" y="189.5" width="248" height="248"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="248" id="gTA-Ua-NNW"/>
@@ -765,8 +766,18 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="被邀請的用戶預設為瀏覽者" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFr-qE-h9J">
+                            <rect key="frame" x="63.5" y="453" width="248" height="21"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="248" id="CiJ-os-i6U"/>
+                                <constraint firstAttribute="height" constant="21" id="YTQ-wB-MA2"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PpF-fk-yIV">
-                            <rect key="frame" x="67.5" y="213.5" width="240" height="240"/>
+                            <rect key="frame" x="67.5" y="193.5" width="240" height="240"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="240" id="Cj8-ma-zFW"/>
                                 <constraint firstAttribute="height" constant="240" id="zi5-Io-EfA"/>
@@ -776,9 +787,11 @@
                     <color key="backgroundColor" white="0.33333333333333331" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="9Hd-Vr-g83" firstAttribute="centerX" secondItem="V6Y-P5-vVN" secondAttribute="centerX" id="7kI-iD-Bmi"/>
-                        <constraint firstItem="9Hd-Vr-g83" firstAttribute="centerY" secondItem="V6Y-P5-vVN" secondAttribute="centerY" id="Kpq-4C-8OU"/>
+                        <constraint firstItem="9Hd-Vr-g83" firstAttribute="centerY" secondItem="V6Y-P5-vVN" secondAttribute="centerY" constant="-20" id="Kpq-4C-8OU"/>
+                        <constraint firstItem="mFr-qE-h9J" firstAttribute="centerY" secondItem="V6Y-P5-vVN" secondAttribute="centerY" constant="130" id="Rk3-Ty-u2E"/>
                         <constraint firstItem="PpF-fk-yIV" firstAttribute="centerX" secondItem="V6Y-P5-vVN" secondAttribute="centerX" id="ZDX-9s-zH6"/>
-                        <constraint firstItem="PpF-fk-yIV" firstAttribute="centerY" secondItem="V6Y-P5-vVN" secondAttribute="centerY" id="hs9-cd-KSb"/>
+                        <constraint firstItem="PpF-fk-yIV" firstAttribute="centerY" secondItem="V6Y-P5-vVN" secondAttribute="centerY" constant="-20" id="hs9-cd-KSb"/>
+                        <constraint firstItem="mFr-qE-h9J" firstAttribute="centerX" secondItem="V6Y-P5-vVN" secondAttribute="centerX" id="qfP-Fg-qlF"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="YUC-iS-MWi"/>
                 </view>

@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) IBOutlet UICollectionView *adminListView;
 @property (nonatomic) IBOutlet UIView *searchView;
 @property (nonatomic) IBOutlet UILabel *infoView;
+@property (nonatomic) IBOutlet UITextField *searchField;
 - (void)setAlbumId:(NSString *)aid;
 @end
 

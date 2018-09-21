@@ -57,7 +57,7 @@
     self.manageButton.enabled = NO;
     [self.manageButton setBackgroundColor:[UIColor whiteColor]];
     [self.manageButton setTitleColor:[UIColor thirdGrey] forState:UIControlStateNormal];
-    self.editButton.hidden = !edit;
+    self.editButton.hidden = YES;
 }
 - (void)setAdminMode:(BOOL)edit selfRank:(NSString *)selfRank userRank:(NSString *)userRank {
     self.manageButton.layer.borderColor = [UIColor thirdGrey].CGColor;
@@ -75,7 +75,7 @@
     if ([selfRank isEqualToString:@"admin"])
         self.editButton.hidden = edit;
     else {
-        self.editButton.hidden = [userRank isEqualToString:@"admin"];
+        self.editButton.hidden = edit || [userRank isEqualToString:@"admin"];
     }
         
 }
@@ -110,6 +110,15 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapQRCView:)];
     [self.QRCover addGestureRecognizer:tap];
     self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+    
+    UIToolbar *numberToolBar = [[UIToolbar alloc] initWithFrame: CGRectMake(0, 0, 320, 40)];
+    numberToolBar.barStyle = UIBarStyleDefault;
+    numberToolBar.items = [NSArray arrayWithObjects:
+                           [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemFlexibleSpace target: nil action: nil],
+                           [[UIBarButtonItem alloc] initWithTitle: @"完成" style: UIBarButtonItemStyleDone target: self action: @selector(dismissKeyboard)], nil];
+    
+    self.searchField.inputAccessoryView = numberToolBar;
+    
 }
 - (BOOL)prefersStatusBarHidden {
     return NO;
@@ -229,6 +238,9 @@
     
 }
 #pragma mark -
+- (void)dismissKeyboard {
+    [self.searchField endEditing:YES];
+}
 - (BOOL) checkUserInCoop: (NSInteger) uid{
     __block int r = -1;
     [_coCreators enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -613,7 +625,7 @@
             NSString *msg = result[@"message"];
             if (!msg || msg.length < 1)
                 msg = @"邀請用戶失敗，請重試";
-            [self showCustomErrorAlert:msg];
+            [self showCustomWarningAlert:msg];
             
         }
         
@@ -667,7 +679,7 @@
             NSString *msg = result[@"message"];
             if (!msg || msg.length < 1)
                 msg = @"刪除用戶失敗，請重試";
-            [self showCustomErrorAlert:msg];
+            [self showCustomWarningAlert:msg];
             
         }
         
@@ -732,14 +744,14 @@
     [[UIApplication sharedApplication].keyWindow addSubview: _customActionSheet.view];
     [_customActionSheet viewWillAppear: NO];
     if ([self.curRank isEqualToString:@"admin"]) {
-        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"副管理者" tagInt: 1 identifierStr: @"approver"];
-        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"共用" tagInt: 2 identifierStr: @"editor"];
-        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"瀏覽" tagInt: 3 identifierStr: @"viewer"];
-        
+        //[_customActionSheet addSelectItem: @"" title: nil btnStr: @"副管理者" tagInt: 1 identifierStr: @"approver"];
+        //[_customActionSheet addSelectItem: @"" title: nil btnStr: @"共用" tagInt: 2 identifierStr: @"editor"];
+        //[_customActionSheet addSelectItem: @"" title: nil btnStr: @"瀏覽" tagInt: 3 identifierStr: @"viewer"];
+        [_customActionSheet addSelectButtons:@[@"副管理者",@"共用",@"瀏覽"] identifierStrs:@[ @"approver",@"editor",@"viewer"]];
         __block typeof(self) weakSelf = self;
         __block typeof(self.albumId) aid = self.albumId;
-        _customActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
-            switch (tagId) {
+        _customActionSheet.customButtonTapBlock= ^(NSInteger tag, NSString *identifierStr) {
+            switch (tag) {
                 case 1:
                 case 2:
                 case 3:
@@ -751,12 +763,13 @@
             }
         };
     } else if ([self.curRank isEqualToString:@"approver"]) {
-        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"共用" tagInt: 1 identifierStr: @"editor"];
-        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"瀏覽" tagInt: 2 identifierStr: @"viewer"];
+        //[_customActionSheet addSelectItem: @"" title: nil btnStr: @"共用" tagInt: 1 identifierStr: @"editor"];
+        //[_customActionSheet addSelectItem: @"" title: nil btnStr: @"瀏覽" tagInt: 2 identifierStr: @"viewer"];
+        [_customActionSheet addSelectButtons:@[@"共用",@"瀏覽"] identifierStrs:@[@"editor",@"viewer"]];
         __block typeof(self) weakSelf = self;
         __block typeof(self.albumId) aid = self.albumId;
-        _customActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
-            switch (tagId) {
+        _customActionSheet.customButtonTapBlock= ^(NSInteger tag, NSString *identifierStr) {
+            switch (tag) {
                 case 1:
                 case 2:
                     [weakSelf updateCooperatorRank:userid rank:identifierStr albumId:aid];
@@ -782,6 +795,26 @@
         [customAlertView close];
     }];
 }
+- (void)showCustomWarningAlert: (NSString *)msg {
+    
+    CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    alertTimeOutView.arrangeStyle = @"Horizontal";
+    alertTimeOutView.parentView = self.view;
+    [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    
+    [alertTimeOutView setButtonColors: @[[UIColor clearColor]]];
+    [alertTimeOutView setButtonTitlesColor: @[[UIColor secondGrey]]];
+    [alertTimeOutView setButtonTitlesHighlightColor: @[[UIColor thirdMain]]];
+    [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
+        
+        [alertTimeOutView close];
+    }];
+    
+    [alertTimeOutView setUseMotionEffects: YES];
+    [alertTimeOutView show];
+}
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                        eventId: (NSString *)eventId
@@ -805,6 +838,7 @@
         
         [alertTimeOutView close];
     }];
+    
     [alertTimeOutView setUseMotionEffects: YES];
     [alertTimeOutView show];
 }
@@ -823,7 +857,7 @@
         
         NSString *val = _coCreators[index][@"cooperation"][@"identity"];
         if ([val isEqualToString:@"approver"] && [val isEqualToString:self.curRank]) {
-            [self showCustomErrorAlert:@"副管理者之間不能互相移除"];
+            [self showCustomWarningAlert:@"副管理者之間不能互相移除"];
         } else {
             NSString *uid = [user[@"user_id"] stringValue];
             NSString *aid = self.albumId;
@@ -837,10 +871,10 @@
         NSDictionary *user = _coCreators[index][@"user"];
         NSString *uid = [user[@"user_id"] stringValue];
         NSString *val = _coCreators[index][@"cooperation"][@"identity"];
-        if (![uid isEqualToString:[wTools getUserID]] &&
-            [val isEqualToString:@"approver"] &&
-            [val isEqualToString:self.curRank]) {
-            [self showCustomErrorAlert:@"副管理者之間不能互相變更權限"];
+        if ([uid isEqualToString:[wTools getUserID]]) {
+            [self showCustomWarningAlert:@"無法變更權限"];
+        } else if ([val isEqualToString:@"approver"] && [val isEqualToString:self.curRank]) {
+            [self showCustomWarningAlert:@"副管理者之間不能互相變更權限"];
         } else {
             [self showManagementActionSheet:uid];
         }

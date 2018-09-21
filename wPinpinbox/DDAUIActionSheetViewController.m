@@ -57,7 +57,50 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+- (void)addSelectButtons:(NSArray *)btnStrs identifierStrs:(NSArray *)identifierStrs {
+    
+    if (btnStrs.count < 1) return ;
+    
+    MyLinearLayout *horzLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
+    
+    horzLayout.myLeftMargin = horzLayout.myRightMargin = 0;
+    horzLayout.myTopMargin = horzLayout.myBottomMargin = 0;
+    if (@available(iOS 11.0, *)) {
+        CGFloat bt = self.view.safeAreaInsets.bottom;
+        horzLayout.myHeight = 48+bt;
+    } else {
+        // Fallback on earlier versions
+        horzLayout.myHeight = 48;
+    }
+    
+    CGFloat ww = [UIApplication sharedApplication].keyWindow.frame.size.width / btnStrs.count;
+    //NSInteger n = btnStrs.count;
+    for (int i =0 ; i< btnStrs.count; i++) {
+        NSString *s = [btnStrs objectAtIndex:i];
+        NSString *is = [identifierStrs objectAtIndex:i];
+        UIButton *btn = [UIButton buttonWithType: UIButtonTypeCustom];
+        btn.wrapContentWidth = YES;
+        btn.myLeftMargin = 8;
+        btn.myRightMargin = 8;
+        btn.myCenterYOffset = 0;
+        btn.widthDime.min(ww-16);
+        btn.layer.cornerRadius = 8;
+        btn.titleEdgeInsets = UIEdgeInsetsMake(0, 4, 0, 4);
+        btn.backgroundColor = [UIColor firstMain];
+        
+        //[btn addTarget: self action: @selector(buttonHighlight:) forControlEvents: UIControlEventTouchDown];
+        [btn addTarget: self action: @selector(buttonNormal:) forControlEvents: UIControlEventTouchUpInside];
+        //[btn addTarget: self action: @selector(buttonNormal:) forControlEvents: UIControlEventTouchUpOutside];
+        [btn setTitle: s forState: UIControlStateNormal];
+        [btn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+        [btn sizeToFit];
+        btn.accessibilityIdentifier = is;
+        btn.tag = i+1;
+        
+        [horzLayout addSubview: btn];
+    }
+    [self.contentLayout addSubview: horzLayout];
+}
 - (void)addSelectItem:(NSString *)imgName
                 title:(NSString *)title
                btnStr:(NSString *)btnStr
@@ -416,6 +459,9 @@
     
     if (self.customButtonBlock) {
         self.customButtonBlock(sender.selected);
+    } else if (self.customButtonTapBlock) {
+        [self slideOut];
+        self.customButtonTapBlock(sender.tag, sender.accessibilityIdentifier);
     }
 }
 

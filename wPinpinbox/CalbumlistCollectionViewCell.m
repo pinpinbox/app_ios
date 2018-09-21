@@ -156,7 +156,10 @@
     
     __block typeof(self) wself = self;
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    [alertTimeOutView setContentViewWithMsg:@"確定要刪除作品?" contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    NSString *msg = @"確定要刪除作品？";
+    if (_type == 2)
+        msg = @"確定解除協作狀態？";
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     alertTimeOutView.arrangeStyle = @"Horizontal";
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     alertTimeOutView.parentView = appDelegate.window;

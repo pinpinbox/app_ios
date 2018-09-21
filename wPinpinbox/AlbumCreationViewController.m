@@ -93,7 +93,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UIImage *selectimage;
     
     NSInteger *nextItem;
-    NSString *identity;
+    
     
     AVAudioRecorder *recorder;
     //AVAudioPlayer *player;
@@ -170,6 +170,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) DDAUIActionSheetViewController *customSettingActionSheet;
 @property (nonatomic) UIVisualEffectView *effectView;
 
+@property (nonatomic) NSString *identity;
 @end
 
 @implementation AlbumCreationViewController
@@ -296,6 +297,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     modalVC = @"";
     
     NSLog(@"self.dimVC.view: %@", NSStringFromCGRect(self.dimVC.view.frame));
+    //  query cooperator status //
+    [self getCooperation];
     
     // For checking whether should present actionSheet options or not
     isViewDidLoad = YES;
@@ -636,6 +639,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     NSLog(@"textViewShouldBeginEditing");
     NSLog(@"textView.text: %@", textView.text);
+    
     NSLog(@"textForDescription: %@", textForDescription);
     
     if (![textView.text isEqualToString: @""]) {
@@ -1526,16 +1530,6 @@ shouldChangeTextInRange:(NSRange)range
 
 - (void)getCooperation
 {
-    @try {
-        [wTools ShowMBProgressHUD];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    
     
     NSMutableDictionary *data=[NSMutableDictionary new];
     [data setObject: _albumid forKey: @"type_id"];
@@ -1549,16 +1543,6 @@ shouldChangeTextInRange:(NSRange)range
                                              data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [wTools HideMBProgressHUD];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
-            
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -1566,32 +1550,26 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"AlbumCollectionViewController");
                     NSLog(@"getCooperation");
                     
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getcooperation"
-                                         textStr: @""
-                                            data: nil
-                                           image: nil
-                                         jsonStr: @""
-                                       audioMode: @""
-                                          option: @""];
+//                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+//                                    protocolName: @"getcooperation"
+//                                         textStr: @""
+//                                            data: nil
+//                                           image: nil
+//                                         jsonStr: @""
+//                                       audioMode: @""
+//                                          option: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
-                    
-                    if ([dic[@"result"] boolValue]) {
-                        NSLog(@"dic result boolValue is 1");
-                        stSelf->identity = dic[@"data"];
-                    } else {
-                        NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
+                    if ([dic[@"result"] intValue] == 1) {
                         
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
-                        }
-                        [stSelf showCustomErrorAlert: msg];
+                        stSelf.identity = dic[@"data"];
+                        
+                    } else {
+                        stSelf.identity = nil;
                     }
+                    
                 }
             }
         });
@@ -1688,18 +1666,11 @@ shouldChangeTextInRange:(NSRange)range
                     
                     if ([dic[@"result"] intValue] == 1) {
                         if ([option isEqualToString: @"save"]) {
-                            AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
-                            aSVC.albumId = stSelf.albumid;
-                            aSVC.postMode = stSelf.postMode;
-                            aSVC.eventId = stSelf.event_id;
-                            aSVC.fromVC = @"AlbumCreationVC";
-                            aSVC.hasImage = YES;
-                            aSVC.isNew = YES;
-                            aSVC.prefixText = stSelf.prefixText;
-                            aSVC.specialUrl = stSelf.specialUrl;
-                            
-                            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                            [appDelegate.myNav pushViewController: aSVC animated: NO];
+                            if ([self.identity isEqualToString:@"admin"]) {
+                                [stSelf proceedToAlbumSetting];
+                            } else {
+                                [stSelf finishCoopEditing];
+                            }
                         } else if ([option isEqualToString: @"back"]) {
                             if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -1735,6 +1706,46 @@ shouldChangeTextInRange:(NSRange)range
     });
 }
 
+- (void)finishCoopEditing {
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    for (UIViewController *vc in appDelegate.myNav.viewControllers) {
+        if ([vc isKindOfClass: [AlbumDetailViewController class]]) {
+            NSLog(@"vc is AlbumDetailVC");
+            
+            
+            [appDelegate.myNav popToViewController: vc animated: YES];
+            
+            return;
+        } else if ([vc isKindOfClass: [AlbumCollectionViewController class]]) {
+            NSLog(@"vc is AlbumCollectionVC");
+            [appDelegate.myNav popToViewController: vc animated: YES];
+            
+            return;
+        }
+    }
+    
+    AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
+    [appDelegate.myNav pushViewController: albumCollectionVC animated: YES];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"modifyAlbum"];
+    [defaults synchronize];
+}
+- (void)proceedToAlbumSetting {
+    AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
+    aSVC.albumId = self.albumid;
+    aSVC.postMode = self.postMode;
+    aSVC.eventId = self.event_id;
+    aSVC.fromVC = @"AlbumCreationVC";
+    aSVC.hasImage = YES;
+    aSVC.isNew = YES;
+    aSVC.prefixText = self.prefixText;
+    aSVC.specialUrl = self.specialUrl;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: aSVC animated: NO];
+}
 - (IBAction)deleteFile:(id)sender
 {
     __weak typeof(self) weakSelf = self;
@@ -1827,7 +1838,7 @@ shouldChangeTextInRange:(NSRange)range
                         //[self.dataCollectionView reloadData];
                         
                     } else if ([dic[@"result"] intValue] == 0) {
-                        [stSelf showPermission];
+                        [stSelf showCustomErrorAlert:dic[@"message"]];
                     } else {
                         [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -3176,7 +3187,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (BOOL)checkPermissionForEditing {
-    if ([identity isEqualToString:@"editor"] || [identity isEqualToString: @"approver"]) {
+    if ([_identity isEqualToString:@"viewer"]){//@"editor"] || [identity isEqualToString: @"approver"]) {
         return NO;
     } else {
         return YES;
@@ -3184,9 +3195,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)showPermission {
-    if ([identity isEqualToString:@"editor"] || [identity isEqualToString: @"approver"]) {
+   // if ([identity isEqualToString:@"viewer"]){//@"editor"] || [identity isEqualToString: @"approver"]) {
         [self showPermissionAlert: NSLocalizedString(@"CreateAlbumText-canNotEditOthers", @"")];
-    }
+   // }
 }
 
 #pragma mark - Reorder Function
