@@ -26,6 +26,23 @@
         [self.coDelegate processInviteUserWithIndex:self.cindex];
     }
 }
+- (void)setInviteButtonEnabled:(BOOL) e {
+    if (e) {
+        
+        _inviteButton.layer.borderWidth = 0;
+        [_inviteButton setBackgroundColor:[UIColor firstMain]];
+        [_inviteButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _inviteButton.enabled = YES;
+        [_inviteButton setTitle:@"邀請" forState:UIControlStateNormal];
+    } else {
+        _inviteButton.layer.borderColor = [UIColor thirdGrey].CGColor;
+        _inviteButton.layer.borderWidth = 1;
+        [_inviteButton setBackgroundColor:[UIColor whiteColor]];
+        [_inviteButton setTitleColor:[UIColor thirdGrey] forState:UIControlStateNormal];
+        _inviteButton.enabled = NO;
+        [_inviteButton setTitle:@"已邀請" forState:UIControlStateNormal];
+    }
+}
 @end
 
 @implementation CoAdminCell
@@ -77,8 +94,8 @@
 @property (nonatomic) NSString *curRank;
 @property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) DDAUIActionSheetViewController *customActionSheet;
-@property (nonatomic) IBOutlet UIView *QRCover;
-@property (nonatomic) IBOutlet UIImageView *QRCodeView;
+@property (nonatomic,strong) IBOutlet UIView *QRCover;
+@property (nonatomic,strong) IBOutlet UIImageView *QRCodeView;
 @end
 
 @implementation CoCreatorListViewController
@@ -158,7 +175,12 @@
                                              placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
             }
             ccell.userName.text = user[@"name"];
-            [ccell.inviteButton setTitle:@"邀請" forState:UIControlStateNormal];
+            if ([self checkUserInCoop:[user[@"user_id"] intValue]]) {
+                [ccell setInviteButtonEnabled:NO];
+            }
+            else {
+                [ccell setInviteButtonEnabled:YES];
+            }
             ccell.coDelegate = self;
             ccell.cindex = indexPath.row;
             return ccell;
@@ -195,6 +217,30 @@
     
     return cell;
 }
+- (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    if (collectionView == _creatorListView)
+        return _searchUsers.count;
+    return _coCreators.count;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+#pragma mark -
+- (BOOL) checkUserInCoop: (NSInteger) uid{
+    __block int r = -1;
+    [_coCreators enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSDictionary *d = (NSDictionary *)obj;
+        NSDictionary *user = d[@"user"];
+        int u = [user[@"user_id"] intValue];
+        if (u == uid) {
+            r = (int)idx;
+            *stop = YES;
+        }
+    }];
+    
+    return (r >= 0);
+}
 //  check if rank is editor or viewer
 + (BOOL) isNonAdminRank:(NSString *)rank {
     if ([rank isEqualToString:@"admin"] || [rank isEqualToString:@"approver"])
@@ -210,30 +256,23 @@
         return @"副管理者";
     else if ([rank isEqualToString:@"editor"])
         return @"共用者";
-
+    
     return @"瀏覽者";
 }
-- (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    if (collectionView == _creatorListView)
-        return _searchUsers.count;
-    return _coCreators.count;
-}
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-#pragma mark -
 - (void)showQRCode:(NSString *)qrs {
     
     NSData *data = [[NSData alloc] initWithBase64EncodedString: qrs options: NSDataBase64DecodingIgnoreUnknownCharacters];
     UIImage *img = [UIImage imageWithData: data];
     
     self.QRCodeView.image = img;
-    
+    _QRCover.frame = self.view.bounds;
     [UIView beginAnimations: nil context: nil];
-    [UIView setAnimationDuration: 1.0];
-    [UIView setAnimationDelay: 1.0];
+    [UIView setAnimationDuration: 0.5];
+    [UIView setAnimationDelay: 0.5];
     [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
+    
+    [[UIApplication sharedApplication].keyWindow addSubview: _QRCover];
     self.QRCover.hidden = NO;
     [UIView commitAnimations];
 }
@@ -268,7 +307,8 @@
     [UIView setAnimationDuration: 1.0];
     [UIView setAnimationDelay: 1.0];
     [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
-    self.QRCover.hidden = YES;
+    //self.QRCover.hidden = YES;
+    [_QRCover removeFromSuperview];
     [UIView commitAnimations];
 }
 #pragma mark - 
@@ -578,7 +618,6 @@
     }
 }
 //  delete cooperators
-#pragma mark - Show QRCode
 #pragma mark - Show actionsheet
 - (void)showManagementActionSheet:(NSString *)userid {
     
