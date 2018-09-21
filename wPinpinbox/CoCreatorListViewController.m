@@ -62,6 +62,7 @@
 - (void)setAdminMode:(BOOL)edit selfRank:(NSString *)selfRank userRank:(NSString *)userRank {
     self.manageButton.layer.borderColor = [UIColor thirdGrey].CGColor;
     self.manageButton.layer.borderWidth = 1;
+    
     self.manageButton.enabled = ![userRank isEqualToString:@"admin"];
     if (self.manageButton.enabled) {
         [self.manageButton setBackgroundColor:[UIColor thirdGrey]];
@@ -72,7 +73,7 @@
     }
     self.editButton.hidden = NO;
     if ([selfRank isEqualToString:@"admin"])
-        self.editButton.hidden = !edit;
+        self.editButton.hidden = edit;
     else {
         self.editButton.hidden = [userRank isEqualToString:@"admin"];
     }
@@ -108,6 +109,7 @@
     _searchUsers = [NSMutableArray array];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapQRCView:)];
     [self.QRCover addGestureRecognizer:tap];
+    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
 }
 - (BOOL)prefersStatusBarHidden {
     return NO;
@@ -118,14 +120,14 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.navigationController.navigationBarHidden = NO;
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];    
+    
     [self.navigationController.navigationBar setShadowImage: [UIImage imageNamed:@"navigationbarshadow"]];
 }
 - (void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
     
-    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     //UIBarButtonItem *litem = [[UIBarButtonItem alloc]initWithCustomView:self.backButton];
     //self.searchView.translatesAutoresizingMaskIntoConstraints = NO;
     UIBarButtonItem *l = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_arrow_left_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onBackButton:)];
@@ -618,6 +620,93 @@
     }
 }
 //  delete cooperators
+- (void)deleteCoopertorWithUserId:(NSString *)uid albumId:(NSString *)aid {
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        
+        NSString *response=@"";
+        NSMutableDictionary *data=[NSMutableDictionary new];
+        [data setObject:uid forKey:@"user_id"];
+        [data setObject:@"album" forKey:@"type"];
+        [data setObject:aid forKey:@"type_id"];
+        
+        
+        response=[boxAPI deletecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //[wTools HideMBProgressHUD];
+            if (response!=nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    
+                    //[wself.view endEditing:YES];
+                    
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"deleteCoopertorWithUserId"
+                                          eventId: @""
+                                             text: uid];
+                } else {
+                    NSLog(@"%@",respone);
+                    NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    
+                    [wself processDeleteCoopResult:dic userid:uid];
+                }
+            }
+        });
+    });
+}
+- (void)processDeleteCoopResult:(NSDictionary *)result userid:(NSString *)userid {
+    NSLog(@"%@",result);
+    if (result) {
+        int r = [result[@"result"] intValue];
+        if (r == 1) {
+            //  get cooperatorlist
+            //  reload
+            [self.coCreators removeAllObjects];
+            [self getCooperatorList];
+            
+        } else {
+            NSString *msg = result[@"message"];
+            if (!msg || msg.length < 1)
+                msg = @"刪除用戶失敗，請重試";
+            [self showCustomErrorAlert:msg];
+            
+        }
+        
+    }
+}
+- (void)updateCooperatorRank:(NSString *)uid rank:(NSString *)rank albumId:(NSString *)aid{
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSMutableDictionary *data=[NSMutableDictionary new];
+        [data setObject:aid forKey:@"type_id"];
+        [data setObject:@"album" forKey:@"type"];
+        [data setObject:rank forKey:@"identity"];
+        [data setObject:uid forKey:@"user_id"];
+        NSString *response=[boxAPI updatecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            
+            if (response!=nil) {
+                NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                if ([dic[@"result"] intValue] == 1) {
+                    [wself handleRankSuccessfullyUpdate];
+                } else if ([dic[@"result"] intValue] == 0) {
+                    NSLog(@"失敗：%@",dic[@"message"]);
+                    [self showCustomErrorAlert: dic[@"message"]];
+                } else {
+                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                }
+            } else {
+                [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+            }
+        });
+    });
+
+}
+- (void)handleRankSuccessfullyUpdate{
+    [self.coCreators removeAllObjects];
+    [self getCooperatorList];
+}
 #pragma mark - Show actionsheet
 - (void)showManagementActionSheet:(NSString *)userid {
     
@@ -643,38 +732,42 @@
     [[UIApplication sharedApplication].keyWindow addSubview: _customActionSheet.view];
     [_customActionSheet viewWillAppear: NO];
     if ([self.curRank isEqualToString:@"admin"]) {
-        [_customActionSheet addSelectItem: @"" title: @"副管理者" btnStr: @"" tagInt: 1 identifierStr: @"approver"];
-        [_customActionSheet addSelectItem: @"" title: @"共用" btnStr: @"" tagInt: 2 identifierStr: @"editor"];
-        [_customActionSheet addSelectItem: @"" title: @"瀏覽" btnStr: @"" tagInt: 2 identifierStr: @"viewer"];
+        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"副管理者" tagInt: 1 identifierStr: @"approver"];
+        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"共用" tagInt: 2 identifierStr: @"editor"];
+        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"瀏覽" tagInt: 3 identifierStr: @"viewer"];
         
         __block typeof(self) weakSelf = self;
+        __block typeof(self.albumId) aid = self.albumId;
         _customActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
-            if ([identifierStr isEqualToString: @"editor"]) {
-                
-                
-            } else if ([identifierStr isEqualToString: @"viewer"]) {
-                
-                
-            } else {
-                
+            switch (tagId) {
+                case 1:
+                case 2:
+                case 3:
+                    [weakSelf updateCooperatorRank:userid rank:identifierStr albumId:aid];
+                    break;
+                    
+                default:
+                    break;
             }
         };
     } else if ([self.curRank isEqualToString:@"approver"]) {
-        [_customActionSheet addSelectItem: @"" title: @"共用" btnStr: @"" tagInt: 2 identifierStr: @"editor"];
-        [_customActionSheet addSelectItem: @"" title: @"瀏覽" btnStr: @"" tagInt: 2 identifierStr: @"viewer"];
-        
+        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"共用" tagInt: 1 identifierStr: @"editor"];
+        [_customActionSheet addSelectItem: @"" title: nil btnStr: @"瀏覽" tagInt: 2 identifierStr: @"viewer"];
+        __block typeof(self) weakSelf = self;
+        __block typeof(self.albumId) aid = self.albumId;
         _customActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
-            if ([identifierStr isEqualToString: @"editor"]) {
-                
-                
-            } else if ([identifierStr isEqualToString: @"viewer"]) {
-                
-                
+            switch (tagId) {
+                case 1:
+                case 2:
+                    [weakSelf updateCooperatorRank:userid rank:identifierStr albumId:aid];
+                    break;
+                    
+                default:
+                    break;
             }
         };
     }
 }
-
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     
     [_effectView removeFromSuperview];
@@ -726,13 +819,15 @@
 }
 - (void)processDeleteUserWithIndex:(NSInteger)index {
     if (index < self.coCreators.count) {
-        //NSDictionary *user = _coCreators[index][@"user"];
-        //NSString *uid = [user[@"user_id"] stringValue];
+        NSDictionary *user = _coCreators[index][@"user"];
+        
         NSString *val = _coCreators[index][@"cooperation"][@"identity"];
         if ([val isEqualToString:@"approver"] && [val isEqualToString:self.curRank]) {
             [self showCustomErrorAlert:@"副管理者之間不能互相移除"];
         } else {
-            
+            NSString *uid = [user[@"user_id"] stringValue];
+            NSString *aid = self.albumId;
+            [self deleteCoopertorWithUserId:uid albumId:aid];
         }
         
     }
