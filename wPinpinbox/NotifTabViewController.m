@@ -195,7 +195,7 @@
                     
                     NSLog(@"response from getPushQueue");
                     NSLog(@"dic: %@", dic);
-                    
+                    [wself processPushQueue:dic];
                     
                 }
             } else {
