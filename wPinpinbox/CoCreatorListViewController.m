@@ -602,7 +602,7 @@
                                           eventId: @""
                                              text: uid];
                 } else {
-                    NSLog(@"%@",respone);
+                    NSLog(@"%@",response);
                     NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     [wself processInsertCoopResult:dic userid:uid];
@@ -656,7 +656,7 @@
                                           eventId: @""
                                              text: uid];
                 } else {
-                    NSLog(@"%@",respone);
+                    NSLog(@"%@",response);
                     NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     [wself processDeleteCoopResult:dic userid:uid];
@@ -699,14 +699,24 @@
             
             
             if (response!=nil) {
-                NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                if ([dic[@"result"] intValue] == 1) {
-                    [wself handleRankSuccessfullyUpdate];
-                } else if ([dic[@"result"] intValue] == 0) {
-                    NSLog(@"失敗：%@",dic[@"message"]);
-                    [self showCustomErrorAlert: dic[@"message"]];
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    
+                    [wself.view endEditing:YES];
+                    
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"updateCooperatorRank"
+                                          eventId: uid
+                                             text: rank];
                 } else {
-                    [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    if ([dic[@"result"] intValue] == 1) {
+                        [wself handleRankSuccessfullyUpdate];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
                 }
             } else {
                 [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
@@ -789,7 +799,9 @@
 
 #pragma mark - show alert
 - (void)showCustomErrorAlert: (NSString *)msg {
-    
+    if (!msg || msg.length < 1 ) {
+        msg = @"請稍後重試";
+    }
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView * _Nullable customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
@@ -833,10 +845,26 @@
     [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     
+    __block typeof(self.albumId) aid = self.albumId;
+    __block typeof(self) wself = self;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [alertTimeOutView close];
+        if ([protocolName isEqualToString:@"getCooperatorList"]) {
+            [wself getCooperatorList];
+        } else if ([protocolName isEqualToString:@"filterUserContentForSearchText"]) {
+            [wself searchUserByKeyword:text];
+        } else if ([protocolName isEqualToString:@"getQRCode"]) {
+            [wself queryQRCode];
+        } else if ([protocolName isEqualToString:@"inviteUserWithUserId"]) {
+            [wself inviteUserWithUserId:text albumId:aid];
+        } else if ([protocolName isEqualToString:@"deleteCoopertorWithUserId"]) {
+            [wself deleteCoopertorWithUserId:text albumId:aid];
+        } else if ([protocolName isEqualToString:@"updateCooperatorRank"]) {
+            [wself updateCooperatorRank:eventId rank:text albumId:aid];
+        }
+        
+        
     }];
     
     [alertTimeOutView setUseMotionEffects: YES];

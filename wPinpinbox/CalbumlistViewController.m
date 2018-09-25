@@ -562,7 +562,7 @@
 //    }
     
     NSLog(@"myString: %@", myString);
-    NSLog(@"size.height: %f", size.height);
+    //NSLog(@"size.height: %f", size.height);
     
     // If line height is higher than 60 then set it to 60 for 4 lines.
 //    if (size.height > 60) {
