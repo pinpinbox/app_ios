@@ -8,7 +8,7 @@
 
 #import "InAppPurchaseManager.h"
 #import "wTools.h"
-#import "Remind.h"
+//
 #import "AppDelegate.h"
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
@@ -131,13 +131,16 @@ static InAppPurchaseManager *instance =nil;
         [self showLoading:NO withTitle:@"讀取商品列表"];
         
         
-        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-        Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
-        [rv addtitletext:@"查無資料，請重新嘗試"];
-        [rv addBackTouch];
-        [rv showView:app.window];
-        
+//        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//        Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
+//        [rv addtitletext:@"查無資料，請重新嘗試"];
+//        [rv addBackTouch];
+//        [rv showView:app.window];
+//
         //[WTools showAlertTile:wNoNet3 Message:nil ButtonTitle:wDone];
+        [UIViewController showCustomErrorAlertWithMessage:@"查無資料，請重新嘗試" onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+            [customAlertView close];
+        }];
     }
     
     // finally release the reqest we alloc/init’ed in requestProUpgradeProductData

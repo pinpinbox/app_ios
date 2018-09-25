@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Remind.h"
+//
 @interface SignViewController_3 : UIViewController
 {
     __weak IBOutlet UIButton *btn_send;    

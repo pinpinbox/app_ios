@@ -17,9 +17,12 @@
 #import "SelectBarViewController.h"
 #import "UIViewController+CWPopup.h"
 #import "UICustomLineLabel.h"
-#import "Remind.h"
+//
 #import "ChooseHobbyViewController.h"
 #import "AsyncImageView.h"
+
+#import "UIViewController+ErrorAlert.h"
+#import "CustomIOSAlertView.h"
 @interface SignViewController_2 ()<UITextFieldDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,PhotosViewDelegate,SelectBarDelegate>
 {
     UITextField *selectText;
@@ -222,11 +225,15 @@
         return ;
     }
     if (![meeage isEqualToString:@""]) {
-        Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-        [rv addtitletext:meeage];
-        [rv addBackTouch];
-        [rv showView:self.view];
+//        Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+//        [rv addtitletext:meeage];
+//        [rv addBackTouch];
+//        [rv showView:self.view];
+        [UIViewController showCustomErrorAlertWithMessage:meeage onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+            [customAlertView close];
+        }];
         return ;
+        
     }
     NSString *countrstr=[countryLabel.text componentsSeparatedByString:@"+"][1];
     
@@ -275,16 +282,23 @@
                     }
                     [self.navigationController pushViewController:sv3 animated:YES];
                 } else if ([dic[@"result"] intValue] == 0) {
-                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                    [rv addtitletext:dic[@"message"]];
-                    [rv addBackTouch];
-                    [rv showView:self.view];
+//                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+//                    [rv addtitletext:dic[@"message"]];
+//                    [rv addBackTouch];
+//                    [rv showView:self.view];
+                    [UIViewController showCustomErrorAlertWithMessage:dic[@"message"] onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                        [customAlertView close];
+                    }];
                     NSLog(@"失敗：%@",dic[@"message"]);
+                    
                 } else {
-                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    [rv addBackTouch];
-                    [rv showView:self.view];
+//                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+//                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+//                    [rv addBackTouch];
+//                    [rv showView:self.view];
+                    [UIViewController showCustomErrorAlertWithMessage:NSLocalizedString(@"Host-NotAvailable", @"") onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                        [customAlertView close];
+                    }];
                 }
             }
         });
@@ -360,17 +374,23 @@
                     
                 } else if ([dic[@"result"] intValue] == 0) {
                     [wTools HideMBProgressHUD];
-                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                    [rv addtitletext:dic[@"message"]];
-                    [rv addBackTouch];
-                    [rv showView:self.view];
-                    NSLog(@"失敗：%@",dic[@"message"]);
+//                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+//                    [rv addtitletext:dic[@"message"]];
+//                    [rv addBackTouch];
+//                    [rv showView:self.view];
+//                    NSLog(@"失敗：%@",dic[@"message"]);
+                    [UIViewController showCustomErrorAlertWithMessage:dic[@"message"] onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                        [customAlertView close];
+                    }];
                 } else {
-                    [wTools HideMBProgressHUD];
-                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    [rv addBackTouch];
-                    [rv showView:self.view];
+//                    [wTools HideMBProgressHUD];
+//                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+//                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+//                    [rv addBackTouch];
+//                    [rv showView:self.view];
+                    [UIViewController showCustomErrorAlertWithMessage:NSLocalizedString(@"Host-NotAvailable", @"") onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                        [customAlertView close];
+                    }];
                 }
             }
         });

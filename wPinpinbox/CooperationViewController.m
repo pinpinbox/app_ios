@@ -12,7 +12,7 @@
 #import "wTools.h"
 #import "boxAPI.h"
 #import "AsyncImageView.h"
-#import "Remind.h"
+
 #import "CooperationAddViewController.h"
 //#import "SBookSelectViewController.h"
 #import "UIViewController+CWPopup.h"
@@ -408,10 +408,14 @@
             }
             
         } else {
-            Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-            [rv addtitletext:NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
-            [rv addBackTouch];
-            [rv showView:self.view];
+//            Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+//            [rv addtitletext:NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
+//            [rv addBackTouch];
+//            [rv showView:self.view];
+            [UIViewController showCustomErrorAlertWithMessage:NSLocalizedString(@"CreateAlbumText-tipPermissions", @"") onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                [customAlertView close];
+            }];
+            
             return;
         }
     };

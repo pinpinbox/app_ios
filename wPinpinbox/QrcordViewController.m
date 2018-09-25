@@ -11,7 +11,7 @@
 #import "wTools.h"
 #import <AVFoundation/AVFoundation.h>
 #import "boxAPI.h"
-#import "Remind.h"
+
 #import "CustomIOSAlertView.h"
 #import "MBProgressHUD.h"
 #import "UIColor+Extensions.h"

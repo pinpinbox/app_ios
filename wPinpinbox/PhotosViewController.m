@@ -12,7 +12,7 @@
 #import "PhotoCollectionViewCell.h"
 #import "RSKImageCropViewController.h"
 #import "UICustomLineLabel.h"
-#import "Remind.h"
+
 #import "wTools.h"
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"

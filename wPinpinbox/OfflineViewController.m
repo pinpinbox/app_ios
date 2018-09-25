@@ -13,8 +13,11 @@
 #import "boxAPI.h"
 #import "AppDelegate.h"
 #import "AsyncImageView.h"
-#import "Remind.h"
+
 #import "GlobalVars.h"
+
+#import "UIViewController+ErrorAlert.h"
+#import "CustomIOSAlertView.h"
 
 @interface OfflineViewController ()<CalbumlistDelegate>
 {
@@ -89,10 +92,13 @@
     
     
     if (sender!=_btn2) {
-        Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-        [rv addtitletext:@"目前為離線模式。"];
-        [rv addBackTouch];
-        [rv showView:self.view];
+//        Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+//        [rv addtitletext:@"目前為離線模式。"];
+//        [rv addBackTouch];
+//        [rv showView:self.view];
+        [UIViewController showCustomErrorAlertWithMessage:@"目前為離線模式。" onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+            [customAlertView close];
+        }];
     }
     
     //[self reloaddata];

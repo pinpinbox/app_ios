@@ -13,7 +13,7 @@
 #import "boxAPI.h"
 #import "AppDelegate.h"
 #import "AsyncImageView.h"
-#import "Remind.h"
+
 #import "GHContextMenuView.h"
 #import "CooperationViewController.h"
 #import "CustomIOSAlertView.h"

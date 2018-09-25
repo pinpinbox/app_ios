@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Remind.h"
+//
 
 @class AlbumCreationViewController;
 @protocol AlbumCreationViewControllerDelegate <NSObject>

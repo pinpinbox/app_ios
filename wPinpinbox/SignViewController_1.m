@@ -8,7 +8,7 @@
 
 #import "SignViewController_1.h"
 #import "UICustomLineLabel.h"
-#import "Remind.h"
+
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "wTools.h"

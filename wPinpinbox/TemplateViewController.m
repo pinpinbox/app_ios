@@ -29,6 +29,7 @@
 
 
 #import "UIViewController+ErrorAlert.h"
+#import "CustomIOSAlertView.h"
 
 @interface TemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,PhotosViewDelegate, UIGestureRecognizerDelegate>
 
@@ -530,10 +531,13 @@
 //共用
 -(IBAction)coppertation:(id)sender {
     if ([_identity isEqualToString:@"editor"]) {
-        Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-        [rv addtitletext:NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
-        [rv addBackTouch];
-        [rv showView:self.view];
+//        Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+//        [rv addtitletext:NSLocalizedString(@"CreateAlbumText-tipPermissions", @"")];
+//        [rv addBackTouch];
+//        [rv showView:self.view];
+        [UIViewController showCustomErrorAlertWithMessage:NSLocalizedString(@"CreateAlbumText-tipPermissions", @"") onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+            [customAlertView close];
+        }];
         return;
     }
     

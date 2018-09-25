@@ -13,7 +13,7 @@
 #import <Photos/Photos.h>
 #import "RSKImageCropViewController.h"
 #import "UICustomLineLabel.h"
-#import "Remind.h"
+//
 #import "wTools.h"
 
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -22,6 +22,9 @@
 #import <AVKit/AVKit.h>
 
 #import "AppDelegate.h"
+
+#import "UIViewController+ErrorAlert.h"
+#import "CustomIOSAlertView.h"
 
 @interface ChooseVideoViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegateFlowLayout>
 {
@@ -106,10 +109,13 @@
 
 - (IBAction)okBtnPressed:(id)sender {
     if (videoArray.count == 0) {
-        Remind *rv = [[Remind alloc] initWithFrame: self.view.bounds];
-        [rv addtitletext: NSLocalizedString(@"VideoText-tipLessVideo", @"")];
-        [rv addBackTouch];
-        [rv showView: self.view];
+//        Remind *rv = [[Remind alloc] initWithFrame: self.view.bounds];
+//        [rv addtitletext: NSLocalizedString(@"VideoText-tipLessVideo", @"")];
+//        [rv addBackTouch];
+//        [rv showView: self.view];
+        [UIViewController showCustomErrorAlertWithMessage:NSLocalizedString(@"VideoText-tipLessVideo", @"") onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+            [customAlertView close];
+        }];
         return;
     }
     
@@ -325,10 +331,13 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
             
         } else {
             if (videoArray.count >= 1) {
-                Remind *rv = [[Remind alloc] initWithFrame: self.view.bounds];
-                [rv addtitletext:NSLocalizedString(@"PicText-tipLimit", @"")];
-                [rv addBackTouch];
-                [rv showView: self.view];
+//                Remind *rv = [[Remind alloc] initWithFrame: self.view.bounds];
+//                [rv addtitletext:NSLocalizedString(@"PicText-tipLimit", @"")];
+//                [rv addBackTouch];
+//                [rv showView: self.view];
+                [UIViewController showCustomErrorAlertWithMessage:NSLocalizedString(@"PicText-tipLimit", @"") onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                    [customAlertView close];
+                }];
             } else {
                 [videoArray addObject: assetsFetchResults[indexPath.item - 1]];
             }

@@ -10,12 +10,14 @@
 #import "MTRadialMenu.h"
 #import "AddNote.h"
 #import "wTools.h"
-#import "Remind.h"
+//
 #import "AppDelegate.h"
 #import "boxAPI.h"
 #import "GlobalVars.h"
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
+#import "UIViewController+ErrorAlert.h"
+#import "CustomIOSAlertView.h"
 
 @implementation CalbumlistCollectionViewCell
 - (void)awakeFromNib
@@ -213,18 +215,28 @@
                 if ([dic[@"result"] intValue] == 1) {
                     [wdelegate reloadData];
                 } else if ([dic[@"result"] intValue] == 0) {
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
-                    [rv addtitletext:dic[@"message"]];
-                     [rv addBackTouch];
-                    [rv showView:app.window];
+//                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
+//                    [rv addtitletext:dic[@"message"]];
+//                     [rv addBackTouch];
+//                    [rv showView:app.window];
+                    NSString *msg = dic[@"message"];
+                    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                       
+                        [customAlertView close];
+                    }];
                     [wdelegate reloadData];
                 } else {
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
-                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    [rv addBackTouch];
-                    [rv showView:app.window];
+                    
+//                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
+//                    [rv addtitletext: NSLocalizedString(@"Host-NotAvailable", @"")];
+//                    [rv addBackTouch];
+//                    [rv showView:app.window];
+                    [UIViewController showCustomErrorAlertWithMessage:NSLocalizedString(@"Host-NotAvailable", @"") onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                        
+                        [customAlertView close];
+                    }];
                     [wdelegate reloadData];
                 }
             }
@@ -249,18 +261,28 @@
                     [wdelegate reloadData];
                     [self deletePlist: albumid];
                 } else if ([dic[@"result"] intValue] == 0) {
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
-                    [rv addtitletext:dic[@"message"]];
-                    [rv addBackTouch];
-                    [rv showView:app.window];
+//                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
+//                    [rv addtitletext:dic[@"message"]];
+//                    [rv addBackTouch];
+//                    [rv showView:app.window];
+                    NSString *msg = dic[@"message"];
+                    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                        
+                        [customAlertView close];
+                    }];
                     [wdelegate reloadData];
                 } else {
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
-                    [rv addtitletext:NSLocalizedString(@"Host-NotAvailable", @"")];
-                    [rv addBackTouch];
-                    [rv showView:app.window];
+//                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
+//                    [rv addtitletext:NSLocalizedString(@"Host-NotAvailable", @"")];
+//                    [rv addBackTouch];
+//                    [rv showView:app.window];
+                    NSString *msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                        
+                        [customAlertView close];
+                    }];
                     [wdelegate reloadData];
                 }
             }
@@ -319,12 +341,18 @@
                 if ([dic[@"result"]boolValue]) {
                     [wdelegate reloadData];
                 }else{
-                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
-                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
-                    [rv addtitletext:dic[@"message"]];
-                    [rv addBackTouch];
-                    [rv showView:app.window];
+//                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
+//                    [rv addtitletext:dic[@"message"]];
+//                    [rv addBackTouch];
+//                    [rv showView:app.window];
+                    NSString *msg = dic[@"message"];
+                    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                        
+                        [customAlertView close];
+                    }];
                     [wdelegate reloadData];
+                    
                 }
             }
         });

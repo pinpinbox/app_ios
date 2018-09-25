@@ -264,9 +264,6 @@
 		9211563A1C4F644A00F9200A /* TaobannameTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921156381C4F644A00F9200A /* TaobannameTableViewCell.xib */; };
 		9222B21B1BEC78C800DF2CAD /* MyScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9222B21A1BEC78C800DF2CAD /* MyScrollView.m */; };
 		9222B2301BEC9EA900DF2CAD /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9222B22F1BEC9EA900DF2CAD /* AudioToolbox.framework */; };
-		9225572A1BDF228400CD4E9B /* RemindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922557281BDF228400CD4E9B /* RemindViewController.m */; };
-		9225572B1BDF228400CD4E9B /* RemindViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 922557291BDF228400CD4E9B /* RemindViewController.xib */; };
-		922557321BDF24BD00CD4E9B /* Remind.m in Sources */ = {isa = PBXBuildFile; fileRef = 922557311BDF24BD00CD4E9B /* Remind.m */; };
 		922557381BDF38F900CD4E9B /* Calbumlist.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 922557371BDF38F900CD4E9B /* Calbumlist.storyboard */; };
 		922557421BDF594E00CD4E9B /* CalbumlistCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 922557411BDF594E00CD4E9B /* CalbumlistCollectionViewCell.m */; };
 		922557481BDF621200CD4E9B /* MTMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 922557451BDF621200CD4E9B /* MTMenuItem.m */; };
@@ -808,11 +805,6 @@
 		9222B2191BEC78C800DF2CAD /* MyScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyScrollView.h; sourceTree = "<group>"; };
 		9222B21A1BEC78C800DF2CAD /* MyScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyScrollView.m; sourceTree = "<group>"; };
 		9222B22F1BEC9EA900DF2CAD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		922557271BDF228400CD4E9B /* RemindViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RemindViewController.h; sourceTree = "<group>"; };
-		922557281BDF228400CD4E9B /* RemindViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RemindViewController.m; sourceTree = "<group>"; };
-		922557291BDF228400CD4E9B /* RemindViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RemindViewController.xib; sourceTree = "<group>"; };
-		922557301BDF24BD00CD4E9B /* Remind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Remind.h; sourceTree = "<group>"; };
-		922557311BDF24BD00CD4E9B /* Remind.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Remind.m; sourceTree = "<group>"; };
 		922557371BDF38F900CD4E9B /* Calbumlist.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Calbumlist.storyboard; sourceTree = "<group>"; };
 		922557401BDF594E00CD4E9B /* CalbumlistCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalbumlistCollectionViewCell.h; sourceTree = "<group>"; };
 		922557411BDF594E00CD4E9B /* CalbumlistCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalbumlistCollectionViewCell.m; sourceTree = "<group>"; };
@@ -2052,18 +2044,6 @@
 			name = bookLib;
 			sourceTree = "<group>";
 		};
-		922557261BDF221E00CD4E9B /* 警告視窗 */ = {
-			isa = PBXGroup;
-			children = (
-				922557271BDF228400CD4E9B /* RemindViewController.h */,
-				922557281BDF228400CD4E9B /* RemindViewController.m */,
-				922557291BDF228400CD4E9B /* RemindViewController.xib */,
-				922557301BDF24BD00CD4E9B /* Remind.h */,
-				922557311BDF24BD00CD4E9B /* Remind.m */,
-			);
-			name = "警告視窗";
-			sourceTree = "<group>";
-		};
 		9225573F1BDF593600CD4E9B /* cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2308,7 +2288,6 @@
 				92B8CB141C1A856400035F06 /* 內購相關 */,
 				9222B2181BEC78A900DF2CAD /* bookLib */,
 				922557431BDF61FF00CD4E9B /* 長按選單 */,
-				922557261BDF221E00CD4E9B /* 警告視窗 */,
 				922D92FB1BDA305D00640639 /* 文字底線 */,
 				924A92E61BD4F88300E3D610 /* AsyncImageView */,
 				92D526001BCF9E47002C157B /* 選擇器 */,
@@ -2744,7 +2723,6 @@
 				54C964C22015F40A00F995DF /* FBFriendNotFoundVC.storyboard in Resources */,
 				54F777F820ABF1B600A6E195 /* Template.xcassets in Resources */,
 				543043D020B2A4FB00018AF4 /* BannerImageView.xib in Resources */,
-				9225572B1BDF228400CD4E9B /* RemindViewController.xib in Resources */,
 				54F777F620ABECB800A6E195 /* AboutPinPinBox.xcassets in Resources */,
 				CB071CF3213E4754003D01D8 /* DMVC.storyboard in Resources */,
 				927823FF1C45FB280063F82D /* CooperationAddTableViewCell.xib in Resources */,
@@ -2946,7 +2924,6 @@
 				630A83E21EB1D07300AC8479 /* MyLayoutSize.m in Sources */,
 				922557481BDF621200CD4E9B /* MTMenuItem.m in Sources */,
 				92A155901C3386E000E83EC5 /* TaobanViewController.m in Sources */,
-				9225572A1BDF228400CD4E9B /* RemindViewController.m in Sources */,
 				635775DD1ED3F94400637914 /* RecentBrowsingTableViewCell.m in Sources */,
 				54B08C7E2105B8B500ADC09A /* ContentCheckingViewController.m in Sources */,
 				638F4A5F1E5D499400F7130B /* FTWCache.m in Sources */,
@@ -3016,7 +2993,6 @@
 				630A83E11EB1D07300AC8479 /* MyLayoutPos.m in Sources */,
 				920279931C449B2900A63027 /* CooperationViewController.m in Sources */,
 				636349111F33D12400B17183 /* DDAUIActionSheetViewController.m in Sources */,
-				922557321BDF24BD00CD4E9B /* Remind.m in Sources */,
 				548D69AE20561E7A0081EC7E /* ExchangeInfoEditViewController.m in Sources */,
 				630C8BDF1EEB04E600EC5784 /* NewMessageTableViewCell.m in Sources */,
 				922A4AE21BD5F16A006D5A36 /* retrievepasswordViewController.m in Sources */,

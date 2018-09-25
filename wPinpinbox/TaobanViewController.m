@@ -15,7 +15,7 @@
 #import "boxAPI.h"
 #import "AsyncImageView.h"
 #import "WdataButton.h"
-#import "Remind.h"
+
 #import "TemplateViewController.h"
 #import "UIViewController+CWPopup.h"
 #import "SelectBarViewController.h"
@@ -25,6 +25,7 @@
 
 #import "UIColor+Extensions.h"
 #import "UIViewController+ErrorAlert.h"
+#import "CustomIOSAlertView.h"
 
 @interface TaobanViewController () <SFSafariViewControllerDelegate, SelectBarDelegate>
 {
@@ -44,7 +45,32 @@
 @end
 
 @implementation TaobanViewController
+- (void)showOptionAlertWithMessage:(NSString *)msg actionBlock:(void(^)(int buttonIndex))actionBlock {
+    
+    CustomIOSAlertView *optionView = [[CustomIOSAlertView alloc] init];
+    [optionView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    optionView.arrangeStyle = @"Horizontal";
+    
+    [optionView setButtonTitles: [NSMutableArray arrayWithObjects: NSLocalizedString(@"GeneralText-yes", @""), NSLocalizedString(@"GeneralText-no", @""), nil]];
+    [optionView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor firstMain],nil]];
+    [optionView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
+    [optionView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
+    
+    
+    [optionView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertViewForEffect, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForEffect tag]);
+        
+        [alertViewForEffect close];
+        
+        if (actionBlock) {
+            actionBlock(buttonIndex);
+        }
+    }];
+    [optionView setUseMotionEffects: YES];
+    [optionView show];
 
+    
+}
 -(IBAction)buy:(id)sender {
     NSLog(@"buy");
     BOOL own=[apidata[@"template"][@"own"] boolValue];
@@ -72,32 +98,50 @@
                
                     //是否足夠
                     if (point >[dic[@"data"] intValue]) {
-                        Remind *rv=[[Remind alloc]initWithFrame:wself.view.bounds];
-                        [rv addtitletext:NSLocalizedString(@"CreateAlbumText-askP", @"")];
-                        [rv addSelectBtntext:NSLocalizedString(@"GeneralText-yes", @"") btn2:NSLocalizedString(@"GeneralText-no", @"") ];
-                        [rv showView:wself.view];
-                        
-                        rv.btn1select=^(BOOL bo){
-                            if (bo) {
-//                                CurrencyViewController *cvc=[[UIStoryboard storyboardWithName:@"Home" bundle:nil]instantiateViewControllerWithIdentifier:@"CurrencyViewController"];
-//                                
-//                                [self.navigationController pushViewController:cvc animated:YES];
+                        [wself showOptionAlertWithMessage:NSLocalizedString(@"CreateAlbumText-askP", @"") actionBlock:^(int buttonIndex) {
+                            if (buttonIndex == 1) {
+                                //CurrencyViewController *cvc=[[UIStoryboard storyboardWithName:@"Home" bundle:nil]instantiateViewControllerWithIdentifier:@"CurrencyViewController"];
+                                ////
+                                ////                                [self.navigationController pushViewController:cvc animated:YES];
                             }
-                        };
+                        }];
+                        
+//                        Remind *rv=[[Remind alloc]initWithFrame:wself.view.bounds];
+//                        [rv addtitletext:NSLocalizedString(@"CreateAlbumText-askP", @"")];
+//                        [rv addSelectBtntext:NSLocalizedString(@"GeneralText-yes", @"") btn2:NSLocalizedString(@"GeneralText-no", @"") ];
+//                        [rv showView:wself.view];
+//
+//                        rv.btn1select=^(BOOL bo){
+//                            if (bo) {
+////                                CurrencyViewController *cvc=[[UIStoryboard storyboardWithName:@"Home" bundle:nil]instantiateViewControllerWithIdentifier:@"CurrencyViewController"];
+////
+////                                [self.navigationController pushViewController:cvc animated:YES];
+//                            }
+//                        };
+                        
                         
                     }else{
                         //可以購買
-                        Remind *rv=[[Remind alloc]initWithFrame:wself.view.bounds];
-                        [rv addtitletext:[NSString stringWithFormat:@"%@(%d P)",NSLocalizedString(@"CreateAlbumText-askPay", @""),point]];
-                        [rv addSelectBtntext:NSLocalizedString(@"GeneralText-yes", @"") btn2:NSLocalizedString(@"GeneralText-no", @"") ];
-                        [rv showView:wself.view];
+//                        Remind *rv=[[Remind alloc]initWithFrame:wself.view.bounds];
+//                        [rv addtitletext:[NSString stringWithFormat:@"%@(%d P)",NSLocalizedString(@"CreateAlbumText-askPay", @""),point]];
+//                        [rv addSelectBtntext:NSLocalizedString(@"GeneralText-yes", @"") btn2:NSLocalizedString(@"GeneralText-no", @"") ];
+//                        [rv showView:wself.view];
+//                        
+//                        rv.btn1select=^(BOOL bo){
+//                            if (bo) {
+//                               //購買流程
+//                                [self buyapi];
+//                            }
+//                        };
                         
-                        rv.btn1select=^(BOOL bo){
-                            if (bo) {
-                               //購買流程
-                                [self buyapi];
+                        [wself showOptionAlertWithMessage:[NSString stringWithFormat:@"%@(%d P)",NSLocalizedString(@"CreateAlbumText-askPay", @""),point] actionBlock:^(int buttonIndex) {
+                            if (buttonIndex == 1) {
+                                [wself buyapi];
+                                //CurrencyViewController *cvc=[[UIStoryboard storyboardWithName:@"Home" bundle:nil]instantiateViewControllerWithIdentifier:@"CurrencyViewController"];
+                                ////
+                                ////                                [self.navigationController pushViewController:cvc animated:YES];
                             }
-                        };
+                        }];
                     }
             });
         });
@@ -114,7 +158,7 @@
         NSString * Pointstr=[boxAPI buytemplate:[wTools getUserID] token:[wTools getUserToken] templateid:tid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+    
             [wTools HideMBProgressHUD];
             
             NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[Pointstr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -478,10 +522,14 @@
                     
                 }else{
                     NSLog(@"失敗：%@",dic[@"message"]);
-                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
-                    [rv addtitletext:dic[@"message"]];
-                    [rv addBackTouch];
-                    [rv showView:self.view];
+//                    Remind *rv=[[Remind alloc]initWithFrame:self.view.bounds];
+//                    [rv addtitletext:dic[@"message"]];
+//                    [rv addBackTouch];
+//                    [rv showView:self.view];
+                    
+                    [UIViewController showCustomErrorAlertWithMessage:dic[@"message"] onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                        [customAlertView close];
+                    }];
                 }
             }
         });
@@ -793,7 +841,7 @@
     
     [wTools ShowMBProgressHUD];
     __block typeof(_temolateid) tid = _temolateid;
-    __block typeof(self.view) sv = self.view;
+    //__block typeof(self.view) sv = self.view;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString * Pointstr=[boxAPI insertreport:[wTools getUserID] token:[wTools getUserToken] rid:rid type:@"template" typeid:tid];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -808,10 +856,13 @@
                 mesg=dic[@"message"];
             }
             
-            Remind *rv=[[Remind alloc]initWithFrame:sv.bounds];
-            [rv addtitletext:mesg];
-            [rv addBackTouch];
-            [rv showView:sv];
+//            Remind *rv=[[Remind alloc]initWithFrame:sv.bounds];
+//            [rv addtitletext:mesg];
+//            [rv addBackTouch];
+//            [rv showView:sv];
+            [UIViewController showCustomErrorAlertWithMessage:dic[@"message"] onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                [customAlertView close];
+            }];
         });
     });
 }

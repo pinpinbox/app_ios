@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "MBProgressHUD.h"
 #import "boxAPI.h"
-#import "Remind.h"
+//
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
 #import "ContentCheckingViewController.h"
@@ -356,7 +356,7 @@ static wTools *instance =nil;
               postMode: (BOOL)postMode
        fromEventPostVC:(BOOL)fromEventPostVC
 {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    //AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //檢查本地...
     NSString *name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],albumid];
     NSLog(@"name: %@", name);
@@ -442,11 +442,15 @@ static wTools *instance =nil;
           } else {
               NSLog(@"沒有info");
               //Remind *rv=[[Remind alloc]initWithFrame:app.menu.view.bounds];
-              Remind *rv=[[Remind alloc]initWithFrame: app.window.bounds];
-              [rv addtitletext:[NSString stringWithFormat:@"404 沒有檔案錯誤(%@)",albumid]];
-              [rv addBackTouch];
-              //[rv showView:app.menu.view];
-              [rv showView: app.window];
+//              Remind *rv=[[Remind alloc]initWithFrame: app.window.bounds];
+//              [rv addtitletext:[NSString stringWithFormat:@"404 沒有檔案錯誤(%@)",albumid]];
+//              [rv addBackTouch];
+//              //[rv showView:app.menu.view];
+//              [rv showView: app.window];
+              NSString *err404 = [NSString stringWithFormat:@"404 沒有檔案錯誤(%@)",albumid];
+              [UIViewController showCustomErrorAlertWithMessage:err404 onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                  [customAlertView close];
+              }];
               
 //              PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
 //              rv.albumid=albumid;

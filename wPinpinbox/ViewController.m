@@ -11,7 +11,7 @@
 #import "ChooseHobbyViewController.h"
 #import "wTools.h"
 #import "boxAPI.h"
-#import "Remind.h"
+
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "OfflineViewController.h"
