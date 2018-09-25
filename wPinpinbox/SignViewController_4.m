@@ -243,7 +243,7 @@
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         NSString *token = [userPrefs objectForKey:@"token"];
         NSString *uid = [wTools getUserID];
-        BOOL respone = [boxAPI updateprofilehobby:token usid:uid hobby:selecttag];
+        BOOL respone = [[boxAPI updateprofilehobby:token usid:uid hobby:selecttag] boolValue];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             //[wTools HideMBProgressHUD];

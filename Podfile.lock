@@ -15,9 +15,9 @@ PODS:
   - FBSDKShareKit (4.36.0):
     - FBSDKCoreKit (~> 4.36.0)
   - FLAnimatedImage (1.0.12)
-  - Flurry-iOS-SDK/FlurryAds (9.0.0):
+  - Flurry-iOS-SDK/FlurryAds (9.1.0):
     - Flurry-iOS-SDK/FlurrySDK (~> 9.0.0)
-  - Flurry-iOS-SDK/FlurrySDK (9.0.0)
+  - Flurry-iOS-SDK/FlurrySDK (9.1.0)
   - GoogleAnalytics (3.17.0)
   - RMPZoomTransitionAnimator (1.0.3)
   - SDWebImage (4.4.2):
@@ -65,7 +65,7 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 8bccb6064708ab2f4251a7fc4e3b6d8d00ad91ba
   FBSDKShareKit: 7090fdd55c39b03941efddb64c83a64ff6b3949f
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  Flurry-iOS-SDK: 58e48e417fee667154e4d240040b270b3734d28a
+  Flurry-iOS-SDK: 5f321ecc8282cf10b051b64bfdc4657f6b280118
   GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
   RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681

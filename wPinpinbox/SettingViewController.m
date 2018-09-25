@@ -454,7 +454,7 @@
     
     UITouch *touch = [touches anyObject];
     NSLog(@"touch.view: %@", touch.view);
-    NSLog(@"touch.view.tag: %ld", touch.view.tag);
+    NSLog(@"touch.view.tag: %ld",(long)touch.view.tag);
     
     if (touch.view.tag != 0) {
         touch.view.backgroundColor = [UIColor thirdMain];
@@ -471,7 +471,7 @@
     
     UITouch *touch = [touches anyObject];
     NSLog(@"touch.view: %@", touch.view);
-    NSLog(@"touch.view.tag: %ld", touch.view.tag);
+    NSLog(@"touch.view.tag: %ld",(long)touch.view.tag);
     
     if (touch.view.tag != 0) {
         touch.view.backgroundColor = [UIColor clearColor];
@@ -488,7 +488,7 @@
     
     UITouch *touch = [touches anyObject];
     NSLog(@"touch.view: %@", touch.view);
-    NSLog(@"touch.view.tag: %ld", touch.view.tag);
+    NSLog(@"touch.view.tag: %ld",(long)touch.view.tag);
 
     CGPoint location = [touch locationInView: touch.view];
     NSLog(@"location: %@", NSStringFromCGPoint(location));

@@ -739,7 +739,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"exitBtnPress");
     
     if ([self.delegate respondsToSelector: @selector(dismissFromSetupMusicVC:audioModeChanged:)]) {
-        [self.delegate dismissFromSetupMusicVC: self audioModeChanged: nil];
+        [self.delegate dismissFromSetupMusicVC: self audioModeChanged: NO];
     }
     //[self dismissViewControllerAnimated: YES completion: nil];
     

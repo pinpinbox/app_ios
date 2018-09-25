@@ -301,7 +301,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     for (int i = 0; i < self.slotArray.count; i++) {
         NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
-        NSLog(@"photoId: %ld", [[slotData valueForKey: @"photoId"] integerValue]);
+        NSLog(@"photoId: %d", (int)[[slotData valueForKey: @"photoId"] integerValue]);
     }
 }
 
@@ -316,7 +316,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     for (int i = 0; i < self.slotArray.count; i++) {
         NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
-        NSLog(@"photoId: %ld", [[slotData valueForKey: @"photoId"] integerValue]);
+        NSLog(@"photoId: %d", (int)[[slotData valueForKey: @"photoId"] integerValue]);
         
         if (photoId == [[slotData valueForKey: @"photoId"] integerValue]) {
             photoIdExist = YES;
@@ -947,7 +947,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //            }
 //        } else if (size.width > size.height) {
 //            NSLog(@"Background in Landscape");
-//            if (currentSize.width > currentSize.height) {
+//            if (currentSize.width > currentSize.height=) {
 //                NSLog(@"imageScrollCV in Landscape");
 //            } else if (currentSize.height > currentSize.width) {
 //                NSLog(@"imageScrollCV in Portrait");
@@ -959,7 +959,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //        NSLog(@"After");
 //        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
         [wself processTransitionCompletion];
-
     }];
 }
 
@@ -4111,7 +4110,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     self.navigationController.delegate = nil;
     
     [self.videoPlayer pause];
-    self.videoPlay = nil;
+    self.videoPlay = NO;
     self.videoPlayerItem = nil;
     self.videoPlayerViewController.player = nil;
     self.videoPlayerViewController = nil;
@@ -4455,7 +4454,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     // Check whether getting Sharing Point or not
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    BOOL share_to_fb = [defaults objectForKey: @"share_to_fb"];
+    BOOL share_to_fb = [[defaults objectForKey: @"share_to_fb"] boolValue];
     NSLog(@"Check whether getting sharing point or not");
     NSLog(@"share_to_fb: %d", (int)share_to_fb);
     

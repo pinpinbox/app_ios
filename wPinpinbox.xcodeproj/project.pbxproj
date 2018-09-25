@@ -362,13 +362,13 @@
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
 		D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78F738D1D226D8700D8A271 /* YTPlayerView.m */; };
-		E7BC74DF2212D7B03A675C53 /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D94C7EC45380C902C8A4B8C /* libPods-wPinpinbox.a */; };
 		F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F039BD192148B8C6007AEA85 /* SystemImages.xcassets */; };
 		F0AC57542142353D00F63B82 /* UIViewController+ErrorAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */; };
+		FBE78602101A497EF9A787A1 /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B9538523C44FC79F83C7AC90 /* libPods-wPinpinbox.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4949990BB134990555691B9A /* Pods-wPinpinbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.release.xcconfig"; sourceTree = "<group>"; };
+		09C3BC777629A4E68A074BE9 /* Pods-wPinpinbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.debug.xcconfig"; sourceTree = "<group>"; };
 		5404732E1FB066D00075BBD8 /* PointCalculationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PointCalculationViewController.h; sourceTree = "<group>"; };
 		5404732F1FB066D00075BBD8 /* PointCalculationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PointCalculationViewController.m; sourceTree = "<group>"; };
 		540635BC204E7E92004C9F21 /* ExchangeListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExchangeListViewController.h; sourceTree = "<group>"; };
@@ -594,7 +594,6 @@
 		54FA3EF1202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewExistingAlbumCollectionViewCell.h; sourceTree = "<group>"; };
 		54FA3EF2202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewExistingAlbumCollectionViewCell.m; sourceTree = "<group>"; };
 		54FF9EEC21359B610098A938 /* NewMessageBoardVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NewMessageBoardVC.storyboard; sourceTree = "<group>"; };
-		6115C2EB9484BEF7687CAD5D /* Pods-wPinpinbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.debug.xcconfig"; sourceTree = "<group>"; };
 		6303C4C71ED32124009E6160 /* FollowListsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowListsViewController.h; sourceTree = "<group>"; };
 		6303C4C81ED32124009E6160 /* FollowListsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowListsViewController.m; sourceTree = "<group>"; };
 		630418271EF9158100132CE1 /* SetupMusicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupMusicViewController.h; sourceTree = "<group>"; };
@@ -954,7 +953,7 @@
 		92F6CD011B7B5382002E547C /* O_drag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = O_drag.m; sourceTree = "<group>"; };
 		92F89B281BBE79F900565908 /* StartImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartImage.h; sourceTree = "<group>"; };
 		92F89B291BBE79F900565908 /* StartImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartImage.m; sourceTree = "<group>"; };
-		9D94C7EC45380C902C8A4B8C /* libPods-wPinpinbox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wPinpinbox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9538523C44FC79F83C7AC90 /* libPods-wPinpinbox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wPinpinbox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB071CF0213E4754003D01D8 /* DMViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMViewController.h; sourceTree = "<group>"; };
 		CB071CF1213E4754003D01D8 /* DMVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DMVC.storyboard; sourceTree = "<group>"; };
 		CB071CF2213E4754003D01D8 /* DMViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMViewController.m; sourceTree = "<group>"; };
@@ -974,6 +973,7 @@
 		D78F73891D226C8700D8A271 /* YouTubeiOSPlayerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeiOSPlayerHelper.h; sourceTree = "<group>"; };
 		D78F738C1D226D8700D8A271 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
 		D78F738D1D226D8700D8A271 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
+		EB758543D29B9F1BCBC4AAF5 /* Pods-wPinpinbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.release.xcconfig"; sourceTree = "<group>"; };
 		F039BD192148B8C6007AEA85 /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SystemImages.xcassets; sourceTree = "<group>"; };
 		F0AC57522142353D00F63B82 /* UIViewController+ErrorAlert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ErrorAlert.h"; sourceTree = "<group>"; };
 		F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ErrorAlert.m"; sourceTree = "<group>"; };
@@ -1006,13 +1006,22 @@
 				92CFB5B11BE7562B001B7B78 /* Foundation.framework in Frameworks */,
 				929ED4AE1B78A2F300D21CF0 /* CoreLocation.framework in Frameworks */,
 				929ED4AC1B78A2E200D21CF0 /* AssetsLibrary.framework in Frameworks */,
-				E7BC74DF2212D7B03A675C53 /* libPods-wPinpinbox.a in Frameworks */,
+				FBE78602101A497EF9A787A1 /* libPods-wPinpinbox.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1D92172789D02803D71286F4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				09C3BC777629A4E68A074BE9 /* Pods-wPinpinbox.debug.xcconfig */,
+				EB758543D29B9F1BCBC4AAF5 /* Pods-wPinpinbox.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		540473331FB080090075BBD8 /* PointCalculation */ = {
 			isa = PBXGroup;
 			children = (
@@ -1522,7 +1531,7 @@
 				5484D58B1FC43B8C00177DD6 /* Security.framework */,
 				542497AB1FB336BE0021D75D /* libSDWebImage.a */,
 				549B48AB1F6EC3190012FE13 /* libicucore.tbd */,
-				9D94C7EC45380C902C8A4B8C /* libPods-wPinpinbox.a */,
+				B9538523C44FC79F83C7AC90 /* libPods-wPinpinbox.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1973,15 +1982,6 @@
 			name = "Home Data Cell";
 			sourceTree = "<group>";
 		};
-		8ED25C8777C121C1001EA1F9 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				6115C2EB9484BEF7687CAD5D /* Pods-wPinpinbox.debug.xcconfig */,
-				4949990BB134990555691B9A /* Pods-wPinpinbox.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		920279971C449CAA00A63027 /* cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2157,7 +2157,7 @@
 				9276DFBC1B72FDC000E6ACC9 /* wPinpinboxTests */,
 				9276DFA11B72FDC000E6ACC9 /* Products */,
 				549B48AA1F6EC3190012FE13 /* Frameworks */,
-				8ED25C8777C121C1001EA1F9 /* Pods */,
+				1D92172789D02803D71286F4 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2616,12 +2616,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9276DFC31B72FDC000E6ACC9 /* Build configuration list for PBXNativeTarget "wPinpinbox" */;
 			buildPhases = (
-				48748FFE7F2B2D7D3B0CAF67 /* [CP] Check Pods Manifest.lock */,
+				33DA87FD0277FBA6FB29DCE0 /* [CP] Check Pods Manifest.lock */,
 				9276DF9C1B72FDC000E6ACC9 /* Sources */,
 				9276DF9D1B72FDC000E6ACC9 /* Frameworks */,
 				9276DF9E1B72FDC000E6ACC9 /* Resources */,
 				54E232B21FA6DA9400D95FD5 /* ShellScript */,
-				5242BE5BA1A2C0D0C4250AE9 /* [CP] Copy Pods Resources */,
+				B0369FCD673583324A722BD2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2800,40 +2800,26 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		48748FFE7F2B2D7D3B0CAF67 /* [CP] Check Pods Manifest.lock */ = {
+		33DA87FD0277FBA6FB29DCE0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-wPinpinbox-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5242BE5BA1A2C0D0C4250AE9 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh",
-				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		54E232B21FA6DA9400D95FD5 /* ShellScript */ = {
@@ -2848,6 +2834,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" d1ae8885f7ffd8a5956e74686a7e720f8d853aac dad04e88c7afebbc23a06451359eaa91f3db070a6e600fdb82a478d5ac72519a\n";
+		};
+		B0369FCD673583324A722BD2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh",
+				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3217,7 +3225,7 @@
 		};
 		9276DFC41B72FDC000E6ACC9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6115C2EB9484BEF7687CAD5D /* Pods-wPinpinbox.debug.xcconfig */;
+			baseConfigurationReference = 09C3BC777629A4E68A074BE9 /* Pods-wPinpinbox.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3260,7 +3268,7 @@
 		};
 		9276DFC51B72FDC000E6ACC9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4949990BB134990555691B9A /* Pods-wPinpinbox.release.xcconfig */;
+			baseConfigurationReference = EB758543D29B9F1BCBC4AAF5 /* Pods-wPinpinbox.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

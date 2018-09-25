@@ -162,7 +162,7 @@
     }
     if (dataarr.count==0) {
         
-        NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%li",type+1] owner:self options:nil];
+        NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%li",(long)type+1] owner:self options:nil];
         backview  = [subviewArray objectAtIndex:0];
         [collectionView addSubview:backview];
         

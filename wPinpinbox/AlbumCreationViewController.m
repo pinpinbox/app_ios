@@ -2789,7 +2789,7 @@ didFinishSavingWithError:(NSError *)error
         NSLog(@"indexPath.item - 1 == 0");
         NSLog(@"lab.text: %@", lab.text);
     } else {
-        lab.text= [NSString stringWithFormat: @"%li", indexPath.item - 1];
+        lab.text= [NSString stringWithFormat: @"%li", (long)indexPath.item - 1];
         NSLog(@"else");
         NSLog(@"lab.text: %@", lab.text);
     }
@@ -3224,8 +3224,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     previewPageVC.delegate = self;
     
     NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
-    NSLog(@"ImageDataArr.count / 4: %lu", ImageDataArr.count / 4);
-    NSLog(@"ImageDataArr.count remainder divided by 4 : %lu", ImageDataArr.count % 4);
+    NSLog(@"ImageDataArr.count / 4: %u", (unsigned int)ImageDataArr.count / 4);
+    NSLog(@"ImageDataArr.count remainder divided by 4 : %u", (unsigned int)ImageDataArr.count % 4);
     
     [self presentViewController: previewPageVC animated: YES completion: nil];
 }

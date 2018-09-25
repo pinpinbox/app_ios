@@ -306,7 +306,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    NSLog(@"self.imageArray.count: %ld", self.imageArray.count);
+    NSLog(@"self.imageArray.count: %lu", (unsigned long)self.imageArray.count);
     return self.imageArray.count;
 }
 

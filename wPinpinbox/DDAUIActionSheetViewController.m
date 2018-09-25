@@ -502,7 +502,7 @@
     
     UITouch *touch = [touches anyObject];
     NSLog(@"touch.view: %@", touch.view);
-    NSLog(@"touch.view.tag: %ld", touch.view.tag);
+    NSLog(@"touch.view.tag: %d", (int)touch.view.tag);
     
     isTouchDown = YES;
     

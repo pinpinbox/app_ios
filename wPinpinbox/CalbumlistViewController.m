@@ -406,7 +406,7 @@
         UILabel *lab1;
         
         @try {
-            NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%li",type+1] owner:self options:nil];
+            NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%i",(int)type+1] owner:self options:nil];
             backview = [subviewArray objectAtIndex:0];
             [collectionView addSubview:backview];
             
@@ -648,13 +648,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         if (zipped) {
             NSLog(@"if zipped is YES");
             if (type == 2) {
-                [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: nil fromEventPostVC: nil];
+                [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
                 return;
             }
             if ([[(id)userId stringValue] isEqualToString:[wTools getUserID]]) {
-                [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: nil fromEventPostVC: nil];
+                [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
             } else {
-                [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: nil fromEventPostVC: nil];
+                [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
             }
         }
     } else {

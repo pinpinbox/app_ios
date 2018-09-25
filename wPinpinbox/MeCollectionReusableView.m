@@ -61,7 +61,7 @@
     if (self.customBlock) {
 //        self.customBlock(YES);
         self.customBlock(YES, gestureRecognizer.view.tag);
-        NSLog(@"gestureRecognizer.view.tag: %ld", gestureRecognizer.view.tag);
+        NSLog(@"gestureRecognizer.view.tag: %d", (int)gestureRecognizer.view.tag);
     }
 }
 
