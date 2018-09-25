@@ -2803,7 +2803,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)likeViewTapped:(UITapGestureRecognizer *)gesturerecognizer {
     NSLog(@"AlbumDetailVC");
     NSLog(@"likeViewTapped");
-    NSLog(@"gesturerecognizer.view.tag: %ld", gesturerecognizer.view.tag);
+    NSLog(@"gesturerecognizer.view.tag: %d", (int)gesturerecognizer.view.tag);
     
     LikeListViewController *likesListVC = [[UIStoryboard storyboardWithName: @"LikeListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"LikeListViewController"];
     likesListVC.albumId = self.albumId;
@@ -2814,14 +2814,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)messageViewTapped:(UITapGestureRecognizer *)gesturerecognizer {
     NSLog(@"AlbumDetailVC");
     NSLog(@"messageViewTapped");
-    NSLog(@"gesturerecognizer.view.tag: %ld", gesturerecognizer.view.tag);
+    NSLog(@"gesturerecognizer.view.tag: %d", (int)gesturerecognizer.view.tag);
     [self showCustomMessageActionSheet];
 }
 
 - (void)sponsorViewTapped:(UITapGestureRecognizer *)gesturerecognizer {
     NSLog(@"AlbumDetailVC");
     NSLog(@"sponsorViewTapped");
-    NSLog(@"gesturerecognizer.view.tag: %ld", gesturerecognizer.view.tag);
+    NSLog(@"gesturerecognizer.view.tag: %d", (int)gesturerecognizer.view.tag);
     AlbumSponsorListViewController *albumSponsorListVC = [[UIStoryboard storyboardWithName: @"AlbumSponsorVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSponsorListViewController"];
     albumSponsorListVC.albumId = self.albumId;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

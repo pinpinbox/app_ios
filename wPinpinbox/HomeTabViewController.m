@@ -1689,7 +1689,12 @@ sourceController:(UIViewController *)source
             cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
         } else {
             [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]] placeholderImage: [UIImage imageNamed:@"placeholder.png"]];
-            cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"album"][@"cover_hex"]];
+            
+            if ([data[@"album"][@"cover_hex"] isKindOfClass: [NSNull class]]) {
+                cell.coverImageView.backgroundColor = [UIColor clearColor];                
+            } else {
+                cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"album"][@"cover_hex"]];
+            }
         }
         
         // UserForView Info Setting

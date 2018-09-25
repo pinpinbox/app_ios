@@ -290,7 +290,7 @@ static NSString * const reuseIdentifier = @"Cell";
         });
     });
     
-    NSLog(@"indexPath: %li", indexPath.item);
+    NSLog(@"indexPath: %li", (long)indexPath.item);
     
     // Set up the label text
     UILabel *lab = (UILabel *)[cell viewWithTag: 200];

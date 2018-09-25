@@ -349,7 +349,7 @@ static InAppPurchaseManager *instance =nil;
                     NSLog(@"Error = %@", error);
                     NSLog(@"error.userInfo: %@", error.userInfo);
                     NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-                    NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+                    NSLog(@"error code: %@", [NSString stringWithFormat: @"%d", (int)error.code]);
                 }
             }];
             

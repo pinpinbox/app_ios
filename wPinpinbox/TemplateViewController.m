@@ -360,7 +360,7 @@
     NSLog(@"\ntouchesBegan");
     UITouch *touch = [touches anyObject];
     NSLog(@"touch.view: %@", touch.view);
-    NSLog(@"touch.view.tag: %ld", touch.view.tag);
+    NSLog(@"touch.view.tag: %ld",(long)touch.view.tag);
     
     if (isSwap) {
         for (UIView *v in _ShowView.subviews) {
@@ -397,7 +397,7 @@
     NSLog(@"\ntouchesEnded");
     UITouch *touch = [touches anyObject];
     NSLog(@"touch.view: %@", touch.view);
-    NSLog(@"touch.view.tag: %ld", touch.view.tag);
+    NSLog(@"touch.view.tag: %ld",(long)touch.view.tag);
     
     if (isSwap) {
         for (UIView *v in _ShowView.subviews) {
@@ -524,7 +524,7 @@
     NSLog(@"touchesCancelled");
     UITouch *touch = [touches anyObject];
     NSLog(@"touch.view: %@", touch.view);
-    NSLog(@"touch.view.tag: %ld", touch.view.tag);
+    NSLog(@"touch.view.tag: %d", (int)touch.view.tag);
 }
 
 //共用

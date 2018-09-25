@@ -1483,7 +1483,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     UITouch *touch = [touches anyObject];
     
     NSLog(@"touch.view: %@", touch.view);
-    NSLog(@"touch.view.tag: %ld", touch.view.tag);
+    NSLog(@"touch.view.tag: %d", (int)touch.view.tag);
     
     if (touch.view.tag == 100) {
         [self userTapped];

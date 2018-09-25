@@ -733,7 +733,7 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
         
         NSLog(@"pairs: %@", pairs);
         
-        NSString *businessUserId = [NSString stringWithFormat: @"%ld", [pairs[@"businessuser_id"] integerValue]];
+        NSString *businessUserId = [NSString stringWithFormat: @"%d", (int)[pairs[@"businessuser_id"] integerValue]];
         NSLog(@"businessUserId: %@", businessUserId);
         
         if (businessUserId != nil) {
@@ -1172,8 +1172,8 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame
         [userPrefs setObject: [NSNumber numberWithBool: diyContentOn] forKey: @"diyContentOn"];
     }
 }
-
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray * __nullable restorableObjects))restorationHandler
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
+//- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray * __nullable restorableObjects))restorationHandler
 {
     NSLog(@"continueUserActivity");
     

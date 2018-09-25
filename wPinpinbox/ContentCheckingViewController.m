@@ -1,4 +1,4 @@
- //
+//
 //  ContentCheckingViewController.m
 //  wPinpinbox
 //
@@ -301,7 +301,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     for (int i = 0; i < self.slotArray.count; i++) {
         NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
-        NSLog(@"photoId: %ld", [[slotData valueForKey: @"photoId"] integerValue]);
+        NSLog(@"photoId: %d", (int)[[slotData valueForKey: @"photoId"] integerValue]);
     }
 }
 
@@ -316,7 +316,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     for (int i = 0; i < self.slotArray.count; i++) {
         NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
-        NSLog(@"photoId: %ld", [[slotData valueForKey: @"photoId"] integerValue]);
+        NSLog(@"photoId: %d", (int)[[slotData valueForKey: @"photoId"] integerValue]);
         
         if (photoId == [[slotData valueForKey: @"photoId"] integerValue]) {
             photoIdExist = YES;
@@ -773,7 +773,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if ([useFor isEqualToString: @"video"]) {
         if ((self.videoPlayer.rate != 0) && (self.videoPlayer.error == nil)) {
             NSLog(@"self.videoPlayer.rate: %f", self.videoPlayer.rate);
-        }
+        }        
         if (self.navBarView.hidden) {
             self.videoPlayerViewController.showsPlaybackControls = YES;
         } else {
@@ -863,6 +863,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     CGSize currentSize = self.imageScrollCV.frame.size;
     offsetAfterRotating = self.pageBeforePresentingOrPushing * currentSize.width;
     NSLog(@"offsetAfterRotating: %f", offsetAfterRotating);
+    // Offset for iPhoneX
     [self.imageScrollCV setContentOffset: CGPointMake(offsetAfterRotating, 0)];
     NSLog(@"");
     NSLog(@"self.imageScrollCV.contentOffset: %@", NSStringFromCGPoint(self.imageScrollCV.contentOffset));
@@ -870,9 +871,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [UIView animateWithDuration: 0.1f animations:^{
         self.imageScrollCV.alpha = 1.0f;
     }];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.pageBeforePresentingOrPushing inSection: 0];
+    //        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.pageBeforePresentingOrPushing inSection: 0];
     [self.thumbnailImageScrollCV reloadData];
-    [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+    //        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+    
+    NSLog(@"");
+    NSLog(@"self.videoPlayerViewController.view.hidden: %d", self.videoPlayerViewController.view.hidden);
     
     //        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated: NO];
     isRotating = NO;
@@ -905,8 +909,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"");
         NSLog(@"coordinator completion");
         [wself settingSizeBasedOnDevice];
-        
-        
 //        NSLog(@"Before");
 //        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
 //        CGFloat width;
@@ -924,7 +926,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //            }
 //        } else if (size.width > size.height) {
 //            NSLog(@"Background in Landscape");
-//            if (currentSize.width > currentSize.height) {
+//            if (currentSize.width > currentSize.height=) {
 //                NSLog(@"imageScrollCV in Landscape");
 //            } else if (currentSize.height > currentSize.width) {
 //                NSLog(@"imageScrollCV in Portrait");
@@ -1389,7 +1391,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     NSLog(@"");
     NSLog(@"observeValueForKeyPath");
-    
     NSLog(@"object: %@", object);
     
     if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext) {
@@ -1672,7 +1673,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     // Reset
     [self.videoPlayer pause];
-//    self.videoPlayerViewController.view.hidden = YES;
     
     if ([useFor isEqualToString: @"video"]) {
         if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
@@ -1954,6 +1954,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Play Uploaded Video
 - (void)playUploadedVideo:(ImageCollectionViewCell *)cell
                      page:(NSInteger)page {
+    NSLog(@"playUploadedVideo");
     NSURL *videoUrl = [NSURL URLWithString: self.photoArray[page][@"video_target"]];
     [self setupVideoPlayer: cell
                   videoUrl: videoUrl
@@ -1965,10 +1966,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 videoUrl:(NSURL *)videoUrl
                 platform:(NSString *)platform {
     NSLog(@"setupVideoPlayer");
+    NSLog(@"platform: %@", platform);
 //    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL: videoUrl];
 //    NSLog(@"playerItem: %@", playerItem);
-    self.videoPlayerViewController.view.hidden = NO;
-    cell.videoView.hidden = NO;
+    
     videoIsPlaying = YES;
     
     [self.avPlayer pause];
@@ -1993,17 +1994,26 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.videoPlayerViewController.view.frame = CGRectMake(0, 40, cell.videoView.bounds.size.width, cell.videoView.bounds.size.height - 40);
     self.videoPlayerViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.videoPlayerViewController.view.center = cell.videoView.center;
-    self.videoPlayerViewController.videoGravity = AVLayerVideoGravityResizeAspect;
-    [self.videoPlayerViewController.view sizeToFit];
+    self.videoPlayerViewController.videoGravity = AVLayerVideoGravityResizeAspect;    
+//    [self.videoPlayerViewController.view sizeToFit];
     
     for (UIView *view in cell.videoView.subviews) {
         [view removeFromSuperview];
     }
-    [self addChildViewController: self.videoPlayerViewController];
     [cell.videoView addSubview: self.videoPlayerViewController.view];
     [self.videoPlayer play];
     
+    // Delay below is to avoid the previous video shows up
+    double delayInSeconds = 0.5;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^{
+        cell.videoView.hidden = NO;
+        self.videoPlayerViewController.view.hidden = NO;
+    });
+    
     if (![platform isEqualToString: @"general"]) {
+        NSLog(@"platform is not equal to general");
+        NSLog(@"self.videoPlayer pause");
         [self.videoPlayer pause];
     }
 }
@@ -2681,10 +2691,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (NSInteger)getCurrentPage {
-    NSLog(@"");
-    NSLog(@"getCurrentPage");
+//    NSLog(@"");
+//    NSLog(@"getCurrentPage");
     NSInteger page = self.imageScrollCV.contentOffset.x / self.imageScrollCV.frame.size.width;
-    NSLog(@"page: %ld", (long)page);
+//    NSLog(@"page: %ld", (long)page);
     return page;
 }
 
@@ -3570,20 +3580,37 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         cell.checkCollectionLayout.hidden = YES;
         
         NSString *refer = self.photoArray[indexPath.row][@"video_refer"];
+        NSLog(@"refer: %@", refer);
+        NSLog(@"useFor: %@", useFor);
         
         if ([useFor isEqualToString: @"video"]) {
+            NSLog(@"useFor is equal to video");
 //            NSURL *url = [NSURL URLWithString: self.photoArray[indexPath.row][@"video_target"]];
             
             if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
+                NSLog(@"refer is equal to file or system");
                 cell.alphaBgV.hidden = YES;
                 cell.videoBtn.hidden = YES;
                 cell.videoView.hidden = NO;
-                self.videoPlayerViewController.view.hidden = NO;
+                
+                for (UIView *view in cell.videoView.subviews) {
+                    NSLog(@"view: %@", view);
+//                    view.backgroundColor = [UIColor redColor];
+                    view.hidden = NO;
+                }
+//                self.videoPlayerViewController.view.hidden = NO;
             } else if ([refer isEqualToString: @"embed"]) {
+                NSLog(@"refer is equal to embed");
                 cell.alphaBgV.hidden = NO;
                 cell.videoBtn.hidden = NO;
                 cell.videoView.hidden = YES;
-                self.videoPlayerViewController.view.hidden = YES;
+                
+                for (UIView *view in cell.videoView.subviews) {
+                    NSLog(@"view: %@", view);
+//                    view.backgroundColor = [UIColor redColor];
+                    view.hidden = YES;
+                }
+//                self.videoPlayerViewController.view.hidden = YES;
             }
         }
         
@@ -3755,6 +3782,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
+    NSLog(@"currentPage: %ld", (long)[self getCurrentPage]);
+    NSLog(@"indexPath.row: %ld", (long)indexPath.row);
     
     if (collectionView.tag == 100) {
         NSLog(@"collectionView.tag == 100");
@@ -3763,21 +3792,32 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         [self handleSingleTap];
     } else {
         NSLog(@"collectionView.tag == 200");
-        [self checkLocationBtn: indexPath.row];
-        [self checkAudio: indexPath.row];
-        
-        // Set delay for playing video, otherwise, there is only sound no video
-        double delayInSeconds = 0.5;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^{
-            NSLog(@"Do some work");
-            [self checkVideo: indexPath.row];
-            [self checkSlotAndExchangeInfo: indexPath.row];
-        });        
-        [self updateOldCurrentPage: indexPath.row];
-        [self textViewContentSetup: indexPath.row];
-        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-        [self.thumbnailImageScrollCV reloadData];
+        if ([self getCurrentPage] != indexPath.row) {
+            [self checkLocationBtn: indexPath.row];
+            [self checkAudio: indexPath.row];
+            
+            // Set delay for playing video, otherwise, there is only sound no video
+            double delayInSeconds = 0.5;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^{
+                NSLog(@"Do some work");
+                [self checkVideo: indexPath.row];
+                [self checkSlotAndExchangeInfo: indexPath.row];
+            });
+            [self updateOldCurrentPage: indexPath.row];
+            [self textViewContentSetup: indexPath.row];
+            [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+            [self.thumbnailImageScrollCV reloadData];
+        }
+    }
+}
+
+- (CGPoint)collectionView:(UICollectionView *)collectionView targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset {
+    // Method below is to avoid AVPlayerViewController disappear when rotate especially the last view in UICollectionViewCell
+    if (collectionView == self.imageScrollCV) {
+        return CGPointMake(self.view.bounds.size.width * self.pageBeforePresentingOrPushing, 0);
+    } else {
+        return proposedContentOffset;
     }
 }
 
@@ -3832,9 +3872,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [self.thumbnailImageScrollCV reloadData];
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
-                  willDecelerate:(BOOL)decelerate {
-//    self.videoPlayerViewController.view.hidden = YES;
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    self.videoPlayerViewController.view.hidden = YES;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -3846,7 +3885,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
     
     [self updateOldCurrentPage: page];
-    self.videoPlayerViewController.view.hidden = NO;
+//    self.videoPlayerViewController.view.hidden = NO;
     
     if (isDataLoaded) {
         NSLog(@"Data is loaded");
@@ -3862,7 +3901,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     [self pageCalculation: page];
                 }
             }
-            
             if (scrollView == self.imageScrollCV) {
                 NSLog(@"scrollView == self.imageScrollCV");
                 [self checkSlotAndExchangeInfo: [self getCurrentPage]];
@@ -4045,7 +4083,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     self.navigationController.delegate = nil;
     
     [self.videoPlayer pause];
-    self.videoPlay = nil;
+    self.videoPlay = NO;
+    self.videoPlayerItem = nil;
+    self.videoPlayerViewController.player = nil;
+    self.videoPlayerViewController = nil;
     
     [self removeObserverForPlayerAndItem];
     [[NSNotificationCenter defaultCenter] removeObserver: self];
@@ -4386,7 +4427,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     // Check whether getting Sharing Point or not
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    BOOL share_to_fb = [defaults objectForKey: @"share_to_fb"];
+    BOOL share_to_fb = [[defaults objectForKey: @"share_to_fb"] boolValue];
     NSLog(@"Check whether getting sharing point or not");
     NSLog(@"share_to_fb: %d", (int)share_to_fb);
     

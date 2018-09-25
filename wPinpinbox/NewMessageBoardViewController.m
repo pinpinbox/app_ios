@@ -1052,13 +1052,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         NSLog(@"Before Adding");
         NSLog(@"oldLocation: %lu", (unsigned long)oldLocation);
-        NSLog(@"length: %ld", [dic[@"length"] integerValue]);
+        NSLog(@"length: %ld",(long) [dic[@"length"] integerValue]);
         NSLog(@"gapRange.length: %lu", (unsigned long)gapRange.length);
         
         oldLocation += [dic[@"length"] integerValue] + gapRange.length;
         
-        NSLog(@"location: %ld", [dic[@"location"] integerValue]);
-        NSLog(@"length: %ld", [dic[@"length"] integerValue]);
+        NSLog(@"location: %ld",(long) [dic[@"location"] integerValue]);
+        NSLog(@"length: %ld",(long) [dic[@"length"] integerValue]);
         
         // For Tag Text Setting
         [attStr addAttribute: NSForegroundColorAttributeName

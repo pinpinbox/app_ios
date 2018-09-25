@@ -1442,13 +1442,13 @@ static NSString *hostURL = @"www.pinpinbox.com";
             
             NSLog(@"str: %@", str);
         } else {
-            str = [NSString stringWithFormat: @"%ld", error.code];
+            str = [NSString stringWithFormat: @"%ld",(long)error.code];
             
             NSLog(@"");
             NSLog(@"error: %@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);            
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld",(long)error.code]);
         }
         
         dispatch_semaphore_signal(semaphore);
@@ -1792,7 +1792,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
         } else {
             NSLog(@"error :%@", error);
             
-            str = [NSString stringWithFormat: @"%ld", error.code];
+            str = [NSString stringWithFormat: @"%ld",(long)error.code];
         }
         
         dispatch_semaphore_signal(semaphore);
@@ -1914,11 +1914,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
             str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
             NSLog(@"str: %@", str);
         } else {
-            str = [NSString stringWithFormat: @"%ld", error.code];
+            str = [NSString stringWithFormat: @"%d", (int)error.code];
             NSLog(@"error :%@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%d", (int)error.code]);
         }
         
         dispatch_semaphore_signal(semaphore);
@@ -2392,11 +2392,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
             str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
             NSLog(@"str: %@", str);
         } else {
-            str = [NSString stringWithFormat: @"%ld", error.code];
+            str = [NSString stringWithFormat: @"%ld", (long)error.code];
             NSLog(@"error: %@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", (long)error.code]);
         }
         
         /*
@@ -2743,7 +2743,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
             NSLog(@"error: %@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", (long)error.code]);
         }
         
         /*
@@ -3039,13 +3039,13 @@ static NSString *hostURL = @"www.pinpinbox.com";
             
             //[[NSURLSession sharedSession] finishTasksAndInvalidate];
         } else {
-            str = [NSString stringWithFormat: @"%ld", error.code];
+            str = [NSString stringWithFormat: @"%ld", (long)error.code];
             
             NSLog(@"");
             NSLog(@"error: %@", error);
             NSLog(@"error.userInfo: %@", error.userInfo);
             NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", error.code]);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", (long)error.code]);
             
             // [[NSURLSession sharedSession] invalidateAndCancel];
         }        

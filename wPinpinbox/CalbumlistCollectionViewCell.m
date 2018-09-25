@@ -54,18 +54,18 @@
         if (_type==2) {
              //[wTools ReadBookalbumid:_albumid userbook:@"Y"];
             //[wTools ReadBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: nil fromEventPostVC: nil];
-            [wTools ReadTestBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: nil fromEventPostVC: nil];
+            [wTools ReadTestBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
             return;
         }
         
         if ([[(id)_userid stringValue] isEqualToString:[wTools getUserID]]) {
             //[wTools ReadBookalbumid:_albumid userbook:@"Y"];
             //[wTools ReadBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: nil fromEventPostVC: nil];
-            [wTools ReadTestBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: nil fromEventPostVC: nil];
+            [wTools ReadTestBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
         }else{
             //[wTools ReadBookalbumid:_albumid userbook:@"N"];
             //[wTools ReadBookalbumid: _albumid userbook: @"N" eventId: nil postMode: nil fromEventPostVC: nil];
-            [wTools ReadTestBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: nil fromEventPostVC: nil];
+            [wTools ReadTestBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
         }
     }
 }
@@ -85,7 +85,7 @@
         if ([sender.selectedIdentifier isEqualToString:@"B"]) {
             //編輯
             //[wTools editphotoinfo:_albumid templateid:_templateid];
-            [wTools editphotoinfo: _albumid templateid: _templateid eventId: nil postMode: nil];
+            [wTools editphotoinfo: _albumid templateid: _templateid eventId: nil postMode: NO];
         }
         if ([sender.selectedIdentifier isEqualToString:@"C"]) {
             [wTools Activitymessage:[NSString stringWithFormat:@"%@ http://www.pinpinbox.com/index/album/content/?album_id=%@",_mytitle.text,_albumid]];
@@ -131,7 +131,7 @@
             if ([_identity isEqualToString:@"admin"]) {
                 NSLog(@"identity is admin");
                 //[wTools editphotoinfo:_albumid templateid:_templateid];
-                [wTools editphotoinfo: _albumid templateid: _templateid eventId: nil postMode: nil];
+                [wTools editphotoinfo: _albumid templateid: _templateid eventId: nil postMode: NO];
             } else {
                 NSLog(@"identity is not admin");
                 if ([_templateid isEqualToString: @"0"]) {
