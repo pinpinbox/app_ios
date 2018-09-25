@@ -73,7 +73,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     __weak IBOutlet UIButton *settingBtn;
     __weak IBOutlet UIButton *nextBtn;
     
-//    __weak IBOutlet UIButton *adobeEidt;
+    //    __weak IBOutlet UIButton *adobeEidt;
     __weak IBOutlet BFPaperButton *recordPausePlayBtn;
     
     __weak IBOutlet UIView *textBgView;
@@ -93,7 +93,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UIImage *selectimage;
     
     NSInteger *nextItem;
-    
+    NSString *identity;
     
     AVAudioRecorder *recorder;
     //AVAudioPlayer *player;
@@ -170,7 +170,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) DDAUIActionSheetViewController *customSettingActionSheet;
 @property (nonatomic) UIVisualEffectView *effectView;
 
-@property (nonatomic) NSString *identity;
 @end
 
 @implementation AlbumCreationViewController
@@ -226,8 +225,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     refreshBtn.hidden = YES;
     
     nextBtn.layer.cornerRadius = kCornerRadius;
-//    adobeEidt.layer.cornerRadius = adobeEidt.bounds.size.width / 2;
-//    adobeEidt.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+    //    adobeEidt.layer.cornerRadius = adobeEidt.bounds.size.width / 2;
+    //    adobeEidt.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     
     addTextBtn.layer.cornerRadius = addTextBtn.bounds.size.width / 2;
     addTextBtn.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
@@ -269,22 +268,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         deleteTextBtn.hidden = YES;
     }
     
-//    NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
-//    NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
-//    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
-//
-//    //The authManager caches our login, so check on startup
-//    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
-//
-//    if(loggedIn) {
-//        [[AdobeUXAuthManager sharedManager] logout:nil onError:nil];
-//        AdobeAuthUserProfile *up = [AdobeUXAuthManager sharedManager].userProfile;
-//        NSLog(@"User Profile: %@", up);
-//    }
+    //    NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
+    //    NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
+    //    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
+    //
+    //    //The authManager caches our login, so check on startup
+    //    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
+    //
+    //    if(loggedIn) {
+    //        [[AdobeUXAuthManager sharedManager] logout:nil onError:nil];
+    //        AdobeAuthUserProfile *up = [AdobeUXAuthManager sharedManager].userProfile;
+    //        NSLog(@"User Profile: %@", up);
+    //    }
     
     [self audioSetUp];
     [self photoSetup];
-
+    
     // For Reorder & PreviewPage Setting Methods
     self.dimVC = [[UIViewController alloc] init];
     self.dimVC.view.frame = [[UIScreen mainScreen] bounds];
@@ -297,8 +296,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     modalVC = @"";
     
     NSLog(@"self.dimVC.view: %@", NSStringFromCGRect(self.dimVC.view.frame));
-    //  query cooperator status //
-    [self getCooperation];
     
     // For checking whether should present actionSheet options or not
     isViewDidLoad = YES;
@@ -316,7 +313,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.customSettingActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customSettingActionSheet.delegate = self;
     self.customSettingActionSheet.topicStr = @"作品設定";
-
+    
     // Add Long Press Gesture to collecitonView
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget: self action: @selector(handleLongPress:)];
     lpgr.delegate = self;
@@ -639,7 +636,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     NSLog(@"textViewShouldBeginEditing");
     NSLog(@"textView.text: %@", textView.text);
-    
     NSLog(@"textForDescription: %@", textForDescription);
     
     if (![textView.text isEqualToString: @""]) {
@@ -1182,7 +1178,7 @@ shouldChangeTextInRange:(NSRange)range
                 NSLog( @"Name: %@", exception.name);
                 NSLog( @"Reason: %@", exception.reason );
                 return;
-            }                        
+            }
             [self stopRipple];
             
             if (response != nil) {
@@ -1194,13 +1190,13 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"deleteAudioOfDiy");
                     
                     [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"updateAudioOfDiy"
-                                         textStr: @""
-                                            data: nil
-                                           image: nil
-                                         jsonStr: @""
-                                       audioMode: @""
-                                          option: @""];
+                                      protocolName: @"updateAudioOfDiy"
+                                           textStr: @""
+                                              data: nil
+                                             image: nil
+                                           jsonStr: @""
+                                         audioMode: @""
+                                            option: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     [stSelf enableRecordAndPlayBtn];
@@ -1292,13 +1288,13 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"deleteAudioOfDiy");
                     
                     [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"deleteAudioOfDiy"
-                                         textStr: @""
-                                            data: nil
-                                           image: nil
-                                         jsonStr: @""
-                                       audioMode: @""
-                                          option: @""];
+                                      protocolName: @"deleteAudioOfDiy"
+                                           textStr: @""
+                                              data: nil
+                                             image: nil
+                                           jsonStr: @""
+                                         audioMode: @""
+                                            option: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     
@@ -1448,13 +1444,13 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"reload");
                     
                     [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getalbumofdiy"
-                                         textStr: @""
-                                            data: nil
-                                           image: nil
-                                         jsonStr: @""
-                                       audioMode: @""
-                                          option: @""];
+                                      protocolName: @"getalbumofdiy"
+                                           textStr: @""
+                                              data: nil
+                                             image: nil
+                                           jsonStr: @""
+                                         audioMode: @""
+                                            option: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -1472,7 +1468,7 @@ shouldChangeTextInRange:(NSRange)range
                         stSelf->ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
                         
-
+                        
                         if (stSelf->ImageDataArr.count == 0) {
                             
                             stSelf->recordPausePlayBtn.hidden = YES;
@@ -1481,9 +1477,9 @@ shouldChangeTextInRange:(NSRange)range
                             
                             stSelf->textBgView.hidden = YES;
                             stSelf->addTextBtn.hidden = YES;
-                        stSelf->deleteTextBtn.hidden = YES;
+                            stSelf->deleteTextBtn.hidden = YES;
                             
-                        stSelf->deleteImageBtn.hidden = YES;
+                            stSelf->deleteImageBtn.hidden = YES;
                             
                             [stSelf.dataCollectionView reloadData];
                             
@@ -1509,7 +1505,7 @@ shouldChangeTextInRange:(NSRange)range
                                         // And it's first time to go to AlbumCreationVC
                                         // will call actionSheet
                                         [stSelf showPhotoAndVideoActionSheet];
-                                    stSelf->isViewDidLoad = NO;
+                                        stSelf->isViewDidLoad = NO;
                                     }
                                 }
                             }
@@ -1530,6 +1526,16 @@ shouldChangeTextInRange:(NSRange)range
 
 - (void)getCooperation
 {
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    
     
     NSMutableDictionary *data=[NSMutableDictionary new];
     [data setObject: _albumid forKey: @"type_id"];
@@ -1539,10 +1545,20 @@ shouldChangeTextInRange:(NSRange)range
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *response = [boxAPI getcooperation: [wTools getUserID]
-                                            token: [wTools getUserToken]
-                                             data: data];
+                                              token: [wTools getUserToken]
+                                               data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -1550,26 +1566,32 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"AlbumCollectionViewController");
                     NSLog(@"getCooperation");
                     
-//                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-//                                    protocolName: @"getcooperation"
-//                                         textStr: @""
-//                                            data: nil
-//                                           image: nil
-//                                         jsonStr: @""
-//                                       audioMode: @""
-//                                          option: @""];
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"getcooperation"
+                                         textStr: @""
+                                            data: nil
+                                           image: nil
+                                         jsonStr: @""
+                                       audioMode: @""
+                                          option: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
-                        
-                        stSelf.identity = dic[@"data"];
-                        
-                    } else {
-                        stSelf.identity = nil;
-                    }
+                    NSLog(@"dic: %@", dic);
                     
+                    if ([dic[@"result"] boolValue]) {
+                        NSLog(@"dic result boolValue is 1");
+                        stSelf->identity = dic[@"data"];
+                    } else {
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [stSelf showCustomErrorAlert: msg];
+                    }
                 }
             }
         });
@@ -1580,7 +1602,7 @@ shouldChangeTextInRange:(NSRange)range
 -(IBAction)save:(id)sender {
     NSLog(@"快速建立相本 儲存");
     
-    if (ImageDataArr.count == 0) {        
+    if (ImageDataArr.count == 0) {
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];
         style.backgroundColor = [UIColor thirdPink];
@@ -1595,19 +1617,19 @@ shouldChangeTextInRange:(NSRange)range
         [self updateAlbumOfDiy: @"save"];
         
         /*
-        NSLog(@"identity: %@", identity);
-        
-        if ([identity isEqualToString:@"editor"] || [identity isEqualToString: @"approver"]) {
-            [self updateAlbumOfDiy];
-            //[self.navigationController popViewControllerAnimated:YES];
-            
-            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            [appDelegate.myNav popViewControllerAnimated: YES];
-            
-            [self removeObserAndNotificationAndRipple];
-            NSLog(@"identity is not admin");
-            return;
-        }
+         NSLog(@"identity: %@", identity);
+         
+         if ([identity isEqualToString:@"editor"] || [identity isEqualToString: @"approver"]) {
+         [self updateAlbumOfDiy];
+         //[self.navigationController popViewControllerAnimated:YES];
+         
+         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+         [appDelegate.myNav popViewControllerAnimated: YES];
+         
+         [self removeObserAndNotificationAndRipple];
+         NSLog(@"identity is not admin");
+         return;
+         }
          */
     }
 }
@@ -1652,25 +1674,32 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"updateAlbumOfDiy");
                     
                     [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"updatealbumofdiy"
-                                         textStr: @""
-                                            data: nil
-                                           image: nil
-                                         jsonStr: @""
-                                       audioMode: @""
-                                          option: option];
+                                      protocolName: @"updatealbumofdiy"
+                                           textStr: @""
+                                              data: nil
+                                             image: nil
+                                           jsonStr: @""
+                                         audioMode: @""
+                                            option: option];
                 } else {
                     NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];                    
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] intValue] == 1) {
                         if ([option isEqualToString: @"save"]) {
-                            if ([self.identity isEqualToString:@"admin"]) {
-                                [stSelf proceedToAlbumSetting];
-                            } else {
-                                [stSelf finishCoopEditing];
-                            }
+                            AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
+                            aSVC.albumId = stSelf.albumid;
+                            aSVC.postMode = stSelf.postMode;
+                            aSVC.eventId = stSelf.event_id;
+                            aSVC.fromVC = @"AlbumCreationVC";
+                            aSVC.hasImage = YES;
+                            aSVC.isNew = YES;
+                            aSVC.prefixText = stSelf.prefixText;
+                            aSVC.specialUrl = stSelf.specialUrl;
+                            
+                            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                            [appDelegate.myNav pushViewController: aSVC animated: NO];
                         } else if ([option isEqualToString: @"back"]) {
                             if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -1682,11 +1711,11 @@ shouldChangeTextInRange:(NSRange)range
                                         }
                                         [appDelegate.myNav popToViewController: vc animated: YES];
                                     }
-                                }                                
+                                }
                             } else if ([stSelf.fromVC isEqualToString: @"AlbumCollectionVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 [appDelegate.myNav popViewControllerAnimated: YES];
-                            } else {                                
+                            } else {
                                 AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
                                 albumCollectionVC.postMode = stSelf.postMode;
                                 
@@ -1706,46 +1735,6 @@ shouldChangeTextInRange:(NSRange)range
     });
 }
 
-- (void)finishCoopEditing {
-    
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    for (UIViewController *vc in appDelegate.myNav.viewControllers) {
-        if ([vc isKindOfClass: [AlbumDetailViewController class]]) {
-            NSLog(@"vc is AlbumDetailVC");
-            
-            
-            [appDelegate.myNav popToViewController: vc animated: YES];
-            
-            return;
-        } else if ([vc isKindOfClass: [AlbumCollectionViewController class]]) {
-            NSLog(@"vc is AlbumCollectionVC");
-            [appDelegate.myNav popToViewController: vc animated: YES];
-            
-            return;
-        }
-    }
-    
-    AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
-    [appDelegate.myNav pushViewController: albumCollectionVC animated: YES];
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"modifyAlbum"];
-    [defaults synchronize];
-}
-- (void)proceedToAlbumSetting {
-    AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
-    aSVC.albumId = self.albumid;
-    aSVC.postMode = self.postMode;
-    aSVC.eventId = self.event_id;
-    aSVC.fromVC = @"AlbumCreationVC";
-    aSVC.hasImage = YES;
-    aSVC.isNew = YES;
-    aSVC.prefixText = self.prefixText;
-    aSVC.specialUrl = self.specialUrl;
-    
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav pushViewController: aSVC animated: NO];
-}
 - (IBAction)deleteFile:(id)sender
 {
     __weak typeof(self) weakSelf = self;
@@ -1819,13 +1808,13 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"deletePhotoOfDiy");
                     
                     [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"deletephotoofdiy"
-                                         textStr: @""
-                                            data: nil
-                                           image: nil
-                                         jsonStr: @""
-                                       audioMode: @""
-                                          option: @""];
+                                      protocolName: @"deletephotoofdiy"
+                                           textStr: @""
+                                              data: nil
+                                             image: nil
+                                           jsonStr: @""
+                                         audioMode: @""
+                                            option: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -1838,7 +1827,7 @@ shouldChangeTextInRange:(NSRange)range
                         //[self.dataCollectionView reloadData];
                         
                     } else if ([dic[@"result"] intValue] == 0) {
-                        [stSelf showCustomErrorAlert:dic[@"message"]];
+                        [stSelf showPermission];
                     } else {
                         [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1891,13 +1880,13 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"deleteVideoOfDiy");
                     
                     [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"deleteVideoOfDiy"
-                                         textStr: @""
-                                            data: nil
-                                           image: nil
-                                         jsonStr: @""
-                                       audioMode: @""
-                                          option: @""];
+                                      protocolName: @"deleteVideoOfDiy"
+                                           textStr: @""
+                                              data: nil
+                                             image: nil
+                                           jsonStr: @""
+                                         audioMode: @""
+                                            option: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -2059,15 +2048,15 @@ didFinishSavingWithError:(NSError *)error
         [self presentViewController: alert animated: YES completion: nil];
     } else {
         /*
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"成功"
-                                                                       message: @"影片儲存到相簿"
-                                                                preferredStyle: UIAlertControllerStyleAlert];
-        
-        UIAlertAction *defaultAction = [UIAlertAction actionWithTitle: @"OK"
-                                                                style: UIAlertActionStyleDefault
-                                                              handler: nil];
-        [alert addAction: defaultAction];
-        [self presentViewController: alert animated: YES completion: nil];
+         UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"成功"
+         message: @"影片儲存到相簿"
+         preferredStyle: UIAlertControllerStyleAlert];
+         
+         UIAlertAction *defaultAction = [UIAlertAction actionWithTitle: @"OK"
+         style: UIAlertActionStyleDefault
+         handler: nil];
+         [alert addAction: defaultAction];
+         [self presentViewController: alert animated: YES completion: nil];
          */
     }
 }
@@ -2123,12 +2112,12 @@ didFinishSavingWithError:(NSError *)error
                         [alert addAction: okBtn];
                         [stSelf presentViewController: alert animated: YES completion: nil];
                         /*
-                        UIAlertView* alert = [[UIAlertView alloc] initWithTitle: @"錯誤"
-                                                                        message: [[exportSession error] localizedDescription]
-                                                                       delegate: nil
-                                                              cancelButtonTitle: @"確定"
-                                                              otherButtonTitles: nil];
-                        [alert show];
+                         UIAlertView* alert = [[UIAlertView alloc] initWithTitle: @"錯誤"
+                         message: [[exportSession error] localizedDescription]
+                         delegate: nil
+                         cancelButtonTitle: @"確定"
+                         otherButtonTitles: nil];
+                         [alert show];
                          */
                     });
                     break;
@@ -2171,12 +2160,12 @@ didFinishSavingWithError:(NSError *)error
         [alert addAction: okBtn];
         [self presentViewController: alert animated: YES completion: nil];
         /*
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"錯誤"
-                                                        message: @"影像檔案不支援"
-                                                       delegate: nil
-                                              cancelButtonTitle: @"確認"
-                                              otherButtonTitles: nil];
-        [alert show];
+         UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"錯誤"
+         message: @"影像檔案不支援"
+         delegate: nil
+         cancelButtonTitle: @"確認"
+         otherButtonTitles: nil];
+         [alert show];
          */
     }
 }
@@ -2243,7 +2232,7 @@ didFinishSavingWithError:(NSError *)error
                         
                         [stSelf myshowimage];
                         NSLog(@"[_dataCollectionView reloadData]");
-                        //[self.dataCollectionView reloadData];                                                
+                        //[self.dataCollectionView reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"insertvideoofdiy Failed");
                         NSLog(@"message: %@", dic[@"message"]);
@@ -2254,18 +2243,18 @@ didFinishSavingWithError:(NSError *)error
                             
                             if (![response isKindOfClass: [NSNull class]]) {
                                 if (![response isEqualToString: @""]) {
-//                                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: response message: @"目前網路不穩定，請確認網路品質再繼續使用pinpinbox唷!" preferredStyle: UIAlertControllerStyleAlert];
-//                                    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
-//                                    [alert addAction: okBtn];
-//                                    [stSelf presentViewController: alert animated: YES completion: nil];
+                                    //                                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: response message: @"目前網路不穩定，請確認網路品質再繼續使用pinpinbox唷!" preferredStyle: UIAlertControllerStyleAlert];
+                                    //                                    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
+                                    //                                    [alert addAction: okBtn];
+                                    //                                    [stSelf presentViewController: alert animated: YES completion: nil];
                                     [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                                    protocolName: @"insertVideoOfDiy"
-                                                         textStr: @""
-                                                            data: data
-                                                           image: nil
-                                                         jsonStr: @""
-                                                       audioMode: @""
-                                                          option: @""];
+                                                      protocolName: @"insertVideoOfDiy"
+                                                           textStr: @""
+                                                              data: data
+                                                             image: nil
+                                                           jsonStr: @""
+                                                         audioMode: @""
+                                                            option: @""];
                                 }
                             }
                         } else {
@@ -2363,7 +2352,7 @@ didFinishSavingWithError:(NSError *)error
     if (ImageDataArr.count == 0) {
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
-//        adobeEidt.hidden = YES;
+        //        adobeEidt.hidden = YES;
         recordPausePlayBtn.hidden = YES;
         audioBgView.hidden = YES;
         deleteAudioBtn.hidden = YES;
@@ -2381,7 +2370,7 @@ didFinishSavingWithError:(NSError *)error
     } else if (ImageDataArr.count != 0) {
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
-//        adobeEidt.hidden = NO;
+        //        adobeEidt.hidden = NO;
         addTextBtn.hidden = NO;
         
         recordPausePlayBtn.hidden = NO;
@@ -2467,7 +2456,7 @@ didFinishSavingWithError:(NSError *)error
             } else if ([videoStr isKindOfClass: [NSNull class]]) {
                 NSLog(@"videoStr is null");
                 [videoBtn removeFromSuperview];
-
+                
                 stSelf->recordPausePlayBtn.hidden = NO;
                 stSelf->audioBgView.hidden = NO;
                 stSelf->deleteAudioBtn.hidden = NO;
@@ -2624,7 +2613,7 @@ didFinishSavingWithError:(NSError *)error
     settingBtn.userInteractionEnabled = YES;
     nextBtn.userInteractionEnabled = YES;
     
-//    adobeEidt.userInteractionEnabled = YES;
+    //    adobeEidt.userInteractionEnabled = YES;
     
     addTextBtn.userInteractionEnabled = YES;
     deleteTextBtn.userInteractionEnabled = YES;
@@ -2641,7 +2630,7 @@ didFinishSavingWithError:(NSError *)error
     settingBtn.userInteractionEnabled = NO;
     nextBtn.userInteractionEnabled = NO;
     
-//    adobeEidt.userInteractionEnabled = NO;
+    //    adobeEidt.userInteractionEnabled = NO;
     
     addTextBtn.userInteractionEnabled = NO;
     deleteTextBtn.userInteractionEnabled = NO;
@@ -2729,38 +2718,38 @@ didFinishSavingWithError:(NSError *)error
         [imagev sd_setImageWithURL: [NSURL URLWithString: ImageDataArr[indexPath.item-1][@"image_url_thumbnail"]]];
     }
     
-//    UIButton *infoButton = (UIButton *)[myCell viewWithTag: 3333];
-//    infoButton.hidden = YES;
-//    infoButton.userInteractionEnabled = NO;
-//
-//    if (![ImageDataArr[indexPath.item - 1][@"audio_url"] isEqual: [NSNull null]]) {
-//        NSLog(@"audio_url is not null");
-//        infoButton.hidden = NO;
-//        [infoButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
-//        infoButton.backgroundColor = [UIColor firstMain];
-//        infoButton.layer.cornerRadius = infoButton.layer.bounds.size.width / 2;
-//    } else {
-//        infoButton.hidden = YES;
-//        [infoButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
-//    }
-//
-//    if (![ImageDataArr[indexPath.item - 1][@"video_url"] isEqual: [NSNull null]]) {
-//        NSLog(@"video_url is not null");
-//        infoButton.hidden = NO;
-//        [infoButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
-//        infoButton.backgroundColor = [UIColor firstMain];
-//        infoButton.layer.cornerRadius = infoButton.bounds.size.width / 2;
-//    } else {
-//        infoButton.hidden = YES;
-//        [infoButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
-//    }
+    //    UIButton *infoButton = (UIButton *)[myCell viewWithTag: 3333];
+    //    infoButton.hidden = YES;
+    //    infoButton.userInteractionEnabled = NO;
+    //
+    //    if (![ImageDataArr[indexPath.item - 1][@"audio_url"] isEqual: [NSNull null]]) {
+    //        NSLog(@"audio_url is not null");
+    //        infoButton.hidden = NO;
+    //        [infoButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+    //        infoButton.backgroundColor = [UIColor firstMain];
+    //        infoButton.layer.cornerRadius = infoButton.layer.bounds.size.width / 2;
+    //    } else {
+    //        infoButton.hidden = YES;
+    //        [infoButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
+    //    }
+    //
+    //    if (![ImageDataArr[indexPath.item - 1][@"video_url"] isEqual: [NSNull null]]) {
+    //        NSLog(@"video_url is not null");
+    //        infoButton.hidden = NO;
+    //        [infoButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+    //        infoButton.backgroundColor = [UIColor firstMain];
+    //        infoButton.layer.cornerRadius = infoButton.bounds.size.width / 2;
+    //    } else {
+    //        infoButton.hidden = YES;
+    //        [infoButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
+    //    }
     
     
     UIButton *audioButton = (UIButton *)[myCell viewWithTag: 3333];
     
     if (![ImageDataArr[indexPath.item - 1][@"audio_url"] isEqual: [NSNull null]]) {
         audioButton.hidden = NO;
-        [audioButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];        
+        [audioButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
         audioButton.backgroundColor = [UIColor firstMain];
         audioButton.layer.cornerRadius = audioButton.bounds.size.width / 2;
     } else {
@@ -2773,7 +2762,7 @@ didFinishSavingWithError:(NSError *)error
     if (![ImageDataArr[indexPath.item - 1][@"video_url"] isEqual: [NSNull null]]) {
         NSLog(@"video_url is not null");
         videoButton.hidden = NO;
-        [videoButton setImage: [UIImage imageNamed: @"ic200_video_white_1"] forState: UIControlStateNormal];        
+        [videoButton setImage: [UIImage imageNamed: @"ic200_video_white_1"] forState: UIControlStateNormal];
         videoButton.backgroundColor = [UIColor firstMain];
         videoButton.layer.cornerRadius = videoButton.bounds.size.width / 2;
     } else {
@@ -2994,7 +2983,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [self.effectView removeFromSuperview];
     self.effectView = nil;
 }
- 
+
 #pragma mark -
 //image
 //產生對應位置的圖片
@@ -3071,17 +3060,17 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 -(void)displayEditorForImahe:(UIImage *)imageToEdit{
     NSLog(@"displayEditorForImahe");
     
-//    @try {
-//        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:imageToEdit];
-//        [editorController setDelegate:self];
-//        [self presentViewController:editorController animated:YES completion:nil];
-//    } @catch (NSException *exception) {
-//        // Print exception information
-//        NSLog( @"NSException caught" );
-//        NSLog( @"Name: %@", exception.name);
-//        NSLog( @"Reason: %@", exception.reason);
-//        return;
-//    }
+    //    @try {
+    //        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:imageToEdit];
+    //        [editorController setDelegate:self];
+    //        [self presentViewController:editorController animated:YES completion:nil];
+    //    } @catch (NSException *exception) {
+    //        // Print exception information
+    //        NSLog( @"NSException caught" );
+    //        NSLog( @"Name: %@", exception.name);
+    //        NSLog( @"Reason: %@", exception.reason);
+    //        return;
+    //    }
 }
 
 //- (void)photoEditor:(AdobeUXImageEditorViewController *)editor
@@ -3107,7 +3096,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)callUpdatePhotoOfDiyWithPhoto: (UIImage *)image
 {
-    //更新照片    
+    //更新照片
     NSString *pid = [ImageDataArr[selectItem][@"photo_id"] stringValue];
     
     //上傳照片
@@ -3187,7 +3176,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (BOOL)checkPermissionForEditing {
-    if ([_identity isEqualToString:@"viewer"]){//@"editor"] || [identity isEqualToString: @"approver"]) {
+    if ([identity isEqualToString:@"editor"] || [identity isEqualToString: @"approver"]) {
         return NO;
     } else {
         return YES;
@@ -3195,9 +3184,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)showPermission {
-   // if ([identity isEqualToString:@"viewer"]){//@"editor"] || [identity isEqualToString: @"approver"]) {
+    if ([identity isEqualToString:@"editor"] || [identity isEqualToString: @"approver"]) {
         [self showPermissionAlert: NSLocalizedString(@"CreateAlbumText-canNotEditOthers", @"")];
-   // }
+    }
 }
 
 #pragma mark - Reorder Function
@@ -3500,7 +3489,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         });
     });
 }
-                   
+
 #pragma mark - Custom AlertView for Yes and No
 - (void)showCustomAlert: (NSString *)msg {
     NSLog(@"showCustomAlert: Msg: %@", msg);
@@ -3538,9 +3527,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             style.backgroundColor = [UIColor firstGrey];
             
             [stSelf.view makeToast: @"作品保存中...請稍候"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                            style: style];
+                          duration: 2.0
+                          position: CSToastPositionBottom
+                             style: style];
             
             if (stSelf->ImageDataArr.count == 0) {
                 // if there is no image then should set to close
@@ -4271,81 +4260,81 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 /*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+ - (UIView *)createErrorContainerView: (NSString *)msg
+ {
+ // TextView Setting
+ UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+ //textView.text = @"帳號已經存在，請使用另一個";
+ textView.text = msg;
+ textView.backgroundColor = [UIColor clearColor];
+ textView.textColor = [UIColor whiteColor];
+ textView.font = [UIFont systemFontOfSize: 16];
+ textView.editable = NO;
+ 
+ // Adjust textView frame size for the content
+ CGFloat fixedWidth = textView.frame.size.width;
+ CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+ CGRect newFrame = textView.frame;
+ 
+ NSLog(@"newSize.height: %f", newSize.height);
+ 
+ // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+ if (newSize.height > 300) {
+ newSize.height = 300;
+ }
+ 
+ // Adjust textView frame size when the content height reach its maximum
+ newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+ textView.frame = newFrame;
+ 
+ CGFloat textViewY = textView.frame.origin.y;
+ NSLog(@"textViewY: %f", textViewY);
+ 
+ CGFloat textViewHeight = textView.frame.size.height;
+ NSLog(@"textViewHeight: %f", textViewHeight);
+ NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+ 
+ 
+ // ImageView Setting
+ UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+ [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
+ 
+ CGFloat viewHeight;
+ 
+ if ((textViewY + textViewHeight) > 96) {
+ if ((textViewY + textViewHeight) > 450) {
+ viewHeight = 450;
+ } else {
+ viewHeight = textViewY + textViewHeight;
+ }
+ } else {
+ viewHeight = 96;
+ }
+ NSLog(@"demoHeight: %f", viewHeight);
+ 
+ 
+ // ContentView Setting
+ UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+ contentView.backgroundColor = [UIColor firstPink];
+ 
+ // Set up corner radius for only upper right and upper left corner
+ UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+ CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+ maskLayer.frame = self.view.bounds;
+ maskLayer.path  = maskPath.CGPath;
+ contentView.layer.mask = maskLayer;
+ 
+ // Add imageView and textView
+ [contentView addSubview: imageView];
+ [contentView addSubview: textView];
+ 
+ NSLog(@"");
+ NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+ NSLog(@"");
+ 
+ return contentView;
+ }
+ */
 #pragma mark - Custom Method for TimeOut
 - (void)processUpdate{
     [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
