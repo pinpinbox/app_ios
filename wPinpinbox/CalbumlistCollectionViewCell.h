@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, OpMenuActionType){
 };
 
 @protocol CalbumlistDelegate <NSObject>
+@optional
 - (void)reloadData;
 - (void)opMenuAction:(OpMenuActionType)action index:(NSInteger )index;
 - (void)changeAlbumAct:(NSString *)albumid index:(NSInteger)index;

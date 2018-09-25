@@ -20,6 +20,8 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 
 #import "DDAUIActionSheetViewController.h"
+
+#pragma mark - cell for Search result -
 @implementation CoCreatorCell
 - (IBAction)inviteCreator:(id)sender {
     if (self.coDelegate && [self.coDelegate respondsToSelector:@selector(processInviteUserWithIndex:)]) {
@@ -45,6 +47,7 @@
 }
 @end
 
+#pragma mark - cell for Album cooprators -
 @implementation CoAdminCell
 - (IBAction)editAdmin:(id)sender {
     if (self.coDelegate && [self.coDelegate respondsToSelector:@selector(processDeleteUserWithIndex:)]) {
@@ -86,8 +89,8 @@
 }
 @end
 
-
-@interface CoCreatorListViewController ()<UITextFieldDelegate,DDAUIActionSheetViewControllerDelegate>
+#pragma mark - CoCreatorListViewController -
+@interface CoCreatorListViewController ()<UITextFieldDelegate,DDAUIActionSheetViewControllerDelegate,UICollectionViewDelegateFlowLayout>
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *searchViewWidth;
 @property (nonatomic) NSMutableArray *coCreators;
 @property (nonatomic) NSMutableArray *searchUsers;
@@ -135,33 +138,11 @@
 - (void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
-    
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    //UIBarButtonItem *litem = [[UIBarButtonItem alloc]initWithCustomView:self.backButton];
-    //self.searchView.translatesAutoresizingMaskIntoConstraints = NO;
-    UIBarButtonItem *l = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_arrow_left_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onBackButton:)];
-    
-    UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:self.searchView];
-    UIBarButtonItem *r1 = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_scancamera_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onShowQRCode:)];
-    r1.title = @"";
-    l.title = @"";
-    l.tintColor = [UIColor firstGrey];
-    l.width = 44;
-    r1.tintColor = [UIColor firstGrey];
-    r1.width = 44;
-    CGFloat w = self.view.bounds.size.width - 110;
-    _searchViewWidth.constant = w;
-    //item.width = w;
-    
-    //ic200_scancamera_dark
-    //ic200_arrow_left_darknav
-    [self.navigationItem setLeftBarButtonItems:@[l]];
-    [self.navigationItem setRightBarButtonItems:@[r1,item]];
-    
-    //self.edgesForExtendedLayout = UIRectEdgeBottom;
-    
+    [self arrangeNavigationBarItems];
     [self getCooperatorList];
 }
+#pragma mark - UICollectionViewDataSource & UICollectionDelegate & UICollectionViewDelegateFlowlayout
+
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if (collectionView == _creatorListView) {
         UICollectionReusableView *v = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"creatorHeader" forIndexPath:indexPath];
@@ -237,7 +218,40 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
 }
-#pragma mark -
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (collectionView == _creatorListView) {
+        //  keep 2 cells in a row in all devices
+        CGFloat w = self.view.bounds.size.width/2;
+        return CGSizeMake(w, 192);
+    }
+    
+    return CGSizeMake(64, 100);
+}
+#pragma mark - UI & MISC functions
+- (void)arrangeNavigationBarItems {
+    
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    
+    UIBarButtonItem *l = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_arrow_left_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onBackButton:)];
+    
+    UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:self.searchView];
+    UIBarButtonItem *r1 = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_scancamera_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onShowQRCode:)];
+    r1.title = @"";
+    l.title = @"";
+    l.tintColor = [UIColor firstGrey];
+    l.width = 44;
+    r1.tintColor = [UIColor firstGrey];
+    r1.width = 44;
+    CGFloat w = self.view.bounds.size.width - 110;
+    _searchViewWidth.constant = w;
+    
+    [self.navigationItem setLeftBarButtonItems:@[l]];
+    [self.navigationItem setRightBarButtonItems:@[r1,item]];
+}
+
 - (void)dismissKeyboard {
     [self.searchField endEditing:YES];
 }
@@ -325,7 +339,7 @@
     [_QRCover removeFromSuperview];
     [UIView commitAnimations];
 }
-#pragma mark - 
+#pragma mark - UITextfieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     NSLog(@"shouldChangeCharactersInRange");
     [_searchUsers removeAllObjects];
@@ -358,21 +372,6 @@
         [data setObject:@"album" forKey:@"type"];
         NSString *response = [boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
         
-//        NSMutableDictionary *qrDic = [NSMutableDictionary new];
-//        [qrDic setObject: [NSNumber numberWithBool: YES] forKey: @"is_cooperation"];
-//        [qrDic setObject: [NSNumber numberWithBool: NO] forKey: @"is_follow"];
-//
-//        NSLog(@"generate jSON data for getQRCode");
-//        NSLog(@"qrDic: %@", qrDic);
-//
-//        NSData *jsonData = [NSJSONSerialization dataWithJSONObject: qrDic
-//                                                           options: 0
-//                                                             error: nil];
-//        NSString *jsonStr = [[NSString alloc] initWithData: jsonData
-//                                                  encoding: NSUTF8StringEncoding];
-        
-        //NSString *responseQRCode = [boxAPI getQRCode: [wTools getUserID] token: [wTools getUserToken] type: @"album" type_id: aid effect: @"execute" is: jsonStr];
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             
             if (response != nil) {
@@ -387,11 +386,6 @@
                 } else {
                 
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    //NSDictionary *dicQR = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [responseQRCode dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    //NSLog(@"response from getQRCode: %@", responseQRCode);
-                    //NSLog(@"dicQR: %@", dicQR);
                     
                     [wself processCooperator:dic]; //dicQR:dicQR];
                 }
@@ -736,11 +730,6 @@
     
     _effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     
-    //[UIView animateWithDuration: kAnimateActionSheet animations:^{
-        
-    //}];
-    
-    
     _effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
     _effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -797,7 +786,7 @@
     _effectView = nil;
 }
 
-#pragma mark - show alert
+#pragma mark - Show alert
 - (void)showCustomErrorAlert: (NSString *)msg {
     if (!msg || msg.length < 1 ) {
         msg = @"請稍後重試";
@@ -870,7 +859,7 @@
     [alertTimeOutView setUseMotionEffects: YES];
     [alertTimeOutView show];
 }
-#pragma mark - CoCreatorManageDelegate
+#pragma mark - CoCreatorManageDelegate // for inviting user & cooperator rank
 - (void)processInviteUserWithIndex:(NSInteger)index {
     if (index < self.searchUsers.count) {
         NSDictionary *user = _searchUsers[index][@"user"];
