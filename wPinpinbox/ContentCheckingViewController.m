@@ -1,4 +1,4 @@
- //
+//
 //  ContentCheckingViewController.m
 //  wPinpinbox
 //
@@ -1413,7 +1413,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     NSLog(@"");
     NSLog(@"observeValueForKeyPath");
-    
     NSLog(@"object: %@", object);
     
     if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext) {
@@ -1995,8 +1994,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"platform: %@", platform);
 //    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL: videoUrl];
 //    NSLog(@"playerItem: %@", playerItem);
-    self.videoPlayerViewController.view.hidden = NO;
-    cell.videoView.hidden = NO;    
+    
     videoIsPlaying = YES;
     
     [self.avPlayer pause];
@@ -2032,6 +2030,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     [cell.videoView addSubview: self.videoPlayerViewController.view];
     [self.videoPlayer play];
+    
+    // Delay below is to avoid the previous video shows up
+    double delayInSeconds = 0.5;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^{
+        cell.videoView.hidden = NO;
+        self.videoPlayerViewController.view.hidden = NO;
+    });
     
     if (![platform isEqualToString: @"general"]) {
         NSLog(@"platform is not equal to general");
@@ -2713,10 +2719,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (NSInteger)getCurrentPage {
-    NSLog(@"");
-    NSLog(@"getCurrentPage");
+//    NSLog(@"");
+//    NSLog(@"getCurrentPage");
     NSInteger page = self.imageScrollCV.contentOffset.x / self.imageScrollCV.frame.size.width;
-    NSLog(@"page: %ld", (long)page);
+//    NSLog(@"page: %ld", (long)page);
     return page;
 }
 
@@ -3894,8 +3900,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [self.thumbnailImageScrollCV reloadData];
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView
-                  willDecelerate:(BOOL)decelerate {
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    self.videoPlayerViewController.view.hidden = YES;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -3907,7 +3913,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
     
     [self updateOldCurrentPage: page];
-    self.videoPlayerViewController.view.hidden = NO;
+//    self.videoPlayerViewController.view.hidden = NO;
     
     if (isDataLoaded) {
         NSLog(@"Data is loaded");
