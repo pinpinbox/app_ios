@@ -3713,13 +3713,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         cell.collectBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
             [self buyAlbum];
         };
-        __block NSString *inputText = inputField.text;
+        //__block NSString *inputText = inputField.text;
         __block typeof(inputField) input = inputField;
         __block typeof(albumPoint) ap = albumPoint;
         __block typeof(userPoint) up = userPoint;
         __block typeof(self) wself = self;
         cell.sponsorBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
-            //NSString *inputText = inputField.text;
+            NSString *inputText = input.text;
             NSLog(@"inputText: %@", inputText);
             
             if ([inputText isEqualToString: @""]) {

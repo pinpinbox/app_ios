@@ -202,6 +202,80 @@
         });
     });
 }
+- (void)refreshUserInterface {
+    self.nameTextView.text = myData[@"nickname"];
+    
+    if ([self.nameTextView.text isEqualToString: @""]) {
+        placeHolderNameLabel.alpha = 1;
+    } else {
+        placeHolderNameLabel.alpha = 0;
+    }
+    self.descriptionTextView.text = myData[@"selfdescription"];
+    if ([self.descriptionTextView.text isEqualToString: @""]) {
+        placeHolderDescriptionLabel.alpha = 1;
+    } else {
+        placeHolderDescriptionLabel.alpha = 0;
+    }
+    
+    self.CreatorNameTextView.text = myData[@"creative_name"];
+    self.emailTextField.text = myData[@"email"];
+    sextInteger = [myData[@"gender"] integerValue];
+    NSLog(@"sextInteger: %ld", (long)sextInteger);
+    
+    if (sextInteger == 1) {
+        [self.maleBtn setTitleColor: [UIColor blackColor]
+                           forState: UIControlStateNormal];
+        self.maleBtn.backgroundColor = [UIColor secondMain];
+        self.maleBtn.layer.borderWidth = 0;
+        
+        [self.femaleBtn setTitleColor: [UIColor thirdGrey]
+                             forState: UIControlStateNormal];
+        self.femaleBtn.backgroundColor = [UIColor clearColor];
+        self.femaleBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
+        self.femaleBtn.layer.borderWidth = 1.0;
+        
+        [self.privateBtn setTitleColor: [UIColor thirdGrey]
+                              forState: UIControlStateNormal];
+        self.privateBtn.backgroundColor = [UIColor clearColor];
+        self.privateBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
+        self.privateBtn.layer.borderWidth = 1.0;
+    } else if (sextInteger == 0) {
+        [self.maleBtn setTitleColor: [UIColor thirdGrey]
+                           forState: UIControlStateNormal];
+        self.maleBtn.backgroundColor = [UIColor clearColor];
+        self.maleBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
+        self.maleBtn.layer.borderWidth = 1.0;
+        
+        [self.femaleBtn setTitleColor: [UIColor blackColor]
+                             forState: UIControlStateNormal];
+        self.femaleBtn.backgroundColor = [UIColor secondMain];
+        self.femaleBtn.layer.borderWidth = 0;
+        
+        [self.privateBtn setTitleColor: [UIColor thirdGrey]
+                              forState: UIControlStateNormal];
+        self.privateBtn.backgroundColor = [UIColor clearColor];
+        self.privateBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
+        self.privateBtn.layer.borderWidth = 1.0;
+    } else if (sextInteger == 2) {
+        [self.maleBtn setTitleColor: [UIColor thirdGrey]
+                           forState: UIControlStateNormal];
+        self.maleBtn.backgroundColor = [UIColor clearColor];
+        self.maleBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
+        self.maleBtn.layer.borderWidth = 1.0;
+        
+        [self.femaleBtn setTitleColor: [UIColor thirdGrey]
+                             forState: UIControlStateNormal];
+        self.femaleBtn.backgroundColor = [UIColor clearColor];
+        self.femaleBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
+        self.femaleBtn.layer.borderWidth = 1.0;
+        
+        [self.privateBtn setTitleColor: [UIColor blackColor]
+                              forState: UIControlStateNormal];
+        self.privateBtn.backgroundColor = [UIColor secondMain];
+        self.privateBtn.layer.borderWidth = 0;
+    }
+    self.birthdayTextField.text = myData[@"birthday"];
+}
 - (void)processProfileResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -220,6 +294,8 @@
         myData = [dataIc mutableCopy];
         
         [self checkSocialData];
+        
+        [self refreshUserInterface];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
         [self showCustomErrorAlert: dic[@"message"]];

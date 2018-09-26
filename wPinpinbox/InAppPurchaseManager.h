@@ -26,10 +26,9 @@
     SKProduct *proUpgradeProduct;
     SKProductsRequest *productsRequest;
     // id <inAppPurchaseDelegate> delegate;
-    NSMutableData *receivedData;
     
-    NSString *productStr;
-    NSData *verifyJsonData; // verifyCode
+    
+     // verifyCode
 }
 
 @property (assign) id delegate;
