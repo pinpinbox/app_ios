@@ -18,6 +18,11 @@
 #define kIAP_AppleSandbox @"https://sandbox.itunes.apple.com/verifyReceipt"
 #define kIAP_AppleStoreVerify @"https://buy.itunes.apple.com/verfyReceipt"
 static InAppPurchaseManager *instance =nil;
+@interface InAppPurchaseManager()
+@property(nonatomic) NSString *productStr;
+@property(nonatomic) NSMutableData *receivedData;
+@property(nonatomic) NSData *verifyJsonData;
+@end
 
 @implementation InAppPurchaseManager
 @synthesize delegate;
@@ -269,18 +274,18 @@ static InAppPurchaseManager *instance =nil;
             NSError *jsonError = nil;
             NSString *receiptBase64 = [receipt base64EncodedStringWithOptions:0];
             //NSLog(@"Receipt Base64: %@",receiptBase64);
-            verifyJsonData=nil;
-            verifyJsonData = [NSJSONSerialization dataWithJSONObject:[NSDictionary dictionaryWithObjectsAndKeys:
+            _verifyJsonData = nil;
+            _verifyJsonData = [NSJSONSerialization dataWithJSONObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                       receiptBase64,
                                                                       @"receipt-data",
                                                                       @"cfaa16887b8e44b7b6f05e9c7b86a17e",
                                                                       @"password",
                                                                       nil]
-                                                             options:NSJSONWritingPrettyPrinted
+                                                             options:0//NSJSONWritingPrettyPrinted
                                                                error:&jsonError
                               ];
             
-            //NSLog(@"送出驗證的資料為 jsonData::%@",verifyJsonData);
+            NSLog(@"送出驗證的資料為 jsonData::%@",_verifyJsonData);
             
             //NSError * error=nil;
             //            NSDictionary * parsedData = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:&error];
@@ -293,7 +298,7 @@ static InAppPurchaseManager *instance =nil;
             
             NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:requestURL];
             [req setHTTPMethod:@"POST"];
-            [req setHTTPBody:verifyJsonData];
+            [req setHTTPBody:_verifyJsonData];
             [req setTimeoutInterval: 8];
             
             NSURLSession *session = [NSURLSession sharedSession];
@@ -311,15 +316,17 @@ static InAppPurchaseManager *instance =nil;
                     id status = [logDict objectForKey:@"status"];
                     int verifyReceiptStatus = (int)[status integerValue];
                     
-                    if ((verifyReceiptStatus==0) && ([weakself->verifyJsonData length] != 0)) //status = 0 正常 and 有驗證碼
+                    if ((verifyReceiptStatus==0) && ([weakself.verifyJsonData length] != 0)) //status = 0 正常 and 有驗證碼
                     {
-                        NSString* verifyCode = [[NSString alloc] initWithData:weakself->verifyJsonData encoding:NSUTF8StringEncoding];
-                        [weakself.delegate purchaseComplete:weakself->productStr withDic:logDict appendString:verifyCode flag:0];
+                        NSString* verifyCode = [[NSString alloc] initWithData:weakself.verifyJsonData encoding:NSUTF8StringEncoding];
+                        NSLog(@"收到資料 verifyCode:%@", verifyCode);
+                        verifyCode = [verifyCode stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+                        [weakself.delegate purchaseComplete:weakself.productStr withDic:logDict appendString:verifyCode flag:0];
                     }
                     else //問題兒童 顯示購買異常
                     {
-                        NSString* verifyCode = [[NSString alloc] initWithData:weakself->verifyJsonData encoding:NSUTF8StringEncoding];
-                        [weakself->delegate purchaseComplete:weakself->productStr withDic:logDict appendString:verifyCode flag:1];
+                        NSString* verifyCode = [[NSString alloc] initWithData:weakself.verifyJsonData encoding:NSUTF8StringEncoding];
+                        [weakself->delegate purchaseComplete:weakself.productStr withDic:logDict appendString:verifyCode flag:1];
                     }
                     
                     switch([(NSHTTPURLResponse *)response statusCode]) {
@@ -374,7 +381,7 @@ static InAppPurchaseManager *instance =nil;
 {
     //NSLog(@"provideContent ?? 幹嘛呢？");
     
-    productStr = productId;
+    _productStr = productId;
     
     //    if ([productId isEqualToString:kIAP_ProductId099])
     //    {
@@ -463,7 +470,7 @@ static InAppPurchaseManager *instance =nil;
         // error!
         [self finishTransaction:transaction wasSuccessful:NO];
         
-        NSLog(@" 是 failedTransaction!!!!");
+        NSLog(@" 是 failedTransaction!!!! %d",(int)transaction.error.code);
         
         [delegate purchaseFailed:NSLocalizedString(@"StoreMsg_4", @"購買發生錯誤，請稍後再試")];
         [self showLoading:NO withTitle:NSLocalizedString(@"StoreMsg_4", @"購買發生錯誤，請稍後再試")];
