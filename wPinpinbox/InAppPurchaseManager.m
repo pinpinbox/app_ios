@@ -323,7 +323,6 @@ static InAppPurchaseManager *instance =nil;
                     {
                         NSString* verifyCode = [[NSString alloc] initWithData:weakself.verifyJsonData encoding:NSUTF8StringEncoding];
                         NSLog(@"收到資料 verifyCode:%@", verifyCode);
-                        verifyCode = [verifyCode stringByReplacingOccurrencesOfString:@"+" withString:@" "];
                         [weakself.delegate purchaseComplete:weakself.productStr withDic:logDict appendString:verifyCode flag:0];
                     }
                     else //問題兒童 顯示購買異常
