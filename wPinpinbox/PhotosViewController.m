@@ -1172,7 +1172,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     config.timeoutIntervalForResource = [kTimeOutForPhoto floatValue];
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration: config];
-    __block typeof(hud) whud = hud;
+    
     __block typeof(self) wself = self;
     dataTask = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
@@ -1180,8 +1180,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         if (error) {
             NSLog(@"dataTaskWithRequest error: %@", error);
             dispatch_async(dispatch_get_main_queue(), ^{
-                whud.detailsLabel.text = @"網路不穩";
-                whud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+                wself->hud.detailsLabel.text = @"網路不穩";
+                wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
             });
             dispatch_semaphore_signal(semaphore);
             return;
@@ -1218,14 +1218,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                 imageInfoArray = nil;
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    whud.detailsLabel.text = @"";
+                    wself->hud.detailsLabel.text = @"";
                 });
             } else {
                 NSLog(@"Error Message: %@", dic[@"message"]);
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    whud.detailsLabel.text = @"網路不穩";
-                    whud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+                    wself->hud.detailsLabel.text = @"網路不穩";
+                    wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
                 });
             }
         }
@@ -1238,7 +1238,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        whud.label.text = [NSString stringWithFormat: @"%ld 張照片上傳完成", (long)wself->photoFinished];
+        wself->hud.label.text = [NSString stringWithFormat: @"%ld 張照片上傳完成", (long)wself->photoFinished];
     });
     
     return str;

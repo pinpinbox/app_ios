@@ -286,7 +286,7 @@
 - (void)getUrPoints {
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    __block typeof(datakey) wd = datakey;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *pointstr = [boxAPI geturpoints: [userPrefs objectForKey: @"id"]
                                  token: [userPrefs objectForKey: @"token"]];
@@ -319,7 +319,7 @@
                     self.userPointLabel.text = str;
                     
                     [InAppPurchaseManager getInstance].delegate = self;
-                    [InAppPurchaseManager getInstance].priceid = wd;//datakey;
+                    [InAppPurchaseManager getInstance].priceid = wself->datakey;//datakey;
                     [[InAppPurchaseManager getInstance] loadStore]; //讀取商店資訊
                 }
             }
@@ -667,12 +667,11 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(selectProductId) sid = selectProductId;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){        
         NSString *response = [boxAPI getpayload: [wTools getUserID]
                                           token: [wTools getUserToken]
-                                      productid: sid];
+                                      productid: wself->selectproductid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -706,7 +705,7 @@
                         wself.orderid = dic[@"data"];
                         NSLog(@"orderid: %@", wself.orderid);
                         
-                        [[InAppPurchaseManager getInstance] purchaseProUpgrade2:sid];
+                        [[InAppPurchaseManager getInstance] purchaseProUpgrade2:wself->selectproductid];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
@@ -794,11 +793,11 @@
     NSLog(@"finishPurchase");
     //[wTools ShowMBProgressHUD];
     NSLog(@"after wTools ShowMBProgressHUD");
-    __block typeof(_orderid) oid = _orderid;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI finishpurchased: [wTools getUserID]
                                                token: [wTools getUserToken]
-                                             orderid: oid
+                                             orderid: wself->_orderid
                                        dataSignature: str];
         
         dispatch_async(dispatch_get_main_queue(), ^{

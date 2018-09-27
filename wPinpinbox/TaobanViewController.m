@@ -107,11 +107,10 @@
 -(void)buyapi{
     
     [wTools ShowMBProgressHUD];
-    __block typeof(_temolateid) tid = _temolateid;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString * Pointstr=[boxAPI buytemplate:[wTools getUserID] token:[wTools getUserToken] templateid:tid];
+        NSString * Pointstr=[boxAPI buytemplate:[wTools getUserID] token:[wTools getUserToken] templateid:wself->_temolateid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -174,11 +173,10 @@
     //新增相本id
     
     [wTools ShowMBProgressHUD];
-    __block typeof(_temolateid) tid = _temolateid;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *respone=[boxAPI insertalbumofdiy:[wTools getUserID] token:[wTools getUserToken] template_id:tid];
+        NSString *respone=[boxAPI insertalbumofdiy:[wTools getUserID] token:[wTools getUserToken] template_id:wself->_temolateid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
