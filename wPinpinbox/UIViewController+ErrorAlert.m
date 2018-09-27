@@ -13,6 +13,8 @@
 @implementation UIViewController(ErrorAlert)
 //  return a simple error alert with one close button (firstPink)
 + (CustomIOSAlertView * _Nullable)getCustomErrorAlert: (NSString * _Nonnull)msg {
+    if ([msg length] < 1)
+        msg = @"請稍後再試";
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
     //[errorAlertView setContainerView: [self createErrorContainerView: msg]];
     [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];

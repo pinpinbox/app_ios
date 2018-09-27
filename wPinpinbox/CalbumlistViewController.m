@@ -350,12 +350,14 @@
         }
         int s=0;
         NSArray *list = [dic objectForKey:@"data"];
+        NSSet *set = [NSSet setWithArray:list];
+        NSArray *alist = [set allObjects];
         s = (int)[list count];
 //        for (NSMutableDictionary *picture in [dic objectForKey:@"data"]) {
 //            s++;
 //            [dataarr addObject: picture];
 //        }
-        [dataarr addObjectsFromArray:list];
+        [dataarr addObjectsFromArray:alist];
         nextId = nextId+s;
         // dataarr=[dic[@"data"] mutableCopy];
         
@@ -475,14 +477,17 @@
     img.imageURL = nil;
     img.image = nil;
     img.contentMode = UIViewContentModeCenter;//UIViewContentModeScaleAspectFit;
-    img.image = [UIImage imageNamed:@"123"];
     
+    img.layer.borderWidth = 0;
     if (![data[@"cover"] isKindOfClass:[NSNull class]]) {
         //[[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: img];
         //img.imageURL = [NSURL URLWithString:data[@"cover"]];
         [img sd_setImageWithURL: [NSURL URLWithString:data[@"cover"]]];
     } else {
         img.imageURL = nil;
+        
+        img.layer.borderColor = [UIColor thirdGrey].CGColor;
+        img.layer.borderWidth = 1;
     }
     img.layer.masksToBounds = YES;
     img.layer.cornerRadius = 6;
@@ -617,7 +622,9 @@
     
     return Cell;
 }
-
+- (void)checkRefreshContent {
+    [self reloaddata];
+}
 -(void)reloadData {
     nextId = 0;
     isLoading = NO;
@@ -727,9 +734,21 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 - (void)refreshCellAtIndex:(NSInteger) index {
+    NSDictionary *d1 = dataarr[index];
+    NSDictionary *data = dataarr[index][@"album"];
+    NSMutableDictionary *nd = [NSMutableDictionary dictionaryWithDictionary:data];
+    NSString  *z = nd[@"act"];
+    if ( [z isEqualToString:@"close"])
+        nd[@"act"] = @"open";
+    else
+        nd[@"act"] = @"close";
+    NSMutableDictionary *nd1 = [NSMutableDictionary dictionaryWithDictionary:d1];
+    [nd1 setObject:nd forKey:@"album"];
+    [dataarr replaceObjectAtIndex:index withObject:nd1];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        //[self.collectioview reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
-        [self reloaddata];
+        [self.collectioview reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
+        //[self reloaddata];
     });
 }
 #pragma mark - GHMenu Methods
@@ -1790,6 +1809,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSDictionary *data = dataarr[index][@"album"];
         switch (action) {
             case OPEdit:{
+                //  for refreshing album list
+                nextId = 0;
+                isLoading = NO;
+                
                 NSDictionary *co = dataarr[index][@"cooperation"];
                 NSDictionary *user = dataarr[index][@"user"];
                 BOOL isSelfWork = [[user[@"user_id"] stringValue] isEqualToString:[wTools getUserID]];
@@ -1824,6 +1847,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             case OPDelete:
                 break;
             case OPInvite: {
+                //  for refreshing album list
+                nextId = 0;
+                isLoading = NO;
+                
                 NSDictionary *co = dataarr[index][@"cooperation"];
                 NSDictionary *user = dataarr[index][@"user"];
                 BOOL isSelfWork = [[user[@"user_id"] stringValue] isEqualToString:[wTools getUserID]];

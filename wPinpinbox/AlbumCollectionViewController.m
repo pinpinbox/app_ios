@@ -90,7 +90,14 @@
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = YES;
-    }        
+    }
+    
+    [self.pageMenu.controllerArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[CalbumlistViewController class]]) {
+            CalbumlistViewController *v = (CalbumlistViewController *)obj;
+            [v checkRefreshContent];
+        }
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

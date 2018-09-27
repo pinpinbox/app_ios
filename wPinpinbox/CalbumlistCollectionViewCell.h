@@ -14,7 +14,8 @@ typedef NS_ENUM(NSInteger, OpMenuActionType){
     OPEdit,
     OPInvite,
     OPShare,
-    OPDelete
+    OPDelete,
+    OPNone
 };
 
 @protocol CalbumlistDelegate <NSObject>

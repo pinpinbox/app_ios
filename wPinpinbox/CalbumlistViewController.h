@@ -32,4 +32,5 @@
 
 @property (nonatomic) NSInteger collectionType;
 @property (weak) id <CalbumlistViewControllerDelegate> delegate;
+- (void)checkRefreshContent;
 @end
