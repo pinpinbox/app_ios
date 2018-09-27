@@ -3127,13 +3127,18 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     return [string dataUsingEncoding:NSUTF8StringEncoding];
 }
-
++ (NSString *)encodingByAddingPercentage:(NSString *)str {
+    NSMutableCharacterSet *charset = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
+    [charset removeCharactersInString:@"/?@!$&'()*+,;="];
+    NSString *result = [str stringByAddingPercentEncodingWithAllowedCharacters:charset];
+    return result;
+}
 + (NSString *)percentEscapeString:(NSString *)string
 {
     //NSLog(@"percentEscapeString");
     //NSLog(@"string: %@", string);
 
-    NSString *result = [string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSString *result = [boxAPI encodingByAddingPercentage:string];//[string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 //    NSString *result = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
 //                                                                                 (CFStringRef)string,
 //                                                                                 (CFStringRef)@" ",
