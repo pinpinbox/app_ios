@@ -134,6 +134,12 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     gai.trackUncaughtExceptions = YES;
     gai.logger.logLevel = kGAILogLevelVerbose;
     
+#if(DEBUG)
+    gai.dryRun = NO;
+#else
+    gai.dryRun = YES;
+#endif
+    
     NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
     
     FlurrySessionBuilder* builder = [[[[[FlurrySessionBuilder new]
