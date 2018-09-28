@@ -330,7 +330,8 @@
                     
                     NSLog(@"dic: %@", dic);
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [wself processCalbumlist:dic];
+                        __strong typeof(wself) ss = wself;
+                        [ss processCalbumlist:dic];
                     });
                 }
             }else{
@@ -349,15 +350,17 @@
         }
         int s=0;
         NSArray *list = [dic objectForKey:@"data"];
-        NSSet *set = [NSSet setWithArray:list];
+        [dataarr addObjectsFromArray:list];
+        NSSet *set = [NSSet setWithArray:dataarr];
         NSArray *alist = [set allObjects];
+        [dataarr setArray:alist];
         s = (int)[list count];
 //        for (NSMutableDictionary *picture in [dic objectForKey:@"data"]) {
 //            s++;
 //            [dataarr addObject: picture];
 //        }
-        [dataarr addObjectsFromArray:alist];
-        nextId = nextId+s;
+        
+        nextId = [dataarr count];//nextId+s;
         // dataarr=[dic[@"data"] mutableCopy];
         
         //NSLog(@"dataarr: %@", dataarr);

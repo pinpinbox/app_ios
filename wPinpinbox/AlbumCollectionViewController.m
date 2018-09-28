@@ -93,7 +93,8 @@
     }
     __block typeof(self) wself = self;
     [self.pageMenu.controllerArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (idx == wself.pageMenu.currentPageIndex) {
+        if (idx == wself.pageMenu.currentPageIndex)
+        {
             if ([obj isKindOfClass:[CalbumlistViewController class]]) {
                 CalbumlistViewController *v = (CalbumlistViewController *)obj;
                 [v checkRefreshContent];
@@ -164,6 +165,7 @@
     if (self.pageMenu != nil) return;
     NSLog(@"");
     NSLog(@"createPageMenu");
+    self.pageMenu.delegate = self;
     // ViewController Array Setup
     CalbumlistViewController *myVC = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CalbumlistViewController"];
     myVC.title = @"";
