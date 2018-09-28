@@ -43,7 +43,6 @@
 		54331AAE1FE6BF1B005E6ACE /* PointCalculationVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54331AAD1FE6BF1B005E6ACE /* PointCalculationVC.storyboard */; };
 		543B11A7205619A900111102 /* ZOZolaZoomTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 543B11A5205619A900111102 /* ZOZolaZoomTransition.m */; };
 		543B11AA20561ACA00111102 /* ExchangeStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 543B11A920561ACA00111102 /* ExchangeStuff.m */; };
-		543D649B1F9F4DE10092AF2F /* SendingPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 543D649A1F9F4DE10092AF2F /* SendingPhoto.m */; };
 		543FC4F920EB24320090DF43 /* MoreTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 543FC4F820EB24320090DF43 /* MoreTabViewController.m */; };
 		544DA7C41F4B271C00E80C45 /* MapShowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 544DA7C21F4B271C00E80C45 /* MapShowingViewController.m */; };
 		544DA7C51F4B271C00E80C45 /* MapShowingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 544DA7C31F4B271C00E80C45 /* MapShowingViewController.xib */; };
@@ -424,8 +423,6 @@
 		543B11A6205619A900111102 /* ZOZolaZoomTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOZolaZoomTransition.h; sourceTree = "<group>"; };
 		543B11A820561ACA00111102 /* ExchangeStuff.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExchangeStuff.h; sourceTree = "<group>"; };
 		543B11A920561ACA00111102 /* ExchangeStuff.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExchangeStuff.m; sourceTree = "<group>"; };
-		543D64991F9F4DE10092AF2F /* SendingPhoto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SendingPhoto.h; sourceTree = "<group>"; };
-		543D649A1F9F4DE10092AF2F /* SendingPhoto.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SendingPhoto.m; sourceTree = "<group>"; };
 		543FC4F720EB24320090DF43 /* MoreTabViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MoreTabViewController.h; sourceTree = "<group>"; };
 		543FC4F820EB24320090DF43 /* MoreTabViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoreTabViewController.m; sourceTree = "<group>"; };
 		544DA7C11F4B271C00E80C45 /* MapShowingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapShowingViewController.h; sourceTree = "<group>"; };
@@ -2346,8 +2343,6 @@
 		929ED4AA1B788F3500D21CF0 /* 相片選擇 */ = {
 			isa = PBXGroup;
 			children = (
-				543D64991F9F4DE10092AF2F /* SendingPhoto.h */,
-				543D649A1F9F4DE10092AF2F /* SendingPhoto.m */,
 				92F6CCE31B79BAD8002E547C /* PhotosViewController.h */,
 				92F6CCE41B79BAD8002E547C /* PhotosViewController.m */,
 				54C67FB020177D6800F56F47 /* PhotosVC.storyboard */,
@@ -2907,7 +2902,6 @@
 				540636292050DEAB004C9F21 /* CheckExchangeViewController.m in Sources */,
 				63C375BD1EB9E44A000C7FC1 /* CreatorCollectionReusableView.m in Sources */,
 				540DE2A920281C5C0090F584 /* ChangeInterestsViewController.m in Sources */,
-				543D649B1F9F4DE10092AF2F /* SendingPhoto.m in Sources */,
 				630A83DF1EB1D07300AC8479 /* MyFlowLayout.m in Sources */,
 				6370022D1D86B48900825EF5 /* ChooseVideoViewController.m in Sources */,
 				9260370D1B81D223009B3B5A /* UIImage+Rotation.m in Sources */,

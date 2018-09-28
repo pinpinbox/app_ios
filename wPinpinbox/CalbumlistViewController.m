@@ -172,7 +172,7 @@
     //[wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 1.0]];
     //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
     
-    //[_collectioview reloadData];    
+    //[_collectioview reloadData];
     //[self refresh];
     [self reloaddata];
 }
@@ -296,14 +296,13 @@
     
     [wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
-    __block typeof(type) wt = type;
     NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSArray *arr = @[@"mine",@"other",@"cooperation"];
         NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
                                              token: [wTools getUserToken]
-                                              rank: arr[wt]//type]
+                                              rank: arr[wself->type]//type]
                                              limit: limit];
         
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -623,7 +622,8 @@
     return Cell;
 }
 - (void)checkRefreshContent {
-    [self reloaddata];
+    [dataarr removeAllObjects];
+    [self reloadData];
 }
 -(void)reloadData {
     nextId = 0;

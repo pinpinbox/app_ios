@@ -42,12 +42,11 @@
     tmpAdduserid=[NSMutableArray new];
     
     [wTools ShowMBProgressHUD];
-    __block typeof(_albumid) aid = _albumid;
-    __block typeof(tmpAdduserid) tmpAdduser = tmpAdduserid;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSMutableDictionary *data=[NSMutableDictionary new];
-        [data setObject:aid forKey:@"type_id"];
+        [data setObject:wself->_albumid forKey:@"type_id"];
         [data setObject:@"album" forKey:@"type"];
         
         NSString *respone=[boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
@@ -63,7 +62,7 @@
                 
                 if ([dic[@"result"] intValue] == 1) {
                     for (NSDictionary *udic in dic[@"data"]) {
-                        [tmpAdduser addObject:[udic[@"user"][@"user_id"] stringValue]];
+                        [wself->tmpAdduserid addObject:[udic[@"user"][@"user_id"] stringValue]];
                     }
                 } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);

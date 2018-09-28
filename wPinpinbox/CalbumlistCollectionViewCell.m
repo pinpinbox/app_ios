@@ -206,7 +206,7 @@
     }
     
     [wTools ShowMBProgressHUD];
-    __block typeof(self.delegate) wdelegate = self.delegate;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *respone = [boxAPI delalbum:[wTools getUserID] token:[wTools getUserToken] albumid:albumid];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -216,7 +216,7 @@
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
                 if ([dic[@"result"] intValue] == 1) {
-                    [wdelegate reloadData];
+                    [wself.delegate reloadData];
                 } else if ([dic[@"result"] intValue] == 0) {
                     //                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
                     //                    Remind *rv=[[Remind alloc]initWithFrame:app.window.bounds];
@@ -228,7 +228,7 @@
                         
                         [customAlertView close];
                     }];
-                    [wdelegate reloadData];
+                    [wself.delegate reloadData];
                 } else {
                     
                     //                    AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -240,7 +240,7 @@
                         
                         [customAlertView close];
                     }];
-                    [wdelegate reloadData];
+                    [wself.delegate reloadData];
                 }
             }
         });

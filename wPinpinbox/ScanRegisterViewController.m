@@ -412,10 +412,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     }
     
     __block typeof(self) wself = self;
-    __block typeof(businessUserId) bid = businessUserId;
-    __block typeof(timeStamp) wtimestamp = timeStamp;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI buisnessSubUserFastRegister: bid fbId: fbId timeStamp: wtimestamp param: jsonStr];
+        NSString *response = [boxAPI buisnessSubUserFastRegister: wself->businessUserId fbId: fbId timeStamp: wself->timeStamp param: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

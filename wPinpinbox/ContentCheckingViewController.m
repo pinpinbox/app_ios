@@ -967,7 +967,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"retrieveAlbum");
     [wTools ShowMBProgressHUD];
     __block typeof(self.albumId) aid = self.albumId;
-    __block typeof(oldCurrentPage) opage = oldCurrentPage;
+    
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrievealbump: aid//self.albumId
@@ -1007,8 +1007,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self checkIsOwnedOrNot: dic[@"data"]];
                         
                         [self getGoogleAPI];
-                        [self checkLocationBtn: opage];
-                        [self checkAudio: opage];
+                        [self checkLocationBtn: wself->oldCurrentPage];
+                        [self checkAudio: wself->oldCurrentPage];
                         [self.imageScrollCV reloadData];
                         [self.thumbnailImageScrollCV reloadData];
                         
@@ -1026,7 +1026,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                 
                                 // To old current page
                                 NSLog(@"To old current page");
-                                indexPath = [NSIndexPath indexPathForItem: opage inSection: 0];
+                                indexPath = [NSIndexPath indexPathForItem: wself->oldCurrentPage inSection: 0];
                                 [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
                                 [self.thumbnailImageScrollCV reloadData];
                             }
@@ -1047,15 +1047,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                 self.descriptionScrollView.alpha = 1;
                                 
                                 // Cell need to be successfully initialized then can play
-                                NSLog(@"oldCurrentPage: %lu", (unsigned long)opage);
-                                [self checkVideo: opage];
+                                NSLog(@"oldCurrentPage: %lu", (unsigned long)wself->oldCurrentPage);
+                                [self checkVideo: wself->oldCurrentPage];
                                 
                                 // cell.giftViewBgV need to be successfully initialized then can play
-                                NSIndexPath *indexPath = [NSIndexPath indexPathForItem: opage inSection: 0];
+                                NSIndexPath *indexPath = [NSIndexPath indexPathForItem: wself->oldCurrentPage inSection: 0];
                                 ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
                                 NSLog(@"cell: %@", cell);
                                 NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
-                                [self checkSlotAndExchangeInfo: opage];
+                                [self checkSlotAndExchangeInfo: wself->oldCurrentPage];
                             }];
                             
                             [self textViewContentSetup: [self getCurrentPage]];
@@ -2103,7 +2103,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)getPoint: (NSString *)pointStr {
     NSLog(@"getPoint");
     [wTools ShowMBProgressHUD];
-    __block typeof(albumPoint) ap = albumPoint;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [wTools getUserID] token: [wTools getUserToken]];
@@ -2129,9 +2128,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     if ([dic[@"result"] intValue] == 1) {
                         NSInteger point = [dic[@"data"] integerValue];
                         NSLog(@"point: %ld", (long)point);
-                        NSLog(@"albumPoint: %ld", (long)ap);
+                        NSLog(@"albumPoint: %ld", (long)wself->albumPoint);
                         
-                        if (point >= ap) {
+                        if (point >= wself->albumPoint) {
                             NSLog(@"point is bigger than albumPoint");
                             [wself newBuyAlbum: pointStr];
                         } else {
@@ -2586,22 +2585,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(task_for) task = task_for;
-    __block typeof(self.albumId) aid = self.albumId;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI doTask2: [wTools getUserID]
                                        token: [wTools getUserToken]
-                                    task_for: task
+                                    task_for: wself->task_for
                                     platform: @"apple"
                                         type: @"album"
-                                     type_id: aid];
+                                     type_id: wself.albumId];
         
         NSLog(@"User ID: %@", [wTools getUserID]);
         NSLog(@"Token: %@", [wTools getUserToken]);
-        NSLog(@"Task_For: %@", task);
-        NSLog(@"Album ID: %@", aid);
+        NSLog(@"Task_For: %@", wself->task_for);
+        NSLog(@"Album ID: %@", wself.albumId);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -3715,8 +3712,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         };
         //__block NSString *inputText = inputField.text;
         __block typeof(inputField) input = inputField;
-        __block typeof(albumPoint) ap = albumPoint;
-        __block typeof(userPoint) up = userPoint;
         __block typeof(self) wself = self;
         cell.sponsorBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
             NSString *inputText = input.text;
@@ -3733,20 +3728,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                style: style];
                 
                 [input resignFirstResponder];
-            } else if ([inputText intValue] < ap) {
+            } else if ([inputText intValue] < wself->albumPoint) {
                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                 style.messageColor = [UIColor whiteColor];
                 style.backgroundColor = [UIColor thirdPink];
                 
-                [wself.view makeToast: [NSString stringWithFormat: @"最低額度：%lu", (unsigned long)ap]
+                [wself.view makeToast: [NSString stringWithFormat: @"最低額度：%lu", (unsigned long)wself->albumPoint]
                             duration: 2.0
                             position: CSToastPositionBottom
                                style: style];
                 
                 [input resignFirstResponder];
             } else {
-                [wself checkBuyingAlbum: ap
-                             userPoint: up];
+                [wself checkBuyingAlbum: wself->albumPoint
+                             userPoint: wself->userPoint];
             }
         };
         

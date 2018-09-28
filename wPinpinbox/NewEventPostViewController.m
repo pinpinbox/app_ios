@@ -836,13 +836,12 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(_eventId) eid = _eventId;
-    __block NSString *aid = [dict valueForKey: @"albumId"];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSString *aid = [wself->dict valueForKey: @"albumId"];
         NSString *response = [boxAPI switchstatusofcontribution: [wTools getUserID]
                                                           token: [wTools getUserToken]
-                                                       event_id: eid
+                                                       event_id: wself->_eventId
                                                        album_id: aid];
         
         dispatch_async(dispatch_get_main_queue(), ^{

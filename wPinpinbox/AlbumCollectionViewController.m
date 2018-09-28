@@ -91,11 +91,13 @@
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = YES;
     }
-    
+    __block typeof(self) wself = self;
     [self.pageMenu.controllerArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[CalbumlistViewController class]]) {
-            CalbumlistViewController *v = (CalbumlistViewController *)obj;
-            [v checkRefreshContent];
+        if (idx == wself.pageMenu.currentPageIndex) {
+            if ([obj isKindOfClass:[CalbumlistViewController class]]) {
+                CalbumlistViewController *v = (CalbumlistViewController *)obj;
+                [v checkRefreshContent];
+            }
         }
     }];
 }

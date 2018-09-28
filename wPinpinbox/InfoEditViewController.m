@@ -852,7 +852,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    __block typeof(selectImage) simage = selectImage;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //NSString *response = [boxAPI updateprofile: [wTools getUserID] token: [wTools getUserToken] data: data];
         NSString *response = [boxAPI updateUser: [wTools getUserID] token: [wTools getUserToken] param: jsonStr];
@@ -884,7 +884,7 @@
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"dic: %@", dic);
                         
-                        if (simage == nil) {
+                        if (wself->selectImage == nil) {
                             NSLog(@"update 1");
                             
                             [self checkPointTask];

@@ -725,13 +725,12 @@ sourceController:(UIViewController *)source
     NSLog(@"limit: %@", limit);
     
     [data setValue: limit forKey: @"limit"];
-    __block typeof(rankType) rtype = rankType;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI updatelist: [wTools getUserID]
                                           token: [wTools getUserToken]
                                            data: data
-                                           rank: rtype];
+                                           rank: wself->rankType];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

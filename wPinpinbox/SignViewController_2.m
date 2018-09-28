@@ -261,13 +261,13 @@
         return;
     }
     [wTools ShowMBProgressHUD];
-    __block typeof(_facebookID) fid = _facebookID;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *email = @"";
-        if (fid == nil) {
+        if (wself->_facebookID == nil) {
             email=tmp[@"email"];
         }else{
-            email= fid;
+            email= wself->_facebookID;
         }
         NSString *respone=[boxAPI requsetsmspwd:tmp[@"phone"] Account:email];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -277,8 +277,8 @@
                  NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 if ([dic[@"result"] intValue] == 1) {
                    SignViewController_3 *sv3= [[UIStoryboard storyboardWithName:@"SignVC_3" bundle:nil]instantiateViewControllerWithIdentifier:@"SignViewController_3"];
-                    if (fid!=nil) {
-                        sv3.facebookID=fid;
+                    if (wself->_facebookID!=nil) {
+                        sv3.facebookID=wself->_facebookID;
                     }
                     [self.navigationController pushViewController:sv3 animated:YES];
                 } else if ([dic[@"result"] intValue] == 0) {
