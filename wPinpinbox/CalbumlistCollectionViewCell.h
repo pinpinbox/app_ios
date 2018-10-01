@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, OpMenuActionType){
 @property (nonatomic, assign) BOOL zipped;
 @property (nonatomic, assign) NSInteger dataIndex;
 
-@property (weak, nonatomic) IBOutlet UITextView *descTextView;
+@property (weak, nonatomic) IBOutlet UILabel *descLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *opMenuLeading;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *opShareLeading;
 @property (weak, nonatomic) IBOutlet UIView *opMenu;

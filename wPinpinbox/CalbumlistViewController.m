@@ -358,17 +358,16 @@
             [dataarr removeAllObjects];//=[NSMutableArray new];
         }
         int s=0;
-        NSArray *list = [dic objectForKey:@"data"];
-        [dataarr addObjectsFromArray:list];
-        NSSet *set = [NSSet setWithArray:dataarr];
-        NSArray *alist = [set allObjects];
-        [dataarr setArray:alist];
-        s = (int)[list count];
-//        for (NSMutableDictionary *picture in [dic objectForKey:@"data"]) {
-//            s++;
-//            [dataarr addObject: picture];
-//        }
+        NSMutableArray *ar = [NSMutableArray arrayWithArray:dataarr];
         
+        NSArray *list = [dic objectForKey:@"data"];
+        [ar addObjectsFromArray:list];
+        NSOrderedSet *nset = [NSOrderedSet orderedSetWithArray:ar];
+        
+        [dataarr setArray:[nset array]];//addObjectsFromArray:list];
+        
+        
+        s = (int)[list count];
         nextId = [dataarr count];//nextId+s;
         // dataarr=[dic[@"data"] mutableCopy];
         
@@ -456,10 +455,12 @@
         //img.imageURL = [NSURL URLWithString:data[@"cover"]];
         [img sd_setImageWithURL: [NSURL URLWithString:data[@"cover"]]];
     } else {
+        img.contentMode = UIViewContentModeScaleAspectFit;
         img.imageURL = nil;
+        img.image = [UIImage imageNamed:@"bg_2_0_0_no_image"];//nil;
         
-        img.layer.borderColor = [UIColor thirdGrey].CGColor;
-        img.layer.borderWidth = 1;
+        //img.layer.borderColor = [UIColor thirdGrey].CGColor;
+        //img.layer.borderWidth = 1;
     }
     img.layer.masksToBounds = YES;
     img.layer.cornerRadius = 6;
@@ -486,7 +487,7 @@
         Cell.lockBtn.hidden = NO;
         if (![data[@"act"] isEqualToString: @"open"]) {
             //img.alpha = 0.3;
-            [Cell.lockBtn setImage:[UIImage imageNamed: @"ic200_act_close_pink"] forState:UIControlStateNormal];//image = ;
+            [Cell.lockBtn setImage:[UIImage imageNamed: @"ic200_act_close_white"] forState:UIControlStateNormal];//image = ;
             [Cell.lockBtn setTintColor:[UIColor firstPink]];
             //Cell.unfinishedLabel.hidden = NO;
         } else {
@@ -526,40 +527,11 @@
     NSLog(@"");
     NSLog(@"data: %@", data);
     
-    NSString *myString=[NSString stringWithFormat:@"    %@",data[@"name"]];
+    NSString *myString=[NSString stringWithFormat:@"%@",data[@"name"]];//[NSString stringWithFormat:@"    %@",data[@"name"]];
     
-    //NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:11]};
-    //CGSize size = [myString boundingRectWithSize:CGSizeMake(111, MAXFLOAT) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+    Cell.descLabel.numberOfLines = 0;
+    Cell.descLabel.text = myString;
     
-    //UILabel *label=(UILabel *)[Cell.bgview viewWithTag:1111];
-    
-//    if (label==nil) {
-//        //label=[[UILabel alloc]initWithFrame:CGRectMake(8, 230, 111, 0)];
-//        label.font = [UIFont systemFontOfSize:11];
-//        label.textColor = [UIColor colorWithRed:(float)110/255 green:(float)110/255 blue:(float)110/255 alpha:1.0];
-//        //label.tag = 1111;
-//        //label.numberOfLines=0;
-//        label.numberOfLines = 4;
-//        label.lineBreakMode = NSLineBreakByTruncatingTail;
-//        //[Cell.bgview addSubview:label];
-//    }
-    
-    NSLog(@"myString: %@", myString);
-    //NSLog(@"size.height: %f", size.height);
-    
-    // If line height is higher than 60 then set it to 60 for 4 lines.
-//    if (size.height > 60) {
-//        label.frame=CGRectMake(label.frame.origin.x, label.frame.origin.y, 111, 60);
-//    } else {
-//        label.frame=CGRectMake(label.frame.origin.x, label.frame.origin.y, 111, size.height);
-//    }
- 
-    //label.frame=CGRectMake(label.frame.origin.x, label.frame.origin.y, 111, 100);
-    //label.text = myString;
-    Cell.descTextView.text = myString;
-    Cell.descTextView.textContainerInset = UIEdgeInsetsZero;
-    Cell.descTextView.textContainer.lineBreakMode = NSLineBreakByCharWrapping;
-    //[Cell.descTextView sizeToFit];
     //個人資料
     NSDictionary *userdata=dataarr[indexPath.row][@"user"];
     //  convert to NSString first
@@ -715,12 +687,20 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 //}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    if (isLoading)
+//        return;
+//
+//    if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
+//        [self reloaddata];
+//    }
+}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (isLoading)
         return;
     
-    if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
-        [self reloaddata];
-    }
+    //if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
+    [self reloaddata];
+    //}
 }
 - (void)refreshCellAtIndex:(NSInteger) index {
     NSDictionary *d1 = dataarr[index];
@@ -1706,6 +1686,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 #pragma mark - change album act with albumid & index
 - (void)changeAlbumAct:(NSString *)albumid index:(NSInteger)index {
+    if (self.collectionType != 0) {
+        return;
+    }
+    
     if (index < dataarr.count) {
         NSDictionary *data = dataarr[index][@"album"];
         NSString *al = [data[@"album_id"] stringValue];

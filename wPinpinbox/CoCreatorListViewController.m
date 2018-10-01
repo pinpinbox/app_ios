@@ -238,7 +238,7 @@
     UIBarButtonItem *l = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_arrow_left_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onBackButton:)];
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc]initWithCustomView:self.searchView];
-    UIBarButtonItem *r1 = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_scancamera_darknav"] style:UIBarButtonItemStylePlain target:self action:@selector(onShowQRCode:)];
+    UIBarButtonItem *r1 = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ic200_scan_dark"] style:UIBarButtonItemStylePlain target:self action:@selector(onShowQRCode:)];
     r1.title = @"";
     l.title = @"";
     l.tintColor = [UIColor firstGrey];
