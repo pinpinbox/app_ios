@@ -34,11 +34,11 @@ typedef NS_ENUM(NSInteger, OpMenuActionType){
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UIView *bgview;
 @property (weak, nonatomic) IBOutlet AsyncImageView *picture;
-@property (weak, nonatomic) IBOutlet UILabel *mytitle;
+//@property (weak, nonatomic) IBOutlet UILabel *mytitle;
 @property (weak, nonatomic) IBOutlet UILabel *mydate;
-@property (weak, nonatomic) IBOutlet UIView *stopview;
+//@property (weak, nonatomic) IBOutlet UIView *stopview;
 @property (weak, nonatomic) IBOutlet UIButton *lockBtn;
-@property (weak, nonatomic) IBOutlet UILabel *unfinishedLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *unfinishedLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *coopConstraint;
 
 @property (nonatomic) NSString *templateid;
@@ -49,8 +49,9 @@ typedef NS_ENUM(NSInteger, OpMenuActionType){
 @property (nonatomic, assign) BOOL zipped;
 @property (nonatomic, assign) NSInteger dataIndex;
 
-@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UITextView *descTextView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *opMenuLeading;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *opShareLeading;
 @property (weak, nonatomic) IBOutlet UIView *opMenu;
 @property (weak, nonatomic) IBOutlet UIButton *opMenuClose;
 @property (weak, nonatomic) IBOutlet UIButton *opMenuEdit;
@@ -66,4 +67,5 @@ typedef NS_ENUM(NSInteger, OpMenuActionType){
 - (void)coopAlbumMode;
 - (void)favAlbumMode;
 - (void)setCoopNumber:(int)number;
+- (BOOL)isOpMode;
 @end

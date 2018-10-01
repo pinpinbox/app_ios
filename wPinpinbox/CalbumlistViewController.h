@@ -26,9 +26,9 @@
     __weak IBOutlet UILabel *wtitle;
 }
 @property (weak, nonatomic) IBOutlet UICollectionView *collectioview;
-@property (weak, nonatomic) IBOutlet UIButton *btn1;
-@property (weak, nonatomic) IBOutlet UIButton *btn2;
-@property (weak, nonatomic) IBOutlet UIButton *btn3;
+//@property (weak, nonatomic) IBOutlet UIButton *btn1;
+//@property (weak, nonatomic) IBOutlet UIButton *btn2;
+//@property (weak, nonatomic) IBOutlet UIButton *btn3;
 
 @property (nonatomic) NSInteger collectionType;
 @property (weak) id <CalbumlistViewControllerDelegate> delegate;

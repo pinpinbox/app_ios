@@ -140,13 +140,13 @@
     [_collectioview addSubview:_refreshControl];
     _collectioview.alwaysBounceVertical=YES;
     
-    [_btn1 setTitle:NSLocalizedString(@"FavText-myWorks", @"") forState:UIControlStateNormal];
-    [_btn2 setTitle:NSLocalizedString(@"FavText-otherFav", @"") forState:UIControlStateNormal];
-    [_btn3 setTitle:NSLocalizedString(@"FavText-publicFav", @"") forState:UIControlStateNormal];
-    
-    _btn1.exclusiveTouch=YES;
-    _btn2.exclusiveTouch=YES;
-    _btn3.exclusiveTouch=YES;
+//    [_btn1 setTitle:NSLocalizedString(@"FavText-myWorks", @"") forState:UIControlStateNormal];
+//    [_btn2 setTitle:NSLocalizedString(@"FavText-otherFav", @"") forState:UIControlStateNormal];
+//    [_btn3 setTitle:NSLocalizedString(@"FavText-publicFav", @"") forState:UIControlStateNormal];
+//
+//    _btn1.exclusiveTouch=YES;
+//    _btn2.exclusiveTouch=YES;
+//    _btn3.exclusiveTouch=YES;
     _collectioview.exclusiveTouch=YES;
     
     self.collectioview.showsVerticalScrollIndicator = NO;
@@ -239,41 +239,7 @@
     NSLog(@"");
     NSLog(@"btn:(UIButton *)sender");
     
-    if (!isLoadbtn) {
-        isLoadbtn=YES;
-        [_collectioview setContentOffset:CGPointMake(0, 0) animated:NO];
-        
-        [wTools ShowMBProgressHUD];
-        
-        _btn1.selected=NO;
-        _btn2.selected=NO;
-        _btn3.selected=NO;
-        
-        sender.selected=YES;
-        
-        if (_btn1==sender) {
-            type=0;
-            
-            NSLog(@"Tab Bar 1");
-            NSLog(@"我上傳的相本");
-        }else if(_btn2==sender){
-            type=1;
-            
-            NSLog(@"Tab Bar 2");
-            NSLog(@"其他收藏");
-        }else{
-            type=2;
-            
-            NSLog(@"Tab Bar 3");
-            NSLog(@"共用收藏");
-        }
-        
-        //dataarr=[NSMutableArray new];
-        nextId = 0;
-        isLoading = NO;
-        
-        [self getcalbumlist];
-    }
+    
 }
 
 -(void)reloaddata {
@@ -343,6 +309,49 @@
         //});
     });
 }
+- (void)showBackView {
+    
+    if (backview!=nil) {
+        [backview removeFromSuperview];
+        backview=nil;
+    }
+    if (dataarr.count == 0) {
+        NSLog(@"type: %ld", (long)type);
+        
+        UILabel *lab1;
+        
+        @try {
+            NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%i",(int)type+1] owner:self options:nil];
+            backview = [subviewArray objectAtIndex:0];
+            backview.frame = self.collectioview.frame;
+            [self.collectioview addSubview:backview];
+            
+            lab1=[(UILabel *)backview viewWithTag:100];
+        } @catch (NSException *exception) {
+            
+        }
+        
+        switch (type) {
+            case 0:
+                lab1.text=NSLocalizedString(@"FavText-tipCreateNow", @"");
+                break;
+            case 1:
+                lab1.text=NSLocalizedString(@"FavText-tipFindFavProducts", @"");
+                break;
+            case 2:{
+                lab1.text=NSLocalizedString(@"FavText-tipInvite", @"");
+                UILabel *lab2=[(UILabel *)backview viewWithTag:200];
+                lab2.text=NSLocalizedString(@"FavText-tipInvite2", @"");
+            }
+                break;
+            default:
+                break;
+        }
+    
+        
+    }
+}
+
 - (void)processCalbumlist:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         if (nextId==0) {
@@ -376,6 +385,9 @@
         }
         
         isreload = NO;
+        if (dataarr.count < 1) {
+            [self showBackView];
+        }
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
         [self showCustomErrorAlert: dic[@"message"]];
@@ -400,49 +412,7 @@
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView
     numberOfItemsInSection:(NSInteger)section {
-    if (backview!=nil) {
-        [backview removeFromSuperview];
-        backview=nil;
-    }
-    if (dataarr.count == 0) {
-        NSLog(@"type: %ld", (long)type);
-        
-        UILabel *lab1;
-        
-        @try {
-            NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:[NSString stringWithFormat:@"CalbumV%i",(int)type+1] owner:self options:nil];
-            backview = [subviewArray objectAtIndex:0];
-            [collectionView addSubview:backview];
-            
-            lab1=[(UILabel *)backview viewWithTag:100];
-        } @catch (NSException *exception) {
-            // Print exception information
-            NSLog( @"NSException caught" );
-            NSLog( @"Name: %@", exception.name);
-            NSLog( @"Reason: %@", exception.reason );
-            return 0;
-        }
-        
-        switch (type) {
-            case 0:
-                lab1.text=NSLocalizedString(@"FavText-tipCreateNow", @"");
-                break;
-            case 1:
-                lab1.text=NSLocalizedString(@"FavText-tipFindFavProducts", @"");
-                break;
-            case 2:{
-                lab1.text=NSLocalizedString(@"FavText-tipInvite", @"");
-                UILabel *lab2=[(UILabel *)backview viewWithTag:200];
-                lab2.text=NSLocalizedString(@"FavText-tipInvite2", @"");
-            }
-                break;
-            default:
-                break;
-        }
-        
-        return 0;
-        
-    }
+    
     return dataarr.count;
 }
 
@@ -503,24 +473,30 @@
     if ([data[@"zipped"] boolValue]) {
         //img.alpha = 1;
         Cell.lockBtn.hidden = YES;
-        Cell.unfinishedLabel.hidden = YES;
+        //Cell.unfinishedLabel.hidden = YES;
     } else {
         //img.alpha = 0.3;
         Cell.lockBtn.hidden = NO;
-        Cell.unfinishedLabel.hidden = NO;
+        //Cell.unfinishedLabel.hidden = NO;
     }
     
     
     NSLog(@"act: %@", data[@"act"]);
-    if (![data[@"act"] isEqualToString: @"open"]) {
-        //img.alpha = 0.3;
+    if (type != 1){
         Cell.lockBtn.hidden = NO;
-        [Cell.lockBtn setImage:[UIImage imageNamed: @"ic200_act_close_pink"] forState:UIControlStateNormal];//image = ;
-        Cell.unfinishedLabel.hidden = NO;
+        if (![data[@"act"] isEqualToString: @"open"]) {
+            //img.alpha = 0.3;
+            [Cell.lockBtn setImage:[UIImage imageNamed: @"ic200_act_close_pink"] forState:UIControlStateNormal];//image = ;
+            [Cell.lockBtn setTintColor:[UIColor firstPink]];
+            //Cell.unfinishedLabel.hidden = NO;
+        } else {
+            //img.alpha = 1;
+            [Cell.lockBtn setTintColor:[UIColor secondGrey]];
+            [Cell.lockBtn setImage:[UIImage imageNamed: @"ic200_act_open_white"] forState:UIControlStateNormal];//image = ;
+            //Cell.unfinishedLabel.hidden = YES;
+        }
     } else {
-        //img.alpha = 1;
         Cell.lockBtn.hidden = YES;
-        Cell.unfinishedLabel.hidden = YES;
     }
     
     
@@ -580,8 +556,10 @@
  
     //label.frame=CGRectMake(label.frame.origin.x, label.frame.origin.y, 111, 100);
     //label.text = myString;
-    Cell.descriptionLabel.text = myString;
-
+    Cell.descTextView.text = myString;
+    Cell.descTextView.textContainerInset = UIEdgeInsetsZero;
+    Cell.descTextView.textContainer.lineBreakMode = NSLineBreakByCharWrapping;
+    //[Cell.descTextView sizeToFit];
     //個人資料
     NSDictionary *userdata=dataarr[indexPath.row][@"user"];
     //  convert to NSString first
@@ -600,9 +578,9 @@
     img.layer.masksToBounds = YES;
     img.layer.cornerRadius = 12;
     
-    if (![userdata[@"name"] isEqual:[NSNull null]]) {
-        Cell.mytitle.text=userdata[@"name"];
-    }
+//    if (![userdata[@"name"] isEqual:[NSNull null]]) {
+//        Cell.mytitle.text=userdata[@"name"];
+//    }
     
     //取得資料ID
 //    NSString *name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],[data[@"album_id"] stringValue]];
@@ -625,8 +603,10 @@
     return Cell;
 }
 - (void)checkRefreshContent {
-    [dataarr removeAllObjects];
-    [self reloadData];
+    if (type != 1) {
+        [dataarr removeAllObjects];
+        [self reloadData];
+    }
 }
 -(void)reloadData {
     nextId = 0;
@@ -641,6 +621,12 @@
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
     NSLog(@"indexPath.row: %ld", (long)indexPath.row);
+    
+    
+    //  check opMenu mode of cell  //
+    CalbumlistCollectionViewCell *cell = (CalbumlistCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
+    if (cell && [cell isOpMode])
+        return;
     
     NSDictionary *data = dataarr[indexPath.row][@"album"];
     NSLog(@"data: %@", data);

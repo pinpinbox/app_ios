@@ -30,15 +30,21 @@
     self.userAvatar.userInteractionEnabled = YES;
     self.userAvatar.multipleTouchEnabled = YES;
     [self.userAvatar addGestureRecognizer:tap];
+    
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 95, [UIScreen mainScreen].bounds.size.width, 1)];
+    line.backgroundColor = [UIColor thirdGrey];
+    [self addSubview: line];
 }
 #pragma mark - arrange cell sub views by collectionViewType
 //  mode for displaying user's album list
 - (void)selfAlbumMode {
     _userAvatar.hidden = YES;
-    _opMenuDelete.enabled = YES;
-    _opMenuInvite.enabled = YES;
+    _opMenuDelete.hidden = NO;
+    _opMenuInvite.hidden = NO;
     _coopConstraint.constant = 8;
-    
+    _opMenuInvite.alpha = 1;
+    _opMenuEdit.alpha = 1;
+    _opShareLeading.constant = 158;
 }
 //  mode for displaying user's cooperator album list
 - (void)coopAlbumMode {
@@ -46,18 +52,25 @@
     _userAvatar.hidden = NO;
     _userAvatar.userInteractionEnabled = YES;
     _userAvatar.multipleTouchEnabled = YES;
-    _opMenuDelete.enabled = YES;
-    _opMenuInvite.enabled = YES;
+    _opMenuDelete.hidden = NO;
+    _opMenuInvite.hidden = NO;
     _coopConstraint.constant = 40;
+    _opMenuInvite.alpha = 1;
+    _opMenuEdit.alpha = 1;
+    _opShareLeading.constant = 158;
 }
 //  mode for displaying user's favorite album list
 - (void)favAlbumMode {
     _userAvatar.hidden = NO;
     _userAvatar.userInteractionEnabled = YES;
     _userAvatar.multipleTouchEnabled = YES;
-    _opMenuInvite.enabled = NO;
-    _opMenuEdit.enabled = NO;
+    _opMenuInvite.hidden = YES;
+    _opMenuEdit.hidden = YES;
+    _opMenuInvite.alpha = 0.3;
+    _opMenuEdit.alpha = 0.3;
+    
     _coopConstraint.constant = 40;
+    _opShareLeading.constant = 30;
 }
 - (void)setCoopNumber:(int)number{
     self.coopLabel.text = [NSString stringWithFormat:@"%00d", number];
@@ -112,6 +125,9 @@
         [self.delegate changeAlbumAct:self.albumid index:self.dataIndex];
 }
 #pragma mark - opMenu Actions
+- (BOOL)isOpMode {
+    return (self.opMenuLeading.constant == 0);
+}
 // edit
 - (IBAction)opMenuEditTap:(id)sender {
     if (self.delegate)
@@ -168,7 +184,7 @@
     alertTimeOutView.arrangeStyle = @"Horizontal";
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     alertTimeOutView.parentView = appDelegate.window;
-    [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: @"是",@"否", nil]];
+    [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消",@"刪除", nil]];
     
     [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
     [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
@@ -178,7 +194,7 @@
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         //NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         
-        if (buttonIndex == 1) {
+        if (buttonIndex == 0) {
             [weakAlertTimeOutView close];
         } else {
             [weakAlertTimeOutView close];
