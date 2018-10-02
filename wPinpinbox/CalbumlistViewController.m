@@ -29,7 +29,6 @@
 #import "UIView+Toast.h"
 #import "CreaterViewController.h"
 #import <FBSDKShareKit/FBSDKShareKit.h>
-#import "CoCreatorListViewController.h"
 #import "NewCooperationViewController.h"
 
 @interface CalbumlistCollectionViewLayout : UICollectionViewFlowLayout
