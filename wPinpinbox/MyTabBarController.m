@@ -384,6 +384,7 @@ const CGFloat kBarHeight = 56;
                         albumCreationVC.templateid = @"0";
                         albumCreationVC.choice = @"Fast";
                         albumCreationVC.isNew = YES;
+                        albumCreationVC.userIdentity = @"admin";
                         
                         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                         [appDelegate.myNav pushViewController: albumCreationVC animated: YES];
