@@ -1728,7 +1728,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSString *t = dt[@"title"];
                     NSNumber *f = dt[@"firstpaging"];
                     NSNumber *s = dt[@"secondpaging"];
-                    if (t && t.length > 0 && f && s) {
+                    if (t && t.length > 0 && ![f isKindOfClass:[NSNull class]] && ![s isKindOfClass:[NSNull class]]) {
                         [boxAPI getAlbumDiyWithAlbumId:albumid completionBlock:^(NSDictionary *result, NSError *error) {
                             if (!error) {
                                 NSDictionary *d = result[@"data"];

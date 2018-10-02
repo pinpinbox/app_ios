@@ -2551,6 +2551,10 @@ didFinishSavingWithError:(NSError *)error
     
     NSLog(@"selectItem: %ld", (long)selectItem);
     
+    NSString *str = ImageDataArr[selectItem][@"image_url"];
+    if ([str isKindOfClass:[NSNull class]]) return;
+    
+    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
