@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -117,18 +117,6 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0eE-qQ-MhU">
                                         <rect key="frame" x="324" y="16" width="35" height="453"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZxS-QF-hp3">
-                                                <rect key="frame" x="0.0" y="418" width="35" height="35"/>
-                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="35" id="JQM-IN-dX3"/>
-                                                    <constraint firstAttribute="width" constant="35" id="W8h-dO-5GP"/>
-                                                </constraints>
-                                                <state key="normal" title="Button" image="ic200_delete_white"/>
-                                                <connections>
-                                                    <action selector="deleteFile:" destination="zap-Ke-wb3" eventType="touchUpInside" id="3lR-oc-B81"/>
-                                                </connections>
-                                            </button>
                                             <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IfW-O8-TYa">
                                                 <rect key="frame" x="4" y="0.0" width="27" height="70"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -196,6 +184,18 @@
                                                     </button>
                                                 </subviews>
                                             </stackView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZxS-QF-hp3">
+                                                <rect key="frame" x="0.0" y="418" width="35" height="35"/>
+                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="35" id="JQM-IN-dX3"/>
+                                                    <constraint firstAttribute="width" constant="35" id="W8h-dO-5GP"/>
+                                                </constraints>
+                                                <state key="normal" title="Button" image="ic200_delete_white"/>
+                                                <connections>
+                                                    <action selector="deleteFile:" destination="zap-Ke-wb3" eventType="touchUpInside" id="3lR-oc-B81"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="hKC-ux-LLx" secondAttribute="trailing" constant="4" id="02f-kQ-GuU"/>
@@ -280,6 +280,15 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="54" height="82"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
+                                                <view tag="5555" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="azC-4P-JTn">
+                                                    <rect key="frame" x="0.0" y="0.0" width="54" height="82"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </view>
+                                                <imageView userInteractionEnabled="NO" tag="6666" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic200_act_close_pink" translatesAutoresizingMaskIntoConstraints="NO" id="SgT-X7-Z9c">
+                                                    <rect key="frame" x="9" y="22" width="36" height="36"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="1111" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="封面" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xwb-NK-oeb">
                                                     <rect key="frame" x="0.0" y="78" width="54" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -356,7 +365,8 @@
     <resources>
         <image name="4-08icon_creatnewframe_plus" width="60" height="60"/>
         <image name="4-08photo-size" width="88" height="132"/>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
+        <image name="ic200_act_close_pink" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="72" height="72"/>
         <image name="ic200_cooperation_dark" width="144" height="144"/>
         <image name="ic200_delete_white" width="144" height="144"/>
         <image name="ic200_micro_white" width="144" height="144"/>

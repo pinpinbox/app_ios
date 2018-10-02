@@ -30,6 +30,7 @@
 #import "CreaterViewController.h"
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import "CoCreatorListViewController.h"
+#import "NewCooperationViewController.h"
 
 @interface CalbumlistCollectionViewLayout : UICollectionViewFlowLayout
 @property (nonatomic) CGFloat itemHeight;
@@ -1774,6 +1775,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - cell opMenu action related
 
 - (void)opMenuAction:(OpMenuActionType)action index:(NSInteger )index {
+    NSLog(@"opMenuAction");
     
     if (index < dataarr.count) {
         NSDictionary *data = dataarr[index][@"album"];
@@ -1791,15 +1793,19 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSString *i = co[@"identity"];
                     if (isSelfWork || ![co[@"identity"] isKindOfClass:[NSNull class]]) {
                         if (isSelfWork || ![i isEqualToString:@"viewer"]) {
-                            if (![data[@"album_id"] isEqual: [NSNull null]])
-                                [self showCustomEditActionSheet:[data[@"album_id"] stringValue]];
+                            if (![data[@"album_id"] isEqual: [NSNull null]]) {
+                                if ([i isEqual: [NSNull null]]) {
+                                    [self showCustomEditActionSheet: [data[@"album_id"] stringValue]
+                                                       userIdentity: @"admin"];
+                                } else if ([i isEqualToString: @"approver"] || [i isEqualToString: @"editor"]) {
+                                    [self toAlbumCreationViewController: [data[@"album_id"] stringValue] templateId: @"0" shareCollection: NO userIdentity: i];
+                                }
+                            }                            
                             return;
                         }
                     }
                 }
-                
                 [self showCustomAlertNormal:@"權限不足"];
-                
             }
                 break;
             case OPShare: {
@@ -1829,10 +1835,18 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     if (isSelfWork || ![co[@"identity"] isKindOfClass:[NSNull class]]) {
                         if (isSelfWork || [i isEqualToString:@"admin"] || [i isEqualToString:@"approver"]) {
                             //  proceed to invite
+                            NewCooperationViewController *newCooperationVC = [[UIStoryboard storyboardWithName: @"NewCooperationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewCooperationViewController"];
+                            newCooperationVC.albumId = [data[@"album_id"] stringValue];
+                            newCooperationVC.userIdentity = i;
+                            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                            [appDelegate.myNav pushViewController: newCooperationVC animated: YES];
+                            
+                            /*
                             CoCreatorListViewController *cv = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CoCreatorListViewController"];
                             [cv setAlbumId:[data[@"album_id"] stringValue]];
                             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                             [appDelegate.myNav pushViewController:cv animated: YES];
+                             */
                             return;
                         }
                     }
@@ -1849,8 +1863,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 #pragma mark - opMenu edit
-- (void)showCustomEditActionSheet:(NSString *)albumid {
-    
+- (void)showCustomEditActionSheet:(NSString *)albumid
+                     userIdentity:(NSString *)userIdentity {
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
     
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
@@ -1874,9 +1888,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         if ([identifierStr isEqualToString: @"albumEdit"]) {
             NSLog(@"albumEdit item is pressed");
             dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf toAlbumCreationViewController: albumid
-                                             templateId: @"0"
-                                        shareCollection: NO];
+            [weakSelf toAlbumCreationViewController: albumid
+                                         templateId: @"0"
+                                    shareCollection: NO
+                                       userIdentity: userIdentity];
             });
         } else if ([identifierStr isEqualToString: @"modifyInfo"]) {
             NSLog(@"modifyInfo item is pressed");
@@ -1887,18 +1902,16 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             });
         }
     };
-    
-    
-    
 }
+
 - (void)toAlbumCreationViewController: (NSString *)albumId
                            templateId: (NSString *)templateId
                       shareCollection: (BOOL)shareCollection
-{
-    NSLog(@"toAlbumCreationViewController");
-    
+                         userIdentity: (NSString *)userIdentity {
+    NSLog(@"toAlbumCreationViewController");    
     AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
     //acVC.selectrow = [wTools userbook];
+    acVC.userIdentity = userIdentity;
     acVC.albumid = albumId;
     acVC.templateid = [NSString stringWithFormat:@"%@", templateId];
     acVC.shareCollection = shareCollection;

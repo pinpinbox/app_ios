@@ -8,16 +8,16 @@ PODS:
   - Crashlytics (3.10.8):
     - Fabric (~> 1.7.12)
   - Fabric (1.7.12)
-  - FBSDKCoreKit (4.36.0):
+  - FBSDKCoreKit (4.37.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.36.0):
+  - FBSDKLoginKit (4.37.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.36.0):
-    - FBSDKCoreKit (~> 4.36.0)
+  - FBSDKShareKit (4.37.0):
+    - FBSDKCoreKit (~> 4.37.0)
   - FLAnimatedImage (1.0.12)
-  - Flurry-iOS-SDK/FlurryAds (9.1.0):
-    - Flurry-iOS-SDK/FlurrySDK (~> 9.0.0)
-  - Flurry-iOS-SDK/FlurrySDK (9.1.0)
+  - Flurry-iOS-SDK/FlurryAds (9.2.0):
+    - Flurry-iOS-SDK/FlurrySDK
+  - Flurry-iOS-SDK/FlurrySDK (9.2.0)
   - GoogleAnalytics (3.17.0)
   - RMPZoomTransitionAnimator (1.0.3)
   - SDWebImage (4.4.2):
@@ -61,11 +61,11 @@ SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   Crashlytics: 058dc1ba579f6c100bc60a6878703779bff383c4
   Fabric: d7387db9a31aadff63b147a4b91d982c53afaa4f
-  FBSDKCoreKit: 3b8e6570eedb443f9fc4af196a7bf39f18e3a3d8
-  FBSDKLoginKit: 8bccb6064708ab2f4251a7fc4e3b6d8d00ad91ba
-  FBSDKShareKit: 7090fdd55c39b03941efddb64c83a64ff6b3949f
+  FBSDKCoreKit: fe5f3474499a81963e11e3f3a5c753d0a95ca2b4
+  FBSDKLoginKit: 2f7249686d1e30ce8a5ef5400eedf50b3e3df332
+  FBSDKShareKit: 52e0083222c38e930eb6878007478326599195c3
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  Flurry-iOS-SDK: 5f321ecc8282cf10b051b64bfdc4657f6b280118
+  Flurry-iOS-SDK: e5d6ff8cb79b5044710a0c7ae41b12ac651f4315
   GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
   RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681

@@ -18,6 +18,8 @@
 
 @property (weak) id <AlbumCreationViewControllerDelegate> delegate;
 
+@property (nonatomic) NSString *userIdentity;
+
 @property (nonatomic) NSArray *imagedata;
 @property (assign) NSInteger selectrow;
 @property (nonatomic) NSString *albumid;

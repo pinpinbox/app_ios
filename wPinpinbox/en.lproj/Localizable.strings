@@ -19,6 +19,9 @@
 "Host-NotAvailable" = "很抱歉，發生不明錯誤";
 
 //共用
+"GeneralText-IdentityInfo" = "Test";
+"GeneralText-DefaultInfo" = "跟其他創作人合作也是一種樂趣";
+"GeneralText-NoMatchCreator" = "無符合關鍵字的創作人";
 "GeneralText-ok" = "確認";
 "GeneralText-email" ="信 箱";
 "GeneralText-pwd" ="密 碼";
@@ -158,7 +161,6 @@
 //作者專區
 "AuthorText-inAtt" ="取消關注";
 "AuthorText-att" ="關注";
-
 
 //相片選擇
 "PicText-selPicture" ="選 擇 相 片";

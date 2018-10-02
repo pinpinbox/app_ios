@@ -192,6 +192,7 @@
         });
     });
 }
+
 - (void)processMsgboardList:(NSDictionary *)dic {
     
     if ([dic[@"result"] intValue] == 1) {

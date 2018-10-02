@@ -23,6 +23,8 @@
 #import <SafariServices/SafariServices.h>
 #import "UIViewController+ErrorAlert.h"
 
+#import "ContentCheckingViewController.h"
+
 @interface QrcordViewController () <AVCaptureMetadataOutputObjectsDelegate, UIGestureRecognizerDelegate>
 {
     __weak IBOutlet UILabel *lab_left;
@@ -325,9 +327,9 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                         // [self insertCooperation];
                         
                         // We should call the method below, so [wTools showMBProgressHD] will show up
-                        //                    [self performSelectorOnMainThread: @selector(insertCooperation) withObject: nil waitUntilDone: NO];
+                        [self performSelectorOnMainThread: @selector(insertCooperation) withObject: nil waitUntilDone: NO];
                         
-                        [self showCustomErrorAlert: @"共用功能尚未完成"];
+//                        [self showCustomErrorAlert: @"共用功能尚未完成"];
                     }
                 } else {
                     [self performSelectorOnMainThread: @selector(showError:)
@@ -470,11 +472,10 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 #pragma mark - Protocol Method Section
 
-- (void)insertCooperation
-{
+- (void)insertCooperation {
     NSLog(@"insertCooperation");
     
-    [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+    [wTools ShowMBProgressHUD];
     NSLog(@"wTools ShowMBProgressHUD");
     __block typeof(self) wself = self;
     NSMutableDictionary *data = [NSMutableDictionary new];
@@ -491,7 +492,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                                data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView: self.view animated: YES];
+            [wTools HideMBProgressHUD];
             NSLog(@"wTools HideMBProgressHUD");
             
             if (response != nil) {
@@ -536,7 +537,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 - (void)getcalbumlist {
     NSLog(@"getcalbumlist");
     
-    [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+    [wTools ShowMBProgressHUD];
     NSLog(@"wTools ShowMBProgressHUD");
     __block NSString *aid = albumId;
     __block typeof(self) wself = self;
@@ -547,7 +548,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                              limit: @"0,1000"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView: self.view animated: YES];
+            [wTools HideMBProgressHUD];
             NSLog(@"wTools HideMBProgressHUD");
             
             if (response != nil) {
@@ -577,24 +578,14 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                             if ([albumIdStr isEqualToString: aid]) {
                                 if ([d[@"album"][@"zipped"] boolValue]) {
                                     NSLog(@"zipped boolValue is: %d", [d[@"album"][@"zipped"] boolValue]);
-                                    
-//                                    PreviewbookViewController *rv=[[PreviewbookViewController alloc]initWithNibName:@"PreviewbookViewController" bundle:nil];
-//                                    
-//                                    rv.albumid = albumId;
-//                                    rv.userbook = @"Y";
-//                                    
-//                                    //[self.navigationController pushViewController: rv animated: YES];
-//                                    
-//                                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//                                    [appDelegate.myNav pushViewController: rv animated: YES];
+                                    ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                                    contentCheckingVC.albumId = albumIdStr;                                    
+                                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                    [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
                                 } else {
                                     NSLog(@"zipped boolValue is: %d", [d[@"album"][@"zipped"] boolValue]);
-                                    
-                                    //[self.navigationController popViewControllerAnimated: YES];
                                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                     [appDelegate.myNav popViewControllerAnimated: YES];
-                                    
-                                    //[self showAlertView: @"作品尚未有儲存的動作"];
                                     [wself showCustomErrorAlert: @"作品尚未有儲存的動作"];
                                 }
                             }
