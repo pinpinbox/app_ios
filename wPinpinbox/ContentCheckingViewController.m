@@ -342,6 +342,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self initialValueSetup];
     [self retrieveAlbum];
     //self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    [wTools setStatusBarBackgroundColor:[UIColor blackColor]];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -4115,7 +4116,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     self.isPresented = NO;
     [self changeOrientationToPortrait];
-    
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     if (self.postMode) {
         //NSString *alertMessage = @"確定投稿此作品? (點 取消 則退出作品瀏覽，如需再投稿此作品請至活動頁面 - 點擊投稿 - 選擇現有作品)";
         NSString *msg = @"要取消此次投稿，請至活動頁面";

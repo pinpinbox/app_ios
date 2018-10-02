@@ -1821,7 +1821,9 @@ shouldChangeTextInRange:(NSRange)range
                             aSVC.isNew = YES;
                             aSVC.prefixText = stSelf.prefixText;
                             aSVC.specialUrl = stSelf.specialUrl;
-                            
+                            if (self.delegate && [self.delegate respondsToSelector:@selector(albumSettingViewControllerUpdate:)]) {
+                                aSVC.delegate = (id<AlbumSettingViewControllerDelegate>)self.delegate;
+                            }
                             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                             [appDelegate.myNav pushViewController: aSVC animated: NO];
                         } else if ([option isEqualToString: @"back"]) {

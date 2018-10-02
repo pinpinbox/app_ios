@@ -260,7 +260,7 @@
     NSLog(@"");
     NSLog(@"getcalbumlist");
     
-    [wTools ShowMBProgressHUD];
+    //[wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
     NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 10];
     
@@ -271,9 +271,9 @@
                                               rank: arr[wself->type]//type]
                                              limit: limit];
         
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [wTools HideMBProgressHUD];
-            });
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [wTools HideMBProgressHUD];
+//            });
         
             if (response != nil) {
                 NSLog(@"response from getcalbumlist");
@@ -369,7 +369,7 @@
         
         
         s = (int)[list count];
-        nextId = [dataarr count];//nextId+s;
+        nextId = nextId+s;
         // dataarr=[dic[@"data"] mutableCopy];
         
         //NSLog(@"dataarr: %@", dataarr);
@@ -432,10 +432,10 @@
     }
     Cell.dataIndex = indexPath.row;
     NSLog(@"cellForItemAtIndexPath");
-    NSLog(@"dataArr: %@", dataarr);
+    //NSLog(@"dataArr: %@", dataarr);
     
     NSDictionary *data = dataarr[indexPath.row][@"album"];
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
     
     if (![data[@"album_id"] isEqual: [NSNull null]]) {
         Cell.albumid = [data[@"album_id"] stringValue];
@@ -529,7 +529,7 @@
     NSLog(@"");
     NSLog(@"data: %@", data);
     
-    NSString *myString=[NSString stringWithFormat:@"%@",data[@"name"]];//[NSString stringWithFormat:@"    %@",data[@"name"]];
+    NSString *myString=[NSString stringWithFormat:@"%@ << %@ << %ld",data[@"name"],data[@"album_id"],nextId];//[NSString stringWithFormat:@"    %@",data[@"name"]];
     
     Cell.descLabel.numberOfLines = 0;
     Cell.descLabel.text = myString;
@@ -628,7 +628,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             }
         }
     } else {
-        [self showCustomErrorAlert: @"作品沒有內容"];
+        [self showToastMessage: @"作品沒有內容"];
     }
 }
 
@@ -640,63 +640,69 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - UICollectionViewFlowLayoutDelegate
-//-(CGSize)collectionView:(UICollectionView *)collectionView
-//                 layout:(UICollectionViewLayout *)collectionViewLayout
-// sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-//{
-////    NSLog(@"collectionViewLayout sizeForItemAtIndexPath");
-////
-////    int i = 0;
-////    //i=arc4random() % 50;
-////    NSDictionary *data=dataarr[indexPath.row][@"album"];
-////    NSString *myString=[NSString stringWithFormat:@"    %@",data[@"description"]];
-////
-////    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:11]};
-////    CGSize size = [myString boundingRectWithSize:CGSizeMake(111, MAXFLOAT) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
-////    i = size.height;
-////
-////    NSLog(@"i: %d", i);
-////    NSLog(@"%@", NSStringFromCGSize(CGSizeMake(128, 242+15+i)));
-////
-////    if (i > 50) {
-////        i = 50;
-////    }
-////
-////    NSLog(@"i: %d", i);
-////    NSLog(@"%@", NSStringFromCGSize(CGSizeMake(128, 242+15+i)));
-////
-//    CGFloat w = collectionView.frame.size.width;
-//    return CGSizeMake(w+10, 96);//128, 242+15+i);
-//}
-//
-//- (CGFloat)collectionView:(UICollectionView *)collectionView
-//                   layout:(UICollectionViewLayout *)collectionViewLayout
-//minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-//    return 0;
-//}
-//
-//- (CGFloat)collectionView:(UICollectionView *)collectionView
-//                   layout:(UICollectionViewLayout *)collectionViewLayout
-//minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-//    return 1;
-//}
-//
-//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
-//                        layout:(UICollectionViewLayout *)collectionViewLayout
-//        insetForSectionAtIndex:(NSInteger)section
-//{
-//    return UIEdgeInsetsMake(0, 0, 0, 0);
-//}
+
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (isLoading)
-        return;
+//    if (isLoading)
+//        return;
+//
+//    if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
+//        [self reloaddata];
+//    }
+    if (!isLoading) {
+        CGFloat contentHeight = scrollView.contentSize.height;
+        CGFloat listHeight = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom;
+        BOOL canLoad = contentHeight > listHeight;
+        
+        CGFloat curOffset = scrollView.contentOffset.y;
+        CGFloat maxOffset = scrollView.contentSize.height-scrollView.frame.size.height;
+        CGFloat diff = maxOffset-curOffset;
+        
+        if (canLoad && diff <= -60) {
+            if (!isLoading) {
+                CGFloat prevScrollViewBottomInset = scrollView.contentInset.bottom;
+                UIEdgeInsets u =scrollView.contentInset;
+                UIEdgeInsets u1 = UIEdgeInsetsMake(u.top, u.left, prevScrollViewBottomInset+30, u.right);
+                [scrollView setContentInset:u1];
+                
+                
+                UIActivityIndicatorView *indicator = nil;//(UIActivityIndicatorView *)[scrollView viewWithTag:54321];
+                if (!indicator) {
+                    indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+                    if (@available(iOS 11.0, *)) {
+                        indicator.center = CGPointMake(scrollView.frame.size.width/2-10, /*scrollView.bounds.size.height*/ self.view.safeAreaLayoutGuide.layoutFrame.size.height - 20);
+                    } else {
+                        indicator.center = CGPointMake(scrollView.frame.size.width/2-10, /*scrollView.bounds.size.height*/ self.view.frame.size.height - 20);
+                    }
+                    indicator.hidesWhenStopped = YES;
+                    
+                    [self.view addSubview:indicator];
+                    indicator.tag = 54321;
+                    [self.view bringSubviewToFront:indicator];
+                }
+                indicator.hidden = NO;
+                [indicator startAnimating];
 
-    if ((scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.frame.size.height )) {
-        [self reloaddata];
+                
+                isLoading = YES;
+                
+                dispatch_time_t after = dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC);
+                dispatch_after(after, dispatch_get_main_queue(), ^{
+                    [scrollView setContentInset:u];
+                    
+                    UIActivityIndicatorView *i = (UIActivityIndicatorView *)[self.view viewWithTag:54321];
+                    [i stopAnimating];
+                    [i removeFromSuperview];
+                    self->isLoading = NO;
+                    [self reloaddata];
+                    
+                });
+                
+            }
+        }
     }
 }
-- (void)refreshCellAtIndex:(NSInteger) index {
+- (void)updateAlbumact:(NSInteger) index {
     NSDictionary *d1 = dataarr[index];
     NSDictionary *data = dataarr[index][@"album"];
     NSMutableDictionary *nd = [NSMutableDictionary dictionaryWithDictionary:data];
@@ -708,6 +714,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     NSMutableDictionary *nd1 = [NSMutableDictionary dictionaryWithDictionary:d1];
     [nd1 setObject:nd forKey:@"album"];
     [dataarr replaceObjectAtIndex:index withObject:nd1];
+    [self refreshCellAtIndex:index];
+}
+- (void)refreshCellAtIndex:(NSInteger) index {
+    
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.collectioview reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
@@ -1008,10 +1018,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         [self reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        [self showCustomAlertNormal: dic[@"message"]];
+                        [self showToastMessage: dic[@"message"]];
                         [self reloadData];
                     } else {
-                        [self showCustomAlertNormal: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showToastMessage: NSLocalizedString(@"Host-NotAvailable", @"")];
                         [self reloadData];
                     }
                 }
@@ -1020,6 +1030,17 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     });
 }
 
+#pragma mark - message toast
+- (void)showToastMessage:(NSString *)msg {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor thirdPink];
+    
+    [self.view makeToast: msg
+                 duration: 1.0
+                 position: CSToastPositionBottom
+                    style: style];
+}
 #pragma mark - Custom Alert Method
 - (void)showCustomAlertNormal: (NSString *)msg
 {
@@ -1377,7 +1398,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         [self reloadData];
                         [self deletePlist: albumid];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        [self showCustomAlertNormal: dic[@"message"]];
+                        [self showToastMessage: dic[@"message"]];
                         [self reloadData];
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
@@ -1455,7 +1476,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         [self reloadData];
                     } else {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        [self showCustomAlertNormal: dic[@"message"]];
+                        [self showToastMessage: dic[@"message"]];
                         [self reloadData];
                     }
                 }
@@ -1704,7 +1725,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                     NSArray *a = d[@"photo"];
                                     if (a.count < 1)
                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                            [wself showCustomErrorAlert:@"你的作品還沒有內容"];
+                                            [wself showToastMessage:@"你的作品還沒有內容"];
                                         });
                                     else {
                                         NSMutableDictionary *va = [NSMutableDictionary dictionaryWithDictionary:settings[@"data"]];
@@ -1713,14 +1734,14 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                             [va setObject:@"close" forKey:@"act"];
                                         else
                                             [va setObject:@"open" forKey:@"act"];
-                                        
+
                                         //NSString *setting = [NSJSONSerialization dataWithJSONObject:va options: error:]
                                         NSData *jsonData = [NSJSONSerialization dataWithJSONObject: va options: 0 error: nil];
                                         NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
                                         
                                         [boxAPI setAlbumSettingsWithDictionary:jsonStr albumid:albumid completionBlock:^(NSDictionary *result, NSError *error) {
                                             if (!error) {
-                                                [wself refreshCellAtIndex:index];
+                                                [wself updateAlbumact:index];
                                             } else if (error.code == 1111) {
                                                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                                                 style.messageColor = [UIColor whiteColor];
@@ -1747,25 +1768,25 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                     }
                                 } else {
                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                        [wself showCustomErrorAlert:@"作品資訊不完整不能公開"];
+                                        [wself showToastMessage:@"作品資訊不完整不能公開"];
                                     });
                                 }
                             } else {
                                 NSString *alert = [error localizedDescription];
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    [wself showCustomErrorAlert:alert];
+                                    [wself showToastMessage:alert];
                                 });
                             }
                         }];
                     } else {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [wself showCustomErrorAlert:@"作品資訊不完整不能公開"];
+                            [wself showToastMessage:@"作品資訊不完整不能公開"];
                         });
                     }
                 } else {
                     NSString *alert = [error localizedDescription];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [wself showCustomErrorAlert:alert];
+                        [wself showToastMessage:alert];
                     });
                 }
             }];
@@ -1805,14 +1826,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         }
                     }
                 }
-                [self showCustomAlertNormal:@"權限不足"];
+                
+                [self showToastMessage:@"權限不足"];
             }
                 break;
             case OPShare: {
                 if ([data[@"zipped"] intValue] != 1) {
-                   [self showCustomAlertNormal:@"作品尚未完成"];
+                   [self showToastMessage:@"作品尚未完成"];
                 } else if (![data[@"act"] isEqualToString:@"open"]){
-                   [self showCustomAlertNormal:@"隱私必須開啟才能分享"];
+                   [self showToastMessage:@"隱私必須開啟才能分享"];
                 } else {
                     //  proceed to share
                     if (![data[@"album_id"] isEqual: [NSNull null]])
@@ -1851,7 +1873,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         }
                     }
                 }
-                [self showCustomAlertNormal:@"權限不足"];
+                [self showToastMessage:@"權限不足"];
             }
                 break;
             default:
@@ -2112,6 +2134,30 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     };
     
 }
+- (void)tryUpdateAlbumSetting:(NSUInteger) index calbum:(NSDictionary *)calbum {
+    NSString *aid = calbum[@"album_id"];
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSString *response = [boxAPI getalbumsettings:[wTools getUserID] token:[wTools getUserToken] album_id:aid];
+        if (response != nil) {
+            if (![response isEqualToString: timeOutErrorCode]) {
+                
+                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                if ([dic[@"result"] intValue] == 1) {
+                    NSMutableDictionary *nd = [NSMutableDictionary dictionaryWithDictionary:calbum];
+                    nd[@"act"] = dic[@"data"][@"act"];
+                    nd[@"name"] = dic[@"data"][@"title"];
+                    nd[@"location"] = dic[@"data"][@"location"];
+                    nd[@"description"] = dic[@"data"][@"description"];
+                    NSMutableDictionary *nt = [NSMutableDictionary dictionaryWithDictionary:wself->dataarr[index]];
+                    [nt setObject:nd forKey:@"album"];
+                    wself->dataarr[index] = nt;
+                    [wself refreshCellAtIndex:index];
+                }
+            }
+        }
+    });
+}
 - (void)albumSettingViewControllerUpdate:(AlbumSettingViewController *)controller{
     NSString *aid = controller.albumId;
     __block typeof(self) wself = self;
@@ -2119,33 +2165,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSDictionary *c = (NSDictionary *)obj;
         NSDictionary *calbum = c[@"album"];
         if ([[calbum[@"album_id"] stringValue] isEqualToString:aid]) {
+            [wself tryUpdateAlbumSetting:idx calbum:calbum];
             *stop = YES;
-            NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)idx-1, 1];
-            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-                NSArray *arr = @[@"mine",@"other",@"cooperation"];
-                //  check index!!
-                NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
-                                                     token: [wTools getUserToken]
-                                                      rank: arr[wself->type]//type]
-                                                     limit: limit];
-                NSLog(@"albumSettingViewControllerUpdate %@",response);
-            });
-            
-            
         }
     }];
-    
-    
-    
-    
-    
-    
-    //[self reloaddata];
-    
-    //  get index with album
-    //  get album data with api
-    //  replace dataarr
-    //  refresh the table
 }
 - (void)albumCreationViewControllerBackBtnPressed:(AlbumCreationViewController *)controller {
     [self reloaddata];
