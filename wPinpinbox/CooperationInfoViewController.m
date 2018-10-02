@@ -1,30 +1,32 @@
 //
-//  DDAUIActionSheetViewController.m
-//  CustomActionSheetTest
+//  CooperationInfoViewController.m
+//  wPinpinbox
 //
-//  Created by David on 7/31/17.
-//  Copyright © 2017 vmage. All rights reserved.
+//  Created by David on 2018/10/1.
+//  Copyright © 2018 Angus. All rights reserved.
 //
 
-#import "DDAUIActionSheetViewController.h"
+#import "CooperationInfoViewController.h"
 #import "MyLayout.h"
 #import "UIColor+Extensions.h"
 #import "GlobalVars.h"
-//#import "LabelAttributeStyle.h"
+#import "LabelAttributeStyle.h"
 
-@interface DDAUIActionSheetViewController ()
+@interface CooperationInfoViewController ()
 {
-    BOOL isTouchDown;        
+    BOOL isTouchDown;
 }
 @property (weak, nonatomic) IBOutlet UIView *blackView;
 //@property (nonatomic) UIVisualEffectView *effectView;
 @property (weak, nonatomic) IBOutlet UIView *actionSheetView;
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+@property (weak, nonatomic) IBOutlet MyLinearLayout *topicLabelHorzLayout;
 @property (weak, nonatomic) IBOutlet UILabel *topicLabel;
+@property (weak, nonatomic) IBOutlet UIButton *questionBtn;
 @property (weak, nonatomic) IBOutlet MyLinearLayout *contentLayout;
-
 @end
 
-@implementation DDAUIActionSheetViewController
+@implementation CooperationInfoViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -42,10 +44,10 @@
     NSLog(@"self.actionSheetView: %@", self.actionSheetView);
     
     /*
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleTapFromView:)];
-    [self.view addGestureRecognizer: tapGestureRecognizer];
-    tapGestureRecognizer.delegate = self;
-    */
+     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleTapFromView:)];
+     [self.view addGestureRecognizer: tapGestureRecognizer];
+     tapGestureRecognizer.delegate = self;
+     */
     
     [self slideIn];
     
@@ -58,7 +60,7 @@
     // Dispose of any resources that can be recreated.
 }
 - (void)addSelectButtons:(NSArray *)btnStrs
-          identifierStrs:(NSArray *)identifierStrs {
+identifierStrs:(NSArray *)identifierStrs {
     if (btnStrs.count < 1) return ;
     
     MyLinearLayout *horzLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
@@ -84,7 +86,7 @@
         btn.myTopMargin = 4;
         btn.wrapContentWidth = YES;
         btn.myLeftMargin = btn.myRightMargin = 8;
-//        btn.myCenterYOffset = 0;
+        //        btn.myCenterYOffset = 0;
         btn.widthDime.min(ww - 16);
         btn.heightDime.min(48);
         btn.layer.cornerRadius = kCornerRadius;
@@ -110,12 +112,12 @@
 }
 
 - (void)addSelectItem:(NSString *)imgName
-                title:(NSString *)title
-               btnStr:(NSString *)btnStr
-               tagInt:(NSInteger)tagInt
-        identifierStr:(NSString *)identifierStr
+title:(NSString *)title
+btnStr:(NSString *)btnStr
+tagInt:(NSInteger)tagInt
+identifierStr:(NSString *)identifierStr
 {
-    MyLinearLayout *horzLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];        
+    MyLinearLayout *horzLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
     
     horzLayout.myLeftMargin = horzLayout.myRightMargin = 0;
     horzLayout.myTopMargin = horzLayout.myBottomMargin = 0;
@@ -205,11 +207,11 @@
 // Method below only applies to collectView
 // If there are any changes below, the method above should also be changed as well.
 - (void)addSelectItem:(NSString *)imgName
-                title:(NSString *)title
-               btnStr:(NSString *)btnStr
-               tagInt:(NSInteger)tagInt
-        identifierStr:(NSString *)identifierStr
-          isCollected:(BOOL)isCollected;
+title:(NSString *)title
+btnStr:(NSString *)btnStr
+tagInt:(NSInteger)tagInt
+identifierStr:(NSString *)identifierStr
+isCollected:(BOOL)isCollected;
 {
     MyLinearLayout *horzLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
     
@@ -305,7 +307,7 @@
                 [btn sizeToFit];
                 
                 [horzLayout addSubview: btn];
-            }                        
+            }
         }
     }
     
@@ -319,6 +321,10 @@
     horizontalLineView.myLeftMargin = horizontalLineView.myRightMargin = 0;
     horizontalLineView.myTopMargin = horizontalLineView.myBottomMargin = 10;
     [self.contentLayout addSubview: horizontalLineView];
+}
+
+- (IBAction)showInfoLabel:(id)sender {
+    self.infoLabel.alpha = 1;
 }
 
 #pragma mark - Custom ActionSheet Methods
@@ -359,15 +365,31 @@
     NSLog(@"After changing actionSheetView");
     NSLog(@"self.actionSheetView: %@", self.actionSheetView);
     
+    // Info Label Setting
+    self.infoLabel.myBottomMargin = 16;
+    self.infoLabel.myLeftMargin = self.infoLabel.myRightMargin = 16;
+    self.infoLabel.textColor = [UIColor whiteColor];
+    self.infoLabel.font = [UIFont boldSystemFontOfSize: 18];
+    [self.infoLabel sizeToFit];
+    [LabelAttributeStyle changeGapString: self.infoLabel content: self.infoLabel.text];
+
+    // TopicLabelHorzLayoutSetting
+    self.topicLabelHorzLayout.myTopMargin = self.topicLabelHorzLayout.myBottomMargin = 16;
+    
     // Topic Label Setting
     self.topicLabel.myLeftMargin = 16;
     self.topicLabel.myTopMargin = 4;
-    self.topicLabel.myBottomMargin = 16;    
+    self.topicLabel.myBottomMargin = 16;
     self.topicLabel.text = self.topicStr;
-    //[LabelAttributeStyle changeGapString: self.topicLabel content: self.topicStr];
+    [LabelAttributeStyle changeGapString: self.topicLabel content: self.topicStr];
     self.topicLabel.textColor = [UIColor whiteColor];
     self.topicLabel.font = [UIFont boldSystemFontOfSize: 24];
-    [self.topicLabel sizeToFit];        
+    [self.topicLabel sizeToFit];
+    
+    // QuestionBtn Setting
+    self.questionBtn.myLeftMargin = 4;
+    self.questionBtn.myTopMargin = 0;
+    self.questionBtn.hidden = self.hideQuestionBtn;
     
     // ContentLayout Setting
     self.contentLayout.padding = UIEdgeInsetsMake(16, 0, 16, 0);
@@ -379,17 +401,17 @@
     // Creating Blur Effect
     //self.effectView = [[UIVisualEffectView alloc] initWithEffect: [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark]];
     /*
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;    
-    self.effectView.tag = 100;
-    //self.effectView.alpha = 0.5;
-    
-    [self.view addSubview: self.effectView];
+     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+     self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+     self.effectView.frame = self.view.frame;
+     self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+     
+     self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+     self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+     self.effectView.tag = 100;
+     //self.effectView.alpha = 0.5;
+     
+     [self.view addSubview: self.effectView];
      */
     
     [self.view addSubview: self.actionSheetView];
@@ -424,7 +446,7 @@
     CGRect frame = self.actionSheetView.frame;
     frame.origin = CGPointMake(0.0, self.view.bounds.size.height);
     self.actionSheetView.frame = frame;
-
+    
     NSLog(@"");
     NSLog(@"After setting bounds");
     NSLog(@"self.actionSheetView: %@", self.actionSheetView);
@@ -460,7 +482,7 @@
 #pragma mark - UIButton Selector Method
 - (void)buttonNormal:(UIButton *)sender {
     NSLog(@"btnPress");
-    sender.backgroundColor = [UIColor firstMain];
+    sender.backgroundColor = [UIColor thirdMain];
     
     if (self.customButtonBlock) {
         self.customButtonBlock(sender.selected);
@@ -532,15 +554,15 @@
     UITouch *touch = [touches anyObject];
     
     if (touch.view.tag != 0 && touch.view.tag != 100 && touch.view.tag != 200 && touch.view.tag != 300) {
-        touch.view.backgroundColor = [UIColor clearColor];                
+        touch.view.backgroundColor = [UIColor clearColor];
     }
     
     if (isTouchDown) {
         isTouchDown = NO;
         /*
-        if (self.customViewBlock) {
-            self.customViewBlock(touch.view.tag, isTouchDown);
-        }
+         if (self.customViewBlock) {
+         self.customViewBlock(touch.view.tag, isTouchDown);
+         }
          */
     }
 }
@@ -561,21 +583,21 @@
         isTouchDown = NO;
         
         /*
-        if (self.customViewBlock) {
-            self.customViewBlock(touch.view.tag, isTouchDown);
-        }
+         if (self.customViewBlock) {
+         self.customViewBlock(touch.view.tag, isTouchDown);
+         }
          */
     }
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

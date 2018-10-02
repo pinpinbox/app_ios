@@ -406,9 +406,11 @@
         }
     }];
 }
+
 - (void)addImage:(UIImage *) image {
     [imgs addObject:image];
 }
+
 - (void)OKimage {
     NSLog(@"OKimage");
     NSLog(@"choice: %@", _choice);

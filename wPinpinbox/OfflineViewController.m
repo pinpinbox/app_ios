@@ -209,7 +209,7 @@
     //img.image=[UIImage imageWithContentsOfFile:data[@"cover"]];
     
     Cell.zipped=YES;
-    Cell.stopview.hidden=YES;
+//    Cell.stopview.hidden=YES;
     
     Cell.mydate.text=data[@"insertdate"];
     
@@ -241,7 +241,7 @@
     img.image=[UIImage imageNamed:@""];
     
     
-    Cell.mytitle.text=data[@"name"];
+//    Cell.mytitle.text=data[@"name"];
     
     //取得資料ID
 //    NSString * name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],[data[@"album_id"] stringValue]];

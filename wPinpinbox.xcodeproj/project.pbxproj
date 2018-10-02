@@ -14,6 +14,13 @@
 		5406362B2050DED3004C9F21 /* CheckExchangeVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5406362A2050DED3004C9F21 /* CheckExchangeVC.storyboard */; };
 		5406362E2050DF34004C9F21 /* CheckExchangeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5406362D2050DF34004C9F21 /* CheckExchangeCollectionViewCell.m */; };
 		540C59D71F85DDAC000B633E /* BuyPPointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 540C59D61F85DDAC000B633E /* BuyPPointViewController.m */; };
+		540D74992161DE1F0061E463 /* CreatorListCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 540D74902161DE1F0061E463 /* CreatorListCollectionReusableView.m */; };
+		540D749A2161DE1F0061E463 /* NewCooperationVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 540D74922161DE1F0061E463 /* NewCooperationVC.storyboard */; };
+		540D749B2161DE1F0061E463 /* NewCooperationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 540D74932161DE1F0061E463 /* NewCooperationViewController.m */; };
+		540D749C2161DE1F0061E463 /* IdentityCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 540D74952161DE1F0061E463 /* IdentityCollectionViewCell.m */; };
+		540D749D2161DE1F0061E463 /* CreatorListCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 540D74982161DE1F0061E463 /* CreatorListCollectionViewCell.m */; };
+		540D74A121626E9F0061E463 /* CooperationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 540D749F21626E9F0061E463 /* CooperationInfoViewController.m */; };
+		540D74A221626E9F0061E463 /* CooperationInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 540D74A021626E9F0061E463 /* CooperationInfoViewController.xib */; };
 		540DE2A920281C5C0090F584 /* ChangeInterestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 540DE2A820281C5C0090F584 /* ChangeInterestsViewController.m */; };
 		540DE2AB20281C680090F584 /* ChangeInterestsVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 540DE2AA20281C680090F584 /* ChangeInterestsVC.storyboard */; };
 		540DE2AE20283A8E0090F584 /* ChangeInterestsCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 540DE2AD20283A8E0090F584 /* ChangeInterestsCollectionViewCell.m */; };
@@ -380,6 +387,18 @@
 		5406362D2050DF34004C9F21 /* CheckExchangeCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CheckExchangeCollectionViewCell.m; sourceTree = "<group>"; };
 		540C59D51F85DDAC000B633E /* BuyPPointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuyPPointViewController.h; sourceTree = "<group>"; };
 		540C59D61F85DDAC000B633E /* BuyPPointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuyPPointViewController.m; sourceTree = "<group>"; };
+		540D748F2161DE1F0061E463 /* CreatorListCollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatorListCollectionReusableView.h; sourceTree = "<group>"; };
+		540D74902161DE1F0061E463 /* CreatorListCollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorListCollectionReusableView.m; sourceTree = "<group>"; };
+		540D74912161DE1F0061E463 /* NewCooperationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCooperationViewController.h; sourceTree = "<group>"; };
+		540D74922161DE1F0061E463 /* NewCooperationVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NewCooperationVC.storyboard; sourceTree = "<group>"; };
+		540D74932161DE1F0061E463 /* NewCooperationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCooperationViewController.m; sourceTree = "<group>"; };
+		540D74952161DE1F0061E463 /* IdentityCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IdentityCollectionViewCell.m; sourceTree = "<group>"; };
+		540D74962161DE1F0061E463 /* CreatorListCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatorListCollectionViewCell.h; sourceTree = "<group>"; };
+		540D74972161DE1F0061E463 /* IdentityCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IdentityCollectionViewCell.h; sourceTree = "<group>"; };
+		540D74982161DE1F0061E463 /* CreatorListCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorListCollectionViewCell.m; sourceTree = "<group>"; };
+		540D749E21626E9F0061E463 /* CooperationInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CooperationInfoViewController.h; sourceTree = "<group>"; };
+		540D749F21626E9F0061E463 /* CooperationInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CooperationInfoViewController.m; sourceTree = "<group>"; };
+		540D74A021626E9F0061E463 /* CooperationInfoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CooperationInfoViewController.xib; sourceTree = "<group>"; };
 		540DE2A720281C5C0090F584 /* ChangeInterestsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChangeInterestsViewController.h; sourceTree = "<group>"; };
 		540DE2A820281C5C0090F584 /* ChangeInterestsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChangeInterestsViewController.m; sourceTree = "<group>"; };
 		540DE2AA20281C680090F584 /* ChangeInterestsVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChangeInterestsVC.storyboard; sourceTree = "<group>"; };
@@ -1053,6 +1072,48 @@
 			path = CheckExchangeVC;
 			sourceTree = "<group>";
 		};
+		540D748D2161DE1F0061E463 /* NewCooperationRelated */ = {
+			isa = PBXGroup;
+			children = (
+				540D748E2161DE1F0061E463 /* ReusableView */,
+				540D74912161DE1F0061E463 /* NewCooperationViewController.h */,
+				540D74932161DE1F0061E463 /* NewCooperationViewController.m */,
+				540D74922161DE1F0061E463 /* NewCooperationVC.storyboard */,
+				540D74942161DE1F0061E463 /* Cell */,
+			);
+			path = NewCooperationRelated;
+			sourceTree = "<group>";
+		};
+		540D748E2161DE1F0061E463 /* ReusableView */ = {
+			isa = PBXGroup;
+			children = (
+				540D748F2161DE1F0061E463 /* CreatorListCollectionReusableView.h */,
+				540D74902161DE1F0061E463 /* CreatorListCollectionReusableView.m */,
+			);
+			path = ReusableView;
+			sourceTree = "<group>";
+		};
+		540D74942161DE1F0061E463 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				540D74952161DE1F0061E463 /* IdentityCollectionViewCell.m */,
+				540D74962161DE1F0061E463 /* CreatorListCollectionViewCell.h */,
+				540D74972161DE1F0061E463 /* IdentityCollectionViewCell.h */,
+				540D74982161DE1F0061E463 /* CreatorListCollectionViewCell.m */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		540D74A321626EA60061E463 /* CooperationInfoVC */ = {
+			isa = PBXGroup;
+			children = (
+				540D749E21626E9F0061E463 /* CooperationInfoViewController.h */,
+				540D749F21626E9F0061E463 /* CooperationInfoViewController.m */,
+				540D74A021626E9F0061E463 /* CooperationInfoViewController.xib */,
+			);
+			name = CooperationInfoVC;
+			sourceTree = "<group>";
+		};
 		540DE2AF20283ADC0090F584 /* InfoEdit */ = {
 			isa = PBXGroup;
 			children = (
@@ -1585,7 +1646,6 @@
 		54E3E619206CE7F200A631A9 /* MapShowingVC */ = {
 			isa = PBXGroup;
 			children = (
-				5486C25D205122A80016BB9D /* UIColor Related */,
 				544DA7C11F4B271C00E80C45 /* MapShowingViewController.h */,
 				544DA7C21F4B271C00E80C45 /* MapShowingViewController.m */,
 				544DA7C31F4B271C00E80C45 /* MapShowingViewController.xib */,
@@ -1753,6 +1813,7 @@
 				63842E5E1EF9D8B100C871A0 /* AlbumSettingViewController.m */,
 				547BC6D01F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.h */,
 				547BC6D11F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m */,
+				540D748D2161DE1F0061E463 /* NewCooperationRelated */,
 				54DC76241FB40D81005F3252 /* Collection Related */,
 			);
 			name = "CenterButton Related";
@@ -1947,6 +2008,7 @@
 				6363490E1F33D12400B17183 /* DDAUIActionSheetViewController.h */,
 				6363490F1F33D12400B17183 /* DDAUIActionSheetViewController.m */,
 				636349101F33D12400B17183 /* DDAUIActionSheetViewController.xib */,
+				540D74A321626EA60061E463 /* CooperationInfoVC */,
 				54E3E619206CE7F200A631A9 /* MapShowingVC */,
 				92AE90621C1E914D00C53413 /* MessageBoardVC */,
 			);
@@ -2329,6 +2391,7 @@
 				54A857532008BC3200D87843 /* LabelAttributeStyle.m */,
 				5478874D214613D400F7B8BB /* WdataButton.h */,
 				5478874E214613D500F7B8BB /* WdataButton.m */,
+				5486C25D205122A80016BB9D /* UIColor Related */,
 				5430446520B8122600018AF4 /* TKImageView */,
 				54933AD6207F4A30001582C3 /* MintAnnotationView */,
 				543B11A4205619A900111102 /* ZOZolaZoomTransition */,
@@ -2746,11 +2809,13 @@
 				541B0D39200125D200890879 /* CreaterVC.storyboard in Resources */,
 				54B9F49C1FE6CA3C00A694E4 /* ChangeCellPhoneNumberVC.storyboard in Resources */,
 				92CD63C01C0810F6000A2279 /* ModeTableViewCell.xib in Resources */,
+				540D749A2161DE1F0061E463 /* NewCooperationVC.storyboard in Resources */,
 				54AB12D120AD7A0400C7CC1A /* CustomAlertViewImages.xcassets in Resources */,
 				54C964BE2015ED0900F995DF /* ScanRegisterVC.storyboard in Resources */,
 				630848F61E4978D500CA40AF /* beep.mp3 in Resources */,
 				54331AA61FE6B963005E6ACE /* ActivityDetailVC.storyboard in Resources */,
 				54F777DE20ABE02B00A6E195 /* TestReadBook.xcassets in Resources */,
+				540D74A221626E9F0061E463 /* CooperationInfoViewController.xib in Resources */,
 				54F777F420ABE99800A6E195 /* SettingsVC.xcassets in Resources */,
 				54F777F220ABE80D00A6E195 /* Voting.xcassets in Resources */,
 				54C964BC2015E9C800F995DF /* SignVC_3.storyboard in Resources */,
@@ -2932,6 +2997,7 @@
 				638F4A5F1E5D499400F7130B /* FTWCache.m in Sources */,
 				63094A711D999F7B00725680 /* AsyncImageView.m in Sources */,
 				92A8B73F1C521EA0000B7D61 /* OpenUDID.m in Sources */,
+				540D74A121626E9F0061E463 /* CooperationInfoViewController.m in Sources */,
 				5478874F214613D600F7B8BB /* WdataButton.m in Sources */,
 				92D3ABC21BB287FC00EA8C54 /* PhotoCollectionViewCell.m in Sources */,
 				630A83E31EB1D07300AC8479 /* MyLayoutSizeClass.m in Sources */,
@@ -2949,6 +3015,7 @@
 				630A83E81EB1D07300AC8479 /* MyTableLayout.m in Sources */,
 				549765D01F7EA0B300E2CBEF /* SettingViewController.m in Sources */,
 				6315B2E51EE7E13600EE67C5 /* NewMessageBoardViewController.m in Sources */,
+				540D749C2161DE1F0061E463 /* IdentityCollectionViewCell.m in Sources */,
 				F0AC57542142353D00F63B82 /* UIViewController+ErrorAlert.m in Sources */,
 				6319A36B1DABB60C001CB8BD /* JCCollectionHeaderView.m in Sources */,
 				630A83E41EB1D07300AC8479 /* MyLinearLayout.m in Sources */,
@@ -2968,6 +3035,7 @@
 				9283489C1C62F523002DBC6A /* SeacrhbookTableViewCell.m in Sources */,
 				92C4D50F1B74591100504B57 /* SignViewController_2.m in Sources */,
 				543B11AA20561ACA00111102 /* ExchangeStuff.m in Sources */,
+				540D749D2161DE1F0061E463 /* CreatorListCollectionViewCell.m in Sources */,
 				63093A391EF8E0CA00BA5507 /* OldCustomAlertView.m in Sources */,
 				544FBEE2208D988800681097 /* SponsorListViewController.m in Sources */,
 				630E1A631EC053CE003FE76A /* MeCollectionReusableView.m in Sources */,
@@ -3048,6 +3116,7 @@
 				920279B41C4500B200A63027 /* CooperationAddViewController.m in Sources */,
 				630B8F931EDD0F16009D72FB /* CategoryDetailViewController.m in Sources */,
 				6306D6501DB4CEA5005EC98C /* UIImage+AverageColor.m in Sources */,
+				540D74992161DE1F0061E463 /* CreatorListCollectionReusableView.m in Sources */,
 				63175B1E1EA54CF6008ADEC4 /* FBFriendsListViewController.m in Sources */,
 				928348A11C62F53C002DBC6A /* SearchuserTableViewCell.m in Sources */,
 				920279A21C449D8500A63027 /* CoopTopTableViewCell.m in Sources */,
@@ -3058,6 +3127,7 @@
 				634B60411F3484AD00C776E0 /* FXBlurView.m in Sources */,
 				5430446420B8121900018AF4 /* TKImageView.m in Sources */,
 				543FC4F920EB24320090DF43 /* MoreTabViewController.m in Sources */,
+				540D749B2161DE1F0061E463 /* NewCooperationViewController.m in Sources */,
 				635775DA1ED3ECFB00637914 /* RecentBrowsingViewController.m in Sources */,
 				92A384A01CFD786A00C1CDBC /* OfflineViewController.m in Sources */,
 				54B08C8D2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m in Sources */,
