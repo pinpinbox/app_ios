@@ -260,7 +260,7 @@
     NSLog(@"");
     NSLog(@"getcalbumlist");
     
-    [wTools ShowMBProgressHUD];
+    //[wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
     NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
     
@@ -271,9 +271,9 @@
                                               rank: arr[wself->type]//type]
                                              limit: limit];
         
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [wTools HideMBProgressHUD];
-            });
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [wTools HideMBProgressHUD];
+//            });
         
             if (response != nil) {
                 NSLog(@"response from getcalbumlist");
@@ -575,10 +575,10 @@
     return Cell;
 }
 - (void)checkRefreshContent {
-    if (type != 1) {
-        [dataarr removeAllObjects];
-        [self reloadData];
-    }
+//    if (type != 1) {
+//        [dataarr removeAllObjects];
+//        [self reloadData];
+//    }
 }
 -(void)reloadData {
     nextId = 0;
@@ -626,7 +626,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             }
         }
     } else {
-        [self showCustomErrorAlert: @"作品沒有內容"];
+        [self showToastMessage: @"作品沒有內容"];
     }
 }
 
@@ -638,53 +638,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - UICollectionViewFlowLayoutDelegate
-//-(CGSize)collectionView:(UICollectionView *)collectionView
-//                 layout:(UICollectionViewLayout *)collectionViewLayout
-// sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-//{
-////    NSLog(@"collectionViewLayout sizeForItemAtIndexPath");
-////
-////    int i = 0;
-////    //i=arc4random() % 50;
-////    NSDictionary *data=dataarr[indexPath.row][@"album"];
-////    NSString *myString=[NSString stringWithFormat:@"    %@",data[@"description"]];
-////
-////    NSDictionary *attribute = @{NSFontAttributeName: [UIFont systemFontOfSize:11]};
-////    CGSize size = [myString boundingRectWithSize:CGSizeMake(111, MAXFLOAT) options: NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
-////    i = size.height;
-////
-////    NSLog(@"i: %d", i);
-////    NSLog(@"%@", NSStringFromCGSize(CGSizeMake(128, 242+15+i)));
-////
-////    if (i > 50) {
-////        i = 50;
-////    }
-////
-////    NSLog(@"i: %d", i);
-////    NSLog(@"%@", NSStringFromCGSize(CGSizeMake(128, 242+15+i)));
-////
-//    CGFloat w = collectionView.frame.size.width;
-//    return CGSizeMake(w+10, 96);//128, 242+15+i);
-//}
-//
-//- (CGFloat)collectionView:(UICollectionView *)collectionView
-//                   layout:(UICollectionViewLayout *)collectionViewLayout
-//minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-//    return 0;
-//}
-//
-//- (CGFloat)collectionView:(UICollectionView *)collectionView
-//                   layout:(UICollectionViewLayout *)collectionViewLayout
-//minimumLineSpacingForSectionAtIndex:(NSInteger)section {
-//    return 1;
-//}
-//
-//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
-//                        layout:(UICollectionViewLayout *)collectionViewLayout
-//        insetForSectionAtIndex:(NSInteger)section
-//{
-//    return UIEdgeInsetsMake(0, 0, 0, 0);
-//}
+
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 //    if (isLoading)
@@ -693,15 +647,60 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 //    if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
 //        [self reloaddata];
 //    }
+    if (!isLoading) {
+        CGFloat contentHeight = scrollView.contentSize.height;
+        CGFloat listHeight = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom;
+        BOOL canLoad = contentHeight > listHeight;
+        
+        CGFloat curOffset = scrollView.contentOffset.y;
+        CGFloat maxOffset = scrollView.contentSize.height-scrollView.frame.size.height;
+        CGFloat diff = maxOffset-curOffset;
+        
+        if (canLoad && diff <= -80) {
+            if (!isLoading) {
+                CGFloat prevScrollViewBottomInset = scrollView.contentInset.bottom;
+                UIEdgeInsets u =scrollView.contentInset;
+                UIEdgeInsets u1 = UIEdgeInsetsMake(u.top, u.left, prevScrollViewBottomInset+90, u.right);
+                [scrollView setContentInset:u1];
+                
+                
+                UIActivityIndicatorView *indicator = (UIActivityIndicatorView *)[scrollView viewWithTag:54321];
+                if (!indicator) {
+                    indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+                    indicator.center = CGPointMake(scrollView.frame.size.width/2-10, /*scrollView.bounds.size.height*/ self.view.safeAreaLayoutGuide.layoutFrame.size.height - 90);
+                    indicator.hidesWhenStopped = YES;
+                    [scrollView addSubview:indicator];
+                    indicator.tag = 54321;
+                    [scrollView bringSubviewToFront:indicator];
+                }
+                indicator.hidden = NO;
+                [indicator startAnimating];
+                
+                
+                isLoading = YES;
+                
+                dispatch_time_t after = dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC);
+                dispatch_after(after, dispatch_get_main_queue(), ^{
+                    [scrollView setContentInset:u];
+                    UIActivityIndicatorView *i = (UIActivityIndicatorView *)[scrollView viewWithTag:54321];
+                    [i stopAnimating];
+                    self->isLoading = NO;
+                    [self reloaddata];
+                    
+                });
+                
+            }
+        }
+    }
 }
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if (isLoading)
-        return;
-    
-    //if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
-    [self reloaddata];
-    //}
-}
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+//    if (isLoading)
+//        return;
+//
+//    //if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
+//    [self reloaddata];
+//    //}
+//}
 - (void)refreshCellAtIndex:(NSInteger) index {
     NSDictionary *d1 = dataarr[index];
     NSDictionary *data = dataarr[index][@"album"];
@@ -1014,10 +1013,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         [self reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        [self showCustomAlertNormal: dic[@"message"]];
+                        [self showToastMessage: dic[@"message"]];
                         [self reloadData];
                     } else {
-                        [self showCustomAlertNormal: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [self showToastMessage: NSLocalizedString(@"Host-NotAvailable", @"")];
                         [self reloadData];
                     }
                 }
@@ -1026,6 +1025,17 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     });
 }
 
+#pragma mark - message toast
+- (void)showToastMessage:(NSString *)msg {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor thirdPink];
+    
+    [self.view makeToast: msg
+                 duration: 1.0
+                 position: CSToastPositionBottom
+                    style: style];
+}
 #pragma mark - Custom Alert Method
 - (void)showCustomAlertNormal: (NSString *)msg
 {
@@ -1383,7 +1393,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         [self reloadData];
                         [self deletePlist: albumid];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        [self showCustomAlertNormal: dic[@"message"]];
+                        [self showToastMessage: dic[@"message"]];
                         [self reloadData];
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
@@ -1461,7 +1471,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         [self reloadData];
                     } else {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        [self showCustomAlertNormal: dic[@"message"]];
+                        [self showToastMessage: dic[@"message"]];
                         [self reloadData];
                     }
                 }
@@ -1710,12 +1720,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                     NSArray *a = d[@"photo"];
                                     if (a.count < 1)
                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                            [wself showCustomErrorAlert:@"你的作品還沒有內容"];
+                                            [wself showToastMessage:@"你的作品還沒有內容"];
                                         });
                                     else {
                                         NSMutableDictionary *va = [NSMutableDictionary dictionaryWithDictionary:settings];
                                         //  modify "act" value in settings
-                                        [va setObject:@"open" forKey:@"act"];
+                                        if ([va[@"act"] isEqualToString:@"open"])
+                                            [va setObject:@"close" forKey:@"act"];
+                                        else
+                                            [va setObject:@"open" forKey:@"act"];
                                         //NSString *setting = [NSJSONSerialization dataWithJSONObject:va options: error:]
                                         NSData *jsonData = [NSJSONSerialization dataWithJSONObject: va options: 0 error: nil];
                                         NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
@@ -1749,25 +1762,25 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                     }
                                 } else {
                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                        [wself showCustomErrorAlert:@"作品資訊不完整不能公開"];
+                                        [wself showToastMessage:@"作品資訊不完整不能公開"];
                                     });
                                 }
                             } else {
                                 NSString *alert = [error localizedDescription];
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    [wself showCustomErrorAlert:alert];
+                                    [wself showToastMessage:alert];
                                 });
                             }
                         }];
                     } else {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [wself showCustomErrorAlert:@"作品資訊不完整不能公開"];
+                            [wself showToastMessage:@"作品資訊不完整不能公開"];
                         });
                     }
                 } else {
                     NSString *alert = [error localizedDescription];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [wself showCustomErrorAlert:alert];
+                        [wself showToastMessage:alert];
                     });
                 }
             }];
@@ -1801,15 +1814,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     }
                 }
                 
-                [self showCustomAlertNormal:@"權限不足"];
+                [self showToastMessage:@"權限不足"];
                 
             }
                 break;
             case OPShare: {
                 if ([data[@"zipped"] intValue] != 1) {
-                   [self showCustomAlertNormal:@"作品尚未完成"];
+                   [self showToastMessage:@"作品尚未完成"];
                 } else if (![data[@"act"] isEqualToString:@"open"]){
-                   [self showCustomAlertNormal:@"隱私必須開啟才能分享"];
+                   [self showToastMessage:@"隱私必須開啟才能分享"];
                 } else {
                     //  proceed to share
                     if (![data[@"album_id"] isEqual: [NSNull null]])
@@ -1840,7 +1853,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         }
                     }
                 }
-                [self showCustomAlertNormal:@"權限不足"];
+                [self showToastMessage:@"權限不足"];
             }
                 break;
             default:
