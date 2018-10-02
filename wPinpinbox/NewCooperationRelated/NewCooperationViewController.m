@@ -789,6 +789,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (IBAction)backBtnPressed:(id)sender {
+    //  notify CalbumCollectionVC
+    if (self.vDelegate && [self.vDelegate respondsToSelector:@selector(newCoopeartionVCFinished:)]) {
+        [self.vDelegate newCoopeartionVCFinished:self.albumId];
+    }
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
 }

@@ -363,7 +363,6 @@
 		CB0C0DB32146509F00FAF438 /* image01.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB12146509F00FAF438 /* image01.xcassets */; };
 		CB0C0DB42146509F00FAF438 /* image00.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB22146509F00FAF438 /* image00.xcassets */; };
 		CB0C0DB6214653BA00FAF438 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB5214653BA00FAF438 /* Images.xcassets */; };
-		CBC404432150DB7A00BE068D /* CoCreatorListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBC404422150DB7A00BE068D /* CoCreatorListViewController.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
@@ -978,8 +977,6 @@
 		CB0C0DB12146509F00FAF438 /* image01.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image01.xcassets; path = "Image Resources/image01.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB22146509F00FAF438 /* image00.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image00.xcassets; path = "Image Resources/image00.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB5214653BA00FAF438 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Image Resources/Images.xcassets"; sourceTree = "<group>"; };
-		CBC404412150DB7A00BE068D /* CoCreatorListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoCreatorListViewController.h; sourceTree = "<group>"; };
-		CBC404422150DB7A00BE068D /* CoCreatorListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoCreatorListViewController.m; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -2155,8 +2152,6 @@
 				9225573F1BDF593600CD4E9B /* cell */,
 				922D92F51BDA2FF500640639 /* CalbumlistViewController.h */,
 				922D92F61BDA2FF500640639 /* CalbumlistViewController.m */,
-				CBC404412150DB7A00BE068D /* CoCreatorListViewController.h */,
-				CBC404422150DB7A00BE068D /* CoCreatorListViewController.m */,
 				92A3849D1CFD784800C1CDBC /* 離線用 */,
 				922557371BDF38F900CD4E9B /* Calbumlist.storyboard */,
 				9251196F1CEEFFF2002D4678 /* CalbumV1.xib */,
@@ -3131,7 +3126,6 @@
 				635775DA1ED3ECFB00637914 /* RecentBrowsingViewController.m in Sources */,
 				92A384A01CFD786A00C1CDBC /* OfflineViewController.m in Sources */,
 				54B08C8D2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m in Sources */,
-				CBC404432150DB7A00BE068D /* CoCreatorListViewController.m in Sources */,
 				92F6CD021B7B5382002E547C /* O_drag.m in Sources */,
 				63A574181DE7FA7D00C9EFAF /* GHContextMenuView.m in Sources */,
 				54D2694C21194EAF00AE3273 /* AlbumInfoViewController.m in Sources */,

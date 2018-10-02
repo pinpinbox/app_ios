@@ -10,7 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol NewCooperationVCDelegate <NSObject>
+- (void)newCoopeartionVCFinished:(NSString *)albumId;
+@end
+
 @interface NewCooperationViewController : UIViewController
+@property (nonatomic) id<NewCooperationVCDelegate> vDelegate;
 @property (strong, nonatomic) NSString *userIdentity;
 @property (nonatomic) NSString *albumId;
 @end

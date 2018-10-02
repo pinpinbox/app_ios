@@ -86,7 +86,7 @@
 @end
 
 #pragma mark
-@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AlbumCreationViewControllerDelegate,DDAUIActionSheetViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKSharingDelegate>
+@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AlbumCreationViewControllerDelegate,DDAUIActionSheetViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKSharingDelegate, NewCooperationVCDelegate>
 {
     NSInteger type;
     NSMutableArray *dataarr;
@@ -362,7 +362,16 @@
         NSMutableArray *ar = [NSMutableArray arrayWithArray:dataarr];
         
         NSArray *list = [dic objectForKey:@"data"];
-        [ar addObjectsFromArray:list];
+        NSMutableArray *ll = [NSMutableArray array];
+        int ci = 0;
+        for (NSDictionary *c in list) {
+            NSMutableDictionary *d = [NSMutableDictionary dictionaryWithDictionary:c];
+            [d setObject:[NSNumber numberWithInteger:nextId+ci] forKey:@"index"];
+            [ll addObject:d];
+            ci++;
+        }
+        
+        [ar addObjectsFromArray:ll];
         NSOrderedSet *nset = [NSOrderedSet orderedSetWithArray:ar];
         
         [dataarr setArray:[nset array]];//addObjectsFromArray:list];
@@ -529,7 +538,7 @@
     NSLog(@"");
     NSLog(@"data: %@", data);
     
-    NSString *myString=[NSString stringWithFormat:@"%@ << %@ << %ld",data[@"name"],data[@"album_id"],nextId];//[NSString stringWithFormat:@"    %@",data[@"name"]];
+    NSString *myString=[NSString stringWithFormat:@"%@",data[@"name"]];//[NSString stringWithFormat:@"    %@",data[@"name"]];
     
     Cell.descLabel.numberOfLines = 0;
     Cell.descLabel.text = myString;
@@ -666,33 +675,36 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 [scrollView setContentInset:u1];
                 
                 
-                UIActivityIndicatorView *indicator = nil;//(UIActivityIndicatorView *)[scrollView viewWithTag:54321];
-                if (!indicator) {
-                    indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-                    if (@available(iOS 11.0, *)) {
-                        indicator.center = CGPointMake(scrollView.frame.size.width/2-10, /*scrollView.bounds.size.height*/ self.view.safeAreaLayoutGuide.layoutFrame.size.height - 20);
-                    } else {
-                        indicator.center = CGPointMake(scrollView.frame.size.width/2-10, /*scrollView.bounds.size.height*/ self.view.frame.size.height - 20);
-                    }
-                    indicator.hidesWhenStopped = YES;
-                    
-                    [self.view addSubview:indicator];
-                    indicator.tag = 54321;
-                    [self.view bringSubviewToFront:indicator];
-                }
-                indicator.hidden = NO;
-                [indicator startAnimating];
+//                UIActivityIndicatorView *indicator = nil;//(UIActivityIndicatorView *)[scrollView viewWithTag:54321];
+//                if (!indicator) {
+//                    indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//                    [indicator setColor:[UIColor darkGrayColor]];
+//                    CGSize s = indicator.frame.size;
+//                    if (@available(iOS 11.0, *)) {
+//                        indicator.center = CGPointMake(scrollView.frame.size.width/2, /*scrollView.bounds.size.height*/ self.view.safeAreaLayoutGuide.layoutFrame.size.height - s.height);
+//                    } else {
+//                        indicator.center = CGPointMake(scrollView.frame.size.width/2, /*scrollView.bounds.size.height*/ self.view.frame.size.height - s.height);
+//                    }
+//                    indicator.hidesWhenStopped = YES;
+//
+//                    [self.view addSubview:indicator];
+//                    indicator.tag = 54321;
+//                    [self.view bringSubviewToFront:indicator];
+//                }
+//                indicator.hidden = NO;
+//                [indicator startAnimating];
 
-                
+                [wTools ShowMBProgressHUD];
                 isLoading = YES;
                 
                 dispatch_time_t after = dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC);
                 dispatch_after(after, dispatch_get_main_queue(), ^{
-                    [scrollView setContentInset:u];
                     
-                    UIActivityIndicatorView *i = (UIActivityIndicatorView *)[self.view viewWithTag:54321];
-                    [i stopAnimating];
-                    [i removeFromSuperview];
+                    [scrollView setContentInset:UIEdgeInsetsZero];
+                    [wTools HideMBProgressHUD];
+//                    UIActivityIndicatorView *i = (UIActivityIndicatorView *)[self.view viewWithTag:54321];
+//                    [i stopAnimating];
+//                    [i removeFromSuperview];
                     self->isLoading = NO;
                     [self reloaddata];
                     
@@ -1817,9 +1829,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                             if (![data[@"album_id"] isEqual: [NSNull null]]) {
                                 if ([i isEqual: [NSNull null]]) {
                                     [self showCustomEditActionSheet: [data[@"album_id"] stringValue]
-                                                       userIdentity: @"admin"];
+                                                       userIdentity: @"admin" cellIndex:index];
                                 } else if ([i isEqualToString: @"approver"] || [i isEqualToString: @"editor"]) {
-                                    [self toAlbumCreationViewController: [data[@"album_id"] stringValue] templateId: @"0" shareCollection: NO userIdentity: i];
+                                    [self toAlbumCreationViewController: [data[@"album_id"] stringValue] templateId: @"0" shareCollection: NO userIdentity: i cellIndex:index];
                                 }
                             }                            
                             return;
@@ -1860,6 +1872,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                             NewCooperationViewController *newCooperationVC = [[UIStoryboard storyboardWithName: @"NewCooperationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewCooperationViewController"];
                             newCooperationVC.albumId = [data[@"album_id"] stringValue];
                             newCooperationVC.userIdentity = i;
+                            newCooperationVC.vDelegate = self;
                             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                             [appDelegate.myNav pushViewController: newCooperationVC animated: YES];
                             
@@ -1886,7 +1899,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 #pragma mark - opMenu edit
 - (void)showCustomEditActionSheet:(NSString *)albumid
-                     userIdentity:(NSString *)userIdentity {
+                     userIdentity:(NSString *)userIdentity
+                        cellIndex:(NSInteger) index {
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
     
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
@@ -1913,14 +1927,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             [weakSelf toAlbumCreationViewController: albumid
                                          templateId: @"0"
                                     shareCollection: NO
-                                       userIdentity: userIdentity];
+                                       userIdentity: userIdentity cellIndex:index];
             });
         } else if ([identifierStr isEqualToString: @"modifyInfo"]) {
             NSLog(@"modifyInfo item is pressed");
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf toAlbumSettingViewController: albumid
                                             templateId: @"0"
-                                       shareCollection: NO];
+                                       shareCollection: NO
+                                             cellIndex:index];
             });
         }
     };
@@ -1929,7 +1944,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)toAlbumCreationViewController: (NSString *)albumId
                            templateId: (NSString *)templateId
                       shareCollection: (BOOL)shareCollection
-                         userIdentity: (NSString *)userIdentity {
+                         userIdentity: (NSString *)userIdentity
+                            cellIndex:(NSInteger) index {
     NSLog(@"toAlbumCreationViewController");    
     AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
     //acVC.selectrow = [wTools userbook];
@@ -1948,7 +1964,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         acVC.booktype = 1000;
         acVC.choice = @"Template";
     }
-    
+    acVC.view.tag = index;
     //[self.navigationController pushViewController: acVC animated: YES];
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -1958,6 +1974,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)toAlbumSettingViewController: (NSString *)albumId
                           templateId: (NSString *)templateId
                      shareCollection: (BOOL)shareCollection
+                           cellIndex:(NSInteger) index
 {
     NSLog(@"toAlbumSettingViewController");
     
@@ -1970,7 +1987,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     aSVC.delegate = self;
     aSVC.hasImage = YES;
     //[self.navigationController pushViewController: aSVC animated: YES];
-    
+    aSVC.view.tag = index;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: aSVC animated: YES];
 }
@@ -2135,43 +2152,61 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 - (void)tryUpdateAlbumSetting:(NSUInteger) index calbum:(NSDictionary *)calbum {
-    NSString *aid = calbum[@"album_id"];
+    //NSString *aid = calbum[@"album_id"];
     __block typeof(self) wself = self;
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI getalbumsettings:[wTools getUserID] token:[wTools getUserToken] album_id:aid];
+    
+    NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)index, 1];
+    
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        NSArray *arr = @[@"mine",@"other",@"cooperation"];
+        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                             token: [wTools getUserToken]
+                                              rank: arr[wself->type]//type]
+                                             limit: limit];
+        NSLog(@"%@",response);
         if (response != nil) {
             if (![response isEqualToString: timeOutErrorCode]) {
-                
+
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                if ([dic[@"result"] intValue] == 1) {
-                    NSMutableDictionary *nd = [NSMutableDictionary dictionaryWithDictionary:calbum];
-                    nd[@"act"] = dic[@"data"][@"act"];
-                    nd[@"name"] = dic[@"data"][@"title"];
-                    nd[@"location"] = dic[@"data"][@"location"];
-                    nd[@"description"] = dic[@"data"][@"description"];
-                    NSMutableDictionary *nt = [NSMutableDictionary dictionaryWithDictionary:wself->dataarr[index]];
-                    [nt setObject:nd forKey:@"album"];
-                    wself->dataarr[index] = nt;
+                NSArray *data = dic[@"data"];
+                if (data && data.count) {
+                    NSMutableDictionary *nd = [NSMutableDictionary dictionaryWithDictionary:data[0]];
+                    [nd setObject:[NSNumber numberWithInteger:index] forKey:@"index"];
+                    [wself->dataarr replaceObjectAtIndex:index withObject:nd];
                     [wself refreshCellAtIndex:index];
                 }
             }
         }
+        
     });
 }
 - (void)albumSettingViewControllerUpdate:(AlbumSettingViewController *)controller{
     NSString *aid = controller.albumId;
-    __block typeof(self) wself = self;
-    [dataarr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSDictionary *c = (NSDictionary *)obj;
+    //NSInteger idx = controller.view.tag;
+
+    for (int i = 0; i< [dataarr count];i++) {
+        NSMutableDictionary *c = (NSMutableDictionary *)dataarr[i];
         NSDictionary *calbum = c[@"album"];
-        if ([[calbum[@"album_id"] stringValue] isEqualToString:aid]) {
-            [wself tryUpdateAlbumSetting:idx calbum:calbum];
-            *stop = YES;
+        if (calbum && [[calbum[@"album_id"] stringValue] isEqualToString:aid]) {
+            [self tryUpdateAlbumSetting:i calbum:calbum];
+            break;
         }
-    }];
+    }
+    
 }
 - (void)albumCreationViewControllerBackBtnPressed:(AlbumCreationViewController *)controller {
     [self reloaddata];
+}
+
+- (void)newCoopeartionVCFinished:(NSString *)albumId {
+    for (int i = 0; i< [dataarr count];i++) {
+        NSMutableDictionary *c = (NSMutableDictionary *)dataarr[i];
+        NSDictionary *calbum = c[@"album"];
+        if (calbum && [[calbum[@"album_id"] stringValue] isEqualToString:albumId]) {
+            [self tryUpdateAlbumSetting:i calbum:calbum];
+            break;
+        }
+    }
 }
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     

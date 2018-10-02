@@ -1633,7 +1633,7 @@ shouldChangeTextInRange:(NSRange)range
                             } else {
                                 NSLog(@"isViewDidLoad: %d",stSelf->isViewDidLoad);
                                 
-                                if ([self.templateid intValue] == 0) {
+                                if ([stSelf.templateid intValue] == 0) {
                                     // check if there is no image
                                     if (stSelf->isViewDidLoad) {
                                         // And it's first time to go to AlbumCreationVC
@@ -1644,7 +1644,7 @@ shouldChangeTextInRange:(NSRange)range
                                 }
                             }
                         } else {
-                            [self myshowimage];
+                            [stSelf myshowimage];
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
