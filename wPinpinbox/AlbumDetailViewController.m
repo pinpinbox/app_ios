@@ -3189,7 +3189,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     //[self retrieveAlbum];
 }
 
-- (void)albumSettingViewControllerUpdate:(AlbumSettingViewController *)controller {
+- (void)albumSettingViewControllerUpdate:(AlbumSettingViewController *)controller{
     NSLog(@"albumSettingViewControllerUpdate");
     //[self retrieveAlbum];
 }

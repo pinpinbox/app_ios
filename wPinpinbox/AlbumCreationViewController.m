@@ -1710,11 +1710,21 @@ shouldChangeTextInRange:(NSRange)range
                                             [stSelf.delegate albumCreationViewControllerBackBtnPressed: stSelf];
                                         }
                                         [appDelegate.myNav popToViewController: vc animated: YES];
+                                        break;
                                     }
                                 }
                             } else if ([stSelf.fromVC isEqualToString: @"AlbumCollectionVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                                [appDelegate.myNav popViewControllerAnimated: YES];
+                                for (UIViewController *vc in appDelegate.myNav.viewControllers) {
+                                    if ([vc isKindOfClass: [AlbumCollectionViewController class]]) {
+                                        if ([stSelf.delegate respondsToSelector: @selector(albumCreationViewControllerBackBtnPressed:)]) {
+                                            [stSelf.delegate albumCreationViewControllerBackBtnPressed: stSelf];
+                                        }
+                                        [appDelegate.myNav popToViewController: vc animated: YES];
+                                        break;
+                                    }
+                                }
+                                
                             } else {
                                 AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
                                 albumCollectionVC.postMode = stSelf.postMode;

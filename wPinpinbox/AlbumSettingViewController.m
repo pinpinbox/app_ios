@@ -1628,6 +1628,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         return;
                     } else if ([vc isKindOfClass: [AlbumCollectionViewController class]]) {
                         NSLog(@"vc is AlbumCollectionVC");
+                        if ([self.delegate respondsToSelector: @selector(albumSettingViewControllerUpdate:)]) {
+                            [self.delegate albumSettingViewControllerUpdate: self];
+                        }
                         [appDelegate.myNav popToViewController: vc animated: YES];
                         
                         return;

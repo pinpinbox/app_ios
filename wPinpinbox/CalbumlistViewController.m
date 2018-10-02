@@ -255,14 +255,13 @@
         [self getcalbumlist];
     }
 }
-
 - (void)getcalbumlist {
     NSLog(@"");
     NSLog(@"getcalbumlist");
     
     [wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
-    NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
+    NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 10];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSArray *arr = @[@"mine",@"other",@"cooperation"];
@@ -354,6 +353,7 @@
 
 - (void)processCalbumlist:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
+        NSInteger pn = nextId;
         if (nextId==0) {
             [dataarr removeAllObjects];//=[NSMutableArray new];
         }
@@ -372,9 +372,10 @@
         // dataarr=[dic[@"data"] mutableCopy];
         
         //NSLog(@"dataarr: %@", dataarr);
-        
-        [_refreshControl endRefreshing];
-        [_collectioview reloadData];
+        if (pn != nextId) {
+            [_refreshControl endRefreshing];
+            [_collectioview reloadData];
+        }
         
         if (nextId  >= 0)
             isLoading = NO;
@@ -575,10 +576,10 @@
     return Cell;
 }
 - (void)checkRefreshContent {
-    if (type != 1) {
-        [dataarr removeAllObjects];
-        [self reloadData];
-    }
+//    if (type != 1) {
+//        [dataarr removeAllObjects];
+//        [self reloadData];
+//    }
 }
 -(void)reloadData {
     nextId = 0;
@@ -687,20 +688,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 //}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    if (isLoading)
-//        return;
-//
-//    if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
-//        [self reloaddata];
-//    }
-}
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (isLoading)
         return;
-    
-    //if ((scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.frame.size.height * 2)) {
-    [self reloaddata];
-    //}
+
+    if ((scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.frame.size.height )) {
+        [self reloaddata];
+    }
 }
 - (void)refreshCellAtIndex:(NSInteger) index {
     NSDictionary *d1 = dataarr[index];
@@ -1713,9 +1706,13 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                             [wself showCustomErrorAlert:@"你的作品還沒有內容"];
                                         });
                                     else {
-                                        NSMutableDictionary *va = [NSMutableDictionary dictionaryWithDictionary:settings];
+                                        NSMutableDictionary *va = [NSMutableDictionary dictionaryWithDictionary:settings[@"data"]];
                                         //  modify "act" value in settings
-                                        [va setObject:@"open" forKey:@"act"];
+                                        if ([va[@"act"] isEqualToString:@"open"])
+                                            [va setObject:@"close" forKey:@"act"];
+                                        else
+                                            [va setObject:@"open" forKey:@"act"];
+                                        
                                         //NSString *setting = [NSJSONSerialization dataWithJSONObject:va options: error:]
                                         NSData *jsonData = [NSJSONSerialization dataWithJSONObject: va options: 0 error: nil];
                                         NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
@@ -1783,7 +1780,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         switch (action) {
             case OPEdit:{
                 //  for refreshing album list
-                nextId = 0;
+                //nextId = 0;
                 isLoading = NO;
                 
                 NSDictionary *co = dataarr[index][@"cooperation"];
@@ -1821,7 +1818,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 break;
             case OPInvite: {
                 //  for refreshing album list
-                nextId = 0;
+                //nextId = 0;
                 isLoading = NO;
                 
                 NSDictionary *co = dataarr[index][@"cooperation"];
@@ -1876,14 +1873,18 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     self.customEditActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         if ([identifierStr isEqualToString: @"albumEdit"]) {
             NSLog(@"albumEdit item is pressed");
-            [weakSelf toAlbumCreationViewController: albumid
-                                         templateId: @"0"
-                                    shareCollection: NO];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf toAlbumCreationViewController: albumid
+                                             templateId: @"0"
+                                        shareCollection: NO];
+            });
         } else if ([identifierStr isEqualToString: @"modifyInfo"]) {
             NSLog(@"modifyInfo item is pressed");
-            [weakSelf toAlbumSettingViewController: albumid
-                                        templateId: @"0"
-                                   shareCollection: NO];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf toAlbumSettingViewController: albumid
+                                            templateId: @"0"
+                                       shareCollection: NO];
+            });
         }
     };
     
@@ -2098,8 +2099,40 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     };
     
 }
-- (void)albumSettingViewControllerUpdate:(AlbumSettingViewController *)controller {
-    [self reloaddata];
+- (void)albumSettingViewControllerUpdate:(AlbumSettingViewController *)controller{
+    NSString *aid = controller.albumId;
+    __block typeof(self) wself = self;
+    [dataarr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSDictionary *c = (NSDictionary *)obj;
+        NSDictionary *calbum = c[@"album"];
+        if ([[calbum[@"album_id"] stringValue] isEqualToString:aid]) {
+            *stop = YES;
+            NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)idx-1, 1];
+            dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+                NSArray *arr = @[@"mine",@"other",@"cooperation"];
+                //  check index!!
+                NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                                     token: [wTools getUserToken]
+                                                      rank: arr[wself->type]//type]
+                                                     limit: limit];
+                NSLog(@"albumSettingViewControllerUpdate %@",response);
+            });
+            
+            
+        }
+    }];
+    
+    
+    
+    
+    
+    
+    //[self reloaddata];
+    
+    //  get index with album
+    //  get album data with api
+    //  replace dataarr
+    //  refresh the table
 }
 - (void)albumCreationViewControllerBackBtnPressed:(AlbumCreationViewController *)controller {
     [self reloaddata];
