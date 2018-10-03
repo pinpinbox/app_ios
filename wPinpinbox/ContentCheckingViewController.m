@@ -249,7 +249,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)saveBrowsingData: (NSDictionary *)bookData {
     NSLog(@"saveBrowseData");
+    NSLog(@"bookData: %@", bookData);
     NSArray *photoArr = bookData[@"photo"];
+    NSLog(@"photoArr: %@", photoArr);
     NSString *imageUrlThumbnail = photoArr[0][@"image_url_thumbnail"];
     //NSLog(@"imageUrlThumbnail: %@", photoArr[0][@"image_url_thumbnail"]);
     
@@ -996,7 +998,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         wself->isDataLoaded = YES;
+                        NSLog(@"dic data: %@", dic[@"data"]);
                         self.bookdata = [dic[@"data"] copy];
+                        
+                        if ([self.bookdata[@"photo"] isEqual: [NSNull null]]) {
+                            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                            style.messageColor = [UIColor whiteColor];
+                            style.backgroundColor = [UIColor thirdPink];
+                            
+                            [wself.view makeToast: @"作品內沒有內容 "
+                                         duration: 2.0
+                                         position: CSToastPositionBottom
+                                            style: style];
+                            return;
+                        }
 //                        NSLog(@"self.bookdata: %@", self.bookdata);
                         
                         // Core Data Setting for RecentBrowsingViewController
