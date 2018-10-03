@@ -267,6 +267,7 @@ replacementString:(NSString *)string {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"Before");
+                        NSLog(@"self.option: %@", self.option);
                         
                         if ([self.option isEqualToString: @"FirstTimeLoading"]) {
                             self.cooperationData = [NSMutableArray arrayWithArray: dic[@"data"]];
@@ -297,16 +298,30 @@ replacementString:(NSString *)string {
                             }
                         }
                         
+                        NSLog(@"Before Swap");
+                        NSLog(@"self.cooperationData: %@", self.cooperationData);
                         // Swap Array data for change admin order to 1st one
-                        NSInteger adminIndexInteger = 0;
-                        
-                        for (NSInteger i = 0; i < self.cooperationData.count; i++) {
-                            NSString *identityStr = self.cooperationData[i][@"cooperation"][@"identity"];
-                            if ([identityStr isEqualToString: @"admin"]) {
-                                adminIndexInteger = i;
+                        if (self.cooperationData.count > 0) {
+                            NSString *identityStr = self.cooperationData[0][@"cooperation"][@"identity"];
+                            NSLog(@"identityStr: %@", identityStr);
+                            
+                            if (![identityStr isEqualToString: @"admin"]) {
+                                NSInteger adminIndexInteger = 0;
+                                
+                                for (NSInteger i = 0; i < self.cooperationData.count; i++) {
+                                    NSString *identityStr = self.cooperationData[i][@"cooperation"][@"identity"];
+                                    NSLog(@"identityStr: %@", identityStr);
+                                    
+                                    if ([identityStr isEqualToString: @"admin"]) {
+                                        adminIndexInteger = i;
+                                        NSLog(@"adminIndexInteger: %ld", (long)adminIndexInteger);
+                                    }
+                                }
+                                [self.cooperationData exchangeObjectAtIndex: adminIndexInteger withObjectAtIndex: 0];
+                                NSLog(@"After Swap");
+                                NSLog(@"self.cooperationData: %@", self.cooperationData);
                             }
                         }
-                        [self.cooperationData exchangeObjectAtIndex: adminIndexInteger withObjectAtIndex: 0];
                         
                         // Update Cell Data
                         if ([self.option isEqualToString: @"FirstTimeLoading"]) {
@@ -317,10 +332,6 @@ replacementString:(NSString *)string {
                             if (self.creatorListData.count > 0) {
                                 [self.creatorListCollectionView reloadItemsAtIndexPaths: self.creatorIndexPathArray];
                             }
-                        } else if ([self.option isEqualToString: @"Updating"]) {
-                            [UIView performWithoutAnimation:^{
-                                [self.identityCollectionView reloadItemsAtIndexPaths: self.indexPathArray];
-                            }];
                         } else if ([self.option isEqualToString: @"Deleting"]) {
                             [self.identityCollectionView deleteItemsAtIndexPaths: self.indexPathArray];
                             if (self.creatorListData.count > 0) {
@@ -565,8 +576,22 @@ replacementString:(NSString *)string {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         self.option = @"Updating";
-                        [self.cooperationData removeAllObjects];
-                        [self getCooperationList];
+                        
+                        NSLog(@"Before Updating");
+                        NSLog(@"self.cooperationData: %@", self.cooperationData);
+                        for (NSInteger i = 0; i < self.cooperationData.count; i++) {
+                            NSMutableDictionary *d = self.cooperationData[i];
+                            NSMutableDictionary *cooperationDic = d[@"cooperation"];
+                            [cooperationDic setValue: identity forKey: @"identity"];
+                        }
+                        NSLog(@"After Updating");
+                        NSLog(@"self.cooperationData: %@", self.cooperationData);
+                        
+                        [UIView performWithoutAnimation:^{
+                            [self.identityCollectionView reloadItemsAtIndexPaths: self.indexPathArray];
+                        }];                        
+//                        [self.cooperationData removeAllObjects];
+//                        [self getCooperationList];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];

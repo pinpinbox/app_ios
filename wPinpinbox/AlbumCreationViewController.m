@@ -193,7 +193,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // Do any additional setup after loading the view.
     NSLog(@"");
     NSLog(@"AlbumCreationViewController viewDidLoad");
-    
+    NSLog(@"self.userIdentity: %@", self.userIdentity);
     NSLog(@"self.choice: %@", self.choice);
     NSLog(@"self.postMode: %d", self.postMode);
     NSLog(@"self.templateid: %@", self.templateid);
@@ -2505,13 +2505,14 @@ didFinishSavingWithError:(NSError *)error
     NSLog(@"-----------");
     NSLog(@"myshowimage");
     NSLog(@"selectItem: %ld", (long)selectItem);
-    NSLog(@"ImageDataArr: %@", ImageDataArr);
+//    NSLog(@"ImageDataArr: %@", ImageDataArr);
     
     for (UIView *v in [_ShowView subviews]) {
         NSLog(@"v: %@", v);
         [v removeFromSuperview];
     }
     if (ImageDataArr.count == 0) {
+        NSLog(@"ImageDataArr.count == 0");
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
         //        adobeEidt.hidden = YES;
@@ -2530,6 +2531,7 @@ didFinishSavingWithError:(NSError *)error
         return;
         
     } else if (ImageDataArr.count != 0) {
+        NSLog(@"ImageDataArr.count != 0");
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
         //        adobeEidt.hidden = NO;
@@ -2551,10 +2553,6 @@ didFinishSavingWithError:(NSError *)error
     
     NSLog(@"selectItem: %ld", (long)selectItem);
     
-    NSString *str = ImageDataArr[selectItem][@"image_url"];
-    if ([str isKindOfClass:[NSNull class]]) return;
-    
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -2564,14 +2562,21 @@ didFinishSavingWithError:(NSError *)error
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         // If ImageDataArr is empty
         // then the code below will not be executed
         __strong typeof(weakSelf) stSelf = weakSelf;
-        NSData *data = [NSData dataWithContentsOfURL: [NSURL URLWithString:stSelf->ImageDataArr[stSelf->selectItem][@"image_url"]]];
-        NSLog(@"image_url: %@", stSelf->ImageDataArr[stSelf->selectItem][@"image_url"]);
         
+        NSLog(@"image_url: %@", stSelf->ImageDataArr[stSelf->selectItem][@"image_url"]);
+        NSData *data;
+        
+        if ([stSelf->ImageDataArr[stSelf->selectItem][@"image_url"] isEqual: [NSNull null]]) {
+            data = [NSData dataWithContentsOfFile: @"bg200_no_image.jpg"];
+        } else {
+            data = [NSData dataWithContentsOfURL: [NSURL URLWithString:stSelf->ImageDataArr[stSelf->selectItem][@"image_url"]]];
+        }                
         NSLog(@"global queue");
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2584,7 +2589,6 @@ didFinishSavingWithError:(NSError *)error
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             NSLog(@"get main queue");
             
             UIImage *image = [UIImage imageWithData: data];
