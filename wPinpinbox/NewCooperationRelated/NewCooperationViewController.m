@@ -267,8 +267,9 @@ replacementString:(NSString *)string {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"Before");
+                        NSLog(@"self.option: %@", self.option);
                         
-                        if ([self.option isEqualToString: @"FirstTimeLoading"]) {
+                        if ([self.option isEqualToString: @"FirstTimeLoading"] || [self.option isEqualToString: @"Updating"]) {
                             self.cooperationData = [NSMutableArray arrayWithArray: dic[@"data"]];
                         } else if ([self.option isEqualToString: @"Adding"]) {
                             NSArray *tempArray = [NSMutableArray arrayWithArray: dic[@"data"]];
@@ -297,16 +298,28 @@ replacementString:(NSString *)string {
                             }
                         }
                         
+                        NSLog(@"Before Swap");
+                        NSLog(@"self.cooperationData: %@", self.cooperationData);
                         // Swap Array data for change admin order to 1st one
+                        if (self.cooperationData.count > 0) {
+                            NSString *identityStr = self.cooperationData[0][@"cooperation"][@"identity"];
+                            NSLog(@"identityStr: %@", identityStr);
+                        }
+                        
                         NSInteger adminIndexInteger = 0;
                         
                         for (NSInteger i = 0; i < self.cooperationData.count; i++) {
                             NSString *identityStr = self.cooperationData[i][@"cooperation"][@"identity"];
+                            NSLog(@"identityStr: %@", identityStr);
+                            
                             if ([identityStr isEqualToString: @"admin"]) {
                                 adminIndexInteger = i;
+                                NSLog(@"adminIndexInteger: %ld", (long)adminIndexInteger);
                             }
                         }
                         [self.cooperationData exchangeObjectAtIndex: adminIndexInteger withObjectAtIndex: 0];
+                        NSLog(@"After Swap");
+                        NSLog(@"self.cooperationData: %@", self.cooperationData);
                         
                         // Update Cell Data
                         if ([self.option isEqualToString: @"FirstTimeLoading"]) {
