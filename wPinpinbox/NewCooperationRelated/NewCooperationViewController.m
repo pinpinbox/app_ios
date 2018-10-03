@@ -259,7 +259,7 @@ replacementString:(NSString *)string {
                                           userId: @""
                                         identity: @""
                                          albumId: @""
-                                       indexPath: nil];
+                                      creatorDic: nil];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -268,35 +268,8 @@ replacementString:(NSString *)string {
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"Before");
                         NSLog(@"self.option: %@", self.option);
-                        
-                        if ([self.option isEqualToString: @"FirstTimeLoading"]) {
-                            self.cooperationData = [NSMutableArray arrayWithArray: dic[@"data"]];
-                        } else if ([self.option isEqualToString: @"Adding"]) {
-                            NSArray *tempArray = [NSMutableArray arrayWithArray: dic[@"data"]];
-                            
-                            if (self.cooperationData.count != tempArray.count) {
-                                if (self.cooperationData.count < tempArray.count) {
-                                    NSSet *set1 = [NSSet setWithArray: self.cooperationData];
-                                    NSMutableSet *set2 = [NSMutableSet setWithArray: tempArray];
-                                    [set2 minusSet: set1];
-                                    NSArray *array = set2.allObjects;
-                                    [self.cooperationData insertObject: array[0] atIndex: 1];
-                                }
-                            }
-                        } else if ([self.option isEqualToString: @"Deleting"]) {
-                            NSArray *tempArray = [NSMutableArray arrayWithArray: dic[@"data"]];
-                            
-                            if (self.cooperationData.count != tempArray.count) {
-                                if (self.cooperationData.count > tempArray.count) {
-                                    NSSet *set1 = [NSSet setWithArray: tempArray];
-                                    NSMutableSet *set2 = [NSMutableSet setWithArray: self.cooperationData];
-                                    [set2 minusSet: set1];
-                                    NSArray *array = set2.allObjects;
-//                                    [self.cooperationData insertObject: array[0] atIndex: 1];
-                                    [self.cooperationData removeObjectsInArray: array];
-                                }
-                            }
-                        }
+                        self.cooperationData = [NSMutableArray arrayWithArray: dic[@"data"]];
+                        [self.identityCollectionView reloadData];
                         
                         NSLog(@"Before Swap");
                         NSLog(@"self.cooperationData: %@", self.cooperationData);
@@ -322,26 +295,6 @@ replacementString:(NSString *)string {
                                 NSLog(@"self.cooperationData: %@", self.cooperationData);
                             }
                         }
-                        
-                        // Update Cell Data
-                        if ([self.option isEqualToString: @"FirstTimeLoading"]) {
-                            [self.identityCollectionView reloadData];
-                        } else if ([self.option isEqualToString: @"Adding"]) {
-                            NSLog(@"self.cooperationData: %@", self.cooperationData);
-                            [self.identityCollectionView insertItemsAtIndexPaths: self.indexPathArray];
-                            if (self.creatorListData.count > 0) {
-                                [self.creatorListCollectionView reloadItemsAtIndexPaths: self.creatorIndexPathArray];
-                            }
-                        } else if ([self.option isEqualToString: @"Deleting"]) {
-                            [self.identityCollectionView deleteItemsAtIndexPaths: self.indexPathArray];
-                            if (self.creatorListData.count > 0) {
-                                [self.creatorListCollectionView reloadItemsAtIndexPaths: self.creatorIndexPathArray];
-                            }
-                        }
-                        
-//                        if (self.cooperationData.count) {
-//                            [self.creatorListCollectionView reloadData];
-//                        }
                         
                         // Get User Identity
                         for (NSDictionary *d in self.cooperationData) {
@@ -395,7 +348,7 @@ replacementString:(NSString *)string {
                                           userId: @""
                                         identity: @""
                                          albumId: @""
-                                       indexPath: nil];
+                                      creatorDic: nil];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dicQR = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [responseQRCode dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -452,7 +405,7 @@ replacementString:(NSString *)string {
                                           userId: @""
                                         identity: @""
                                          albumId: @""
-                                       indexPath: nil];
+                                      creatorDic: nil];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -569,7 +522,7 @@ replacementString:(NSString *)string {
                                           userId: userId
                                         identity: identity
                                          albumId: albumId
-                                       indexPath: nil];
+                                      creatorDic: nil];
                 } else {
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"dic: %@", dic);
@@ -608,7 +561,7 @@ replacementString:(NSString *)string {
 
 - (void)deleteCooperation:(NSString *)userId
                   albumId:(NSString *)albumId
-                indexPath:(NSIndexPath *)indexPath {
+               creatorDic:(NSMutableDictionary *)creatorDic {
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -633,7 +586,7 @@ replacementString:(NSString *)string {
                                               userId: userId
                                             identity: @""
                                              albumId: albumId
-                                           indexPath: indexPath];
+                                          creatorDic: creatorDic];
                     } else {
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
@@ -642,19 +595,44 @@ replacementString:(NSString *)string {
                         if ([dic[@"result"] intValue] == 1) {
                             self.option = @"Deleting";
                             
-                            /*
-                            if (self.creatorListData.count > 0) {
-                                [self.creatorListData removeAllObjects];
+                            NSInteger indexInt = 0;
+                            NSArray *array;
+
+                            NSLog(@"self.cooperationData: %@", self.cooperationData);
+                            
+                            for (NSInteger i = 0; i < self.cooperationData.count; i++) {
+                                NSLog(@"i: %ld", i);
                                 
-                                for (NSInteger i = 0; i < self.creatorListData.count; i++) {
-                                    NSDictionary *d = self.creatorListData[i];
-                                    if ([d[@"user"][@"user_id"] intValue] == [userId intValue]) {
-                                        [self.creatorIndexPathArray addObject: [NSIndexPath indexPathForRow: i inSection: 0]];
-                                    }
+                                NSMutableDictionary *dicData = self.cooperationData[i];
+                                NSLog(@"dicData: %@", dicData);
+                                
+                                if ([dicData[@"user"][@"user_id"] intValue] == [creatorDic[@"user"][@"user_id"] intValue]) {
+                                    NSLog(@"userId Match");
+                                    array = [NSArray arrayWithObject: creatorDic];
+                                    NSLog(@"array: %@", array);
+                                    indexInt = i;
                                 }
                             }
-                             */
-                            [self getCooperationList];
+//                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow: indexInt inSection: 0];
+//                            NSArray *indexPathArray = [NSArray arrayWithObject: indexPath];
+//                            [self.indexPathArray removeAllObjects];
+//                            [self.indexPathArray addObject: indexPathArray];
+//
+                            NSLog(@"self.cooperationData removeObjectsInArray");
+                            
+                            [self.cooperationData removeObjectAtIndex: indexInt];
+                            NSLog(@"self.cooperationData: %@", self.cooperationData);
+                            
+                            NSLog(@"self.identityCollectionView deleteItemsAtIndexPaths");
+//                            NSLog(@"indexPath.row: %ld", (long)indexPath.row);
+                            
+                            [self.identityCollectionView deleteItemsAtIndexPaths: self.indexPathArray];
+                            
+                            if (self.creatorListData.count > 0) {
+                                NSLog(@"self.creatorListCollectionView reloadItemsAtIndexPaths");
+                                [self.creatorListCollectionView reloadItemsAtIndexPaths: self.creatorIndexPathArray];
+                            }
+//                            [self getCooperationList];
                         } else if ([dic[@"result"] intValue] == 0) {
                             NSLog(@"失敗：%@",dic[@"message"]);
                             [self showCustomErrorAlert: dic[@"message"]];
@@ -672,7 +650,7 @@ replacementString:(NSString *)string {
 
 - (void)addCoperation:(NSString *)userId
               albumId:(NSString *)albumId
-            indexPath:(NSIndexPath *)indexPath {
+           creatorDic:(NSMutableDictionary *)creatorDic {
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -697,7 +675,7 @@ replacementString:(NSString *)string {
                                               userId: userId
                                             identity: @""
                                              albumId: albumId
-                                           indexPath: indexPath];
+                                          creatorDic: creatorDic];
                     } else {
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
@@ -707,12 +685,16 @@ replacementString:(NSString *)string {
                             self.option = @"Adding";
                             [self.indexPathArray removeAllObjects];
                             self.indexPathArray = [NSMutableArray arrayWithObject: [NSIndexPath indexPathForRow: 1 inSection: 0]];
-                            
+                            [self.cooperationData insertObject: creatorDic atIndex: 1];
+                            [self.identityCollectionView insertItemsAtIndexPaths: self.indexPathArray];
+                            if (self.creatorListData.count > 0) {
+                                [self.creatorListCollectionView reloadItemsAtIndexPaths: self.creatorIndexPathArray];
+                            }
 //                            if (self.creatorListData.count > 0) {
 //                                [self.creatorListCollectionView reloadData];
 //                            }
 //                            [self.cooperationData removeAllObjects];
-                            [self getCooperationList];
+//                            [self getCooperationList];
                         } else if ([dic[@"result"] intValue] == 0) {
                             NSLog(@"失敗：%@",dic[@"message"]);
                             [self showCustomErrorAlert: dic[@"message"]];
@@ -894,20 +876,21 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSDictionary *userDic = self.creatorListData[indexPath.row][@"user"];
     NSString *userId = [userDic[@"user_id"] stringValue];
     
-    NSLog(@"self.creatorListData: %@", self.creatorListData[indexPath.row]);
-    
     if (indexPath == nil) {
         assert(false);
         return;
     }
     NSLog(@"indexPath.row: %ld", (long)indexPath.row);
     
+//    NSArray *creatorIndexPathArray;
+//    creatorIndexPathArray = [NSArray arrayWithObject: indexPath];
+    
     [self.creatorIndexPathArray removeAllObjects];
     [self.creatorIndexPathArray addObject: indexPath];
     
     [self addCoperation: userId
                 albumId: self.albumId
-              indexPath: indexPath];
+             creatorDic: [self createCreatorDic: userDic]];
 }
 
 - (IBAction)identityBtnPressed:(id)sender {
@@ -969,6 +952,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     [self.creatorIndexPathArray removeAllObjects];
     
+//    NSArray *creatorIndexPathArray;
+    
     if (self.creatorListData.count > 0) {
         for (NSInteger i = 0; i < self.creatorListData.count; i++) {
             NSDictionary *dic = self.creatorListData[i];
@@ -978,9 +963,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 NSLog(@"found userId in self.creatorListData");
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow: i inSection: 0];
                 [self.creatorIndexPathArray addObject: indexPath];
+//                creatorIndexPathArray = [NSArray arrayWithObject: indexPath];
             }
         }
     }
+    
+//    NSArray *cooperationIndexPathArray;
+//    cooperationIndexPathArray = [NSArray arrayWithObject: indexPath];
     
     [self.indexPathArray removeAllObjects];
     [self.indexPathArray addObject: indexPath];
@@ -989,7 +978,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         if ([self.userIdentity isEqualToString: @"admin"]) {
             [self deleteCooperation: userId
                             albumId: self.albumId
-                          indexPath: indexPath];
+                         creatorDic: [self createCreatorDic: userDic]];
         } else if ([self.userIdentity isEqualToString: @"approver"]) {
             if ([cooperationDic[@"identity"] isEqualToString: @"approver"]) {
                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -1003,10 +992,27 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             } else {
                 [self deleteCooperation: userId
                                 albumId: self.albumId
-                              indexPath: indexPath];
+                             creatorDic: [self createCreatorDic: userDic]];
             }
         }
     }
+}
+
+#pragma mark -
+- (NSMutableDictionary *)createCreatorDic:(NSDictionary *)userDic {
+    NSMutableDictionary *identityDic = [NSMutableDictionary new];
+    [identityDic setObject: @"editor" forKey: @"identity"];
+    
+    NSMutableDictionary *userDicData = [NSMutableDictionary new];
+    [userDicData setObject: userDic[@"name"] forKey: @"name"];
+    [userDicData setObject: userDic[@"picture"] forKey: @"picture"];
+    [userDicData setObject: userDic[@"user_id"] forKey: @"user_id"];
+    
+    NSMutableDictionary *creatorDic = [NSMutableDictionary new];
+    [creatorDic setObject: identityDic forKey: @"cooperation"];
+    [creatorDic setObject: userDicData forKey: @"user"];
+    
+    return creatorDic;
 }
 
 #pragma mark - Show actionsheet
@@ -1100,7 +1106,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                         userId:(NSString *)userId
                       identity:(NSString *)identity
                        albumId:(NSString *)albumId
-                     indexPath:(NSIndexPath *)indexPath {
+                    creatorDic:(NSMutableDictionary *)creatorDic {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1141,11 +1147,11 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             } else if ([protocolName isEqualToString: @"deleteCooperation"]) {
                 [weakSelf deleteCooperation: userId
                                     albumId: albumId
-                                  indexPath: indexPath];
+                                 creatorDic: creatorDic];
             } else if ([protocolName isEqualToString: @"addCoperation"]) {
                 [weakSelf addCoperation: userId
                                 albumId: albumId
-                              indexPath: indexPath];
+                             creatorDic: creatorDic];
             }
         }
     }];
