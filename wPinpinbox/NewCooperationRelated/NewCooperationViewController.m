@@ -1001,7 +1001,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark -
 - (NSMutableDictionary *)createCreatorDic:(NSDictionary *)userDic {
     NSMutableDictionary *identityDic = [NSMutableDictionary new];
-    [identityDic setObject: @"editor" forKey: @"identity"];
+    [identityDic setObject: @"viewer" forKey: @"identity"];
     
     NSMutableDictionary *userDicData = [NSMutableDictionary new];
     [userDicData setObject: userDic[@"name"] forKey: @"name"];
