@@ -1926,6 +1926,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"toAlbumCreationViewController");    
     AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
     //acVC.selectrow = [wTools userbook];
+    NSLog(@"userIdentity: %@", userIdentity);
     acVC.userIdentity = userIdentity;
     acVC.albumid = albumId;
     acVC.templateid = [NSString stringWithFormat:@"%@", templateId];

@@ -512,8 +512,11 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result is 1");
-                        
-                        [wself getcalbumlist];
+                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                        contentCheckingVC.albumId = albumId;
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
+//                        [wself getcalbumlist];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
                         //[self.navigationController popViewControllerAnimated: YES];
