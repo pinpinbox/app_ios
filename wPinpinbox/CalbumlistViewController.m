@@ -505,7 +505,7 @@
     
     
     NSLog(@"act: %@", data[@"act"]);
-    if (type != 1){
+    if (type == 0){
         Cell.lockBtn.hidden = NO;
         if (![data[@"act"] isEqualToString: @"open"]) {
             //img.alpha = 0.3;
