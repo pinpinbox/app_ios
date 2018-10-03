@@ -30,9 +30,10 @@
     __weak IBOutlet UILabel *lab_left;
     __weak IBOutlet UILabel *lab_rig;
     
-    NSString *albumId;
+//    NSString *albumId;
     NSString *productn;
 }
+@property (strong, nonatomic) NSString *albumId;
 @property (weak, nonatomic) IBOutlet UIView *viewPreview;
 @property (weak, nonatomic) IBOutlet UIButton *bbitemStart;
 @property (nonatomic) BOOL isReading;
@@ -295,12 +296,12 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     
                     sv = strArray[0];
                     
-                    albumId = sv;
+                    self.albumId = sv;
                     
                     NSLog(@"album_id: %@", sv);
                     
                     //[self ToRetrievealbumpViewControlleralbumid:sv];
-                    [self performSelectorOnMainThread: @selector(ToRetrievealbumpViewControlleralbumid:) withObject: albumId waitUntilDone: NO];
+                    [self performSelectorOnMainThread: @selector(ToRetrievealbumpViewControlleralbumid:) withObject: self.albumId waitUntilDone: NO];
                     
                 } else if (!([strArray[1] rangeOfString: @"type"].location == NSNotFound)) {
                     
@@ -319,7 +320,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                         sv = strArray[1];
                         
                         NSLog(@"sv: %@", sv);
-                        albumId = sv;
+                        self.albumId = sv;
                         
                         NSLog(@"type_id: %@", sv);
                         
@@ -467,8 +468,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     });
 }
 - (void) processAlbumID:(NSString *)aid {
-    albumId = aid;//[NSString stringWithString:aid];
-    [self ToRetrievealbumpViewControlleralbumid: albumId];
+    self.albumId = aid;//[NSString stringWithString:aid];
+    [self ToRetrievealbumpViewControlleralbumid: self.albumId];
 }
 #pragma mark - Protocol Method Section
 
@@ -482,9 +483,9 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     
     [data setObject: [wTools getUserID] forKey: @"user_id"];
     [data setObject: @"album" forKey: @"type"];
-    [data setObject: albumId forKey: @"type_id"];
+    [data setObject: self.albumId forKey: @"type_id"];
     
-    NSLog(@"albumId: %@", albumId);
+    NSLog(@"albumId: %@", self.albumId);
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI addcooperation: [wTools getUserID]
@@ -513,7 +514,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result is 1");
                         ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
-                        contentCheckingVC.albumId = albumId;
+                        contentCheckingVC.albumId = wself.albumId;
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
 //                        [wself getcalbumlist];
@@ -542,7 +543,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     
     [wTools ShowMBProgressHUD];
     NSLog(@"wTools ShowMBProgressHUD");
-    __block NSString *aid = albumId;
+    __block NSString *aid = self.albumId;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getcalbumlist: [wTools getUserID]

@@ -3684,7 +3684,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             
             if (stSelf->ImageDataArr.count == 0) {
                 // if there is no image then should set to close
-                [stSelf callAlbumSettings];
+//                [stSelf callAlbumSettings];
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                [appDelegate.myNav popViewControllerAnimated: YES];
             } else {
                 [stSelf updateAlbumOfDiy: @"back"];
             }
