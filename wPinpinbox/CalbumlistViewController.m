@@ -720,7 +720,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 //                    [i removeFromSuperview];
                     
                     [self reloaddata];
-                    
+                    isLoading = NO;
                 });
                 
             }
