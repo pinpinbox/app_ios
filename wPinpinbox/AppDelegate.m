@@ -135,8 +135,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     gai.logger.logLevel = kGAILogLevelVerbose;
     
 #if(DEBUG)
-    gai.dryRun = NO;
-#else
     gai.dryRun = YES;
 #endif
     

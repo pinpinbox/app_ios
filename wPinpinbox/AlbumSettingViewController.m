@@ -694,6 +694,31 @@
                 }
                 [secondCategoryArray addObject: dic];
             }
+            
+            
+            [firstCategoryArray removeAllObjects];
+            BOOL checkFirst = NO;
+            for (NSMutableDictionary *d in mdata[@"firstpaging"]) {
+                arr = d[@"secondpaging"];
+                checkFirst = NO;
+                for (NSDictionary *d1 in arr) {
+                    int y = [d1[@"id"] intValue];
+                    if (x == y) {
+                        checkFirst = YES;
+                        break;
+                    }
+                }
+                
+                [d setValue: [NSNumber numberWithBool: checkFirst] forKey: @"selected"];
+                if (checkFirst && secondCategoryArray.count < 1) {
+                    for (NSMutableDictionary *d1 in arr) {
+                        int y = [d1[@"id"] intValue];
+                        [d1 setValue: [NSNumber numberWithBool: x==y] forKey: @"selected"];
+                        [secondCategoryArray addObject:d1];
+                    }
+                }
+                [firstCategoryArray addObject: d];
+            }
         }
     }
     

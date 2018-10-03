@@ -1997,7 +1997,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     aSVC.shareCollection = shareCollection;
     aSVC.fromVC = @"AlbumDetailVC";
     aSVC.delegate = self;
-    aSVC.hasImage = YES;
+    NSDictionary *al = dataarr[index][@"album"];
+    //  check if album has contents
+    aSVC.hasImage = ([al[@"usefor"][@"image"] boolValue] || [al[@"usefor"][@"video"] boolValue]) ;
     //[self.navigationController pushViewController: aSVC animated: YES];
     aSVC.view.tag = index;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
