@@ -259,7 +259,9 @@
     NSLog(@"");
     NSLog(@"getcalbumlist");
     
-    //[wTools ShowMBProgressHUD];
+    if (nextId == 0)
+        [wTools ShowMBProgressHUD];
+
     __block typeof(self) wself = self;
     NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 10];
     
@@ -270,9 +272,9 @@
                                               rank: arr[wself->type]//type]
                                              limit: limit];
         
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [wTools HideMBProgressHUD];
-//            });
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wTools HideMBProgressHUD];
+            });
         
             if (response != nil) {
                 NSLog(@"response from getcalbumlist");
@@ -291,12 +293,15 @@
                     
                 } else {
                     NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    NSDictionary *dict1 = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    NSMutableDictionary *c = [NSMutableDictionary dictionaryWithDictionary:dict1];
+                    [c setObject:limit forKey:@"section"];
+                                        
+                    NSLog(@"dic: %@", dict1);
                     dispatch_async(dispatch_get_main_queue(), ^{
                         __strong typeof(wself) ss = wself;
-                        [ss processCalbumlist:dic];
+                        [ss processCalbumlist:c];
                     });
                 }
             }else{
@@ -350,58 +355,64 @@
         
     }
 }
-
+- (int)getSectionStart:(NSString *)limit {
+    //NSArray *ls = [limit by]
+    return -1;
+}
 - (void)processCalbumlist:(NSDictionary *)dic {
-    if ([dic[@"result"] intValue] == 1) {
-        NSInteger pn = nextId;
-        if (nextId==0) {
-            [dataarr removeAllObjects];//=[NSMutableArray new];
-        }
-        int s=0;
-        NSMutableArray *ar = [NSMutableArray arrayWithArray:dataarr];
-        
-        NSArray *list = [dic objectForKey:@"data"];
-        NSMutableArray *ll = [NSMutableArray array];
-        int ci = 0;
-        for (NSDictionary *c in list) {
-            NSMutableDictionary *d = [NSMutableDictionary dictionaryWithDictionary:c];
-            [d setObject:[NSNumber numberWithInteger:nextId+ci] forKey:@"index"];
-            [ll addObject:d];
-            ci++;
-        }
-        
-        [ar addObjectsFromArray:ll];
-        NSOrderedSet *nset = [NSOrderedSet orderedSetWithArray:ar];
-        
-        [dataarr setArray:[nset array]];//addObjectsFromArray:list];
-        
-        
-        s = (int)[list count];
-        nextId = nextId+s;
-        // dataarr=[dic[@"data"] mutableCopy];
-        
-        //NSLog(@"dataarr: %@", dataarr);
-        if (pn != nextId) {
+    if (dic[@"result"]) {
+        if ([dic[@"result"] intValue] == 1) {
+            NSLog(@"section::: %@",dic[@"section"]);
+            NSInteger pn = nextId;
+            if (nextId==0) {
+                [dataarr removeAllObjects];//=[NSMutableArray new];
+            }
+            int s=0;
+            NSMutableArray *ar = [NSMutableArray arrayWithArray:dataarr];
+            
+            NSArray *list = [dic objectForKey:@"data"];
+            NSMutableArray *ll = [NSMutableArray array];
+            int ci = 0;
+            for (NSDictionary *c in list) {
+                NSMutableDictionary *d = [NSMutableDictionary dictionaryWithDictionary:c];
+                [d setObject:[NSNumber numberWithInteger:nextId+ci] forKey:@"index"];
+                [ll addObject:d];
+                ci++;
+            }
+            
+            [ar addObjectsFromArray:ll];
+            NSOrderedSet *nset = [NSOrderedSet orderedSetWithArray:ar];
+            
+            [dataarr setArray:[nset array]];//addObjectsFromArray:list];
+            
+            
+            s = (int)[list count];
+            nextId = nextId+s;
+            // dataarr=[dic[@"data"] mutableCopy];
+            
+            //NSLog(@"dataarr: %@", dataarr);
+            if (pn != nextId) {
+                [_refreshControl endRefreshing];
+                [_collectioview reloadData];
+            }
+            
+            if (nextId  >= 0)
+                isLoading = NO;
+            
+            if (s==0) {
+                isLoading = YES;
+            }
+            
+            isreload = NO;
+            if (dataarr.count < 1) {
+                [self showBackView];
+            }
+        } else if ([dic[@"result"] intValue] == 0) {
+            NSLog(@"失敗：%@",dic[@"message"]);
+            [self showCustomErrorAlert: dic[@"message"]];
             [_refreshControl endRefreshing];
-            [_collectioview reloadData];
+            isreload = NO;
         }
-        
-        if (nextId  >= 0)
-            isLoading = NO;
-        
-        if (s==0) {
-            isLoading = YES;
-        }
-        
-        isreload = NO;
-        if (dataarr.count < 1) {
-            [self showBackView];
-        }
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-        [_refreshControl endRefreshing];
-        isreload = NO;
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         [_refreshControl endRefreshing];
@@ -614,7 +625,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"data: %@", data);
     
     if ([data[@"usefor"][@"image"] boolValue] || [data[@"usefor"][@"video"] boolValue]) {
-        BOOL zipped = [data[@"zipped"] boolValue];
+        //BOOL zipped = [data[@"zipped"] boolValue];
         NSString *albumId;
         
         NSDictionary *userdata=dataarr[indexPath.row][@"user"];
@@ -623,18 +634,21 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         if (![data[@"album_id"] isEqual: [NSNull null]]) {
             albumId = [data[@"album_id"] stringValue];
         }
-        if (zipped) {
-            NSLog(@"if zipped is YES");
-            if (type == 2) {
-                [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
-                return;
-            }
-            if ([[(id)userId stringValue] isEqualToString:[wTools getUserID]]) {
-                [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
-            } else {
-                [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
-            }
+        // issue 0002170 //
+        //if (zipped) {
+        NSLog(@"if zipped is YES");
+        if (type == 2) {
+            [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+            return;
         }
+        if ([[(id)userId stringValue] isEqualToString:[wTools getUserID]]) {
+            [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+        } else {
+            [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+        }
+        //} else if (type == 2) {
+        //    [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+        //}
     } else {
         [self showToastMessage: @"作品沒有內容"];
     }
@@ -666,11 +680,11 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         CGFloat maxOffset = scrollView.contentSize.height-scrollView.frame.size.height;
         CGFloat diff = maxOffset-curOffset;
         
-        if (canLoad && diff <= -60) {
+        if (canLoad && diff <= -50) {
             if (!isLoading) {
                 CGFloat prevScrollViewBottomInset = scrollView.contentInset.bottom;
                 UIEdgeInsets u =scrollView.contentInset;
-                UIEdgeInsets u1 = UIEdgeInsetsMake(u.top, u.left, prevScrollViewBottomInset+30, u.right);
+                UIEdgeInsets u1 = UIEdgeInsetsMake(u.top, u.left, prevScrollViewBottomInset+50, u.right);
                 [scrollView setContentInset:u1];
                 
                 
@@ -704,7 +718,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 //                    UIActivityIndicatorView *i = (UIActivityIndicatorView *)[self.view viewWithTag:54321];
 //                    [i stopAnimating];
 //                    [i removeFromSuperview];
-                    self->isLoading = NO;
+                    
                     [self reloaddata];
                     
                 });
@@ -713,22 +727,19 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         }
     }
 }
-- (void)updateAlbumact:(NSInteger) index {
-    NSDictionary *d1 = dataarr[index];
-    NSDictionary *data = dataarr[index][@"album"];
-    NSMutableDictionary *nd = [NSMutableDictionary dictionaryWithDictionary:data];
-    NSString  *z = nd[@"act"];
-    if ( [z isEqualToString:@"close"])
-        nd[@"act"] = @"open";
-    else
-        nd[@"act"] = @"close";
-    NSMutableDictionary *nd1 = [NSMutableDictionary dictionaryWithDictionary:d1];
-    [nd1 setObject:nd forKey:@"album"];
-    [dataarr replaceObjectAtIndex:index withObject:nd1];
-    [self refreshCellAtIndex:index];
+- (void)updateAlbumact:(NSString *) albumid {
+    for (int i = 0; i< [dataarr count];i++) {
+        NSMutableDictionary *c = (NSMutableDictionary *)dataarr[i];
+        NSDictionary *calbum = c[@"album"];
+        if (calbum && [[calbum[@"album_id"] stringValue] isEqualToString:albumid]) {
+            [self tryUpdateAlbumSetting:i];
+            break;
+        }
+        
+    }
+
 }
 - (void)refreshCellAtIndex:(NSInteger) index {
-    
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.collectioview reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
@@ -1731,7 +1742,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     if (t && t.length > 0 && ![f isKindOfClass:[NSNull class]] && ![s isKindOfClass:[NSNull class]]) {
                         [boxAPI getAlbumDiyWithAlbumId:albumid completionBlock:^(NSDictionary *result, NSError *error) {
                             if (!error) {
-                                NSDictionary *d = result[@"data"];
+                                NSDictionary *  d = result[@"data"];
                                 if (d) {
                                     NSArray *a = d[@"photo"];
                                     if (a.count < 1)
@@ -1752,7 +1763,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                         
                                         [boxAPI setAlbumSettingsWithDictionary:jsonStr albumid:albumid completionBlock:^(NSDictionary *result, NSError *error) {
                                             if (!error) {
-                                                [wself updateAlbumact:index];
+                                                [wself updateAlbumact:albumid];
                                             } else if (error.code == 1111) {
                                                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                                                 style.messageColor = [UIColor whiteColor];
@@ -2150,7 +2161,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     };
     
 }
-- (void)tryUpdateAlbumSetting:(NSUInteger) index calbum:(NSDictionary *)calbum {
+- (void)tryUpdateAlbumSetting:(NSUInteger) index{
     //NSString *aid = calbum[@"album_id"];
     __block typeof(self) wself = self;
     
@@ -2187,7 +2198,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSMutableDictionary *c = (NSMutableDictionary *)dataarr[i];
         NSDictionary *calbum = c[@"album"];
         if (calbum && [[calbum[@"album_id"] stringValue] isEqualToString:aid]) {
-            [self tryUpdateAlbumSetting:i calbum:calbum];
+            [self tryUpdateAlbumSetting:i];
             break;
         }
     }
@@ -2202,7 +2213,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSMutableDictionary *c = (NSMutableDictionary *)dataarr[i];
         NSDictionary *calbum = c[@"album"];
         if (calbum && [[calbum[@"album_id"] stringValue] isEqualToString:albumId]) {
-            [self tryUpdateAlbumSetting:i calbum:calbum];
+            [self tryUpdateAlbumSetting:i];
             break;
         }
     }
