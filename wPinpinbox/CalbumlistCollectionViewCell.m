@@ -18,7 +18,9 @@
 #import "UIColor+Extensions.h"
 #import "UIViewController+ErrorAlert.h"
 #import "CustomIOSAlertView.h"
-
+@interface CalbumlistCollectionViewCell ()
+@property (nonatomic) UIImageView *caution;
+@end
 @implementation CalbumlistCollectionViewCell
 - (void)awakeFromNib
 {
@@ -34,6 +36,13 @@
     UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 95, [UIScreen mainScreen].bounds.size.width, 1)];
     line.backgroundColor = [UIColor thirdGrey];
     [self addSubview: line];
+    
+    _caution = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic200_warn_pink"]];
+    _caution.frame = CGRectMake(0, 0,32, 32);
+    [self.bgview insertSubview:_caution belowSubview:self.opMenu]; //aboveSubview:self.imageView];
+    //[self bringSubviewToFront:_caution];
+    _caution.hidden = YES;
+    
 }
 #pragma mark - arrange cell sub views by collectionViewType
 //  mode for displaying user's album list
@@ -76,6 +85,17 @@
     self.coopLabel.text = [NSString stringWithFormat:@"%00d", number];
     _coopIcon.hidden = number <= 1;
     _coopLabel.hidden = number <= 1;
+}
+- (void)displayZippedStatus:(BOOL)z {
+    self.zipped = z;
+    if (z) {
+        self.imageView.alpha = 1;
+        self.caution.hidden = YES;
+    } else {
+        self.imageView.alpha = 0.3;
+        self.caution.center = self.imageView.center;
+        _caution.hidden = NO;
+    }
 }
 -(void)addto{
     // NSLog(@"CalbumlistCollectionViewCell");

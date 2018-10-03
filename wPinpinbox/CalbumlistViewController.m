@@ -487,7 +487,8 @@
     img.layer.cornerRadius = 6;
     
     Cell.opMenuLeading.constant = collectionView.bounds.size.width;
-    Cell.zipped = [data[@"zipped"] boolValue];
+    
+    [Cell displayZippedStatus:[data[@"zipped"] boolValue]];
     //Cell.stopview.hidden = YES;
     
     NSLog(@"data zipped boolvalue: %d", [data[@"zipped"] boolValue]);

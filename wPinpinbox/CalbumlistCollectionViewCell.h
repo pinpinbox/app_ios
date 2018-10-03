@@ -68,4 +68,5 @@ typedef NS_ENUM(NSInteger, OpMenuActionType){
 - (void)favAlbumMode;
 - (void)setCoopNumber:(int)number;
 - (BOOL)isOpMode;
+- (void)displayZippedStatus:(BOOL)z;
 @end
