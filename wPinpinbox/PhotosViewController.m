@@ -78,6 +78,10 @@
 @property (nonatomic) BOOL shouldResize;
 //@property (nonatomic) CGFloat compressionData;
 
+@property (nonatomic) NSInteger photoFinished;
+@property (nonatomic) NSInteger photoFailed;
+@property (nonatomic) NSInteger totalPhoto;
+
 @end
 
 @implementation PhotosViewController
@@ -657,17 +661,17 @@
             NSLog(@"queue has completed");
             __block typeof(hud) whud = hud;
             __block typeof(dataTaskArray) array = dataTaskArray;
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [whud hideAnimated: YES];
-                
-                [array removeAllObjects];
-                
-                [self.navigationController popViewControllerAnimated: YES];
-                
-                if ([self.delegate respondsToSelector: @selector(afterSendingImages:)]) {
-                    [self.delegate afterSendingImages: self];
-                }
-            }];
+//            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//                [whud hideAnimated: YES];
+//
+//                [array removeAllObjects];
+//
+//                [self.navigationController popViewControllerAnimated: YES];
+//
+//                if ([self.delegate respondsToSelector: @selector(afterSendingImages:)]) {
+//                    [self.delegate afterSendingImages: self];
+//                }
+//            }];
         }
     }
 }

@@ -553,6 +553,12 @@
     
     Cell.descLabel.numberOfLines = 0;
     Cell.descLabel.text = myString;
+    [Cell.descLabel sizeToFit];
+    if (Cell.descLabel.frame.size.height > 58) {
+        CGRect t = Cell.descLabel.frame;
+        Cell.descLabel.bounds = CGRectMake(t.origin.x, t.origin.y, t.size.width, 58);
+        Cell.descLabel.numberOfLines = 3;
+    }
     
     //個人資料
     NSDictionary *userdata=dataarr[indexPath.row][@"user"];
@@ -721,7 +727,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 //                    [i removeFromSuperview];
                     
                     [self reloaddata];
-                    isLoading = NO;
+                    self->isLoading = NO;
                 });
                 
             }
