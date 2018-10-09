@@ -1597,7 +1597,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     [wself processReportResult:dic];
                 }
@@ -1674,7 +1674,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding:NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     NSString *msg = @"";
                     
@@ -1794,7 +1794,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);

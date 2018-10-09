@@ -196,7 +196,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     [wself processTemplateListResult:dic];
                 }
@@ -498,7 +498,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if (dic != nil) {
                         if ([dic[@"result"] intValue] == 1) {
@@ -809,7 +809,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");

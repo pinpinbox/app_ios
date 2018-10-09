@@ -1591,7 +1591,7 @@ shouldChangeTextInRange:(NSRange)range
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"call getalbumofdiy success");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         stSelf.selectrow = [dic[@"data"][@"usergrade"][@"photo_limit_of_album"] intValue];
                         NSLog(@"self.selectrow: %ld", (long)stSelf.selectrow);
@@ -1712,7 +1712,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] boolValue]) {
                         NSLog(@"dic result boolValue is 1");
@@ -1808,7 +1808,7 @@ shouldChangeTextInRange:(NSRange)range
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         if ([option isEqualToString: @"save"]) {
@@ -3505,7 +3505,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     
                     //if ([dic[@"result"]boolValue]) {
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         self.audioMode = audioMode;
                         
@@ -3621,7 +3621,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

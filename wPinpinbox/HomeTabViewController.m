@@ -756,7 +756,7 @@ sourceController:(UIViewController *)source
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     [wself processUpdateListResult:dic];
                     
@@ -850,7 +850,7 @@ sourceController:(UIViewController *)source
 }
 - (void)processGetCategoryListResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
-        NSLog(@"dic: %@", dic);
+        
         NSLog(@"dic data: %@", dic[@"data"]);
         categoryArray = [NSMutableArray arrayWithArray: dic[@"data"]];
         
@@ -926,7 +926,7 @@ sourceController:(UIViewController *)source
     
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         NSLog(@"SYSTEM_OK");
-        NSLog(@"dic: %@", dic);
+        
         getTheMeAreaDic = dic;
         
         NSLog(@"dic data albumexplore: %@", dic[@"data"][@"albumexplore"]);
@@ -944,7 +944,7 @@ sourceController:(UIViewController *)source
         [dic setObject: colorHexStr forKey: @"colorhex"];
         [dic setObject: nameStr forKey: @"name"];
         [dic setObject: imageStr forKey: @"image_360x360"];
-        NSLog(@"dic: %@", dic);
+        
         
         NSMutableDictionary *dicData = [[NSMutableDictionary alloc] init];
         [dicData setObject: dic forKey: @"categoryarea"];
@@ -1138,7 +1138,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"Get Real Response");
                     NSDictionary *dic =  (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if (![dic[@"result"] boolValue]) {
                         return ;
@@ -1396,7 +1396,7 @@ sourceController:(UIViewController *)source
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
@@ -1808,7 +1808,7 @@ sourceController:(UIViewController *)source
         HomeCategoryCollectionViewCell *cell = nil;        
         cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
         NSDictionary *dic = categoryArray[indexPath.row][@"categoryarea"];
-        NSLog(@"dic: %@", dic);
+        
         NSLog(@"dic name: %@", dic[@"name"]);
         NSLog(@"dic image_360x360: %@", dic[@"image_360x360"]);
         
@@ -1850,7 +1850,7 @@ sourceController:(UIViewController *)source
         NSLog(@"collectionView.tag == 5");
         SearchTabCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"SearchCell" forIndexPath: indexPath];
         NSDictionary *albumDic = followAlbumData[indexPath.row][@"album"];
-        NSLog(@"albumDic: %@", albumDic);
+        //NSLog(@"albumDic: %@", albumDic);
         
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
@@ -1951,7 +1951,7 @@ sourceController:(UIViewController *)source
         }
         
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
-        NSLog(@"albumDic: %@", albumDic);
+        //NSLog(@"albumDic: %@", albumDic);
         
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];

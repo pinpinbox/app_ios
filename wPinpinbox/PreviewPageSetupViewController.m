@@ -279,7 +279,7 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         if ([self.delegate respondsToSelector: @selector(previewPageSetupViewControllerDisappearAfterCalling:modifySuccess:imageArray:)]) {
                             [self.delegate previewPageSetupViewControllerDisappearAfterCalling: self modifySuccess: [dic[@"result"] boolValue] imageArray: self.imageArray];

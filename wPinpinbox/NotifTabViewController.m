@@ -194,7 +194,7 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     NSLog(@"response from getPushQueue");
-                    NSLog(@"dic: %@", dic);
+                    
                     [wself processPushQueue:dic];
                     
                 }
@@ -308,7 +308,7 @@
     NotifTabTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"Cell" forIndexPath: indexPath];
     
     NSDictionary *dic = [notificationData[indexPath.row] copy];
-    NSLog(@"dic: %@", dic);
+    
     
     NSString *imageUrl = dic[@"pushqueue"][@"image_url"];
     NSLog(@"imageUrl: %@", imageUrl);
@@ -797,7 +797,7 @@ heightForHeaderInSection:(NSInteger)section {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic: %@", dic);
+                        
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         

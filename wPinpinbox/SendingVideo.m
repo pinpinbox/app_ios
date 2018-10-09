@@ -111,7 +111,7 @@
     if (response != nil) {
         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
         
-        NSLog(@"dic: %@", dic);
+        
         
         if ([dic[@"result"] boolValue]) {
             NSLog(@"dic result boolValue: %d", [dic[@"result"] boolValue]);

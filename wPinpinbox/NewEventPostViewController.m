@@ -460,7 +460,7 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     NSLog(@"getcalbumlist");
-//                    NSLog(@"dic: %@", dic);
+//                    
                     
                     [wself processExistAlbums:dic];
                 }
