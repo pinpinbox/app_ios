@@ -28,6 +28,8 @@
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "MultipartInputStream.h"
+
 #define kFontSize 18
 
 #define kFontSizeForUploading 18
@@ -141,7 +143,6 @@
     
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
-    config.timeoutIntervalForResource = [kTimeOutForPhoto floatValue];
     
     _session = [NSURLSession sessionWithConfiguration: config delegate:self delegateQueue:nil];
     
@@ -404,7 +405,7 @@
         // A key whose value indicates whether the result image is
         // a low-quality substitute for the requested image.
         if (![info[PHImageResultIsDegradedKey] boolValue]) {
-            NSLog(@"imageData: %@", imageData);
+            
             img = [UIImage imageWithData:imageData];
             UIImage *image = [wself imageRatioCalculation: img];
             [wself addImage:image];
@@ -419,6 +420,7 @@
             }
         }
     }];
+    
 }
 
 - (void)addImage:(UIImage *) image {
@@ -540,7 +542,7 @@
             
         NSLog(@"boxAPI insertPhotoOfDiy");
         NSData *imageData = UIImageJPEGRepresentation(imageForResize, 1.0);
-        [self insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];
+        [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];//insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];
         
         [imgArray removeObjectAtIndex:0];
             //NSLog(@"response: %@", response);
@@ -629,10 +631,12 @@
 //                                               scale: img.scale * screenScale
 //                                         orientation: img.imageOrientation];
 
-    UIImage *scaledImage = [img resizedImage: newSize
-                        interpolationQuality: 4];
+   // UIImage *scaledImage = [img resizedImage: newSize
+   //                     interpolationQuality: 4];
     
-    return scaledImage;
+   // return scaledImage;
+    
+    return  img;
 }
 
 /*
@@ -1165,7 +1169,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     //self.hud.progress = 0;
     //[self postProcessUploadFinished];
 }
-- (void)updateProgress:(CGFloat)p {
+- (void)updateProgress:(CGFloat)p total:(int64_t)total  {
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1186,7 +1190,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [_params setObject:uid forKey:@"id"];
     [_params setObject:token forKey:@"token"];
     [_params setObject:album_id forKey:@"album_id"];
-    [_params setObject:[self signGenerator2:_params] forKey:@"sign"];
+    [_params setObject:[boxAPI signGenerator2:_params] forKey:@"sign"];
     
     // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
     NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
@@ -1351,7 +1355,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             
             [dataTaskArray removeObject:t];
             
-            [self updateProgress:0];
+            [self updateProgress:0 total:0];
             [self postProcessUploadFinished];
             
             NSURLSessionDataTask *tt = [dataTaskArray firstObject];
@@ -1363,7 +1367,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
     
     NSLog(@"removeDataTask %ld",[dataTaskArray count]);
-    [self updateProgress:0];
+    [self updateProgress:0 total:0];
     [self postProcessUploadFinished];
 }
 - (void)URLSession:(NSURLSession *)session
@@ -1374,64 +1378,64 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     double p = (double)totalBytesSent / (double)totalBytesExpectedToSend;
     //NSLog(@"didSendBodyData bytesSent :%lld, totalBytesSent: %lld, totalBytesExpectedToSend %lld ",bytesSent,totalBytesSent,totalBytesExpectedToSend);
-    [self updateProgress:p];
+    [self updateProgress:p total:totalBytesExpectedToSend];
 }
-- (NSString *)signGenerator2:(NSDictionary *)parameters {
-    //NSLog(@"signGenerator2")l;
-    
-    NSString *secrectSN = @"d9$kv3fk(ri3mv#d-kg05[vs)F;f2lg/";
-    NSString *signSN = @"";
-    NSArray *keys = [parameters allKeys];
-    
-    keys = [keys sortedArrayUsingComparator: ^NSComparisonResult(id obj1, id obj2) {
-        return [obj1 compare: obj2 options: NSNumericSearch];
-    }];
-    
-//    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
-    //:/?@!$&'()*+,;=
-    
-    NSString *requestOriginal = @"";
-    
-    for (int i = 0 ;i < keys.count ;i++) {
-        //NSLog(@"i: %d", i);
-        //NSLog(@"keys.count: %lu", (unsigned long)keys.count);
-        
-        NSString *key = keys[i];
-        NSString *value = parameters[key];
-        // requestOriginal=[NSString stringWithFormat:@"%@%@=%@",requestOriginal,key,[value stringByAddingPercentEncodingWithAllowedCharacters:URLCombinedCharacterSet]];
-        
-        requestOriginal = [NSString stringWithFormat:@"%@%@=%@", requestOriginal, key, value];
-        //NSLog(@"requestOriginal: %@", requestOriginal);
-        
-        if (i < keys.count - 1) {
-            //NSLog(@"i < keys.count - 1");
-            requestOriginal = [NSString stringWithFormat:@"%@&", requestOriginal];
-            //NSLog(@"requestOriginal: %@", requestOriginal);
-        }
-    }
-    //requestOriginal=[requestOriginal stringByReplacingOccurrencesOfString:@"%@20" withString:@"+"];
-    
-    //NSLog(@"requestOriginal lowercaseString");
-    NSString *requestLow = [requestOriginal lowercaseString];
-    //NSLog(@"%@",requestLow);
-    
-    //NSLog(@"requestLow,secrectSN");
-    requestLow = [NSString stringWithFormat:@"%@%@",requestLow,secrectSN];
-    //NSLog(@"%@",requestLow);
-    
-    //NSLog(@"requestLow.MD5");
-    requestLow = requestLow.MD5;
-    //NSLog(@"%@",requestLow);
-    
-    //NSLog(@"requestLow.lowercaseString");
-    requestLow = requestLow.lowercaseString;
-    //NSLog(@"%@",requestLow);
-    
-    signSN = requestLow;
-    //NSLog(@"signSN: %@", signSN);
-    
-    return signSN;
-}
+//- (NSString *)signGenerator2:(NSDictionary *)parameters {
+//    //NSLog(@"signGenerator2")l;
+//
+//    NSString *secrectSN = @"d9$kv3fk(ri3mv#d-kg05[vs)F;f2lg/";
+//    NSString *signSN = @"";
+//    NSArray *keys = [parameters allKeys];
+//
+//    keys = [keys sortedArrayUsingComparator: ^NSComparisonResult(id obj1, id obj2) {
+//        return [obj1 compare: obj2 options: NSNumericSearch];
+//    }];
+//
+////    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
+//    //:/?@!$&'()*+,;=
+//
+//    NSString *requestOriginal = @"";
+//
+//    for (int i = 0 ;i < keys.count ;i++) {
+//        //NSLog(@"i: %d", i);
+//        //NSLog(@"keys.count: %lu", (unsigned long)keys.count);
+//
+//        NSString *key = keys[i];
+//        NSString *value = parameters[key];
+//        // requestOriginal=[NSString stringWithFormat:@"%@%@=%@",requestOriginal,key,[value stringByAddingPercentEncodingWithAllowedCharacters:URLCombinedCharacterSet]];
+//
+//        requestOriginal = [NSString stringWithFormat:@"%@%@=%@", requestOriginal, key, value];
+//        //NSLog(@"requestOriginal: %@", requestOriginal);
+//
+//        if (i < keys.count - 1) {
+//            //NSLog(@"i < keys.count - 1");
+//            requestOriginal = [NSString stringWithFormat:@"%@&", requestOriginal];
+//            //NSLog(@"requestOriginal: %@", requestOriginal);
+//        }
+//    }
+//    //requestOriginal=[requestOriginal stringByReplacingOccurrencesOfString:@"%@20" withString:@"+"];
+//
+//    //NSLog(@"requestOriginal lowercaseString");
+//    NSString *requestLow = [requestOriginal lowercaseString];
+//    //NSLog(@"%@",requestLow);
+//
+//    //NSLog(@"requestLow,secrectSN");
+//    requestLow = [NSString stringWithFormat:@"%@%@",requestLow,secrectSN];
+//    //NSLog(@"%@",requestLow);
+//
+//    //NSLog(@"requestLow.MD5");
+//    requestLow = requestLow.MD5;
+//    //NSLog(@"%@",requestLow);
+//
+//    //NSLog(@"requestLow.lowercaseString");
+//    requestLow = requestLow.lowercaseString;
+//    //NSLog(@"%@",requestLow);
+//
+//    signSN = requestLow;
+//    //NSLog(@"signSN: %@", signSN);
+//
+//    return signSN;
+//}
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg
@@ -1441,6 +1445,136 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         [customAlertView close];
     }];
     
+}
+- (void)sendWithStream:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id imageData:(NSData *)imageData {
+
+    if (!imageData || imageData.length < 1) return;
+    // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
+    NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
+    [_params setObject:uid forKey:@"id"];
+    [_params setObject:token forKey:@"token"];
+    [_params setObject:album_id forKey:@"album_id"];
+    [_params setObject:[boxAPI signGenerator2:_params] forKey:@"sign"];
+    
+    // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
+    NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
+    
+    // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
+    NSString* FileParamConstant = @"file";
+    
+    // the server url to which the image (or the media) is uploaded. Use your server url here
+    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/insertphotoofdiy",@"/1.1"]];
+    
+    // create request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval: [kTimeOutForPhoto floatValue]];
+    [request setHTTPMethod:@"POST"];
+    
+    MultipartInputStream *st = [[MultipartInputStream alloc] initWithBoundary:BoundaryConstant];
+    
+    for (NSString *e in [_params allKeys]) {
+        NSString *d = _params[e];
+        [st addPartWithName:e string:d];
+    }
+    if (imageData && imageData.length > 0) {
+        
+        [st addPartWithName:FileParamConstant filename:@"image.jpg" data:imageData contentType:@"image/jpeg"];
+    }
+    
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    
+    [request setValue:[NSString stringWithFormat:@"%ld",st.totalLength] forHTTPHeaderField:@"Content-Length"];
+    // set HTTP_ACCEPT_LANGUAGE in HTTP Header
+    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
+    
+    [request setHTTPBodyStream:st];
+    
+    __block NSString *str;
+    
+    __block typeof(self) wself = self;
+    
+    //    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    //    config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
+    //    _session = [NSURLSession sessionWithConfiguration: config delegate:self delegateQueue:nil];
+    //
+    __block NSString *desc = [[NSUUID UUID] UUIDString];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSLog(@"insertphotoofdiy");
+        
+        __strong typeof(wself) sself = wself;
+        if (error) {
+            NSLog(@"dataTaskWithRequest error: %@", error);
+            //            dispatch_async(dispatch_get_main_queue(), ^{
+            //                wself->hud.detailsLabel.text = @"網路不穩";
+            //                wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+            //            });
+            //            dispatch_semaphore_signal(semaphore);
+            //            return;
+        }
+        if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
+            NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+            
+            if (statusCode != 200) {
+                NSLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
+                //dispatch_semaphore_signal(semaphore);
+                //return;
+            }
+        }
+        if (!error && data) {
+            str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
+            
+            //NSLog(@"str: %@", str);
+            
+            NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [str dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+            
+            
+            
+            if ([dic[@"result"] boolValue]) {
+                //NSMutableArray *imageInfoArray = [NSMutableArray new];
+                
+                //for (NSMutableDictionary *photo in dic[@"data"][@"photo"]) {
+                //    [imageInfoArray addObject: photo[@"photo_id"]];
+                //}
+                //NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
+                
+                //wself.photoFinished = imageInfoArray.count;
+                [sself increaseFinished];
+                //[imageInfoArray removeAllObjects];
+                //imageInfoArray = nil;
+                
+                //dispatch_async(dispatch_get_main_queue(), ^{
+                //    wself->hud.detailsLabel.text = @"";
+                //});
+            } else {
+                NSLog(@"Error Message: %@", dic[@"message"]);
+                
+                //                dispatch_async(dispatch_get_main_queue(), ^{
+                //                    wself->hud.detailsLabel.text = @"網路不穩";
+                //                    wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+                //                });
+                [sself increaseFailed];
+            }
+            
+        } else {
+            [sself increaseFailed];
+        }
+        [sself removeDataTask:desc];
+        
+        
+        
+    }];
+    NSLog(@"task resume");
+    
+    [task setTaskDescription:desc];
+    [dataTaskArray addObject: task];
+    if ([dataTaskArray count] == 1)
+        [task resume];
+    
+    //st add
 }
 /*
 - (UIView *)createErrorContainerView: (NSString *)msg
@@ -1524,7 +1658,9 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
  didSendBodyData: 32768 per update...
  For Streaming upload body
  
- requestDataForAssetResource:options:dataReceivedHandler:completionHandler:
+ From PHAsset -> PHAssetResource:
+ [PHAssetResource assetResourcesForAsset:PHAsset]
+ [[PHAssetResourceManager defaultManager] requestDataForAssetResource:options:dataReceivedHandler:completionHandler:]
  */
 @end
 

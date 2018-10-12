@@ -364,6 +364,7 @@
 		CB0C0DB32146509F00FAF438 /* image01.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB12146509F00FAF438 /* image01.xcassets */; };
 		CB0C0DB42146509F00FAF438 /* image00.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB22146509F00FAF438 /* image00.xcassets */; };
 		CB0C0DB6214653BA00FAF438 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB5214653BA00FAF438 /* Images.xcassets */; };
+		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
@@ -977,6 +978,8 @@
 		CB0C0DB12146509F00FAF438 /* image01.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image01.xcassets; path = "Image Resources/image01.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB22146509F00FAF438 /* image00.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image00.xcassets; path = "Image Resources/image00.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB5214653BA00FAF438 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Image Resources/Images.xcassets"; sourceTree = "<group>"; };
+		CB7F2E40216C97AA00A3E1AD /* MultipartInputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultipartInputStream.h; path = MultipartInputStream/MultipartInputStream.h; sourceTree = "<group>"; };
+		CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MultipartInputStream.m; path = MultipartInputStream/MultipartInputStream.m; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -2326,6 +2329,7 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CB7F2E3F216C972200A3E1AD /* MultipartInputStream */,
 				CB071CF5213E476A003D01D8 /* dailymotion-player-objc */,
 				630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */,
 				D78F73861D226C8700D8A271 /* youtube-ios-player-helper */,
@@ -2632,6 +2636,15 @@
 			path = "dailymotion-player-objc";
 			sourceTree = "<group>";
 		};
+		CB7F2E3F216C972200A3E1AD /* MultipartInputStream */ = {
+			isa = PBXGroup;
+			children = (
+				CB7F2E40216C97AA00A3E1AD /* MultipartInputStream.h */,
+				CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */,
+			);
+			name = MultipartInputStream;
+			sourceTree = "<group>";
+		};
 		D70145001D1A7F20005D8CDE /* Email 驗證 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2696,8 +2709,9 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 392DCPHLMM;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -3000,6 +3014,7 @@
 				D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */,
 				630A83E81EB1D07300AC8479 /* MyTableLayout.m in Sources */,
 				549765D01F7EA0B300E2CBEF /* SettingViewController.m in Sources */,
+				CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */,
 				6315B2E51EE7E13600EE67C5 /* NewMessageBoardViewController.m in Sources */,
 				540D749C2161DE1F0061E463 /* IdentityCollectionViewCell.m in Sources */,
 				F0AC57542142353D00F63B82 /* UIViewController+ErrorAlert.m in Sources */,
@@ -3285,8 +3300,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 392DCPHLMM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3328,8 +3343,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 392DCPHLMM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
