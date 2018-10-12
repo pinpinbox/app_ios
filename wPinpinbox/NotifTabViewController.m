@@ -28,8 +28,10 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "UIViewController+ErrorAlert.h"
+#import "AlbumCreationViewController.h"
+#import "AlbumCollectionViewController.h"
 
-@interface NotifTabViewController () <UITableViewDataSource, UITableViewDelegate, SFSafariViewControllerDelegate>
+@interface NotifTabViewController () <UITableViewDataSource, UITableViewDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate>
 {
     NSMutableArray *notificationData;
     
@@ -296,11 +298,13 @@
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section {
     return notificationData.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForRowAtIndexPath");
 //    NSLog(@"notificationData: %@", notificationData);
     
@@ -328,75 +332,45 @@
     [LabelAttributeStyle changeGapString: cell.insertTimeLabel content: insertTime];
     
     if (![target2type isKindOfClass: [NSNull class]]) {
-//        if (![imageUrl isKindOfClass: [NSNull class]]) {
-//            if (![imageUrl isEqualToString: @""]) {
-//                [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
-//                //cell.headshotImaveView.imageURL = [NSURL URLWithString: imageUrl];
-//                [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
-//            }
-//        }
         if (![target2type isEqualToString: @""]) {
             if ([target2type isEqualToString: @"albumqueue"]) {
                 cell.targetTypeLabel.text = @"作品通知";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"作品通知"];
-                //cell.targetTypeImageView.image = [UIImage imageNamed: @"ic2li00_create_album_white"];
+                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_create_album_small_white"];
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyAlbumBackground];
                 
                 if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
                 } else {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
                     [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
                                               placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
                 }
             } else if ([target2type isEqualToString: @"albumqueue@messageboard"]) {
                 cell.targetTypeLabel.text = @"創作人互動";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"創作人互動"];
-                
-                //cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_white"];
+                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_small_white"];
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
-                
                 cell.headshotImaveView.layer.cornerRadius = kCornerRadius;
-//                cell.headshotImaveView.layer.borderColor = [UIColor thirdGrey].CGColor;
-//                cell.headshotImaveView.layer.borderWidth = 0.5;
                 
                 if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_user_default"];
                 } else {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
-//                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
                     [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
                                               placeholderImage: [UIImage imageNamed: @"bg200_user_default"]];
                 }
             } else if ([target2type isEqualToString: @"user@messageboard"]) {
                 cell.targetTypeLabel.text = @"創作人互動";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"創作人互動"];
-                
-                //cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_white"];
+                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_small_white"];
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
-                
                 cell.headshotImaveView.layer.cornerRadius = cell.headshotImaveView.bounds.size.width / 2;
                 cell.headshotImaveView.layer.borderColor = [UIColor thirdGrey].CGColor;
                 cell.headshotImaveView.layer.borderWidth = 0.5;
-                
                 cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
-                
-//                if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
-//                    cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_user_default"];
-//                } else {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
-//                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
-//                }
             } else if ([target2type isEqualToString: @"user"]) {
                 cell.targetTypeLabel.text = @"創作人互動";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"創作人互動"];
+                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 //cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_white"];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_small_white"];
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
@@ -406,55 +380,46 @@
                 cell.headshotImaveView.layer.borderWidth = 0.5;
                 
                 if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_user_default"];
                 } else {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
-//                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
                     [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
                                               placeholderImage: [UIImage imageNamed: @"bg200_user_default"]];
                 }
             } else if ([target2type isEqualToString: @"albumcooperation"]) {
                 cell.targetTypeLabel.text = @"共用邀請";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"共用邀請"];
-                //cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_cooperation_white"];
+                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_cooperation_small_white"];
-                cell.targetTypeImageView.backgroundColor = [UIColor notifyUserInteractiveBackground];
+                cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
                 
                 if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     cell.headshotImaveView.image = [UIImage imageNamed: @"bg200_user_default"];
                 } else {
-//                    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: cell.headshotImaveView];
                     [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]
                                               placeholderImage: [UIImage imageNamed: @"bg200_user_default"]];
-//                    [cell.headshotImaveView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
                 }
             } else if ([target2type isEqualToString: @"event"]) {
                 cell.targetTypeLabel.text = @"系統發布";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"系統發布"];
+                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
                 cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
             } else if ([target2type isEqualToString: @"categoryarea"]) {
                 cell.targetTypeLabel.text = @"系統發布";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"系統發布"];
+                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
                 cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
             }
         } else {
-            cell.targetTypeLabel.text = @"";
             cell.targetTypeLabel.text = @"系統發布";
-            [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"系統發布"];
+            [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
             cell.targetTypeImageView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
             cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
         }
     } else {
         cell.targetTypeLabel.text = @"系統發布";
-        [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: @"系統發布"];
+        [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
         cell.targetTypeImageView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
         cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
-    }
-    
+    }    
     return cell;
 }
 
@@ -524,31 +489,49 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                 NSString *msg = @"作品已經被移除或是已取消跟作品的共用關係";
                 [self showCustomAlert: msg messageType: @"error"];
             } else {
-                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                aDVC.albumId = type_id;
-                aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+                NSLog(@"cooperation exits");
                 
-                CATransition *transition = [CATransition animation];
-                transition.duration = 0.5;
-                transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                transition.type = kCATransitionMoveIn;
-                transition.subtype = kCATransitionFromTop;
-                
-                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-                [appDelegate.myNav pushViewController: aDVC animated: NO];
-                
-                NSLog(@"cooperation is not kind of NSNull class");
-                
-                /*
                 if ([notificationData[indexPath.row][@"cooperation"][@"identity"] isEqualToString: @"viewer"]) {
                     NSLog(@"identity is viewer");
                     NSLog(@"目前權限為瀏覽者，即將前往我的收藏(想做內容編輯可以通知作者更改一下你的權限唷)");
-                    NSString *msg = @"目前權限為瀏覽者，即將前往我的收藏(想做內容編輯可以通知作者更改一下你的權限唷)";
-                    [self showCustomAlert: msg messageType: @"confirmation"];
+                    NSString *msg = @"你在當前作品的權限為瀏覽者無法編輯內容，要前往共用管理嗎?";
+                    [self showCustomAlert: msg];
+//                    NSString *msg = @"目前權限為瀏覽者，即將前往我的收藏(想做內容編輯可以通知作者更改一下你的權限唷)";
+//                    [self showCustomAlert: msg messageType: @"confirmation"];
                 } else {
                     NSLog(@"identity is not viewer");
                     
+                    AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
+                    
+                    if ([notificationData[indexPath.row][@"cooperation"][@"identity"] isEqual: [NSNull null]]) {
+                        acVC.userIdentity = @"";
+                    } else {
+                        acVC.userIdentity = notificationData[indexPath.row][@"cooperation"][@"identity"];
+                    }
+                    NSLog(@"acVC.userIdentity: %@", acVC.userIdentity);
+                    acVC.albumid = type_id;
+                    NSString *templateId = [notificationData[indexPath.row][@"template"][@"template_id"] stringValue];
+                    acVC.templateid = [NSString stringWithFormat: @"%@", templateId];
+                    
+//                    acVC.shareCollection = shareCollection;
+                    acVC.postMode = NO;
+                    acVC.fromVC = @"NotifTabVC";
+                    acVC.delegate = self;
+                    
+                    if ([templateId isEqualToString:@"0"]) {
+                        acVC.booktype = 0;
+                        acVC.choice = @"Fast";
+                    } else {
+                        acVC.booktype = 1000;
+                        acVC.choice = @"Template";
+                    }
+//                    acVC.view.tag = index;
+                    //[self.navigationController pushViewController: acVC animated: YES];
+                    
+                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                    [appDelegate.myNav pushViewController: acVC animated: YES];
+                    
+                    /*
                     FastViewController *fVC = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"FastViewController"];
                     fVC.selectrow = [wTools userbook];
                     fVC.albumid = type_id;
@@ -564,8 +547,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                         fVC.booktype = 1000;
                         fVC.choice = @"Template";
                     }
+                     */
                 }
-                 */
             }
         }
         if ([type isEqualToString: @"event"]) {
@@ -827,8 +810,8 @@ heightForHeaderInSection:(NSInteger)section {
     });
 }
 
-- (void)showCustomAlert: (NSString *)msg messageType:(NSString *)messageType
-{    
+- (void)showCustomAlert:(NSString *)msg
+            messageType:(NSString *)messageType {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     [alertView setContainerView: [self createContainerView: msg]];
     
@@ -859,8 +842,7 @@ heightForHeaderInSection:(NSInteger)section {
     [alertView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg
-{
+- (UIView *)createContainerView:(NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     //textView.text = @"帳號已經存在，請使用另一個";
@@ -917,7 +899,7 @@ heightForHeaderInSection:(NSInteger)section {
     contentView.backgroundColor = [UIColor firstPink];
     
     // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(6.0, 6.0)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
     maskLayer.frame = self.view.bounds;
     maskLayer.path  = maskPath.CGPath;
@@ -935,95 +917,56 @@ heightForHeaderInSection:(NSInteger)section {
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-   
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
+
+#pragma mark - Custom AlertView for Yes and No
+- (void)showCustomAlert: (NSString *)msg {
+    NSLog(@"showCustomAlert: Msg: %@", msg);
     
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
+    CustomIOSAlertView *alertBackView = [[CustomIOSAlertView alloc] init];
+    //[alertBackView setContainerView: [self createContainerView: msg]];
+    [alertBackView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    alertBackView.arrangeStyle = @"Horizontal";
     
-    NSLog(@"newSize.height: %f", newSize.height);
+    [alertBackView setButtonTitles: [NSMutableArray arrayWithObjects: @"稍後再說", @"前往共用管理", nil]];
+    //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+    [alertBackView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertBackView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
+    [alertBackView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
+    //alertView.arrangeStyle = @"Vertical";
     
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
+    __weak CustomIOSAlertView *weakAlertBackView = alertBackView;
+    __weak typeof(self) weakSelf = self;
+    [alertBackView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertBackView, int buttonIndex) {
+        __strong typeof(weakSelf) stSelf = weakSelf;
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertBackView tag]);
+        [weakAlertBackView close];
+        
+        if (buttonIndex == 0) {
+            
         } else {
-            viewHeight = textViewY + textViewHeight;
+            AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
+            albumCollectionVC.fromVC = @"NotifTabViewController";
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [appDelegate.myNav pushViewController: albumCollectionVC animated: YES];
         }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
+    }];
+    [alertBackView setUseMotionEffects: YES];
+    [alertBackView show];
 }
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       albumId: (NSString *)albumId
-{
+                       albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];

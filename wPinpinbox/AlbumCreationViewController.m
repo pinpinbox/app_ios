@@ -1850,7 +1850,9 @@ shouldChangeTextInRange:(NSRange)range
                                         break;
                                     }
                                 }
-                                
+                            } else if ([stSelf.fromVC isEqualToString: @"NotifTabVC"]) {
+                                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                [appDelegate.myNav popViewControllerAnimated: YES];
                             } else {
                                 AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
                                 albumCollectionVC.postMode = stSelf.postMode;
@@ -3662,7 +3664,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - Custom AlertView for Yes and No
-- (void)showCustomAlert: (NSString *)msg {
+- (void)showCustomAlert:(NSString *)msg {
     NSLog(@"showCustomAlert: Msg: %@", msg);
     
     CustomIOSAlertView *alertBackView = [[CustomIOSAlertView alloc] init];

@@ -22,9 +22,7 @@
 @property (nonatomic) UIImageView *caution;
 @end
 @implementation CalbumlistCollectionViewCell
-- (void)awakeFromNib
-{
-    
+- (void)awakeFromNib {    
     [super awakeFromNib];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapViewUserInfo:)];

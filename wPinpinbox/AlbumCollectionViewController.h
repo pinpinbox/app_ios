@@ -10,4 +10,5 @@
 
 @interface AlbumCollectionViewController : UIViewController
 @property (nonatomic) BOOL postMode;
+@property (nonatomic) NSString *fromVC;
 @end
