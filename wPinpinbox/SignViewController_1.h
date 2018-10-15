@@ -10,8 +10,8 @@
 
 @interface SignViewController_1 : UIViewController{
     __weak IBOutlet UILabel *labtip;
-    __weak IBOutlet UIButton *btn_btntip;
-    __weak IBOutlet UIButton *navBackBtn;    
+//    __weak IBOutlet UIButton *btn_btntip;
+    __weak IBOutlet UIButton *navBackBtn;
     __weak IBOutlet UIButton *nextBtn;        
 }
 

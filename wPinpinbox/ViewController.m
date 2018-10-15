@@ -33,6 +33,7 @@
 #import "AboutPinpinBoxViewController.h"
 #import "UIColor+HexString.h"
 #import "UIViewController+ErrorAlert.h"
+#import <SafariServices/SafariServices.h>
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
@@ -58,6 +59,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     UIImageView *bg;
 }
+@property (weak, nonatomic) IBOutlet UIButton *termsAndConditionsBtn;
 
 @property (weak, nonatomic) IBOutlet UIButton *createAccountBtn;
 @property (weak, nonatomic) IBOutlet UIButton *facebookLoginBtn;
@@ -113,6 +115,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     [self faceBookLoginBtnSetup];
     [self createAccountBtnSetup];
+    
+    [self.termsAndConditionsBtn setTitle: NSLocalizedString(@"RegText-tipAgreementTitle", @"")
+                                forState: UIControlStateNormal];
+    
     [self scanBtnSetup];
     
     [self emailTextFieldAndViewSetup];
@@ -435,6 +441,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - IBAction - Login Related
+- (IBAction)termsAndConditionsBtnPressed:(id)sender {
+    NSString *termStr = @"https://www.pinpinbox.com/index/index/terms";
+    NSURL *url = [NSURL URLWithString: termStr];
+    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
+    safariVC.preferredBarTintColor = [UIColor whiteColor];
+    [self presentViewController: safariVC animated: YES completion: nil];
+}
+
 - (IBAction)toAboutVC:(id)sender {
     AboutPinpinBoxViewController *aboutVC = [[UIStoryboard storyboardWithName: @"AboutPinpinBoxVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AboutPinpinBoxViewController"];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

@@ -73,6 +73,7 @@ typedef void (^FBBlock)(void);
 }
 
 //規範
+/*
 - (IBAction)TERMSbtn:(id)sender
 {
     NSString *termStr = @"https://www.pinpinbox.com/index/index/terms";
@@ -81,6 +82,7 @@ typedef void (^FBBlock)(void);
     safariVC.preferredBarTintColor = [UIColor whiteColor];
     [self presentViewController: safariVC animated: YES completion: nil];
 }
+ */
 
 #pragma mark - View Related Method
 
@@ -110,8 +112,8 @@ typedef void (^FBBlock)(void);
     
     
 //    labtip.text = NSLocalizedString(@"RegText-tipAgreement", @"");
-    [btn_btntip setTitle: NSLocalizedString(@"RegText-tipAgreementTitle", @"")
-                forState: UIControlStateNormal];
+//    [btn_btntip setTitle: NSLocalizedString(@"RegText-tipAgreementTitle", @"")
+//                forState: UIControlStateNormal];
     
     
     // Do any additional setup after loading the view.

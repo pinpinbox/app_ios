@@ -39,7 +39,12 @@
     
     int timeTick;
     NSTimer *timer;
+    
+    BOOL wantToGetInfo;
 }
+@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckView;
+@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckSelectionView;
+
 @end
 
 @implementation SignViewController_3
@@ -99,8 +104,7 @@
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
-- (void)viewSetup
-{
+- (void)viewSetup {
     countryCodeView.layer.cornerRadius = kCornerRadius;
     mobilePhoneView.layer.cornerRadius = kCornerRadius;
     smsView.layer.cornerRadius = kCornerRadius;
@@ -108,6 +112,12 @@
     
     btn_send.layer.cornerRadius = kCornerRadius;
     btn_finishedReg.layer.cornerRadius = kCornerRadius;
+    
+    wantToGetInfo = NO;
+    self.infoGettingCheckSelectionView.layer.cornerRadius = kCornerRadius;
+    self.infoGettingCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.infoGettingCheckSelectionView.layer.borderWidth = 1.0;
+    self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)navBarBtnSetup {
@@ -127,13 +137,36 @@
     keylab.textColor = [UIColor firstGrey];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event{
     [self.view endEditing: YES];
+    
+    CGPoint location = [[touches anyObject] locationInView: self.view];
+    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
+    
+    for (UIView *view in self.view.subviews) {
+        CGRect subviewFrame = view.frame;
+        
+        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
+            NSLog(@"finally touched view: %@", view);
+            NSLog(@"view.tag: %ld", (long)view.tag);
+            
+            switch (view.tag) {
+                case 100:
+                    wantToGetInfo = !wantToGetInfo;
+                    if (wantToGetInfo) {
+                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor thirdMain];
+                    } else {
+                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+                    }
+                default:
+                    break;
+            }
+        }
+    }
 }
 
-- (void)hideKeyboard: (id)sender
-{
+- (void)hideKeyboard: (id)sender {
     [self.view endEditing: YES];
 }
 
@@ -374,6 +407,7 @@
     //[dic setObject:phone.text forKey:@"cellphone"];
     [dic setObject: [NSString stringWithFormat: @"%@,%@", countrStr, phone.text] forKey: @"cellphone"];
     [dic setObject:keylab.text forKey:@"smspassword"];
+//    [dic setObject: [NSNumber numberWithBool: wantToGetInfo] forKey: @"sendParam"];
     
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated:YES];
