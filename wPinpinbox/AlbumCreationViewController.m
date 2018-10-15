@@ -2352,6 +2352,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
+        wself.vidHud.mode =  MBProgressHUDModeDeterminateHorizontalBar;
         wself.vidHud.detailsLabel.text =  @"";
         wself.vidHud.label.text = @"影片上傳中...";
         wself.vidHud.progress = p;
@@ -2365,7 +2366,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     @try {
          //[wTools ShowMBProgressHUD];
          _vidHud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-         _vidHud.mode =  MBProgressHUDModeDeterminateHorizontalBar;
+         //_vidHud.mode =  MBProgressHUDModeDeterminateHorizontalBar;
          _vidHud.label.text = @"開始上傳影片...";
          _vidHud.label.font = [UIFont systemFontOfSize: 18];
          //[self.hud.button setTitle: @"取消" forState: UIControlStateNormal];
