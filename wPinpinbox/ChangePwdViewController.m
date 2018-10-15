@@ -458,7 +458,7 @@ replacementString:(NSString *)string
                 }
                 
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                NSLog(@"dic: %@", dic);
+                
                 
                 if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"更新成功");

@@ -1203,7 +1203,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         

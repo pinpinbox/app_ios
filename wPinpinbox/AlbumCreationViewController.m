@@ -51,6 +51,8 @@
 
 #import "NewCooperationViewController.h"
 
+#import "MultipartInputStream.h"
+
 #define kWidthForUpload 720
 #define kHeightForUpload 960
 
@@ -68,7 +70,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate>
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate>
 {
     __weak IBOutlet UIButton *refreshBtn;
     __weak IBOutlet UIButton *conbtn;
@@ -171,7 +173,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) DDAUIActionSheetViewController *customVideoActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customSettingActionSheet;
 @property (nonatomic) UIVisualEffectView *effectView;
-
+@property (nonatomic) MBProgressHUD *vidHud;
 @end
 
 @implementation AlbumCreationViewController
@@ -343,6 +345,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [self enableButton];
     [self.dataCollectionView reloadData];
+    [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -1591,7 +1594,7 @@ shouldChangeTextInRange:(NSRange)range
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"call getalbumofdiy success");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         stSelf.selectrow = [dic[@"data"][@"usergrade"][@"photo_limit_of_album"] intValue];
                         NSLog(@"self.selectrow: %ld", (long)stSelf.selectrow);
@@ -1712,7 +1715,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] boolValue]) {
                         NSLog(@"dic result boolValue is 1");
@@ -1808,7 +1811,7 @@ shouldChangeTextInRange:(NSRange)range
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         if ([option isEqualToString: @"save"]) {
@@ -2084,6 +2087,8 @@ shouldChangeTextInRange:(NSRange)range
         videoPicker.delegate = self;
         videoPicker.videoMaximumDuration = 30.0f;
         videoPicker.videoQuality = UIImagePickerControllerQualityTypeMedium;
+        //videoPicker.videoMaximumDuration = 600.0f;
+        //videoPicker.videoQuality = UIImagePickerControllerQualityTypeHigh;
         [self presentViewController: videoPicker animated: YES completion: nil];
     }
 }
@@ -2105,6 +2110,9 @@ shouldChangeTextInRange:(NSRange)range
         videoPicker.delegate = self;
         videoPicker.videoMaximumDuration = 30.0f;
         videoPicker.videoQuality = UIImagePickerControllerQualityTypeMedium;
+        //videoPicker.videoMaximumDuration = 600.0f;
+        //videoPicker.videoQuality = UIImagePickerControllerQualityTypeHigh;
+        
         [self presentViewController: videoPicker animated: YES completion: nil];
     }
 }
@@ -2150,6 +2158,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info
                 [self presentViewController: alert animated: YES completion: nil];
             } else {
                 NSLog(@"Smaller than 31 seconds");
+                
                 [self convertVideoToMP4: videoURL];
                 
                 //NSData *data = [NSData dataWithContentsOfURL: videoURL];
@@ -2238,6 +2247,23 @@ didFinishSavingWithError:(NSError *)error
     
     // Check if video is supported for conversion or not
     if ([compatiblePresets containsObject: AVAssetExportPreset640x480]) {
+        
+        @try {
+            //[wTools ShowMBProgressHUD];
+            _vidHud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+            _vidHud.mode =  MBProgressHUDModeIndeterminate;
+            _vidHud.label.text = @"影片處理中...";
+            _vidHud.label.font = [UIFont systemFontOfSize: 18];
+            //[self.hud.button setTitle: @"取消" forState: UIControlStateNormal];
+            //[self.hud.button addTarget: self action: @selector(cancelWork:) forControlEvents: UIControlEventTouchUpInside];
+        } @catch (NSException *exception) {
+            // Print exception information
+            NSLog( @"NSException caught" );
+            NSLog( @"Name: %@", exception.name);
+            NSLog( @"Reason: %@", exception.reason );
+            return;
+        }
+        
         // Create Export Session
         AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset: avAsset
                                                                                presetName: AVAssetExportPreset640x480];
@@ -2261,23 +2287,14 @@ didFinishSavingWithError:(NSError *)error
         __weak typeof(self) weakSelf = self;
         [exportSession exportAsynchronouslyWithCompletionHandler:^{
             __strong typeof(weakSelf) stSelf = weakSelf;
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [weakSelf.vidHud hideAnimated:YES];
+            });
             switch ([exportSession status]) {
                 case AVAssetExportSessionStatusFailed:
                 {
                     dispatch_sync(dispatch_get_main_queue(), ^{
-                        UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"錯誤" message: [[exportSession error] localizedDescription] preferredStyle: UIAlertControllerStyleAlert];
-                        UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確認" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                        }];
-                        [alert addAction: okBtn];
-                        [stSelf presentViewController: alert animated: YES completion: nil];
-                        /*
-                         UIAlertView* alert = [[UIAlertView alloc] initWithTitle: @"錯誤"
-                         message: [[exportSession error] localizedDescription]
-                         delegate: nil
-                         cancelButtonTitle: @"確定"
-                         otherButtonTitles: nil];
-                         [alert show];
-                         */
+                        [weakSelf showCustomErrorAlert:[[exportSession error] localizedDescription]];
                     });
                     break;
                 }
@@ -2294,6 +2311,7 @@ didFinishSavingWithError:(NSError *)error
                         
                         NSURL *videoURL = [NSURL fileURLWithPath: mp4Path];
                         NSData *data = [NSData dataWithContentsOfURL: videoURL];
+                        NSLog(@"callInsertVideoOfDiy  %ld", data.length);
                         [stSelf callInsertVideoOfDiy: data];
                         
                         /*
@@ -2313,119 +2331,284 @@ didFinishSavingWithError:(NSError *)error
         }];
     }
     else {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"錯誤" message: @"影像檔案不支援" preferredStyle: UIAlertControllerStyleAlert];
-        UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確認" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        }];
-        [alert addAction: okBtn];
-        [self presentViewController: alert animated: YES completion: nil];
-        /*
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"錯誤"
-         message: @"影像檔案不支援"
-         delegate: nil
-         cancelButtonTitle: @"確認"
-         otherButtonTitles: nil];
-         [alert show];
-         */
+        [self.vidHud hideAnimated:YES];
+        [self showCustomErrorAlert:@"影像檔案不支援"];
+
     }
 }
 
 #pragma mark - Calling Protocol callInsertVideoOfDiy
-- (void)callInsertVideoOfDiy: (NSData *)data;
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+   didSendBodyData:(int64_t)bytesSent
+    totalBytesSent:(int64_t)totalBytesSent
+totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+    
+    double p = (double)totalBytesSent / (double)totalBytesExpectedToSend;
+    //NSLog(@"didSendBodyData bytesSent :%lld, totalBytesSent: %lld, totalBytesExpectedToSend %lld ",bytesSent,totalBytesSent,totalBytesExpectedToSend);
+    //[self updateProgress:p total:totalBytesExpectedToSend];
+    
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        wself.vidHud.detailsLabel.text =  @"";
+        wself.vidHud.label.text = @"影片上傳中...";
+        wself.vidHud.progress = p;
+    });
+}
+
+- (void)callInsertVideoOfDiy: (NSData *)vidData;
 {
     NSLog(@"callInsertVideoOfDiy");
-    @try {
-        [wTools ShowMBProgressHUD];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
+    
+    
+    if (!vidData || vidData.length < 1) return;
+
+    
+        
+     @try {
+         //[wTools ShowMBProgressHUD];
+         _vidHud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+         _vidHud.mode =  MBProgressHUDModeDeterminateHorizontalBar;
+         _vidHud.label.text = @"開始上傳影片...";
+         _vidHud.label.font = [UIFont systemFontOfSize: 18];
+         //[self.hud.button setTitle: @"取消" forState: UIControlStateNormal];
+         //[self.hud.button addTarget: self action: @selector(cancelWork:) forControlEvents: UIControlEventTouchUpInside];
+     } @catch (NSException *exception) {
+         // Print exception information
+         NSLog( @"NSException caught" );
+         NSLog( @"Name: %@", exception.name);
+         NSLog( @"Reason: %@", exception.reason );
+         return;
+     }
+
+    NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
+    [_params setObject:[wTools getUserID] forKey:@"id"];
+    [_params setObject:[wTools getUserToken] forKey:@"token"];
+    [_params setObject:self.albumid forKey:@"album_id"];
+    [_params setObject:[boxAPI signGenerator2:_params] forKey:@"sign"];
+    
+    // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
+    NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
+    
+    // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
+    NSString* FileParamConstant = @"file";
+    
+    // the server url to which the image (or the media) is uploaded. Use your server url here
+    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/insertvideoofdiy",@"/1.2"]];
+    
+    // create request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval: [kTimeOutForVideo floatValue]];
+    [request setHTTPMethod:@"POST"];
+    
+    MultipartInputStream *st = [[MultipartInputStream alloc] initWithBoundary:BoundaryConstant];
+    
+    for (NSString *e in [_params allKeys]) {
+        NSString *d = _params[e];
+        [st addPartWithName:e string:d];
     }
-    __weak typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        __strong typeof(weakSelf) stSelf = weakSelf;
-        NSString *response = @"";
-        response = [boxAPI insertVideoOfDiy: [wTools getUserID]
-                                      token: [wTools getUserToken]
-                                   album_id: stSelf.albumid
-                                       file: data];
+    if (vidData && vidData.length > 0) {
+        
+        [st addPartWithName:FileParamConstant filename:@"uploadVideo.mov" data:vidData contentType:@"video/mov"];
+    }
+    
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    
+    [request setValue:[NSString stringWithFormat:@"%ld",st.totalLength] forHTTPHeaderField:@"Content-Length"];
+    // set HTTP_ACCEPT_LANGUAGE in HTTP Header
+    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
+    
+    [request setHTTPBodyStream:st];
+    
+    __block NSString *str;
+    
+    __block typeof(self) wself = self;
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.timeoutIntervalForRequest = [kTimeOutForVideo floatValue];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration: config delegate:self delegateQueue:nil];
+
+    //__block NSString *desc = [[NSUUID UUID] UUIDString];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [wTools HideMBProgressHUD];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
+            [wself.vidHud hideAnimated:YES];
+        });
+        
+        if (data) {
             
-            if (response != nil) {
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"AlbumCollectionViewController");
-                    NSLog(@"callInsertVideoOfDiy");
-                    
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+            str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
+            NSLog(@"str: %@", str);
+            //  time out
+            if (str && [str isEqualToString:timeOutErrorCode]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"insertVideoOfDiy"
                                          textStr: @""
-                                            data: data
+                                            data: vidData
                                            image: nil
                                          jsonStr: @""
                                        audioMode: @""
                                           option: @""];
-                } else {
-                    NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
+                });
+            } else {
+                __strong typeof(wself) stSelf = wself;
+                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options: NSJSONReadingMutableContainers error: nil];
+
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"insertvideoofdiy Success");
                         
-                        stSelf->ImageDataArr = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
-                        NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            stSelf->ImageDataArr = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
+                            NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
+                            stSelf->selectItem = stSelf->ImageDataArr.count - 1;
+                            NSLog(@"selectItem: %ld", (long)stSelf->selectItem);
+                            [stSelf myshowimage];
+                        });
                         
-                        stSelf->selectItem = stSelf->ImageDataArr.count - 1;
-                        NSLog(@"selectItem: %ld", (long)stSelf->selectItem);
-                        
-                        [stSelf myshowimage];
-                        NSLog(@"[_dataCollectionView reloadData]");
-                        //[self.dataCollectionView reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"insertvideoofdiy Failed");
                         NSLog(@"message: %@", dic[@"message"]);
-                        
+
                         if (dic[@"message"] == nil) {
                             NSLog(@"dic message is nil");
                             NSLog(@"response from insertvideoofdiy: %@", response);
-                            
-                            if (![response isKindOfClass: [NSNull class]]) {
-                                if (![response isEqualToString: @""]) {
-                                    //                                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: response message: @"目前網路不穩定，請確認網路品質再繼續使用pinpinbox唷!" preferredStyle: UIAlertControllerStyleAlert];
-                                    //                                    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
-                                    //                                    [alert addAction: okBtn];
-                                    //                                    [stSelf presentViewController: alert animated: YES completion: nil];
-                                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                                      protocolName: @"insertVideoOfDiy"
-                                                           textStr: @""
-                                                              data: data
-                                                             image: nil
-                                                           jsonStr: @""
-                                                         audioMode: @""
-                                                            option: @""];
-                                }
-                            }
+
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                                  protocolName: @"insertVideoOfDiy"
+                                                       textStr: @""
+                                                          data: vidData
+                                                         image: nil
+                                                       jsonStr: @""
+                                                     audioMode: @""
+                                                        option: @""];
+                            });
                         } else {
-                            [stSelf showCustomErrorAlert: dic[@"message"]];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [stSelf showCustomErrorAlert: dic[@"message"]];
+                            });
                         }
                     } else {
-                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        });
                     }
                 }
-            }
-        });
-    });
+        } else {
+            str = [NSString stringWithFormat: @"%d", (int)error.code];
+            NSLog(@"error :%@", error);
+            NSLog(@"error.userInfo: %@", error.userInfo);
+            NSLog(@"error.localizedDescription: %@", error.localizedDescription);
+            NSLog(@"error code: %@", [NSString stringWithFormat: @"%d", (int)error.code]);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error.code == -1001 ) {
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                      protocolName: @"insertVideoOfDiy"
+                                           textStr: @""
+                                              data: vidData
+                                             image: nil
+                                           jsonStr: @""
+                                         audioMode: @""
+                                            option: @""];
+                } else {
+                    NSString *desc = error.localizedDescription;
+                    [wself showCustomErrorAlert: desc];
+                }
+            });
+            
+        }
+        
+    }];
+    
+    [task resume];
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+//        __strong typeof(weakSelf) stSelf = weakSelf;
+//        NSString *response = @"";
+//        response = [boxAPI insertVideoOfDiy: [wTools getUserID]
+//                                      token: [wTools getUserToken]
+//                                   album_id: stSelf.albumid
+//                                       file: data];
+//
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            @try {
+//                [wTools HideMBProgressHUD];
+//            } @catch (NSException *exception) {
+//                // Print exception information
+//                NSLog( @"NSException caught" );
+//                NSLog( @"Name: %@", exception.name);
+//                NSLog( @"Reason: %@", exception.reason );
+//                return;
+//            }
+//
+//            if (response != nil) {
+//                if ([response isEqualToString: timeOutErrorCode]) {
+//                    NSLog(@"Time Out Message Return");
+//                    NSLog(@"AlbumCollectionViewController");
+//                    NSLog(@"callInsertVideoOfDiy");
+//
+//                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+//                                    protocolName: @"insertVideoOfDiy"
+//                                         textStr: @""
+//                                            data: data
+//                                           image: nil
+//                                         jsonStr: @""
+//                                       audioMode: @""
+//                                          option: @""];
+//                } else {
+//                    NSLog(@"Get Real Response");
+//                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+//
+//                    if ([dic[@"result"] intValue] == 1) {
+//                        NSLog(@"insertvideoofdiy Success");
+//
+//                        stSelf->ImageDataArr = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
+//                        NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
+//
+//                        stSelf->selectItem = stSelf->ImageDataArr.count - 1;
+//                        NSLog(@"selectItem: %ld", (long)stSelf->selectItem);
+//
+//                        [stSelf myshowimage];
+//                        NSLog(@"[_dataCollectionView reloadData]");
+//                        //[self.dataCollectionView reloadData];
+//                    } else if ([dic[@"result"] intValue] == 0) {
+//                        NSLog(@"insertvideoofdiy Failed");
+//                        NSLog(@"message: %@", dic[@"message"]);
+//
+//                        if (dic[@"message"] == nil) {
+//                            NSLog(@"dic message is nil");
+//                            NSLog(@"response from insertvideoofdiy: %@", response);
+//
+//                            if (![response isKindOfClass: [NSNull class]]) {
+//                                if (![response isEqualToString: @""]) {
+//                                    //                                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: response message: @"目前網路不穩定，請確認網路品質再繼續使用pinpinbox唷!" preferredStyle: UIAlertControllerStyleAlert];
+//                                    //                                    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
+//                                    //                                    [alert addAction: okBtn];
+//                                    //                                    [stSelf presentViewController: alert animated: YES completion: nil];
+//                                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+//                                                      protocolName: @"insertVideoOfDiy"
+//                                                           textStr: @""
+//                                                              data: data
+//                                                             image: nil
+//                                                           jsonStr: @""
+//                                                         audioMode: @""
+//                                                            option: @""];
+//                                }
+//                            }
+//                        } else {
+//                            [stSelf showCustomErrorAlert: dic[@"message"]];
+//                        }
+//                    } else {
+//                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+//                    }
+//                }
+//            }
+//        });
+//    });
 }
 
 #pragma mark - Long Press Gesture
@@ -2689,8 +2872,9 @@ didFinishSavingWithError:(NSError *)error
     AVPlayer *player = [AVPlayer playerWithPlayerItem: playerItem];
     AVPlayerViewController *playerViewController = [AVPlayerViewController new];
     playerViewController.player = player;
-    
+    //playerViewController
     [self presentViewController: playerViewController animated: YES completion: nil];
+    [wTools setStatusBarBackgroundColor:[UIColor blackColor]];
 }
 
 #pragma mark - PhotosViewDelegate Methods
@@ -3206,53 +3390,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     return bgimag;
 }
 
-#pragma mark - Adobe SDK Delegate Methods
-//-(IBAction)AdobeEdit:(id)sender{
-//    [self AdobeSDK];
-//}
-
--(void)AdobeSDK {
-    NSLog(@"AdobeSDK");
-    [self displayEditorForImahe:selectimage];
-    return;
-}
-
--(void)displayEditorForImahe:(UIImage *)imageToEdit{
-    NSLog(@"displayEditorForImahe");
-    
-    //    @try {
-    //        AdobeUXImageEditorViewController *editorController = [[AdobeUXImageEditorViewController alloc] initWithImage:imageToEdit];
-    //        [editorController setDelegate:self];
-    //        [self presentViewController:editorController animated:YES completion:nil];
-    //    } @catch (NSException *exception) {
-    //        // Print exception information
-    //        NSLog( @"NSException caught" );
-    //        NSLog( @"Name: %@", exception.name);
-    //        NSLog( @"Reason: %@", exception.reason);
-    //        return;
-    //    }
-}
-
-//- (void)photoEditor:(AdobeUXImageEditorViewController *)editor
-//  finishedWithImage:(UIImage *)image
-//{
-//    // Handle the result image here
-//    //[ImageDataArr replaceObjectAtIndex:selectItem withObject:image];
-//    //    [self myshowimage];
-//    //    [mycollection reloadData];
-//
-//    NSLog(@"finishedWithImage");
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//
-//    [self callUpdatePhotoOfDiyWithPhoto: image];
-//}
-//
-//- (void)photoEditorCanceled:(AdobeUXImageEditorViewController *)editor
-//{
-//    NSLog(@"photoEditorCanceled");
-//    // Handle cancellation here
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//}
 
 - (void)callUpdatePhotoOfDiyWithPhoto: (UIImage *)image
 {
@@ -3505,7 +3642,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     
                     //if ([dic[@"result"]boolValue]) {
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         self.audioMode = audioMode;
                         
@@ -3621,7 +3758,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

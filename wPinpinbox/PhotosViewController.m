@@ -28,12 +28,15 @@
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "MultipartInputStream.h"
+
 #define kFontSize 18
 
 #define kFontSizeForUploading 18
 #define kFontSizeForConnection 16
 
-@interface PhotosViewController () <UICollectionViewDataSource,UICollectionViewDelegate,RSKImageCropViewControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate, UIGestureRecognizerDelegate>
+@interface PhotosViewController () <UICollectionViewDataSource,UICollectionViewDelegate,RSKImageCropViewControllerDelegate,
+                                    UIImagePickerControllerDelegate,UINavigationControllerDelegate, UIGestureRecognizerDelegate,NSURLSessionDelegate>
 {
     __weak IBOutlet UICustomLineLabel *titlelab;
     NSMutableArray *imageArray;
@@ -43,18 +46,15 @@
     //__strong PHImageManager *imageManager;
     __weak IBOutlet UIButton *okbtn;
     
-    NSMutableArray *imgs;
+    //NSMutableArray *imgs;
     
     //CustomIOSAlertView *alertViewForButton;
     
     // For Observing NSOperationQueue
     //NSString *responseImageStr;
     
-    MBProgressHUD *hud;
     
-    NSInteger photoFinished;
-    
-    NSURLSessionDataTask *dataTask;
+    //NSURLSessionDataTask *dataTask;
     NSMutableArray *dataTaskArray;
 }
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
@@ -63,7 +63,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 
-@property (strong, nonatomic) PHCachingImageManager * imageManager;
+@property (nonatomic) PHCachingImageManager * imageManager;
 @property (strong, nonatomic) NSMutableArray * cachingIndexes;
 @property (assign, nonatomic) CGFloat lastCacheFrameCenter;
 @property (assign, nonatomic) CGSize assetThumbnailSize;
@@ -71,7 +71,7 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *dismissBtn;
 
-@property (strong, nonatomic) NSOperationQueue *queue;
+//@property (strong, nonatomic) NSOperationQueue *queue;
 
 @property (weak, nonatomic) IBOutlet UIButton *cameraBtn;
 @property (weak, nonatomic) IBOutlet UIButton *compressionBtn;
@@ -81,6 +81,9 @@
 @property (nonatomic) NSInteger photoFinished;
 @property (nonatomic) NSInteger photoFailed;
 @property (nonatomic) NSInteger totalPhoto;
+@property (nonatomic) MBProgressHUD *hud;
+@property (nonatomic) NSURLSession *session;
+@property (nonatomic) NSMutableArray *imgs;
 
 @end
 
@@ -137,6 +140,12 @@
         });
     }];
     
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
+    
+    _session = [NSURLSession sessionWithConfiguration: config delegate:self delegateQueue:nil];
+    
     return;
 }
 - (void)processPhotoList {
@@ -192,7 +201,7 @@
 
 - (void)dealloc {
     NSLog(@"dealloc");
-    [self.queue removeObserver: self forKeyPath: @"operations" context: NULL];
+    //[self.queue removeObserver: self forKeyPath: @"operations" context: NULL];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -342,7 +351,7 @@
     [self showToastMsg: @"圖片載入中" color: [UIColor secondMain] duration: 2.0];
     
     //處理所有則的圖片
-    imgs = [NSMutableArray new];
+    _imgs = [NSMutableArray new];
     //開始用照片
     @try {
         [self addnewimage:0];
@@ -378,30 +387,32 @@
     [options setResizeMode:PHImageRequestOptionsResizeModeNone];
     [options setDeliveryMode:PHImageRequestOptionsDeliveryModeOpportunistic];
     
-    CGSize size = cellSize(mycov);
-    CGFloat scale = [[UIScreen mainScreen] scale];
-    scale = 1;
-    size = CGSizeMake(size.width * scale, size.height * scale);
-    NSLog(@"------------");
-    NSLog(@"size: %@", NSStringFromCGSize(size));
-    NSLog(@"------------");
-    
+//    CGSize size = cellSize(mycov);
+//    CGFloat scale = [[UIScreen mainScreen] scale];
+//    scale = 1;
+//    size = CGSizeMake(size.width * scale, size.height * scale);
+//    NSLog(@"------------");
+//    NSLog(@"size: %@", NSStringFromCGSize(size));
+//    NSLog(@"------------");
+//
     __block UIImage *img;
-    __block NSInteger c = imageArray.count;
+    //__block NSInteger c = imageArray.count;
     __block typeof(self) wself = self;
+    
     [self.imageManager requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
         NSLog(@"requestImageDataForAsset");
         
         // A key whose value indicates whether the result image is
         // a low-quality substitute for the requested image.
         if (![info[PHImageResultIsDegradedKey] boolValue]) {
-            NSLog(@"imageData: %@", imageData);
-            img = [UIImage imageWithData:imageData];
-            [wself addImage:img];
             
-            if ((se+1)>=c) {//imageArray.count) {
+            img = [UIImage imageWithData:imageData];
+            UIImage *image = [wself imageRatioCalculation: img];
+            [wself addImage:image];
+            
+            if ((se+1) >= wself->imageArray.count) {
                 NSLog(@"se: %d", se);
-                NSLog(@"imageArray.count: %lu", (unsigned long)c);//imageArray.count);
+                NSLog(@"imageArray.count: %lu", (unsigned long) wself->imageArray.count);
                 [wself OKimage];
             } else {
                 NSLog(@"");
@@ -409,10 +420,11 @@
             }
         }
     }];
+    
 }
 
 - (void)addImage:(UIImage *) image {
-    [imgs addObject:image];
+    [_imgs addObject:image];
 }
 
 - (void)OKimage {
@@ -424,33 +436,35 @@
     if ([_choice isEqualToString: @"Template"]) {
         [self.navigationController popViewControllerAnimated:NO];
         
-        NSLog(@"輸出%lu張圖片",(unsigned long)imgs.count);
+        NSLog(@"輸出%lu張圖片",(unsigned long)_imgs.count);
         
         if ([self.delegate respondsToSelector:@selector(imageCropViewController:ImageArr:compression:)]) {
-            [self.delegate imageCropViewController: self ImageArr: imgs compression: 0.5];
+            [self.delegate imageCropViewController: self ImageArr: _imgs compression: 0.5];
         }
     } else if ([_choice isEqualToString: @"Fast"]) {
         //[self showImageSizeMode];
-        //[self sendingImage: imgs compression: self.compressionData];
-        [self sendingImage:imgs resize:self.shouldResize];
+        //[self sendingImage: _imgs compression: self.compressionData];
+        [self sendingImage:_imgs resize:self.shouldResize];
     }
 }
 
 - (void)cancelWork:(id)sender {
     NSLog(@"");
     NSLog(@"cancelWork");
-    __block typeof(hud) whud = hud;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [whud hideAnimated: YES];
+        [wself.hud hideAnimated: YES];
     });
     
     for (NSURLSessionDataTask *task in dataTaskArray) {
         [task cancel];
     }
     
-    if (self.queue.operationCount > 0) {
-        [self.queue cancelAllOperations];
-    }
+    //if (self.queue.operationCount > 0) {
+    //    [self.queue cancelAllOperations];
+    //}
+    
+    [dataTaskArray removeAllObjects];
     
     [self.navigationController popViewControllerAnimated: YES];
     
@@ -461,20 +475,21 @@
 
 #pragma mark - Sending Image Function
 //- (void)sendingImage:(NSArray *)imgArray compression:(CGFloat)compression {
-- (void)sendingImage:(NSArray *)imgArray
+- (void)sendingImage:(NSMutableArray *)imgArray
               resize:(BOOL)resize {
     NSLog(@"sendingImage");
     NSLog(@"imgArray.count: %lu", (unsigned long)imgArray.count);
     //NSLog(@"compression: %f", compression);
     
     [dataTaskArray removeAllObjects];
-    
+    self.totalPhoto = imgArray.count;
     @try {
-        hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-        hud.label.text = [NSString stringWithFormat: @"等待上傳中"];
-        hud.label.font = [UIFont systemFontOfSize: kFontSizeForUploading];
-        [hud.button setTitle: @"取消" forState: UIControlStateNormal];
-        [hud.button addTarget: self action: @selector(cancelWork:) forControlEvents: UIControlEventTouchUpInside];
+        self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        self.hud.mode =  MBProgressHUDModeDeterminateHorizontalBar;//MBProgressHUDModeAnnularDeterminate;
+        self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳", self.totalPhoto];
+        self.hud.label.font = [UIFont systemFontOfSize: kFontSizeForUploading];
+        [self.hud.button setTitle: @"取消" forState: UIControlStateNormal];
+        [self.hud.button addTarget: self action: @selector(cancelWork:) forControlEvents: UIControlEventTouchUpInside];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -483,56 +498,65 @@
         return;
     }
     
-    photoFinished = 0;
+    self.photoFinished = 0;
+    self.photoFailed = 0;
     
-    self.queue = [[NSOperationQueue alloc] init];
-    self.queue.maxConcurrentOperationCount = 5;
-    [self.queue addObserver: self forKeyPath: @"operations" options: 0 context: NULL];
+    //self.queue = [[NSOperationQueue alloc] init];
+    //self.queue.maxConcurrentOperationCount = 1;//5;
+    //[self.queue addObserver: self forKeyPath: @"operations" options: 0 context: NULL];
     
-    NSBlockOperation *operation;
+    //NSBlockOperation *operation;
     
-    __block NSString *response = @"";
-    typeof(self) __weak weakSelf = self;
+    //__block NSString *response = @"";
+    //typeof(self) __weak weakSelf = self;
     
-    for (int i = 0; i < imgArray.count; i++) {
-        operation = [NSBlockOperation blockOperationWithBlock:^{
-            NSLog(@"i = %d, thread = %@", i, [NSThread currentThread]);
-            NSLog(@"image: %d", i);
+    //for (int i = 0; i < imgArray.count; i++) {
+    while ([imgArray count]) {
+        
+        UIImage *imageForResize = [imgArray firstObject];
+        //operation = [NSBlockOperation blockOperationWithBlock:^{
+            //NSLog(@"i = %d, thread = %@", i, [NSThread currentThread]);
+            //NSLog(@"image: %d", i);
             
-            UIImage *imageForResize = [imgArray objectAtIndex: i];
-            NSLog(@"Before Resize");
-            NSLog(@"width: %f, height: %f", imageForResize.size.width, imageForResize.size.height);
+            //UIImage *imageForResize = [imgArray objectAtIndex: i];
+        NSLog(@"Before Resize");
+        NSLog(@"width: %f, height: %f", imageForResize.size.width, imageForResize.size.height);
             
-            UIImage *image;
+//            UIImage *image;
             
-            if (resize) {
-                NSLog(@"resize is YES");
-                NSLog(@"resize: %d", resize);
-                image = [weakSelf imageRatioCalculation: imageForResize];
-            } else {
-                NSLog(@"resize is NO");
-                NSLog(@"resize: %d", resize);
-                image = imageForResize;
-            }
+//            if (resize) {
+//                NSLog(@"resize is YES");
+//                NSLog(@"resize: %d", resize);
+//                image = [weakSelf imageRatioCalculation: imageForResize];
+//            } else {
+//            {
+//                NSLog(@"resize is NO");
+//                NSLog(@"resize: %d", resize);
+//                image = imageForResize;
+//            }
             
 //            [self saveImage: image];
             
-            NSLog(@"After Resize");
-            NSLog(@"width: %f, height: %f", image.size.width, image.size.height);
+//            NSLog(@"After Resize");
+//            NSLog(@"width: %f, height: %f", image.size.width, image.size.height);
             
-            NSLog(@"boxAPI insertPhotoOfDiy");
-            response = [self insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: weakSelf.albumId image: image];
-            
-            NSLog(@"response: %@", response);
+        NSLog(@"boxAPI insertPhotoOfDiy");
+        NSData *imageData = UIImageJPEGRepresentation(imageForResize, 1.0);
+        [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];//insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];
+        
+        [imgArray removeObjectAtIndex:0];
+            //NSLog(@"response: %@", response);
             //responseImageStr = response;
             //NSLog(@"responseImageStr: %@", responseImageStr);
-        }];
+        //}];
+    
         
-        [operation setCompletionBlock:^{
-            NSLog(@"Operation 1-%d Completed", i);
-            //photoFinished++;
-        }];
-        [self.queue addOperation: operation];
+//        [operation setCompletionBlock:^{
+//            NSLog(@"Operation 1-%d Completed", i);
+//            //photoFinished++;
+//        }];
+//
+//        [self.queue addOperation: operation];
     }
 }
 
@@ -607,10 +631,12 @@
 //                                               scale: img.scale * screenScale
 //                                         orientation: img.imageOrientation];
 
-    UIImage *scaledImage = [img resizedImage: newSize
-                        interpolationQuality: 4];
+   // UIImage *scaledImage = [img resizedImage: newSize
+   //                     interpolationQuality: 4];
     
-    return scaledImage;
+   // return scaledImage;
+    
+    return  img;
 }
 
 /*
@@ -645,7 +671,43 @@
     }
 }
  */
-
+- (void)postProcessUploadFinished {
+    
+    
+    __block typeof(self) wself = self;
+    
+    //hud.progress = 0;
+    if ((self.photoFailed+self.photoFinished) >=  self.totalPhoto) {
+        [imageArray removeAllObjects];
+        [dataTaskArray removeAllObjects];
+        if (self.photoFailed != 0) {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                wself.hud.mode = MBProgressHUDModeText;
+                [wself.hud.button setTitle:@"確定" forState:UIControlStateNormal];
+                wself.hud.detailsLabel.text = @"";
+                wself.hud.label.text = [NSString stringWithFormat:@"已上傳%ld個項目，%ld個項目失敗",wself.photoFinished,wself.photoFailed];
+            }];
+        } else {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [wself.hud hideAnimated: YES];
+                if ([self.delegate respondsToSelector: @selector(afterSendingImages:)]) {
+                    [self.delegate afterSendingImages: self];
+                }
+                
+                [self.navigationController popViewControllerAnimated: YES];
+                
+            }];
+        }
+        
+    } else {
+//        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//            thehud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",wself.photoFinished, wself.photoFailed];
+//            thehud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",wself.totalPhoto-(wself.photoFinished+wself.photoFailed)];
+//
+//        }];
+    }
+    
+}
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary<NSKeyValueChangeKey,id> *)change
@@ -654,13 +716,13 @@
     NSLog(@"observeValueForKeyPath");
     NSLog(@"object: %@", object);
     
-    NSLog(@"self.queue.operations.count: %lu", (unsigned long)self.queue.operations.count);
-    
-    if (object == self.queue && [keyPath isEqualToString: @"operations"]) {
-        if (self.queue.operations.count == 0) {
-            NSLog(@"queue has completed");
-            __block typeof(hud) whud = hud;
-            __block typeof(dataTaskArray) array = dataTaskArray;
+//    NSLog(@"self.queue.operations.count: %lu", (unsigned long)self.queue.operations.count);
+//
+//    if (object == self.queue && [keyPath isEqualToString: @"operations"]) {
+//        if (self.queue.operations.count == 0) {
+//            NSLog(@"queue has completed");
+//            __block typeof(hud) whud = hud;
+//            __block typeof(dataTaskArray) array = dataTaskArray;
 //            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
 //                [whud hideAnimated: YES];
 //
@@ -672,8 +734,8 @@
 //                    [self.delegate afterSendingImages: self];
 //                }
 //            }];
-        }
-    }
+//        }
+//    }
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -726,9 +788,9 @@
     // cell thumbnailImage
     if ([imagesCache objectForKey:asset.localIdentifier]) {
         if ([[imagesCache objectForKey: asset.localIdentifier] isKindOfClass: [NSNull class]]) {
-            NSLog(@"imagesCache objectForKey: asset.localIdentifier is null");
+            //NSLog(@"imagesCache objectForKey: asset.localIdentifier is null");
         } else {
-            NSLog(@"imagesCache objectForKey: asset.localIdentifier is not null");
+            //NSLog(@"imagesCache objectForKey: asset.localIdentifier is not null");
             myCell.thumbnailImage = [imagesCache objectForKey: asset.localIdentifier];
         }
     } else {
@@ -761,7 +823,7 @@
                                               if ([result isKindOfClass: [NSNull class]]) {
                                                   NSLog(@"result image is null");
                                               } else {
-                                                  NSLog(@"result image is not null");
+                                                  //NSLog(@"result image is not null");
                                                   myCell.thumbnailImage = result;
                                               }
                                               if (![info[PHImageResultIsDegradedKey] boolValue]) {
@@ -1091,17 +1153,44 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 }
 
 #pragma mark -
-- (NSString *)insertphotoofdiy:(NSString *)uid
-                         token:(NSString *)token
-                      album_id:(NSString *)album_id
-                         image:(UIImage *)image
+- (void)increaseFailed {
+    self.photoFailed++;
+    //self.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",self.photoFinished, self.photoFailed];
+    //self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",self.totalPhoto-(self.photoFinished+self.photoFailed)];
+    //self.hud.progress = 0;
+   // [self updateProgress:0];
+   // [self postProcessUploadFinished];
+}
+- (void)increaseFinished {
+    self.photoFinished++;
+    //[self updateProgress:0];
+    //self.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",self.photoFinished, self.photoFailed];
+    //self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",self.totalPhoto-(self.photoFinished+self.photoFailed)];
+    //self.hud.progress = 0;
+    //[self postProcessUploadFinished];
+}
+- (void)updateProgress:(CGFloat)p total:(int64_t)total  {
+    
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        wself.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",wself.photoFinished, wself.photoFailed];
+        wself.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",wself.totalPhoto-(wself.photoFinished+wself.photoFailed)];
+        wself.hud.progress = p;
+    });
+}
+- (void)insertphotoofdiy:(NSString *)uid
+                   token:(NSString *)token
+                album_id:(NSString *)album_id
+               imageData:(NSData *)imageData
+                         //image:(UIImage *)image
+
 {
     // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
     [_params setObject:uid forKey:@"id"];
     [_params setObject:token forKey:@"token"];
     [_params setObject:album_id forKey:@"album_id"];
-    [_params setObject:[self signGenerator2:_params] forKey:@"sign"];
+    [_params setObject:[boxAPI signGenerator2:_params] forKey:@"sign"];
     
     // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
     NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
@@ -1140,7 +1229,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
     
     // add image data
-    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+    //NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
     
     if (imageData) {
         // start tag
@@ -1169,143 +1258,184 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     // set URL
     //[request setURL:requestURL];
     
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    //dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     __block NSString *str;
     
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
-    config.timeoutIntervalForResource = [kTimeOutForPhoto floatValue];
-    
-    NSURLSession *session = [NSURLSession sessionWithConfiguration: config];
-    
     __block typeof(self) wself = self;
-    dataTask = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    
+//    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+//    config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
+//    _session = [NSURLSession sessionWithConfiguration: config delegate:self delegateQueue:nil];
+//
+    __block NSString *desc = [[NSUUID UUID] UUIDString];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
         
+        __strong typeof(wself) sself = wself;
         if (error) {
             NSLog(@"dataTaskWithRequest error: %@", error);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                wself->hud.detailsLabel.text = @"網路不穩";
-                wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
-            });
-            dispatch_semaphore_signal(semaphore);
-            return;
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                wself->hud.detailsLabel.text = @"網路不穩";
+//                wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+//            });
+//            dispatch_semaphore_signal(semaphore);
+//            return;
         }
         if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
             
             if (statusCode != 200) {
                 NSLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
-                dispatch_semaphore_signal(semaphore);
-                return;
+                //dispatch_semaphore_signal(semaphore);
+                //return;
             }
         }
         if (!error && data) {
             str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
             
-            NSLog(@"str: %@", str);
+            //NSLog(@"str: %@", str);
             
             NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [str dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
             
-            NSLog(@"dic: %@", dic);
+            
             
             if ([dic[@"result"] boolValue]) {
-                NSMutableArray *imageInfoArray = [NSMutableArray new];
+                //NSMutableArray *imageInfoArray = [NSMutableArray new];
                 
-                for (NSMutableDictionary *photo in dic[@"data"][@"photo"]) {
-                    [imageInfoArray addObject: photo[@"photo_id"]];
-                }
-                NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
+                //for (NSMutableDictionary *photo in dic[@"data"][@"photo"]) {
+                //    [imageInfoArray addObject: photo[@"photo_id"]];
+                //}
+                //NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
                 
-                wself->photoFinished = imageInfoArray.count;
+                //wself.photoFinished = imageInfoArray.count;
+                [sself increaseFinished];
+                //[imageInfoArray removeAllObjects];
+                //imageInfoArray = nil;
                 
-                [imageInfoArray removeAllObjects];
-                imageInfoArray = nil;
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    wself->hud.detailsLabel.text = @"";
-                });
+                //dispatch_async(dispatch_get_main_queue(), ^{
+                //    wself->hud.detailsLabel.text = @"";
+                //});
             } else {
                 NSLog(@"Error Message: %@", dic[@"message"]);
                 
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    wself->hud.detailsLabel.text = @"網路不穩";
-                    wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
-                });
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    wself->hud.detailsLabel.text = @"網路不穩";
+//                    wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+//                });
+                [sself increaseFailed];
             }
+            
+        } else {
+            [sself increaseFailed];
         }
-        dispatch_semaphore_signal(semaphore);
+        [sself removeDataTask:desc];
+        
+        
+        
     }];
     NSLog(@"task resume");
-    [dataTask resume];
-    [dataTaskArray addObject: dataTask];
     
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    [task setTaskDescription:desc];
+    [dataTaskArray addObject: task];
+    if ([dataTaskArray count] == 1)
+        [task resume];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        wself->hud.label.text = [NSString stringWithFormat: @"%ld 張照片上傳完成", (long)wself->photoFinished];
-    });
+//    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+//
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        wself->hud.label.text = [NSString stringWithFormat: @"%ld 張照片上傳完成", (long)wself->photoFinished];
+//    });
     
-    return str;
+    //return str;
 }
-
-- (NSString *)signGenerator2:(NSDictionary *)parameters {
-    //NSLog(@"signGenerator2");
-    
-    NSString *secrectSN = @"d9$kv3fk(ri3mv#d-kg05[vs)F;f2lg/";
-    NSString *signSN = @"";
-    NSArray *keys = [parameters allKeys];
-    
-    keys = [keys sortedArrayUsingComparator: ^NSComparisonResult(id obj1, id obj2) {
-        return [obj1 compare: obj2 options: NSNumericSearch];
-    }];
-    
-//    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
-    //:/?@!$&'()*+,;=
-    
-    NSString *requestOriginal = @"";
-    
-    for (int i = 0 ;i < keys.count ;i++) {
-        //NSLog(@"i: %d", i);
-        //NSLog(@"keys.count: %lu", (unsigned long)keys.count);
-        
-        NSString *key = keys[i];
-        NSString *value = parameters[key];
-        // requestOriginal=[NSString stringWithFormat:@"%@%@=%@",requestOriginal,key,[value stringByAddingPercentEncodingWithAllowedCharacters:URLCombinedCharacterSet]];
-        
-        requestOriginal = [NSString stringWithFormat:@"%@%@=%@", requestOriginal, key, value];
-        //NSLog(@"requestOriginal: %@", requestOriginal);
-        
-        if (i < keys.count - 1) {
-            //NSLog(@"i < keys.count - 1");
-            requestOriginal = [NSString stringWithFormat:@"%@&", requestOriginal];
-            //NSLog(@"requestOriginal: %@", requestOriginal);
+- (void)removeDataTask:(NSString * )taskDesc {
+    for (NSURLSessionDataTask *t in dataTaskArray) {
+        if ([taskDesc isEqualToString: t.taskDescription]) {
+            
+            [dataTaskArray removeObject:t];
+            
+            [self updateProgress:0 total:0];
+            [self postProcessUploadFinished];
+            
+            NSURLSessionDataTask *tt = [dataTaskArray firstObject];
+            [tt resume];
+            
+            NSLog(@"removeDataTask ([tt resume]) %ld",[dataTaskArray count]);
+            return;
         }
     }
-    //requestOriginal=[requestOriginal stringByReplacingOccurrencesOfString:@"%@20" withString:@"+"];
     
-    //NSLog(@"requestOriginal lowercaseString");
-    NSString *requestLow = [requestOriginal lowercaseString];
-    //NSLog(@"%@",requestLow);
-    
-    //NSLog(@"requestLow,secrectSN");
-    requestLow = [NSString stringWithFormat:@"%@%@",requestLow,secrectSN];
-    //NSLog(@"%@",requestLow);
-    
-    //NSLog(@"requestLow.MD5");
-    requestLow = requestLow.MD5;
-    //NSLog(@"%@",requestLow);
-    
-    //NSLog(@"requestLow.lowercaseString");
-    requestLow = requestLow.lowercaseString;
-    //NSLog(@"%@",requestLow);
-    
-    signSN = requestLow;
-    //NSLog(@"signSN: %@", signSN);
-    
-    return signSN;
+    NSLog(@"removeDataTask %ld",[dataTaskArray count]);
+    [self updateProgress:0 total:0];
+    [self postProcessUploadFinished];
 }
+- (void)URLSession:(NSURLSession *)session
+              task:(NSURLSessionTask *)task
+   didSendBodyData:(int64_t)bytesSent
+    totalBytesSent:(int64_t)totalBytesSent
+totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+    
+    double p = (double)totalBytesSent / (double)totalBytesExpectedToSend;
+    //NSLog(@"didSendBodyData bytesSent :%lld, totalBytesSent: %lld, totalBytesExpectedToSend %lld ",bytesSent,totalBytesSent,totalBytesExpectedToSend);
+    [self updateProgress:p total:totalBytesExpectedToSend];
+}
+//- (NSString *)signGenerator2:(NSDictionary *)parameters {
+//    //NSLog(@"signGenerator2")l;
+//
+//    NSString *secrectSN = @"d9$kv3fk(ri3mv#d-kg05[vs)F;f2lg/";
+//    NSString *signSN = @"";
+//    NSArray *keys = [parameters allKeys];
+//
+//    keys = [keys sortedArrayUsingComparator: ^NSComparisonResult(id obj1, id obj2) {
+//        return [obj1 compare: obj2 options: NSNumericSearch];
+//    }];
+//
+////    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
+//    //:/?@!$&'()*+,;=
+//
+//    NSString *requestOriginal = @"";
+//
+//    for (int i = 0 ;i < keys.count ;i++) {
+//        //NSLog(@"i: %d", i);
+//        //NSLog(@"keys.count: %lu", (unsigned long)keys.count);
+//
+//        NSString *key = keys[i];
+//        NSString *value = parameters[key];
+//        // requestOriginal=[NSString stringWithFormat:@"%@%@=%@",requestOriginal,key,[value stringByAddingPercentEncodingWithAllowedCharacters:URLCombinedCharacterSet]];
+//
+//        requestOriginal = [NSString stringWithFormat:@"%@%@=%@", requestOriginal, key, value];
+//        //NSLog(@"requestOriginal: %@", requestOriginal);
+//
+//        if (i < keys.count - 1) {
+//            //NSLog(@"i < keys.count - 1");
+//            requestOriginal = [NSString stringWithFormat:@"%@&", requestOriginal];
+//            //NSLog(@"requestOriginal: %@", requestOriginal);
+//        }
+//    }
+//    //requestOriginal=[requestOriginal stringByReplacingOccurrencesOfString:@"%@20" withString:@"+"];
+//
+//    //NSLog(@"requestOriginal lowercaseString");
+//    NSString *requestLow = [requestOriginal lowercaseString];
+//    //NSLog(@"%@",requestLow);
+//
+//    //NSLog(@"requestLow,secrectSN");
+//    requestLow = [NSString stringWithFormat:@"%@%@",requestLow,secrectSN];
+//    //NSLog(@"%@",requestLow);
+//
+//    //NSLog(@"requestLow.MD5");
+//    requestLow = requestLow.MD5;
+//    //NSLog(@"%@",requestLow);
+//
+//    //NSLog(@"requestLow.lowercaseString");
+//    requestLow = requestLow.lowercaseString;
+//    //NSLog(@"%@",requestLow);
+//
+//    signSN = requestLow;
+//    //NSLog(@"signSN: %@", signSN);
+//
+//    return signSN;
+//}
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg
@@ -1315,6 +1445,136 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         [customAlertView close];
     }];
     
+}
+- (void)sendWithStream:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id imageData:(NSData *)imageData {
+
+    if (!imageData || imageData.length < 1) return;
+    // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
+    NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
+    [_params setObject:uid forKey:@"id"];
+    [_params setObject:token forKey:@"token"];
+    [_params setObject:album_id forKey:@"album_id"];
+    [_params setObject:[boxAPI signGenerator2:_params] forKey:@"sign"];
+    
+    // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
+    NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
+    
+    // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
+    NSString* FileParamConstant = @"file";
+    
+    // the server url to which the image (or the media) is uploaded. Use your server url here
+    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/insertphotoofdiy",@"/1.1"]];
+    
+    // create request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval: [kTimeOutForPhoto floatValue]];
+    [request setHTTPMethod:@"POST"];
+    
+    MultipartInputStream *st = [[MultipartInputStream alloc] initWithBoundary:BoundaryConstant];
+    
+    for (NSString *e in [_params allKeys]) {
+        NSString *d = _params[e];
+        [st addPartWithName:e string:d];
+    }
+    if (imageData && imageData.length > 0) {
+        
+        [st addPartWithName:FileParamConstant filename:@"image.jpg" data:imageData contentType:@"image/jpeg"];
+    }
+    
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    
+    [request setValue:[NSString stringWithFormat:@"%ld",st.totalLength] forHTTPHeaderField:@"Content-Length"];
+    // set HTTP_ACCEPT_LANGUAGE in HTTP Header
+    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
+    
+    [request setHTTPBodyStream:st];
+    
+    __block NSString *str;
+    
+    __block typeof(self) wself = self;
+    
+    //    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    //    config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
+    //    _session = [NSURLSession sessionWithConfiguration: config delegate:self delegateQueue:nil];
+    //
+    __block NSString *desc = [[NSUUID UUID] UUIDString];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSLog(@"insertphotoofdiy");
+        
+        __strong typeof(wself) sself = wself;
+        if (error) {
+            NSLog(@"dataTaskWithRequest error: %@", error);
+            //            dispatch_async(dispatch_get_main_queue(), ^{
+            //                wself->hud.detailsLabel.text = @"網路不穩";
+            //                wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+            //            });
+            //            dispatch_semaphore_signal(semaphore);
+            //            return;
+        }
+        if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
+            NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+            
+            if (statusCode != 200) {
+                NSLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
+                //dispatch_semaphore_signal(semaphore);
+                //return;
+            }
+        }
+        if (!error && data) {
+            str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
+            
+            //NSLog(@"str: %@", str);
+            
+            NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [str dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+            
+            
+            
+            if ([dic[@"result"] boolValue]) {
+                //NSMutableArray *imageInfoArray = [NSMutableArray new];
+                
+                //for (NSMutableDictionary *photo in dic[@"data"][@"photo"]) {
+                //    [imageInfoArray addObject: photo[@"photo_id"]];
+                //}
+                //NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
+                
+                //wself.photoFinished = imageInfoArray.count;
+                [sself increaseFinished];
+                //[imageInfoArray removeAllObjects];
+                //imageInfoArray = nil;
+                
+                //dispatch_async(dispatch_get_main_queue(), ^{
+                //    wself->hud.detailsLabel.text = @"";
+                //});
+            } else {
+                NSLog(@"Error Message: %@", dic[@"message"]);
+                
+                //                dispatch_async(dispatch_get_main_queue(), ^{
+                //                    wself->hud.detailsLabel.text = @"網路不穩";
+                //                    wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
+                //                });
+                [sself increaseFailed];
+            }
+            
+        } else {
+            [sself increaseFailed];
+        }
+        [sself removeDataTask:desc];
+        
+        
+        
+    }];
+    NSLog(@"task resume");
+    
+    [task setTaskDescription:desc];
+    [dataTaskArray addObject: task];
+    if ([dataTaskArray count] == 1)
+        [task resume];
+    
+    //st add
 }
 /*
 - (UIView *)createErrorContainerView: (NSString *)msg
@@ -1392,5 +1652,15 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     return contentView;
 }
 */
+
+/*
+ 
+ didSendBodyData: 32768 per update...
+ For Streaming upload body
+ 
+ From PHAsset -> PHAssetResource:
+ [PHAssetResource assetResourcesForAsset:PHAsset]
+ [[PHAssetResourceManager defaultManager] requestDataForAssetResource:options:dataReceivedHandler:completionHandler:]
+ */
 @end
 

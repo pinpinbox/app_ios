@@ -279,7 +279,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     [dic setObject: viewed forKey: @"viewed"];
     
-    NSLog(@"dic: %@", dic);
+    
     
     returnStr = [self api_Wine: @"/retrievealbump/1.2" dic: dic];
     
@@ -767,7 +767,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     NSLog(@"rank: %@", rank);
     [dic setObject: rank forKey: @"rank"];
     
-    NSLog(@"dic: %@", dic);
+    
     
     //returnstr=[self boxAPI:dic URL:@"/getupdatelist/1.1"];
     returnStr = [self api_Wine: @"/getupdatelist/1.2" dic: dic];
@@ -993,7 +993,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject:token forKey:@"token"];
     
     NSLog(@"data: %@", data);
-    NSLog(@"dic: %@", dic);
+    
     
     returnstr=[self boxAPI:dic URL:@"/getcooperationlist/1.1"];
     
@@ -2056,7 +2056,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     NSLog(@"is: %@", is);
     [dic setObject: is forKey: @"is"];
     
-    NSLog(@"dic: %@", dic);
+    
     
     //returnStr = [self boxAPI: dic URL: @"/getqrcode/1.0"];
     returnStr = [self api_Wine: @"/getqrcode/1.0" dic: dic];
@@ -2241,7 +2241,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     [dic setObject: param forKey: @"param"];
     
-    NSLog(@"dic: %@", dic);
+    
     
     returnStr = [self api_Wine: @"/businesssubuserfastregister/2.0" dic: dic];
     
@@ -2900,7 +2900,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
              NSLog(@"isKindOfClass: [NSString class]");
              NSLog(@"kye: %@", kye);
              NSLog(@"wData[kye]: %@", wData[kye]);
-             NSLog(@"dic: %@", dic);
+             
              */
         } else {
             [dic setObject:[wData[kye] stringValue] forKey:kye];
@@ -2909,7 +2909,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
              NSLog(@"is not KindOfClass: [NSString class]");
              NSLog(@"kye: %@", kye);
              NSLog(@"wData[kye]: %@", wData[kye]);
-             NSLog(@"dic: %@", dic);
+             
              */
         }
     }
@@ -2918,7 +2918,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject: [self signGenerator2:dic] forKey: @"sign"];
     
     //NSLog(@"sign: %@", [self signGenerator2:dic]);
-    //NSLog(@"dic: %@", dic);
+    //
     
     // Create NSMutableURLRequest, post data to server for getting response
     returnstr = [self api_Wine: url dic: dic];
@@ -2963,7 +2963,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
              NSLog(@"isKindOfClass: [NSString class]");
              NSLog(@"kye: %@", kye);
              NSLog(@"wData[kye]: %@", wData[kye]);
-             NSLog(@"dic: %@", dic);
+             
              */
             
         } else {
@@ -2973,7 +2973,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
              NSLog(@"is not KindOfClass: [NSString class]");
              NSLog(@"kye: %@", kye);
              NSLog(@"wData[kye]: %@", wData[kye]);
-             NSLog(@"dic: %@", dic);
+             
              */
         }
     }
@@ -2986,7 +2986,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject: [self signGenerator2: dicWithoutTypeData] forKey: @"sign"];
     
     NSLog(@"sign: %@", [self signGenerator2:dic]);
-    NSLog(@"dic: %@", dic);
+    
     
     returnstr = [self api_Wine: url dic: dic];
     

@@ -269,7 +269,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
             isLoading = NO;
         }
         
-        NSLog(@"dic: %@", dic);
+        
         NSLog(@"pictures: %@", pictures);
         
         if (pictures.count == 0) {
