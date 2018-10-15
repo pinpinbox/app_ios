@@ -184,7 +184,7 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     [wself processMsgboardList:dic];
                 }
@@ -394,7 +394,7 @@
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     [wself processInserMessageResult:dic];
                 }
@@ -421,7 +421,7 @@
     static NSString *cellIdentifier = @"Cell";
 
     NSDictionary *dic = [messageArray[indexPath.row] copy];
-    NSLog(@"dic: %@", dic);
+    
     
     NSString *imageUrl = dic[@"user"][@"picture"];
     NSString *nameStr = dic[@"user"][@"name"];
@@ -900,7 +900,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     for (int i = 0; i < tagArray.count; i++) {
         NSMutableDictionary *dic = [tagArray objectAtIndex: i];
-        NSLog(@"dic: %@", dic);
+        
         NSLog(@"");
         
         // Get End point like
@@ -1603,7 +1603,7 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if (![dic[@"result"] boolValue]) {
                         return ;

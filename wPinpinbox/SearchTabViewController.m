@@ -249,7 +249,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    //NSLog(@"dic: %@", dic);
+                    //
                     
                     if (![dic[@"result"] boolValue]) {
                         return ;
@@ -467,7 +467,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
         }
         
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
-        NSLog(@"albumDic: %@", albumDic);
+        //NSLog(@"albumDic: %@", albumDic);
         
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
@@ -615,8 +615,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 //        cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
         //NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
         
-        NSDictionary *albumDic = albumData[indexPath.row][@"album"];
-        NSLog(@"albumDic: %@", albumDic);
+        //NSDictionary *albumDic = albumData[indexPath.row][@"album"];
+        //NSLog(@"albumDic: %@", albumDic);
         
         NSString *albumId = [albumData[indexPath.row][@"album"][@"album_id"] stringValue];
         [self ToRetrievealbumpViewControlleralbumid: albumId];
@@ -1155,7 +1155,7 @@ replacementString:(NSString *)string
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         

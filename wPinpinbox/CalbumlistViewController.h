@@ -16,7 +16,6 @@
          hasImage:(BOOL)hasImage;
 - (void)editCooperation:(NSString *)albumId
                identity:(NSString *)identity;
-
 - (void)toReadBookController: (NSString *)albumId;
 - (void)shareLink:(NSString *)sharingStr
           albumId:(NSString *)albumId;
@@ -25,7 +24,7 @@
 @interface CalbumlistViewController : UIViewController {
     __weak IBOutlet UILabel *wtitle;
 }
-@property (weak, nonatomic) IBOutlet UICollectionView *collectioview;
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionview;
 //@property (weak, nonatomic) IBOutlet UIButton *btn1;
 //@property (weak, nonatomic) IBOutlet UIButton *btn2;
 //@property (weak, nonatomic) IBOutlet UIButton *btn3;
@@ -33,4 +32,6 @@
 @property (nonatomic) NSInteger collectionType;
 @property (weak) id <CalbumlistViewControllerDelegate> delegate;
 - (void)checkRefreshContent;
+- (void)reloadData;
+- (void)loadDataWhenChangingPage:(NSInteger)page;
 @end

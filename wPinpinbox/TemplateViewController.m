@@ -163,7 +163,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     [wself processAlbumDiyResult:dic];
                 }
@@ -220,7 +220,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] boolValue]) {
                         wself.identity = dic[@"data"];

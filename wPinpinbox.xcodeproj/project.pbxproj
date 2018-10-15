@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D869E7B43C6AA8714388565 /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E17DE3DBBC43F631EC294B4D /* libPods-wPinpinbox.a */; };
 		540473301FB066D00075BBD8 /* PointCalculationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5404732F1FB066D00075BBD8 /* PointCalculationViewController.m */; };
 		540635BE204E7E92004C9F21 /* ExchangeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 540635BD204E7E92004C9F21 /* ExchangeListViewController.m */; };
 		540635C1204E7ED5004C9F21 /* ExchangeListVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 540635C0204E7ED5004C9F21 /* ExchangeListVC.storyboard */; };
@@ -363,17 +364,16 @@
 		CB0C0DB32146509F00FAF438 /* image01.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB12146509F00FAF438 /* image01.xcassets */; };
 		CB0C0DB42146509F00FAF438 /* image00.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB22146509F00FAF438 /* image00.xcassets */; };
 		CB0C0DB6214653BA00FAF438 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB5214653BA00FAF438 /* Images.xcassets */; };
+		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
 		D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78F738D1D226D8700D8A271 /* YTPlayerView.m */; };
 		F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F039BD192148B8C6007AEA85 /* SystemImages.xcassets */; };
 		F0AC57542142353D00F63B82 /* UIViewController+ErrorAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */; };
-		FBE78602101A497EF9A787A1 /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B9538523C44FC79F83C7AC90 /* libPods-wPinpinbox.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		09C3BC777629A4E68A074BE9 /* Pods-wPinpinbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.debug.xcconfig"; sourceTree = "<group>"; };
 		5404732E1FB066D00075BBD8 /* PointCalculationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PointCalculationViewController.h; sourceTree = "<group>"; };
 		5404732F1FB066D00075BBD8 /* PointCalculationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PointCalculationViewController.m; sourceTree = "<group>"; };
 		540635BC204E7E92004C9F21 /* ExchangeListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExchangeListViewController.h; sourceTree = "<group>"; };
@@ -801,6 +801,7 @@
 		63F18A6D1DE68EC1005AEB85 /* VersionUpdate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VersionUpdate.m; sourceTree = "<group>"; };
 		63F3064C1EA48104009B6BF3 /* FBFriendsFindingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBFriendsFindingViewController.h; sourceTree = "<group>"; };
 		63F3064D1EA48104009B6BF3 /* FBFriendsFindingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBFriendsFindingViewController.m; sourceTree = "<group>"; };
+		79182CEEB22E88BBC58AC641 /* Pods-wPinpinbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.release.xcconfig"; sourceTree = "<group>"; };
 		920279901C449B2900A63027 /* CooperationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CooperationViewController.h; sourceTree = "<group>"; };
 		920279911C449B2900A63027 /* CooperationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CooperationViewController.m; sourceTree = "<group>"; };
 		920279921C449B2900A63027 /* CooperationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CooperationViewController.xib; sourceTree = "<group>"; };
@@ -968,7 +969,6 @@
 		92F6CD011B7B5382002E547C /* O_drag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = O_drag.m; sourceTree = "<group>"; };
 		92F89B281BBE79F900565908 /* StartImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartImage.h; sourceTree = "<group>"; };
 		92F89B291BBE79F900565908 /* StartImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartImage.m; sourceTree = "<group>"; };
-		B9538523C44FC79F83C7AC90 /* libPods-wPinpinbox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wPinpinbox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB071CF0213E4754003D01D8 /* DMViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMViewController.h; sourceTree = "<group>"; };
 		CB071CF1213E4754003D01D8 /* DMVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DMVC.storyboard; sourceTree = "<group>"; };
 		CB071CF2213E4754003D01D8 /* DMViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMViewController.m; sourceTree = "<group>"; };
@@ -977,6 +977,8 @@
 		CB0C0DB12146509F00FAF438 /* image01.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image01.xcassets; path = "Image Resources/image01.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB22146509F00FAF438 /* image00.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image00.xcassets; path = "Image Resources/image00.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB5214653BA00FAF438 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Image Resources/Images.xcassets"; sourceTree = "<group>"; };
+		CB7F2E40216C97AA00A3E1AD /* MultipartInputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultipartInputStream.h; path = MultipartInputStream/MultipartInputStream.h; sourceTree = "<group>"; };
+		CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MultipartInputStream.m; path = MultipartInputStream/MultipartInputStream.m; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -986,7 +988,8 @@
 		D78F73891D226C8700D8A271 /* YouTubeiOSPlayerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeiOSPlayerHelper.h; sourceTree = "<group>"; };
 		D78F738C1D226D8700D8A271 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
 		D78F738D1D226D8700D8A271 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
-		EB758543D29B9F1BCBC4AAF5 /* Pods-wPinpinbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.release.xcconfig"; sourceTree = "<group>"; };
+		D9824607428AC70EBD679637 /* Pods-wPinpinbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.debug.xcconfig"; sourceTree = "<group>"; };
+		E17DE3DBBC43F631EC294B4D /* libPods-wPinpinbox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wPinpinbox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F039BD192148B8C6007AEA85 /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SystemImages.xcassets; sourceTree = "<group>"; };
 		F0AC57522142353D00F63B82 /* UIViewController+ErrorAlert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ErrorAlert.h"; sourceTree = "<group>"; };
 		F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ErrorAlert.m"; sourceTree = "<group>"; };
@@ -1019,22 +1022,13 @@
 				92CFB5B11BE7562B001B7B78 /* Foundation.framework in Frameworks */,
 				929ED4AE1B78A2F300D21CF0 /* CoreLocation.framework in Frameworks */,
 				929ED4AC1B78A2E200D21CF0 /* AssetsLibrary.framework in Frameworks */,
-				FBE78602101A497EF9A787A1 /* libPods-wPinpinbox.a in Frameworks */,
+				2D869E7B43C6AA8714388565 /* libPods-wPinpinbox.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1D92172789D02803D71286F4 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				09C3BC777629A4E68A074BE9 /* Pods-wPinpinbox.debug.xcconfig */,
-				EB758543D29B9F1BCBC4AAF5 /* Pods-wPinpinbox.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		540473331FB080090075BBD8 /* PointCalculation */ = {
 			isa = PBXGroup;
 			children = (
@@ -1586,7 +1580,7 @@
 				5484D58B1FC43B8C00177DD6 /* Security.framework */,
 				542497AB1FB336BE0021D75D /* libSDWebImage.a */,
 				549B48AB1F6EC3190012FE13 /* libicucore.tbd */,
-				B9538523C44FC79F83C7AC90 /* libPods-wPinpinbox.a */,
+				E17DE3DBBC43F631EC294B4D /* libPods-wPinpinbox.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2211,7 +2205,7 @@
 				9276DFBC1B72FDC000E6ACC9 /* wPinpinboxTests */,
 				9276DFA11B72FDC000E6ACC9 /* Products */,
 				549B48AA1F6EC3190012FE13 /* Frameworks */,
-				1D92172789D02803D71286F4 /* Pods */,
+				C290DC3DAF790AE49A3A987A /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2335,6 +2329,7 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CB7F2E3F216C972200A3E1AD /* MultipartInputStream */,
 				CB071CF5213E476A003D01D8 /* dailymotion-player-objc */,
 				630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */,
 				D78F73861D226C8700D8A271 /* youtube-ios-player-helper */,
@@ -2623,6 +2618,15 @@
 			name = "起始Scroll圖片";
 			sourceTree = "<group>";
 		};
+		C290DC3DAF790AE49A3A987A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D9824607428AC70EBD679637 /* Pods-wPinpinbox.debug.xcconfig */,
+				79182CEEB22E88BBC58AC641 /* Pods-wPinpinbox.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		CB071CF5213E476A003D01D8 /* dailymotion-player-objc */ = {
 			isa = PBXGroup;
 			children = (
@@ -2630,6 +2634,15 @@
 				CB071CF7213E476A003D01D8 /* DMPlayerViewController.m */,
 			);
 			path = "dailymotion-player-objc";
+			sourceTree = "<group>";
+		};
+		CB7F2E3F216C972200A3E1AD /* MultipartInputStream */ = {
+			isa = PBXGroup;
+			children = (
+				CB7F2E40216C97AA00A3E1AD /* MultipartInputStream.h */,
+				CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */,
+			);
+			name = MultipartInputStream;
 			sourceTree = "<group>";
 		};
 		D70145001D1A7F20005D8CDE /* Email 驗證 */ = {
@@ -2669,12 +2682,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9276DFC31B72FDC000E6ACC9 /* Build configuration list for PBXNativeTarget "wPinpinbox" */;
 			buildPhases = (
-				33DA87FD0277FBA6FB29DCE0 /* [CP] Check Pods Manifest.lock */,
+				26727AC4575E7EE3FAFA89FF /* [CP] Check Pods Manifest.lock */,
 				9276DF9C1B72FDC000E6ACC9 /* Sources */,
 				9276DF9D1B72FDC000E6ACC9 /* Frameworks */,
 				9276DF9E1B72FDC000E6ACC9 /* Resources */,
 				54E232B21FA6DA9400D95FD5 /* ShellScript */,
-				B0369FCD673583324A722BD2 /* [CP] Copy Pods Resources */,
+				C01B748071BE34F2815A01EF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2856,7 +2869,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		33DA87FD0277FBA6FB29DCE0 /* [CP] Check Pods Manifest.lock */ = {
+		26727AC4575E7EE3FAFA89FF /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2891,7 +2904,7 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" d1ae8885f7ffd8a5956e74686a7e720f8d853aac dad04e88c7afebbc23a06451359eaa91f3db070a6e600fdb82a478d5ac72519a\n";
 		};
-		B0369FCD673583324A722BD2 /* [CP] Copy Pods Resources */ = {
+		C01B748071BE34F2815A01EF /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3009,6 +3022,7 @@
 				D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */,
 				630A83E81EB1D07300AC8479 /* MyTableLayout.m in Sources */,
 				549765D01F7EA0B300E2CBEF /* SettingViewController.m in Sources */,
+				CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */,
 				6315B2E51EE7E13600EE67C5 /* NewMessageBoardViewController.m in Sources */,
 				540D749C2161DE1F0061E463 /* IdentityCollectionViewCell.m in Sources */,
 				F0AC57542142353D00F63B82 /* UIViewController+ErrorAlert.m in Sources */,
@@ -3284,7 +3298,7 @@
 		};
 		9276DFC41B72FDC000E6ACC9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 09C3BC777629A4E68A074BE9 /* Pods-wPinpinbox.debug.xcconfig */;
+			baseConfigurationReference = D9824607428AC70EBD679637 /* Pods-wPinpinbox.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3327,7 +3341,7 @@
 		};
 		9276DFC51B72FDC000E6ACC9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EB758543D29B9F1BCBC4AAF5 /* Pods-wPinpinbox.release.xcconfig */;
+			baseConfigurationReference = 79182CEEB22E88BBC58AC641 /* Pods-wPinpinbox.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

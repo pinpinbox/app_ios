@@ -452,7 +452,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 - (void)processBusinessSubUserResult:(NSDictionary *)dic {
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         NSLog(@"SYSTEM_OK");
-        NSLog(@"dic: %@", dic);
+        
         
         NSLog(@"新用戶");
         
@@ -480,7 +480,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
          */
     } else if ([dic[@"result"] isEqualToString: @"USER_EXISTS"]) {
         NSLog(@"USER_EXISTS");
-        NSLog(@"dic: %@", dic);
+        
         
         //已有帳號
         NSLog(@"已有帳號");
@@ -643,7 +643,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     [wself processRefreshToken:dic];
                     
                 }
@@ -807,7 +807,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");

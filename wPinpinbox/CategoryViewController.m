@@ -340,7 +340,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"dic data: %@", dic[@"data"]);
@@ -942,7 +942,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"collectionViewArray: %@", collectionViewArray);
         
         NSDictionary *dic = collectionViewArray[indexPath.item];
-        NSLog(@"dic: %@", dic);
+        
         
         if ([dic[@"album"][@"cover"] isEqual: [NSNull null]]) {
             cell.albumImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];

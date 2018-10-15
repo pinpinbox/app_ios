@@ -412,7 +412,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"response from getCreative");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     [wself processCreatorInfo:dic];
                     
                 }
@@ -492,7 +492,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     NSLog(@"responseFromGetProfile != nil");
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     [wself processProfile:dic];
                 }
@@ -703,7 +703,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
@@ -1705,7 +1705,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic: %@", dic);
+                        
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         

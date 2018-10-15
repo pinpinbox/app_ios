@@ -22,9 +22,7 @@
 @property (nonatomic) UIImageView *caution;
 @end
 @implementation CalbumlistCollectionViewCell
-- (void)awakeFromNib
-{
-    
+- (void)awakeFromNib {    
     [super awakeFromNib];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapViewUserInfo:)];
@@ -80,6 +78,18 @@
     
     _coopConstraint.constant = 40;
     _opShareLeading.constant = 30;
+}
+- (void)setAlbumDesc:(NSString *)desc {
+    _descLabel.numberOfLines = 0;
+    _descLabel.text = desc;
+    CGSize s = [_descLabel sizeThatFits:CGSizeMake(225, 58)];
+    CGPoint t = _descLabel.frame.origin;
+    if (s.height > 58) {
+        _descLabel.bounds = CGRectMake(t.x, t.y, s.width, 58);
+        _descLabel.numberOfLines = 3;
+    } else {
+        _descLabel.frame = CGRectMake(t.x, t.y, s.width, s.height);
+    }
 }
 - (void)setCoopNumber:(int)number{
     self.coopLabel.text = [NSString stringWithFormat:@"%00d", number];

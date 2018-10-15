@@ -136,7 +136,7 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

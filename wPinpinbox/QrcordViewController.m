@@ -569,7 +569,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result is: %d", [dic[@"result"] boolValue]);

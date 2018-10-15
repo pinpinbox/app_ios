@@ -201,7 +201,7 @@
     OtherCollectionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"cell" forIndexPath: indexPath];
     
     NSDictionary *dic = [_dataArray[indexPath.row] copy];
-    NSLog(@"dic: %@", dic);
+    
     
     NSString *imageUrl = dic[@"album"][@"cover"];
     NSLog(@"imageUrl: %@", imageUrl);
@@ -269,7 +269,7 @@
     NSLog(@"didSelectRowAtIndexPath");
     
     NSDictionary *dic = [_dataArray[indexPath.row] copy];
-    NSLog(@"dic: %@", dic);
+    
     
     if ([self.delegate respondsToSelector: @selector(toReadBookController:)]) {
         NSLog(@"self.delegate respondsToSelector toReadBookController");

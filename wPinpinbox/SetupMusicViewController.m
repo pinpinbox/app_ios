@@ -947,7 +947,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     //if ([dic[@"result"]boolValue]) {
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-        NSLog(@"dic: %@", dic);
+        
         
         if ([self.audioMode isEqualToString: oldAudioMode]) {
             isAudioModeChanged = NO;
