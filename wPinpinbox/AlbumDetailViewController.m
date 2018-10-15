@@ -2286,6 +2286,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     acVC.fromVC = @"AlbumDetailVC";
     acVC.delegate = self;
     
+    NSString * u = [NSString stringWithFormat:@"%lu", [self.data[@"user"][@"user_id"] longValue] ];
+    if ([u isEqualToString: [wTools getUserID]])
+        acVC.userIdentity = @"admin";
+    
     if ([templateId isEqualToString:@"0"]) {
         acVC.booktype = 0;
         acVC.choice = @"Fast";

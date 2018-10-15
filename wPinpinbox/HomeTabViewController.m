@@ -363,6 +363,13 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (awsResponse != nil) {
+                //  if response is TIMEDOUT, retry API
+                if ([awsResponse isEqualToString:timeOutErrorCode]) {
+                    UIDevice *device = [UIDevice currentDevice];
+                    NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
+                    [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
+                }
+                    
                 NSLog(@"awsResponse: %@", awsResponse);
             }
         });

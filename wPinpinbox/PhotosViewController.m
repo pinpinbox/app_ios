@@ -45,16 +45,7 @@
     
     //__strong PHImageManager *imageManager;
     __weak IBOutlet UIButton *okbtn;
-    
-    //NSMutableArray *imgs;
-    
-    //CustomIOSAlertView *alertViewForButton;
-    
-    // For Observing NSOperationQueue
-    //NSString *responseImageStr;
-    
-    
-    //NSURLSessionDataTask *dataTask;
+
     NSMutableArray *dataTaskArray;
 }
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
@@ -486,6 +477,7 @@
     @try {
         self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
         self.hud.mode =  MBProgressHUDModeDeterminateHorizontalBar;//MBProgressHUDModeAnnularDeterminate;
+        self.hud.progress = 0;
         self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳", self.totalPhoto];
         self.hud.label.font = [UIFont systemFontOfSize: kFontSizeForUploading];
         [self.hud.button setTitle: @"取消" forState: UIControlStateNormal];
@@ -1155,21 +1147,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 #pragma mark -
 - (void)increaseFailed {
     self.photoFailed++;
-    //self.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",self.photoFinished, self.photoFailed];
-    //self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",self.totalPhoto-(self.photoFinished+self.photoFailed)];
-    //self.hud.progress = 0;
-   // [self updateProgress:0];
-   // [self postProcessUploadFinished];
+    [self updateProgress:0];
+   
 }
 - (void)increaseFinished {
     self.photoFinished++;
-    //[self updateProgress:0];
-    //self.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",self.photoFinished, self.photoFailed];
-    //self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",self.totalPhoto-(self.photoFinished+self.photoFailed)];
-    //self.hud.progress = 0;
-    //[self postProcessUploadFinished];
+    [self updateProgress:0];
 }
-- (void)updateProgress:(CGFloat)p total:(int64_t)total  {
+- (void)updateProgress:(CGFloat)p  {
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1355,7 +1340,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             
             [dataTaskArray removeObject:t];
             
-            [self updateProgress:0 total:0];
+            [self updateProgress:0];
             [self postProcessUploadFinished];
             
             NSURLSessionDataTask *tt = [dataTaskArray firstObject];
@@ -1367,7 +1352,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
     
     NSLog(@"removeDataTask %ld",[dataTaskArray count]);
-    [self updateProgress:0 total:0];
+    [self updateProgress:0];
     [self postProcessUploadFinished];
 }
 - (void)URLSession:(NSURLSession *)session
@@ -1378,64 +1363,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     double p = (double)totalBytesSent / (double)totalBytesExpectedToSend;
     //NSLog(@"didSendBodyData bytesSent :%lld, totalBytesSent: %lld, totalBytesExpectedToSend %lld ",bytesSent,totalBytesSent,totalBytesExpectedToSend);
-    [self updateProgress:p total:totalBytesExpectedToSend];
+    [self updateProgress:p];
 }
-//- (NSString *)signGenerator2:(NSDictionary *)parameters {
-//    //NSLog(@"signGenerator2")l;
-//
-//    NSString *secrectSN = @"d9$kv3fk(ri3mv#d-kg05[vs)F;f2lg/";
-//    NSString *signSN = @"";
-//    NSArray *keys = [parameters allKeys];
-//
-//    keys = [keys sortedArrayUsingComparator: ^NSComparisonResult(id obj1, id obj2) {
-//        return [obj1 compare: obj2 options: NSNumericSearch];
-//    }];
-//
-////    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
-//    //:/?@!$&'()*+,;=
-//
-//    NSString *requestOriginal = @"";
-//
-//    for (int i = 0 ;i < keys.count ;i++) {
-//        //NSLog(@"i: %d", i);
-//        //NSLog(@"keys.count: %lu", (unsigned long)keys.count);
-//
-//        NSString *key = keys[i];
-//        NSString *value = parameters[key];
-//        // requestOriginal=[NSString stringWithFormat:@"%@%@=%@",requestOriginal,key,[value stringByAddingPercentEncodingWithAllowedCharacters:URLCombinedCharacterSet]];
-//
-//        requestOriginal = [NSString stringWithFormat:@"%@%@=%@", requestOriginal, key, value];
-//        //NSLog(@"requestOriginal: %@", requestOriginal);
-//
-//        if (i < keys.count - 1) {
-//            //NSLog(@"i < keys.count - 1");
-//            requestOriginal = [NSString stringWithFormat:@"%@&", requestOriginal];
-//            //NSLog(@"requestOriginal: %@", requestOriginal);
-//        }
-//    }
-//    //requestOriginal=[requestOriginal stringByReplacingOccurrencesOfString:@"%@20" withString:@"+"];
-//
-//    //NSLog(@"requestOriginal lowercaseString");
-//    NSString *requestLow = [requestOriginal lowercaseString];
-//    //NSLog(@"%@",requestLow);
-//
-//    //NSLog(@"requestLow,secrectSN");
-//    requestLow = [NSString stringWithFormat:@"%@%@",requestLow,secrectSN];
-//    //NSLog(@"%@",requestLow);
-//
-//    //NSLog(@"requestLow.MD5");
-//    requestLow = requestLow.MD5;
-//    //NSLog(@"%@",requestLow);
-//
-//    //NSLog(@"requestLow.lowercaseString");
-//    requestLow = requestLow.lowercaseString;
-//    //NSLog(@"%@",requestLow);
-//
-//    signSN = requestLow;
-//    //NSLog(@"signSN: %@", signSN);
-//
-//    return signSN;
-//}
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg
@@ -1573,85 +1502,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     [dataTaskArray addObject: task];
     if ([dataTaskArray count] == 1)
         [task resume];
-    
-    //st add
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
 
 /*
  

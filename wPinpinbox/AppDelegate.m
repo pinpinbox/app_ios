@@ -265,7 +265,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                 [[UIApplication sharedApplication] registerForRemoteNotifications];
             });
     }];
-    UNNotificationAction *a = [UNNotificationAction actionWithIdentifier:UNNotificationDefaultActionIdentifier title:@"pinpinBox" options:UNNotificationActionOptionNone];
+    UNNotificationAction *a = [UNNotificationAction actionWithIdentifier:UNNotificationDefaultActionIdentifier title:@"pinpinBox" options:UNNotificationActionOptionForeground];
     UNNotificationCategory *c = [UNNotificationCategory categoryWithIdentifier:@"GENERAL" actions:@[a] intentIdentifiers:@[UNNotificationDefaultActionIdentifier] options:UNNotificationCategoryOptionCustomDismissAction];
     [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObject:c]];
     
@@ -818,12 +818,18 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
     
     NSLog(@"%@", notification);
     
-    completionHandler(UNNotificationPresentationOptionBadge);
+    completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionSound);
     
 }
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     
     NSLog(@"%@", response.notification.request.content.userInfo);
+    NSDictionary *userinfo = response.notification.request.content.userInfo;
+    if (userinfo) {
+                [self application:[UIApplication sharedApplication]
+     didReceiveRemoteNotification:userinfo
+           fetchCompletionHandler:^(UIBackgroundFetchResult result) {}];
+    }
     
     completionHandler();
 }

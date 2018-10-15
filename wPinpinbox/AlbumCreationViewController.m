@@ -2357,8 +2357,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 
 - (void)callInsertVideoOfDiy: (NSData *)vidData;
 {
-    NSLog(@"callInsertVideoOfDiy");
-    
     
     if (!vidData || vidData.length < 1) return;
 
