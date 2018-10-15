@@ -51,7 +51,9 @@
     
     UIVisualEffectView *blurEffectView;
     
-    UIImage *selectImage;        
+    UIImage *selectImage;
+    
+    BOOL wantToGetInfo;
 }
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -118,6 +120,8 @@
 @property (weak, nonatomic) IBOutlet MyLinearLayout *homeView;
 @property (weak, nonatomic) IBOutlet UITextField *homeTextField;
 
+@property (weak, nonatomic) IBOutlet MyLinearLayout *infoGettingCheckView;
+@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckSelectionView;
 @property (weak, nonatomic) IBOutlet UIButton *saveBtn;
 
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -275,7 +279,27 @@
         self.privateBtn.layer.borderWidth = 0;
     }
     self.birthdayTextField.text = myData[@"birthday"];
+    
+    // wantToGetInfo data should get from server
+    wantToGetInfo = NO;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(checkInfoGetting)];
+    [self.infoGettingCheckView addGestureRecognizer:tap];
+    self.infoGettingCheckSelectionView.layer.cornerRadius = kCornerRadius;
+    self.infoGettingCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.infoGettingCheckSelectionView.layer.borderWidth = 1.0;
+    self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
 }
+
+- (void)checkInfoGetting {
+    NSLog(@"checkInfoGetting");
+    wantToGetInfo = !wantToGetInfo;
+    if (wantToGetInfo) {
+        self.infoGettingCheckSelectionView.backgroundColor = [UIColor thirdMain];
+    } else {
+        self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+    }
+}
+
 - (void)processProfileResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -387,14 +411,14 @@
 }
 
 - (void)dismissKeyboard {
+    NSLog(@"dismissKeyboard");
     [self.view endEditing:YES];
     
     [blurEffectView removeFromSuperview];
     self.view.backgroundColor = [UIColor whiteColor];
 }
 
-- (void)userInterfaceSetup;
-{
+- (void)userInterfaceSetup {
     UIToolbar *toolBarForDoneBtn = [[UIToolbar alloc] initWithFrame: CGRectMake(0, 0, 320, 40)];
     toolBarForDoneBtn.barStyle = UIBarStyleDefault;
     toolBarForDoneBtn.items = [NSArray arrayWithObjects:
@@ -1059,21 +1083,18 @@
 }
 
 #pragma mark - UITextViewDelegate
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
+- (void)textViewDidBeginEditing:(UITextView *)textView {
     NSLog(@"textViewDidBeginEditing");
     
     selectTextView = textView;
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
+- (void)textViewDidEndEditing:(UITextView *)textView {
     NSLog(@"textViewDidEndEditing");
     selectTextView = nil;
 }
 
-- (void)textViewDidChange:(UITextView *)textView
-{
+- (void)textViewDidChange:(UITextView *)textView {
     NSLog(@"textViewDidChange");
     
     //每次输入变更都让布局重新布局。
@@ -1101,8 +1122,7 @@
 
 - (BOOL)textView:(UITextView *)textView
 shouldChangeTextInRange:(NSRange)range
- replacementText:(NSString *)text
-{
+ replacementText:(NSString *)text {
     if (textView.tag == 100) {
         NSLog(@"textView.tag == 100");
         
@@ -1434,6 +1454,33 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"");
     
     return contentView;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
+    CGPoint location = [[touches anyObject] locationInView: self.view];
+    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
+    
+    for (UIView *view in self.view.subviews) {
+        CGRect subviewFrame = view.frame;
+        
+        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
+            NSLog(@"finally touched view: %@", view);
+            NSLog(@"view.tag: %ld", (long)view.tag);
+            
+            switch (view.tag) {
+                case 100:
+                    wantToGetInfo = !wantToGetInfo;
+                    if (wantToGetInfo) {
+                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor thirdMain];
+                    } else {
+                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+                    }
+                default:
+                    break;
+            }
+        }
+    }
 }
 
 /*

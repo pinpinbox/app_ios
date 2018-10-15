@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -37,7 +37,7 @@
                                 </connections>
                             </button>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="75z-Ky-l1r">
-                                <rect key="frame" x="16" y="305.5" width="77" height="48"/>
+                                <rect key="frame" x="16" y="241.5" width="77" height="48"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="台灣+886" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wbr-Y5-QX0">
                                         <rect key="frame" x="8" y="16" width="60" height="16"/>
@@ -54,7 +54,7 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bCj-Ac-4oq">
-                                <rect key="frame" x="107" y="305.5" width="252" height="48"/>
+                                <rect key="frame" x="107" y="241.5" width="252" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="行 動 裝 置 號 碼" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0kJ-Yu-sZs">
                                         <rect key="frame" x="8" y="10" width="181" height="30"/>
@@ -73,13 +73,13 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="剩餘 59 秒可再發送" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQ7-2v-rud">
-                                <rect key="frame" x="114" y="385.5" width="125" height="17"/>
+                                <rect key="frame" x="114" y="321.5" width="125" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.94901960780000005" green="0.4823529412" blue="0.63921568630000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vDk-8o-Si0">
-                                <rect key="frame" x="247" y="369.5" width="112" height="48"/>
+                                <rect key="frame" x="247" y="305.5" width="112" height="48"/>
                                 <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="112" id="9mS-Bb-hpW"/>
@@ -93,7 +93,7 @@
                                 </connections>
                             </button>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oho-14-CJv">
-                                <rect key="frame" x="16" y="482" width="343" height="48"/>
+                                <rect key="frame" x="16" y="418" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="輸 入 驗 證 碼" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sPt-sC-RBr">
                                         <rect key="frame" x="41" y="8" width="294" height="32"/>
@@ -124,7 +124,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="請等候驗證碼寄送至您輸入的行動裝置，若時間過長，可回前步驟重新獲取驗證碼" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UGa-jd-z1j">
-                                <rect key="frame" x="16" y="546" width="343" height="44"/>
+                                <rect key="frame" x="16" y="482" width="343" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="yVj-rc-wW2"/>
                                 </constraints>
@@ -146,11 +146,53 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="riU-1Z-sBs">
-                                <rect key="frame" x="0.0" y="449.5" width="375" height="0.5"/>
+                                <rect key="frame" x="0.0" y="385.5" width="375" height="0.5"/>
                                 <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="0.5" id="m5c-Va-wzp"/>
                                 </constraints>
+                            </view>
+                            <view hidden="YES" tag="100" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Awa-ds-eLa">
+                                <rect key="frame" x="0.0" y="542" width="375" height="48"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qiR-j5-Jhw">
+                                        <rect key="frame" x="16" y="12" width="24" height="24"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="24" id="6Rr-6a-exa"/>
+                                            <constraint firstAttribute="height" constant="24" id="Wdh-Pu-QUw"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                <real key="value" value="16"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                <real key="value" value="16"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="願意收到電子報，掌握最新創作及抽獎資訊" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAV-EJ-dLW">
+                                        <rect key="frame" x="56" y="0.0" width="300" height="48"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="YAV-EJ-dLW" secondAttribute="bottom" id="78P-Sb-pQI"/>
+                                    <constraint firstItem="YAV-EJ-dLW" firstAttribute="leading" secondItem="qiR-j5-Jhw" secondAttribute="trailing" constant="16" id="Had-d4-reA"/>
+                                    <constraint firstItem="YAV-EJ-dLW" firstAttribute="top" secondItem="Awa-ds-eLa" secondAttribute="top" id="Obj-ee-lu5"/>
+                                    <constraint firstAttribute="height" constant="48" id="ocv-tn-SDU"/>
+                                    <constraint firstAttribute="trailing" secondItem="YAV-EJ-dLW" secondAttribute="trailing" constant="19" id="qde-ck-rTr"/>
+                                    <constraint firstItem="qiR-j5-Jhw" firstAttribute="leading" secondItem="Awa-ds-eLa" secondAttribute="leading" constant="16" id="tbB-4M-t6A"/>
+                                    <constraint firstItem="qiR-j5-Jhw" firstAttribute="top" secondItem="Awa-ds-eLa" secondAttribute="top" constant="12" id="upX-WC-AWb"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -158,14 +200,15 @@
                             <constraint firstItem="tv4-lo-U6H" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="12f-28-qG0"/>
                             <constraint firstItem="riU-1Z-sBs" firstAttribute="leading" secondItem="RBT-L2-lng" secondAttribute="leading" id="1CL-wz-W0h"/>
                             <constraint firstItem="oho-14-CJv" firstAttribute="top" secondItem="riU-1Z-sBs" secondAttribute="bottom" constant="32" id="3QU-5X-ENJ"/>
+                            <constraint firstItem="Awa-ds-eLa" firstAttribute="leading" secondItem="riU-1Z-sBs" secondAttribute="leading" id="5oV-bl-mQD"/>
                             <constraint firstItem="75z-Ky-l1r" firstAttribute="top" secondItem="bCj-Ac-4oq" secondAttribute="top" id="7Uh-Xr-W2b"/>
+                            <constraint firstItem="Awa-ds-eLa" firstAttribute="trailing" secondItem="riU-1Z-sBs" secondAttribute="trailing" id="C3g-6K-8ty"/>
                             <constraint firstItem="wpI-gE-vI2" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="8" id="Fcg-7c-Lvb"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="bottom" secondItem="tv4-lo-U6H" secondAttribute="bottom" constant="16" id="GWJ-Fa-0fs"/>
                             <constraint firstItem="cTP-Wh-Ica" firstAttribute="top" secondItem="Wx2-i6-Grc" secondAttribute="top" constant="16" id="PWm-mB-vBp"/>
                             <constraint firstItem="75z-Ky-l1r" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="QcU-eb-CZx"/>
                             <constraint firstItem="ZQ7-2v-rud" firstAttribute="baseline" secondItem="vDk-8o-Si0" secondAttribute="baseline" id="QlK-YY-RCN"/>
                             <constraint firstItem="vDk-8o-Si0" firstAttribute="leading" secondItem="ZQ7-2v-rud" secondAttribute="trailing" constant="8" id="RDs-SV-CCw"/>
-                            <constraint firstItem="tv4-lo-U6H" firstAttribute="top" secondItem="UGa-jd-z1j" secondAttribute="bottom" constant="16" id="SLm-W3-XsC"/>
                             <constraint firstItem="UGa-jd-z1j" firstAttribute="top" secondItem="oho-14-CJv" secondAttribute="bottom" constant="16" id="Sf4-Es-69e"/>
                             <constraint firstAttribute="trailing" secondItem="riU-1Z-sBs" secondAttribute="trailing" id="UJi-IX-0Rb"/>
                             <constraint firstItem="UGa-jd-z1j" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="ZlF-93-mq9"/>
@@ -175,11 +218,13 @@
                             <constraint firstItem="bCj-Ac-4oq" firstAttribute="leading" secondItem="75z-Ky-l1r" secondAttribute="trailing" constant="14" id="dqg-sR-pmH"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="oho-14-CJv" secondAttribute="trailing" constant="16" id="fO3-ah-U1O"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="vDk-8o-Si0" secondAttribute="trailing" constant="16" id="gUI-VX-fC0"/>
+                            <constraint firstItem="Awa-ds-eLa" firstAttribute="top" secondItem="UGa-jd-z1j" secondAttribute="bottom" constant="16" id="mlX-0D-WGB"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="bCj-Ac-4oq" secondAttribute="trailing" constant="16" id="p9W-id-FdG"/>
                             <constraint firstItem="riU-1Z-sBs" firstAttribute="top" secondItem="vDk-8o-Si0" secondAttribute="bottom" constant="32" id="pE9-kI-FVB"/>
                             <constraint firstItem="Wx2-i6-Grc" firstAttribute="trailing" secondItem="tv4-lo-U6H" secondAttribute="trailing" constant="16" id="pMm-Ws-09L"/>
                             <constraint firstItem="cTP-Wh-Ica" firstAttribute="leading" secondItem="Wx2-i6-Grc" secondAttribute="leading" constant="16" id="pb5-BM-SJX"/>
                             <constraint firstItem="wpI-gE-vI2" firstAttribute="top" secondItem="cTP-Wh-Ica" secondAttribute="bottom" constant="8" id="qDR-KR-O4L"/>
+                            <constraint firstItem="tv4-lo-U6H" firstAttribute="top" secondItem="Awa-ds-eLa" secondAttribute="bottom" constant="16" id="qih-v6-PXg"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Wx2-i6-Grc"/>
                     </view>
@@ -190,6 +235,8 @@
                         <outlet property="countDownLabel" destination="ZQ7-2v-rud" id="n7t-yp-PMc"/>
                         <outlet property="countryCodeView" destination="75z-Ky-l1r" id="arW-nM-q5Y"/>
                         <outlet property="countryLabel" destination="Wbr-Y5-QX0" id="sa3-QU-sy8"/>
+                        <outlet property="infoGettingCheckSelectionView" destination="qiR-j5-Jhw" id="EKg-sv-QJY"/>
+                        <outlet property="infoGettingCheckView" destination="Awa-ds-eLa" id="Ooq-6H-YU1"/>
                         <outlet property="keylab" destination="sPt-sC-RBr" id="s3Z-4q-gTn"/>
                         <outlet property="mobilePhoneView" destination="bCj-Ac-4oq" id="4PH-CE-877"/>
                         <outlet property="navBackBtn" destination="wpI-gE-vI2" id="UQv-dr-YwX"/>

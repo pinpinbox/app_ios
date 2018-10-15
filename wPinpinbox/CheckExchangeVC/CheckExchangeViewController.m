@@ -378,13 +378,11 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
 
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-{
+                  protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -417,11 +415,11 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         }
     }];
     [alertTimeOutView setUseMotionEffects: YES];
+    alertTimeOutView.parentView = nil;
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8fM-Qo-Anu">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8fM-Qo-Anu">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -37,7 +37,7 @@
                                 </connections>
                             </button>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ISA-sp-8qX">
-                                <rect key="frame" x="16" y="297" width="343" height="48"/>
+                                <rect key="frame" x="16" y="347" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="暱 稱" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mKU-Ug-s5b">
                                         <rect key="frame" x="41" y="8" width="294" height="32"/>
@@ -68,7 +68,7 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sGC-uL-fT1">
-                                <rect key="frame" x="16" y="361" width="343" height="48"/>
+                                <rect key="frame" x="16" y="411" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="信 箱" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ux5-BS-Mey">
                                         <rect key="frame" x="41" y="8" width="244" height="32"/>
@@ -113,7 +113,7 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="buF-ps-MLo">
-                                <rect key="frame" x="16" y="425" width="343" height="48"/>
+                                <rect key="frame" x="16" y="475" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="密 碼 ( 最 少 八 位 英 數 字 )" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r84-9g-gsp">
                                         <rect key="frame" x="41" y="8" width="255" height="32"/>
@@ -156,7 +156,7 @@
                                 </constraints>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bXy-YG-bh4">
-                                <rect key="frame" x="16" y="489" width="343" height="48"/>
+                                <rect key="frame" x="16" y="539" width="343" height="48"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="再 輸 入 一 次 密 碼 確 認" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bHQ-xZ-BxI">
                                         <rect key="frame" x="41" y="8" width="255" height="32"/>
@@ -199,7 +199,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6PJ-Af-FDj">
-                                <rect key="frame" x="16" y="553" width="343" height="48"/>
+                                <rect key="frame" x="16" y="603" width="343" height="48"/>
                                 <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="C1V-uy-RxV"/>
@@ -209,16 +209,6 @@
                                 </state>
                                 <connections>
                                     <action selector="signbtn:" destination="8fM-Qo-Anu" eventType="touchUpInside" id="Fst-Gp-dya"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zCo-6M-Xx8">
-                                <rect key="frame" x="16" y="617" width="343" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="成功註冊表示同意 pinpinbox 平台規範">
-                                    <color key="titleColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="TERMSbtn:" destination="8fM-Qo-Anu" eventType="touchUpInside" id="sfs-kH-y0w"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -234,24 +224,20 @@
                             <constraint firstItem="6PJ-Af-FDj" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="Uj1-uM-uXx"/>
                             <constraint firstItem="6PJ-Af-FDj" firstAttribute="top" secondItem="bXy-YG-bh4" secondAttribute="bottom" constant="16" id="Wa0-BN-YQM"/>
                             <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="sGC-uL-fT1" secondAttribute="trailing" constant="16" id="XzG-uW-4jE"/>
-                            <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="zCo-6M-Xx8" secondAttribute="trailing" constant="16" id="ZXg-qx-ZLR"/>
                             <constraint firstItem="buF-ps-MLo" firstAttribute="top" secondItem="sGC-uL-fT1" secondAttribute="bottom" constant="16" id="cZJ-mt-iQF"/>
-                            <constraint firstItem="01I-Kg-iio" firstAttribute="bottom" secondItem="zCo-6M-Xx8" secondAttribute="bottom" constant="16" id="ckj-6e-D9B"/>
                             <constraint firstItem="ISA-sp-8qX" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="gdl-0D-HxI"/>
                             <constraint firstItem="PZm-Ti-lCS" firstAttribute="top" secondItem="2b6-4Q-Oxz" secondAttribute="bottom" constant="8" id="gi0-wI-hdg"/>
                             <constraint firstItem="2b6-4Q-Oxz" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="k3a-v7-mCU"/>
                             <constraint firstItem="bXy-YG-bh4" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="mTM-BF-ap0"/>
-                            <constraint firstItem="zCo-6M-Xx8" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="nzO-gs-Zs8"/>
-                            <constraint firstItem="zCo-6M-Xx8" firstAttribute="top" secondItem="6PJ-Af-FDj" secondAttribute="bottom" constant="16" id="o9F-bn-alG"/>
                             <constraint firstItem="buF-ps-MLo" firstAttribute="leading" secondItem="01I-Kg-iio" secondAttribute="leading" constant="16" id="p1I-f8-DXx"/>
                             <constraint firstItem="01I-Kg-iio" firstAttribute="trailing" secondItem="ISA-sp-8qX" secondAttribute="trailing" constant="16" id="u7b-UK-ReH"/>
+                            <constraint firstItem="01I-Kg-iio" firstAttribute="bottom" secondItem="6PJ-Af-FDj" secondAttribute="bottom" constant="16" id="ubi-B9-M3c"/>
                             <constraint firstItem="sGC-uL-fT1" firstAttribute="top" secondItem="ISA-sp-8qX" secondAttribute="bottom" constant="16" id="x3U-kd-3Ac"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="01I-Kg-iio"/>
                     </view>
                     <navigationItem key="navigationItem" id="pCH-0i-x1a"/>
                     <connections>
-                        <outlet property="btn_btntip" destination="zCo-6M-Xx8" id="9ol-6B-qms"/>
                         <outlet property="email" destination="Ux5-BS-Mey" id="0cH-Rs-nqS"/>
                         <outlet property="emailBtn" destination="GBi-nc-Sgy" id="zrf-3N-ykU"/>
                         <outlet property="emailView" destination="sGC-uL-fT1" id="ZsX-R6-yGd"/>
