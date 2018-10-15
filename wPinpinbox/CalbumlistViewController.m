@@ -34,6 +34,7 @@
 @interface CalbumlistCollectionViewLayout : UICollectionViewFlowLayout
 //@property (nonatomic) CGFloat itemHeight;
 @end
+
 @implementation CalbumlistCollectionViewLayout
 - (id)init {
     self = [super init];
@@ -46,7 +47,6 @@
     return self;
 }
 - (void)layoutAlbumList {
-    
     self.minimumInteritemSpacing = 0;
     self.minimumLineSpacing = 0.5;
     self.scrollDirection = UICollectionViewScrollDirectionVertical;
@@ -64,7 +64,7 @@
 @end
 
 #pragma mark
-@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AlbumCreationViewControllerDelegate,DDAUIActionSheetViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKSharingDelegate, NewCooperationVCDelegate>
+@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, AlbumCreationViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, AlbumSettingViewControllerDelegate, FBSDKSharingDelegate, NewCooperationVCDelegate>
 {
     NSInteger type;
     NSMutableArray *dataarr;
@@ -221,11 +221,14 @@
 - (IBAction)btn:(UIButton *)sender {
     NSLog(@"");
     NSLog(@"btn:(UIButton *)sender");
-    
-    
 }
 
--(void)reloaddata {
+- (void)loadDataWhenChangingPage:(NSInteger)page {
+    type = page;
+    [self refresh];
+}
+
+- (void)reloaddata {
     NSLog(@"");
     NSLog(@"reloaddata");
     //[mytableview setContentOffset:CGPointZero animated:YES];
@@ -239,6 +242,7 @@
     }
     
 }
+
 - (void)getcalbumlist {
     NSLog(@"");
     NSLog(@"getcalbumlist");
@@ -635,6 +639,7 @@
 //        [self reloadData];
 //    }
 }
+
 -(void)reloadData {
     nextId = 0;
     isLoading = NO;
@@ -648,7 +653,6 @@
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
     NSLog(@"indexPath.row: %ld", (long)indexPath.row);
-    
     
     //  check opMenu mode of cell  //
     CalbumlistCollectionViewCell *cell = (CalbumlistCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
@@ -2005,8 +2009,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)toAlbumSettingViewController: (NSString *)albumId
                           templateId: (NSString *)templateId
                      shareCollection: (BOOL)shareCollection
-                           cellIndex:(NSInteger) index
-{
+                           cellIndex:(NSInteger) index {
     NSLog(@"toAlbumSettingViewController");
     
     AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
@@ -2225,7 +2228,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             break;
         }
     }
-    
 }
 - (void)albumCreationViewControllerBackBtnPressed:(AlbumCreationViewController *)controller {
     [self reloaddata];

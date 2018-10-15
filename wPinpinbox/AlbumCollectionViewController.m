@@ -35,6 +35,8 @@
 #import "ContentCheckingViewController.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "NotifTabViewController.h"
+
 @interface AlbumCollectionViewController () <CAPSPageMenuDelegate, MyAlbumCollectionViewControllerDelegate, OtherCollectionViewControllerDelegate, CalbumlistViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic) CAPSPageMenu *pageMenu;
 //@property (nonatomic) UIView *navBarView;
@@ -93,11 +95,16 @@
     }
     __block typeof(self) wself = self;
     [self.pageMenu.controllerArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (idx == wself.pageMenu.currentPageIndex)
-        {
+        if (idx == wself.pageMenu.currentPageIndex) {
             if ([obj isKindOfClass:[CalbumlistViewController class]]) {
                 CalbumlistViewController *v = (CalbumlistViewController *)obj;
                 [v checkRefreshContent];
+                
+                // 前往共用管理
+                if ([self.fromVC isEqualToString: @"NotifTabViewController"]) {
+                    [self.pageMenu moveToPage: 2];
+                    [v loadDataWhenChangingPage: 2];
+                }
             }
         }
     }];
@@ -121,30 +128,6 @@
 }
 
 - (void)viewWillLayoutSubviews {
-    
-//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-//        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-//            case 1136:
-//                printf("iPhone 5 or 5S or 5C");
-//                break;
-//            case 1334:
-//                printf("iPhone 6/6S/7/8");
-//                break;
-//            case 1920:
-//                printf("iPhone 6+/6S+/7+/8+");
-//                break;
-//            case 2208:
-//                printf("iPhone 6+/6S+/7+/8+");
-//                break;
-//            case 2436:
-//                printf("iPhone X");
-//                break;
-//            default:
-//                printf("unknown");
-//                break;
-//        }
-//    }
-    
     if (@available(iOS 11.0, *)) {
         CGFloat y = self.view.safeAreaLayoutGuide.layoutFrame.origin.y;
         self.pageMenu.view.frame = CGRectMake(0,y , self.view.safeAreaLayoutGuide.layoutFrame.size.width,  self.view.safeAreaLayoutGuide.layoutFrame.size.height);
@@ -161,6 +144,7 @@
     [self createPageMenu];
     [self createAnimateSegmentView];
 }
+
 - (void)createPageMenu {
     if (self.pageMenu != nil) return;
     NSLog(@"");
@@ -362,8 +346,7 @@
     return itemLayout;
 }
 
--(void)handleTap:(MyBaseLayout*)sender
-{
+- (void)handleTap:(MyBaseLayout*)sender {
     switch (sender.tag) {
         case 0:
 //            self.underLineView.leftPos.active = YES;
@@ -431,10 +414,10 @@
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleDefault;
 }
-- (void)willMoveToPage:(UIViewController *)controller index:(NSInteger)index
-{
+- (void)willMoveToPage:(UIViewController *)controller
+                 index:(NSInteger)index {
     NSLog(@"willMoveToPage index: %ld", (long)index);
-    [self changeViewAndLabel: index];
+    [self changeViewAndLabel: index];        
 }
 
 - (void)setStatusBarBackgroundColor:(UIColor *)color {
@@ -501,6 +484,15 @@
     for (id controller in app.myNav.viewControllers) {
         NSLog(@"controller: %@", controller);
         
+        if ([controller isKindOfClass: [NotifTabViewController class]]) {
+            [app.myNav popToViewController: controller animated: YES];
+            return;
+        }
+    }
+    
+    for (id controller in app.myNav.viewControllers) {
+        NSLog(@"controller: %@", controller);
+        
         if ([controller isKindOfClass: [MeTabViewController class]]) {
             [self.navigationController popToViewController: controller animated: YES];
             return;
@@ -515,6 +507,8 @@
             return;
         }
     }
+    
+    
 }
 
 #pragma mark - CustomActionSheet
@@ -653,7 +647,8 @@
                            hasImage: hasImage];
 }
 
-- (void)shareLink:(NSString *)sharingStr albumId:(NSString *)albumId
+- (void)shareLink:(NSString *)sharingStr
+          albumId:(NSString *)albumId
 {
     NSLog(@"sharingStr: %@", sharingStr);
     NSLog(@"albumId: %@", albumId);

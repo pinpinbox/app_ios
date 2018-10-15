@@ -21,5 +21,6 @@
     self.nameLabel.font = [UIFont boldSystemFontOfSize: 14.0];
     
     self.timeLabel.font = [UIFont boldSystemFontOfSize: 14.0];
+    self.timeLabel.textColor = [UIColor firstPink];
 }
 @end
