@@ -816,18 +816,18 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
 #if __IPHONE_10_0
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
     
-    //NSLog(@"willPresentNotification : %@", notification);
-    
     completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionSound);
     
 }
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     
-    //NSLog(@"didReceiveNotificationResponse : %@", response.notification.request.content.userInfo);
-    NSDictionary *userInfo = response.notification.request.content.userInfo;
-    if (userInfo) {
-        [self application: [UIApplication sharedApplication] didReceiveRemoteNotification: userInfo fetchCompletionHandler:^(UIBackgroundFetchResult result) {
-        }];
+    NSDictionary *userinfo = response.notification.request.content.userInfo;
+    //  Notification data received //
+    if (userinfo) {
+        
+                [self application:[UIApplication sharedApplication]
+     didReceiveRemoteNotification:userinfo
+           fetchCompletionHandler:^(UIBackgroundFetchResult result) {}];
     }
     completionHandler();
 }

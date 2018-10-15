@@ -45,16 +45,7 @@
     
     //__strong PHImageManager *imageManager;
     __weak IBOutlet UIButton *okbtn;
-    
-    //NSMutableArray *imgs;
-    
-    //CustomIOSAlertView *alertViewForButton;
-    
-    // For Observing NSOperationQueue
-    //NSString *responseImageStr;
-    
-    
-    //NSURLSessionDataTask *dataTask;
+
     NSMutableArray *dataTaskArray;
 }
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
@@ -486,6 +477,8 @@
     @try {
         self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
         self.hud.mode =  MBProgressHUDModeDeterminateHorizontalBar;//MBProgressHUDModeAnnularDeterminate;
+
+        self.hud.progress = 0;
         self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳", self.totalPhoto];
         self.hud.label.font = [UIFont systemFontOfSize: kFontSizeForUploading];
         [self.hud.button setTitle: @"取消" forState: UIControlStateNormal];
@@ -1152,25 +1145,31 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     return assets;
 }
 
-#pragma mark -
+#pragma mark - NSURLSessionDataTask Related Functions
+
+- (void)URLSession:(NSURLSession *)session
+              task:(nonnull NSURLSessionTask *)task
+   didSendBodyData:(int64_t)bytesSent
+    totalBytesSent:(int64_t)totalBytesSent
+totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+    
+    double p = (double)totalBytesSent / (double)totalBytesExpectedToSend;
+    [self updateProgress:p];
+}
+//  increase failed task count
 - (void)increaseFailed {
     self.photoFailed++;
-    //self.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",self.photoFinished, self.photoFailed];
-    //self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",self.totalPhoto-(self.photoFinished+self.photoFailed)];
-    //self.hud.progress = 0;
-   // [self updateProgress:0];
-   // [self postProcessUploadFinished];
+    [self updateProgress:0];
+   
 }
+//  increase successful task count
 - (void)increaseFinished {
     self.photoFinished++;
-    //[self updateProgress:0];
-    //self.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",self.photoFinished, self.photoFailed];
-    //self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",self.totalPhoto-(self.photoFinished+self.photoFailed)];
-    //self.hud.progress = 0;
-    //[self postProcessUploadFinished];
+    [self updateProgress:0];
 }
-- (void)updateProgress:(CGFloat)p total:(int64_t)total  {
-    
+
+//  update hud progress
+- (void)updateProgress:(CGFloat)p  {
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         wself.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",wself.photoFinished, wself.photoFailed];
@@ -1178,6 +1177,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         wself.hud.progress = p;
     });
 }
+
 - (void)insertphotoofdiy:(NSString *)uid
                    token:(NSString *)token
                 album_id:(NSString *)album_id
@@ -1264,10 +1264,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     __block typeof(self) wself = self;
     
-//    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-//    config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
-//    _session = [NSURLSession sessionWithConfiguration: config delegate:self delegateQueue:nil];
-//
     __block NSString *desc = [[NSUUID UUID] UUIDString];
     NSURLSessionDataTask *task = [_session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
@@ -1275,12 +1271,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         __strong typeof(wself) sself = wself;
         if (error) {
             NSLog(@"dataTaskWithRequest error: %@", error);
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                wself->hud.detailsLabel.text = @"網路不穩";
-//                wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
-//            });
-//            dispatch_semaphore_signal(semaphore);
-//            return;
         }
         if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
@@ -1298,31 +1288,11 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             
             NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [str dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
             
-            
-            
             if ([dic[@"result"] boolValue]) {
-                //NSMutableArray *imageInfoArray = [NSMutableArray new];
-                
-                //for (NSMutableDictionary *photo in dic[@"data"][@"photo"]) {
-                //    [imageInfoArray addObject: photo[@"photo_id"]];
-                //}
-                //NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
-                
-                //wself.photoFinished = imageInfoArray.count;
                 [sself increaseFinished];
-                //[imageInfoArray removeAllObjects];
-                //imageInfoArray = nil;
-                
-                //dispatch_async(dispatch_get_main_queue(), ^{
-                //    wself->hud.detailsLabel.text = @"";
-                //});
             } else {
                 NSLog(@"Error Message: %@", dic[@"message"]);
                 
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    wself->hud.detailsLabel.text = @"網路不穩";
-//                    wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
-//                });
                 [sself increaseFailed];
             }
             
@@ -1331,8 +1301,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         }
         [sself removeDataTask:desc];
         
-        
-        
     }];
     NSLog(@"task resume");
     
@@ -1340,22 +1308,15 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [dataTaskArray addObject: task];
     if ([dataTaskArray count] == 1)
         [task resume];
-    
-//    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-//
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        wself->hud.label.text = [NSString stringWithFormat: @"%ld 張照片上傳完成", (long)wself->photoFinished];
-//    });
-    
-    //return str;
 }
+//  remove NSURLSessionDataTask from dataTaskArray when it's been finished
 - (void)removeDataTask:(NSString * )taskDesc {
     for (NSURLSessionDataTask *t in dataTaskArray) {
         if ([taskDesc isEqualToString: t.taskDescription]) {
             
             [dataTaskArray removeObject:t];
             
-            [self updateProgress:0 total:0];
+            [self updateProgress:0];
             [self postProcessUploadFinished];
             
             NSURLSessionDataTask *tt = [dataTaskArray firstObject];
@@ -1367,85 +1328,11 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     }
     
     NSLog(@"removeDataTask %ld",[dataTaskArray count]);
-    [self updateProgress:0 total:0];
+    [self updateProgress:0];
     [self postProcessUploadFinished];
 }
-- (void)URLSession:(NSURLSession *)session
-              task:(NSURLSessionTask *)task
-   didSendBodyData:(int64_t)bytesSent
-    totalBytesSent:(int64_t)totalBytesSent
-totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
-    
-    double p = (double)totalBytesSent / (double)totalBytesExpectedToSend;
-    //NSLog(@"didSendBodyData bytesSent :%lld, totalBytesSent: %lld, totalBytesExpectedToSend %lld ",bytesSent,totalBytesSent,totalBytesExpectedToSend);
-    [self updateProgress:p total:totalBytesExpectedToSend];
-}
-//- (NSString *)signGenerator2:(NSDictionary *)parameters {
-//    //NSLog(@"signGenerator2")l;
-//
-//    NSString *secrectSN = @"d9$kv3fk(ri3mv#d-kg05[vs)F;f2lg/";
-//    NSString *signSN = @"";
-//    NSArray *keys = [parameters allKeys];
-//
-//    keys = [keys sortedArrayUsingComparator: ^NSComparisonResult(id obj1, id obj2) {
-//        return [obj1 compare: obj2 options: NSNumericSearch];
-//    }];
-//
-////    NSCharacterSet *URLCombinedCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"#%/:<>?@[\\]^`{|},="] invertedSet];
-//    //:/?@!$&'()*+,;=
-//
-//    NSString *requestOriginal = @"";
-//
-//    for (int i = 0 ;i < keys.count ;i++) {
-//        //NSLog(@"i: %d", i);
-//        //NSLog(@"keys.count: %lu", (unsigned long)keys.count);
-//
-//        NSString *key = keys[i];
-//        NSString *value = parameters[key];
-//        // requestOriginal=[NSString stringWithFormat:@"%@%@=%@",requestOriginal,key,[value stringByAddingPercentEncodingWithAllowedCharacters:URLCombinedCharacterSet]];
-//
-//        requestOriginal = [NSString stringWithFormat:@"%@%@=%@", requestOriginal, key, value];
-//        //NSLog(@"requestOriginal: %@", requestOriginal);
-//
-//        if (i < keys.count - 1) {
-//            //NSLog(@"i < keys.count - 1");
-//            requestOriginal = [NSString stringWithFormat:@"%@&", requestOriginal];
-//            //NSLog(@"requestOriginal: %@", requestOriginal);
-//        }
-//    }
-//    //requestOriginal=[requestOriginal stringByReplacingOccurrencesOfString:@"%@20" withString:@"+"];
-//
-//    //NSLog(@"requestOriginal lowercaseString");
-//    NSString *requestLow = [requestOriginal lowercaseString];
-//    //NSLog(@"%@",requestLow);
-//
-//    //NSLog(@"requestLow,secrectSN");
-//    requestLow = [NSString stringWithFormat:@"%@%@",requestLow,secrectSN];
-//    //NSLog(@"%@",requestLow);
-//
-//    //NSLog(@"requestLow.MD5");
-//    requestLow = requestLow.MD5;
-//    //NSLog(@"%@",requestLow);
-//
-//    //NSLog(@"requestLow.lowercaseString");
-//    requestLow = requestLow.lowercaseString;
-//    //NSLog(@"%@",requestLow);
-//
-//    signSN = requestLow;
-//    //NSLog(@"signSN: %@", signSN);
-//
-//    return signSN;
-//}
 
-#pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
-    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
-        [customAlertView close];
-    }];
-    
-}
+// upload image with NSInputStream
 - (void)sendWithStream:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id imageData:(NSData *)imageData {
 
     if (!imageData || imageData.length < 1) return;
@@ -1497,10 +1384,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     __block typeof(self) wself = self;
     
-    //    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    //    config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
-    //    _session = [NSURLSession sessionWithConfiguration: config delegate:self delegateQueue:nil];
-    //
+    
     __block NSString *desc = [[NSUUID UUID] UUIDString];
     NSURLSessionDataTask *task = [_session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
@@ -1534,28 +1418,12 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
             
             
             if ([dic[@"result"] boolValue]) {
-                //NSMutableArray *imageInfoArray = [NSMutableArray new];
                 
-                //for (NSMutableDictionary *photo in dic[@"data"][@"photo"]) {
-                //    [imageInfoArray addObject: photo[@"photo_id"]];
-                //}
-                //NSLog(@"imageInfoArray.count: %lu", (unsigned long)imageInfoArray.count);
-                
-                //wself.photoFinished = imageInfoArray.count;
                 [sself increaseFinished];
-                //[imageInfoArray removeAllObjects];
-                //imageInfoArray = nil;
                 
-                //dispatch_async(dispatch_get_main_queue(), ^{
-                //    wself->hud.detailsLabel.text = @"";
-                //});
             } else {
                 NSLog(@"Error Message: %@", dic[@"message"]);
                 
-                //                dispatch_async(dispatch_get_main_queue(), ^{
-                //                    wself->hud.detailsLabel.text = @"網路不穩";
-                //                    wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
-                //                });
                 [sself increaseFailed];
             }
             
@@ -1573,85 +1441,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     [dataTaskArray addObject: task];
     if ([dataTaskArray count] == 1)
         [task resume];
-    
-    //st add
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
 
 /*
  
@@ -1662,5 +1452,12 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
  [PHAssetResource assetResourcesForAsset:PHAsset]
  [[PHAssetResourceManager defaultManager] requestDataForAssetResource:options:dataReceivedHandler:completionHandler:]
  */
+
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert:(NSString *)msg {
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+        [customAlertView close];
+    }];
+}
 @end
 

@@ -1853,7 +1853,9 @@ shouldChangeTextInRange:(NSRange)range
                                         break;
                                     }
                                 }
-                                
+                            } else if ([stSelf.fromVC isEqualToString: @"NotifTabVC"]) {
+                                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                [appDelegate.myNav popViewControllerAnimated: YES];
                             } else {
                                 AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
                                 albumCollectionVC.postMode = stSelf.postMode;
@@ -2358,14 +2360,9 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 
 - (void)callInsertVideoOfDiy: (NSData *)vidData;
 {
-    NSLog(@"callInsertVideoOfDiy");
-    
-    
     if (!vidData || vidData.length < 1) return;
 
-    
-        
-     @try {
+    @try {
          //[wTools ShowMBProgressHUD];
          _vidHud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
          _vidHud.mode =  MBProgressHUDModeDeterminateHorizontalBar;
@@ -3799,7 +3796,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - Custom AlertView for Yes and No
-- (void)showCustomAlert: (NSString *)msg {
+- (void)showCustomAlert:(NSString *)msg {
     NSLog(@"showCustomAlert: Msg: %@", msg);
     
     CustomIOSAlertView *alertBackView = [[CustomIOSAlertView alloc] init];

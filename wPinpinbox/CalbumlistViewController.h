@@ -16,7 +16,6 @@
          hasImage:(BOOL)hasImage;
 - (void)editCooperation:(NSString *)albumId
                identity:(NSString *)identity;
-
 - (void)toReadBookController: (NSString *)albumId;
 - (void)shareLink:(NSString *)sharingStr
           albumId:(NSString *)albumId;
@@ -33,4 +32,6 @@
 @property (nonatomic) NSInteger collectionType;
 @property (weak) id <CalbumlistViewControllerDelegate> delegate;
 - (void)checkRefreshContent;
+- (void)reloadData;
+- (void)loadDataWhenChangingPage:(NSInteger)page;
 @end

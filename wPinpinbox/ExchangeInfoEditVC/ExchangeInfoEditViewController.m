@@ -180,8 +180,9 @@
     
     // Number Label
     UILabel *nameLabel = [UILabel new];
+    nameLabel.wrapContentHeight = YES;
     nameLabel.myTopMargin = nameLabel.myBottomMargin = 8;
-    nameLabel.myLeftMargin = 0;
+    nameLabel.myLeftMargin = nameLabel.myRightMargin = 0;
     nameLabel.numberOfLines = 0;
     nameLabel.font = [UIFont boldSystemFontOfSize: 24.0];
     
@@ -214,18 +215,20 @@
     [bgLayout addSubview: descriptionLabel];
     
     // HorzLayout1
-    MyLinearLayout *horzLayout1 = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
+    MyLinearLayout *horzLayout1 = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];    
     horzLayout1.myTopMargin = 16.0;
     horzLayout1.myLeftMargin = horzLayout1.myRightMargin = 0;
     horzLayout1.myBottomMargin = 8.0;
     horzLayout1.wrapContentWidth = YES;
     horzLayout1.wrapContentHeight = YES;
-    horzLayout1.myHeight = 24.0;
+    horzLayout1.myHeight = 28.0;
     
     // modifyContactInfoLabel
     UILabel *modifyContactInfoLabel = [UILabel new];
+    modifyContactInfoLabel.wrapContentHeight = YES;
     modifyContactInfoLabel.myTopMargin = modifyContactInfoLabel.myBottomMargin = 8;
     modifyContactInfoLabel.myLeftMargin = 0;
+    modifyContactInfoLabel.myRightMargin = 16;
     modifyContactInfoLabel.font = [UIFont boldSystemFontOfSize: 22.0];
     modifyContactInfoLabel.text = @"聯絡資訊";
     [LabelAttributeStyle changeGapString: modifyContactInfoLabel content: modifyContactInfoLabel.text];

@@ -34,6 +34,7 @@
 @interface CalbumlistCollectionViewLayout : UICollectionViewFlowLayout
 //@property (nonatomic) CGFloat itemHeight;
 @end
+
 @implementation CalbumlistCollectionViewLayout
 - (id)init {
     self = [super init];
@@ -46,7 +47,6 @@
     return self;
 }
 - (void)layoutAlbumList {
-    
     self.minimumInteritemSpacing = 0;
     self.minimumLineSpacing = 0.5;
     self.scrollDirection = UICollectionViewScrollDirectionVertical;
@@ -64,7 +64,7 @@
 @end
 
 #pragma mark
-@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,AlbumCreationViewControllerDelegate,DDAUIActionSheetViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKSharingDelegate, NewCooperationVCDelegate>
+@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, AlbumCreationViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, AlbumSettingViewControllerDelegate, FBSDKSharingDelegate, NewCooperationVCDelegate>
 {
     NSInteger type;
     NSMutableArray *dataarr;
@@ -221,11 +221,14 @@
 - (IBAction)btn:(UIButton *)sender {
     NSLog(@"");
     NSLog(@"btn:(UIButton *)sender");
-    
-    
 }
 
--(void)reloaddata {
+- (void)loadDataWhenChangingPage:(NSInteger)page {
+    type = page;
+    [self refresh];
+}
+
+- (void)reloaddata {
     NSLog(@"");
     NSLog(@"reloaddata");
     //[mytableview setContentOffset:CGPointZero animated:YES];
@@ -239,6 +242,7 @@
     }
     
 }
+
 - (void)getcalbumlist {
     NSLog(@"");
     NSLog(@"getcalbumlist");
@@ -635,6 +639,7 @@
 //        [self reloadData];
 //    }
 }
+
 -(void)reloadData {
     nextId = 0;
     isLoading = NO;
@@ -648,7 +653,6 @@
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
     NSLog(@"indexPath.row: %ld", (long)indexPath.row);
-    
     
     //  check opMenu mode of cell  //
     CalbumlistCollectionViewCell *cell = (CalbumlistCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
@@ -699,53 +703,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 
-//    if (!isLoading) {
-//        CGFloat contentHeight = scrollView.contentSize.height;
-//        CGFloat listHeight = scrollView.frame.size.height ;//- scrollView.contentInset.top - scrollView.contentInset.bottom;
-//        BOOL canLoad = contentHeight > listHeight;
-//
-//        CGFloat curOffset = scrollView.contentOffset.y;
-//        CGFloat maxOffset = scrollView.contentSize.height-scrollView.frame.size.height;
-//        CGFloat diff = maxOffset-curOffset;
-//
-//        if (canLoad && diff <= -48) {
-//            //scrollView.bounces = NO;
-//            UIView *v = [scrollView viewWithTag:54321];
-//            if (!isLoading && (v == nil)) {
-//            //    CGFloat prevScrollViewBottomInset = scrollView.contentInset.bottom;
-//                UIEdgeInsets u =scrollView.contentInset;
-//
-//                [scrollView setContentInset:UIEdgeInsetsMake(u.top, u.left, 96, u.right)];
-//                NSLog(@"getContentInset %f,%f",scrollView.contentOffset.y, scrollView.contentInset.bottom);
-//                [scrollView setContentOffset:CGPointMake(0, maxOffset+96)];
-//
-//                UIActivityIndicatorView *indicator =
-//                    indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-//                [indicator setColor:[UIColor darkGrayColor]];
-//
-//
-//                indicator.center = CGPointMake(scrollView.center.x, /*scrollView.bounds.size.height*/ scrollView.contentSize.height+48);
-//
-//                indicator.tag = 54321;
-//                [scrollView addSubview:indicator];
-//                indicator.hidesWhenStopped = YES;
-//                [indicator startAnimating];
-//
-//                //[wTools ShowMBProgressHUD];
-//                //isLoading = YES;
-//
-//                dispatch_time_t after = dispatch_time(DISPATCH_TIME_NOW, 2.5 * NSEC_PER_SEC);
-//                dispatch_after(after, dispatch_get_main_queue(), ^{
-//
-//                    [self reloaddata];
-//                    self->isLoading = NO;
-//
-//                });
-//
-//                //scrollView.bounces = YES;
-//            }
-//        }
-//    }
 }
 - (void)updateAlbumact:(NSString *) albumid {
     for (int i = 0; i< [dataarr count];i++) {
@@ -2005,8 +1962,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)toAlbumSettingViewController: (NSString *)albumId
                           templateId: (NSString *)templateId
                      shareCollection: (BOOL)shareCollection
-                           cellIndex:(NSInteger) index
-{
+                           cellIndex:(NSInteger) index {
     NSLog(@"toAlbumSettingViewController");
     
     AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
@@ -2225,7 +2181,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             break;
         }
     }
-    
 }
 - (void)albumCreationViewControllerBackBtnPressed:(AlbumCreationViewController *)controller {
     [self reloaddata];
