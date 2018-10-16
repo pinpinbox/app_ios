@@ -90,7 +90,7 @@
         // ImageDataArr=[NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
         selectItem = 0;
         NSDictionary *data = _templatelist[selectItem];
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         NSArray *frame = data[@"blank"];
         
         for (int i = 0; i < frame.count; i++) {
@@ -688,7 +688,7 @@
         
         NSDictionary *data=_templatelist[selectItem];
         
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         
         NSArray *frame=data[@"blank"];
         
@@ -1040,7 +1040,7 @@
             
             [data setObject:bimag forKey:@"image"];
             
-            NSLog(@"data: %@", data);
+            //NSLog(@"data: %@", data);
         } else {
             NSLog(@"image does not exist");
         }

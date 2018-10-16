@@ -404,7 +404,7 @@
                     NSLog(@"response from checkVersion");
                     
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
-                    NSLog(@"data: %@", data);
+                    //NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 0) {
                         NSLog(@"error");
@@ -1520,7 +1520,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
                     
-                    NSLog(@"data: %@", data);
+                    //NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 1) {
                         NSLog(@"result is 1");
@@ -2121,7 +2121,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         [self tapDetectedForURL: indexPath.row];
     } else if (collectionView.tag == 3) {
         NSDictionary *data = categoryArray[indexPath.row];
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         NSLog(@"categoryarea: %@", data[@"categoryarea"]);
         NSLog(@"categoryarea_id: %@", [data[@"categoryarea"][@"categoryarea_id"] stringValue]);
         
@@ -2408,7 +2408,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
         NSDictionary *data = albumData[indexPath.row][@"album"];
         
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         NSLog(@"data name: %@", data[@"name"]);
         
         // Check Width & Height return value is nil or not

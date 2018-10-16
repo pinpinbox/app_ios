@@ -503,7 +503,7 @@ replacementString:(NSString *)string {
         [data setObject: identity forKey: @"identity"];
         [data setObject: userId forKey: @"user_id"];
         
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         
         NSString *response = [boxAPI updatecooperation: [wTools getUserID]
                                                  token: [wTools getUserToken]

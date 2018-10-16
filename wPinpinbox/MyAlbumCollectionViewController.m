@@ -370,9 +370,9 @@
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
+    //NSLog(@"");
     
     return contentView;
 }
@@ -485,9 +485,9 @@
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
+    //NSLog(@"");
     
     return contentView;
 }

@@ -54,7 +54,7 @@
     //取得檔案路徑
     NSString *path = [[NSBundle mainBundle] pathForResource: @"Hobby_lang" ofType: @"plist"];
     NSMutableDictionary *data = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
     
     NSString *language = [NSString stringWithFormat: @"%@", [[[NSUserDefaults standardUserDefaults]objectForKey: @"AppleLanguages"] objectAtIndex: 0]];
     NSLog(@"language: %@", language);

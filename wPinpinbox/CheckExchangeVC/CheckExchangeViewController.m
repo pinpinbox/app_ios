@@ -130,7 +130,7 @@
                         
                         
                         for (NSMutableDictionary *data in [dic objectForKey: @"data"]) {
-                            NSLog(@"data: %@", data);
+                            //NSLog(@"data: %@", data);
                             
                             if ([data[@"photo"][@"has_gained"] boolValue] == YES) {
                                 NSLog(@"has_gained TRUE");
@@ -258,7 +258,7 @@
     } else {
         data = self.hasNotExchangedData[indexPath.row];
     }
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
     
     if ([data[@"photousefor"][@"image"] isEqual: [NSNull null]]) {
         cell.imageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];

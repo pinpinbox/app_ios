@@ -1122,7 +1122,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     cell.contentView.subviews[0].backgroundColor = nil;
     
     NSDictionary *data = pictures[indexPath.row];
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
     
     if ([data[@"cover"] isEqual: [NSNull null]]) {
         cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];

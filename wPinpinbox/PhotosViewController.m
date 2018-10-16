@@ -339,7 +339,11 @@
     }
     
     okbtn.userInteractionEnabled = NO;
-    [self showToastMsg: @"圖片載入中" color: [UIColor secondMain] duration: 2.0];
+    //[self showToastMsg: @"圖片載入中" color: [UIColor secondMain] duration: 2.0];
+    
+    self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+    self.hud.mode = MBProgressHUDModeIndeterminate;
+    self.hud.label.text = @"圖片載入中";
     
     //處理所有則的圖片
     _imgs = [NSMutableArray new];
@@ -421,7 +425,7 @@
 - (void)OKimage {
     NSLog(@"OKimage");
     NSLog(@"choice: %@", _choice);
-    
+    [self.hud hideAnimated:YES];
     okbtn.userInteractionEnabled = YES;
     
     if ([_choice isEqualToString: @"Template"]) {

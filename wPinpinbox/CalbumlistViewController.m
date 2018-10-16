@@ -91,7 +91,7 @@
 #pragma mark - View Loading Related Methods
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"CalbumlistViewController");
     NSLog(@"viewDidLoad");
     NSLog(@"Test");
@@ -148,7 +148,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"CalbumlistViewController");
     NSLog(@"viewWillAppear");
     NSLog(@"Test");
@@ -219,7 +219,7 @@
 }
 
 - (IBAction)btn:(UIButton *)sender {
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"btn:(UIButton *)sender");
 }
 
@@ -229,7 +229,7 @@
 }
 
 - (void)reloaddata {
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"reloaddata");
     //[mytableview setContentOffset:CGPointZero animated:YES];
     
@@ -244,7 +244,7 @@
 }
 
 - (void)getcalbumlist {
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"getcalbumlist");
     
     if (nextId == 0)
@@ -494,7 +494,7 @@
     //NSLog(@"dataArr: %@", dataarr);
     
     NSDictionary *data = dataarr[indexPath.row][@"album"];
-    //NSLog(@"data: %@", data);
+    ////NSLog(@"data: %@", data);
     
     if (![data[@"album_id"] isEqual: [NSNull null]]) {
         Cell.albumid = [data[@"album_id"] stringValue];
@@ -585,9 +585,9 @@
         coop = [dataarr[indexPath.row][@"cooperationstatistics"][@"count"] intValue];
     }
     [Cell setCoopNumber:coop];
-    NSLog(@"");
-    NSLog(@"");
-    NSLog(@"data: %@", data);
+    //NSLog(@"");
+    //NSLog(@"");
+    //NSLog(@"data: %@", data);
     
     [Cell setAlbumDesc:[NSString stringWithFormat:@"%@",data[@"name"]]];
     
@@ -660,7 +660,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     
     NSDictionary *data = dataarr[indexPath.row][@"album"];
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
     
     if ([data[@"usefor"][@"image"] boolValue] || [data[@"usefor"][@"video"] boolValue]) {
         //BOOL zipped = [data[@"zipped"] boolValue];
@@ -977,7 +977,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 //刪除相本
 -(void)deletebook:(NSString *)albumid {
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"deletebook albumId: %@", albumid);
     
     NSLog(@"type: %ld", (long)type);
@@ -1141,9 +1141,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
+    //NSLog(@"");
     
     return contentView;
 }
@@ -1251,9 +1251,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
+    //NSLog(@"");
     
     return contentView;
 }
@@ -1359,9 +1359,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
+    //NSLog(@"");
     
     return contentView;
 }
@@ -1423,10 +1423,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"file exists");
         
         data = [[NSMutableDictionary alloc] initWithContentsOfFile: filePath];
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         
         [data removeObjectForKey: albumId];
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
     }
     
     if ([data writeToFile: filePath atomically: YES]) {
@@ -1562,9 +1562,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
+    //NSLog(@"");
     
     return contentView;
 }
@@ -1684,9 +1684,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
+    //NSLog(@"");
     
     return contentView;
 }
@@ -2013,8 +2013,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             }
             
             if (response != nil) {
-                NSLog(@"");
-                NSLog(@"");
+                //NSLog(@"");
+                //NSLog(@"");
                 NSLog(@"response from checkTaskCompleted");
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -2032,7 +2032,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSDictionary *eventjoin = [dt objectForKey:@"eventjoin"];
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"data: %@", data);
+                    //NSLog(@"data: %@", data);
                     NSString *autoPlayStr = @"&autoplay=1";
                     if ([data[@"result"] intValue] == 1) {
                         
@@ -2099,7 +2099,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) weakSelf = self;
     
     self.customEditActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
-        NSLog(@"");
+        //NSLog(@"");
         NSLog(@"customShareActionSheet.customViewBlock executes");
         NSLog(@"tagId: %ld", (long)tagId);
         NSLog(@"isTouchDown: %d", isTouchDown);

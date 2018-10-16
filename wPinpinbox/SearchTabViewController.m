@@ -669,7 +669,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
     if (collectionView.tag == 1) {
         NSDictionary *data = albumData[indexPath.row][@"album"];
         
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         NSLog(@"data name: %@", data[@"name"]);
         
         // Check Width & Height return value is nil or not

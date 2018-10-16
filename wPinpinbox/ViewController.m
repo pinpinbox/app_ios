@@ -880,7 +880,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"data: %@", data);
+                    //NSLog(@"data: %@", data);
                     
                     if ([data[@"result"]intValue] == 1) {
                         //已有帳號

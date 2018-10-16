@@ -728,7 +728,19 @@ const char * const ASSOCIATEDOBJECT_KEY_MYLAYOUT_ABSPOS = "ASSOCIATEDOBJECT_KEY_
 }
 
 BOOL _hasBegin;
-
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self)
+        self.touchDelay = 0.12;
+    
+    return self;
+}
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self)
+        self.touchDelay = 0.12;
+    return self;
+}
 -(void)dealloc
 {
     //如果您在使用时出现了KVO的异常崩溃，原因是您将这个视图被多次加入为子视图，请检查您的代码，是否这个视图被多次加入！！
@@ -1174,7 +1186,11 @@ BOOL _hasBegin;
         _forbidTouch = YES;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [self performSelector:@selector(doTargetAction:) withObject:[touches anyObject] afterDelay:0.12];
+        //  to prevent touch delay
+        if (self.touchDelay <= 0.0)
+            [self performSelector:@selector(doTargetAction:) withObject:[touches anyObject]];
+        else
+            [self performSelector:@selector(doTargetAction:) withObject:[touches anyObject] afterDelay:self.touchDelay];
 #pragma clang diagnostic pop
 
         _hasBegin = NO;

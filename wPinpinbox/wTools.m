@@ -281,7 +281,7 @@ static wTools *instance =nil;
 //    ReadBookViewController *readBookVC = [[ReadBookViewController alloc] initWithNibName: @"ReadBookViewController" bundle: nil];
 //    readBookVC.dic = data;
 //
-//    NSLog(@"data: %@", data);
+//    //NSLog(@"data: %@", data);
 //
 //    readBookVC.isDownloaded = NO;
 //    readBookVC.albumid = albumId;

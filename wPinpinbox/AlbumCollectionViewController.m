@@ -59,7 +59,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.        
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"AlbumCollectionViewController");
     NSLog(@"viewDidLoad");
     
@@ -71,7 +71,7 @@
     self.customEditActionSheet.delegate = self;
     self.customEditActionSheet.topicStr = @"你 想 做 什 麼?";
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"app.myNav");
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -83,7 +83,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"AlbumCollectionViewController");
     NSLog(@"viewWillAppear");
     
@@ -138,7 +138,7 @@
 
 #pragma mark -
 - (void)initialValueSetup {
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"initialValueSetup");
     //self.navBarView.backgroundColor = [UIColor barColor];
     [self createPageMenu];
@@ -147,7 +147,7 @@
 
 - (void)createPageMenu {
     if (self.pageMenu != nil) return;
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"createPageMenu");
     self.pageMenu.delegate = self;
     // ViewController Array Setup
@@ -233,7 +233,7 @@
 
 - (void)createAnimateSegmentView {
     if (self.leftLabel != nil) return;
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"createAnimateSegmentView");
     [self setItemChangedAction:^(NSInteger index) {
         NSLog(@"index: %ld", (long)index);
@@ -258,6 +258,7 @@
     //MyFrameLayout *leftItemLayout = [self createItemLayout: @"我的作品" withTag:0];
     MyFrameLayout *leftItemLayout = [MyFrameLayout new];
     leftItemLayout.tag = 0;
+    leftItemLayout.touchDelay = 0;
     [leftItemLayout setTarget:self action:@selector(handleTap:)];
     leftItemLayout.widthDime.equalTo(rootLayout.widthDime).multiply(1/3.0);
     leftItemLayout.heightDime.equalTo(rootLayout.heightDime);
@@ -280,6 +281,7 @@
     // Center Item Layout
     MyFrameLayout *centerItemLayout = [MyFrameLayout new];
     centerItemLayout.tag = 1;
+    centerItemLayout.touchDelay = 0;
     [centerItemLayout setTarget:self action:@selector(handleTap:)];
     centerItemLayout.widthDime.equalTo(rootLayout.widthDime).multiply(1/3.0);
     centerItemLayout.heightDime.equalTo(rootLayout.heightDime);
@@ -302,6 +304,7 @@
     //MyFrameLayout *rightItemLayout = [self createItemLayout: @"共用條件" withTag:2];
     MyFrameLayout *rightItemLayout = [MyFrameLayout new];
     rightItemLayout.tag = 2;
+    rightItemLayout.touchDelay = 0;
     [rightItemLayout setTarget:self action:@selector(handleTap:)];
     rightItemLayout.widthDime.equalTo(rootLayout.widthDime).multiply(1/3.0);
     rightItemLayout.heightDime.equalTo(rootLayout.heightDime);
@@ -357,6 +360,12 @@
             self.centerLabel.textColor = [UIColor thirdGrey];
             self.rightLabel.textColor = [UIColor thirdGrey];
             
+            for (UIViewController *c in self.pageMenu.controllerArray) {
+                CalbumlistViewController *cc = (CalbumlistViewController *)c;
+                CGPoint f = cc.collectionview.contentOffset;
+                [cc.collectionview setContentOffset:f animated:NO];
+            }
+            
             [self.pageMenu moveToPage: 0];
             break;
         case 1:
@@ -367,6 +376,12 @@
             self.leftLabel.textColor = [UIColor thirdGrey];
             self.centerLabel.textColor = [UIColor blackColor];
             self.rightLabel.textColor = [UIColor thirdGrey];
+            
+            for (UIViewController *c in self.pageMenu.controllerArray) {
+                CalbumlistViewController *cc = (CalbumlistViewController *)c;
+                CGPoint f = cc.collectionview.contentOffset;
+                [cc.collectionview setContentOffset:f animated:NO];
+            }
             
             [self.pageMenu moveToPage: 1];
             break;
@@ -379,6 +394,12 @@
             self.leftLabel.textColor = [UIColor thirdGrey];
             self.centerLabel.textColor = [UIColor thirdGrey];
             self.rightLabel.textColor = [UIColor blackColor];
+            
+            for (UIViewController *c in self.pageMenu.controllerArray) {
+                CalbumlistViewController *cc = (CalbumlistViewController *)c;
+                CGPoint f = cc.collectionview.contentOffset;
+                [cc.collectionview setContentOffset:f animated:NO];
+            }
             
             [self.pageMenu moveToPage: 2];
              
@@ -551,7 +572,7 @@
     __weak typeof(self) weakSelf = self;
     
     self.customEditActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
-        NSLog(@"");
+        //NSLog(@"");
         NSLog(@"self.customEditActionSheet.customViewBlock");
         NSLog(@"tagId: %ld", (long)tagId);
         NSLog(@"isTouchDown: %d", isTouchDown);
@@ -808,9 +829,9 @@
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
+    //NSLog(@"");
     
     return contentView;
 }
@@ -923,9 +944,9 @@
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
+    //NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
+    //NSLog(@"");
     
     return contentView;
 }

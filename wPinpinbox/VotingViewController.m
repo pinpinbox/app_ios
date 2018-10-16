@@ -485,7 +485,7 @@
     
     NSDictionary *data = voteArray[indexPath.row];
     NSLog(@"voteArray: %@", voteArray);
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
     
 //    // Check Width & Height return value is nil or not
 //    NSNumber *coverWidth = data[@"album"][@"cover_width"];

@@ -105,7 +105,7 @@
     if ([data[@"result"] intValue] == 1) {
         NSLog(@"getHobbyList Success");
         
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         
         hobbyArray = data[@"data"];
         

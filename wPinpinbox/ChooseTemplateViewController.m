@@ -277,7 +277,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     NSLog(@"didSelectItemAtIndexPath");
     
     NSDictionary *data = pictures[indexPath.row];
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
  
     NSLog(@"template own: %d", [data[@"template"][@"own"] boolValue]);
     NSLog(@"template point: %d", [data[@"template"][@"point"] intValue]);
