@@ -339,7 +339,6 @@
     }
     
     okbtn.userInteractionEnabled = NO;
-    //[self showToastMsg: @"圖片載入中" color: [UIColor secondMain] duration: 2.0];
     
     self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     self.hud.mode = MBProgressHUDModeIndeterminate;
@@ -379,7 +378,7 @@
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
     [options setVersion:PHImageRequestOptionsVersionUnadjusted];
-    [options setResizeMode:PHImageRequestOptionsResizeModeNone];
+    //[options setResizeMode:PHImageRequestOptionsResizeModeNone];
     [options setDeliveryMode:PHImageRequestOptionsDeliveryModeOpportunistic];
     
 //    CGSize size = cellSize(mycov);
@@ -390,21 +389,19 @@
 //    NSLog(@"size: %@", NSStringFromCGSize(size));
 //    NSLog(@"------------");
 //
-    __block UIImage *img;
+//    __block UIImage *img;
     //__block NSInteger c = imageArray.count;
     __block typeof(self) wself = self;
-    
-    [self.imageManager requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
-        NSLog(@"requestImageDataForAsset");
-        
-        // A key whose value indicates whether the result image is
-        // a low-quality substitute for the requested image.
+    CGSize res = [self imageResizedResult:CGSizeMake(asset.pixelWidth, asset.pixelHeight)];
+    [self.imageManager requestImageForAsset:asset targetSize:res contentMode:PHImageContentModeAspectFill/*PHImageContentModeDefault*/ options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+
         if (![info[PHImageResultIsDegradedKey] boolValue]) {
-            
-            img = [UIImage imageWithData:imageData];
-            UIImage *image = [wself imageRatioCalculation: img];
-            [wself addImage:image];
-            
+
+            //img = [UIImage imageWithData:imageData];
+            //UIImage *image = [wself imageRatioCalculation: img];
+            //NSLog(@"Result size : %f,%f",result.size.width,result.size.height);
+            [wself addImage:result];
+
             if ((se+1) >= wself->imageArray.count) {
                 NSLog(@"se: %d", se);
                 NSLog(@"imageArray.count: %lu", (unsigned long) wself->imageArray.count);
@@ -415,6 +412,28 @@
             }
         }
     }];
+    
+//    [self.imageManager requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info){
+//        NSLog(@"requestImageDataForAsset");
+//
+//        // A key whose value indicates whether the result image is
+//        // a low-quality substitute for the requested image.
+//        if (![info[PHImageResultIsDegradedKey] boolValue]) {
+//
+//            img = [UIImage imageWithData:imageData];
+//            //UIImage *image = [wself imageRatioCalculation: img];
+//            [wself addImage:img];//image];
+//
+//            if ((se+1) >= wself->imageArray.count) {
+//                NSLog(@"se: %d", se);
+//                NSLog(@"imageArray.count: %lu", (unsigned long) wself->imageArray.count);
+//                [wself OKimage];
+//            } else {
+//                NSLog(@"");
+//                [wself addnewimage:se+1];
+//            }
+//        }
+//    }];
     
 }
 
@@ -483,7 +502,7 @@
         self.hud.mode =  MBProgressHUDModeDeterminateHorizontalBar;//MBProgressHUDModeAnnularDeterminate;
 
         self.hud.progress = 0;
-        self.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳", self.totalPhoto];
+        self.hud.label.text = [NSString stringWithFormat: @"%d 項目等待上傳", self.totalPhoto];
         self.hud.label.font = [UIFont systemFontOfSize: kFontSizeForUploading];
         [self.hud.button setTitle: @"取消" forState: UIControlStateNormal];
         [self.hud.button addTarget: self action: @selector(cancelWork:) forControlEvents: UIControlEventTouchUpInside];
@@ -556,7 +575,36 @@
 //        [self.queue addOperation: operation];
     }
 }
+- (CGSize)imageResizedResult:(CGSize)size {
+    
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    
+    CGFloat heightRatio = 0;
+    CGFloat widthRatio = 0;
+    
+    CGFloat screenScale = [[UIScreen mainScreen] scale];
+    
+    
+    // The format of Screen Bounds is in pixel
+    CGSize screenSize = CGSizeMake(screenBounds.size.width * screenScale, screenBounds.size.height * screenScale);
+    
+    if ((size.height > screenSize.height) || (size.width > screenSize.width)) {
+        
+        heightRatio = size.height / screenSize.height;
+        
+        widthRatio = size.width / screenSize.width;
+        //NSLog(@"widthRatio: %lu", (unsigned long)widthRatio);
+    }
+    
+    CGFloat ratio = heightRatio < widthRatio ? heightRatio : widthRatio;
+    
+    if (ratio == 0) {
+        ratio = 1;
+    }
+    
+    return CGSizeMake(size.width / ratio, size.height / ratio);
 
+}
 - (UIImage *)imageRatioCalculation:(UIImage *)img {
     NSLog(@"");
     NSLog(@"imageRatioCalculationAndResize");
@@ -682,7 +730,7 @@
                 wself.hud.mode = MBProgressHUDModeText;
                 [wself.hud.button setTitle:@"確定" forState:UIControlStateNormal];
                 wself.hud.detailsLabel.text = @"";
-                wself.hud.label.text = [NSString stringWithFormat:@"已上傳%ld個項目，%ld個項目失敗",wself.photoFinished,wself.photoFailed];
+                wself.hud.label.text = [NSString stringWithFormat:@"已上傳%d個項目，%d個項目失敗",wself.photoFinished,wself.photoFailed];
             }];
         } else {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -1157,9 +1205,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
-    double p = (double)totalBytesSent / (double)totalBytesExpectedToSend;
-    [self updateProgress:p];
+//    double p = (double)totalBytesSent / (double)totalBytesExpectedToSend;
+//    float p0 = self.hud.progress;
+//    p0 += p/self.totalPhoto;
+//    [self updateProgress:p0];
 }
+
 //  increase failed task count
 - (void)increaseFailed {
     self.photoFailed++;
@@ -1176,9 +1227,10 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 - (void)updateProgress:(CGFloat)p  {
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        wself.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",wself.photoFinished, wself.photoFailed];
-        wself.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",wself.totalPhoto-(wself.photoFinished+wself.photoFailed)];
-        wself.hud.progress = p;
+        wself.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%d；失敗：%d",wself.photoFinished, wself.photoFailed];
+        wself.hud.label.text = [NSString stringWithFormat: @"%d 項目等待上傳",wself.totalPhoto-(wself.photoFinished+wself.photoFailed)];
+        CGFloat p0 = (CGFloat) wself.photoFinished/ (CGFloat)wself.totalPhoto;
+        wself.hud.progress = p0;
     });
 }
 
@@ -1326,12 +1378,12 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
             NSURLSessionDataTask *tt = [dataTaskArray firstObject];
             [tt resume];
             
-            NSLog(@"removeDataTask ([tt resume]) %ld",[dataTaskArray count]);
+            NSLog(@"removeDataTask ([tt resume]) %lu",(unsigned long)[dataTaskArray count]);
             return;
         }
     }
     
-    NSLog(@"removeDataTask %ld",[dataTaskArray count]);
+    NSLog(@"removeDataTask %lu",(unsigned long)[dataTaskArray count]);
     [self updateProgress:0];
     [self postProcessUploadFinished];
 }
@@ -1378,13 +1430,13 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
     
     
-    [request setValue:[NSString stringWithFormat:@"%ld",st.totalLength] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu",(unsigned long)st.totalLength] forHTTPHeaderField:@"Content-Length"];
     // set HTTP_ACCEPT_LANGUAGE in HTTP Header
     [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
     
     [request setHTTPBodyStream:st];
     
-    __block NSString *str;
+    //__block NSString *str;
     
     __block typeof(self) wself = self;
     
@@ -1396,12 +1448,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         __strong typeof(wself) sself = wself;
         if (error) {
             NSLog(@"dataTaskWithRequest error: %@", error);
-            //            dispatch_async(dispatch_get_main_queue(), ^{
-            //                wself->hud.detailsLabel.text = @"網路不穩";
-            //                wself->hud.detailsLabel.font = [UIFont systemFontOfSize: kFontSizeForConnection];
-            //            });
-            //            dispatch_semaphore_signal(semaphore);
-            //            return;
+            
         }
         if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
@@ -1413,11 +1460,11 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
             }
         }
         if (!error && data) {
-            str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
+            //str = [NSString stringWithUTF8String:[data bytes]];//[[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
             
             //NSLog(@"str: %@", str);
             
-            NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [str dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+            NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: data /*[str dataUsingEncoding: NSUTF8StringEncoding]*/ options: NSJSONReadingMutableContainers error: nil];
             
             
             
@@ -1443,13 +1490,13 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     [task setTaskDescription:desc];
     [dataTaskArray addObject: task];
-    if ([dataTaskArray count] == 1)
-        [task resume];
+    //if ([dataTaskArray count] == 1)
+    [task resume];
 }
 
 /*
  
- didSendBodyData: 32768 per update...
+ didSendBodyData: 32768 per update... (socket buffer size)
  For Streaming upload body
  
  From PHAsset -> PHAssetResource:
