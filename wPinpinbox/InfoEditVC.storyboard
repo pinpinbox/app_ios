@@ -1480,7 +1480,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <view hidden="YES" tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rsm-bF-CL9" customClass="MyLinearLayout">
+                                            <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rsm-bF-CL9" customClass="MyLinearLayout">
                                                 <rect key="frame" x="16" y="1355" width="288" height="48"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <subviews>
@@ -1657,8 +1657,6 @@
                         <outlet property="homeBgView" destination="nM0-8d-9VJ" id="iLJ-Xs-Crw"/>
                         <outlet property="homeTextField" destination="3UB-lc-zKO" id="beA-tZ-lD9"/>
                         <outlet property="homeView" destination="bb2-0i-bJg" id="siD-Yc-AGN"/>
-                        <outlet property="infoGettingCheckSelectionView" destination="e5y-QW-ThM" id="Cmt-rz-Uae"/>
-                        <outlet property="infoGettingCheckView" destination="Rsm-bF-CL9" id="Xek-zL-Ay4"/>
                         <outlet property="instagramBgView" destination="Zzp-vs-hao" id="bxO-24-XTs"/>
                         <outlet property="instagramTextField" destination="FGu-KY-kEV" id="FFn-7l-DC8"/>
                         <outlet property="instagramView" destination="eHw-Md-ZAO" id="7lZ-yC-vw3"/>
@@ -1673,6 +1671,8 @@
                         <outlet property="nameTextView" destination="pG2-MJ-HYB" id="i0i-90-F3E"/>
                         <outlet property="navBarHeight" destination="aOY-cB-gbc" id="F92-7P-2wS"/>
                         <outlet property="navBarView" destination="kAG-aD-L4L" id="33F-2s-cQe"/>
+                        <outlet property="newsLetterCheckSelectionView" destination="e5y-QW-ThM" id="9pU-pu-Zbq"/>
+                        <outlet property="newsLetterCheckView" destination="Rsm-bF-CL9" id="nqR-3g-xpQ"/>
                         <outlet property="pinterestBgView" destination="Wn6-qo-ycz" id="icZ-Tr-G1M"/>
                         <outlet property="pinterestTextField" destination="C6g-Zy-hXY" id="dcd-H1-zWJ"/>
                         <outlet property="pinterestView" destination="x05-96-udF" id="Ebq-Hr-ffj"/>

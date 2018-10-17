@@ -497,6 +497,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     [self loginAccount];
 }
+
 - (void)loginAccount {
     NSLog(@"loginAccount");
     @try {
@@ -597,8 +598,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     }
 }
 
-- (void)fbLoginHandler
-{
+- (void)fbLoginHandler {
     NSLog(@"");
     NSLog(@"");
     NSLog(@"fbLoginHandler");
@@ -661,8 +661,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 // Get FB Personal Data & Location
-- (void)getFbDataAndLocation:(NSString *)fbId
-{
+- (void)getFbDataAndLocation:(NSString *)fbId {
     NSLog(@"getFbDataAndRegister: fbId: %@", fbId);
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -730,8 +729,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - Call Server
-- (void)buisnessSubUserFastRegister:(NSString *)fbId jsonStr:(NSString *)jsonStr
-{
+- (void)buisnessSubUserFastRegister:(NSString *)fbId
+                            jsonStr:(NSString *)jsonStr {
     NSLog(@"buisnessSubUserFastRegister");
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated: YES];
@@ -835,7 +834,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     });
 }
 
--(void)facebookLogin:(NSString *)fbId {
+- (void)facebookLogin:(NSString *)fbId {
     NSLog(@"\nfacebookLogin");
     
     @try {
@@ -879,7 +878,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     NSLog(@"data: %@", data);
                     
                     if ([data[@"result"]intValue] == 1) {
@@ -906,7 +904,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         //[self setupPushNotification];
                         
                     } else if([data[@"result"] intValue] == 2) {
-                        
                         NSLog(@"");
                         NSLog(@"data result intValue == 2");
                         
@@ -946,7 +943,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     });
 }
 
--(void)FBSign:(NSString *)_facebookID name:(NSString *)wname {
+-(void)FBSign:(NSString *)_facebookID
+         name:(NSString *)wname {
     NSMutableDictionary *dic = [NSMutableDictionary new];
     
     [dic setObject:@""forKey:@"account"];
@@ -959,29 +957,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [dic setObject:@"" forKey:@"cellphone"];
     //  [dic setObject:app.coordinate  forKey:@"coordinate"];
     
-    @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated:YES];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
+    [wTools ShowMBProgressHUD];
+    
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *respone = [boxAPI registration:dic];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [MBProgressHUD hideHUDForView: self.view animated:YES];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
+            [wTools HideMBProgressHUD];
             
             if (respone != nil) {
                 NSLog(@"response from registration");
@@ -1005,6 +988,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     if ([dic[@"result"] intValue] == 1) {
                         wself.tokenStr = dic[@"data"][@"token"];
                         wself.idStr = [dic[@"data"][@"id"] stringValue];
+                        
+                        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+                        [userPrefs setObject: @"NeedToCheck" forKey: @"newsLetterCheck"];
+                        [userPrefs synchronize];
                         
                         [wself saveDataAfterLogin: @"facebookLogin"];
                         //[self setupPushNotification];
@@ -1359,8 +1346,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - To FB Finding ViewController
-- (void)toFbFindingVCAndResetData
-{
+- (void)toFbFindingVCAndResetData {
     FBFriendsFindingViewController *fbFindingVC = [[UIStoryboard storyboardWithName:@"FBFriendsFindingVC" bundle:nil]instantiateViewControllerWithIdentifier:@"FBFriendsFindingViewController"];
     [self.navigationController pushViewController: fbFindingVC animated:YES];
     

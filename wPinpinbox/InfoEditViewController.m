@@ -53,7 +53,8 @@
     
     UIImage *selectImage;
     
-    BOOL wantToGetInfo;
+//    BOOL wantToGetInfo;
+    BOOL wantToGetNewsLetter;
 }
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -120,8 +121,10 @@
 @property (weak, nonatomic) IBOutlet MyLinearLayout *homeView;
 @property (weak, nonatomic) IBOutlet UITextField *homeTextField;
 
-@property (weak, nonatomic) IBOutlet MyLinearLayout *infoGettingCheckView;
-@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckSelectionView;
+@property (weak, nonatomic) IBOutlet MyLinearLayout *newsLetterCheckView;
+@property (weak, nonatomic) IBOutlet UIView *newsLetterCheckSelectionView;
+//@property (weak, nonatomic) IBOutlet MyLinearLayout *infoGettingCheckView;
+//@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckSelectionView;
 @property (weak, nonatomic) IBOutlet UIButton *saveBtn;
 
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -280,23 +283,31 @@
     }
     self.birthdayTextField.text = myData[@"birthday"];
     
-    // wantToGetInfo data should get from server
-    wantToGetInfo = NO;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(checkInfoGetting)];
-    [self.infoGettingCheckView addGestureRecognizer:tap];
-    self.infoGettingCheckSelectionView.layer.cornerRadius = kCornerRadius;
-    self.infoGettingCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
-    self.infoGettingCheckSelectionView.layer.borderWidth = 1.0;
-    self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+    // wantToGetNewsLetter data should get from server    
+    wantToGetNewsLetter = [myData[@"newsletter"] boolValue];
+    NSLog(@"wantToGetNewsLetter: %d", wantToGetNewsLetter);
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(checkNewsLetterGetting)];
+    [self.newsLetterCheckView addGestureRecognizer:tap];
+    self.newsLetterCheckSelectionView.layer.cornerRadius = kCornerRadius;
+    self.newsLetterCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.newsLetterCheckSelectionView.layer.borderWidth = 1.0;
+    
+    if (wantToGetNewsLetter) {
+        self.newsLetterCheckSelectionView.backgroundColor = [UIColor thirdMain];
+    } else {
+        self.newsLetterCheckSelectionView.backgroundColor = [UIColor clearColor];
+    }
 }
 
-- (void)checkInfoGetting {
-    NSLog(@"checkInfoGetting");
-    wantToGetInfo = !wantToGetInfo;
-    if (wantToGetInfo) {
-        self.infoGettingCheckSelectionView.backgroundColor = [UIColor thirdMain];
+- (void)checkNewsLetterGetting {
+    NSLog(@"checkNewsLetterGetting");
+    wantToGetNewsLetter = !wantToGetNewsLetter;
+    
+    if (wantToGetNewsLetter) {
+        self.newsLetterCheckSelectionView.backgroundColor = [UIColor thirdMain];
     } else {
-        self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+        self.newsLetterCheckSelectionView.backgroundColor = [UIColor clearColor];
     }
 }
 
@@ -318,7 +329,6 @@
         myData = [dataIc mutableCopy];
         
         [self checkSocialData];
-        
         [self refreshUserInterface];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
@@ -849,6 +859,7 @@
     //[data setObject: self.descriptionTextView.text forKey: @"selfdescription"];
     [dataDic setObject: self.CreatorNameTextView.text forKey: @"creative_name"];
     [dataDic setObject: self.emailTextField.text forKey: @"email"];
+    [dataDic setObject: [NSNumber numberWithBool: wantToGetNewsLetter] forKey: @"newsletter"];
     
     NSMutableDictionary *socialDic = [NSMutableDictionary new];
     [socialDic setObject: self.facebookTextField.text forKey: @"facebook"];
@@ -879,7 +890,9 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //NSString *response = [boxAPI updateprofile: [wTools getUserID] token: [wTools getUserToken] data: data];
-        NSString *response = [boxAPI updateUser: [wTools getUserID] token: [wTools getUserToken] param: jsonStr];
+        NSString *response = [boxAPI updateUser: [wTools getUserID]
+                                          token: [wTools getUserToken]
+                                          param: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -960,11 +973,11 @@
     [wTools logOut];
 }
 
-- (void)updateProfilePic
-{
+- (void)updateProfilePic {
     NSLog(@"updateProfilePic");
     
-    UIImage *image = [wTools scaleImage: selectImage toScale:0.5];
+    UIImage *image = [wTools scaleImage: selectImage
+                                toScale: 0.5];
     
     @try {
         [wTools ShowMBProgressHUD];
@@ -1470,11 +1483,11 @@ shouldChangeTextInRange:(NSRange)range
             
             switch (view.tag) {
                 case 100:
-                    wantToGetInfo = !wantToGetInfo;
-                    if (wantToGetInfo) {
-                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor thirdMain];
+                    wantToGetNewsLetter = !wantToGetNewsLetter;
+                    if (wantToGetNewsLetter) {
+                        self.newsLetterCheckSelectionView.backgroundColor = [UIColor thirdMain];
                     } else {
-                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+                        self.newsLetterCheckSelectionView.backgroundColor = [UIColor clearColor];
                     }
                 default:
                     break;

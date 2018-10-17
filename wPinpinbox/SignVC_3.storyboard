@@ -152,7 +152,7 @@
                                     <constraint firstAttribute="height" constant="0.5" id="m5c-Va-wzp"/>
                                 </constraints>
                             </view>
-                            <view hidden="YES" tag="100" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Awa-ds-eLa">
+                            <view tag="100" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Awa-ds-eLa">
                                 <rect key="frame" x="0.0" y="542" width="375" height="48"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qiR-j5-Jhw">
@@ -235,11 +235,11 @@
                         <outlet property="countDownLabel" destination="ZQ7-2v-rud" id="n7t-yp-PMc"/>
                         <outlet property="countryCodeView" destination="75z-Ky-l1r" id="arW-nM-q5Y"/>
                         <outlet property="countryLabel" destination="Wbr-Y5-QX0" id="sa3-QU-sy8"/>
-                        <outlet property="infoGettingCheckSelectionView" destination="qiR-j5-Jhw" id="EKg-sv-QJY"/>
-                        <outlet property="infoGettingCheckView" destination="Awa-ds-eLa" id="Ooq-6H-YU1"/>
                         <outlet property="keylab" destination="sPt-sC-RBr" id="s3Z-4q-gTn"/>
                         <outlet property="mobilePhoneView" destination="bCj-Ac-4oq" id="4PH-CE-877"/>
                         <outlet property="navBackBtn" destination="wpI-gE-vI2" id="UQv-dr-YwX"/>
+                        <outlet property="newsLetterCheckSelectionView" destination="qiR-j5-Jhw" id="2W7-UI-AMD"/>
+                        <outlet property="newsLetterCheckView" destination="Awa-ds-eLa" id="iAJ-HZ-2nH"/>
                         <outlet property="phone" destination="0kJ-Yu-sZs" id="CIR-ns-zqO"/>
                         <outlet property="smsView" destination="oho-14-CJv" id="E6P-Gb-PmY"/>
                     </connections>

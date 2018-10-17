@@ -734,16 +734,7 @@ heightForHeaderInSection:(NSInteger)section {
 #pragma mark - Call Protocol
 - (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
     NSLog(@"ToRetrievealbumpViewControlleralbumid");
-    
-    @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
+    [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI retrievealbump: albumid
@@ -751,16 +742,7 @@ heightForHeaderInSection:(NSInteger)section {
                                               token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
-            
+            [wTools HideMBProgressHUD];
             
             if (response != nil) {
                 NSLog(@"check response");

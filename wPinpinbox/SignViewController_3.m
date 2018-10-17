@@ -40,10 +40,14 @@
     int timeTick;
     NSTimer *timer;
     
-    BOOL wantToGetInfo;
+//    BOOL wantToGetInfo;
+    BOOL wantToGetNewsLetter;
 }
-@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckView;
-@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckSelectionView;
+@property (weak, nonatomic) IBOutlet UIView *newsLetterCheckView;
+@property (weak, nonatomic) IBOutlet UIView *newsLetterCheckSelectionView;
+
+//@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckView;
+//@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckSelectionView;
 
 @end
 
@@ -113,11 +117,11 @@
     btn_send.layer.cornerRadius = kCornerRadius;
     btn_finishedReg.layer.cornerRadius = kCornerRadius;
     
-    wantToGetInfo = NO;
-    self.infoGettingCheckSelectionView.layer.cornerRadius = kCornerRadius;
-    self.infoGettingCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
-    self.infoGettingCheckSelectionView.layer.borderWidth = 1.0;
-    self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+    wantToGetNewsLetter = NO;
+    self.newsLetterCheckSelectionView.layer.cornerRadius = kCornerRadius;
+    self.newsLetterCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.newsLetterCheckSelectionView.layer.borderWidth = 1.0;
+    self.newsLetterCheckSelectionView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)navBarBtnSetup {
@@ -153,11 +157,11 @@
             
             switch (view.tag) {
                 case 100:
-                    wantToGetInfo = !wantToGetInfo;
-                    if (wantToGetInfo) {
-                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor thirdMain];
+                    wantToGetNewsLetter = !wantToGetNewsLetter;
+                    if (wantToGetNewsLetter) {
+                        self.newsLetterCheckSelectionView.backgroundColor = [UIColor thirdMain];
                     } else {
-                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+                        self.newsLetterCheckSelectionView.backgroundColor = [UIColor clearColor];
                     }
                 default:
                     break;
@@ -407,7 +411,7 @@
     //[dic setObject:phone.text forKey:@"cellphone"];
     [dic setObject: [NSString stringWithFormat: @"%@,%@", countrStr, phone.text] forKey: @"cellphone"];
     [dic setObject:keylab.text forKey:@"smspassword"];
-//    [dic setObject: [NSNumber numberWithBool: wantToGetInfo] forKey: @"sendParam"];
+    [dic setObject: [NSNumber numberWithBool: wantToGetNewsLetter] forKey: @"newsletter"];
     
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated:YES];

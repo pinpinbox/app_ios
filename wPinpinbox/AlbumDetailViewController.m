@@ -233,7 +233,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     self.messageTrail.constant = -16;
     //[self retrieveAlbum];
 }
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+
+- (void)navigationController:(UINavigationController *)navigationController
+      willShowViewController:(UIViewController *)viewController
+                    animated:(BOOL)animated {
     if (self == viewController )
         [self retrieveAlbum];
     navigationController.delegate = nil;
@@ -342,14 +345,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 //    [self retrieveAlbum];
-    [wTools sendScreenTrackingWithScreenName:@"作品資訊頁"];
-    
-    
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
+    [wTools sendScreenTrackingWithScreenName:@"作品資訊頁"];        
 }
 
 - (void)viewDidLayoutSubviews {
