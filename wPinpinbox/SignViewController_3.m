@@ -117,11 +117,11 @@
     btn_send.layer.cornerRadius = kCornerRadius;
     btn_finishedReg.layer.cornerRadius = kCornerRadius;
     
-    wantToGetNewsLetter = NO;
+    wantToGetNewsLetter = YES;
     self.newsLetterCheckSelectionView.layer.cornerRadius = kCornerRadius;
     self.newsLetterCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
     self.newsLetterCheckSelectionView.layer.borderWidth = 1.0;
-    self.newsLetterCheckSelectionView.backgroundColor = [UIColor clearColor];
+    self.newsLetterCheckSelectionView.backgroundColor = [UIColor thirdMain];
 }
 
 - (void)navBarBtnSetup {
