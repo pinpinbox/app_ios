@@ -52,6 +52,7 @@
 
 @property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) DDAUIActionSheetViewController *customEditActionSheet;
+@property (nonatomic) UIColor *unselectedColor;
 @end
 
 @implementation AlbumCollectionViewController
@@ -79,6 +80,11 @@
     for (id controller in app.myNav.viewControllers) {
         NSLog(@"controller: %@", controller);
     }
+    
+    self.unselectedColor = [UIColor colorWithRed: 212.0/255.0
+                                                                 green: 212.0/255.0
+                                                                  blue: 212.0/255.0
+                                                                 alpha: 1.0];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -459,25 +465,25 @@
 //            self.underLineView.rightPos.active = NO;
             
             self.leftLabel.textColor = [UIColor firstGrey];
-            self.centerLabel.textColor = [UIColor secondGrey];
-            self.rightLabel.textColor = [UIColor secondGrey];
+            self.centerLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
+            self.rightLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
             break;
         case 1:
 //            self.underLineView.leftPos.active = NO;
 //            self.underLineView.centerXPos.active = YES;
 //            self.underLineView.rightPos.active = NO;
             
-            self.leftLabel.textColor = [UIColor secondGrey];
+            self.leftLabel.textColor =  self.unselectedColor;//[UIColor secondGrey];
             self.centerLabel.textColor = [UIColor firstGrey];
-            self.rightLabel.textColor = [UIColor secondGrey];
+            self.rightLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
             break;
         case 2:
 //            self.underLineView.leftPos.active = NO;
 //            self.underLineView.centerXPos.active = NO;
 //            self.underLineView.rightPos.active = YES;
             
-            self.leftLabel.textColor = [UIColor secondGrey];
-            self.centerLabel.textColor = [UIColor secondGrey];
+            self.leftLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
+            self.centerLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
             self.rightLabel.textColor = [UIColor firstGrey];
             break;
         default:
