@@ -41,6 +41,16 @@
     //[self bringSubviewToFront:_caution];
     _caution.hidden = YES;
     
+    [self switchOpMenuButtonTint:self.opMenuEdit];
+    [self switchOpMenuButtonTint:self.opMenuShare];
+    [self switchOpMenuButtonTint:self.opMenuDelete];
+    [self switchOpMenuButtonTint:self.opMenuInvite];
+}
+- (void)switchOpMenuButtonTint:(UIButton *)button {
+    
+    UIImage *op = [button.currentImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    button.imageView.image = op;
+    button.imageView.tintColor = [UIColor whiteColor];
 }
 #pragma mark - arrange cell sub views by collectionViewType
 //  mode for displaying user's album list

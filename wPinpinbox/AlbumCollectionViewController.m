@@ -280,7 +280,7 @@
     [self.centerLabel sizeToFit];
     self.centerLabel.centerXPos.equalTo(@0);
     self.centerLabel.centerYPos.equalTo(@0); //标题尺寸由内容包裹，位置在布局视图中居中。
-    self.centerLabel.textColor = [UIColor thirdGrey];
+    self.centerLabel.textColor = self.unselectedColor;//[UIColor thirdGrey];
     
     //MyFrameLayout *centerItemLayout = [self createItemLayout: @"其他收藏" withTag:1];
     
@@ -304,7 +304,7 @@
     [self.rightLabel sizeToFit];
     self.rightLabel.centerXPos.equalTo(@0);
     self.rightLabel.centerYPos.equalTo(@0); //标题尺寸由内容包裹，位置在布局视图中居中。
-    self.rightLabel.textColor = [UIColor thirdGrey];
+    self.rightLabel.textColor = self.unselectedColor;//[UIColor thirdGrey];
     
     // Right Item Layout
     //MyFrameLayout *rightItemLayout = [self createItemLayout: @"共用條件" withTag:2];
