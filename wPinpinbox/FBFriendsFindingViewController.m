@@ -254,6 +254,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [pictures removeAllObjects];
     [self loadData: rank];
 }
+
 - (void)processFBResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         int s = 0;
@@ -294,8 +295,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
-- (void)loadData: (NSString *)rank
-{
+- (void)loadData: (NSString *)rank {
     NSLog(@"loadData: rank: %@", rank);
     
     if (!isLoading) {
@@ -335,7 +335,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog( @"Reason: %@", exception.reason );
                     return;
                 }
-                
                 
                 if (response != nil) {
                     NSLog(@"response: %@", response);

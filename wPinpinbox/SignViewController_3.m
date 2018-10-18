@@ -40,10 +40,14 @@
     int timeTick;
     NSTimer *timer;
     
-    BOOL wantToGetInfo;
+//    BOOL wantToGetInfo;
+    BOOL wantToGetNewsLetter;
 }
-@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckView;
-@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckSelectionView;
+@property (weak, nonatomic) IBOutlet UIView *newsLetterCheckView;
+@property (weak, nonatomic) IBOutlet UIView *newsLetterCheckSelectionView;
+
+//@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckView;
+//@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckSelectionView;
 
 @end
 
@@ -113,11 +117,11 @@
     btn_send.layer.cornerRadius = kCornerRadius;
     btn_finishedReg.layer.cornerRadius = kCornerRadius;
     
-    wantToGetInfo = NO;
-    self.infoGettingCheckSelectionView.layer.cornerRadius = kCornerRadius;
-    self.infoGettingCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
-    self.infoGettingCheckSelectionView.layer.borderWidth = 1.0;
-    self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+    wantToGetNewsLetter = YES;
+    self.newsLetterCheckSelectionView.layer.cornerRadius = kCornerRadius;
+    self.newsLetterCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.newsLetterCheckSelectionView.layer.borderWidth = 1.0;
+    self.newsLetterCheckSelectionView.backgroundColor = [UIColor thirdMain];
 }
 
 - (void)navBarBtnSetup {
@@ -153,11 +157,11 @@
             
             switch (view.tag) {
                 case 100:
-                    wantToGetInfo = !wantToGetInfo;
-                    if (wantToGetInfo) {
-                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor thirdMain];
+                    wantToGetNewsLetter = !wantToGetNewsLetter;
+                    if (wantToGetNewsLetter) {
+                        self.newsLetterCheckSelectionView.backgroundColor = [UIColor thirdMain];
                     } else {
-                        self.infoGettingCheckSelectionView.backgroundColor = [UIColor clearColor];
+                        self.newsLetterCheckSelectionView.backgroundColor = [UIColor clearColor];
                     }
                 default:
                     break;
@@ -397,8 +401,9 @@
     
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     NSDictionary *tmp = [userPrefs objectForKey:@"tmp"];
-    NSMutableDictionary *dic = [NSMutableDictionary new];
     
+    /*
+    NSMutableDictionary *dic = [NSMutableDictionary new];
     [dic setObject:tmp[@"email"] forKey:@"account"];
     [dic setObject:@"none" forKey:@"way"];
     [dic setObject:@"null" forKey:@"way_id"];
@@ -407,37 +412,36 @@
     //[dic setObject:phone.text forKey:@"cellphone"];
     [dic setObject: [NSString stringWithFormat: @"%@,%@", countrStr, phone.text] forKey: @"cellphone"];
     [dic setObject:keylab.text forKey:@"smspassword"];
-//    [dic setObject: [NSNumber numberWithBool: wantToGetInfo] forKey: @"sendParam"];
+    [dic setObject: [NSNumber numberWithBool: wantToGetNewsLetter] forKey: @"newsletter"];
+     */
     
-    @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated:YES];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
+    [wTools ShowMBProgressHUD];
+    
+    NSString *phoneTextStr = [NSString stringWithFormat: @"%@,%@", countrStr, phone.text];
+    NSString *pwdStr = keylab.text;
+    __block typeof(self) wself = self;
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){        
-        NSString *respone = [boxAPI registration:dic];
+//        NSString *respone = [boxAPI registration:dic];
+        __strong typeof(wself) sself = wself;
+        
+        NSString *response = [boxAPI registration: tmp[@"email"]
+                                         password: tmp[@"pwd"]
+                                             name: tmp[@"name"]
+                                        cellphone: phoneTextStr
+                                      smspassword: pwdStr
+                                              way: @"none"
+                                           way_id: @"null"
+                                       newsletter: [NSString stringWithFormat: @"%d", sself->wantToGetNewsLetter]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [MBProgressHUD hideHUDForView: self.view  animated:YES];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
+            [wTools HideMBProgressHUD];
             
-            if (respone != nil) {
+            if (response != nil) {
                 NSLog(@"response from registration");
-                NSLog(@"response: %@", respone);
+                NSLog(@"response: %@", response);
                 
-                if ([respone isEqualToString: timeOutErrorCode]) {
+                if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"SignViewController_3");
                     NSLog(@"downbtn");
@@ -447,7 +451,7 @@
                 } else {
                     NSLog(@"Get Real Response");
                     
-                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([data[@"result"] intValue] == 1) {
                         NSLog(@"result is: %d", [data[@"result"] boolValue]);

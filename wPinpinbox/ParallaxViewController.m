@@ -89,16 +89,30 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSLog(@"viewWillAppear");
-    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
+//    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     //[self.topScroll setContentOffset:CGPointMake(0, 0) animated:NO];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    double delayInSeconds = 0.5;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^{
+        [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
+    });
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
 //    UIWindow *statusBarWindow = (UIWindow *)[[UIApplication sharedApplication] valueForKey: @"statusBarWindow"];
     //statusBarWindow.alpha = 1.0;
     //[self setStatusBarBackgroundColor: [UIColor whiteColor]];
-    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 0.0]];
+//    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 0.0]];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -107,14 +121,6 @@
     CGPoint offset = self.topScroll.contentOffset;
     offset.y = - self.topScroll.contentInset.top;
     [self.topScroll setContentOffset:offset animated:YES];
-}
-
-- (void)setStatusBarBackgroundColor:(UIColor *)color {
-    UIView *statusBar = [[[UIApplication sharedApplication] valueForKey: @"statusBarWindow"] valueForKey: @"statusBar"];
-    
-    if ([statusBar respondsToSelector: @selector(setBackgroundColor:)]) {
-        statusBar.backgroundColor = color;
-    }
 }
 
 - (void)likeViewSetup {

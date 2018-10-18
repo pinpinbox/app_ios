@@ -820,13 +820,28 @@
         self.subCategoryRequiredLabel.hidden = NO;
     }
     
-    self.nameTextField.text = self.data[@"title"];
+    NSLog(@"self.data: %@", self.data);
+    
+    if ([self.data[@"title"] isEqual: [NSNull null]]) {
+        self.nameTextField.text = @"";
+    } else {
+        self.nameTextField.text = self.data[@"title"];
+    }
+    
     oldName = self.nameTextField.text;        
     
-    self.descriptionTextView.text = self.data[@"description"];
+    if ([self.data[@"description"] isEqual: [NSNull null]]) {
+        self.descriptionTextView.text = @"";
+    } else {
+        self.descriptionTextView.text = self.data[@"description"];
+    }
     oldDescription = self.descriptionTextView.text;
     
-    self.locationTextView.text = self.data[@"location"];
+    if ([self.data[@"location"] isEqual: [NSNull null]]) {
+        self.locationTextView.text = @"";
+    } else {
+        self.locationTextView.text = self.data[@"location"];
+    }
     oldLocation = self.locationTextView.text;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -853,7 +868,12 @@
     // Default Setup is NO
     self.pPointView.hidden = NO;
     
-    self.pPointTextField.text = [NSString stringWithFormat: @"%d", [self.data[@"point"] intValue]];
+    if ([self.data[@"point"] isEqual: [NSNull null]]) {
+        self.pPointTextField.text = [NSString stringWithFormat: @"0"];
+    } else {
+        self.pPointTextField.text = [NSString stringWithFormat: @"%d", [self.data[@"point"] intValue]];
+    }    
+    
     oldPoint = self.pPointTextField.text;
     
     /*

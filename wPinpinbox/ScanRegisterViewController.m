@@ -397,8 +397,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     
     [self buisnessSubUserFastRegister: fbid jsonStr: jsonStr];
 }
-- (void)buisnessSubUserFastRegister:(NSString *)fbId jsonStr:(NSString *)jsonStr
-{
+- (void)buisnessSubUserFastRegister:(NSString *)fbId
+                            jsonStr:(NSString *)jsonStr {
     NSLog(@"buisnessSubUserFastRegister");
     
     @try {
@@ -464,6 +464,10 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         
         NSLog(@"tokenStr: %@", tokenStr);
         NSLog(@"idStr: %@", idStr);
+        
+        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+        [userPrefs setObject: @"NeedToCheck" forKey: @"newsLetterCheck"];
+        [userPrefs synchronize];
         
         [self saveDataAfterLogin];
         [self setupPushNotification];

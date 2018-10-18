@@ -185,6 +185,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
 }
 
 //註冊
+
 +(NSString *)registration:(NSDictionary *)data {
     NSLog(@"");
     NSLog(@"registration");
@@ -193,6 +194,45 @@ static NSString *hostURL = @"www.pinpinbox.com";
     returnstr=[self boxAPI:data URL:@"/registration/1.2"];
     
     return returnstr;
+}
+ 
++ (NSString *)registration:(NSString *)account
+                  password:(NSString *)password
+                      name:(NSString *)name
+                 cellphone:(NSString *)cellphone
+               smspassword:(NSString *)smspassword
+                       way:(NSString *)way
+                    way_id:(NSString *)way_id
+                newsletter:(NSString *)newsletter {
+    NSLog(@"");
+    NSLog(@"registration");
+    NSString *returnStr = @"";
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    [dic setObject: account forKey: @"account"];
+    [dic setObject: password forKey: @"password"];
+    [dic setObject: name forKey: @"name"];
+    [dic setObject: cellphone forKey: @"cellphone"];
+    [dic setObject: smspassword forKey: @"smspassword"];
+    [dic setObject: way forKey: @"way"];
+    [dic setObject: way_id forKey: @"way_id"];
+    
+    NSMutableDictionary *wData = [NSMutableDictionary new];
+    
+    for (NSString *key in dic.allKeys) {
+        if ([dic[key] isKindOfClass: [NSString class]]) {
+            [wData setObject: dic[key] forKey: key];
+        } else {
+            [wData setObject: [dic[key] stringValue] forKey: key];
+        }
+    }
+    [dic setObject: [self signGenerator2: dic] forKey: @"sign"];
+    [dic setObject: newsletter forKey: @"newsletter"];
+    
+    NSLog(@"dic: %@", dic);
+    
+    returnStr = [self api_Wine: @"/registration/1.2" dic: dic];
+    
+    return returnStr;
 }
 
 //忘記密碼

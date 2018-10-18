@@ -41,6 +41,16 @@ static NSString *version = @"";
 //註冊
 +(NSString *)registration:(NSDictionary *)data;
 
++(NSString *)registration:(NSString *)account
+                 password:(NSString *)password
+                     name:(NSString *)name
+                cellphone:(NSString *)cellphone
+              smspassword:(NSString *)smspassword
+                      way:(NSString *)way
+                   way_id:(NSString *)way_id
+               newsletter:(NSString *)newsletter;
+
+
 //Check 帳號&電話號碼
 + (NSString *)check:(NSString *)checkColumn
          checkValue:(NSString *)value;
