@@ -947,7 +947,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
          name:(NSString *)wname {
     NSMutableDictionary *dic = [NSMutableDictionary new];
     
-    [dic setObject:@""forKey:@"account"];
+    [dic setObject:@"" forKey:@"account"];
     [dic setObject:@"facebook" forKey:@"way"];
     [dic setObject:_facebookID forKey:@"way_id"];
     [dic setObject:@"" forKey:@"password"];

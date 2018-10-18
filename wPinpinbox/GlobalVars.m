@@ -22,8 +22,8 @@ CGFloat kCornerRadius = 6.0;
 
 NSString *appStoreUrl = @"https://itunes.apple.com/tw/app/pinpinbox/id1057840696?mt=8";
 
-//NSString *ServerURL = @"https://w3.pinpinbox.com/index/api";
-NSString *ServerURL = @"http://platformvmage5.cloudapp.net/pinpinbox/index/api";
+NSString *ServerURL = @"https://w3.pinpinbox.com/index/api";
+//NSString *ServerURL = @"http://platformvmage5.cloudapp.net/pinpinbox/index/api";
 NSString *pinpinbox = @"https://w3.pinpinbox.com/";
 
 NSString *sharingLinkWithAutoPlay = @"http://w3.pinpinbox.com/index/album/content/?album_id=%@%@";

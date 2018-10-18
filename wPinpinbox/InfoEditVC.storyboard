@@ -45,7 +45,7 @@
                                             </label>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DJT-fo-b5P" customClass="MyLinearLayout">
                                                 <rect key="frame" x="0.0" y="137" width="375" height="90"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i7j-Dp-0TC">
                                                         <rect key="frame" x="16" y="0.0" width="90" height="90"/>
@@ -601,8 +601,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E4g-H1-wVO" customClass="MyLinearLayout">
-                                                <rect key="frame" x="16" y="990" width="288" height="48"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="16" y="1000" width="288" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_facebook" translatesAutoresizingMaskIntoConstraints="NO" id="paN-LB-8CX">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
@@ -711,8 +711,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BF4-oM-Bd6" customClass="MyLinearLayout">
-                                                <rect key="frame" x="16" y="1040" width="288" height="48"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="16" y="1100" width="288" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_google" translatesAutoresizingMaskIntoConstraints="NO" id="sQt-mf-nxE">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
@@ -821,8 +821,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zzp-vs-hao" customClass="MyLinearLayout">
-                                                <rect key="frame" x="16" y="1080" width="288" height="48"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="16" y="1180" width="288" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_nstagrame" translatesAutoresizingMaskIntoConstraints="NO" id="oom-vc-9Iw">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
@@ -931,8 +931,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Do1-LC-e65" customClass="MyLinearLayout">
-                                                <rect key="frame" x="16" y="1120" width="288" height="48"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="16" y="1200" width="288" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_linkedin" translatesAutoresizingMaskIntoConstraints="NO" id="Wek-Mo-u63">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
@@ -1041,8 +1041,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wn6-qo-ycz" customClass="MyLinearLayout">
-                                                <rect key="frame" x="16" y="1170" width="288" height="48"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="16" y="1250" width="288" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_pintrest" translatesAutoresizingMaskIntoConstraints="NO" id="69W-0a-gOy">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
@@ -1151,8 +1151,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Km-ek-jwh" customClass="MyLinearLayout">
-                                                <rect key="frame" x="16" y="1220" width="288" height="48"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="16" y="1300" width="288" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_twitter" translatesAutoresizingMaskIntoConstraints="NO" id="5xV-aV-HTU">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
@@ -1261,8 +1261,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zaf-UT-ZyA" customClass="MyLinearLayout">
-                                                <rect key="frame" x="16" y="1260" width="288" height="48"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="16" y="1350" width="288" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_youtube" translatesAutoresizingMaskIntoConstraints="NO" id="5wI-tn-PBx">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
@@ -1371,8 +1371,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nM0-8d-9VJ" customClass="MyLinearLayout">
-                                                <rect key="frame" x="16" y="1300" width="288" height="48"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="16" y="1400" width="288" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_2_0_0_link_home" translatesAutoresizingMaskIntoConstraints="NO" id="VkZ-l7-URG">
                                                         <rect key="frame" x="8" y="0.0" width="48" height="48"/>
@@ -1481,8 +1481,8 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view tag="100" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rsm-bF-CL9" customClass="MyLinearLayout">
-                                                <rect key="frame" x="16" y="1355" width="288" height="48"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="16" y="1450" width="288" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e5y-QW-ThM">
                                                         <rect key="frame" x="16" y="12" width="24" height="24"/>

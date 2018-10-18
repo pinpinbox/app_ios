@@ -236,6 +236,8 @@
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
     
+    NSLog(@"UserId: %@", [wTools getUserID]);
+    
     isSearchTextFieldSelected = NO;
     self.albumCollectionView.hidden = YES;
     isViewLoading = YES;    
@@ -1229,7 +1231,7 @@ sourceController:(UIViewController *)source
     } else {
         if ([[userPrefs objectForKey: @"newsLetterCheck"] isEqualToString: @"NeedToCheck"]) {
             NSLog(@"NeedToCheck");
-            [self showCustomNewsLetterCheckAlert: @"願意收到電子報，掌握最新創作及抽獎資訊"];
+            [self showCustomNewsLetterCheckAlert: @"願意收到電子報，掌握最新創作及抽獎資訊(預設為接收)"];
         }
     }
 }
@@ -3327,6 +3329,7 @@ replacementString:(NSString *)string {
         if (buttonIndex == 0) {
             NSLog(@"0");
             wself->wantToGetNewsLetter = NO;
+            [self updateUser];
         } else {
             NSLog(@"1");
             wself->wantToGetNewsLetter = YES;
@@ -3346,7 +3349,7 @@ replacementString:(NSString *)string {
     
     [wTools ShowMBProgressHUD];
     
-//    __block typeof(self) wself = self;
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI updateUser: [wTools getUserID]
                                           token: [wTools getUserToken]
@@ -3374,6 +3377,26 @@ replacementString:(NSString *)string {
                         [userPrefs setObject: @"NoNeedToCheck" forKey: @"newsLetterCheck"];
                         [userPrefs synchronize];
                         NSLog(@"userPrefs: %@", userPrefs);
+                        
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        
+                        if (wself->wantToGetNewsLetter) {
+                            style.messageColor = [UIColor whiteColor];
+                            style.backgroundColor = [UIColor secondMain];
+                            
+                            [self.view makeToast: @"成功訂閱電子報"
+                                        duration: 2.0
+                                        position: CSToastPositionBottom
+                                           style: style];
+                        } else {
+                            style.messageColor = [UIColor whiteColor];
+                            style.backgroundColor = [UIColor hintGrey];
+                            
+                            [self.view makeToast: @"已取消訂閱電子報"
+                                        duration: 2.0
+                                        position: CSToastPositionBottom
+                                           style: style];
+                        }
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         NSString *msg = dic[@"message"];
