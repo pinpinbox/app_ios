@@ -748,39 +748,40 @@ static NSString *autoPlayStr = @"&autoplay=1";
     horzLineView.backgroundColor = [UIColor thirdGrey];
     [rootLayout addSubview: horzLineView];
 
-    
-    // Location Setting
-    if ([self.data[@"album"][@"location"] isEqualToString: @""]) {
-        NSLog(@"no location data");
-    } else {
-        NSLog(@"got location data");
-        // Horizontal location Layout
-        MyLinearLayout *horzLocLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
-        horzLocLayout.myTopMargin = 0;
-        horzLocLayout.myLeftMargin = horzLocLayout.myRightMargin = 0;
-        horzLocLayout.wrapContentHeight = YES;
-        [rootLayout addSubview: horzLocLayout];
-        
-        UIImageView *locImgView = [UIImageView new];
-        locImgView.image = [UIImage imageNamed: @"ic200_location_light"];
-        locImgView.myLeftMargin = 16;
-        locImgView.myRightMargin = 2;
-        locImgView.myWidth = 18;
-        locImgView.myHeight = 18;
-        [horzLocLayout addSubview: locImgView];
-        
-        UILabel *locLabel = [UILabel new];
-        locLabel.text = self.data[@"album"][@"location"];
-        locLabel.textColor = [UIColor secondGrey];
-        locLabel.font = [UIFont systemFontOfSize: 16];
-        [locLabel sizeToFit];
-        locLabel.numberOfLines = 0;
-        locLabel.myLeftMargin = 2;
-        locLabel.myRightMargin = 16;
-        locLabel.weight = 1.0;
-        locLabel.wrapContentHeight = YES;
-        [horzLocLayout addSubview: locLabel];
-    }
+    if (![self.data[@"album"][@"location"] isEqual: [NSNull null]]) {
+        // Location Setting
+        if ([self.data[@"album"][@"location"] isEqualToString: @""]) {
+            NSLog(@"no location data");
+        } else {
+            NSLog(@"got location data");
+            // Horizontal location Layout
+            MyLinearLayout *horzLocLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
+            horzLocLayout.myTopMargin = 0;
+            horzLocLayout.myLeftMargin = horzLocLayout.myRightMargin = 0;
+            horzLocLayout.wrapContentHeight = YES;
+            [rootLayout addSubview: horzLocLayout];
+            
+            UIImageView *locImgView = [UIImageView new];
+            locImgView.image = [UIImage imageNamed: @"ic200_location_light"];
+            locImgView.myLeftMargin = 16;
+            locImgView.myRightMargin = 2;
+            locImgView.myWidth = 18;
+            locImgView.myHeight = 18;
+            [horzLocLayout addSubview: locImgView];
+            
+            UILabel *locLabel = [UILabel new];
+            locLabel.text = self.data[@"album"][@"location"];
+            locLabel.textColor = [UIColor secondGrey];
+            locLabel.font = [UIFont systemFontOfSize: 16];
+            [locLabel sizeToFit];
+            locLabel.numberOfLines = 0;
+            locLabel.myLeftMargin = 2;
+            locLabel.myRightMargin = 16;
+            locLabel.weight = 1.0;
+            locLabel.wrapContentHeight = YES;
+            [horzLocLayout addSubview: locLabel];
+        }
+    }    
     
     NSLog(@"Check Event Layout");
     NSLog(@"self.data: %@", self.data);
