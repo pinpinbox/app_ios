@@ -40,15 +40,11 @@
     [self.bgview insertSubview:_caution belowSubview:self.opMenu]; //aboveSubview:self.imageView];
     //[self bringSubviewToFront:_caution];
     _caution.hidden = YES;
-    
-    [self switchOpMenuButtonTint:self.opMenuEdit];
-    [self switchOpMenuButtonTint:self.opMenuShare];
-    [self switchOpMenuButtonTint:self.opMenuDelete];
-    [self switchOpMenuButtonTint:self.opMenuInvite];
+
 }
 - (void)switchOpMenuButtonTint:(UIButton *)button {
     
-    UIImage *op = [button.currentImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    UIImage *op = [button.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     button.imageView.image = op;
     button.imageView.tintColor = [UIColor whiteColor];
 }
@@ -436,6 +432,10 @@
             [self layoutIfNeeded];
         } completion:nil];
     } else {
+        [self switchOpMenuButtonTint:self.opMenuEdit];
+        [self switchOpMenuButtonTint:self.opMenuShare];
+        [self switchOpMenuButtonTint:self.opMenuDelete];
+        [self switchOpMenuButtonTint:self.opMenuInvite];
         self.opMenuLeading.constant = 0;
         [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [self layoutIfNeeded];
