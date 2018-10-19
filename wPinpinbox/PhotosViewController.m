@@ -1375,8 +1375,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
             [self updateProgress:0];
             [self postProcessUploadFinished];
             
-            NSURLSessionDataTask *tt = [dataTaskArray firstObject];
-            [tt resume];
+            //NSURLSessionDataTask *tt = [dataTaskArray firstObject];
+            //[tt resume];
             
             NSLog(@"removeDataTask ([tt resume]) %lu",(unsigned long)[dataTaskArray count]);
             return;
