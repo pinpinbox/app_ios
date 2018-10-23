@@ -601,7 +601,7 @@ replacementString:(NSString *)string {
                             NSLog(@"self.cooperationData: %@", self.cooperationData);
                             
                             for (NSInteger i = 0; i < self.cooperationData.count; i++) {
-                                NSLog(@"i: %ld", i);
+                                //NSLog(@"i: %d", i);
                                 
                                 NSMutableDictionary *dicData = self.cooperationData[i];
                                 NSLog(@"dicData: %@", dicData);

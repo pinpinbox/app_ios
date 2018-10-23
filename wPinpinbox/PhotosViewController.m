@@ -502,7 +502,7 @@
         self.hud.mode =  MBProgressHUDModeDeterminateHorizontalBar;//MBProgressHUDModeAnnularDeterminate;
 
         self.hud.progress = 0;
-        self.hud.label.text = [NSString stringWithFormat: @"%d 項目等待上傳", self.totalPhoto];
+        self.hud.label.text = [NSString stringWithFormat: @"%d 項目等待上傳", (int)self.totalPhoto];
         self.hud.label.font = [UIFont systemFontOfSize: kFontSizeForUploading];
         [self.hud.button setTitle: @"取消" forState: UIControlStateNormal];
         [self.hud.button addTarget: self action: @selector(cancelWork:) forControlEvents: UIControlEventTouchUpInside];
@@ -730,7 +730,7 @@
                 wself.hud.mode = MBProgressHUDModeText;
                 [wself.hud.button setTitle:@"確定" forState:UIControlStateNormal];
                 wself.hud.detailsLabel.text = @"";
-                wself.hud.label.text = [NSString stringWithFormat:@"已上傳%d個項目，%d個項目失敗",wself.photoFinished,wself.photoFailed];
+                wself.hud.label.text = [NSString stringWithFormat:@"已上傳%d個項目，%d個項目失敗",(int)wself.photoFinished,(int)wself.photoFailed];
             }];
         } else {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -1227,8 +1227,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 - (void)updateProgress:(CGFloat)p  {
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        wself.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%d",(long)wself.photoFinished, wself.photoFailed];
-        wself.hud.label.text = [NSString stringWithFormat: @"%ld 項目等待上傳",wself.totalPhoto-(wself.photoFinished+wself.photoFailed)];
+        wself.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%d；失敗：%d",(int)wself.photoFinished, (int)wself.photoFailed];
+        wself.hud.label.text = [NSString stringWithFormat: @"%d 項目等待上傳",(int)(wself.totalPhoto-(wself.photoFinished+wself.photoFailed))];
         CGFloat p0 = (CGFloat) (wself.photoFinished+wself.photoFailed)/ (CGFloat)wself.totalPhoto;
         wself.hud.progress = p0;
     });

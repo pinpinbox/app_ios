@@ -2313,7 +2313,7 @@ didFinishSavingWithError:(NSError *)error
                         
                         NSURL *videoURL = [NSURL fileURLWithPath: mp4Path];
                         NSData *data = [NSData dataWithContentsOfURL: videoURL];
-                        NSLog(@"callInsertVideoOfDiy  %ld", data.length);
+                        //NSLog(@"callInsertVideoOfDiy  %ld", data.length);
                         [stSelf callInsertVideoOfDiy: data];
                         
                         /*
@@ -2416,7 +2416,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
     
     
-    [request setValue:[NSString stringWithFormat:@"%ld",st.totalLength] forHTTPHeaderField:@"Content-Length"];
+    [request setValue:[NSString stringWithFormat:@"%lu",(unsigned long)st.totalLength] forHTTPHeaderField:@"Content-Length"];
     // set HTTP_ACCEPT_LANGUAGE in HTTP Header
     [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
     
