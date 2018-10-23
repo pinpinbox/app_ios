@@ -631,6 +631,7 @@ static wTools *instance =nil;
             break;
         }
     }
+    
 }
 
 + (void)deleteAllCoreData {
@@ -955,5 +956,30 @@ static wTools *instance =nil;
     
 }
 
+//  處理awssns
++(void)processAWSResponse:(NSString *)res {
+    
+    if (res != nil) {
+        if (![res isEqualToString:timeOutErrorCode]) {
+            NSDictionary *d = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [res dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
+            //  setawssns is successfull
+            if ([d[@"result"] intValue] == 1) {
+                NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+                [userPrefs setObject:@"ok" forKey:@"awssns"];
+            }
+            
+        }
+        
+    }
+}
+
++(BOOL)isRegisterAWSNeeded {
+    
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    if ([userPrefs objectForKey:@"awssns"]) {
+        return false;
+    }
+    return true;
+}
 
 @end

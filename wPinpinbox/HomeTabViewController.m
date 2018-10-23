@@ -316,6 +316,9 @@
 #pragma mark - Push Notification Setting
 - (void)setupPushNotification {
     NSLog(@"\n\nsetupPushNotification");
+    //  already registered //
+    if (![wTools isRegisterAWSNeeded]) return ;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *awsResponse;
         
@@ -344,8 +347,11 @@
                 if ([awsResponse isEqualToString:timeOutErrorCode]) {
                     UIDevice *device = [UIDevice currentDevice];
                     NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
-                    [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
-                }                    
+                    NSString *result = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
+                    [wTools processAWSResponse: result];
+                } else {
+                    [wTools processAWSResponse: awsResponse];
+                }
                 NSLog(@"awsResponse: %@", awsResponse);
             }
         });
