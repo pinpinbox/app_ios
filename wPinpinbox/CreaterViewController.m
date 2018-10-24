@@ -217,52 +217,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self getCreator];
     }
 }
-- (void)processCreatorResult:(NSDictionary *)dic {
-    if ([dic[@"result"] intValue] == 1) {
-        userDic = dic[@"data"][@"user"];
-        sponsorInt = [dic[@"data"][@"userstatistics"][@"besponsored"] intValue];
-        NSLog(@"sponsorInt: %ld", (long)sponsorInt);
-        
-        if (nextId == 0) {
-            pictures = [NSMutableArray new];
-        }
-        int s = 0;
-        
-        for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
-            s++;
-            [pictures addObject: picture];
-        }
-        nextId = nextId + s;
-        
-        NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
-        followDic = dic[@"data"][@"follow"];
-        _follow = [dic[@"data"][@"follow"][@"follow"] boolValue];
-        sponsorDic = dic[@"data"][@"userstatistics"];
-        
-        self.followBtn = [self changeFollowBtn: self.followBtn];
-        
-        [self.collectionView reloadData];
-        [self.refreshControl endRefreshing];
-        
-        if (nextId >= 0)
-            isLoading = NO;
-        
-        if (s == 0) {
-            isLoading = YES;
-        }
-        [self layoutSetup];
-        isReloading = NO;
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-        [self.refreshControl endRefreshing];
-        isReloading = NO;
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-        [self.refreshControl endRefreshing];
-        isReloading = NO;
-    }
-}
 
 - (void)getCreator {
     NSLog(@"");
@@ -318,6 +272,54 @@ static NSString *autoPlayStr = @"&autoplay=1";
             wself->isReloading = NO;
         });
     });
+}
+
+- (void)processCreatorResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        userDic = dic[@"data"][@"user"];
+        sponsorInt = [dic[@"data"][@"userstatistics"][@"besponsored"] intValue];
+        NSLog(@"sponsorInt: %ld", (long)sponsorInt);
+        
+        if (nextId == 0) {
+//            pictures = [NSMutableArray new];
+            [pictures removeAllObjects];
+        }
+        int s = 0;
+        
+        for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
+            s++;
+            [pictures addObject: picture];
+        }
+        nextId = nextId + s;
+        
+        NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
+        followDic = dic[@"data"][@"follow"];
+        _follow = [dic[@"data"][@"follow"][@"follow"] boolValue];
+        sponsorDic = dic[@"data"][@"userstatistics"];
+        
+        self.followBtn = [self changeFollowBtn: self.followBtn];
+        
+        [self.collectionView reloadData];
+        [self.refreshControl endRefreshing];
+        
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        if (s == 0) {
+            isLoading = YES;
+        }
+        [self layoutSetup];
+        isReloading = NO;
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    }
 }
 
 #pragma mark - JCCLayout Setup
