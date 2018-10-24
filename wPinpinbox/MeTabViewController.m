@@ -140,8 +140,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"");
     NSLog(@"MeTabViewController viewWillAppear");
-    
     [super viewWillAppear:animated];
+    
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     
     [self.navigationController.navigationBar setShadowImage: [UIImage imageNamed:@"navigationbarshadow"]];
     
