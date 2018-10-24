@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xcB-z3-MQ0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xcB-z3-MQ0">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -43,7 +43,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gBL-2Y-dCz">
-                                                    <rect key="frame" x="56.5" y="120" width="39.5" height="20"/>
+                                                    <rect key="frame" x="0.0" y="120" width="152" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -62,12 +62,13 @@
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="gBL-2Y-dCz" secondAttribute="trailing" id="0h3-MZ-SDM"/>
+                                            <constraint firstItem="gBL-2Y-dCz" firstAttribute="leading" secondItem="WaL-VL-2Ej" secondAttribute="leading" id="5WA-ms-7MT"/>
                                             <constraint firstItem="oDW-DN-Se8" firstAttribute="top" secondItem="WaL-VL-2Ej" secondAttribute="top" constant="16" id="8Qt-Tc-vhf"/>
                                             <constraint firstItem="oDW-DN-Se8" firstAttribute="centerX" secondItem="WaL-VL-2Ej" secondAttribute="centerX" id="9QL-dP-Omz"/>
                                             <constraint firstItem="urr-I4-XNk" firstAttribute="top" secondItem="gBL-2Y-dCz" secondAttribute="bottom" constant="8" id="Mad-Kt-QPX"/>
                                             <constraint firstItem="gBL-2Y-dCz" firstAttribute="top" secondItem="oDW-DN-Se8" secondAttribute="bottom" constant="8" id="QPU-Co-dlx"/>
                                             <constraint firstItem="oDW-DN-Se8" firstAttribute="centerX" secondItem="urr-I4-XNk" secondAttribute="centerX" id="cDb-sV-Bkh"/>
-                                            <constraint firstItem="urr-I4-XNk" firstAttribute="top" secondItem="gBL-2Y-dCz" secondAttribute="bottom" constant="8" id="fT6-D7-Yv1"/>
                                             <constraint firstItem="oDW-DN-Se8" firstAttribute="centerX" secondItem="gBL-2Y-dCz" secondAttribute="centerX" id="ytU-U2-At9"/>
                                         </constraints>
                                     </collectionViewCell>
@@ -152,10 +153,10 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xmt-rr-cir" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="82.5" y="2419.0140845070423"/>
+            <point key="canvasLocation" x="82.400000000000006" y="2418.440779610195"/>
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="72" height="72"/>
     </resources>
 </document>

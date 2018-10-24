@@ -133,9 +133,15 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
         NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         NSLog(@"remoteN %@",remoteN);
         if (remoteN) {
-            self.launchNotification = [[NSMutableDictionary alloc] initWithDictionary:remoteN];
-            NSLog(@"self.launchNotification %@",self.launchNotification);
+            
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setObject: remoteN forKey: @"launchNotification"];
+            [defaults synchronize];
+//            self.launchNotification = [[NSMutableDictionary alloc] initWithDictionary:remoteN];
+//            NSLog(@"self.launchNotification %@",self.launchNotification);
         }
+        
+        
     }
     
 #pragma mark  Google Analytics setup
@@ -884,11 +890,7 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo0
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
     NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:userInfo0];
-    if (self.launchNotification && self.launchNotification.allKeys.count) {
-        [self.launchNotification removeAllObjects];
-        self.launchNotification = nil;
-    }
-    
+
     NSLog(@"didReceiveRemoteNotification fetchCompletionHandler");
     NSLog(@"接收到訊息: %@", [userInfo description]);
 
@@ -1063,16 +1065,16 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 NSLog(@"dataType isEqualToString albumqueue");
                 NSLog(@"typeIdStr: %@", typeIdStr);
                 
-                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+//                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
                     aDVC.albumId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
                     [appDelegate.myNav pushViewController: aDVC animated: NO];
-                }];
+//                }];
             } else if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
-                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+//                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
                     aDVC.albumId = typeIdStr;
                     aDVC.getMessagePush = YES;
@@ -1080,31 +1082,31 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
                     [appDelegate.myNav pushViewController: aDVC animated: NO];
-                }];
+//                }];
             } else if ([dataType isEqualToString: @"user@messageboard"]) {
-                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+//                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
                     cVC.userId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
                     [appDelegate.myNav pushViewController: cVC animated: YES];
-                }];
+//                }];
             } else if ([dataType isEqualToString: @"event"]) {
-                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+                //[[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     [self popToMyTabBarVC: appDelegate];
                     [self checkVCAndShowEventVC: appDelegate typeId: typeIdStr];
-                }];
+                //}];
             } else if ([dataType isEqualToString: @"categoryarea"]) {
-                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+                //[[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
                     categoryVC.categoryAreaId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
                     [appDelegate.myNav pushViewController: categoryVC animated: YES];
-                }];
+                //}];
             }
         }
     }
@@ -1472,9 +1474,15 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame
 }
 //  handling app launched by remote notification
 - (void)checkInitialLaunchCase {
-    NSLog(@"checkInitialLaunchCase  %@",self.launchNotification);
-    if (self.launchNotification != nil && self.launchNotification.allKeys.count) {
-        [self application:[UIApplication sharedApplication] didReceiveRemoteNotification:self.launchNotification fetchCompletionHandler:^(UIBackgroundFetchResult result) {}];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *remote = (NSDictionary *)[defaults  objectForKey: @"launchNotification"];
+    
+    
+    NSLog(@"checkInitialLaunchCase  %@",remote);
+    if (remote != nil && remote.allKeys.count) {
+        [self application:[UIApplication sharedApplication] didReceiveRemoteNotification:remote fetchCompletionHandler:^(UIBackgroundFetchResult result) {}];
+        [defaults removeObjectForKey:@"launchNotification"];
+        [defaults synchronize];
     }
 }
 /*

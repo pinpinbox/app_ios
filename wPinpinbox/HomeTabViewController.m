@@ -283,9 +283,7 @@
     }
     [wTools sendScreenTrackingWithScreenName:@"首頁"];
     
-    // display notification content after login
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [app checkInitialLaunchCase];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -613,6 +611,8 @@ sourceController:(UIViewController *)source
         isLoading = YES;
         [self updateList];
     }
+    
+    
 }
 
 - (void)updateList {
@@ -715,6 +715,11 @@ sourceController:(UIViewController *)source
         
         NSLog(@"-------------------------");
         NSLog(@"nextId: %ld", (long)nextId);
+        
+        // display notification content after login
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [app checkInitialLaunchCase];
+        
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
         [self showCustomErrorAlert: dic[@"message"]];
