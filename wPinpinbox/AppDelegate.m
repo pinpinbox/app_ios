@@ -55,7 +55,7 @@
 @property (nonatomic, strong) NSURL *launchedURL;
 @property (nonatomic) BOOL isInBackground;
 @property (nonatomic, assign) CGRect currentStatusBarFrame;
-@property (nonatomic) NSMutableDictionary *launchNotification;
+@property (nonatomic, strong) NSMutableDictionary *launchNotification;
 
 //- (id)initWithStyleSheet:(NSObject<TWMessageBarStyleSheet> *)stylesheet;
 
@@ -129,6 +129,15 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                            withCrashReporting:YES]
                           withLogLevel:FlurryLogLevelDebug]];        
 
+    if (launchOptions != nil ) {
+        NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+        NSLog(@"remoteN %@",remoteN);
+        if (remoteN) {
+            self.launchNotification = [[NSMutableDictionary alloc] initWithDictionary:remoteN];
+            NSLog(@"self.launchNotification %@",self.launchNotification);
+        }
+    }
+    
 #pragma mark  Google Analytics setup
     GAI *gai = [GAI sharedInstance];
     [gai trackerWithTrackingId:@"UA-58524918-1"];
@@ -284,12 +293,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"APNSArray: %@", [defaults objectForKey: @"APNSArray"]);
     
     
-    if (launchOptions != nil ) {
-        NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-        if (remoteN) {
-            self.launchNotification = [NSMutableDictionary dictionaryWithDictionary:remoteN];
-        }
-    }
+    
     return YES;
 }
 
@@ -1468,7 +1472,7 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame
 }
 //  handling app launched by remote notification
 - (void)checkInitialLaunchCase {
-    
+    NSLog(@"checkInitialLaunchCase  %@",self.launchNotification);
     if (self.launchNotification != nil && self.launchNotification.allKeys.count) {
         [self application:[UIApplication sharedApplication] didReceiveRemoteNotification:self.launchNotification fetchCompletionHandler:^(UIBackgroundFetchResult result) {}];
     }

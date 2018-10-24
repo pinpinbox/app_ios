@@ -51,7 +51,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
-    
     [self initialValueSetup];
 }
 
@@ -59,6 +58,8 @@
     NSLog(@"");
     NSLog(@"NotifTabTableViewController viewWillAppear");
     [super viewWillAppear:animated];
+    
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     
     for (UIView *v in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[v viewWithTag: 104];

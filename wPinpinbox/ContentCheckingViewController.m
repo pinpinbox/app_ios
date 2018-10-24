@@ -344,12 +344,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self initialValueSetup];
     [self retrieveAlbum];
     //self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    [wTools setStatusBarBackgroundColor:[UIColor blackColor]];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSLog(@"ContentCheckingViewController viewWillAppear");
+    [wTools setStatusBarBackgroundColor:[UIColor blackColor]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -374,7 +374,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //            isRotated = NO;
 //        }
 //    }
-    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 0.0]];
+    
+//    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 0.0]];
     //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
     [self addKeyboardNotification];
 }

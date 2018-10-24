@@ -282,6 +282,10 @@
         btn.hidden = NO;
     }
     [wTools sendScreenTrackingWithScreenName:@"首頁"];
+    
+    // display notification content after login
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [app checkInitialLaunchCase];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

@@ -554,7 +554,7 @@
                                 </connections>
                             </collectionView>
                         </subviews>
-                        <color key="backgroundColor" name="systemPurpleColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="GKT-ab-lwF" firstAttribute="leading" secondItem="F51-WY-8Vk" secondAttribute="leading" id="3qL-pE-BtL"/>
                             <constraint firstItem="GKT-ab-lwF" firstAttribute="bottom" secondItem="F51-WY-8Vk" secondAttribute="bottom" id="F17-Z9-0P5"/>
@@ -658,8 +658,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="MeSelectedTab" width="37.5" height="37.5"/>
-        <image name="MeTab" width="50" height="50"/>
+        <image name="MeSelectedTab" width="25" height="25"/>
+        <image name="MeTab" width="25" height="25"/>
         <image name="ic200_chart_dark" width="48" height="48"/>
         <image name="ic200_menu_dark" width="25" height="25"/>
         <image name="ic200_message_dark" width="48" height="48"/>

@@ -52,7 +52,6 @@
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = YES;
     }
-    
     @try {
         [wTools HideMBProgressHUD];
     } @catch (NSException *exception) {
@@ -62,8 +61,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
-    [self refresh];
+    [self loadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -74,7 +72,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -85,8 +82,7 @@
 }
 
 #pragma mark -
-- (void)initialValueSetup
-{
+- (void)initialValueSetup {
     NSLog(@"");
     NSLog(@"initialValueSetup");
     
@@ -124,7 +120,6 @@
                 break;
         }
     }
-    
     nextId = 0;
     isLoading = NO;
     isReloading = NO;
@@ -138,7 +133,6 @@
     [self.collectionView addSubview: self.refreshControl];
     
     self.navBarView.backgroundColor = [UIColor barColor];
-    
     self.collectionView.showsVerticalScrollIndicator = NO;
 }
 
@@ -146,7 +140,6 @@
 - (void)refresh {
     if (!isReloading) {
         isReloading = YES;
-        
         nextId = 0;
         isLoading = NO;
         
@@ -161,56 +154,13 @@
         if (nextId == 0) {
             NSLog(@"nextId is: %ld", (long)nextId);
         }
-        
         isLoading = YES;
-        
         [self getFollowToList];
     }
 }
-- (void)processFollowListResult:(NSDictionary *) dic{
-    if ([dic[@"result"] intValue] == 1) {
-        if (nextId == 0)
-            [followListData removeAllObjects];
-        
-        // s for counting how much data is loaded
-        int s = 0;
-        
-        for (NSMutableDictionary *followData in [dic objectForKey: @"data"]) {
-            s++;
-            [followListData addObject: followData];
-        }
-        
-        NSLog(@"followListData: %@", followListData);
-        
-        // If data keeps loading then the nextId is accumulating
-        nextId = nextId + s;
-        NSLog(@"nextId is: %ld", (long)nextId);
-        
-        // If nextId is bigger than 0, that means there are some data loaded already.
-        if (nextId >= 0)
-            isLoading = NO;
-        
-        // If s is 0, that means dic data is empty.
-        if (s == 0) {
-            isLoading = YES;
-        }
-        
-        [self.refreshControl endRefreshing];
-        [self.collectionView reloadData];
-        
-        isReloading = NO;
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-        [self.refreshControl endRefreshing];
-        isReloading = NO;
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-        [self.refreshControl endRefreshing];
-        isReloading = NO;
-    }
-}
+
 - (void)getFollowToList {
+    NSLog(@"getFollowToList");
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -266,17 +216,57 @@
     });
 }
 
-#pragma mark - IBAction Methods
+- (void)processFollowListResult:(NSDictionary *) dic{
+    if ([dic[@"result"] intValue] == 1) {
+        if (nextId == 0)
+            [followListData removeAllObjects];
+        
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *followData in [dic objectForKey: @"data"]) {
+            s++;
+            [followListData addObject: followData];
+        }
+        
+        NSLog(@"followListData: %@", followListData);
+        
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        NSLog(@"nextId is: %ld", (long)nextId);
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        
+        [self.refreshControl endRefreshing];
+        [self.collectionView reloadData];
+        
+        isReloading = NO;
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+    }
+}
 
-- (IBAction)back:(id)sender
-{
-    //[self.navigationController popViewControllerAnimated: YES];
+#pragma mark - IBAction Methods
+- (IBAction)back:(id)sender {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
 
-- (IBAction)followBtnPress:(id)sender
-{
+- (IBAction)followBtnPress:(id)sender {
     UICollectionViewCell *cell = (UICollectionViewCell *)[[sender superview] superview];
     NSIndexPath *indexPath = [self.collectionView indexPathForCell: cell];
     
@@ -292,22 +282,10 @@
     NSString *titleStr = [NSString stringWithFormat: @"不再關注 %@?", name];
     
     [self showCustomAlert: titleStr userId: userId name: name];
-    
-    /*
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle: titleStr message: @"" preferredStyle: UIAlertControllerStyleAlert];
-    UIAlertAction *cancelBtn = [UIAlertAction actionWithTitle: @"取消" style: UIAlertActionStyleDefault handler: nil];
-    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [self changeFollowStatus: userId name: name];
-    }];
-    [alert addAction: cancelBtn];
-    [alert addAction: okBtn];
-    
-    [self presentViewController: alert animated: YES completion: nil];
-     */
 }
 
-- (void)changeFollowStatus: (NSString *)userId name:(NSString *)name
-{
+- (void)changeFollowStatus:(NSString *)userId
+                      name:(NSString *)name {
     NSLog(@"changeFollowStatus");
     
     @try {
@@ -370,21 +348,18 @@
 }
 
 #pragma mark - UICollectionViewDataSource Methods
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
     return followListData.count;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
            viewForSupplementaryElementOfKind:(NSString *)kind
-                                 atIndexPath:(NSIndexPath *)indexPath
-{
+                                 atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"viewForSupplementaryElementOfKind");
     
 //    UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerCell" forIndexPath: indexPath];
@@ -503,16 +478,23 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumLineSpacingForSectionAtIndex");
-    
     return 16;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
-        insetForSectionAtIndex:(NSInteger)section
-{
+        insetForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 8, 0, 8);
     return itemInset;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+       willDisplayCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.item == (followListData.count - 1)) {
+        NSLog(@"indexPath.item == (followListData.count - 1)");
+        [self loadData];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -522,13 +504,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     CGFloat bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height;
     NSLog(@"bottomEdge: %f", bottomEdge);
     NSLog(@"scrollView.contentSize.height: %f", scrollView.contentSize.height);
-    
     NSLog(@"isLoading: %d", isLoading);
     
-    if (bottomEdge > scrollView.contentSize.height) {
-        NSLog(@"We are at the bottom");
-        [self loadData];
-    }
+//    if (bottomEdge > scrollView.contentSize.height) {
+//        NSLog(@"We are at the bottom");
+//        [self loadData];
+//    }
 }
 
 #pragma mark - Custom Alert Method

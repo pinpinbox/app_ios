@@ -30,7 +30,6 @@
 #import "ChangeInterestsViewController.h"
 #import "UIViewController+ErrorAlert.h"
 
-
 #define kWidthForUpload 720
 #define kHeightForUpload 960
 
@@ -194,21 +193,45 @@
                     NSLog(@"getProfile");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getprofile"];                                        
-                    //                    [self.refreshControl endRefreshing];
+                                    protocolName: @"getprofile"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     NSLog(@"responseFromGetProfile != nil");
-                    
-                    
+                    NSLog(@"dic: %@", dic);
                     [wself processProfileResult:dic];
                 }
             }
         });
     });
 }
+
+- (void)processProfileResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
+        for (NSString *key in [dataIc allKeys]) {
+            id objective = [dataIc objectForKey: key];
+            
+            if ([objective isKindOfClass: [NSNull class]]) {
+                [dataIc setObject: @"" forKey: key];
+            }
+        }
+        [userPrefs setValue: dataIc forKey: @"profile"];
+        [userPrefs synchronize];
+        
+        myData = [dataIc mutableCopy];
+        
+        [self checkSocialData];
+        [self refreshUserInterface];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        [self showCustomErrorAlert: dic[@"message"]];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
+
 - (void)refreshUserInterface {
     self.nameTextView.text = myData[@"nickname"];
     
@@ -311,32 +334,6 @@
     }
 }
 
-- (void)processProfileResult:(NSDictionary *)dic {
-    if ([dic[@"result"] intValue] == 1) {
-        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
-        
-        for (NSString *key in [dataIc allKeys]) {
-            id objective = [dataIc objectForKey: key];
-            
-            if ([objective isKindOfClass: [NSNull class]]) {
-                [dataIc setObject: @"" forKey: key];
-            }
-        }
-        [userPrefs setValue: dataIc forKey: @"profile"];
-        [userPrefs synchronize];
-        
-        myData = [dataIc mutableCopy];
-        
-        [self checkSocialData];
-        [self refreshUserInterface];
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-    }
-}
 #pragma mark - UI Setup Section
 - (void)initialValueSetup {
     // Get the profile data
@@ -678,6 +675,7 @@
 }
 
 - (void)showSocialData {
+    NSLog(@"showSocialData");
     self.communityLabel.hidden = NO;
     
     self.facebookBgView.hidden = NO;
@@ -685,56 +683,57 @@
     self.facebookView.clipsToBounds = YES;
     self.facebookView.backgroundColor = [UIColor thirdGrey];
     self.facebookTextField.textColor = [UIColor firstGrey];
-    self.facebookTextField.text = self.userDic[@"sociallink"][@"facebook"];
+    NSLog(@"myData: %@", myData);
+    self.facebookTextField.text = myData[@"sociallink"][@"facebook"];
     
     self.googleBgView.hidden = NO;
     self.googleView.layer.cornerRadius = kCornerRadius;
     self.googleView.clipsToBounds = YES;
     self.googleView.backgroundColor = [UIColor thirdGrey];
     self.googleTextField.textColor = [UIColor firstGrey];
-    self.googleTextField.text = self.userDic[@"sociallink"][@"google"];
+    self.googleTextField.text = myData[@"sociallink"][@"google"];
     
     self.instagramBgView.hidden = NO;
     self.instagramView.layer.cornerRadius = kCornerRadius;
     self.instagramView.clipsToBounds = YES;
     self.instagramView.backgroundColor = [UIColor thirdGrey];
     self.instagramTextField.textColor = [UIColor firstGrey];
-    self.instagramTextField.text = self.userDic[@"sociallink"][@"instagram"];
+    self.instagramTextField.text = myData[@"sociallink"][@"instagram"];
     
     self.linkedInBgView.hidden = NO;
     self.linkedInView.layer.cornerRadius = kCornerRadius;
     self.linkedInView.clipsToBounds = YES;
     self.linkedInView.backgroundColor = [UIColor thirdGrey];
     self.linkedInTextField.textColor = [UIColor firstGrey];
-    self.linkedInTextField.text = self.userDic[@"sociallink"][@"linkedin"];
+    self.linkedInTextField.text = myData[@"sociallink"][@"linkedin"];
     
     self.pinterestBgView.hidden = NO;
     self.pinterestView.layer.cornerRadius = kCornerRadius;
     self.pinterestView.clipsToBounds = YES;
     self.pinterestView.backgroundColor = [UIColor thirdGrey];
     self.pinterestTextField.textColor = [UIColor firstGrey];
-    self.pinterestTextField.text = self.userDic[@"sociallink"][@"pinterest"];
+    self.pinterestTextField.text = myData[@"sociallink"][@"pinterest"];
     
     self.twitterBgView.hidden = NO;
     self.twitterView.layer.cornerRadius = kCornerRadius;
     self.twitterView.clipsToBounds = YES;
     self.twitterView.backgroundColor = [UIColor thirdGrey];
     self.twitterTextField.textColor = [UIColor firstGrey];
-    self.twitterTextField.text = self.userDic[@"sociallink"][@"twitter"];
+    self.twitterTextField.text = myData[@"sociallink"][@"twitter"];
     
     self.youtubeBgView.hidden = NO;
     self.youtubeView.layer.cornerRadius = kCornerRadius;
     self.youtubeView.clipsToBounds = YES;
     self.youtubeView.backgroundColor = [UIColor thirdGrey];
     self.youtubeTextField.textColor = [UIColor firstGrey];
-    self.youtubeTextField.text = self.userDic[@"sociallink"][@"youtube"];
+    self.youtubeTextField.text = myData[@"sociallink"][@"youtube"];
     
     self.homeBgView.hidden = NO;
     self.homeView.layer.cornerRadius = kCornerRadius;
     self.homeView.clipsToBounds = YES;
     self.homeView.backgroundColor = [UIColor thirdGrey];
     self.homeTextField.textColor = [UIColor firstGrey];
-    self.homeTextField.text = self.userDic[@"sociallink"][@"web"];
+    self.homeTextField.text = myData[@"sociallink"][@"web"];
 }
 
 - (void)donePicker

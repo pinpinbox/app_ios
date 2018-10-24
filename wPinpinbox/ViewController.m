@@ -564,10 +564,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         //[self getProfile];
                         [sself refreshToken];
                         //[self setupPushNotification];
-                        
-                        // display notification content after login
-                        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                        [app checkInitialLaunchCase];
+                                                
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSString *msg = dic[@"message"];
                         NSLog(@"msg: %@", msg);

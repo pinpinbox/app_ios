@@ -51,8 +51,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"");
     NSLog(@"RecentBrowsingViewController viewWillAppear");
-    
     [super viewWillAppear:animated];
+    
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     
     for (UIView *v in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[v viewWithTag: 104];
