@@ -258,24 +258,24 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
         }
     }
     
-    if ([wTools isRegisterAWSNeeded]) {
-        #if __IPHONE_10_0
-            [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-            [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:UNAuthorizationOptionAlert|UNAuthorizationOptionBadge|UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                if (granted)
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[UIApplication sharedApplication] registerForRemoteNotifications];
-                    });
-            }];
-            UNNotificationAction *a = [UNNotificationAction actionWithIdentifier:UNNotificationDefaultActionIdentifier title:@"pinpinBox" options:UNNotificationActionOptionForeground];
-            UNNotificationCategory *c = [UNNotificationCategory categoryWithIdentifier:@"GENERAL" actions:@[a] intentIdentifiers:@[UNNotificationDefaultActionIdentifier] options:UNNotificationCategoryOptionCustomDismissAction];
-            [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObject:c]];
-        
-        #else
-            UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil];
-            [application registerUserNotificationSettings:setting];
-        #endif
-    }
+    //if ([wTools isRegisterAWSNeeded]) {
+    #if __IPHONE_10_0
+        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:UNAuthorizationOptionAlert|UNAuthorizationOptionBadge|UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            if (granted)
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[UIApplication sharedApplication] registerForRemoteNotifications];
+                });
+        }];
+        UNNotificationAction *a = [UNNotificationAction actionWithIdentifier:UNNotificationDefaultActionIdentifier title:@"pinpinBox" options:UNNotificationActionOptionForeground];
+        UNNotificationCategory *c = [UNNotificationCategory categoryWithIdentifier:@"GENERAL" actions:@[a] intentIdentifiers:@[UNNotificationDefaultActionIdentifier] options:UNNotificationCategoryOptionCustomDismissAction];
+        [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObject:c]];
+    
+    #else
+        UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil];
+        [application registerUserNotificationSettings:setting];
+    #endif
+    //}
     
     NSInteger badgeCount = [[defaults objectForKey: @"badgeCount"] integerValue];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber: badgeCount];
