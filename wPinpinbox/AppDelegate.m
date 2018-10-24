@@ -55,6 +55,7 @@
 @property (nonatomic, strong) NSURL *launchedURL;
 @property (nonatomic) BOOL isInBackground;
 @property (nonatomic, assign) CGRect currentStatusBarFrame;
+@property (nonatomic) NSMutableDictionary *launchNotification;
 
 //- (id)initWithStyleSheet:(NSObject<TWMessageBarStyleSheet> *)stylesheet;
 
@@ -282,6 +283,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     NSLog(@"APNSArray: %@", [defaults objectForKey: @"APNSArray"]);
     
+    
+    if (launchOptions != nil ) {
+        NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+        if (remoteN) {
+            self.launchNotification = [NSMutableDictionary dictionaryWithDictionary:remoteN];
+        }
+    }
     return YES;
 }
 
@@ -332,6 +340,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     NSLog(@"applicationWillEnterForeground");
+    
+
     [self checkBadge];
     
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
@@ -866,11 +876,18 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
 }
 
 - (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo
+didReceiveRemoteNotification:(NSDictionary *)userInfo0
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:userInfo0];
+    if (self.launchNotification && self.launchNotification.allKeys.count) {
+        [self.launchNotification removeAllObjects];
+        self.launchNotification = nil;
+    }
+    
     NSLog(@"didReceiveRemoteNotification fetchCompletionHandler");
     NSLog(@"接收到訊息: %@", [userInfo description]);
-    
+
     // iOS 10 will handle notifications through other methods
     
     NSLog(@"data: %@", userInfo[@"data"]);
@@ -1448,6 +1465,13 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame
         [customAlertView close];
     }];
     
+}
+//  handling app launched by remote notification
+- (void)checkInitialLaunchCase {
+    
+    if (self.launchNotification != nil && self.launchNotification.allKeys.count) {
+        [self application:[UIApplication sharedApplication] didReceiveRemoteNotification:self.launchNotification fetchCompletionHandler:^(UIBackgroundFetchResult result) {}];
+    }
 }
 /*
 - (UIView *)createErrorContainerView: (NSString *)msg

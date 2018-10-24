@@ -30,5 +30,5 @@
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
-
+- (void)checkInitialLaunchCase;
 @end
