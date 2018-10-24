@@ -837,8 +837,11 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
 #pragma  mark - APNS
 #if __IPHONE_10_0
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    
-    completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionSound);
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateInactive) {
+        completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionSound);
+    } else {
+        completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
+    }
     
 }
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
@@ -894,6 +897,12 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"didReceiveRemoteNotification fetchCompletionHandler");
     NSLog(@"接收到訊息: %@", [userInfo description]);
 
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSDictionary *remote = (NSDictionary *)[defaults  objectForKey: @"launchNotification"];
+    BOOL launchedByNotification = (remote != nil);
+    
     // iOS 10 will handle notifications through other methods
     
     NSLog(@"data: %@", userInfo[@"data"]);
@@ -903,8 +912,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
     //application.applicationIconBadgeNumber = 0;
     UIApplicationState state = [application applicationState];
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
     NSInteger badgeCount = [[defaults objectForKey: @"badgeCount"] integerValue];
     
     // Check Info
@@ -970,7 +978,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         }
     }
     //if (state == UIApplicationStateBackground || state == UIApplicationStateInactive) {
-    if (state == UIApplicationStateInactive) {
+    if (state == UIApplicationStateInactive || launchedByNotification) {
         NSLog(@"state == UIApplicationStateInactive");
         // user has tapped notification
         
@@ -1065,16 +1073,16 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 NSLog(@"dataType isEqualToString albumqueue");
                 NSLog(@"typeIdStr: %@", typeIdStr);
                 
-//                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
                     aDVC.albumId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
                     [appDelegate.myNav pushViewController: aDVC animated: NO];
-//                }];
+                }];
             } else if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
-//                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
                     aDVC.albumId = typeIdStr;
                     aDVC.getMessagePush = YES;
@@ -1082,31 +1090,31 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
                     [appDelegate.myNav pushViewController: aDVC animated: NO];
-//                }];
+                }];
             } else if ([dataType isEqualToString: @"user@messageboard"]) {
-//                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
                     cVC.userId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
                     [appDelegate.myNav pushViewController: cVC animated: YES];
-//                }];
+                }];
             } else if ([dataType isEqualToString: @"event"]) {
-                //[[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     [self popToMyTabBarVC: appDelegate];
                     [self checkVCAndShowEventVC: appDelegate typeId: typeIdStr];
-                //}];
+                }];
             } else if ([dataType isEqualToString: @"categoryarea"]) {
-                //[[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
                     categoryVC.categoryAreaId = typeIdStr;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
                     [appDelegate.myNav pushViewController: categoryVC animated: YES];
-                //}];
+                }];
             }
         }
     }
