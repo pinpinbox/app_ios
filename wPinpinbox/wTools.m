@@ -203,6 +203,23 @@ static wTools *instance =nil;
     return str;
 }
 
++ (BOOL)objectExists:(id)object {
+    if (object != nil) {
+        NSLog(@"object is not nil");
+        
+        if (![object isEqual: [NSNull null]]) {
+            NSLog(@"object does not equal to null");
+            return YES;
+        } else {
+            NSLog(@"object does equal to null");
+            return NO;
+        }
+    } else {
+        NSLog(@"object is nil");
+        return NO;
+    }
+}
+
 //Ｐ不足
 +(void)InsufficientP{
 //    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];

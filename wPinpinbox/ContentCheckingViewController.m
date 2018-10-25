@@ -252,37 +252,36 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"bookData: %@", bookData);
     NSArray *photoArr = bookData[@"photo"];
     NSLog(@"photoArr: %@", photoArr);
-    NSString *imageUrlThumbnail = photoArr[0][@"image_url_thumbnail"];
-    //NSLog(@"imageUrlThumbnail: %@", photoArr[0][@"image_url_thumbnail"]);
     
-    //NSString *imageFolderName = [NSString stringWithFormat: @"%@%@", [wTools getUserID], self.albumid];
-    //NSLog(@"imageFolderName: %@", imageFolderName);
+    NSString *imageUrlThumbnail;
     
+    if ([wTools objectExists: photoArr[0][@"image_url_thumbnail"]]) {
+        imageUrlThumbnail = photoArr[0][@"image_url_thumbnail"];
+    }
     // Save data to Core Data
     NSManagedObjectContext *context = [self managedObjectContext];
     NSManagedObject *newData = [NSEntityDescription insertNewObjectForEntityForName: @"Browse" inManagedObjectContext: context];
     
     NSLog(@"album name: %@", bookData[@"album"][@"name"]);
     
-    if (![self.albumId isKindOfClass: [NSNull class]]) {
+    if ([wTools objectExists: self.albumId]) {
         [newData setValue: self.albumId forKey: @"albumId"];
     }
-    if (![bookData[@"user"][@"name"] isKindOfClass: [NSNull class]]) {
+    if ([wTools objectExists: bookData[@"user"][@"name"]]) {
         [newData setValue: bookData[@"user"][@"name"] forKey: @"author"];
     }
-    if (![bookData[@"album"][@"description"] isKindOfClass: [NSNull class]]) {
+    if ([wTools objectExists: bookData[@"album"][@"description"]]) {
         [newData setValue: bookData[@"album"][@"description"] forKey: @"descriptionInfo"];
     }
-    if (![bookData[@"album"][@"name"] isKindOfClass: [NSNull class]]) {
+    if ([wTools objectExists: bookData[@"album"][@"name"]]) {
         [newData setValue: bookData[@"album"][@"name"] forKey: @"title"];
     }
-    if (![imageUrlThumbnail isKindOfClass: [NSNull class]]) {
+    if ([wTools objectExists: imageUrlThumbnail]) {
         [newData setValue: imageUrlThumbnail forKey: @"imageUrlThumbnail"];
     }
-    if (![[NSDate date] isKindOfClass: [NSNull class]]) {
+    if ([wTools objectExists: [NSDate date]]) {
         [newData setValue: [NSDate date] forKey: @"browseDate"];
     }
-    
     NSError *error = nil;
     
     // Save the object to persistent store
@@ -324,7 +323,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             photoIdExist = YES;
         }
     }
-    
     if (!photoIdExist) {
         NSManagedObject *newData = [NSEntityDescription insertNewObjectForEntityForName: @"Slot" inManagedObjectContext: context];
         [newData setValue: [NSNumber numberWithInteger: photoId] forKey: @"photoId"];
@@ -349,39 +347,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSLog(@"ContentCheckingViewController viewWillAppear");
-    [wTools setStatusBarBackgroundColor:[UIColor blackColor]];
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     NSLog(@"ContentCheckingViewController viewDidAppear");
     [super viewDidAppear:animated];
-    
-    [wTools sendScreenTrackingWithScreenName:@"閱讀器"];
-//    NSLog(@"currentPage: %ld", (long)[self getCurrentPage]);
-//    NSLog(@"self.pageBeforePresentingOrPushing: %d", self.pageBeforePresentingOrPushing);
-//    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-//    NSLog(@"orientation: %ld", (long)orientation);
-//    NSLog(@"self.previousOrientation: %ld", (long)self.previousOrientation);
-//    NSLog(@"self.isPresentingOrPushingVC: %d", self.isPresentingOrPushingVC);
-//    NSLog(@"isRotated: %d", isRotated);
-    
-//    if (self.isPresentingOrPushingVC) {
-//        if (isRotated) {
-//            CGSize currentSize = self.imageScrollCV.bounds.size;
-//            float offset = self.pageBeforePresentingOrPushing * currentSize.width;
-//            [self.imageScrollCV setContentOffset: CGPointMake(offset, 0) animated: NO];
-//            self.isPresentingOrPushingVC = NO;
-//            isRotated = NO;
-//        }
-//    }
+    [wTools sendScreenTrackingWithScreenName: @"閱讀器"];
     
 //    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 0.0]];
     //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
     [self addKeyboardNotification];
 }
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
@@ -1013,7 +995,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                             style: style];
                             return;
                         }
-//                        NSLog(@"self.bookdata: %@", self.bookdata);
                         
                         // Core Data Setting for RecentBrowsingViewController
                         [self checkBrowsingDataInDatabaseOrNot];
@@ -2689,30 +2670,32 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)checkIsOwnedOrNot:(NSDictionary *)dic {
     NSLog(@"checkIsOwnedOrNot");
     self.bookdata = [dic mutableCopy];
-    self.isOwned = [self.bookdata[@"album"][@"own"] boolValue];
-    NSLog(@"self.isOwned: %d", self.isOwned);
     
-    if (!self.isOwned) {
-        NSMutableDictionary *collectDic = [NSMutableDictionary new];
-        [collectDic setValue: [NSNumber numberWithBool: NO] forKey: @"audio_loop"];
-        [collectDic setValue: @"none" forKey: @"audio_refer"];
-        [collectDic setValue: [NSNull null] forKey: @"audio_target"];
-        [collectDic setValue: @"" forKey: @"description"];
-        [collectDic setValue: [NSNumber numberWithInteger: 0] forKey: @"duration"];
-        [collectDic setValue: [NSNull null] forKey: @"hyperlink"];
-        [collectDic setValue: @"bg200_preview_normal.jpg" forKey: @"image"];
-        [collectDic setValue: @"bg200_preview_small.jpg" forKey: @"imageThumbnail"];
-        [collectDic setValue: @"" forKey: @"location"];
-        [collectDic setValue: @"" forKey: @"name"];
-        [collectDic setValue: [NSNumber numberWithInteger: 0] forKey: @"photo_id"];
-        [collectDic setValue: @"FinalPage" forKey: @"usefor"];
-        [collectDic setValue: @"none" forKey: @"video_refer"];
-        [collectDic setValue: [NSNull null] forKey: @"video_target"];
-        [collectDic setValue: [NSNumber numberWithBool: YES] forKey: @"collect"];
+    if ([wTools objectExists: self.bookdata[@"album"][@"own"]]) {
+        self.isOwned = [self.bookdata[@"album"][@"own"] boolValue];
+        NSLog(@"self.isOwned: %d", self.isOwned);
         
-        [self.photoArray addObject: collectDic];
+        if (!self.isOwned) {
+            NSMutableDictionary *collectDic = [NSMutableDictionary new];
+            [collectDic setValue: [NSNumber numberWithBool: NO] forKey: @"audio_loop"];
+            [collectDic setValue: @"none" forKey: @"audio_refer"];
+            [collectDic setValue: [NSNull null] forKey: @"audio_target"];
+            [collectDic setValue: @"" forKey: @"description"];
+            [collectDic setValue: [NSNumber numberWithInteger: 0] forKey: @"duration"];
+            [collectDic setValue: [NSNull null] forKey: @"hyperlink"];
+            [collectDic setValue: @"bg200_preview_normal.jpg" forKey: @"image"];
+            [collectDic setValue: @"bg200_preview_small.jpg" forKey: @"imageThumbnail"];
+            [collectDic setValue: @"" forKey: @"location"];
+            [collectDic setValue: @"" forKey: @"name"];
+            [collectDic setValue: [NSNumber numberWithInteger: 0] forKey: @"photo_id"];
+            [collectDic setValue: @"FinalPage" forKey: @"usefor"];
+            [collectDic setValue: @"none" forKey: @"video_refer"];
+            [collectDic setValue: [NSNull null] forKey: @"video_target"];
+            [collectDic setValue: [NSNumber numberWithBool: YES] forKey: @"collect"];
+            
+            [self.photoArray addObject: collectDic];
+        }
     }
-//    NSLog(@"self.photoArray: %@", self.photoArray);
 }
 
 - (void)updateOldCurrentPage:(NSUInteger)currentPage {
@@ -4667,7 +4650,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
- 
 }
 
 - (UIView *)createErrorContainerView: (NSString *)msg {

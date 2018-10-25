@@ -1224,7 +1224,7 @@ sourceController:(UIViewController *)source
 - (void)newsLetterCheck {
     NSLog(@"newsLetterCheck");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    NSLog(@"newsLetterCheck key: %@", [userPrefs objectForKey: @"newsLetterCheck"]);
+    NSLog(@"newsLetterCheck key: %@", [userPrefs objectForKey: @"newsLetterCheck"]);        
     
     if ([[userPrefs objectForKey: @"newsLetterCheck"] isEqual: [NSNull null]]) {
         NSLog(@"newsLetterCheck is null");

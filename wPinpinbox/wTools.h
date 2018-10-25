@@ -28,6 +28,8 @@
 +(NSString *)getUUID;
 +(NSString *)stringisnull:(NSString *)str;
 
++ (BOOL)objectExists:(id)object;
+
 //書本詳細頁導入 先下載再進入
 +(void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid;
 
