@@ -43,7 +43,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gBL-2Y-dCz">
-                                                    <rect key="frame" x="0.0" y="120" width="152" height="20"/>
+                                                    <rect key="frame" x="16" y="120" width="120" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -62,8 +62,8 @@
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="gBL-2Y-dCz" secondAttribute="trailing" id="0h3-MZ-SDM"/>
-                                            <constraint firstItem="gBL-2Y-dCz" firstAttribute="leading" secondItem="WaL-VL-2Ej" secondAttribute="leading" id="5WA-ms-7MT"/>
+                                            <constraint firstAttribute="trailing" secondItem="gBL-2Y-dCz" secondAttribute="trailing" constant="16" id="0h3-MZ-SDM"/>
+                                            <constraint firstItem="gBL-2Y-dCz" firstAttribute="leading" secondItem="WaL-VL-2Ej" secondAttribute="leading" constant="16" id="5WA-ms-7MT"/>
                                             <constraint firstItem="oDW-DN-Se8" firstAttribute="top" secondItem="WaL-VL-2Ej" secondAttribute="top" constant="16" id="8Qt-Tc-vhf"/>
                                             <constraint firstItem="oDW-DN-Se8" firstAttribute="centerX" secondItem="WaL-VL-2Ej" secondAttribute="centerX" id="9QL-dP-Omz"/>
                                             <constraint firstItem="urr-I4-XNk" firstAttribute="top" secondItem="gBL-2Y-dCz" secondAttribute="bottom" constant="8" id="Mad-Kt-QPX"/>
