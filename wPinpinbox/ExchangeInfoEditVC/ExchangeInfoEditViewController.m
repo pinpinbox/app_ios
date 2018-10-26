@@ -720,7 +720,7 @@
                     NSLog(@"Get response from gainPhotoUseForUser");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"SYSTEM_OK");
@@ -784,7 +784,7 @@
 - (void)processExchangeResult:(NSDictionary *)dic {
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         NSLog(@"SYSTEM_OK");
-        NSLog(@"dic: %@", dic);
+        
         
         @try {
             photoUseForUserId = [dic[@"data"][@"photousefor_user"][@"photousefor_user_id"] integerValue];
@@ -865,7 +865,7 @@
                     NSLog(@"Get response from exchangePhotoUseFor");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     [wself processExchangeResult:dic];
                 }
@@ -915,7 +915,7 @@
                     NSLog(@"Get Real Response");
                     NSLog(@"Get response from insertBookmark");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"SYSTEM_OK");
@@ -1003,12 +1003,12 @@
                     NSLog(@"Get response from updatePhotoUseForUser");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     NSLog(@"dic message: %@", dic[@"message"]);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"SYSTEM_OK");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         [self dismiss];
                         

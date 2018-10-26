@@ -40,7 +40,13 @@
     [self.bgview insertSubview:_caution belowSubview:self.opMenu]; //aboveSubview:self.imageView];
     //[self bringSubviewToFront:_caution];
     _caution.hidden = YES;
+
+}
+- (void)switchOpMenuButtonTint:(UIButton *)button {
     
+    UIImage *op = [button.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    button.imageView.image = op;
+    button.imageView.tintColor = [UIColor whiteColor];
 }
 #pragma mark - arrange cell sub views by collectionViewType
 //  mode for displaying user's album list
@@ -78,6 +84,18 @@
     
     _coopConstraint.constant = 40;
     _opShareLeading.constant = 30;
+}
+- (void)setAlbumDesc:(NSString *)desc {
+    _descLabel.numberOfLines = 0;
+    _descLabel.text = desc;
+    CGSize s = [_descLabel sizeThatFits:CGSizeMake(225, 58)];
+    CGPoint t = _descLabel.frame.origin;
+    if (s.height > 58) {
+        _descLabel.bounds = CGRectMake(t.x, t.y, s.width, 58);
+        _descLabel.numberOfLines = 3;
+    } else {
+        _descLabel.frame = CGRectMake(t.x, t.y, s.width, s.height);
+    }
 }
 - (void)setCoopNumber:(int)number{
     self.coopLabel.text = [NSString stringWithFormat:@"%00d", number];
@@ -414,6 +432,10 @@
             [self layoutIfNeeded];
         } completion:nil];
     } else {
+        [self switchOpMenuButtonTint:self.opMenuEdit];
+        [self switchOpMenuButtonTint:self.opMenuShare];
+        [self switchOpMenuButtonTint:self.opMenuDelete];
+        [self switchOpMenuButtonTint:self.opMenuInvite];
         self.opMenuLeading.constant = 0;
         [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [self layoutIfNeeded];

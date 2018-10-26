@@ -633,7 +633,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     CreatorCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"Creator" forIndexPath: indexPath];
     NSDictionary *data = pictures[indexPath.row];
-//    NSLog(@"data: %@", data);
+//    //NSLog(@"data: %@", data);
     
     cell.contentView.subviews[0].backgroundColor = nil;
     
@@ -749,7 +749,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
     
     NSDictionary *data = pictures[indexPath.row];
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
     
     NSString *albumId = [data[@"album_id"] stringValue];
     
@@ -1205,7 +1205,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         

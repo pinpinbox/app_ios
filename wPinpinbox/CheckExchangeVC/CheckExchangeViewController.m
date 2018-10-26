@@ -127,10 +127,10 @@
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"SYSTEM_OK");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         for (NSMutableDictionary *data in [dic objectForKey: @"data"]) {
-                            NSLog(@"data: %@", data);
+                            //NSLog(@"data: %@", data);
                             
                             if ([data[@"photo"][@"has_gained"] boolValue] == YES) {
                                 NSLog(@"has_gained TRUE");
@@ -185,7 +185,7 @@
 - (void)removeDicData:(NSMutableDictionary *)dic {
     NSLog(@"Before removing");
     NSLog(@"self.hasNotExchangedData: %@", self.hasNotExchangedData);
-    NSLog(@"dic: %@", dic);
+    
     
     NSMutableArray *tempArray = [NSMutableArray new];
     
@@ -206,7 +206,7 @@
     NSLog(@"Before adding");
     NSLog(@"self.hasExchangedData.count: %lu", (unsigned long)self.hasExchangedData.count);
     NSLog(@"self.hasExchangedData: %@", self.hasExchangedData);
-    NSLog(@"dic: %@", dic);
+    
     
     BOOL isNewDic = NO;
     
@@ -215,7 +215,7 @@
             NSLog(@"dic data already exists");
         } else {
             NSLog(@"dic data didn't exist");
-            NSLog(@"dic: %@", dic);
+            
             isNewDic = YES;
         }
     }
@@ -258,7 +258,7 @@
     } else {
         data = self.hasNotExchangedData[indexPath.row];
     }
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
     
     if ([data[@"photousefor"][@"image"] isEqual: [NSNull null]]) {
         cell.imageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];

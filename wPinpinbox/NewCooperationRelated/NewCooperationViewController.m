@@ -263,7 +263,7 @@ replacementString:(NSString *)string {
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"Before");
@@ -424,7 +424,7 @@ replacementString:(NSString *)string {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                        NSLog(@"dic: %@", dic);
+                        
                         self.creatorListData = [NSMutableArray arrayWithArray: dic[@"data"]];
                         NSLog(@"self.creatorListData: %@", self.creatorListData);
                         NSLog(@"self.cooperationData: %@", self.cooperationData);
@@ -503,7 +503,7 @@ replacementString:(NSString *)string {
         [data setObject: identity forKey: @"identity"];
         [data setObject: userId forKey: @"user_id"];
         
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         
         NSString *response = [boxAPI updatecooperation: [wTools getUserID]
                                                  token: [wTools getUserToken]
@@ -525,7 +525,7 @@ replacementString:(NSString *)string {
                                       creatorDic: nil];
                 } else {
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         self.option = @"Updating";
@@ -590,7 +590,7 @@ replacementString:(NSString *)string {
                     } else {
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         if ([dic[@"result"] intValue] == 1) {
                             self.option = @"Deleting";
@@ -601,7 +601,7 @@ replacementString:(NSString *)string {
                             NSLog(@"self.cooperationData: %@", self.cooperationData);
                             
                             for (NSInteger i = 0; i < self.cooperationData.count; i++) {
-                                NSLog(@"i: %ld", i);
+                                //NSLog(@"i: %d", i);
                                 
                                 NSMutableDictionary *dicData = self.cooperationData[i];
                                 NSLog(@"dicData: %@", dicData);
@@ -679,7 +679,7 @@ replacementString:(NSString *)string {
                     } else {
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         if ([dic[@"result"] intValue] == 1) {
                             self.option = @"Adding";
@@ -957,7 +957,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     if (self.creatorListData.count > 0) {
         for (NSInteger i = 0; i < self.creatorListData.count; i++) {
             NSDictionary *dic = self.creatorListData[i];
-            NSLog(@"dic: %@", dic);
+            
             
             if ([dic[@"user"][@"user_id"] intValue] == [userId intValue]) {
                 NSLog(@"found userId in self.creatorListData");

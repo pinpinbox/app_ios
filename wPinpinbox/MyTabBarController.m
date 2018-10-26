@@ -268,7 +268,7 @@ const CGFloat kBarHeight = 56;
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if (dic != nil) {
                         NSLog(@"dic != nil");

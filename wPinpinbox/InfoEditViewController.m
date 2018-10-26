@@ -918,7 +918,7 @@
                     
                     //if ([dic[@"result"] boolValue]) {
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         if (wself->selectImage == nil) {
                             NSLog(@"update 1");
@@ -1007,7 +1007,7 @@
                 NSLog(@"response from updateProfilePic");
                 
                 NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                NSLog(@"dic: %@", dic);
+                
                 
                 if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"dic result boolValue is 1");

@@ -366,7 +366,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         NSLog(@"result intValue: %d", [dic[@"result"] intValue]);
                         
@@ -550,7 +550,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     NSLog(@"result intValue: %d", [dic[@"result"] intValue]);
                     
                     if ([dic[@"result"] intValue] == 1) {
@@ -564,6 +564,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         //[self getProfile];
                         [sself refreshToken];
                         //[self setupPushNotification];
+                                                
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSString *msg = dic[@"message"];
                         NSLog(@"msg: %@", msg);
@@ -777,7 +778,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"SYSTEM_OK");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         NSLog(@"新用戶");
                         
@@ -793,7 +794,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         
                     } else if ([dic[@"result"] isEqualToString: @"USER_EXISTS"]) {
                         NSLog(@"USER_EXISTS");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         //已有帳號
                         NSLog(@"已有帳號");
@@ -878,7 +879,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"data: %@", data);
                     
                     if ([data[@"result"]intValue] == 1) {
                         //已有帳號
@@ -1134,7 +1134,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"result SYSTEM_OK");
@@ -1305,7 +1305,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");

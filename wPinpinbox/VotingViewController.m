@@ -335,7 +335,7 @@
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    //NSLog(@"dic: %@", dic);
+                    //
                     
                     [wself processEventVoteList:dic];
                 }
@@ -399,7 +399,7 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     [wself processVoteResult:dic indexPath:indexPath];
                 }
@@ -485,7 +485,7 @@
     
     NSDictionary *data = voteArray[indexPath.row];
     NSLog(@"voteArray: %@", voteArray);
-    NSLog(@"data: %@", data);
+    //NSLog(@"data: %@", data);
     
 //    // Check Width & Height return value is nil or not
 //    NSNumber *coverWidth = data[@"album"][@"cover_width"];

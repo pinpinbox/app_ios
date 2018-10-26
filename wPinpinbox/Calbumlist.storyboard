@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,7 +15,7 @@
             <objects>
                 <viewController storyboardIdentifier="OfflineViewController" id="Da8-kh-XwD" customClass="OfflineViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kWz-qe-GbV">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="3-05bg" translatesAutoresizingMaskIntoConstraints="NO" id="Cik-U7-mZX">
@@ -23,7 +23,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="G9a-H7-yP5">
-                                <rect key="frame" x="0.0" y="61" width="375" height="563"/>
+                                <rect key="frame" x="0.0" y="61" width="414" height="792"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="20" minimumInteritemSpacing="10" id="kgU-qb-fJS" customClass="JCCollectionViewWaterfallLayout">
@@ -107,7 +107,7 @@
                                 </connections>
                             </collectionView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="我的收藏" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zsY-KJ-9ec">
-                                <rect key="frame" x="82" y="13" width="212" height="21"/>
+                                <rect key="frame" x="102" y="13" width="212" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16.5"/>
                                 <color key="textColor" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -121,7 +121,7 @@
                                 </state>
                             </button>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BfM-TJ-TEs">
-                                <rect key="frame" x="0.0" y="623" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="852" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWu-le-odO">
@@ -213,21 +213,21 @@
         <!--Calbumlist View Controller-->
         <scene sceneID="3SP-lH-dLb">
             <objects>
-                <viewController storyboardIdentifier="CalbumlistViewController" id="0nv-s6-ZtY" customClass="CalbumlistViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CalbumlistViewController" automaticallyAdjustsScrollViewInsets="NO" id="0nv-s6-ZtY" customClass="CalbumlistViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AC3-8C-qeX">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="3-05bg" translatesAutoresizingMaskIntoConstraints="NO" id="Qmu-pQ-kVM">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                             </imageView>
-                            <collectionView clipsSubviews="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gPj-Ba-eIj">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                            <collectionView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" delaysContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gPj-Ba-eIj">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewLayout key="collectionViewLayout" id="ToX-f8-6BV" customClass="CalbumlistCollectionViewLayout"/>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Calbumlist" id="O5a-80-Fo1" customClass="CalbumlistCollectionViewCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
+                                        <rect key="frame" x="19.5" y="0.0" width="375" height="96"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
@@ -322,6 +322,7 @@
                                                                         <constraint firstAttribute="height" constant="58" id="ZPg-y0-olF"/>
                                                                     </constraints>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <inset key="titleEdgeInsets" minX="0.0" minY="44" maxX="32" maxY="0.0"/>
                                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="24"/>
                                                                     <state key="normal" title="編輯" image="ic200_edit_light"/>
@@ -410,6 +411,7 @@
                                                         <constraint firstItem="Rcb-cm-5ih" firstAttribute="trailing" secondItem="RrZ-1W-5BC" secondAttribute="trailing" constant="-8" id="FmA-Ei-4dX"/>
                                                         <constraint firstItem="Uex-HN-Q2H" firstAttribute="leading" secondItem="RrZ-1W-5BC" secondAttribute="leading" constant="375" id="NDe-D0-OOT"/>
                                                         <constraint firstItem="UDr-Ix-y9i" firstAttribute="top" secondItem="RrZ-1W-5BC" secondAttribute="top" constant="8" id="NOp-Qa-BJD"/>
+                                                        <constraint firstAttribute="height" constant="96" id="OeP-Hw-H71"/>
                                                         <constraint firstItem="rmb-FC-Hn2" firstAttribute="bottom" secondItem="RrZ-1W-5BC" secondAttribute="bottom" id="PZL-z7-wZb"/>
                                                         <constraint firstItem="UDr-Ix-y9i" firstAttribute="leading" secondItem="mdn-87-6hY" secondAttribute="trailing" constant="8" id="URL-vl-bX2"/>
                                                         <constraint firstItem="rjn-cm-twE" firstAttribute="leading" secondItem="X40-8s-A8a" secondAttribute="trailing" constant="4" id="Zqt-AS-vqW"/>
@@ -480,7 +482,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionViewBottomConstraint" destination="s0j-VQ-rdC" id="Rjv-QO-F3P"/>
-                        <outlet property="collectioview" destination="gPj-Ba-eIj" id="HMp-bF-EWB"/>
+                        <outlet property="collectionview" destination="gPj-Ba-eIj" id="TX5-gM-Nqo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NGu-yf-H21" userLabel="First Responder" sceneMemberID="firstResponder"/>

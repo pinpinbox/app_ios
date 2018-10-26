@@ -500,6 +500,7 @@
                                 
                                 if (awsResponse != nil) {
                                     NSLog(@"awsResponse: %@", awsResponse);
+                                    [wTools processAWSResponse: awsResponse];
                                 }
                             });
                         });

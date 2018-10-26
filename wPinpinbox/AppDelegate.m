@@ -55,6 +55,7 @@
 @property (nonatomic, strong) NSURL *launchedURL;
 @property (nonatomic) BOOL isInBackground;
 @property (nonatomic, assign) CGRect currentStatusBarFrame;
+@property (nonatomic, strong) NSMutableDictionary *launchNotification;
 
 //- (id)initWithStyleSheet:(NSObject<TWMessageBarStyleSheet> *)stylesheet;
 
@@ -128,6 +129,21 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                            withCrashReporting:YES]
                           withLogLevel:FlurryLogLevelDebug]];        
 
+    if (launchOptions != nil ) {
+        NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+        NSLog(@"remoteN %@",remoteN);
+        if (remoteN) {
+            
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setObject: remoteN forKey: @"launchNotification"];
+            [defaults synchronize];
+//            self.launchNotification = [[NSMutableDictionary alloc] initWithDictionary:remoteN];
+//            NSLog(@"self.launchNotification %@",self.launchNotification);
+        }
+        
+        
+    }
+    
 #pragma mark  Google Analytics setup
     GAI *gai = [GAI sharedInstance];
     [gai trackerWithTrackingId:@"UA-58524918-1"];
@@ -257,28 +273,32 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
             [defaults synchronize];
         }
     }
-#if __IPHONE_10_0
-    [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-    [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:UNAuthorizationOptionAlert|UNAuthorizationOptionBadge|UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        if (granted)
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[UIApplication sharedApplication] registerForRemoteNotifications];
-            });
-    }];
-    UNNotificationAction *a = [UNNotificationAction actionWithIdentifier:UNNotificationDefaultActionIdentifier title:@"pinpinBox" options:UNNotificationActionOptionNone];
-    UNNotificationCategory *c = [UNNotificationCategory categoryWithIdentifier:@"GENERAL" actions:@[a] intentIdentifiers:@[UNNotificationDefaultActionIdentifier] options:UNNotificationCategoryOptionCustomDismissAction];
-    [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObject:c]];
     
-#else
-    UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil];
-    [application registerUserNotificationSettings:setting];
-#endif
+    //if ([wTools isRegisterAWSNeeded]) {
+    #if __IPHONE_10_0
+        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:UNAuthorizationOptionAlert|UNAuthorizationOptionBadge|UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            if (granted)
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[UIApplication sharedApplication] registerForRemoteNotifications];
+                });
+        }];
+        UNNotificationAction *a = [UNNotificationAction actionWithIdentifier:UNNotificationDefaultActionIdentifier title:@"pinpinBox" options:UNNotificationActionOptionForeground];
+        UNNotificationCategory *c = [UNNotificationCategory categoryWithIdentifier:@"GENERAL" actions:@[a] intentIdentifiers:@[UNNotificationDefaultActionIdentifier] options:UNNotificationCategoryOptionCustomDismissAction];
+        [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObject:c]];
     
+    #else
+        UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeAlert|UIUserNotificationTypeSound categories:nil];
+        [application registerUserNotificationSettings:setting];
+    #endif
+    //}
     
     NSInteger badgeCount = [[defaults objectForKey: @"badgeCount"] integerValue];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber: badgeCount];
     
     NSLog(@"APNSArray: %@", [defaults objectForKey: @"APNSArray"]);
+    
+    
     
     return YES;
 }
@@ -330,6 +350,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     NSLog(@"applicationWillEnterForeground");
+    
+
     [self checkBadge];
     
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
@@ -815,16 +837,23 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
 #pragma  mark - APNS
 #if __IPHONE_10_0
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    
-    NSLog(@"%@", notification);
-    
-    completionHandler(UNNotificationPresentationOptionBadge);
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateInactive) {
+        completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionSound);
+    } else {
+        completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
+    }
     
 }
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     
-    NSLog(@"%@", response.notification.request.content.userInfo);
-    
+    NSDictionary *userinfo = response.notification.request.content.userInfo;
+    //  Notification data received //
+    if (userinfo) {
+        
+                [self application:[UIApplication sharedApplication]
+     didReceiveRemoteNotification:userinfo
+           fetchCompletionHandler:^(UIBackgroundFetchResult result) {}];
+    }
     completionHandler();
 }
 #else
@@ -860,10 +889,19 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
 }
 
 - (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo
+didReceiveRemoteNotification:(NSDictionary *)userInfo0
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
+    NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:userInfo0];
+
     NSLog(@"didReceiveRemoteNotification fetchCompletionHandler");
     NSLog(@"接收到訊息: %@", [userInfo description]);
+
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSDictionary *remote = (NSDictionary *)[defaults  objectForKey: @"launchNotification"];
+    BOOL launchedByNotification = (remote != nil);
     
     // iOS 10 will handle notifications through other methods
     
@@ -874,8 +912,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
     //application.applicationIconBadgeNumber = 0;
     UIApplicationState state = [application applicationState];
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
     NSInteger badgeCount = [[defaults objectForKey: @"badgeCount"] integerValue];
     
     // Check Info
@@ -941,7 +978,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         }
     }
     //if (state == UIApplicationStateBackground || state == UIApplicationStateInactive) {
-    if (state == UIApplicationStateInactive) {
+    if (state == UIApplicationStateInactive || launchedByNotification) {
         NSLog(@"state == UIApplicationStateInactive");
         // user has tapped notification
         
@@ -1297,7 +1334,7 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
@@ -1442,6 +1479,19 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame
         [customAlertView close];
     }];
     
+}
+//  handling app launched by remote notification
+- (void)checkInitialLaunchCase {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *remote = (NSDictionary *)[defaults  objectForKey: @"launchNotification"];
+    
+    
+    NSLog(@"checkInitialLaunchCase  %@",remote);
+    if (remote != nil && remote.allKeys.count) {
+        [self application:[UIApplication sharedApplication] didReceiveRemoteNotification:remote fetchCompletionHandler:^(UIBackgroundFetchResult result) {}];
+        [defaults removeObjectForKey:@"launchNotification"];
+        [defaults synchronize];
+    }
 }
 /*
 - (UIView *)createErrorContainerView: (NSString *)msg

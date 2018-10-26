@@ -618,6 +618,8 @@
  */
 @property(nonatomic,strong)  UIImage *highlightedBackgroundImage;
 
+
+@property(nonatomic) CGFloat touchDelay;
 /**
  *设置布局的touch up 、touch down、touch cancel事件的处理动作,后两个事件的处理必须依赖于第一个事件的处理。请不要在这些处理动作中修改背景色，不透明度，以及背景图片。如果您只想要高亮效果但是不想处理事件则将action设置为nil即可了。
  * @target: 事件的处理对象，如果设置为nil则表示取消事件。

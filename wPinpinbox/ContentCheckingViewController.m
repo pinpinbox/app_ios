@@ -2174,7 +2174,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    //NSLog(@"dic: %@", dic);
+                    //
                     NSString *resultStr = dic[@"result"];
                     //NSLog(@"resultStr: %@", resultStr);
                     
@@ -2467,7 +2467,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
@@ -2624,7 +2624,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"data: %@", data);
+                    //NSLog(@"data: %@", data);
                     [wself processCheckPoint:data];
                     
                 }
@@ -2938,7 +2938,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get response from slotPhotoUseFor");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     NSLog(@"dic message: %@", dic[@"message"]);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
@@ -3081,7 +3081,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get response from getPhotoUseFor");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     NSLog(@"dic message: %@", dic[@"message"]);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
@@ -3512,7 +3512,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"SYSTEM_OK");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         [self.slotDicData[@"bookmark"] setObject: [NSNumber numberWithBool: YES] forKey: @"is_existing"];
                         NSLog(@"self.slotDicData: %@", self.slotDicData);

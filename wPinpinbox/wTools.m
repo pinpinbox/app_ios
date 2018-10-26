@@ -170,7 +170,7 @@ static wTools *instance =nil;
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic: %@", dic);
+                        
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         
@@ -298,7 +298,7 @@ static wTools *instance =nil;
 //    ReadBookViewController *readBookVC = [[ReadBookViewController alloc] initWithNibName: @"ReadBookViewController" bundle: nil];
 //    readBookVC.dic = data;
 //
-//    NSLog(@"data: %@", data);
+//    //NSLog(@"data: %@", data);
 //
 //    readBookVC.isDownloaded = NO;
 //    readBookVC.albumid = albumId;
@@ -345,7 +345,7 @@ static wTools *instance =nil;
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
@@ -648,6 +648,7 @@ static wTools *instance =nil;
             break;
         }
     }
+    
 }
 
 + (void)deleteAllCoreData {
@@ -972,5 +973,30 @@ static wTools *instance =nil;
     
 }
 
+//  處理awssns
++(void)processAWSResponse:(NSString *)res {
+    
+    if (res != nil) {
+        if (![res isEqualToString:timeOutErrorCode]) {
+            NSDictionary *d = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [res dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
+            //  setawssns is successfull
+            if ([d[@"result"] intValue] == 1) {
+                NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+                [userPrefs setObject:@"ok" forKey:@"awssns"];
+            }
+            
+        }
+        
+    }
+}
+
++(BOOL)isRegisterAWSNeeded {
+    
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    if ([userPrefs objectForKey:@"awssns"]) {
+        return false;
+    }
+    return true;
+}
 
 @end

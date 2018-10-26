@@ -282,6 +282,8 @@
         btn.hidden = NO;
     }
     [wTools sendScreenTrackingWithScreenName:@"首頁"];
+    
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -316,6 +318,9 @@
 #pragma mark - Push Notification Setting
 - (void)setupPushNotification {
     NSLog(@"\n\nsetupPushNotification");
+    //  already registered //
+    if (![wTools isRegisterAWSNeeded]) return ;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *awsResponse;
         
@@ -340,6 +345,15 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (awsResponse != nil) {
+                //  if response is TIMEDOUT, retry API
+                if ([awsResponse isEqualToString:timeOutErrorCode]) {
+                    UIDevice *device = [UIDevice currentDevice];
+                    NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
+                    NSString *result = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
+                    [wTools processAWSResponse: result];
+                } else {
+                    [wTools processAWSResponse: awsResponse];
+                }
                 NSLog(@"awsResponse: %@", awsResponse);
             }
         });
@@ -375,7 +389,7 @@
                     NSLog(@"response from checkVersion");
                     
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
-                    NSLog(@"data: %@", data);
+                    //NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 0) {
                         NSLog(@"error");
@@ -597,6 +611,8 @@ sourceController:(UIViewController *)source
         isLoading = YES;
         [self updateList];
     }
+    
+    
 }
 
 - (void)updateList {
@@ -699,6 +715,11 @@ sourceController:(UIViewController *)source
         
         NSLog(@"-------------------------");
         NSLog(@"nextId: %ld", (long)nextId);
+        
+        // display notification content after login
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [app checkInitialLaunchCase];
+        
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
         [self showCustomErrorAlert: dic[@"message"]];
@@ -760,7 +781,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
                     
-                    [wself processCheckAdResult:dic];
+                   [wself processCheckAdResult:dic];
                 }
             }
         });
@@ -842,7 +863,7 @@ sourceController:(UIViewController *)source
 
 - (void)processGetCategoryListResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
-        NSLog(@"dic: %@", dic);
+        
         NSLog(@"dic data: %@", dic[@"data"]);
         categoryArray = [NSMutableArray arrayWithArray: dic[@"data"]];
         
@@ -911,7 +932,7 @@ sourceController:(UIViewController *)source
 - (void)processGetMeAreaResult:(NSDictionary *)dic {
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         NSLog(@"SYSTEM_OK");
-        NSLog(@"dic: %@", dic);
+        
         getTheMeAreaDic = dic;
         
         NSLog(@"dic data albumexplore: %@", dic[@"data"][@"albumexplore"]);
@@ -929,7 +950,7 @@ sourceController:(UIViewController *)source
         [dic setObject: colorHexStr forKey: @"colorhex"];
         [dic setObject: nameStr forKey: @"name"];
         [dic setObject: imageStr forKey: @"image_360x360"];
-        NSLog(@"dic: %@", dic);
+        
         
         NSMutableDictionary *dicData = [[NSMutableDictionary alloc] init];
         [dicData setObject: dic forKey: @"categoryarea"];
@@ -1068,7 +1089,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"Get Real Response");
                     NSDictionary *dic =  (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if (![dic[@"result"] boolValue]) {
                         return ;
@@ -1364,7 +1385,7 @@ sourceController:(UIViewController *)source
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    NSLog(@"dic: %@", dic);
+                    
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
@@ -1484,7 +1505,7 @@ sourceController:(UIViewController *)source
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
                     
-                    NSLog(@"data: %@", data);
+                    //NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 1) {
                         NSLog(@"result is 1");
@@ -1778,7 +1799,7 @@ sourceController:(UIViewController *)source
         HomeCategoryCollectionViewCell *cell = nil;        
         cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
         NSDictionary *dic = categoryArray[indexPath.row][@"categoryarea"];
-        NSLog(@"dic: %@", dic);
+        
         NSLog(@"dic name: %@", dic[@"name"]);
         NSLog(@"dic image_360x360: %@", dic[@"image_360x360"]);
         
@@ -1820,7 +1841,7 @@ sourceController:(UIViewController *)source
         NSLog(@"collectionView.tag == 5");
         SearchTabCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"SearchCell" forIndexPath: indexPath];
         NSDictionary *albumDic = followAlbumData[indexPath.row][@"album"];
-        NSLog(@"albumDic: %@", albumDic);
+        //NSLog(@"albumDic: %@", albumDic);
         
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
@@ -1921,7 +1942,7 @@ sourceController:(UIViewController *)source
         }
         
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
-        NSLog(@"albumDic: %@", albumDic);
+        //NSLog(@"albumDic: %@", albumDic);
         
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
@@ -2085,7 +2106,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         [self tapDetectedForURL: indexPath.row];
     } else if (collectionView.tag == 3) {
         NSDictionary *data = categoryArray[indexPath.row];
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         NSLog(@"categoryarea: %@", data[@"categoryarea"]);
         NSLog(@"categoryarea_id: %@", [data[@"categoryarea"][@"categoryarea_id"] stringValue]);
         
@@ -2372,7 +2393,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
         NSDictionary *data = albumData[indexPath.row][@"album"];
         
-        NSLog(@"data: %@", data);
+        //NSLog(@"data: %@", data);
         NSLog(@"data name: %@", data[@"name"]);
         
         // Check Width & Height return value is nil or not

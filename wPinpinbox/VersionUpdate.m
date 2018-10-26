@@ -59,7 +59,7 @@ static NSString *canUpdateLater = @"canUpdateLater";
                     NSLog(@"response from checkVersion");
                     
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
-                    NSLog(@"data: %@", data);
+                    //NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 0) {
                         NSLog(@"error");

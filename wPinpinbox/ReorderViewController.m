@@ -238,7 +238,7 @@ static NSString * const reuseIdentifier = @"Cell";
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result is successful");
-                        NSLog(@"dic: %@", dic);
+                        
                         
                         if ([self.delegate respondsToSelector: @selector(reorderViewControllerDisappearAfterCalling:)]) {
                             [self.delegate reorderViewControllerDisappearAfterCalling: self];

@@ -11,6 +11,7 @@
 
 @class AlbumCreationViewController;
 @protocol AlbumCreationViewControllerDelegate <NSObject>
+@optional
 - (void)albumCreationViewControllerBackBtnPressed: (AlbumCreationViewController *)controller;
 @end
 
