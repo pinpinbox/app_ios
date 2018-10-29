@@ -313,7 +313,6 @@ typedef void (^FBBlock)(void);
                         
                         if ([dic[@"result"] boolValue]) {
                             NSLog(@"dic result boolValue is 1");
-                            
                             NSLog(@"check成功");
                             
                             // Change Button
@@ -323,15 +322,13 @@ typedef void (^FBBlock)(void);
                             btn.userInteractionEnabled = NO;
                         } else {                                                        
                             NSLog(@"失敗： %@", dic[@"message"]);
-                            NSString *msg = dic[@"message"];
-                            
-                            if (msg == nil) {
-                                msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                            if ([wTools objectExists: dic[@"message"]]) {
+                                [self showCustomErrorAlert: dic[@"message"]];
+                            } else {
+                                [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                             }
-                            [self showCustomErrorAlert: msg];
                         }
                     }
-                    
                 } else {
                     NSLog(@"check失敗");
                     [self showCustomErrorAlert: @"帳號已經存在，請使用另一個"];
@@ -342,92 +339,14 @@ typedef void (^FBBlock)(void);
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
-#pragma mark - IBAction Methods
 
+#pragma mark - IBAction Methods
 - (IBAction)back:(id)sender {
     //[self.navigationController popViewControllerAnimated:YES];
     
@@ -435,12 +354,9 @@ typedef void (^FBBlock)(void);
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
 
-- (IBAction)signbtn:(id)sender
-{
+- (IBAction)signbtn:(id)sender {
     NSLog(@"signbtn");
-    
     NSString *msg = @"";
-    
     NSLog(@"name");
     
     // If Name Field is empty then message got data
@@ -459,9 +375,6 @@ typedef void (^FBBlock)(void);
         nickNameView.backgroundColor = [UIColor thirdPink];
         
         return;
-        //msg = NSLocalizedString(@"RegText-empNickname", @"");
-        //msg = [msg stringByAppendingString: NSLocalizedString(@"RegText-empNickname", @"")];
-        //msg = [msg stringByAppendingString: @"\n"];
     }
     
     NSLog(@"email");
@@ -481,10 +394,6 @@ typedef void (^FBBlock)(void);
         emailView.backgroundColor = [UIColor thirdPink];
         
         return;
-        
-        //msg = NSLocalizedString(@"RegText-empEmail", @"");
-        //msg = [msg stringByAppendingString: NSLocalizedString(@"RegText-empEmail", @"")];
-        //msg = [msg stringByAppendingString: @"\n"];
     } else if (![email.text isEmailValid]) {
         NSLog(@"信箱格式出了點問題");
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -499,10 +408,6 @@ typedef void (^FBBlock)(void);
         emailView.backgroundColor = [UIColor thirdPink];
         
         return;
-        
-        //msg = NSLocalizedString(@"RegText-wrongEmail", @"");
-        //msg = [msg stringByAppendingString: NSLocalizedString(@"RegText-wrongEmail", @"")];
-        //msg = [msg stringByAppendingString: @"\n"];
     }
     
     NSLog(@"password");
@@ -525,10 +430,6 @@ typedef void (^FBBlock)(void);
         pwdView1.backgroundColor = [UIColor thirdPink];
         
         return;
-        
-        //msg = NSLocalizedString(@"RegText-empPwd", @"");
-        //msg = [msg stringByAppendingString: NSLocalizedString(@"RegText-empPwd", @"")];
-        //msg = [msg stringByAppendingString: @"\n"];
     } else if (![pwd1.text isPasswordValid]) {
         NSLog(@"pw1.text 密碼至少8個字元唷");
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -543,10 +444,6 @@ typedef void (^FBBlock)(void);
         pwdView1.backgroundColor = [UIColor thirdPink];
         
         return;
-        
-        //msg = NSLocalizedString(@"RegText-wrongPwd", @"");
-        //msg = [msg stringByAppendingString: NSLocalizedString(@"RegText-wrongPwd", @"")];
-        //msg = [msg stringByAppendingString: @"\n"];
     } else if (![pwd2.text isPasswordValid]) {
         NSLog(@"pwd2.text 密碼至少8個字元唷");
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -574,19 +471,7 @@ typedef void (^FBBlock)(void);
         pwdView2.backgroundColor = [UIColor thirdPink];
         
         return;
-        
-        //msg = NSLocalizedString(@"RegText-diffPwd", @"");
-        //msg = [msg stringByAppendingString: NSLocalizedString(@"RegText-diffPwd", @"")];
-        //msg = [msg stringByAppendingString: @"\n"];
-    }    
-    
-    /*
-     if (![pwd2.text isPasswordValid]) {
-     NSLog(@"密碼未滿8個字元");
-     message = NSLocalizedString(@"RegText-wrongPwd", @"");
-     }
-     */
-    
+    }
     // If message is not empty, that means there are some error messages in message
     if (![msg isEqualToString: @""]) {
         

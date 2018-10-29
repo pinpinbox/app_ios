@@ -36,8 +36,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             NSDictionary *data= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-            if ([data[@"result"]boolValue]) {
-                
+            if ([data[@"result"]boolValue]) {                
                 [wview loadHTMLString:data[@"data"] baseURL:nil];
                 [wTools HideMBProgressHUD];
             }else{

@@ -293,8 +293,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     }
 }
 
-- (void)fbLoginHandler
-{
+- (void)fbLoginHandler {
     // Try to login with permissions
     __block typeof(self) wself = self;
     [self loginAndRequestPermissionsWithSuccessHandler:^{
@@ -333,25 +332,23 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                  // Making Param JSON String
                  NSMutableDictionary *paramDic = [NSMutableDictionary new];
                  
-                 if (emailAccount != nil) {
+                 if ([wTools objectExists: emailAccount]) {
                      [paramDic setObject: emailAccount forKey: @"account"];
                  }
-                 if (birthday != nil) {
+                 if ([wTools objectExists: birthday]) {
                      [paramDic setObject: birthday forKey: @"birthday"];
                  }
-                 if (gender != nil) {
+                 if ([wTools objectExists: gender]) {
                      [paramDic setObject: gender forKey: @"gender"];
                  }
-                 if (name != nil) {
+                 if ([wTools objectExists: name]) {
                      [paramDic setObject: name forKey: @"name"];
                  }
-                 
                  [wself handleFBLoginParam:paramDic fbid:fbid];
              } else {
                  NSLog(@"%@",error.localizedDescription);
              }
          }];
-        
         //[self facebookLogin:fbid];
     }
                              declinedOrCanceledHandler:^{
@@ -449,19 +446,17 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         });
     });
 }
+
 - (void)processBusinessSubUserResult:(NSDictionary *)dic {
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         NSLog(@"SYSTEM_OK");
-        
-        
         NSLog(@"新用戶");
-        
-        tokenStr = dic[@"data"][@"token"][@"token"];
-        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
-        
-        tokenStr = dic[@"data"][@"token"][@"token"];
-        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
-        
+        if ([wTools objectExists: dic[@"data"][@"token"][@"token"]]) {
+            tokenStr = dic[@"data"][@"token"][@"token"];
+        }
+        if ([wTools objectExists: dic[@"data"][@"token"][@"user_id"]]) {
+            idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+        }
         NSLog(@"tokenStr: %@", tokenStr);
         NSLog(@"idStr: %@", idStr);
         
@@ -473,26 +468,20 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         [self setupPushNotification];
         
         FBFriendsFindingViewController *fbFindingVC = [[UIStoryboard storyboardWithName:@"FBFriendsFindingVC" bundle:nil]instantiateViewControllerWithIdentifier:@"FBFriendsFindingViewController"];
-        //[self.navigationController pushViewController: fbFindingVC animated:YES];
         
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [appDelegate.myNav pushViewController: fbFindingVC animated: YES];
-        
-        /*
-         ChooseHobbyViewController *chooseHobbyVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"ChooseHobbyViewController"];
-         [self.navigationController pushViewController: chooseHobbyVC animated: YES];
-         */
     } else if ([dic[@"result"] isEqualToString: @"USER_EXISTS"]) {
         NSLog(@"USER_EXISTS");
-        
-        
         //已有帳號
         NSLog(@"已有帳號");
-        
         //isCreator = [dic[@"data"][@"creative"] boolValue];
-        tokenStr = dic[@"data"][@"token"][@"token"];
-        idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
-        
+        if ([wTools objectExists: dic[@"data"][@"token"][@"token"]]) {
+            tokenStr = dic[@"data"][@"token"][@"token"];
+        }
+        if ([wTools objectExists: dic[@"data"][@"token"][@"user_id"]]) {
+            idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+        }
         NSLog(@"tokenStr: %@", tokenStr);
         NSLog(@"idStr: %@", idStr);
         
@@ -503,21 +492,20 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         [self setupPushNotification];
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"SYSTEM_ERROR");
-        NSLog(@"失敗：%@",dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        NSLog(@"失敗： %@", dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: dic[@"message"]];
     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
         NSLog(@"TOKEN_ERROR");
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        NSLog(@"失敗： %@", dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: dic[@"message"]];
     }
 }
 - (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock) successHandler
@@ -658,28 +646,33 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 - (void)processRefreshToken:(NSDictionary *)dic {
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-        tokenStr = dic[@"data"][@"token"][@"token"];
-        
+        if ([wTools objectExists: dic[@"data"][@"token"][@"token"]]) {
+            tokenStr = dic[@"data"][@"token"][@"token"];
+        }
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         [userPrefs setObject: tokenStr forKey: @"token"];
         
         [self getProfile];
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        NSLog(@"失敗： %@", dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
         NSLog(@"TOKEN_ERROR");
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        NSLog(@"失敗： %@", dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: dic[@"message"]];
     }
 }
 #pragma mark - Web Service - GetProfile
-- (void)getProfile
-{
+- (void)getProfile {
     NSLog(@"");
     NSLog(@"");
     NSLog(@"getProfile");
@@ -735,32 +728,26 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     if ([dic[@"result"] boolValue]) {
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
                         NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
-                        //NSLog(@"dataIc: %@", dataIc);
                         
-                        for (NSString *key in [dataIc allKeys]) {
-                            //NSLog(@"key: %@", key);
-                            
-                            id objective = [dataIc objectForKey: key];
-                            //NSLog(@"objective: %@", objective);
-                            
-                            if ([objective isKindOfClass: [NSNull class]]) {
-                                [dataIc setObject: @"" forKey: key];
+                        if ([wTools objectExists: dataIc]) {
+                            for (NSString *key in [dataIc allKeys]) {
+                                id objective = [dataIc objectForKey: key];
+                                
+                                if ([objective isKindOfClass: [NSNull class]]) {
+                                    [dataIc setObject: @"" forKey: key];
+                                }
                             }
+                            [userPrefs setValue: dataIc forKey: @"profile"];
+                            [userPrefs synchronize];
                         }
-                        //NSLog(@"dataIc: %@", dataIc);
-                        
-                        [userPrefs setValue: dataIc forKey: @"profile"];
-                        [userPrefs synchronize];
-                        
                         [self getUrPoints];
                     } else {
                         NSLog(@"失敗: %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: dic[@"message"]];
                     }
                 }
             }
@@ -813,19 +800,21 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         NSInteger point = [dic[@"data"] integerValue];
-                        //NSLog(@"point: %ld", (long)point);
                         
                         [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                         [userPrefs synchronize];
                         
                         [self toMyTabBarController];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -836,8 +825,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 
 #pragma mark - To MyTabBarController
-- (void)toMyTabBarController
-{
+- (void)toMyTabBarController {
     MyTabBarController *myTabC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"MyTabBarController"];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -845,8 +833,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 
 #pragma mark - Saving Data to Device
-- (void)saveDataAfterLogin
-{
+- (void)saveDataAfterLogin {
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     [userPrefs setObject: tokenStr forKey:@"token"];
     [userPrefs setObject: idStr forKey:@"id"];
@@ -855,8 +842,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
@@ -865,84 +851,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
             [self startReading];
         }
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
@@ -989,8 +899,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

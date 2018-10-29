@@ -51,8 +51,7 @@
 }
 
 #pragma mark - Setup Methods
-- (void)gradientViewSetup
-{
+- (void)gradientViewSetup {
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.gradientView.bounds;
     gradient.colors = @[(id)[UIColor FBGradientViewColor].CGColor, (id)[UIColor whiteColor].CGColor];
@@ -61,8 +60,7 @@
     self.gradientView.alpha = 0.6;
 }
 
-- (void)viewSetup
-{
+- (void)viewSetup {
     self.nextBtn.layer.cornerRadius = 16;
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.backgroundView = [[UIView alloc] initWithFrame: CGRectZero];
@@ -72,14 +70,12 @@
 }
 
 #pragma mark <UICollectionViewDataSource>
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
     return self.fbArray.count;
 }
 
@@ -94,30 +90,33 @@
     //AsyncImageView *followImageView = (AsyncImageView *)[cell viewWithTag: 100];
     UIImageView *followImageView = (UIImageView *)[cell viewWithTag: 100];
     NSDictionary *dic = [self.fbArray[indexPath.row] mutableCopy];
-    NSString *name = dic[@"user"][@"name"];
-    NSLog(@"name: %@", name);
     
-    NSString *imageUrl = dic[@"user"][@"picture"];
-    NSLog(@"imageUrl: %@", imageUrl);
-    
+    NSString *name;
+    if ([wTools objectExists: dic[@"user"][@"name"]]) {
+        name = dic[@"user"][@"name"];
+        NSLog(@"name: %@", name);
+    }
+    NSString *imageUrl;
+    if ([wTools objectExists: dic[@"user"][@"picture"]]) {
+        imageUrl = dic[@"user"][@"picture"];
+        NSLog(@"imageUrl: %@", imageUrl);
+    }
     if (![imageUrl isKindOfClass: [NSNull class]]) {
         if (![imageUrl isEqualToString: @""]) {
-            //[[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: followImageView];
-            //followImageView.imageURL = [NSURL URLWithString: imageUrl];
             [followImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
         }
     } else {
         NSLog(@"imageURL is nil");
-        //[[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: followImageView];
         followImageView.image = [UIImage imageNamed: @"member_back_head.png"];
     }
     followImageView.layer.masksToBounds = YES;
     followImageView.layer.cornerRadius = followImageView.bounds.size.height / 2;
     
-    
     UILabel *nameLabel = (UILabel *)[cell viewWithTag: 101];
-    nameLabel.text = name;
     
+    if ([wTools objectExists: name]) {
+        nameLabel.text = name;
+    }
     UIButton *followSwitchButton = (UIButton *)[cell viewWithTag: 102];
     followSwitchButton.layer.masksToBounds = YES;
     followSwitchButton.layer.cornerRadius = kCornerRadius;
@@ -133,45 +132,34 @@
         followSwitchButton.backgroundColor = [UIColor firstMain];
         [followSwitchButton setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
     }
-    
     return cell;
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView
-shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
-    
     NSDictionary *dic = [self.fbArray[indexPath.row] mutableCopy];
-    NSString *userId = dic[@"user"][@"user_id"];
     
-    [self callChangeFollowStatus: userId];
-    
+    if ([wTools objectExists: dic[@"user"][@"user_id"]]) {
+        NSString *userId = dic[@"user"][@"user_id"];
+        [self callChangeFollowStatus: userId];
+    }
     return YES;
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
-
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
-    
-    //CGFloat width = ([UIScreen mainScreen].bounds.size.width - 16) / 2;
-    //CGFloat width = self.collectionView.bounds.size.width - 16 / 2;
-    //return CGSizeMake(width, 194);
-    
     CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
     return CGSizeMake(itemWidth, 194);
 }
 
 #pragma mark - IBAction Methods
-
 - (IBAction)followBtnPress:(id)sender {
     NSLog(@"followBtnPress");
-    
     UICollectionViewCell *cell = (UICollectionViewCell *)[[sender superview] superview];
     NSIndexPath *indexPath = [self.collectionView indexPathForCell: cell];
     
@@ -179,25 +167,22 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
         assert(false);
         return;
     }
-    
     NSDictionary *dic = [self.fbArray[indexPath.row] mutableCopy];
-    NSString *userId = dic[@"user"][@"user_id"];
     
-    [self callChangeFollowStatus: userId];
+    if ([wTools objectExists: dic[@"user"][@"user_id"]]) {
+        NSString *userId = dic[@"user"][@"user_id"];
+        [self callChangeFollowStatus: userId];
+    }
 }
 
 - (IBAction)nextBtnPress:(id)sender {
     ChooseHobbyViewController *chooseHobbyVC = [[UIStoryboard storyboardWithName: @"ChooseHobbyVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ChooseHobbyViewController"];
-    //[self.navigationController pushViewController: chooseHobbyVC animated: YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: chooseHobbyVC animated: YES];
 }
 
 #pragma mark -
-
-- (void)callChangeFollowStatus: (NSString *)userId
-{
+- (void)callChangeFollowStatus:(NSString *)userId {
     NSLog(@"callChangeFollowStatus: userId: %@", userId);
     
     @try {
@@ -223,7 +208,6 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-                        
             if (response != nil) {
                 NSLog(@"response from changefollowstatus");
                 NSLog(@"response: %@", response);
@@ -238,26 +222,31 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                           userId: userId];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSDictionary *d = dic[@"data"];
                         
-                        if ([d[@"followstatus"] boolValue]) {
-                            if (![self.tmpAddUserId containsObject: userId]) {
-                                [self.tmpAddUserId addObject: userId];
+                        if ([wTools objectExists: d[@"followstatus"]]) {
+                            if ([d[@"followstatus"] boolValue]) {
+                                if (![self.tmpAddUserId containsObject: userId]) {
+                                    [self.tmpAddUserId addObject: userId];
+                                }
+                            } else {
+                                if ([self.tmpAddUserId containsObject: userId]) {
+                                    [self.tmpAddUserId removeObject: userId];
+                                }
                             }
-                        } else {
-                            if ([self.tmpAddUserId containsObject: userId]) {
-                                [self.tmpAddUserId removeObject: userId];
-                            }
+                            NSLog(@"self.collectionView reloadData");
+                            [self.collectionView reloadData];
                         }
-                        NSLog(@"self.collectionView reloadData");
-                        [self.collectionView reloadData];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -268,8 +257,7 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     CustomIOSAlertView *errorAlertView = [UIViewController getCustomErrorAlert:msg];
 //    [[CustomIOSAlertView alloc] init];
 //    [errorAlertView setContainerView: [self createErrorContainerView: msg]];
@@ -291,12 +279,10 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [weakErrorAlertView close];
     }];
-    
     [errorAlertView show];
 }
 
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
+- (UIView *)createErrorContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     //textView.text = @"帳號已經存在，請使用另一個";
@@ -373,8 +359,7 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                        userId: (NSString *)userId
-{
+                        userId: (NSString *)userId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -396,7 +381,6 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -410,8 +394,7 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView:(NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -484,7 +467,6 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     return contentView;
 }
-
 
 /*
 #pragma mark - Navigation

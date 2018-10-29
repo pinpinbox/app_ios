@@ -363,11 +363,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         
                     } else {
                         NSLog(@"Get Real Response");
-                        
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                        
-                        
-                        
                         NSLog(@"result intValue: %d", [dic[@"result"] intValue]);
                         
                         if ([dic[@"result"] intValue] == 1) {
@@ -377,9 +373,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                             [wself refreshToken];
                         } else if ([dic[@"result"] intValue] == 0) {
                             NSLog(@"失敗： %@", dic[@"message"]);
-                            NSString *msg = dic[@"message"];
-                            NSLog(@"msg: %@", msg);
-                            [wself showCustomErrorAlert: msg];
+                            if ([wTools objectExists: dic[@"message"]]) {
+                                [wself showCustomErrorAlert: dic[@"message"]];
+                            } else {
+                                [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                            }
                         } else {
                             [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
@@ -462,10 +460,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 - (IBAction)loginbtn:(id)sender {
     NSLog(@"loginbtn");
-    
     [self defaultSetupForAudio];
-    
-    //NSString *msg = @"";
     
     // If Email Field is empty then message got data
     if ([self.emailTextField.text isEqualToString: @""]) {
@@ -548,17 +543,17 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                             name: @""];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     NSLog(@"result intValue: %d", [dic[@"result"] intValue]);
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-
-                        sself.tokenStr = dic[@"data"][@"token"];
-                        sself.idStr = [dic[@"data"][@"id"] stringValue];
-
+                        if ([wTools objectExists: dic[@"data"][@"token"]]) {
+                            sself.tokenStr = dic[@"data"][@"token"];
+                        }
+                        if ([wTools objectExists: dic[@"data"][@"id"]]) {
+                            sself.idStr = [dic[@"data"][@"id"] stringValue];
+                        }
                         [sself saveDataAfterLogin: @"emailLogin"];
                         //[self toMyTabBarController];
                         //[self getProfile];
@@ -566,9 +561,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         //[self setupPushNotification];
                                                 
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSString *msg = dic[@"message"];
-                        NSLog(@"msg: %@", msg);
-                        [sself showCustomErrorAlert: msg];
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [sself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -579,7 +577,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - IBAction - Facebook Button Press
-
 //Facebook
 -(IBAction)Facebookbtn:(id)sender {
     NSLog(@"Facebookbtn Pressed");
@@ -590,11 +587,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog(@"FBSDKAccessToken currentAccessToken");
         FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
         [login logOut];
-        
         [self fbLoginHandler];
     } else {
         NSLog(@"login with permissions");
-        
         [self fbLoginHandler];
     }
 }
@@ -673,7 +668,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
          
          if (!error) {
              NSLog(@"fetched user: %@", result);
-             
              [wself->locationManager stopUpdatingLocation];
              
              // Get FB Personal Data
@@ -692,18 +686,18 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
              // Making Param JSON String
              NSMutableDictionary *paramDic = [NSMutableDictionary new];
              
-             if (emailAccount != nil)
+             if ([wTools objectExists: emailAccount]) {
                  [paramDic setObject: emailAccount forKey: @"account"];
-             
-             if (birthday != nil)
+             }
+             if ([wTools objectExists: birthday]) {
                  [paramDic setObject: birthday forKey: @"birthday"];
-             
-             if (gender != nil)
+             }
+             if ([wTools objectExists: gender]) {
                  [paramDic setObject: gender forKey: @"gender"];
-             
-             if (name != nil)
+             }
+             if ([wTools objectExists: name]) {
                  [paramDic setObject: name forKey: @"name"];
-             
+             }
              NSLog(@"currentLocation: %@", wself->currentLocation);
              
              // Get Location Data
@@ -716,7 +710,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                  
                  [paramDic setObject: locationStr forKey: @"coordinate"];
              }
-             
              NSLog(@"paramDic: %@", paramDic);
              
              NSData *jsonData = [NSJSONSerialization dataWithJSONObject: paramDic options: 0 error: nil];
@@ -773,35 +766,35 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                             name: @""];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"SYSTEM_OK");
-                        
-                        
                         NSLog(@"新用戶");
-                        
-                        sself.tokenStr = dic[@"data"][@"token"][@"token"];
-                        sself.idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
-                        
+                        if ([wTools objectExists: dic[@"data"][@"token"][@"token"]]) {
+                            sself.tokenStr = dic[@"data"][@"token"][@"token"];
+                        }
+                        if ([wTools objectExists: dic[@"data"][@"token"][@"user_id"]]) {
+                            sself.idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+                        }
                         NSLog(@"tokenStr: %@", sself.tokenStr);
                         NSLog(@"idStr: %@", sself.idStr);
                         
                         [sself saveDataAfterLogin: @"facebookLogin"];
                         //[self setupPushNotification];
                         [sself toFbFindingVCAndResetData];
-                        
                     } else if ([dic[@"result"] isEqualToString: @"USER_EXISTS"]) {
                         NSLog(@"USER_EXISTS");
-                        
-                        
                         //已有帳號
                         NSLog(@"已有帳號");
-                        
                         //isCreator = [dic[@"data"][@"creative"] boolValue];
-                        sself.tokenStr = dic[@"data"][@"token"][@"token"];
-                        sself.idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+                        
+                        if ([wTools objectExists: dic[@"data"][@"token"][@"token"]]) {
+                            sself.tokenStr = dic[@"data"][@"token"][@"token"];
+                        }
+                        if ([wTools objectExists: dic[@"data"][@"token"][@"user_id"]]) {
+                            sself.idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
+                        }
                         
                         NSLog(@"tokenStr: %@", sself.tokenStr);
                         NSLog(@"idStr: %@", sself.idStr);
@@ -813,21 +806,20 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         //[self setupPushNotification];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [sself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [sself showCustomErrorAlert: dic[@"message"]];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [sself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [sself showCustomErrorAlert: dic[@"message"]];
                     }
                 }
             }
@@ -894,9 +886,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                     position: CSToastPositionBottom
                                        style: style];
                         
-                        sself.tokenStr = data[@"data"][@"token"];
-                        sself.idStr = [data[@"data"][@"id"] stringValue];
-                        
+                        if ([wTools objectExists: data[@"data"][@"token"]]) {
+                            sself.tokenStr = data[@"data"][@"token"];
+                        }
+                        if ([wTools objectExists: data[@"data"][@"id"]]) {
+                            sself.idStr = [data[@"data"][@"id"] stringValue];
+                        }
                         [sself saveDataAfterLogin: @"facebookLogin"];
                         //[self toMyTabBarController];
                         //[self getProfile];
@@ -934,8 +929,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                          }];
                         
                     } else {
-                        //[wTools showAlertTile:@"" Message:data[@"message"] ButtonTitle:@"確定"];
-                        [sself showCustomErrorAlert: data[@"message"]];
+                        NSLog(@"失敗： %@", data[@"message"]);
+                        if ([wTools objectExists: data[@"message"]]) {
+                            [sself showCustomErrorAlert: data[@"message"]];
+                        } else {
+                            [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     }
                 }
             }
@@ -986,9 +985,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSLog(@"%@",respone);
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        wself.tokenStr = dic[@"data"][@"token"];
-                        wself.idStr = [dic[@"data"][@"id"] stringValue];
-                        
+                        if ([wTools objectExists: dic[@"data"][@"token"]]) {
+                            wself.tokenStr = dic[@"data"][@"token"];
+                        }
+                        if ([wTools objectExists: dic[@"data"][@"id"]]) {
+                            wself.idStr = [dic[@"data"][@"id"] stringValue];
+                        }
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
                         [userPrefs setObject: @"NeedToCheck" forKey: @"newsLetterCheck"];
                         [userPrefs synchronize];
@@ -997,8 +999,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         //[self setupPushNotification];
                         [wself toFbFindingVCAndResetData];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1131,32 +1137,30 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
-                    
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"result SYSTEM_OK");
-                        
-                        wself.tokenStr = dic[@"data"][@"token"][@"token"];
-                        
+                        if ([wTools objectExists: dic[@"data"][@"token"][@"token"]]) {
+                            wself.tokenStr = dic[@"data"][@"token"][@"token"];
+                        }
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
                         [userPrefs setObject: wself.tokenStr forKey: @"token"];
-                        
                         [wself getProfile];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
-                        
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [wself showCustomErrorAlert: dic[@"message"]];
                     }
                 }
             }
@@ -1248,8 +1252,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         [userPrefs setValue: dataIc forKey: @"profile"];
                         [userPrefs synchronize];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1305,20 +1313,25 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                        NSInteger point = [dic[@"data"] integerValue];
-                        //NSLog(@"point: %ld", (long)point);
+                        NSInteger point = 0;
                         
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            point = [dic[@"data"] integerValue];
+                        }
+                        //NSLog(@"point: %ld", (long)point);
                         [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                         [userPrefs synchronize];
                         
                         [self toMyTabBarController];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1557,7 +1570,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
 /*
 - (UIView *)createErrorContainerView: (NSString *)msg

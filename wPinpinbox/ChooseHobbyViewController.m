@@ -100,38 +100,39 @@
     }
     self.startUsingPinpinboxBtnHeight.constant = kToolBarButtonHeight;
 }
+
 - (void)processHobbyListResult:(NSDictionary *)data {
-    
     if ([data[@"result"] intValue] == 1) {
         NSLog(@"getHobbyList Success");
-        
-        //NSLog(@"data: %@", data);
-        
         hobbyArray = data[@"data"];
-        
         NSInteger hobbyId;
         
-        for (int i = 0; i < hobbyArray.count; i++) {
-            NSMutableDictionary *dic = [NSMutableDictionary new];
+        if ([wTools objectExists: hobbyArray]) {
+            for (int i = 0; i < hobbyArray.count; i++) {
+                NSMutableDictionary *dic = [NSMutableDictionary new];
+                
+                hobbyId = [hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
+                [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+                [dic setValue: [NSNumber numberWithInteger: hobbyId] forKey: @"hobbyId"];
+                [checkSelectedArray addObject: dic];
+            }
+            NSLog(@"checkSelectedArray: %@", checkSelectedArray);
+            NSLog(@"hobbyArray: %@", hobbyArray);
             
-            hobbyId = [hobbyArray[i][@"hobby"][@"hobby_id"] integerValue];
-            [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
-            [dic setValue: [NSNumber numberWithInteger: hobbyId] forKey: @"hobbyId"];
-            [checkSelectedArray addObject: dic];
+            [self.collectionView reloadData];
         }
-        NSLog(@"checkSelectedArray: %@", checkSelectedArray);
-        NSLog(@"hobbyArray: %@", hobbyArray);
-        
-        [self.collectionView reloadData];
     } else if ([data[@"result"] intValue] == 0) {
         NSLog(@"失敗： %@", data[@"message"]);
-        NSString *msg = data[@"message"];
-        [self showCustomErrorAlert: msg];
+        if ([wTools objectExists: data[@"message"]]) {
+            [self showCustomErrorAlert: data[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
-    
 }
+
 - (void)getHobbyList {
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated: YES];
@@ -192,8 +193,9 @@
     return hobbyArray.count;
 }
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
+           viewForSupplementaryElementOfKind:(NSString *)kind
+                                 atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"viewForSupplementaryElementOfKind");
     
     UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
@@ -201,38 +203,40 @@
     return headerView;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ChooseHobbyCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"hobbyCell" forIndexPath: indexPath];
-    
     NSString *imgUrlStr = hobbyArray[indexPath.row][@"hobby"][@"image_url"];
-    
     NSLog(@"hobby image_url: %@", hobbyArray[indexPath.row][@"hobby"][@"image_url"]);
     
-    if (![imgUrlStr isEqual: [NSNull null]]) {
+    if ([wTools objectExists: imgUrlStr]) {
         cell.hobbyImageView.imageURL = [NSURL URLWithString: imgUrlStr];
     }
-    
-    cell.hobbyLabel.text = hobbyArray[indexPath.row][@"hobby"][@"name"];
-    
+    if ([wTools objectExists: hobbyArray[indexPath.row][@"hobby"][@"name"]]) {
+        cell.hobbyLabel.text = hobbyArray[indexPath.row][@"hobby"][@"name"];
+    }
     return cell;
 }
 
 #pragma mark - UICollectionViewDelegate Methods
-
 - (void)collectionView:(UICollectionView *)collectionView
-didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
     NSLog(@"checkSelectedArray: %@", checkSelectedArray[indexPath.row]);
+    BOOL isSelected = NO;
     
-    BOOL isSelected = [checkSelectedArray[indexPath.row][@"selected"] boolValue];
+    if ([wTools objectExists: checkSelectedArray[indexPath.row][@"selected"]]) {
+        isSelected = [checkSelectedArray[indexPath.row][@"selected"] boolValue];
+    }
     NSLog(@"isSelected: %d", isSelected);
     NSLog(@"selectArray.count: %lu", (unsigned long)selectArray.count);
     
-    NSInteger hobbyIdInt = [checkSelectedArray[indexPath.row][@"hobbyId"] integerValue];
+    NSInteger hobbyIdInt = 0;
     
+    if ([wTools objectExists: checkSelectedArray[indexPath.row][@"hobbyId"]]) {
+        hobbyIdInt = [checkSelectedArray[indexPath.row][@"hobbyId"] integerValue];
+    }
     if ([selectArray containsObject: [NSNumber numberWithInteger: hobbyIdInt]]) {
         [selectArray removeObject: [NSNumber numberWithInteger: hobbyIdInt]];
         cell.contentView.subviews[0].backgroundColor = nil;
@@ -263,56 +267,43 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
             self.startUsingPinpinboxView.hidden = NO;
         }
     }
-    
     NSLog(@"");
     NSLog(@"selectArray: %@", selectArray);
     NSLog(@"selectArray.count: %lu", (unsigned long)selectArray.count);
     
     NSMutableDictionary *dic = checkSelectedArray[indexPath.row];
-    [dic setValue: [NSNumber numberWithBool: isSelected] forKey: @"selected"];
-    
-    //NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
+    [dic setValue: [NSNumber numberWithBool: isSelected] forKey: @"selected"];        
 }
-
-/*
-- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
-    //cell.contentView.backgroundColor = nil;
-    cell.contentView.subviews[0].backgroundColor = nil;
-}
-*/
 
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
     CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
-    
     return CGSizeMake(itemWidth, 100);
-    
-    //return CGSizeMake(97, 94);
-    //return CGSizeMake(136.0, height * kCoverHeight);
 }
 
 // Horizontal Cell Spacing
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(UICollectionView *)collectionView
+                   layout:(UICollectionViewLayout *)collectionViewLayout
+minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 0;
 }
 
 // Vertical Cell Spacing
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(UICollectionView *)collectionView
+                   layout:(UICollectionViewLayout *)collectionViewLayout
+minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumLineSpacingForSectionAtIndex");
-    
     return 8;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+        insetForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 8, 0, 8);
     return itemInset;
 }
@@ -320,7 +311,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - IBAction
 - (IBAction)DownBtn:(id)sender {
     NSLog(@"DownBtn");
-    
     NSString *selectTag = @"";
     
     if (selectArray.count == 0) {
@@ -383,16 +373,16 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
-                    
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
                         [self getProfile];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        [self showCustomErrorAlert: msg];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -403,8 +393,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - Web Service - GetProfile
-- (void)getProfile
-{
+- (void)getProfile {
     NSLog(@"");
     NSLog(@"");
     NSLog(@"getProfile");
@@ -418,7 +407,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -437,11 +425,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                 return;
             }
             
-            //NSLog(@"testSign: %@", testSign);
-            
             if (response != nil) {
                 NSLog(@"Getting response from getprofile");
-                //NSLog(@"response: %@", response);
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -458,27 +443,28 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                     if ([dic[@"result"] intValue] == 1) {
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
                         NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
-                        //NSLog(@"dataIc: %@", dataIc);
                         
-                        for (NSString *key in [dataIc allKeys]) {
-                            //NSLog(@"key: %@", key);
-                            
-                            id objective = [dataIc objectForKey: key];
-                            //NSLog(@"objective: %@", objective);
-                            
-                            if ([objective isKindOfClass: [NSNull class]]) {
-                                [dataIc setObject: @"" forKey: key];
+                        if ([wTools objectExists: dataIc]) {
+                            for (NSString *key in [dataIc allKeys]) {
+                                id objective = [dataIc objectForKey: key];
+                                
+                                if ([objective isKindOfClass: [NSNull class]]) {
+                                    [dataIc setObject: @"" forKey: key];
+                                }
                             }
+                            NSLog(@"dataIc: %@", dataIc);
+                            
+                            [userPrefs setValue: dataIc forKey: @"profile"];
+                            [userPrefs synchronize];
                         }
-                        NSLog(@"dataIc: %@", dataIc);
-                        
-                        [userPrefs setValue: dataIc forKey: @"profile"];
-                        [userPrefs synchronize];
-                        
                         [self getUrPoints];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -523,21 +509,24 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
                                     protocolName: @"geturpoints"];
                 } else {
                     NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];                                        
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                        NSInteger point = [dic[@"data"] integerValue];
-                        //NSLog(@"point: %ld", (long)point);
+                        NSInteger point;
                         
-                        [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
-                        [userPrefs synchronize];
-                        
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            point = [dic[@"data"] integerValue];
+                            [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
+                            [userPrefs synchronize];
+                        }
                         [self toMyTabBarController];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -548,8 +537,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - To MyTabBarController
-- (void)toMyTabBarController
-{
+- (void)toMyTabBarController {
     MyTabBarController *myTabC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"MyTabBarController"];
     
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -557,94 +545,16 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-{
+                  protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -685,8 +595,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

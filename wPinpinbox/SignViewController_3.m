@@ -273,7 +273,9 @@
     NSString *email=@"";
     
     if (_facebookID==nil) {
-        email=tmp[@"email"];
+        if ([wTools objectExists: tmp[@"email"]]) {
+            email=tmp[@"email"];
+        }
     }
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated:YES];
@@ -344,14 +346,17 @@
         timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector: @selector(tickForSMS) userInfo: nil repeats: YES];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        [self showCustomErrorAlert: msg];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
-- (void)tickForSMS
-{
+
+- (void)tickForSMS {
     NSLog(@"tick");
     
     if (timeTick == 0) {
@@ -450,12 +455,10 @@
                                     protocolName: @"registration"];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([data[@"result"] intValue] == 1) {
                         NSLog(@"result is: %d", [data[@"result"] boolValue]);
-                        
                         // Show Toast Message
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
@@ -495,7 +498,6 @@
                                 //awsResponse = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier:[OpenUDID value]];
                                 awsResponse = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
                             }
-                            
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 
                                 if (awsResponse != nil) {
@@ -506,11 +508,13 @@
                         });
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
-                        NSString *msg = data[@"message"];
-                        NSLog(@"msg: %@", msg);                        
-                        [self showCustomErrorAlert: msg];
+                        if ([wTools objectExists: data[@"message"]]) {
+                            [sself showCustomErrorAlert: data[@"message"]];
+                        } else {
+                            [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        [sself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
                 }
             }
@@ -519,8 +523,6 @@
 }
 
 - (IBAction)back:(id)sender {
-    //[self.navigationController popViewControllerAnimated:YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
 }

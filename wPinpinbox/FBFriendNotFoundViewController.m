@@ -68,8 +68,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)gradientViewSetup
-{
+- (void)gradientViewSetup {
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.view.bounds;
     gradient.colors = @[(id)[UIColor FBGradientViewColor].CGColor, (id)[UIColor whiteColor].CGColor];
@@ -78,16 +77,13 @@
     self.view.alpha = 0.9;
 }
 
-- (void)viewSetup
-{
+- (void)viewSetup {
     self.messageContainerView.layer.cornerRadius = 16;
     self.nextBtn.layer.cornerRadius = 16;
 }
 
 - (IBAction)nextBtnPress:(id)sender {
-    ChooseHobbyViewController *chooseHobbyVC = [[UIStoryboard storyboardWithName: @"ChooseHobbyVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ChooseHobbyViewController"];
-    //[self.navigationController pushViewController: chooseHobbyVC animated: YES];
-    
+    ChooseHobbyViewController *chooseHobbyVC = [[UIStoryboard storyboardWithName: @"ChooseHobbyVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ChooseHobbyViewController"];    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: chooseHobbyVC animated: YES];
 }

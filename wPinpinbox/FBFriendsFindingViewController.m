@@ -126,23 +126,23 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 NSArray *data = result[@"data"];
                 NSString *rank = @"facebook=";
                 
-                for (int i = 0; i < data.count; i++) {
-                    NSDictionary *d = data[i];
-                    
-                    if (i == 0) {
-                        rank = [NSString stringWithFormat: @"%@%@", rank, d[@"id"]];
-                    } else {
-                        rank = [NSString stringWithFormat: @"%@,%@", rank, d[@"id"]];
+                if ([wTools objectExists: data]) {
+                    for (int i = 0; i < data.count; i++) {
+                        NSDictionary *d = data[i];
+                        
+                        if (i == 0) {
+                            rank = [NSString stringWithFormat: @"%@%@", rank, d[@"id"]];
+                        } else {
+                            rank = [NSString stringWithFormat: @"%@,%@", rank, d[@"id"]];
+                        }
                     }
+                    [self reloadAPI: rank];
                 }
-                
-                [self reloadAPI: rank];
             } else if (!connection) {
                 NSLog(@"Get Friends Error");
                 [self showCustomErrorAlert: @"連線失敗"];
             }
         }];
-        
         return;
     }
     
@@ -164,26 +164,25 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                                    NSArray *data = result[@"data"];
                                                    NSString *rank = @"facebook=";
                                                    
-                                                   for (int i = 0; i < data.count; i++) {
-                                                       NSDictionary *d = data[i];
-                                                       
-                                                       if (i == 0) {
-                                                           rank = [NSString stringWithFormat: @"%@%@", rank, d[@"id"]];
-                                                       } else {
-                                                           rank = [NSString stringWithFormat: @"%@,%@", rank, d[@"id"]];
+                                                   if ([wTools objectExists: data]) {
+                                                       for (int i = 0; i < data.count; i++) {
+                                                           NSDictionary *d = data[i];
+                                                           
+                                                           if (i == 0) {
+                                                               rank = [NSString stringWithFormat: @"%@%@", rank, d[@"id"]];
+                                                           } else {
+                                                               rank = [NSString stringWithFormat: @"%@,%@", rank, d[@"id"]];
+                                                           }
                                                        }
+                                                       [self reloadAPI: rank];
                                                    }
-                                                   
-                                                   [self reloadAPI: rank];
                                                } else if (!connection) {
                                                    NSLog(@"Get Friends Error");
                                                    [self showCustomErrorAlert: @"連線失敗"];
                                                }
                                            }];
-                                           
                                            return;
                                        }
-                                       
                                        NSLog(@"100");
                                    }];
 }
@@ -207,7 +206,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
              }
              return;
          }
-         
          if ([FBSDKAccessToken currentAccessToken] &&
              [[FBSDKAccessToken currentAccessToken].permissions containsObject:@"public_profile"]) {
              
@@ -216,7 +214,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
              }
              return;
          }
-         
          if (declinedOrCanceledHandler) {
              declinedOrCanceledHandler();
          }
@@ -259,42 +256,41 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     if ([dic[@"result"] intValue] == 1) {
         int s = 0;
         
-        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
-            s++;
-            [pictures addObject: picture];
-        }
-        
-        nextId = nextId + s;
-        
-        if (nextId >= 0) {
-            isLoading = NO;
-        }
-        
-        
-        NSLog(@"pictures: %@", pictures);
-        
-        if (pictures.count == 0) {
-            FBFriendNotFoundViewController *fbFriendNotFoundVC = [[UIStoryboard storyboardWithName: @"FBFriendNotFoundVC" bundle: nil] instantiateViewControllerWithIdentifier: @"FBFriendNotFoundViewController"];
+        if ([wTools objectExists: dic[@"data"]]) {
+            for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
+                s++;
+                [pictures addObject: picture];
+            }
+            nextId = nextId + s;
             
-            //[self.navigationController pushViewController: fbFriendNotFoundVC animated: YES];
+            if (nextId >= 0) {
+                isLoading = NO;
+            }
+            NSLog(@"pictures: %@", pictures);
             
-            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            [appDelegate.myNav pushViewController: fbFriendNotFoundVC animated: YES];
-        } else if (pictures.count > 0) {
-            FBFriendsListViewController *fbFriendsVC = [[UIStoryboard storyboardWithName: @"FBFriendsListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"FBFriendsListViewController"];
-            fbFriendsVC.fbArray = [pictures mutableCopy];
-            
-            //[self.navigationController pushViewController: fbFriendsVC animated: YES];
-            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            [appDelegate.myNav pushViewController: fbFriendsVC animated: YES];
+            if (pictures.count == 0) {
+                FBFriendNotFoundViewController *fbFriendNotFoundVC = [[UIStoryboard storyboardWithName: @"FBFriendNotFoundVC" bundle: nil] instantiateViewControllerWithIdentifier: @"FBFriendNotFoundViewController"];
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                [appDelegate.myNav pushViewController: fbFriendNotFoundVC animated: YES];
+            } else if (pictures.count > 0) {
+                FBFriendsListViewController *fbFriendsVC = [[UIStoryboard storyboardWithName: @"FBFriendsListVC" bundle: nil] instantiateViewControllerWithIdentifier: @"FBFriendsListViewController"];
+                fbFriendsVC.fbArray = [pictures mutableCopy];
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                [appDelegate.myNav pushViewController: fbFriendsVC animated: YES];
+            }
         }
     } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        NSLog(@"失敗： %@", dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 - (void)loadData: (NSString *)rank {
     NSLog(@"loadData: rank: %@", rank);
     
@@ -306,10 +302,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 // Print exception information
                 NSLog( @"NSException caught" );
                 NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
+                NSLog( @"Reason: %@", exception.reason);
                 return;
             }
-            
         }
         isLoading = YES;
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -323,7 +318,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         }
         __block typeof(self) wself = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-            NSString *response = [boxAPI getrecommended: [wTools getUserID] token: [wTools getUserToken] data: data];
+            NSString *response = [boxAPI getrecommended: [wTools getUserID]
+                                                  token: [wTools getUserToken]
+                                                   data: data];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 @try {
@@ -332,10 +329,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     // Print exception information
                     NSLog( @"NSException caught" );
                     NSLog( @"Name: %@", exception.name);
-                    NSLog( @"Reason: %@", exception.reason );
+                    NSLog( @"Reason: %@", exception.reason);
                     return;
                 }
-                
                 if (response != nil) {
                     NSLog(@"response: %@", response);
                     
@@ -348,11 +344,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                         protocolName: @"getrecommended"
                                                 rank: rank];
                     } else {
-                        NSLog(@"Get Real Response");
-                        
+                        NSLog(@"Get Real Response");                        
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                         [wself processFBResult:dic];
-                        
                     }                                        
                 }
             });
