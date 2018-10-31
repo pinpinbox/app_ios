@@ -25,6 +25,38 @@
 #import "AlbumDetailViewController.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "UIImage+Resize.h"
+
+#import "InfoTextView.h"
+
+@interface CheckBox : UIButton
+@end
+
+@implementation  CheckBox
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    UIImage *i = [UIImage imageNamed:@"navigationbarshadow"];
+    UIImage *ni = [i resizedImage:CGSizeMake(24, 24) interpolationQuality:kCGInterpolationNone];
+    [self setImage:ni forState:UIControlStateNormal];
+    
+    self.imageView.contentMode = UIViewContentModeScaleToFill;
+    self.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 2);
+    self.imageView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.imageView.layer.borderWidth = 1;
+    self.imageView.layer.cornerRadius = 6;
+    //self.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 0);
+}
+- (void)setSelected:(BOOL)selected {
+    [super setSelected:selected];
+    if (!selected) {
+        self.imageView.backgroundColor = [UIColor clearColor];
+    } else {
+        self.imageView.backgroundColor = [UIColor thirdMain];
+        
+    }
+}
+
+@end
 @interface AlbumSettingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate, UITextFieldDelegate, UITextViewDelegate, SFSafariViewControllerDelegate>
 {
     NSString *sfir;
@@ -80,8 +112,8 @@
 
 @property (nonatomic, strong) NSIndexPath *firstCategoryIndexPath;
 @property (nonatomic, strong) NSIndexPath *secondCategoryIndexPath;
-@property (nonatomic, strong) NSIndexPath *weatherIndexPath;
-@property (nonatomic, strong) NSIndexPath *moodIndexPath;
+//@property (nonatomic, strong) NSIndexPath *weatherIndexPath;
+//@property (nonatomic, strong) NSIndexPath *moodIndexPath;
 
 //@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet TouchDetectedScrollView *scrollView;
@@ -106,8 +138,12 @@
 
 @property (weak, nonatomic) IBOutlet UICollectionView *firstCategoryCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *secondCategoryCollectionView;
-@property (weak, nonatomic) IBOutlet UICollectionView *weatherCollectionView;
-@property (weak, nonatomic) IBOutlet UICollectionView *moodCollectionView;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *secondCategoryHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *plusMemberHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *professionMemberHeight;
+//@property (weak, nonatomic) IBOutlet UICollectionView *weatherCollectionView;
+//@property (weak, nonatomic) IBOutlet UICollectionView *moodCollectionView;
 
 @property (weak, nonatomic) IBOutlet UIButton *pQuestionBtn;
 @property (weak, nonatomic) IBOutlet UIView *pPointView;
@@ -124,6 +160,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *subCategoryRequiredLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *bottomBtnView;
+
+
+@property (weak, nonatomic) IBOutlet UIButton *sponsorDescON;
+@property (weak, nonatomic) IBOutlet UIButton *sponsorDescOFF;
+@property (weak, nonatomic) IBOutlet UIButton *sponsorCountON;
+@property (weak, nonatomic) IBOutlet UIButton *sponsorCountOFF;
+@property (weak, nonatomic) IBOutlet InfoTextView *sponsorDesc;
 
 @end
 
@@ -288,14 +331,16 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
+                    //if ([dic[@"result"] intValue] == 1) {
+                    NSString *res = (NSString *)dic[@"result"];
+                    if ([res isEqualToString:@"SYSTEM_OK"]) {
                         self.data = [dic[@"data"] mutableCopy];
                         
                         [self initialValueSetup];
                         [self.firstCategoryCollectionView reloadData];
                         [self.secondCategoryCollectionView reloadData];
-                        [self.weatherCollectionView reloadData];
-                        [self.moodCollectionView reloadData];
+//                        [self.weatherCollectionView reloadData];
+//                        [self.moodCollectionView reloadData];
                         
                         [self checkCreatePointTask];
                     } else if ([dic[@"result"] intValue] == 0) {
@@ -610,13 +655,13 @@
     self.secondCategoryCollectionView.myLeftMargin = 16;
     self.secondCategoryCollectionView.myRightMargin = 16;
     
-    self.weatherCollectionView.showsHorizontalScrollIndicator = NO;
-    self.weatherCollectionView.myLeftMargin = 16;
-    self.weatherCollectionView.myRightMargin = 16;
-    
-    self.moodCollectionView.showsHorizontalScrollIndicator = NO;
-    self.moodCollectionView.myLeftMargin = 16;
-    self.moodCollectionView.myRightMargin = 16;
+//    self.weatherCollectionView.showsHorizontalScrollIndicator = NO;
+//    self.weatherCollectionView.myLeftMargin = 16;
+//    self.weatherCollectionView.myRightMargin = 16;
+//
+//    self.moodCollectionView.showsHorizontalScrollIndicator = NO;
+//    self.moodCollectionView.myLeftMargin = 16;
+//    self.moodCollectionView.myRightMargin = 16;
     
     self.scrollView.showsVerticalScrollIndicator = NO;
     
@@ -632,7 +677,8 @@
     NSLog(@"loadUserSettingData");
     
     // First Category
-    if ([self.data[@"firstpaging"] isKindOfClass: [NSNull class]]) {
+    //if ([self.data[@"firstpaging"] isKindOfClass: [NSNull class]]) {
+    if ([self.data[@"categoryarea_id"] isKindOfClass: [NSNull class]]) {
         NSLog(@"firstpaging is kinf of null class");
         
         for (NSMutableDictionary *d in mdata[@"firstpaging"]) {
@@ -645,7 +691,8 @@
         NSArray *arr = mdata[@"firstpaging"];
         
         // List setting data
-        int x = [self.data[@"firstpaging"] intValue];
+        //int x = [self.data[@"firstpaging"] intValue];
+        int x = [self.data[@"categoryarea_id"] intValue];
         NSLog(@"x: %d", x);
         
         // Data for SecondCategory
@@ -674,13 +721,16 @@
         }
         
         // Second Category
-        if (![self.data[@"secondpaging"] isKindOfClass: [NSNull class]]) {
+        //if (![self.data[@"secondpaging"] isKindOfClass: [NSNull class]]) {
+        if (![self.data[@"category_id"] isKindOfClass:[NSNull class]]) {
+            _secondCategoryHeight.constant = 53;
             self.secondCategoryCollectionView.hidden = NO;
             
             NSLog(@"secondpaging is not kind of null class");
             arr = firdata[@"secondpaging"];
             
-            x = [self.data[@"secondpaging"] intValue];
+            //x = [self.data[@"secondpaging"] intValue];
+            x = [self.data[@"category_id"] intValue];
             ssec = [NSString stringWithFormat: @"%i", x];
             NSLog(@"ssec: %@", ssec);
             
@@ -782,6 +832,20 @@
     
 //    self.advanceSettingView.layer.cornerRadius = kCornerRadius;
     self.saveAndExitBtn.layer.cornerRadius = kCornerRadius;
+    
+    self.plusMemberHeight.constant = 0;
+    self.professionMemberHeight.constant = 0;
+    
+    self.pPointTextField.leftViewMode = UITextFieldViewModeAlways;
+    UILabel *left = [[UILabel alloc] init];
+    left.text = @"贊助所需P點:";
+    left.font = [UIFont systemFontOfSize:17];
+    CGSize s = [left.text sizeWithAttributes:@{NSFontAttributeName:left.font}];
+    left.textAlignment = NSTextAlignmentCenter;
+    left.frame = CGRectMake(0, 0, s.width+16, s.height);
+    left.textColor = [UIColor hintGrey];
+    left.backgroundColor = UIColor.clearColor;
+    self.pPointTextField.leftView = left;
 }
 
 - (void)setupUI2 {
@@ -822,12 +886,18 @@
     
     NSLog(@"self.data: %@", self.data);
     
-    if ([self.data[@"title"] isEqual: [NSNull null]]) {
+//    if ([self.data[@"title"] isEqual: [NSNull null]]) {
+//        self.nameTextField.text = @"";
+//    } else {
+//        self.nameTextField.text = self.data[@"title"];
+//    }
+    
+    if ([self.data[@"name"] isEqual: [NSNull null]]) {
         self.nameTextField.text = @"";
     } else {
-        self.nameTextField.text = self.data[@"title"];
+        self.nameTextField.text = self.data[@"name"];
     }
-    
+
     oldName = self.nameTextField.text;        
     
     if ([self.data[@"description"] isEqual: [NSNull null]]) {
@@ -899,6 +969,29 @@
 //    }
     
 //    oldAdvancedStr = self.advancedTextField.text;
+    self.plusMemberHeight.constant = 0;
+    self.professionMemberHeight.constant = 0;
+    if (mdata[@"usergrade"] ) {
+        NSString *user = mdata[@"usergrade"];
+        if (![user isEqualToString:@"free"]) {
+            BOOL n = [self isDisplayCollectNum];
+            self.sponsorCountON.selected = n;
+            self.sponsorCountOFF.selected = !n;
+            BOOL c = [self isDisplayCollectReward];
+            self.sponsorDescON.selected = c;
+            self.sponsorDescOFF.selected = !c;
+            self.sponsorDesc.text = [self getRewardDesc];
+        
+            self.plusMemberHeight.constant = c? 280: 208;
+                
+            if ([user isEqualToString:@"profession"]) {
+                
+                self.professionMemberHeight.constant = 200;
+            }
+        }
+        
+    }
+    NSLog(@"");
 }
 
 - (void)doneNumberPad
@@ -923,13 +1016,14 @@
         NSLog(@"collectionView == secondCategoryCollectionView");
         numberOfItems = secondCategoryArray.count;
         NSLog(@"numberOfItems: %ld", (long)numberOfItems);
-    } else if (collectionView == self.weatherCollectionView) {
-        NSLog(@"collectionView == self.weatherCollectionView");
-        numberOfItems = weatherArray.count;
-    } else if (collectionView == self.moodCollectionView) {
-        NSLog(@"collectionView == self.moodCollectionView");
-        numberOfItems = moodArray.count;
     }
+//    else if (collectionView == self.weatherCollectionView) {
+//        NSLog(@"collectionView == self.weatherCollectionView");
+//        numberOfItems = weatherArray.count;
+//    } else if (collectionView == self.moodCollectionView) {
+//        NSLog(@"collectionView == self.moodCollectionView");
+//        numberOfItems = moodArray.count;
+//    }
     
     NSLog(@"numberOfItems: %ld", (long)numberOfItems);
     
@@ -981,44 +1075,45 @@
         }
         
         //[collectionView scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionNone animated: NO];
-    } else if (collectionView == self.weatherCollectionView) {
-        NSLog(@"");
-        NSLog(@"collectionView == self.weatherCollectionView");
-        
-        cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"WeatherCell" forIndexPath: indexPath];
-        cell.layer.cornerRadius = kCornerRadius;
-        
-        UILabel *textLabel = (UILabel *)[cell viewWithTag: 100];
-        textLabel.text = weatherArray[indexPath.row][@"name"];
-        
-        NSIndexPath *selectedIndexPath;
-        if ([weatherArray[indexPath.row][@"selected"] boolValue]) {
-            selectedIndexPath = indexPath;
-            cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-        } else {
-            cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
-        }
-        
-        //[collectionView scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionNone animated: NO];
-    } else if (collectionView == self.moodCollectionView) {
-        NSLog(@"");
-        NSLog(@"collectionView == moodCollectionView");
-        
-        cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"MoodCell" forIndexPath: indexPath];
-        cell.layer.cornerRadius = kCornerRadius;
-        
-        UILabel *textLabel = (UILabel *)[cell viewWithTag: 100];
-        textLabel.text = moodArray[indexPath.row][@"name"];
-        
-        NSIndexPath *selectedIndexPath;
-        if ([moodArray[indexPath.row][@"selected"] boolValue]) {
-            selectedIndexPath = indexPath;
-            cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-        } else {
-            cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
-        }
-        //[collectionView scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionNone animated: NO];
     }
+//    else if (collectionView == self.weatherCollectionView) {
+//        NSLog(@"");
+//        NSLog(@"collectionView == self.weatherCollectionView");
+//
+//        cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"WeatherCell" forIndexPath: indexPath];
+//        cell.layer.cornerRadius = kCornerRadius;
+//
+//        UILabel *textLabel = (UILabel *)[cell viewWithTag: 100];
+//        textLabel.text = weatherArray[indexPath.row][@"name"];
+//
+//        NSIndexPath *selectedIndexPath;
+//        if ([weatherArray[indexPath.row][@"selected"] boolValue]) {
+//            selectedIndexPath = indexPath;
+//            cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
+//        } else {
+//            cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
+//        }
+//
+//        //[collectionView scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionNone animated: NO];
+//    } else if (collectionView == self.moodCollectionView) {
+//        NSLog(@"");
+//        NSLog(@"collectionView == moodCollectionView");
+//
+//        cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"MoodCell" forIndexPath: indexPath];
+//        cell.layer.cornerRadius = kCornerRadius;
+//
+//        UILabel *textLabel = (UILabel *)[cell viewWithTag: 100];
+//        textLabel.text = moodArray[indexPath.row][@"name"];
+//
+//        NSIndexPath *selectedIndexPath;
+//        if ([moodArray[indexPath.row][@"selected"] boolValue]) {
+//            selectedIndexPath = indexPath;
+//            cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
+//        } else {
+//            cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
+//        }
+//        //[collectionView scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionNone animated: NO];
+//    }
     
     return cell;
 }
@@ -1050,6 +1145,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
         
         [self.firstCategoryCollectionView reloadData];
+        self.secondCategoryHeight.constant = 53;
         self.secondCategoryCollectionView.hidden = NO;
         
         [secondCategoryArray removeAllObjects];
@@ -1080,41 +1176,42 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         
         [self.secondCategoryCollectionView reloadData];
         
-    } else if (collectionView == self.weatherCollectionView) {
-        NSLog(@"collectionView == self.weatherCollectionView");
-        
-        cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-        
-        for (NSMutableDictionary *d in weatherArray) {
-            if ([d[@"selected"] boolValue]) {
-                [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
-            }
-        }
-        
-        weatherArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
-        
-        for (NSDictionary *d in weatherArray) {
-            NSLog(@"selected: %@", d[@"selected"]);
-        }
-        [self.weatherCollectionView reloadData];
-    } else if (collectionView == self.moodCollectionView) {
-        NSLog(@"collectionView == self.moodCollectionView");
-        
-        cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-        
-        for (NSMutableDictionary *d in moodArray) {
-            if ([d[@"selected"] boolValue]) {
-                [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
-            }
-        }
-        
-        moodArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
-        
-        for (NSDictionary *d in moodArray) {
-            NSLog(@"selected: %@", d[@"selected"]);
-        }
-        [self.moodCollectionView reloadData];
     }
+//    else if (collectionView == self.weatherCollectionView) {
+//        NSLog(@"collectionView == self.weatherCollectionView");
+//
+//        cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
+//
+//        for (NSMutableDictionary *d in weatherArray) {
+//            if ([d[@"selected"] boolValue]) {
+//                [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
+//            }
+//        }
+//
+//        weatherArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
+//
+//        for (NSDictionary *d in weatherArray) {
+//            NSLog(@"selected: %@", d[@"selected"]);
+//        }
+//        [self.weatherCollectionView reloadData];
+//    } else if (collectionView == self.moodCollectionView) {
+//        NSLog(@"collectionView == self.moodCollectionView");
+//
+//        cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
+//
+//        for (NSMutableDictionary *d in moodArray) {
+//            if ([d[@"selected"] boolValue]) {
+//                [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
+//            }
+//        }
+//
+//        moodArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
+//
+//        for (NSDictionary *d in moodArray) {
+//            NSLog(@"selected: %@", d[@"selected"]);
+//        }
+//        [self.moodCollectionView reloadData];
+//    }
 }
 
 #pragma mark - Touches Detection
@@ -1186,14 +1283,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"privacyStatusChange"];
         [defaults synchronize];
     } else {
-        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-        style.messageColor = [UIColor whiteColor];
-        style.backgroundColor = [UIColor thirdPink];
-        
-        [self.view makeToast: @"你的作品沒有內容"
-                    duration: 2.0
-                    position: CSToastPositionBottom
-                       style: style];
+        [self warnToastWithMessage:@"你的作品沒有內容"];
+//        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+//        style.messageColor = [UIColor whiteColor];
+//        style.backgroundColor = [UIColor thirdPink];
+//
+//        [self.view makeToast: @"你的作品沒有內容"
+//                    duration: 2.0
+//                    position: CSToastPositionBottom
+//                       style: style];
     }
 }
 
@@ -1270,7 +1368,46 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)saveAndExit:(id)sender {
     [self saveData];
 }
-
+- (IBAction)sponsingSettingSwitch:(id)sender{
+    UIButton *btn = (UIButton *)sender;
+    if (!btn.selected) {
+        if (btn == self.sponsorCountON) {
+            self.sponsorCountON.selected = YES;
+            self.sponsorCountOFF.selected = NO;
+            
+        } else {
+            self.sponsorCountON.selected = NO;
+            self.sponsorCountOFF.selected = YES;
+        }
+        
+    }
+    
+}
+- (IBAction)sponsingResponseSettingSwitch:(id)sender{
+    NSLog(@"%@", sender);
+    UIButton *btn = (UIButton *)sender;
+    if (!btn.selected) {
+        if (btn == self.sponsorDescON) {
+            if ([self getCurrentSetPPoint] < 3) {
+                [self warnToastWithMessage:@"贊助條件至少3P"];
+                self.sponsorDescON.selected = NO;
+                self.sponsorDescOFF.selected = YES;
+                return;
+            } else {
+                self.sponsorDescON.selected = YES;
+                self.sponsorDescOFF.selected = NO;
+                self.plusMemberHeight.constant = 280;
+            }
+        } else {
+            self.sponsorDescON.selected = NO;
+            self.sponsorDescOFF.selected = YES;
+            self.plusMemberHeight.constant = 208;
+        }
+        
+        //btn.selected = !btn.selected;
+        
+    }
+}
 - (void)postAlbum {
     NSLog(@"postAlbum");
     @try {
@@ -1323,15 +1460,16 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
                         NSLog(@"contributionCheck: %d", contributionCheck);
                         
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor firstMain];
-                        
-                        [self.view makeToast: @"投稿成功"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
-                        
+                        [self remindToastWithMessage:@"投稿成功"];
+//                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+//                        style.messageColor = [UIColor whiteColor];
+//                        style.backgroundColor = [UIColor firstMain];
+//
+//                        [self.view makeToast:
+//                                    duration: 2.0
+//                                    position: CSToastPositionBottom
+//                                       style: style];
+//
                         [self ToRetrievealbumpViewControlleralbumid: self.albumId];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -1360,7 +1498,35 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         isModified = YES;
     }
 }
+#pragma mark -
+- (BOOL)isDisplayCollectNum {
+    id d = self.data[@"display_num_of_collect"];
+    if (d && [d isKindOfClass:[NSNumber class]]) {
+        
+        return [d boolValue];
+    }
+    return NO;
+}
+- (BOOL)isDisplayCollectReward{
+    id d = self.data[@"reward_after_collect"];
+    if (d && [d isKindOfClass:[NSNumber class]]) {
+        
+        return [d boolValue];
+    }
+    return NO;
+}
+- (NSString *)getRewardDesc {
+    id desc = self.data[@"reward_description"];
+    if (desc && [desc isKindOfClass:[NSString class]])
+        return self.data[@"reward_description"];
+    
+    return @"";
+}
 
+- (int)getCurrentSetPPoint {
+    NSString *pStr = self.pPointTextField.text;
+    return [pStr intValue];
+}
 #pragma mark - Get Server Data
 - (void)saveData
 {
@@ -1444,14 +1610,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     if ([sact isEqualToString: @"open"]) {
         if ([self.nameTextField.text isEqualToString: @""]) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor thirdPink];
-            
-            [self.view makeToast: @"名稱要記得填寫"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
+            [self warnToastWithMessage:@"名稱要記得填寫"];
+//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+//            style.messageColor = [UIColor whiteColor];
+//            style.backgroundColor = [UIColor thirdPink];
+//
+//            [self.view makeToast:
+//                        duration: 2.0
+//                        position: CSToastPositionBottom
+//                           style: style];
             
             return;
         }
@@ -1484,25 +1651,27 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
          */
         if (firstPaging == nil) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor thirdPink];
-            
-            [self.view makeToast: @"主類別還沒選"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
+            [self warnToastWithMessage:@"主類別還沒選"];
+//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+//            style.messageColor = [UIColor whiteColor];
+//            style.backgroundColor = [UIColor thirdPink];
+//
+//            [self.view makeToast:
+//                        duration: 2.0
+//                        position: CSToastPositionBottom
+//                           style: style];
             return;
         }
         if (secondPaging == nil) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor thirdPink];
-            
-            [self.view makeToast: @"子類別還沒選"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
+            [self warnToastWithMessage:@"子類別還沒選"];
+//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+//            style.messageColor = [UIColor whiteColor];
+//            style.backgroundColor = [UIColor thirdPink];
+//
+//            [self.view makeToast:
+//                        duration: 2.0
+//                        position: CSToastPositionBottom
+//                           style: style];
             return;
         }
     }
@@ -1515,41 +1684,44 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         
         if ([pStr hasPrefix: @"0"]) {
             NSLog(@"pStr as prefix 0");
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor thirdPink];
-            
-            [self.view makeToast: @"第一位數不能為0"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
+            [self warnToastWithMessage:@"第一位數不能為0"];
+//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+//            style.messageColor = [UIColor whiteColor];
+//            style.backgroundColor = [UIColor thirdPink];
+//
+//            [self.view makeToast:
+//                        duration: 2.0
+//                        position: CSToastPositionBottom
+//                           style: style];
             return;
         }
     }
     
     if ([pStr intValue] > 0 && [pStr intValue] < 3) {
-        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-        style.messageColor = [UIColor whiteColor];
-        style.backgroundColor = [UIColor thirdPink];
-        
-        [self.view makeToast: @"至少3P點"
-                    duration: 2.0
-                    position: CSToastPositionBottom
-                       style: style];
+        [self warnToastWithMessage:@"至少3P點"];
+//        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+//        style.messageColor = [UIColor whiteColor];
+//        style.backgroundColor = [UIColor thirdPink];
+//
+//        [self.view makeToast:
+//                    duration: 2.0
+//                    position: CSToastPositionBottom
+//                       style: style];
         return;
     }
     
     if (self.postMode) {
         if ([sact isEqualToString: @"close"]) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor thirdPink];
-            
-            [self.view makeToast: @"隱私打開才能投稿作品"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
-            
+            [self warnToastWithMessage:@"隱私打開才能投稿作品"];
+//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+//            style.messageColor = [UIColor whiteColor];
+//            style.backgroundColor = [UIColor thirdPink];
+//
+//            [self.view makeToast:
+//                        duration: 2.0
+//                        position: CSToastPositionBottom
+//                           style: style];
+//
             return;
         }
     }
@@ -1558,20 +1730,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     NSMutableDictionary *settingsDic = [NSMutableDictionary new];
     [settingsDic setObject: sact forKey: @"act"];
     //[settingsDic setObject: self.nameTextView.text forKey: @"title"];
-    [settingsDic setObject: self.nameTextField.text forKey: @"title"];
+    //[settingsDic setObject: self.nameTextField.text forKey: @"title"];
+    [settingsDic setObject: self.nameTextField.text forKey: @"name"];
     [settingsDic setObject: self.descriptionTextView.text forKey: @"description"];
     [settingsDic setObject: self.locationTextView.text forKey:@"location"];
     
     NSLog(@"check firstPaging");
     
     if (![firstPaging isKindOfClass: [NSNull class]]) {
-        [settingsDic setObject: [NSNumber numberWithInt: [firstPaging intValue]] forKey: @"firstpaging"];
+        //[settingsDic setObject: [NSNumber numberWithInt: [firstPaging intValue]] forKey: @"firstpaging"];
+        [settingsDic setObject: [NSNumber numberWithInt: [firstPaging intValue]] forKey: @"categoryarea_id"];
     }
     
     NSLog(@"check secondPaging");
     
     if (![secondPaging isKindOfClass: [NSNull class]]) {
-        [settingsDic setObject: [NSNumber numberWithInt: [secondPaging intValue]] forKey: @"secondpaging"];
+        //[settingsDic setObject: [NSNumber numberWithInt: [secondPaging intValue]] forKey: @"secondpaging"];
+        [settingsDic setObject: [NSNumber numberWithInt: [secondPaging intValue]] forKey: @"category_id"];
     }
     
     [settingsDic setObject: weatherStr forKey:@"weather"];
@@ -1710,15 +1885,16 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [self showCustomErrorAlert: msg];
         
     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
-        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-        style.messageColor = [UIColor whiteColor];
-        style.backgroundColor = [UIColor thirdPink];
-        
-        [self.view makeToast: @"用戶驗證異常請重新登入"
-                    duration: 2.0
-                    position: CSToastPositionBottom
-                       style: style];
-        
+        [self warnToastWithMessage:@"用戶驗證異常請重新登入"];
+//        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+//        style.messageColor = [UIColor whiteColor];
+//        style.backgroundColor = [UIColor thirdPink];
+//
+//        [self.view makeToast:
+//                    duration: 2.0
+//                    position: CSToastPositionBottom
+//                       style: style];
+//
         [NSTimer scheduledTimerWithTimeInterval: 1.0
                                          target: self
                                        selector: @selector(logOut)
@@ -2229,18 +2405,21 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)textViewDidChange:(UITextView *)textView
 {
     NSLog(@"textViewDidChange");
-    
     isModified = YES;
+    if ([textView isKindOfClass: [InfoTextView class]]) {
+        
+    } else {
     
-    //每次输入变更都让布局重新布局。
-    MyBaseLayout *layout = (MyBaseLayout*)textView.superview;
-    [layout setNeedsLayout];
-    
-    //这里设置在布局结束后将textView滚动到光标所在的位置了。在布局执行布局完毕后如果设置了endLayoutBlock的话可以在这个block里面读取布局里面子视图的真实布局位置和尺寸，也就是可以在block内部读取每个子视图的真实的frame的值。
-    layout.endLayoutBlock = ^{
-        NSRange rg = textView.selectedRange;
-        [textView scrollRangeToVisible:rg];
-    };
+        //每次输入变更都让布局重新布局。
+        MyBaseLayout *layout = (MyBaseLayout*)textView.superview;
+        [layout setNeedsLayout];
+        
+        //这里设置在布局结束后将textView滚动到光标所在的位置了。在布局执行布局完毕后如果设置了endLayoutBlock的话可以在这个block里面读取布局里面子视图的真实布局位置和尺寸，也就是可以在block内部读取每个子视图的真实的frame的值。
+        layout.endLayoutBlock = ^{
+            NSRange rg = textView.selectedRange;
+            [textView scrollRangeToVisible:rg];
+        };
+    }
 }
 
 #pragma mark - UITextField Delegate Methods
@@ -2318,14 +2497,7 @@ replacementString:(NSString *)string
         }
         
         if (newLength > 4) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor thirdPink];
-            
-            [self.view makeToast: @"最多四位數"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
+            [self warnToastWithMessage:@"最多四位數"];
             
             [textField resignFirstResponder];
             
@@ -2405,7 +2577,27 @@ replacementString:(NSString *)string
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }
-
+#pragma mark -
+- (void)remindToastWithMessage:(NSString *)message {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor firstMain];
+    
+    [self.view makeToast: message
+                duration: 2.0
+                position: CSToastPositionBottom
+                   style: style];
+}
+- (void)warnToastWithMessage:(NSString *)message {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor thirdPink];
+    
+    [self.view makeToast: message
+                duration: 2.0
+                position: CSToastPositionBottom
+                   style: style];
+}
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
@@ -2543,3 +2735,36 @@ replacementString:(NSString *)string
 */
 
 @end
+/*
+ 
+ 項目內容顯示變化:
+ 
+ 
+ 依接口getalbumdataoptions(32) respond param
+ 
+ 
+ usergrade=plus(profession)該區域顯示，否則隱藏不佔位
+ 
+ 項目內容顯示變化:
+ 
+ 
+ 贊助條件需>=3才能選擇開啟
+ 
+ 
+ 否則顯示toast"贊助條件至少3P" (一般樣式)
+ 
+ 項目內容顯示變化:
+ 
+ 
+ 選擇開啟時顯示，否則隱藏不佔位
+ 
+ 項目內容顯示變化:
+ 
+ 
+ 依接口getalbumdataoptions(32) respond param
+ 
+ 
+ usergrade=profession參數顯示或隱藏不佔位
+ 
+
+ */

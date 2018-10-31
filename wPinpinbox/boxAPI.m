@@ -1213,11 +1213,13 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     NSString *returnstr=@"";
     NSMutableDictionary *dic=[NSMutableDictionary new];
-    [dic setObject:uid forKey:@"id"];
+    //[dic setObject:uid forKey:@"id"];
+    [dic setObject:uid forKey:@"user_id"];
     [dic setObject:token forKey:@"token"];
-    [dic setObject:album_id forKey:@"albumid"];
+    //[dic setObject:album_id forKey:@"albumid"];
+    [dic setObject:album_id forKey:@"album_id"];
     
-    returnstr=[self boxAPI:dic URL:@"/getalbumsettings/1.0"];
+    returnstr=[self boxAPI:dic URL:@"/getalbumsettings/2.0"];
     
     return returnstr;
 }

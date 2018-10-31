@@ -10,6 +10,8 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
+#define sysOK @"SYSTEM_OK"
+
 static NSString *version = @"";
 //static NSString *ServerURL = @"https://www.pinpinbox.com/index/api";
 
