@@ -190,10 +190,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
+                    NSString *res = (NSString *)dic[@"result"];
+                    if ([res isEqualToString:@"SYSTEM_OK"]) {
                         self.data = [dic[@"data"] mutableCopy];
                         NSLog(@"self.data: %@", self.data);
-                    } else if ([dic[@"result"] intValue] == 0) {
+                    } else if (dic[@"message"]) {//([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
                     } else {

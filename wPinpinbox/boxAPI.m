@@ -3240,10 +3240,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
                 NSLog(@"Get Real Response");
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
-                if ([dic[@"result"] intValue] == 1) {
+                NSString *res = (NSString *)dic[@"result"];
+                if ([res isEqualToString:@"SYSTEM_OK"]) {
                     if (completionBlock)
                         completionBlock(dic,nil);
-                } else if ([dic[@"result"] intValue] == 0) {
+                } else if (dic[@"message"]) {//[dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
                     if (completionBlock)
                         completionBlock(nil, [NSError errorWithDomain:@"getAlbumSettingsWithAlbumId" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
