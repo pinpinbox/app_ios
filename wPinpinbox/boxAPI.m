@@ -1239,7 +1239,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject:album_id forKey:@"album_id"];
     [dic setObject:settings forKey:@"settings"];
     
-    returnstr=[self boxAPI:dic URL:@"/albumsettings/2.0"];
+    returnstr=[self boxAPI:dic URL:@"/updatealbumsettings/2.0"];//@"/albumsettings/2.0"];
     
     return returnstr;
 }
