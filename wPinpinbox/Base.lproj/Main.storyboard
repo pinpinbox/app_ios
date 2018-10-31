@@ -165,11 +165,9 @@
                                     <view clipsSubviews="YES" tag="50" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vSI-Sh-FV1" customClass="MyLinearLayout">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="1300"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="作品資訊" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="60s-Hw-WnW">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="作品資訊" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="60s-Hw-WnW">
                                                 <rect key="frame" x="16" y="76" width="207" height="57.5"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="207" id="qnw-b9-0wM"/>
-                                                </constraints>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="48"/>
                                                 <color key="textColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -185,8 +183,9 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dmY-C0-7sh" customClass="MyLinearLayout">
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmY-C0-7sh" customClass="MyLinearLayout">
                                                 <rect key="frame" x="16" y="167.5" width="359" height="29.5"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="標題" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dNa-m1-BFV">
                                                         <rect key="frame" x="16" y="0.0" width="37" height="22"/>
@@ -230,8 +229,9 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KGF-x1-sLp" customClass="MyLinearLayout">
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KGF-x1-sLp" customClass="MyLinearLayout">
                                                 <rect key="frame" x="16" y="205" width="343" height="40"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xX4-Eu-0gA">
                                                         <rect key="frame" x="10" y="3" width="270" height="35"/>
@@ -270,7 +270,7 @@
                                                         <real key="value" value="16"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="topPadding">
-                                                        <real key="value" value="4"/>
+                                                        <real key="value" value="0.0"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="leftPadding">
                                                         <real key="value" value="8"/>
@@ -283,8 +283,9 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hra-qE-lOL" customClass="MyLinearLayout">
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hra-qE-lOL" customClass="MyLinearLayout">
                                                 <rect key="frame" x="16" y="259" width="359" height="28"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="介紹" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="be2-fc-FaQ">
                                                         <rect key="frame" x="16" y="1" width="37" height="22"/>
@@ -328,12 +329,10 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="PTo-im-Dzf">
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="PTo-im-Dzf">
                                                 <rect key="frame" x="16" y="298" width="343" height="40"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="g2T-Nv-PWa"/>
-                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 <userDefinedRuntimeAttributes>
@@ -345,9 +344,12 @@
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="wrapContentHeight" value="YES"/>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                        <real key="value" value="8"/>
+                                                        <real key="value" value="0.0"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                        <real key="value" value="16"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myMargin">
                                                         <real key="value" value="16"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
@@ -355,8 +357,9 @@
                                                     <outlet property="delegate" destination="GLV-YV-TYD" id="0e2-L8-H6W"/>
                                                 </connections>
                                             </textView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XqN-Rd-lRX" userLabel="First My Linear Layout" customClass="MyLinearLayout">
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XqN-Rd-lRX" userLabel="First My Linear Layout" customClass="MyLinearLayout">
                                                 <rect key="frame" x="16" y="370" width="359" height="29"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="主類別" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0S8-fG-S5c">
                                                         <rect key="frame" x="16" y="0.0" width="56" height="22"/>
@@ -382,9 +385,6 @@
                                                     </label>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="29" id="Inx-yP-tEQ"/>
-                                                </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="orientation">
                                                         <integer key="value" value="1"/>
@@ -401,14 +401,24 @@
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
                                                         <real key="value" value="8"/>
                                                     </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="topPadding">
+                                                        <real key="value" value="4"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="leftPadding">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="bottomPadding">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="rightPadding">
+                                                        <real key="value" value="8"/>
+                                                    </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="eaC-zg-SVM">
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="eaC-zg-SVM">
                                                 <rect key="frame" x="0.0" y="407" width="375" height="53"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="53" id="RWF-cj-rPQ"/>
-                                                </constraints>
                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="16" id="q1Q-4h-wvV">
                                                     <size key="itemSize" width="112" height="48"/>
                                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -440,10 +450,16 @@
                                                 </cells>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                        <real key="value" value="8"/>
+                                                        <real key="value" value="0.0"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
                                                         <real key="value" value="16"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                        <real key="value" value="0.0"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
@@ -451,20 +467,20 @@
                                                     <outlet property="delegate" destination="GLV-YV-TYD" id="qg3-5N-OVF"/>
                                                 </connections>
                                             </collectionView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="urF-Mu-Q0E" customClass="MyLinearLayout">
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="urF-Mu-Q0E" customClass="MyLinearLayout">
                                                 <rect key="frame" x="16" y="492" width="359" height="29"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="子類別" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1rT-bs-DtB">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="子類別" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1rT-bs-DtB">
                                                         <rect key="frame" x="16" y="0.0" width="55.5" height="21.5"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(先選擇主類別)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UEq-l8-Q8z">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(先選擇主類別)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UEq-l8-Q8z">
                                                         <rect key="frame" x="96.5" y="4" width="147" height="21"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="147" id="GiV-ZG-OjG"/>
-                                                        </constraints>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                         <color key="textColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -477,11 +493,9 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(必選)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o2F-Id-CjC">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(必選)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o2F-Id-CjC">
                                                         <rect key="frame" x="251.5" y="3" width="55" height="23"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="55" id="Uaw-MD-UoD"/>
-                                                        </constraints>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                         <color key="textColor" red="0.91372549020000005" green="0.1176470588" blue="0.38823529410000002" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -496,17 +510,6 @@
                                                     </label>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstItem="UEq-l8-Q8z" firstAttribute="centerY" secondItem="urF-Mu-Q0E" secondAttribute="centerY" id="9vH-tX-wbs"/>
-                                                    <constraint firstItem="UEq-l8-Q8z" firstAttribute="leading" secondItem="1rT-bs-DtB" secondAttribute="trailing" constant="25" id="EEG-L3-10q"/>
-                                                    <constraint firstAttribute="height" constant="29" id="FTX-vN-PQV"/>
-                                                    <constraint firstItem="o2F-Id-CjC" firstAttribute="centerY" secondItem="urF-Mu-Q0E" secondAttribute="centerY" id="GyD-bO-Yrp"/>
-                                                    <constraint firstItem="1rT-bs-DtB" firstAttribute="top" secondItem="urF-Mu-Q0E" secondAttribute="top" id="NBb-Ry-toF"/>
-                                                    <constraint firstItem="1rT-bs-DtB" firstAttribute="leading" secondItem="urF-Mu-Q0E" secondAttribute="leading" constant="16" id="OQR-Rh-Hoc"/>
-                                                    <constraint firstItem="o2F-Id-CjC" firstAttribute="top" secondItem="urF-Mu-Q0E" secondAttribute="top" constant="3" id="Sa4-h1-bLw"/>
-                                                    <constraint firstItem="o2F-Id-CjC" firstAttribute="leading" secondItem="UEq-l8-Q8z" secondAttribute="trailing" constant="8" symbolic="YES" id="qdd-ro-d6z"/>
-                                                    <constraint firstItem="UEq-l8-Q8z" firstAttribute="top" secondItem="urF-Mu-Q0E" secondAttribute="top" constant="4" id="wlw-5H-vsr"/>
-                                                </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="orientation">
                                                         <integer key="value" value="1"/>
@@ -523,14 +526,24 @@
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
                                                         <real key="value" value="8"/>
                                                     </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="topPadding">
+                                                        <real key="value" value="4"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="leftPadding">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="bottomPadding">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="rightPadding">
+                                                        <real key="value" value="8"/>
+                                                    </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vax-rN-Utj">
-                                                <rect key="frame" x="0.0" y="529" width="375" height="1"/>
+                                            <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vax-rN-Utj">
+                                                <rect key="frame" x="0.0" y="529" width="375" height="53"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="1" id="ATq-Wy-ehJ"/>
-                                                </constraints>
                                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="16" id="aks-vt-eY8">
                                                     <size key="itemSize" width="112" height="48"/>
                                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -539,7 +552,7 @@
                                                 </collectionViewFlowLayout>
                                                 <cells>
                                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SecondCategoryCell" id="oxh-me-QPz">
-                                                        <rect key="frame" x="0.0" y="-23.5" width="112" height="48"/>
+                                                        <rect key="frame" x="0.0" y="2.5" width="112" height="48"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                             <rect key="frame" x="0.0" y="0.0" width="112" height="48"/>
@@ -562,10 +575,16 @@
                                                 </cells>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                        <real key="value" value="8"/>
+                                                        <real key="value" value="0.0"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
                                                         <real key="value" value="16"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                        <real key="value" value="0.0"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
@@ -573,11 +592,9 @@
                                                     <outlet property="delegate" destination="GLV-YV-TYD" id="Uca-bC-FHk"/>
                                                 </connections>
                                             </collectionView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="地點" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="prr-xm-bvM">
-                                                <rect key="frame" x="16" y="562" width="37" height="20"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="20" id="s4t-PF-l2N"/>
-                                                </constraints>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="地點" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="prr-xm-bvM">
+                                                <rect key="frame" x="0.0" y="562" width="37" height="20"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -589,16 +606,14 @@
                                                         <real key="value" value="16"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
-                                                        <real key="value" value="8"/>
+                                                        <real key="value" value="4"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="QVk-LP-HqP">
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="QVk-LP-HqP">
                                                 <rect key="frame" x="16" y="614" width="343" height="40"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="40" id="vE3-KE-gJ1"/>
-                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 <userDefinedRuntimeAttributes>
@@ -610,7 +625,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="wrapContentHeight" value="YES"/>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                        <real key="value" value="8"/>
+                                                        <real key="value" value="4"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
                                                         <real key="value" value="16"/>
@@ -620,17 +635,86 @@
                                                     <outlet property="delegate" destination="GLV-YV-TYD" id="G8q-HR-A12"/>
                                                 </connections>
                                             </textView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Nc-Nb-SYz" userLabel="sponsor View">
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Nc-Nb-SYz" userLabel="sponsor View" customClass="MyLinearLayout">
                                                 <rect key="frame" x="0.0" y="686" width="375" height="132"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GpO-Ih-OYA">
-                                                        <rect key="frame" x="16" y="62" width="343" height="40"/>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iLH-wv-WID">
+                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OKy-EG-5xx">
+                                                        <rect key="frame" x="0.0" y="65" width="343" height="21.5"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <subviews>
-                                                            <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ltc-3e-gfO">
-                                                                <rect key="frame" x="0.0" y="0.0" width="359" height="40"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="40" id="cOp-0G-JrM"/>
-                                                                </constraints>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="贊助條件" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xn6-r0-3bb">
+                                                                <rect key="frame" x="0.0" y="0.0" width="73.5" height="21.5"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                        <real key="value" value="8"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                        <real key="value" value="16"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                        <real key="value" value="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(最少設定3P)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ecm-vU-04D">
+                                                                <rect key="frame" x="0.0" y="0.0" width="343" height="21"/>
+                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                        <real key="value" value="8"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                        <real key="value" value="4"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                        <real key="value" value="16"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </label>
+                                                        </subviews>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="8"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GpO-Ih-OYA">
+                                                        <rect key="frame" x="16" y="62" width="341" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <subviews>
+                                                            <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ltc-3e-gfO">
+                                                                <rect key="frame" x="0.0" y="0.0" width="341" height="40"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                                 <userDefinedRuntimeAttributes>
@@ -644,13 +728,6 @@
                                                             </textField>
                                                         </subviews>
                                                         <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <constraints>
-                                                            <constraint firstItem="ltc-3e-gfO" firstAttribute="centerY" secondItem="GpO-Ih-OYA" secondAttribute="centerY" id="0vH-y6-Th4"/>
-                                                            <constraint firstItem="ltc-3e-gfO" firstAttribute="leading" secondItem="GpO-Ih-OYA" secondAttribute="leading" id="UUk-3E-pPB"/>
-                                                            <constraint firstAttribute="height" constant="40" id="VZG-EL-lNH"/>
-                                                            <constraint firstItem="ltc-3e-gfO" firstAttribute="trailing" secondItem="GpO-Ih-OYA" secondAttribute="trailing" constant="16" id="jgh-Wp-Zdp"/>
-                                                        </constraints>
-                                                        <viewLayoutGuide key="safeArea" id="XLc-Dn-edb"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                 <real key="value" value="16"/>
@@ -659,78 +736,16 @@
                                                                 <real key="value" value="16"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
-                                                                <real key="value" value="16"/>
+                                                                <real key="value" value="0.0"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="8"/>
+                                                                <real key="value" value="0.0"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="贊助條件" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xn6-r0-3bb">
-                                                        <rect key="frame" x="16" y="32.5" width="73.5" height="21.5"/>
-                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(最少設定3P)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ecm-vU-04D">
-                                                        <rect key="frame" x="277" y="37" width="85" height="17"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="4"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </label>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3bu-q7-abb" userLabel="View2">
-                                                        <rect key="frame" x="0.0" y="131" width="375" height="1"/>
-                                                        <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="1" id="PFj-vt-TLZ"/>
-                                                        </constraints>
-                                                        <viewLayoutGuide key="safeArea" id="HPe-uc-S8m"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
-                                                                <real key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iLH-wv-WID">
-                                                        <rect key="frame" x="0.0" y="4" width="375" height="1"/>
-                                                        <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="1" id="kYc-rY-opA"/>
-                                                        </constraints>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
-                                                                <real key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </view>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vhb-Hf-S9e">
+                                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vhb-Hf-S9e">
                                                         <rect key="frame" x="97.5" y="36" width="15" height="15"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="15" id="7wG-GR-PBW"/>
-                                                            <constraint firstAttribute="width" constant="15" id="NkA-zr-O6p"/>
-                                                        </constraints>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <state key="normal" image="ic200_ask_light.png"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
@@ -743,187 +758,247 @@
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="132" id="2d5-IA-rlg"/>
-                                                    <constraint firstItem="iLH-wv-WID" firstAttribute="leading" secondItem="3bu-q7-abb" secondAttribute="leading" id="8Ud-gw-asD"/>
-                                                    <constraint firstItem="vhb-Hf-S9e" firstAttribute="centerY" secondItem="xn6-r0-3bb" secondAttribute="centerY" id="98N-4X-vhD"/>
-                                                    <constraint firstItem="GpO-Ih-OYA" firstAttribute="top" secondItem="3Nc-Nb-SYz" secondAttribute="top" constant="62" id="CU1-NF-CCV"/>
-                                                    <constraint firstItem="RtK-mq-QSe" firstAttribute="trailing" secondItem="Ecm-vU-04D" secondAttribute="trailing" constant="13" id="GsU-1i-xI9"/>
-                                                    <constraint firstItem="GpO-Ih-OYA" firstAttribute="top" secondItem="Ecm-vU-04D" secondAttribute="bottom" constant="8" symbolic="YES" id="KFu-1c-tnE"/>
-                                                    <constraint firstItem="GpO-Ih-OYA" firstAttribute="centerX" secondItem="3Nc-Nb-SYz" secondAttribute="centerX" id="MZK-m9-aaw"/>
-                                                    <constraint firstItem="GpO-Ih-OYA" firstAttribute="leading" secondItem="xn6-r0-3bb" secondAttribute="leading" id="UvA-fz-277"/>
-                                                    <constraint firstItem="GpO-Ih-OYA" firstAttribute="centerX" secondItem="iLH-wv-WID" secondAttribute="centerX" id="bnd-Tq-VXN"/>
-                                                    <constraint firstItem="GpO-Ih-OYA" firstAttribute="top" secondItem="xn6-r0-3bb" secondAttribute="bottom" constant="8" symbolic="YES" id="fdz-ag-bfx"/>
-                                                    <constraint firstItem="3bu-q7-abb" firstAttribute="top" secondItem="GpO-Ih-OYA" secondAttribute="bottom" constant="29" id="h1h-bb-cce"/>
-                                                    <constraint firstItem="GpO-Ih-OYA" firstAttribute="leading" secondItem="RtK-mq-QSe" secondAttribute="leading" constant="16" id="k6u-C0-9LU"/>
-                                                    <constraint firstItem="GpO-Ih-OYA" firstAttribute="centerX" secondItem="3bu-q7-abb" secondAttribute="centerX" id="vJO-X7-AyQ"/>
-                                                    <constraint firstItem="vhb-Hf-S9e" firstAttribute="leading" secondItem="xn6-r0-3bb" secondAttribute="trailing" constant="8" id="wjQ-yC-rpZ"/>
-                                                    <constraint firstItem="iLH-wv-WID" firstAttribute="leading" secondItem="3Nc-Nb-SYz" secondAttribute="leading" id="xAx-QA-NMi"/>
-                                                    <constraint firstItem="Ecm-vU-04D" firstAttribute="top" secondItem="iLH-wv-WID" secondAttribute="bottom" constant="32" id="y5m-pV-Mnl"/>
-                                                </constraints>
-                                                <viewLayoutGuide key="safeArea" id="RtK-mq-QSe"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                        <real key="value" value="16"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                             </view>
-                                            <view autoresizesSubviews="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UP9-oe-7Ld" userLabel="plus View">
-                                                <rect key="frame" x="0.0" y="818" width="375" height="0.0"/>
+                                            <view clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UP9-oe-7Ld" userLabel="plus View" customClass="MyLinearLayout">
+                                                <rect key="frame" x="0.0" y="818" width="375" height="280"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="贊助次數顯示" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wIV-wl-Cde">
-                                                        <rect key="frame" x="16" y="32" width="111" height="22"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="111" id="DfD-39-BQ7"/>
-                                                            <constraint firstAttribute="height" constant="22" id="Grf-XB-pos"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
-                                                                <real key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="贊助回饋" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pom-PP-dx6">
-                                                        <rect key="frame" x="16" y="132" width="111" height="22"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="22" id="Uqm-DH-UvU"/>
-                                                            <constraint firstAttribute="width" constant="111" id="akw-KG-mrW"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
-                                                                <real key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="會員等級plus" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Sv-tj-GVI">
-                                                        <rect key="frame" x="274.5" y="32" width="84.5" height="17"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="4"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </label>
-                                                    <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="JPA-nV-FOR" customClass="CheckBox">
-                                                        <rect key="frame" x="16" y="72" width="68" height="24"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="68" id="Zna-qZ-4ne"/>
-                                                            <constraint firstAttribute="height" constant="24" id="czh-vG-v1j"/>
-                                                        </constraints>
-                                                        <state key="normal" title="開啟">
-                                                            <color key="titleColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
-                                                        <state key="selected">
-                                                            <color key="titleColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.cornerRadius">
-                                                                <integer key="value" value="6"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.borderWidth">
-                                                                <integer key="value" value="1"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <action selector="sponsingSettingSwitch:" destination="GLV-YV-TYD" eventType="touchUpInside" id="19Y-cO-s8z"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="2Xz-EQ-4j4" customClass="CheckBox">
-                                                        <rect key="frame" x="148" y="72" width="68" height="24"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="24" id="RUW-Z1-0PF"/>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="68" id="lP8-Gp-sir"/>
-                                                        </constraints>
-                                                        <state key="normal" title="關閉">
-                                                            <color key="titleColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
-                                                        <state key="selected">
-                                                            <color key="titleColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.cornerRadius">
-                                                                <integer key="value" value="6"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.borderWidth">
-                                                                <integer key="value" value="1"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <action selector="sponsingSettingSwitch:" destination="GLV-YV-TYD" eventType="touchUpInside" id="Oyi-V2-mIQ"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="vjl-Y8-ptc" customClass="CheckBox">
-                                                        <rect key="frame" x="16" y="169" width="68" height="24"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="68" id="l2x-0W-27q"/>
-                                                            <constraint firstAttribute="height" constant="24" id="lKz-c7-Ec9"/>
-                                                        </constraints>
-                                                        <state key="normal" title="開啟">
-                                                            <color key="titleColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
-                                                        <state key="selected">
-                                                            <color key="titleColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.cornerRadius">
-                                                                <integer key="value" value="6"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.borderWidth">
-                                                                <integer key="value" value="1"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <action selector="sponsingResponseSettingSwitch:" destination="GLV-YV-TYD" eventType="touchUpInside" id="BQX-my-fmU"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="EWl-nI-Yje" customClass="CheckBox">
-                                                        <rect key="frame" x="148" y="169" width="68" height="24"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="24" id="3Ja-v3-Ep4"/>
-                                                            <constraint firstAttribute="width" constant="68" id="TnA-vV-SYm"/>
-                                                        </constraints>
-                                                        <state key="normal" title="關閉">
-                                                            <color key="titleColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
-                                                        <state key="selected">
-                                                            <color key="titleColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </state>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.cornerRadius">
-                                                                <integer key="value" value="6"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.borderWidth">
-                                                                <integer key="value" value="1"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <action selector="sponsingResponseSettingSwitch:" destination="GLV-YV-TYD" eventType="touchUpInside" id="fws-9N-BLZ"/>
-                                                        </connections>
-                                                    </button>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="phU-Ne-68I" customClass="InfoTextView">
-                                                        <rect key="frame" x="16" y="209" width="343" height="40"/>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3bu-q7-abb" userLabel="View2">
+                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="40" id="QNI-g2-CBN"/>
-                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="wrapContentHeight" value="YES"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g31-v7-sCq">
+                                                        <rect key="frame" x="0.0" y="32" width="343" height="21.5"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="贊助次數顯示" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="23b-tx-i6N">
+                                                                <rect key="frame" x="0.0" y="0.0" width="211" height="22"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                        <real key="value" value="8"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                        <real key="value" value="16"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                        <real key="value" value="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="會員等級plus" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zEc-ka-LCt">
+                                                                <rect key="frame" x="0.0" y="0.0" width="343" height="21"/>
+                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                        <real key="value" value="8"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                        <real key="value" value="4"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                        <real key="value" value="16"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </label>
+                                                        </subviews>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="8"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i8K-as-BwV">
+                                                        <rect key="frame" x="0.0" y="69" width="375" height="24"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <subviews>
+                                                            <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="JPA-nV-FOR" customClass="CheckBox">
+                                                                <rect key="frame" x="16" y="0.0" width="68" height="24"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <state key="normal" title="開啟">
+                                                                    <color key="titleColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </state>
+                                                                <state key="selected">
+                                                                    <color key="titleColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </state>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.cornerRadius">
+                                                                        <integer key="value" value="6"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.borderWidth">
+                                                                        <integer key="value" value="1"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <action selector="sponsingSettingSwitch:" destination="GLV-YV-TYD" eventType="touchUpInside" id="19Y-cO-s8z"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="2Xz-EQ-4j4" customClass="CheckBox">
+                                                                <rect key="frame" x="150" y="0.0" width="68" height="24"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <state key="normal" title="關閉">
+                                                                    <color key="titleColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </state>
+                                                                <state key="selected">
+                                                                    <color key="titleColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </state>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.cornerRadius">
+                                                                        <integer key="value" value="6"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.borderWidth">
+                                                                        <integer key="value" value="1"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <action selector="sponsingSettingSwitch:" destination="GLV-YV-TYD" eventType="touchUpInside" id="Oyi-V2-mIQ"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="40"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="贊助回饋" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pom-PP-dx6">
+                                                        <rect key="frame" x="16" y="132" width="111" height="22"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </label>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2rw-LF-oLq">
+                                                        <rect key="frame" x="0.0" y="169" width="375" height="24"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <subviews>
+                                                            <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="vjl-Y8-ptc" customClass="CheckBox">
+                                                                <rect key="frame" x="16" y="0.0" width="68" height="24"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <state key="normal" title="開啟">
+                                                                    <color key="titleColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </state>
+                                                                <state key="selected">
+                                                                    <color key="titleColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </state>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.cornerRadius">
+                                                                        <integer key="value" value="6"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.borderWidth">
+                                                                        <integer key="value" value="1"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <action selector="sponsingResponseSettingSwitch:" destination="GLV-YV-TYD" eventType="touchUpInside" id="BQX-my-fmU"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="EWl-nI-Yje" customClass="CheckBox">
+                                                                <rect key="frame" x="150" y="0.0" width="68" height="24"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <state key="normal" title="關閉">
+                                                                    <color key="titleColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </state>
+                                                                <state key="selected">
+                                                                    <color key="titleColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                                </state>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.cornerRadius">
+                                                                        <integer key="value" value="6"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="imageView.layer.borderWidth">
+                                                                        <integer key="value" value="1"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <action selector="sponsingResponseSettingSwitch:" destination="GLV-YV-TYD" eventType="touchUpInside" id="fws-9N-BLZ"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="phU-Ne-68I" customClass="InfoTextView">
+                                                        <rect key="frame" x="16" y="208" width="343" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                         <userDefinedRuntimeAttributes>
@@ -954,216 +1029,212 @@
                                                     </textView>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstItem="2Xz-EQ-4j4" firstAttribute="leading" secondItem="JPA-nV-FOR" secondAttribute="trailing" constant="64" id="0Gb-vf-db4"/>
-                                                    <constraint firstItem="phU-Ne-68I" firstAttribute="top" secondItem="vjl-Y8-ptc" secondAttribute="bottom" constant="16" id="2aM-Jo-m7a"/>
-                                                    <constraint firstItem="pom-PP-dx6" firstAttribute="leading" secondItem="UP9-oe-7Ld" secondAttribute="leading" constant="16" id="9g3-yI-VF5"/>
-                                                    <constraint firstItem="EWl-nI-Yje" firstAttribute="leading" secondItem="vjl-Y8-ptc" secondAttribute="trailing" constant="64" id="EGE-Di-e0x"/>
-                                                    <constraint firstItem="vjl-Y8-ptc" firstAttribute="leading" secondItem="UP9-oe-7Ld" secondAttribute="leading" constant="16" id="H8I-JE-nFd"/>
-                                                    <constraint firstItem="wIV-wl-Cde" firstAttribute="top" secondItem="UP9-oe-7Ld" secondAttribute="top" constant="32" id="HBe-M0-GoQ"/>
-                                                    <constraint firstItem="JPA-nV-FOR" firstAttribute="top" secondItem="UP9-oe-7Ld" secondAttribute="top" constant="72" id="QgK-BV-ehh"/>
-                                                    <constraint firstItem="vjl-Y8-ptc" firstAttribute="top" secondItem="UP9-oe-7Ld" secondAttribute="top" constant="169" id="QoL-y2-RbR"/>
-                                                    <constraint firstAttribute="height" id="SUq-MJ-q5o"/>
-                                                    <constraint firstItem="phU-Ne-68I" firstAttribute="trailing" secondItem="UP9-oe-7Ld" secondAttribute="trailing" constant="-16" id="ajv-f7-VYq"/>
-                                                    <constraint firstItem="EWl-nI-Yje" firstAttribute="top" secondItem="UP9-oe-7Ld" secondAttribute="top" constant="169" id="coI-1y-ppc"/>
-                                                    <constraint firstItem="wIV-wl-Cde" firstAttribute="leading" secondItem="UP9-oe-7Ld" secondAttribute="leading" constant="16" id="iMJ-7k-4eC"/>
-                                                    <constraint firstItem="2Xz-EQ-4j4" firstAttribute="top" secondItem="UP9-oe-7Ld" secondAttribute="top" constant="72" id="iWl-oY-p4c"/>
-                                                    <constraint firstItem="9Sv-tj-GVI" firstAttribute="top" secondItem="UP9-oe-7Ld" secondAttribute="top" constant="32" id="iXH-hk-xrZ"/>
-                                                    <constraint firstItem="9Sv-tj-GVI" firstAttribute="trailing" secondItem="UP9-oe-7Ld" secondAttribute="trailing" constant="-16" id="pca-k9-RZc"/>
-                                                    <constraint firstItem="phU-Ne-68I" firstAttribute="leading" secondItem="UP9-oe-7Ld" secondAttribute="leading" constant="16" id="pwK-yp-jLM"/>
-                                                    <constraint firstItem="JPA-nV-FOR" firstAttribute="leading" secondItem="UP9-oe-7Ld" secondAttribute="leading" constant="16" id="s4F-PT-z0P"/>
-                                                    <constraint firstItem="pom-PP-dx6" firstAttribute="top" secondItem="UP9-oe-7Ld" secondAttribute="top" constant="132" id="ztn-gS-7QF"/>
-                                                </constraints>
                                                 <viewLayoutGuide key="safeArea" id="Zfr-qd-fJX"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                        <real key="value" value="16"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="wrapContentHeight" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
                                             </view>
-                                            <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uxi-Ew-zEV" userLabel="professional View">
-                                                <rect key="frame" x="0.0" y="818" width="375" height="0.0"/>
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uxi-Ew-zEV" userLabel="professional View" customClass="MyLinearLayout">
+                                                <rect key="frame" x="0.0" y="1098" width="375" height="144"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="進階設定" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vKS-Sd-MxZ">
-                                                        <rect key="frame" x="16" y="32" width="111" height="22"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="22" id="CiZ-7X-DNR"/>
-                                                            <constraint firstAttribute="width" constant="111" id="L98-Z7-Ytp"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rAs-PE-Cmi" userLabel="View2">
+                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
                                                                 <real key="value" value="16"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
-                                                                <real key="value" value="16"/>
+                                                                <real key="value" value="0.0"/>
                                                             </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </label>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rAs-PE-Cmi" userLabel="View2">
-                                                        <rect key="frame" x="0.0" y="1" width="375" height="1"/>
-                                                        <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="1" id="agb-jS-zb5"/>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="cRc-lC-97L"/>
-                                                        </constraints>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
-                                                                <real key="value" value="16"/>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                <real key="value" value="0.0"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="會員等級profession" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2mX-9b-nvL">
-                                                        <rect key="frame" x="234" y="32" width="125" height="17"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
+                                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="acN-XF-2hA">
+                                                        <rect key="frame" x="0.0" y="53" width="343" height="21.5"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="進階設定" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vKS-Sd-MxZ">
+                                                                <rect key="frame" x="0.0" y="0.0" width="111" height="22"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                        <real key="value" value="16"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                        <real key="value" value="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                        <real key="value" value="8"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="會員等級profession" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2mX-9b-nvL">
+                                                                <rect key="frame" x="0.0" y="0.0" width="343" height="22"/>
+                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                        <real key="value" value="8"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                        <real key="value" value="4"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                        <real key="value" value="16"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </label>
+                                                        </subviews>
                                                         <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="4"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </label>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DMg-gs-cna" customClass="InfoTextView">
-                                                        <rect key="frame" x="60" y="62" width="299" height="40"/>
-                                                        <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="40" id="l20-eW-HnS"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                 <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="8"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
                                                                 <real key="value" value="16"/>
                                                             </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="wrapContentHeight" value="YES"/>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                 <real key="value" value="16"/>
                                                             </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                <integer key="value" value="6"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="點擊左方圖示或直接輸入"/>
-                                                            <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                                                                <color key="value" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                            </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <outlet property="delegate" destination="GLV-YV-TYD" id="h0J-vo-AGT"/>
-                                                        </connections>
-                                                    </textView>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Ym-aF-Kor">
-                                                        <rect key="frame" x="319" y="66" width="32" height="32"/>
-                                                        <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="32" id="cHf-PF-Nay"/>
-                                                            <constraint firstAttribute="height" constant="32" id="uRQ-oc-bo7"/>
-                                                        </constraints>
-                                                        <state key="normal" image="icon_creatnewframe_plus"/>
+                                                    </view>
+                                                    <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3oB-dK-7es">
+                                                        <rect key="frame" x="0.0" y="62" width="375" height="40"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <subviews>
+                                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pQ1-Mn-IaX">
+                                                                <rect key="frame" x="54" y="0.0" width="303" height="40"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
+                                                                <subviews>
+                                                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="點擊按鈕掃描或直接輸入" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R9d-qp-hxZ">
+                                                                        <rect key="frame" x="0.0" y="5" width="302" height="30"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                        <nil key="textColor"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <textInputTraits key="textInputTraits"/>
+                                                                    </textField>
+                                                                </subviews>
+                                                                <color key="backgroundColor" red="0.90980392156862744" green="0.90980392156862744" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                        <real key="value" value="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                        <real key="value" value="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                        <real key="value" value="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                        <real key="value" value="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="6"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
+                                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Ym-aF-Kor">
+                                                                <rect key="frame" x="303" y="4" width="32" height="32"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                                <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <state key="normal" image="icon_creatnewframe_plus"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="6"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                        <real key="value" value="20"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                        <real key="value" value="4"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                        <real key="value" value="4"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HhB-ho-Mkd">
+                                                                <rect key="frame" x="0.0" y="4" width="32" height="32"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                                                <state key="normal" image="ic200_scancamera_white">
+                                                                    <color key="titleColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </state>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="16"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <action selector="scanCodeForAdvanceSetting:" destination="GLV-YV-TYD" eventType="touchUpInside" id="VAQ-c8-kD4"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
                                                         <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                <integer key="value" value="6"/>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="8"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                <real key="value" value="16"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
-                                                    </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HhB-ho-Mkd">
-                                                        <rect key="frame" x="16" y="66" width="32" height="32"/>
-                                                        <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="32" id="46h-y0-gvQ"/>
-                                                            <constraint firstAttribute="height" constant="32" id="D6p-Rz-C3j"/>
-                                                        </constraints>
-                                                        <inset key="imageEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
-                                                        <state key="normal" image="ic200_scancamera_white">
-                                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </state>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                <integer key="value" value="16"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </button>
+                                                    </view>
                                                 </subviews>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstItem="DMg-gs-cna" firstAttribute="trailing" secondItem="Uxi-Ew-zEV" secondAttribute="trailing" constant="-16" id="6Tq-py-UaX"/>
-                                                    <constraint firstItem="DMg-gs-cna" firstAttribute="centerY" secondItem="HhB-ho-Mkd" secondAttribute="centerY" id="DNb-nU-Zxq"/>
-                                                    <constraint firstItem="DMg-gs-cna" firstAttribute="leading" secondItem="Uxi-Ew-zEV" secondAttribute="leading" constant="60" id="Ecc-i1-7az"/>
-                                                    <constraint firstItem="HhB-ho-Mkd" firstAttribute="leading" secondItem="Uxi-Ew-zEV" secondAttribute="leading" constant="16" id="I8A-0F-8xM"/>
-                                                    <constraint firstItem="rAs-PE-Cmi" firstAttribute="width" secondItem="Uxi-Ew-zEV" secondAttribute="width" id="JdY-zu-jac"/>
-                                                    <constraint firstItem="DMg-gs-cna" firstAttribute="top" secondItem="Uxi-Ew-zEV" secondAttribute="top" constant="62" id="UHb-8T-nRn"/>
-                                                    <constraint firstItem="8Ym-aF-Kor" firstAttribute="trailing" secondItem="Uxi-Ew-zEV" secondAttribute="trailing" constant="-24" id="b20-Yg-GAd"/>
-                                                    <constraint firstItem="8Ym-aF-Kor" firstAttribute="centerY" secondItem="HhB-ho-Mkd" secondAttribute="centerY" id="hu9-HO-jE1"/>
-                                                    <constraint firstItem="2mX-9b-nvL" firstAttribute="trailing" secondItem="Uxi-Ew-zEV" secondAttribute="trailing" constant="-16" id="hzC-NL-hdg"/>
-                                                    <constraint firstAttribute="height" id="iyA-Xe-Y62"/>
-                                                    <constraint firstItem="2mX-9b-nvL" firstAttribute="top" secondItem="Uxi-Ew-zEV" secondAttribute="top" constant="32" id="p8d-6F-yne"/>
-                                                    <constraint firstItem="rAs-PE-Cmi" firstAttribute="leading" secondItem="Uxi-Ew-zEV" secondAttribute="leading" id="pff-cm-eVS"/>
-                                                    <constraint firstItem="rAs-PE-Cmi" firstAttribute="top" secondItem="Uxi-Ew-zEV" secondAttribute="top" constant="1" id="uvs-sa-nHT"/>
-                                                    <constraint firstItem="vKS-Sd-MxZ" firstAttribute="leading" secondItem="Uxi-Ew-zEV" secondAttribute="leading" constant="16" id="wcr-xy-6hO"/>
-                                                    <constraint firstItem="vKS-Sd-MxZ" firstAttribute="top" secondItem="Uxi-Ew-zEV" secondAttribute="top" constant="32" id="wd2-R0-ae3"/>
-                                                </constraints>
                                                 <viewLayoutGuide key="safeArea" id="qFQ-eg-w1s"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="wrapContentHeight" value="YES"/>
+                                                </userDefinedRuntimeAttributes>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="eaC-zg-SVM" firstAttribute="top" secondItem="XqN-Rd-lRX" secondAttribute="bottom" constant="8" id="09x-ch-Thw"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="trailing" secondItem="XqN-Rd-lRX" secondAttribute="trailing" id="0Kx-ih-99k"/>
-                                            <constraint firstItem="PTo-im-Dzf" firstAttribute="top" secondItem="vSI-Sh-FV1" secondAttribute="top" constant="298" id="1KH-rx-OEy"/>
-                                            <constraint firstItem="QVk-LP-HqP" firstAttribute="leading" secondItem="vSI-Sh-FV1" secondAttribute="leading" constant="16" id="1q8-5m-18k"/>
-                                            <constraint firstItem="prr-xm-bvM" firstAttribute="top" secondItem="vax-rN-Utj" secondAttribute="bottom" constant="32" id="5Ow-2v-VnI"/>
-                                            <constraint firstItem="QVk-LP-HqP" firstAttribute="top" secondItem="prr-xm-bvM" secondAttribute="bottom" constant="32" id="9K3-E0-ZoZ"/>
                                             <constraint firstAttribute="height" constant="1300" id="9Ri-Ox-sZ6"/>
-                                            <constraint firstItem="KGF-x1-sLp" firstAttribute="leading" secondItem="PTo-im-Dzf" secondAttribute="leading" id="9Uq-Uu-46R"/>
-                                            <constraint firstItem="QVk-LP-HqP" firstAttribute="centerX" secondItem="vax-rN-Utj" secondAttribute="centerX" id="ALR-af-nM4"/>
-                                            <constraint firstItem="60s-Hw-WnW" firstAttribute="top" secondItem="vSI-Sh-FV1" secondAttribute="top" constant="76" id="CfV-0b-kkp"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="top" secondItem="eaC-zg-SVM" secondAttribute="bottom" constant="32" id="Ci2-os-5L9"/>
-                                            <constraint firstItem="vax-rN-Utj" firstAttribute="top" secondItem="urF-Mu-Q0E" secondAttribute="bottom" constant="8" symbolic="YES" id="DSe-wx-OLl"/>
-                                            <constraint firstAttribute="trailing" secondItem="eaC-zg-SVM" secondAttribute="trailing" id="Diw-R9-yFj"/>
-                                            <constraint firstAttribute="trailing" secondItem="Uxi-Ew-zEV" secondAttribute="trailing" id="E0C-IY-UyO"/>
-                                            <constraint firstItem="UP9-oe-7Ld" firstAttribute="leading" secondItem="vSI-Sh-FV1" secondAttribute="leading" id="H5q-JB-nfY"/>
-                                            <constraint firstItem="eaC-zg-SVM" firstAttribute="leading" secondItem="vSI-Sh-FV1" secondAttribute="leading" id="HQE-SZ-05f"/>
-                                            <constraint firstItem="3Nc-Nb-SYz" firstAttribute="top" secondItem="QVk-LP-HqP" secondAttribute="bottom" constant="32" id="I3I-3I-HvX"/>
-                                            <constraint firstItem="60s-Hw-WnW" firstAttribute="leading" secondItem="vSI-Sh-FV1" secondAttribute="leading" constant="16" id="J7y-zx-H5H"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="trailing" secondItem="eaC-zg-SVM" secondAttribute="trailing" id="JV1-Eq-GAK"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="trailing" secondItem="dmY-C0-7sh" secondAttribute="trailing" id="KxK-uk-vw1"/>
-                                            <constraint firstItem="UP9-oe-7Ld" firstAttribute="trailing" secondItem="vSI-Sh-FV1" secondAttribute="trailing" id="NKD-wH-Rjb"/>
-                                            <constraint firstItem="KGF-x1-sLp" firstAttribute="leading" secondItem="dmY-C0-7sh" secondAttribute="leading" id="QRZ-xL-sTg"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="trailing" secondItem="vax-rN-Utj" secondAttribute="trailing" id="Rwf-UE-FXE"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="leading" secondItem="QVk-LP-HqP" secondAttribute="leading" id="S7h-4X-gel"/>
-                                            <constraint firstItem="Uxi-Ew-zEV" firstAttribute="width" secondItem="vSI-Sh-FV1" secondAttribute="width" id="Te2-0G-RfT"/>
-                                            <constraint firstItem="XqN-Rd-lRX" firstAttribute="top" secondItem="PTo-im-Dzf" secondAttribute="bottom" constant="32" id="Vf7-mc-gqA"/>
-                                            <constraint firstItem="UP9-oe-7Ld" firstAttribute="top" secondItem="3Nc-Nb-SYz" secondAttribute="bottom" id="ZKR-pC-IhO"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="leading" secondItem="hra-qE-lOL" secondAttribute="leading" id="ayM-nL-bNP"/>
-                                            <constraint firstItem="hra-qE-lOL" firstAttribute="top" secondItem="vSI-Sh-FV1" secondAttribute="top" constant="259" id="bZ4-CY-XIr"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="trailing" secondItem="hra-qE-lOL" secondAttribute="trailing" id="cFe-Rm-Xbw"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="leading" secondItem="XqN-Rd-lRX" secondAttribute="leading" id="cKc-V6-9Z9"/>
-                                            <constraint firstItem="KGF-x1-sLp" firstAttribute="top" secondItem="vSI-Sh-FV1" secondAttribute="top" constant="205" id="dU0-Ib-9Ty"/>
-                                            <constraint firstItem="Uxi-Ew-zEV" firstAttribute="top" secondItem="UP9-oe-7Ld" secondAttribute="bottom" id="hz6-SY-8VV"/>
-                                            <constraint firstItem="3Nc-Nb-SYz" firstAttribute="width" secondItem="vSI-Sh-FV1" secondAttribute="width" id="iMn-4c-azw"/>
-                                            <constraint firstItem="hra-qE-lOL" firstAttribute="top" secondItem="KGF-x1-sLp" secondAttribute="bottom" constant="14" id="kUq-Td-9Ja"/>
-                                            <constraint firstItem="QVk-LP-HqP" firstAttribute="trailing" secondItem="KGF-x1-sLp" secondAttribute="trailing" id="maE-7M-Las"/>
-                                            <constraint firstItem="dmY-C0-7sh" firstAttribute="top" secondItem="60s-Hw-WnW" secondAttribute="bottom" constant="34" id="nC9-l9-OnA"/>
-                                            <constraint firstItem="KGF-x1-sLp" firstAttribute="leading" secondItem="prr-xm-bvM" secondAttribute="leading" id="q7l-ZO-gJd"/>
-                                            <constraint firstItem="QVk-LP-HqP" firstAttribute="trailing" secondItem="PTo-im-Dzf" secondAttribute="trailing" id="rq6-1Y-c2l"/>
-                                            <constraint firstItem="KGF-x1-sLp" firstAttribute="top" secondItem="dmY-C0-7sh" secondAttribute="bottom" constant="8" symbolic="YES" id="t0w-f3-TtF"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="leading" secondItem="prr-xm-bvM" secondAttribute="leading" id="trN-pY-xcD"/>
-                                            <constraint firstItem="Uxi-Ew-zEV" firstAttribute="leading" secondItem="vSI-Sh-FV1" secondAttribute="leading" id="tvS-BO-Lj4"/>
-                                            <constraint firstItem="urF-Mu-Q0E" firstAttribute="trailing" secondItem="3Nc-Nb-SYz" secondAttribute="trailing" id="viY-9h-JDn"/>
-                                            <constraint firstItem="PTo-im-Dzf" firstAttribute="top" secondItem="hra-qE-lOL" secondAttribute="bottom" constant="11" id="xGP-10-vPa"/>
-                                            <constraint firstItem="QVk-LP-HqP" firstAttribute="centerX" secondItem="3Nc-Nb-SYz" secondAttribute="centerX" id="yU4-oI-61n"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="wrapContentHeight" value="YES"/>
@@ -1304,6 +1375,7 @@
                         <viewLayoutGuide key="safeArea" id="shq-aM-dZf"/>
                     </view>
                     <connections>
+                        <outlet property="advTextField" destination="R9d-qp-hxZ" id="kiO-em-76r"/>
                         <outlet property="backgroundLayout" destination="vSI-Sh-FV1" id="v1g-Im-t7C"/>
                         <outlet property="bottomBtnView" destination="HZX-CN-bcy" id="tzA-e4-FeK"/>
                         <outlet property="decriptionRequiredLabel" destination="VEK-I3-bDC" id="weL-g5-iP1"/>
@@ -1319,20 +1391,20 @@
                         <outlet property="pPointTextField" destination="ltc-3e-gfO" id="bai-AY-81f"/>
                         <outlet property="pPointView" destination="GpO-Ih-OYA" id="WNw-h9-XnY"/>
                         <outlet property="pQuestionBtn" destination="vhb-Hf-S9e" id="30I-Zj-Fci"/>
-                        <outlet property="plusMemberHeight" destination="SUq-MJ-q5o" id="HoY-cr-h1a"/>
+                        <outlet property="plusView" destination="UP9-oe-7Ld" id="Ttw-hW-4et"/>
                         <outlet property="privacyBtn" destination="G6s-OO-mcw" id="lFh-BH-6kZ"/>
                         <outlet property="privacyLabel" destination="Jh7-sg-l4y" id="ayc-VY-htz"/>
-                        <outlet property="professionMemberHeight" destination="iyA-Xe-Y62" id="gxp-Dk-0IK"/>
+                        <outlet property="professionView" destination="Uxi-Ew-zEV" id="bVW-VX-EgT"/>
                         <outlet property="saveAndExitBtn" destination="n71-hw-5ck" id="nay-qa-08k"/>
                         <outlet property="scrollView" destination="YNO-eD-9io" id="uqD-h8-xd4"/>
                         <outlet property="secondCategoryCollectionView" destination="vax-rN-Utj" id="lHJ-bn-Hxm"/>
-                        <outlet property="secondCategoryHeight" destination="ATq-Wy-ehJ" id="cw4-3F-Abh"/>
                         <outlet property="sponsorCountOFF" destination="2Xz-EQ-4j4" id="mbn-k1-APX"/>
                         <outlet property="sponsorCountON" destination="JPA-nV-FOR" id="onI-vz-oKt"/>
                         <outlet property="sponsorDesc" destination="phU-Ne-68I" id="Xds-Q1-t90"/>
                         <outlet property="sponsorDescOFF" destination="EWl-nI-Yje" id="LDM-gg-Is6"/>
                         <outlet property="sponsorDescON" destination="vjl-Y8-ptc" id="fpR-SZ-RpQ"/>
                         <outlet property="subCategoryRequiredLabel" destination="o2F-Id-CjC" id="gzP-tR-f62"/>
+                        <outlet property="submitBtn" destination="8Ym-aF-Kor" id="GFw-Sz-KkC"/>
                         <outlet property="toAlbumCreationBtn" destination="nLe-im-xt0" id="D0M-vo-M7o"/>
                     </connections>
                 </viewController>
@@ -2510,20 +2582,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VP0-5b-AmK">
-                                <rect key="frame" x="28" y="50" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="72" width="375" height="517"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="scan-frame.png" translatesAutoresizingMaskIntoConstraints="NO" id="Jrj-AZ-O1e">
-                                <rect key="frame" x="60" y="234" width="200" height="200"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yre-Ik-yER">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yre-Ik-yER">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DPS-ve-FEZ">
-                                        <rect key="frame" x="5" y="21" width="40" height="40"/>
+                                        <rect key="frame" x="8" y="2" width="40" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                         <state key="normal" image="ic200_arrow_left_dark.png"/>
@@ -2532,20 +2599,51 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="8aG-VM-9MC"/>
+                                </constraints>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0yo-QV-h5D">
-                                <rect key="frame" x="0.0" y="504" width="320" height="64"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0yo-QV-h5D">
+                                <rect key="frame" x="0.0" y="603" width="375" height="64"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="pinpin_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="fyf-VS-2mH">
-                                        <rect key="frame" x="40" y="7" width="240" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pinpin_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="fyf-VS-2mH">
+                                        <rect key="frame" x="67.5" y="9.5" width="240" height="45"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="45" id="4ZL-cM-ReD"/>
+                                            <constraint firstAttribute="width" constant="240" id="s8y-Mc-XQh"/>
+                                        </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="fyf-VS-2mH" firstAttribute="centerX" secondItem="0yo-QV-h5D" secondAttribute="centerX" id="6zc-Ma-OBr"/>
+                                    <constraint firstItem="fyf-VS-2mH" firstAttribute="centerY" secondItem="0yo-QV-h5D" secondAttribute="centerY" id="88C-S6-bj2"/>
+                                    <constraint firstItem="fyf-VS-2mH" firstAttribute="centerX" secondItem="0yo-QV-h5D" secondAttribute="centerX" id="Dhe-mc-Ipj"/>
+                                    <constraint firstAttribute="height" constant="64" id="Ekb-SN-yDp"/>
+                                    <constraint firstItem="fyf-VS-2mH" firstAttribute="centerY" secondItem="0yo-QV-h5D" secondAttribute="centerY" id="qZE-hL-X4w"/>
+                                </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scan-frame.png" translatesAutoresizingMaskIntoConstraints="NO" id="Jrj-AZ-O1e">
+                                <rect key="frame" x="87.5" y="232.5" width="200" height="202"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="Lx3-mZ-Ahu"/>
+                                    <constraint firstAttribute="height" constant="202" id="zpv-Dp-faa"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Yre-Ik-yER" firstAttribute="centerX" secondItem="BKO-2h-BAC" secondAttribute="centerX" id="1X3-2R-46R"/>
+                            <constraint firstItem="0yo-QV-h5D" firstAttribute="centerX" secondItem="jMZ-kH-KMA" secondAttribute="centerX" id="4aa-CT-Z25"/>
+                            <constraint firstItem="Jrj-AZ-O1e" firstAttribute="centerY" secondItem="BKO-2h-BAC" secondAttribute="centerY" id="5Vc-X0-MMr"/>
+                            <constraint firstItem="Jrj-AZ-O1e" firstAttribute="centerY" secondItem="BKO-2h-BAC" secondAttribute="centerY" id="ELt-kx-6yb"/>
+                            <constraint firstItem="0yo-QV-h5D" firstAttribute="width" secondItem="jMZ-kH-KMA" secondAttribute="width" id="PnC-V9-Dfn"/>
+                            <constraint firstItem="Yre-Ik-yER" firstAttribute="top" secondItem="jMZ-kH-KMA" secondAttribute="top" id="QtO-gu-BQv"/>
+                            <constraint firstItem="Jrj-AZ-O1e" firstAttribute="centerX" secondItem="BKO-2h-BAC" secondAttribute="centerX" id="RKc-jW-iSX"/>
+                            <constraint firstItem="0yo-QV-h5D" firstAttribute="bottom" secondItem="jMZ-kH-KMA" secondAttribute="bottom" id="S89-Rr-gks"/>
+                            <constraint firstItem="jMZ-kH-KMA" firstAttribute="width" secondItem="Yre-Ik-yER" secondAttribute="width" id="UBd-TR-JNj"/>
+                            <constraint firstItem="Jrj-AZ-O1e" firstAttribute="centerX" secondItem="BKO-2h-BAC" secondAttribute="centerX" id="mm2-hl-0aW"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="jMZ-kH-KMA"/>
                     </view>
                     <connections>
@@ -2554,7 +2652,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Fx-YZ-lJy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2346" y="58"/>
+            <point key="canvasLocation" x="2344.8000000000002" y="57.121439280359823"/>
         </scene>
         <!--NotifTab-->
         <scene sceneID="oIs-cN-GK5">

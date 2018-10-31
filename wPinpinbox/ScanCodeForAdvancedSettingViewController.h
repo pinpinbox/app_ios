@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ScanCodeForAdvancedSettingViewController : UIViewController
+typedef void (^ScanFinishedBlock)(NSArray *anyids);
 
+@interface ScanCodeForAdvancedSettingViewController : UIViewController
+@property (nonatomic) ScanFinishedBlock finishedBlock;
 @end

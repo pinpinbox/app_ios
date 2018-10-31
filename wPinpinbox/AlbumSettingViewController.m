@@ -29,6 +29,8 @@
 
 #import "InfoTextView.h"
 
+#define SponsorRemindMsg @"啟用需遵守個人資料保護法之相關規定，盡善良管理人之注意義務，不得外流或作為本次回饋使用者以外目的之使用，並須遵守本平台含隱私權政策在內之相關規定，如有違反，需自負一切責任。"
+
 @interface CheckBox : UIButton
 @end
 
@@ -139,9 +141,9 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *firstCategoryCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *secondCategoryCollectionView;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *secondCategoryHeight;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *plusMemberHeight;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *professionMemberHeight;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *secondCategoryHeight;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *plusMemberHeight;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *professionMemberHeight;
 //@property (weak, nonatomic) IBOutlet UICollectionView *weatherCollectionView;
 //@property (weak, nonatomic) IBOutlet UICollectionView *moodCollectionView;
 
@@ -161,12 +163,17 @@
 
 @property (weak, nonatomic) IBOutlet UIView *bottomBtnView;
 
-
+@property (weak, nonatomic) IBOutlet MyLinearLayout *plusView;
 @property (weak, nonatomic) IBOutlet UIButton *sponsorDescON;
 @property (weak, nonatomic) IBOutlet UIButton *sponsorDescOFF;
 @property (weak, nonatomic) IBOutlet UIButton *sponsorCountON;
 @property (weak, nonatomic) IBOutlet UIButton *sponsorCountOFF;
 @property (weak, nonatomic) IBOutlet InfoTextView *sponsorDesc;
+
+
+@property (weak, nonatomic) IBOutlet MyLinearLayout *professionView;
+@property (weak, nonatomic) IBOutlet UITextField *advTextField;
+@property (weak, nonatomic) IBOutlet UIButton *submitBtn;
 
 @end
 
@@ -667,7 +674,8 @@
     
     [self loadUserSettingData];
     [self setupUI2];
-    
+    //  for profession member only
+    [self processAlbumIndexList];
     isModified = NO;
     albumEditBtnPress = NO;
 }
@@ -723,7 +731,7 @@
         // Second Category
         //if (![self.data[@"secondpaging"] isKindOfClass: [NSNull class]]) {
         if (![self.data[@"category_id"] isKindOfClass:[NSNull class]]) {
-            _secondCategoryHeight.constant = 53;
+            //_secondCategoryHeight.constant = 53;
             self.secondCategoryCollectionView.hidden = NO;
             
             NSLog(@"secondpaging is not kind of null class");
@@ -833,8 +841,8 @@
 //    self.advanceSettingView.layer.cornerRadius = kCornerRadius;
     self.saveAndExitBtn.layer.cornerRadius = kCornerRadius;
     
-    self.plusMemberHeight.constant = 0;
-    self.professionMemberHeight.constant = 0;
+    self.plusView.hidden = YES;
+    self.professionView.hidden = YES;
     
     self.pPointTextField.leftViewMode = UITextFieldViewModeAlways;
     UILabel *left = [[UILabel alloc] init];
@@ -969,8 +977,8 @@
 //    }
     
 //    oldAdvancedStr = self.advancedTextField.text;
-    self.plusMemberHeight.constant = 0;
-    self.professionMemberHeight.constant = 0;
+    //self.plusMemberHeight.constant = 0;
+    //self.professionMemberHeight.constant = 0;
     if (mdata[@"usergrade"] ) {
         NSString *user = mdata[@"usergrade"];
         if (![user isEqualToString:@"free"]) {
@@ -981,19 +989,25 @@
             self.sponsorDescON.selected = c;
             self.sponsorDescOFF.selected = !c;
             self.sponsorDesc.text = [self getRewardDesc];
-        
-            self.plusMemberHeight.constant = c? 280: 208;
+            self.sponsorDesc.hidden = (_sponsorDesc.text.length < 1);
+            self.plusView.hidden = NO;
+            //self.plusMemberHeight.constant = c? 280: 208;
                 
             if ([user isEqualToString:@"profession"]) {
-                
-                self.professionMemberHeight.constant = 200;
+                self.plusView.hidden = NO;
+                self.professionView.hidden = NO;
+                //self.professionMemberHeight.constant = 200;
             }
+            [self.plusView setNeedsLayout];
+            [self.backgroundLayout setNeedsLayout];
         }
         
     }
     NSLog(@"");
 }
-
+- (void)processAlbumIndexList {
+    
+}
 - (void)doneNumberPad
 {
     NSLog(@"doneNumberPad");
@@ -1145,7 +1159,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
         
         [self.firstCategoryCollectionView reloadData];
-        self.secondCategoryHeight.constant = 53;
+        //self.secondCategoryHeight.constant = 53;
         self.secondCategoryCollectionView.hidden = NO;
         
         [secondCategoryArray removeAllObjects];
@@ -1247,9 +1261,16 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     ScanCodeForAdvancedSettingViewController *scanCodeFASVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"ScanCodeForAdvancedSettingViewController"];
     
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav popViewControllerAnimated: YES];
-    [appDelegate.myNav pushViewController: scanCodeFASVC animated: YES];
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [appDelegate.myNav popViewControllerAnimated: YES];
+//    [appDelegate.myNav pushViewController: scanCodeFASVC animated: YES];
+    
+    [self presentViewController:scanCodeFASVC animated:YES completion:nil];
+    __weak typeof(self) wself = self;
+    
+    scanCodeFASVC.finishedBlock = ^(NSArray *anyids) {
+        [wself processScanResult: anyids];
+    };
 }
 
 - (IBAction)privacyBtnPress:(id)sender {
@@ -1389,21 +1410,25 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     if (!btn.selected) {
         if (btn == self.sponsorDescON) {
             if ([self getCurrentSetPPoint] < 3) {
-                [self warnToastWithMessage:@"贊助條件至少3P"];
+                [self warnToastWithMessage:@"贊助條件至少3P才能開啟"];
                 self.sponsorDescON.selected = NO;
                 self.sponsorDescOFF.selected = YES;
                 return;
             } else {
                 self.sponsorDescON.selected = YES;
                 self.sponsorDescOFF.selected = NO;
-                self.plusMemberHeight.constant = 280;
+                //self.plusMemberHeight.constant = 280;
+                self.sponsorDesc.hidden = NO;
+                
+                [self showCustomAlert:SponsorRemindMsg];
             }
         } else {
             self.sponsorDescON.selected = NO;
             self.sponsorDescOFF.selected = YES;
-            self.plusMemberHeight.constant = 208;
+            //self.plusMemberHeight.constant = 208;
+            self.sponsorDesc.hidden = YES;
         }
-        
+        [self.plusView setNeedsLayout];
         //btn.selected = !btn.selected;
         
     }
@@ -1498,6 +1523,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         isModified = YES;
     }
 }
+
+- (void)processScanResult:(NSArray *)anyIds {
+    NSLog(@"%@",anyIds);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (anyIds == nil || anyIds.count < 1) {
+            [self remindToastWithMessage:@"掃描QR code未取得結果"];
+            return;
+            
+        }
+    });
+    
+}
+
 #pragma mark -
 - (BOOL)isDisplayCollectNum {
     id d = self.data[@"display_num_of_collect"];
@@ -1752,6 +1790,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [settingsDic setObject: weatherStr forKey:@"weather"];
     [settingsDic setObject: moodStr forKey:@"mood"];
     [settingsDic setObject: [NSNumber numberWithInt: [pStr intValue]] forKey: @"point"];
+
+    if (![self collectNonfreeMemberOption:settingsDic]) {
+        
+        return ;
+    }
     
     NSLog(@"settingsDic: %@", settingsDic);
     
@@ -1760,7 +1803,31 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     [self callAlbumSettings: jsonStr];
 }
-
+//  save settings of plus/profession member
+- (BOOL)collectNonfreeMemberOption:(NSMutableDictionary *)settings {
+    
+    // check member grade //
+    if (mdata[@"usergrade"] ) {
+        NSString *user = mdata[@"usergrade"];
+        if (![user isEqualToString:@"free"]) {
+            
+            if (self.sponsorDescON.selected) {
+                NSString *desc = self.sponsorDesc.text;
+                if (!desc || desc.length < 1) {
+                    [self warnToastWithMessage:@"尚未填寫回饋說明"];
+                    return NO;
+                }
+                [settings setObject:desc forKey:@"reward_description"];
+                [settings setObject:[NSNumber numberWithBool:YES] forKey:@"reward_after_collect"];
+            } else {
+                [settings setObject:[NSNumber numberWithBool:NO] forKey:@"reward_after_collect"];
+            }
+            
+            [settings setObject:[NSNumber numberWithBool:self.sponsorCountON.selected] forKey:@"display_num_of_collect"];
+        }
+    }
+    return YES;
+}
 - (void)callAlbumSettings: (NSString *)jsonStr {
     NSLog(@"callAlbumSettings");
     NSLog(@"jsonStr: %@", jsonStr);
@@ -2407,7 +2474,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     NSLog(@"textViewDidChange");
     isModified = YES;
     if ([textView isKindOfClass: [InfoTextView class]]) {
-        
+        MyBaseLayout *layout = (MyBaseLayout*)textView.superview;
+        [layout setNeedsLayout];
+        layout.endLayoutBlock = ^{
+            NSRange rg = textView.selectedRange;
+            [textView scrollRangeToVisible:rg];
+        };
+        [self.backgroundLayout setNeedsLayout];
     } else {
     
         //每次输入变更都让布局重新布局。
@@ -2766,5 +2839,10 @@ replacementString:(NSString *)string
  
  usergrade=profession參數顯示或隱藏不佔位
  
-
+profession
+ 1. get: getalbumsettings. albumindex
+ 2. add: insertalbumindex
+ 3. delete: deletealbumindex
+增刪都先call API
+ https://free.modao.cc/app/rsPJEqdqNcSYkdLfx7w0jFRFxlrKlaA#screen=s05CF9E106B1520519294799
  */

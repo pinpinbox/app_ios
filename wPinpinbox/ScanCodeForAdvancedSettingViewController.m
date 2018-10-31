@@ -39,8 +39,9 @@
 }
 
 - (IBAction)backBtnPress:(id)sender {
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav popViewControllerAnimated: YES];
+    //AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //[appDelegate.myNav popViewControllerAnimated: YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (BOOL)startReading {
@@ -148,14 +149,24 @@
             NSString *sv = [metadataObj stringValue];
             NSArray *strArray = [sv componentsSeparatedByString: @"?"];
             NSLog(@"strArray: %@", strArray);
-            
-            if (!([strArray[1] rangeOfString: @"businessuser_id"].location == NSNotFound)) {
-                NSLog(@"strArray[1] rangeOfString is businessuser_id");
-                strArray = [strArray[1] componentsSeparatedByString: @"businessuser_id="];
-                NSLog(@"strArray: %@", strArray);
-                 
+            if (strArray.count > 1) {
+                if (!([strArray[1] rangeOfString: @"businessuser_id"].location == NSNotFound)) {
+                    NSLog(@"strArray[1] rangeOfString is businessuser_id");
+                    strArray = [strArray[1] componentsSeparatedByString: @"businessuser_id="];
+                    NSLog(@"strArray: %@", strArray);
+                    __weak typeof(self) wself = self;
+                    [self dismissViewControllerAnimated:YES completion:^{
+                        if (wself.finishedBlock)
+                            wself.finishedBlock(strArray);
+                    }];
+                    return;
+                }
             }
         }
+        
+        if (self.finishedBlock)
+            self.finishedBlock(nil);
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
