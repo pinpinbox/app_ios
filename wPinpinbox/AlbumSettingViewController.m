@@ -59,6 +59,62 @@
 }
 
 @end
+
+@interface DelTextField : UITextField<UITextFieldDelegate>
+@property (nonatomic) int listIndex;
+@property (nonatomic) NSString *delActionFUNCName;
+@property (nonatomic) id delSource;
+@property (nonatomic) UIButton *delBtn;
+- (id)initWithFrame:(CGRect)frame listindex:(int)listindex text:(NSString *)text source:(id)source delaction:(SEL)delaction;
+@end
+@implementation DelTextField
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    return NO;
+}
+- (id)initWithFrame:(CGRect)frame listindex:(int)listindex text:(NSString *)text source:(id)source delaction:(SEL)delaction {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.listIndex = listindex;
+        self.text = text;
+        self.delegate = self;
+        self.delSource = source;
+        self.delActionFUNCName = NSStringFromSelector(delaction);
+        
+        self.delBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.delBtn setBackgroundColor:[UIColor secondGrey]];
+        [self.delBtn setImage:[UIImage imageNamed:@"ic200_cancel_light"] forState:UIControlStateNormal];
+        [self.delBtn setImageEdgeInsets:UIEdgeInsetsMake(6, 6, 6, 6)];
+        UIView *base = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+        self.delBtn.frame = CGRectMake(4,4,32,32);
+        [base setBackgroundColor:[UIColor clearColor]];
+        [base addSubview:self.delBtn];
+        self.delBtn.layer.cornerRadius = 6;
+        self.rightView = base;
+        self.rightViewMode = UITextFieldViewModeAlways;
+        [self.delBtn addTarget:self action:@selector(delThisItem:) forControlEvents:UIControlEventTouchUpInside];
+        self.layer.cornerRadius = 6;
+        self.backgroundColor = [UIColor secondGrey];
+        
+        
+        self.leftViewMode = UITextFieldViewModeAlways;
+        UIView *left = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 16, self.frame.size.height)];
+        left.backgroundColor = UIColor.clearColor;
+        self.leftView = left;
+    }
+    
+    return self;
+}
+- (void)delThisItem:(id)sender {
+    SEL action = NSSelectorFromString(self.delActionFUNCName);
+    if (action && self.delSource) {
+        if ([self.delSource respondsToSelector:action]) {                        
+            [self.delSource performSelectorOnMainThread:action withObject:self waitUntilDone:NO];
+        }
+    }
+}
+@end
+
+
 @interface AlbumSettingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate, UITextFieldDelegate, UITextViewDelegate, SFSafariViewControllerDelegate>
 {
     NSString *sfir;
@@ -173,7 +229,11 @@
 
 @property (weak, nonatomic) IBOutlet MyLinearLayout *professionView;
 @property (weak, nonatomic) IBOutlet UITextField *advTextField;
-@property (weak, nonatomic) IBOutlet UIButton *submitBtn;
+@property (weak, nonatomic) IBOutlet MyLinearLayout *albslistView;
+@property (nonatomic) UIButton *submitBtn;
+
+
+@property (nonatomic) NSMutableArray *albumIndexArray;
 
 @end
 
@@ -348,7 +408,7 @@
                         [self.secondCategoryCollectionView reloadData];
 //                        [self.weatherCollectionView reloadData];
 //                        [self.moodCollectionView reloadData];
-                        
+                        [self retrieveAlbumIndex];
                         [self checkCreatePointTask];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -361,7 +421,6 @@
         });
     });
 }
-
 - (void)checkCreatePointTask
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -854,8 +913,10 @@
     left.textColor = [UIColor hintGrey];
     left.backgroundColor = UIColor.clearColor;
     self.pPointTextField.leftView = left;
+    
+    [self addProfessionSubmitBtn];
+    
 }
-
 - (void)setupUI2 {
     NSLog(@"act: %@", self.data[@"act"]);
     NSString *act = self.data[@"act"];
@@ -989,7 +1050,7 @@
             self.sponsorDescON.selected = c;
             self.sponsorDescOFF.selected = !c;
             self.sponsorDesc.text = [self getRewardDesc];
-            self.sponsorDesc.hidden = (_sponsorDesc.text.length < 1);
+            self.sponsorDesc.hidden = !c ;//&& (_sponsorDesc.text.length < 1);
             self.plusView.hidden = NO;
             //self.plusMemberHeight.constant = c? 280: 208;
                 
@@ -1256,6 +1317,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - IBAction Methods
+- (IBAction)submitInsertAlbum:(id)sender {
+    NSString *nid = self.advTextField.text;
+    if (nid && nid.length > 0) {
+        [self addAlbumIndexWithAid:nid];
+    }
+}
 - (IBAction)scanCodeForAdvanceSetting:(id)sender {
     NSLog(@"scanCodeForAdvanceSetting");
     
@@ -1427,6 +1494,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             self.sponsorDescOFF.selected = YES;
             //self.plusMemberHeight.constant = 208;
             self.sponsorDesc.hidden = YES;
+            [self.sponsorDesc resignFirstResponder];
         }
         [self.plusView setNeedsLayout];
         //btn.selected = !btn.selected;
@@ -1532,6 +1600,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             return;
             
         }
+        
+        NSString *nid = (NSString *)[anyIds firstObject];
+        [self addAlbumIndexWithAid:nid];
     });
     
 }
@@ -2462,6 +2533,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
     selectTextView = textView;
+    
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
@@ -2471,28 +2543,32 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    NSLog(@"textViewDidChange");
+    //NSLog(@"textViewDidChange");
     isModified = YES;
     if ([textView isKindOfClass: [InfoTextView class]]) {
-        MyBaseLayout *layout = (MyBaseLayout*)textView.superview;
-        [layout setNeedsLayout];
-        layout.endLayoutBlock = ^{
-            NSRange rg = textView.selectedRange;
-            [textView scrollRangeToVisible:rg];
-        };
-        [self.backgroundLayout setNeedsLayout];
-    } else {
-    
-        //每次输入变更都让布局重新布局。
-        MyBaseLayout *layout = (MyBaseLayout*)textView.superview;
-        [layout setNeedsLayout];
+        NSLog(@"InfoTextView");
         
-        //这里设置在布局结束后将textView滚动到光标所在的位置了。在布局执行布局完毕后如果设置了endLayoutBlock的话可以在这个block里面读取布局里面子视图的真实布局位置和尺寸，也就是可以在block内部读取每个子视图的真实的frame的值。
-        layout.endLayoutBlock = ^{
-            NSRange rg = textView.selectedRange;
-            [textView scrollRangeToVisible:rg];
-        };
     }
+    UITextRange *tp = textView.selectedTextRange;
+    CGRect caret = [textView firstRectForRange:tp];
+    if (caret.size.width < 1) {
+        caret = [textView caretRectForPosition:[textView endOfDocument]];
+    }
+    
+    CGRect r2 = [self.scrollView convertRect:caret fromView:textView];
+    
+    [self.scrollView scrollRectToVisible:CGRectMake(0, r2.origin.y, self.scrollView.bounds.size.width, r2.size.height) animated:YES];
+    
+    MyBaseLayout *layout = (MyBaseLayout*)textView.superview;
+    [layout setNeedsLayout];
+    layout.endLayoutBlock = ^{
+        NSRange rg = textView.selectedRange;
+        [textView scrollRangeToVisible:rg];
+    };
+    [self.backgroundLayout setNeedsLayout];
+    
+    
+    
 }
 
 #pragma mark - UITextField Delegate Methods
@@ -2650,7 +2726,93 @@ replacementString:(NSString *)string
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }
-#pragma mark -
+#pragma mark - profession user related functions
+- (void) addAlbumIndexWithAid:(NSString *)aid {
+    
+    NSInteger i = self.albumIndexArray.count;
+    [self.albumIndexArray addObject:@{@"album_id":aid, @"index":[NSNumber numberWithInteger:i+1]}];
+    self.advTextField.text = @"";
+    [self reloadAlbumIndexList];
+}
+-(void)addProfessionSubmitBtn {
+    self.submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.submitBtn.backgroundColor = [UIColor firstMain];
+    [self.submitBtn setImage:[UIImage imageNamed:@"icon_creatnewframe_plus"] forState:UIControlStateNormal];
+    //UIView *sv = self.advTextField.superview;
+    UIView *base = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    self.submitBtn.frame = CGRectMake(4,4,32,32);
+    [base setBackgroundColor:[UIColor clearColor]];
+    [base addSubview:self.submitBtn];
+    self.submitBtn.layer.cornerRadius = 6;
+    self.advTextField.rightView = base;
+    self.advTextField.rightViewMode = UITextFieldViewModeAlways;
+    [self.submitBtn addTarget:self action:@selector(submitInsertAlbum:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.advTextField.leftViewMode = UITextFieldViewModeAlways;
+    UIView *tleft = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 16, self.advTextField.frame.size.height)];
+    tleft.backgroundColor = UIColor.clearColor;
+    self.advTextField.leftView = tleft;
+    self.albumIndexArray = [NSMutableArray array];
+    
+}
+- (void)retrieveAlbumIndex {
+    NSArray *alb = self.data[@"albumindex"];
+    [self.albumIndexArray removeAllObjects];
+    NSArray *salb = [alb sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        NSDictionary *a1 = (NSDictionary *)obj1;
+        NSDictionary *a2 = (NSDictionary *)obj2;
+        
+        if ([a1 objectForKey:@"index"] && [a2 objectForKey:@"index"]) {
+            int i1 = [[a1 objectForKey:@"index"] intValue];
+            int i2 = [[a2 objectForKey:@"index"] intValue];
+            if (i1 == i2) return NSOrderedSame;
+            
+            return (i1 > i2)? NSOrderedDescending:NSOrderedAscending;
+        }
+        return NSOrderedSame;
+        
+    }];
+    
+    [self.albumIndexArray setArray:salb];
+    
+    [self reloadAlbumIndexList];
+    
+}
+- (void)reloadAlbumIndexList {
+    if (self.albslistView.hidden)
+        self.albslistView.hidden = NO;
+    
+    for ( UIView *v in self.albslistView.subviews) {
+        [v removeFromSuperview];
+    }
+    
+    int i = 0;
+    for (NSDictionary *t in self.albumIndexArray) {
+        int i1 = [[t objectForKey:@"index"] intValue];
+        NSString *al = [t objectForKey:@"album_id"];
+        DelTextField *d = [[DelTextField alloc] initWithFrame:CGRectMake(54, i*40, self.albslistView.frame.size.width, 40) listindex:i1 text:al source:self delaction:@selector(delAlbumIndexWithInfo:)];
+        d.myBottomMargin = 8;
+        d.myLeftMargin = 54;
+        d.myRightMargin = 0;
+        [self.albslistView addSubview:d];
+        i++;
+    }
+    [self.albslistView setNeedsLayout];
+    [self.professionView setNeedsLayout];
+    [self.backgroundLayout setNeedsLayout];
+//    self.backgroundLayout.endLayoutBlock = ^{
+//        NSLog(@"backgroundLayout height %f",self.backgroundLayout.frame.size.height);
+//    };
+}
+- (void)delAlbumIndexWithInfo:(DelTextField *)field {
+    if (self.albumIndexArray.count >= field.listIndex)
+        [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
+    
+    [field removeFromSuperview];
+    [self reloadAlbumIndexList];
+}
+
+#pragma mark - toast message
 - (void)remindToastWithMessage:(NSString *)message {
     CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
     style.messageColor = [UIColor whiteColor];

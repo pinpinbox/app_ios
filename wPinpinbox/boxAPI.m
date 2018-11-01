@@ -2667,6 +2667,36 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnStr;
 }
 
+#pragma mark - albumindex
+// 96
++ (NSString *)insertalbumindex:(NSString *)uid
+                         token:(NSString *)token
+                      album_id:(NSString *)album_id
+                         index:(int)index {
+    
+    NSString *returnStr = @"";
+    NSDictionary *dic = @{@"album_id":album_id,
+                          @"index":[NSNumber numberWithInt:index],
+                          @"uid":uid,
+                          @"token":token};
+    returnStr = [self boxAPI: dic URL: @"/insertalbumindex/2.0"];
+    
+    return returnStr;
+}
+
++ (NSString *)deletealbumindex:(NSString *)uid
+                         token:(NSString *)token
+                      album_id:(NSString *)album_id
+                         index:(int)index {
+    NSString *returnStr = @"";
+    NSDictionary *dic = @{@"album_id":album_id,
+                          @"index":[NSNumber numberWithInt:index],
+                          @"uid":uid,
+                          @"token":token};
+    returnStr = [self boxAPI: dic URL: @"/deletealbumindex/2.0"];
+    
+    return returnStr;
+}
 #pragma mark - 檢測網路
 +(BOOL)hostAvailable:(NSString *)theHost
 {

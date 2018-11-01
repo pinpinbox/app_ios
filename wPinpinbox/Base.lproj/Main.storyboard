@@ -1127,10 +1127,10 @@
                                                     </view>
                                                     <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3oB-dK-7es">
                                                         <rect key="frame" x="0.0" y="62" width="375" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                         <subviews>
                                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="點擊按鈕掃描或直接輸入" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R9d-qp-hxZ">
-                                                                <rect key="frame" x="54" y="0.0" width="302" height="40"/>
+                                                                <rect key="frame" x="54" y="0.0" width="321" height="40"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxY="YES"/>
                                                                 <color key="backgroundColor" red="0.90980392156862744" green="0.90980392156862744" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="textColor"/>
@@ -1142,26 +1142,6 @@
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </textField>
-                                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Ym-aF-Kor">
-                                                                <rect key="frame" x="303" y="4" width="32" height="32"/>
-                                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <state key="normal" image="icon_creatnewframe_plus"/>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                        <integer key="value" value="6"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
-                                                                        <real key="value" value="20"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
-                                                                        <real key="value" value="4"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
-                                                                        <real key="value" value="4"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                            </button>
                                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HhB-ho-Mkd">
                                                                 <rect key="frame" x="0.0" y="4" width="32" height="32"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -1193,6 +1173,25 @@
                                                             <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
                                                                 <real key="value" value="16"/>
                                                             </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GaK-83-q3v" customClass="MyLinearLayout">
+                                                        <rect key="frame" x="0.0" y="110" width="375" height="80"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myLeftMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myRightMargin">
+                                                                <real key="value" value="16"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myTopMargin">
+                                                                <real key="value" value="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="myBottomMargin">
+                                                                <real key="value" value="8"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="wrapContentHeight" value="YES"/>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                 </subviews>
@@ -1358,6 +1357,7 @@
                     </view>
                     <connections>
                         <outlet property="advTextField" destination="R9d-qp-hxZ" id="kiO-em-76r"/>
+                        <outlet property="albslistView" destination="GaK-83-q3v" id="DS8-fa-Sxm"/>
                         <outlet property="backgroundLayout" destination="vSI-Sh-FV1" id="v1g-Im-t7C"/>
                         <outlet property="bottomBtnView" destination="HZX-CN-bcy" id="tzA-e4-FeK"/>
                         <outlet property="decriptionRequiredLabel" destination="VEK-I3-bDC" id="weL-g5-iP1"/>
@@ -1386,7 +1386,6 @@
                         <outlet property="sponsorDescOFF" destination="EWl-nI-Yje" id="LDM-gg-Is6"/>
                         <outlet property="sponsorDescON" destination="vjl-Y8-ptc" id="fpR-SZ-RpQ"/>
                         <outlet property="subCategoryRequiredLabel" destination="o2F-Id-CjC" id="gzP-tR-f62"/>
-                        <outlet property="submitBtn" destination="8Ym-aF-Kor" id="GFw-Sz-KkC"/>
                         <outlet property="toAlbumCreationBtn" destination="nLe-im-xt0" id="D0M-vo-M7o"/>
                     </connections>
                 </viewController>
@@ -2754,7 +2753,6 @@
         <image name="ic200_scancamera_white" width="144" height="144"/>
         <image name="ic200_setting_light.png" width="144" height="144"/>
         <image name="ic200_template_photo_change_light.png" width="144" height="144"/>
-        <image name="icon_creatnewframe_plus" width="120" height="120"/>
         <image name="pinpin_logo.png" width="401" height="82"/>
         <image name="scan-frame.png" width="350" height="350"/>
         <image name="wbutton_cooperation.png" width="120" height="120"/>

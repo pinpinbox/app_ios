@@ -339,6 +339,18 @@ static NSString *version = @"";
 // 95
 + (NSString *)refreshToken:(NSString *)userId;
 
+#pragma mark - albumindex
+// 96
++ (NSString *)insertalbumindex:(NSString *)uid
+                         token:(NSString *)token
+                      album_id:(NSString *)album_id
+                         index:(int)index;
+
++ (NSString *)deletealbumindex:(NSString *)uid
+                         token:(NSString *)token
+                      album_id:(NSString *)album_id
+                         index:(int)index;
+
 #pragma mark - BuisnessSubUserFastRegister
 // 98
 + (NSString *)buisnessSubUserFastRegister:(NSString *)businessUserId
