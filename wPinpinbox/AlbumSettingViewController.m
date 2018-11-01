@@ -1322,6 +1322,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     if (nid && nid.length > 0) {
         [self addAlbumIndexWithAid:nid];
     }
+    [self.advTextField resignFirstResponder];
 }
 - (IBAction)scanCodeForAdvanceSetting:(id)sender {
     NSLog(@"scanCodeForAdvanceSetting");
@@ -1601,8 +1602,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             
         }
         
-        NSString *nid = (NSString *)[anyIds firstObject];
-        [self addAlbumIndexWithAid:nid];
+        NSString *nid = (NSString *)[anyIds lastObject];
+        self.advTextField.text = nid;
     });
     
 }

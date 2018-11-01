@@ -150,16 +150,26 @@
             NSArray *strArray = [sv componentsSeparatedByString: @"?"];
             NSLog(@"strArray: %@", strArray);
             if (strArray.count > 1) {
-                if (!([strArray[1] rangeOfString: @"businessuser_id"].location == NSNotFound)) {
-                    NSLog(@"strArray[1] rangeOfString is businessuser_id");
-                    strArray = [strArray[1] componentsSeparatedByString: @"businessuser_id="];
-                    NSLog(@"strArray: %@", strArray);
-                    __weak typeof(self) wself = self;
-                    [self dismissViewControllerAnimated:YES completion:^{
-                        if (wself.finishedBlock)
-                            wself.finishedBlock(strArray);
-                    }];
-                    return;
+                if (!([strArray[1] rangeOfString: @"album_id"].location == NSNotFound)) {
+                    NSLog(@"strArray[1] rangeOfString is album_id");
+                    NSString *q = strArray[1];
+                    NSArray *t = [q componentsSeparatedByString:@"&"];
+                    for (NSString *t0 in t) {
+                        if ([t0 hasPrefix:@"album_id="]) {
+                            NSArray *t1 = [t0 componentsSeparatedByString:@"="];
+                            __weak typeof(self) wself = self;
+                            
+                            [self dismissViewControllerAnimated:YES completion:^{
+                                if (wself.finishedBlock)
+                                    wself.finishedBlock(t1);
+                            }];
+                            
+                            return;
+                        }
+                    }
+                    //strArray = [strArray[1] componentsSeparatedByString: @"album_id="];
+                    //NSLog(@"strArray: %@", strArray);
+                    
                 }
             }
         }
