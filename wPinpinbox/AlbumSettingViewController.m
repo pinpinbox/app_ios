@@ -2731,6 +2731,10 @@ replacementString:(NSString *)string
 - (void) addAlbumIndexWithAid:(NSString *)aid {
     
     NSInteger i = self.albumIndexArray.count;
+    if (i >= 20) {
+        [self warnToastWithMessage:@"已達上限"];
+        return;
+    }
     [self.albumIndexArray addObject:@{@"album_id":aid, @"index":[NSNumber numberWithInteger:i+1]}];
     self.advTextField.text = @"";
     [self reloadAlbumIndexList];
@@ -2805,12 +2809,46 @@ replacementString:(NSString *)string
 //        NSLog(@"backgroundLayout height %f",self.backgroundLayout.frame.size.height);
 //    };
 }
+- (void)deleteAlbumIndexWithfield:(DelTextField *)field {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.albumIndexArray.count >= field.listIndex)
+            [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
+        
+        [field removeFromSuperview];
+        [self reloadAlbumIndexList];
+    });
+}
+
 - (void)delAlbumIndexWithInfo:(DelTextField *)field {
-    if (self.albumIndexArray.count >= field.listIndex)
-        [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
     
-    [field removeFromSuperview];
-    [self reloadAlbumIndexList];
+    NSString *q = [NSString stringWithFormat:@"確定刪除 %@？",field.text];
+    CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
+
+    [alertView setContentViewWithMsg:q contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    alertView.arrangeStyle = @"Horizontal";
+    
+    [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"刪除", nil]];
+    //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+    [alertView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
+    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
+    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
+    
+    
+    __weak CustomIOSAlertView *weakAlertView = alertView;
+    __block typeof(self) wself = self;
+    [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
+        
+        [weakAlertView close];
+        
+        if (buttonIndex == 1) {
+            [wself deleteAlbumIndexWithfield:field];
+        }
+    }];
+    [alertView setUseMotionEffects: YES];
+    [alertView show];
+    
+    
 }
 
 #pragma mark - toast message
