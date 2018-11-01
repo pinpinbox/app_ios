@@ -142,36 +142,46 @@
         
         NSLog(@"metadataObj type: %@", [metadataObj type]);
         
-        if ([[metadataObj type] isEqualToString: AVMetadataObjectTypeQRCode]) {
+        if ([[metadataObj type] isEqualToString: AVMetadataObjectTypeEAN13Code]) {
             NSLog(@"metadataObj type isEqualToString AVMetadataObjectTypeQRCode");
             NSLog(@"%@", [metadataObj stringValue]);
             
             NSString *sv = [metadataObj stringValue];
-            NSArray *strArray = [sv componentsSeparatedByString: @"?"];
-            NSLog(@"strArray: %@", strArray);
-            if (strArray.count > 1) {
-                if (!([strArray[1] rangeOfString: @"album_id"].location == NSNotFound)) {
-                    NSLog(@"strArray[1] rangeOfString is album_id");
-                    NSString *q = strArray[1];
-                    NSArray *t = [q componentsSeparatedByString:@"&"];
-                    for (NSString *t0 in t) {
-                        if ([t0 hasPrefix:@"album_id="]) {
-                            NSArray *t1 = [t0 componentsSeparatedByString:@"="];
-                            __weak typeof(self) wself = self;
-                            
-                            [self dismissViewControllerAnimated:YES completion:^{
-                                if (wself.finishedBlock)
-                                    wself.finishedBlock(t1);
-                            }];
-                            
-                            return;
-                        }
-                    }
-                    //strArray = [strArray[1] componentsSeparatedByString: @"album_id="];
-                    //NSLog(@"strArray: %@", strArray);
-                    
-                }
+            if (sv && ![sv isEqualToString:@""] ) {
+                __weak typeof(self) wself = self;
+                NSArray *t1 = @[sv];
+                [self dismissViewControllerAnimated:YES completion:^{
+                    if (wself.finishedBlock)
+                        wself.finishedBlock(t1);
+                }];
+
+                return;
             }
+//            NSArray *strArray = [sv componentsSeparatedByString: @"?"];
+//            NSLog(@"strArray: %@", strArray);
+//            if (strArray.count > 1) {
+//                if (!([strArray[1] rangeOfString: @"album_id"].location == NSNotFound)) {
+//                    NSLog(@"strArray[1] rangeOfString is album_id");
+//                    NSString *q = strArray[1];
+//                    NSArray *t = [q componentsSeparatedByString:@"&"];
+//                    for (NSString *t0 in t) {
+//                        if ([t0 hasPrefix:@"album_id="]) {
+//                            NSArray *t1 = [t0 componentsSeparatedByString:@"="];
+//                            __weak typeof(self) wself = self;
+//
+//                            [self dismissViewControllerAnimated:YES completion:^{
+//                                if (wself.finishedBlock)
+//                                    wself.finishedBlock(t1);
+//                            }];
+//
+//                            return;
+//                        }
+//                    }
+//                    //strArray = [strArray[1] componentsSeparatedByString: @"album_id="];
+//                    //NSLog(@"strArray: %@", strArray);
+//
+//                }
+//            }
         }
         
         if (self.finishedBlock)

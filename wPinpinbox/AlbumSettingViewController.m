@@ -81,7 +81,7 @@
         self.delActionFUNCName = NSStringFromSelector(delaction);
         
         self.delBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.delBtn setBackgroundColor:[UIColor secondGrey]];
+        [self.delBtn setBackgroundColor:[UIColor thirdGrey]];
         [self.delBtn setImage:[UIImage imageNamed:@"ic200_cancel_light"] forState:UIControlStateNormal];
         [self.delBtn setImageEdgeInsets:UIEdgeInsetsMake(6, 6, 6, 6)];
         UIView *base = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
@@ -93,7 +93,7 @@
         self.rightViewMode = UITextFieldViewModeAlways;
         [self.delBtn addTarget:self action:@selector(delThisItem:) forControlEvents:UIControlEventTouchUpInside];
         self.layer.cornerRadius = 6;
-        self.backgroundColor = [UIColor secondGrey];
+        self.backgroundColor = [UIColor thirdGrey];
         
         
         self.leftViewMode = UITextFieldViewModeAlways;
@@ -1893,6 +1893,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 [settings setObject:[NSNumber numberWithBool:YES] forKey:@"reward_after_collect"];
             } else {
                 [settings setObject:[NSNumber numberWithBool:NO] forKey:@"reward_after_collect"];
+                [settings setObject:@"" forKey:@"reward_description"];
             }
             
             [settings setObject:[NSNumber numberWithBool:self.sponsorCountON.selected] forKey:@"display_num_of_collect"];
@@ -2795,7 +2796,7 @@ replacementString:(NSString *)string
     for (NSDictionary *t in self.albumIndexArray) {
         int i1 = [[t objectForKey:@"index"] intValue];
         NSString *al = [t objectForKey:@"album_id"];
-        DelTextField *d = [[DelTextField alloc] initWithFrame:CGRectMake(54, i*40, self.albslistView.frame.size.width, 40) listindex:i1 text:al source:self delaction:@selector(delAlbumIndexWithInfo:)];
+        DelTextField *d = [[DelTextField alloc] initWithFrame:CGRectMake(0, i*40, self.albslistView.frame.size.width, 40) listindex:i1 text:al source:self delaction:@selector(delAlbumIndexWithInfo:)];
         d.myBottomMargin = 8;
         d.myLeftMargin = 54;
         d.myRightMargin = 0;
