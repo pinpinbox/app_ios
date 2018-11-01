@@ -410,7 +410,7 @@
 //                        [self.moodCollectionView reloadData];
                         [self retrieveAlbumIndex];
                         [self checkCreatePointTask];
-                    } else if ([dic[@"result"] intValue] == 0) {
+                    } else if (dic[@"message"] != nil) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
                     } else {
@@ -2736,9 +2736,46 @@ replacementString:(NSString *)string
         [self warnToastWithMessage:@"已達上限"];
         return;
     }
-    [self.albumIndexArray addObject:@{@"album_id":aid, @"index":[NSNumber numberWithInteger:i+1]}];
+    __block typeof(self) wself = self;
     self.advTextField.text = @"";
-    [self reloadAlbumIndexList];
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        
+        
+        NSString *response = [boxAPI insertalbumindex:[wTools getUserID]
+                                                token:[wTools getUserToken]
+                                             album_id:aid
+                                                index:(int)i+1];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"AlbumSettingViewController");
+                    NSLog(@"getAlbumDataOptions");
+                    
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"insertalbumindex"
+                                          jsonStr: @""
+                                          albumId: aid];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    
+                    NSString *res = (NSString *)dic[@"result"];
+                    if ([res isEqualToString:@"SYSTEM_OK"]) {
+                        [wself.albumIndexArray addObject:@{@"album_id":aid, @"index":[NSNumber numberWithInteger:i+1]}];
+                    
+                        [wself reloadAlbumIndexList];
+                    } else if (dic[@"message"] != nil) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [wself showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
+                }
+            }
+        });
+    });
 }
 -(void)addProfessionSubmitBtn {
     self.submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -2798,7 +2835,7 @@ replacementString:(NSString *)string
         NSString *al = [t objectForKey:@"album_id"];
         DelTextField *d = [[DelTextField alloc] initWithFrame:CGRectMake(0, i*40, self.albslistView.frame.size.width, 40) listindex:i1 text:al source:self delaction:@selector(delAlbumIndexWithInfo:)];
         d.myBottomMargin = 8;
-        d.myLeftMargin = 54;
+        d.myLeftMargin = 50;
         d.myRightMargin = 0;
         [self.albslistView addSubview:d];
         i++;
@@ -2811,13 +2848,54 @@ replacementString:(NSString *)string
 //    };
 }
 - (void)deleteAlbumIndexWithfield:(DelTextField *)field {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.albumIndexArray.count >= field.listIndex)
-            [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
+    
+    
         
-        [field removeFromSuperview];
-        [self reloadAlbumIndexList];
+    if (self.albumIndexArray.count >= field.listIndex)
+        [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
+    NSString *aid = field.text;
+    int index = field.listIndex;
+    __block typeof(self) wself = self;
+    __block DelTextField *wfield = field;
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+        
+        
+        NSString *response = [boxAPI deletealbumindex:[wTools getUserID]
+                                                token:[wTools getUserToken]
+                                             album_id:aid
+                                                index:index];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"AlbumSettingViewController");
+                    NSLog(@"getAlbumDataOptions");
+                    
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"deletealbumindex"
+                                          jsonStr: @""
+                                          albumId: aid];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    
+                    NSString *res = (NSString *)dic[@"result"];
+                    if ([res isEqualToString:@"SYSTEM_OK"]) {
+                        [wfield removeFromSuperview];
+                        [wself reloadAlbumIndexList];
+                    } else if (dic[@"message"] != nil) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [wself showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
+                }
+            }
+        });
     });
+    
+
 }
 
 - (void)delAlbumIndexWithInfo:(DelTextField *)field {
