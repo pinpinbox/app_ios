@@ -3729,8 +3729,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             NSLog(@"cell.userPoint: %ld", (long)cell.userPoint);
             cell.exchangeNumber = exchangeNumber;
             NSLog(@"cell.exchangeNumber: %ld", (long)cell.exchangeNumber);
-            cell.rewardDescriptionLabel.text = rewardDescription;
-            
             cell.finalPageView.hidden = NO;
             
             if (albumPoint == 0) {
@@ -3760,6 +3758,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         nameTextView.delegate = self;
                         phoneTextView.delegate = self;
                         addressTextView.delegate = self;
+                        
+                        if ([wTools objectExists: rewardDescription]) {
+                            cell.rewardDescriptionLabel.text = rewardDescription;
+                        }
                     } else {
                         cell.conditionCheckStr = @"DisplayAllWithoutReward";
                         inputTextField = cell.sponsorTextFieldForBgV2;
@@ -3778,6 +3780,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         nameTextView.delegate = self;
                         phoneTextView.delegate = self;
                         addressTextView.delegate = self;
+                        
+                        if ([wTools objectExists: rewardDescription]) {
+                            cell.rewardDescriptionLabel.text = rewardDescription;
+                        }
                     } else {
                         cell.conditionCheckStr = @"DisplayPreviewWithoutReward";
                         inputTextField = cell.sponsorTextFieldForBgV2;
@@ -5406,7 +5412,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     // Pass the selected object to the new view controller.
 }
 */
-
 
 #pragma mark - UITextFieldDelegate Methods
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
