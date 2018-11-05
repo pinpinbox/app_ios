@@ -143,7 +143,7 @@
 
 - (void)setupBgSV {
     self.bgSV.hidden = YES;
-    self.bgSV.backgroundColor = [UIColor redColor];
+//    self.bgSV.backgroundColor = [UIColor redColor];
     self.bgSV.layer.cornerRadius = kCornerRadius;
 //    self.bgSV.contentOffset = CGPointMake(0, 40);
 //    self.bgSV.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);

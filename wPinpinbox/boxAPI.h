@@ -10,6 +10,8 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
+#define sysOK @"SYSTEM_OK"
+
 static NSString *version = @"";
 //static NSString *ServerURL = @"https://www.pinpinbox.com/index/api";
 
@@ -347,6 +349,18 @@ static NSString *version = @"";
 #pragma mark - RefreshToken
 // 95
 + (NSString *)refreshToken:(NSString *)userId;
+
+#pragma mark - albumindex
+// 96
++ (NSString *)insertalbumindex:(NSString *)uid
+                         token:(NSString *)token
+                      album_id:(NSString *)album_id
+                         index:(int)index;
+
++ (NSString *)deletealbumindex:(NSString *)uid
+                         token:(NSString *)token
+                      album_id:(NSString *)album_id
+                         index:(int)index;
 
 #pragma mark - BuisnessSubUserFastRegister
 // 98

@@ -1237,11 +1237,13 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     NSString *returnstr=@"";
     NSMutableDictionary *dic=[NSMutableDictionary new];
-    [dic setObject:uid forKey:@"id"];
+    //[dic setObject:uid forKey:@"id"];
+    [dic setObject:uid forKey:@"user_id"];
     [dic setObject:token forKey:@"token"];
-    [dic setObject:album_id forKey:@"albumid"];
+    //[dic setObject:album_id forKey:@"albumid"];
+    [dic setObject:album_id forKey:@"album_id"];
     
-    returnstr=[self boxAPI:dic URL:@"/getalbumsettings/1.0"];
+    returnstr=[self boxAPI:dic URL:@"/getalbumsettings/2.0"];
     
     return returnstr;
 }
@@ -1261,7 +1263,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject:album_id forKey:@"album_id"];
     [dic setObject:settings forKey:@"settings"];
     
-    returnstr = [self boxAPI:dic URL:@"/albumsettings/2.0"];
+//    returnstr = [self boxAPI:dic URL:@"/albumsettings/2.0"];
+    returnstr = [self boxAPI:dic URL:@"/updatealbumsettings/2.0"];//@"/albumsettings/2.0"];
     
     return returnstr;
 }
@@ -2689,6 +2692,36 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnStr;
 }
 
+#pragma mark - albumindex
+// 96
++ (NSString *)insertalbumindex:(NSString *)uid
+                         token:(NSString *)token
+                      album_id:(NSString *)album_id
+                         index:(int)index {
+    
+    NSString *returnStr = @"";
+    NSDictionary *dic = @{@"album_id":album_id,
+                          @"index":[NSNumber numberWithInt:index],
+                          @"uid":uid,
+                          @"token":token};
+    returnStr = [self boxAPI: dic URL: @"/insertalbumindex/2.0"];
+    
+    return returnStr;
+}
+
++ (NSString *)deletealbumindex:(NSString *)uid
+                         token:(NSString *)token
+                      album_id:(NSString *)album_id
+                         index:(int)index {
+    NSString *returnStr = @"";
+    NSDictionary *dic = @{@"album_id":album_id,
+                          @"index":[NSNumber numberWithInt:index],
+                          @"uid":uid,
+                          @"token":token};
+    returnStr = [self boxAPI: dic URL: @"/deletealbumindex/2.0"];
+    
+    return returnStr;
+}
 #pragma mark - 檢測網路
 +(BOOL)hostAvailable:(NSString *)theHost
 {
@@ -3262,10 +3295,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
                 NSLog(@"Get Real Response");
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
-                if ([dic[@"result"] intValue] == 1) {
+                NSString *res = (NSString *)dic[@"result"];
+                if ([res isEqualToString:@"SYSTEM_OK"]) {
                     if (completionBlock)
                         completionBlock(dic,nil);
-                } else if ([dic[@"result"] intValue] == 0) {
+                } else if (dic[@"message"]) {//[dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
                     if (completionBlock)
                         completionBlock(nil, [NSError errorWithDomain:@"getAlbumSettingsWithAlbumId" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;

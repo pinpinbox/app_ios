@@ -473,7 +473,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     kbShowUp = YES;
     
     NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
-    /*
+    
     if (rewardAfterCollect) {
         NSDictionary *info = [aNotification userInfo];
         CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
@@ -521,7 +521,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             }];
         }
     }
-     */
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
@@ -529,7 +528,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     kbShowUp = NO;
     
     NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
-    /*
+    
     if (rewardAfterCollect) {
         UIEdgeInsets contentInsets = UIEdgeInsetsZero;
         bgSV.contentInset = contentInsets;
@@ -552,8 +551,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 cell.bgV2CenterYConstraint.constant = 0;
             }];
         }
-    }
-     */
+    }     
 }
 
 #pragma mark - changeOrientationToPortrait

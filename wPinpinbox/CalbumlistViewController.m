@@ -1713,9 +1713,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 if (!error) {
                     //NSLog(@"%@",settings);
                     NSDictionary *dt = settings[@"data"];
-                    NSString *t = dt[@"title"];
-                    NSNumber *f = dt[@"firstpaging"];
-                    NSNumber *s = dt[@"secondpaging"];
+                    NSString *t = dt[@"name"];//dt[@"title"];
+                    NSNumber *f = dt[@"categoryarea_id"];//firstpaging"];
+                    NSNumber *s = dt[@"category_id"];
                     if (t && t.length > 0 && ![f isKindOfClass:[NSNull class]] && ![s isKindOfClass:[NSNull class]]) {
                         [boxAPI getAlbumDiyWithAlbumId:albumid completionBlock:^(NSDictionary *result, NSError *error) {
                             if (!error) {
