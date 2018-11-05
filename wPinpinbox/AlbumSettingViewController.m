@@ -1636,17 +1636,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"Get Real Response");
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
-                    
                     [wself processCallAlbumSetting:dic];
                 }
             }
         });
     });
 }
-- (void)processCallAlbumSetting:(NSDictionary *)dic {
-    
+- (void)processCallAlbumSetting:(NSDictionary *)dic {    
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         NSLog(@"self.postMode: %d", self.postMode);
         
@@ -2216,18 +2212,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - UITextViewDelegate
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
+- (void)textViewDidBeginEditing:(UITextView *)textView {
     selectTextView = textView;
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
+- (void)textViewDidEndEditing:(UITextView *)textView {
     selectTextView = nil;
 }
 
-- (void)textViewDidChange:(UITextView *)textView
-{
+- (void)textViewDidChange:(UITextView *)textView {
     NSLog(@"textViewDidChange");
     
     isModified = YES;
@@ -2288,10 +2281,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
-replacementString:(NSString *)string
-{
+replacementString:(NSString *)string {
     NSLog(@"shouldChangeCharactersInRange");
-    
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
     NSString *resultString = [textField.text stringByReplacingCharactersInRange: range
                                                                      withString: string];
@@ -2365,10 +2356,8 @@ replacementString:(NSString *)string
 }
 
 #pragma mark -
-
 // Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
+- (void)keyboardWasShown:(NSNotification*)aNotification {
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
@@ -2376,7 +2365,6 @@ replacementString:(NSString *)string
     self.scrollView.scrollIndicatorInsets = contentInsets;
     
     // If active text field is hidden by keyboard, scroll it so it's visible
-    // Your application might not need or want this behavior.
     CGRect aRect = self.view.frame;
     aRect.size.height -= kbSize.height;
     
@@ -2399,8 +2387,7 @@ replacementString:(NSString *)string
 }
 
 // Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
     UIEdgeInsets contentInsets = UIEdgeInsetsZero;
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
@@ -2410,8 +2397,7 @@ replacementString:(NSString *)string
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                        jsonStr: (NSString *)jsonStr
-                       albumId: (NSString *)albumId
-{
+                       albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -2457,8 +2443,7 @@ replacementString:(NSString *)string
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView:(NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

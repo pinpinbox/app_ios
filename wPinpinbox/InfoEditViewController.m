@@ -1330,8 +1330,7 @@ shouldChangeTextInRange:(NSRange)range
         viewHeight = 96;
     }
     NSLog(@"demoHeight: %f", viewHeight);
-    
-    
+ 
     // ContentView Setting
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
     contentView.backgroundColor = [UIColor firstPink];

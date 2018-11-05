@@ -465,6 +465,30 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnStr;
 }
 
++ (NSString *)newBuyAlbum:(NSString *)userId
+                    token:(NSString *)token
+                  albumId:(NSString *)albumId
+                 platform:(NSString *)platform
+                    point:(NSString *)point
+                   reward:(NSString *)reward {
+    NSLog(@"");
+    NSLog(@"newBuyAlbum");
+    
+    NSString *returnStr = @"";
+    
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    [dic setObject: userId forKey: @"user_id"];
+    [dic setObject: token forKey: @"token"];
+    [dic setObject: albumId forKey: @"album_id"];
+    [dic setObject: platform forKey: @"platform"];
+    [dic setObject: point forKey: @"point"];
+    [dic setObject: reward forKey: @"reward"];
+    
+    returnStr = [self boxAPIWithoutSign: dic URL: @"/buyalbum/2.0"];
+    
+    return returnStr;
+}
+
 //下載相本
 +(NSString *)downloadalbumzip:(NSString *)uid token:(NSString *)token albumid:(NSString *)albumid{
     NSLog(@"");
@@ -1230,14 +1254,14 @@ static NSString *hostURL = @"www.pinpinbox.com";
     NSLog(@"");
     NSLog(@"albumsettings");
     
-    NSString *returnstr=@"";
-    NSMutableDictionary *dic=[NSMutableDictionary new];
+    NSString *returnstr = @"";
+    NSMutableDictionary *dic = [NSMutableDictionary new];
     [dic setObject:uid forKey:@"user_id"];
     [dic setObject:token forKey:@"token"];    
     [dic setObject:album_id forKey:@"album_id"];
     [dic setObject:settings forKey:@"settings"];
     
-    returnstr=[self boxAPI:dic URL:@"/albumsettings/2.0"];
+    returnstr = [self boxAPI:dic URL:@"/albumsettings/2.0"];
     
     return returnstr;
 }

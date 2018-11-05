@@ -103,7 +103,18 @@ static NSString *version = @"";
 //購買相本
 +(NSString *)buyalbum:(NSString *)uid token:(NSString *)token albumid:(NSString *)albumid;
 
-+ (NSString *)newBuyAlbum:(NSString *)userId token:(NSString *)token albumId:(NSString *)albumId platform:(NSString *)platform point:(NSString *)point;
++ (NSString *)newBuyAlbum:(NSString *)userId
+                    token:(NSString *)token
+                  albumId:(NSString *)albumId
+                 platform:(NSString *)platform
+                    point:(NSString *)point;
+
++ (NSString *)newBuyAlbum:(NSString *)userId
+                    token:(NSString *)token
+                  albumId:(NSString *)albumId
+                 platform:(NSString *)platform
+                    point:(NSString *)point
+                   reward:(NSString *)reward;
 //下載相本(有問題)
 +(NSString *)downloadalbumzip:(NSString *)uid token:(NSString *)token albumid:(NSString *)albumid;
 //通知下載完成

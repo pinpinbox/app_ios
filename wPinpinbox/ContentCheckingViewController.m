@@ -63,7 +63,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, ExchangeInfoEditViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, NewMessageBoardViewControllerDelegate, YoutubePlayerViewControllerDelegate, AlbumInfoViewControllerDelegate> {
+@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, ExchangeInfoEditViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, NewMessageBoardViewControllerDelegate, YoutubePlayerViewControllerDelegate, AlbumInfoViewControllerDelegate, UITextViewDelegate, UITextFieldDelegate> {
     BOOL isDataLoaded;
     BOOL isRotating;
     BOOL kbShowUp;
@@ -74,10 +74,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     NSUserDefaults *userPrefs;
     
-    UITextField *inputField;
+    UIScrollView *bgSV;
+    UITextView *nameTextView;
+    UITextView *phoneTextView;
+    UITextView *addressTextView;
+    UITextField *inputTextField;
+    
+    UITextView *selectTextView;
+    UITextField *selectTextField;
+//    UITextField *inputField;
     
     NSUInteger albumPoint;
     NSUInteger userPoint;
+    NSUInteger exchangeNumber;
     NSUInteger oldCurrentPage;
     
     NSDictionary *locdata;
@@ -118,6 +127,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     CGSize sizeAfterRotating;
     float offsetAfterRotating;
     UIInterfaceOrientation orientation;
+    
+    BOOL rewardAfterCollect;
+    BOOL displayNumOfCollect;
 }
 @property (weak, nonatomic) IBOutlet UIView *navBarBgView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarBgViewHeight;
@@ -460,58 +472,88 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"keyboardWasShown");
     kbShowUp = YES;
     
-    UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-    
-    if (interfaceOrientation == 1) {
-        [UIView animateWithDuration: 0.3 animations:^{
-            cell.bgV3CenterYConstraint.constant = 0;
-            cell.bgV3CenterYConstraint.constant = -30;
-            
-            cell.bgV4CenterYConstraint.constant = 0;
-            cell.bgV4CenterYConstraint.constant = -30;
-//            self.bgV4CenterYConstraint.constant = -30;
-        }];
-    } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
-        [UIView animateWithDuration: 0.3 animations:^{
-            cell.bgV3CenterYConstraint.constant = 0;
-            cell.bgV3CenterYConstraint.constant = -100;
-            
-            cell.bgV4CenterYConstraint.constant = 0;
-            cell.bgV4CenterYConstraint.constant = -100;
-//            self.bgV4CenterYConstraint.constant = -30;
-        }];
+    NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
+    /*
+    if (rewardAfterCollect) {
+        NSDictionary *info = [aNotification userInfo];
+        CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+        UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+        bgSV.contentInset = contentInsets;
+        bgSV.scrollIndicatorInsets = contentInsets;
+        
+        // If active textField/textView is hidden by keyboard, scroll it so it's visible
+        CGRect aRect = self.view.frame;
+        aRect.size.height -= kbSize.height;
+        
+        UIView *activeField;
+        
+        if (selectTextView != nil) {
+            activeField = selectTextView;
+        } else if (selectTextField != nil) {
+            activeField = selectTextField;
+        }
+        //    activeField.backgroundColor = [UIColor thirdPink];
+        NSLog(@"activeField: %@", activeField);
+        NSLog(@"aRect: %@", NSStringFromCGRect(aRect));
+        NSLog(@"activeField.frame.origin: %@", NSStringFromCGPoint(activeField.frame.origin));
+        
+        if (!CGRectContainsPoint(aRect, activeField.frame.origin)) {
+            NSLog(@"!CGRectContainsPoint aRect activeField.frame.origin");
+            CGPoint scrollPoint = CGPointMake(0.0, activeField.frame.origin.y - kbSize.height);
+            [bgSV setContentOffset: scrollPoint animated: YES];
+        }
+    } else {
+        UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+        ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+        
+        if (interfaceOrientation == 1) {
+            NSLog(@"interfaceOrientation == 1");
+            [UIView animateWithDuration: 0.3 animations:^{
+                cell.bgV2CenterYConstraint.constant = 0;
+                cell.bgV2CenterYConstraint.constant = -30;
+            }];
+        } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
+            NSLog(@"interfaceOrientation == 3 || 4");
+            [UIView animateWithDuration: 0.3 animations:^{
+                cell.bgV2CenterYConstraint.constant = 0;
+                cell.bgV2CenterYConstraint.constant = -100;
+            }];
+        }
     }
+     */
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
     NSLog(@"keyboardWillBeHidden");
     kbShowUp = NO;
     
-    UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-    
-    if (interfaceOrientation == 1) {
-        [UIView animateWithDuration: 0.3 animations:^{
-            cell.bgV3CenterYConstraint.constant = -30;
-            cell.bgV3CenterYConstraint.constant = 0;
-            
-            cell.bgV4CenterYConstraint.constant = -30;
-            cell.bgV4CenterYConstraint.constant = 0;
-//            self.bgV4CenterYConstraint.constant = 0;
-        }];
-    } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
-        [UIView animateWithDuration: 0.3 animations:^{
-            cell.bgV3CenterYConstraint.constant = -60;
-            cell.bgV3CenterYConstraint.constant = 0;
-            
-            cell.bgV4CenterYConstraint.constant = -60;
-            cell.bgV4CenterYConstraint.constant = 0;
-//            self.bgV4CenterYConstraint.constant = 0;
-        }];
+    NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
+    /*
+    if (rewardAfterCollect) {
+        UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+        bgSV.contentInset = contentInsets;
+        bgSV.scrollIndicatorInsets = contentInsets;
+    } else {
+        UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+        ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+        
+        if (interfaceOrientation == 1) {
+            NSLog(@"interfaceOrientation == 1");
+            [UIView animateWithDuration: 0.3 animations:^{
+                cell.bgV2CenterYConstraint.constant = -30;
+                cell.bgV2CenterYConstraint.constant = 0;
+            }];
+        } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
+            NSLog(@"interfaceOrientation == 3 || 4");
+            [UIView animateWithDuration: 0.3 animations:^{
+                cell.bgV2CenterYConstraint.constant = -60;
+                cell.bgV2CenterYConstraint.constant = 0;
+            }];
+        }
     }
+     */
 }
 
 #pragma mark - changeOrientationToPortrait
@@ -798,6 +840,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [LabelAttributeStyle changeGapString: self.pageOrderLabel content: self.pageOrderLabel.text];
     [self.pageOrderLabel sizeToFit];
 }
+
 - (void)processVCTransition {
     orientation = [[UIApplication sharedApplication] statusBarOrientation];
     NSLog(@"");
@@ -887,8 +930,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     //        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated: NO];
     isRotating = NO;
-    
 }
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     NSLog(@"");
     NSLog(@"viewWillTransitionToSize");
@@ -995,7 +1038,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                             style: style];
                             return;
                         }
+                        if ([wTools objectExists: self.bookdata[@"album"][@"reward_after_collect"]]) {
+                            self->rewardAfterCollect = [self.bookdata[@"album"][@"reward_after_collect"] boolValue];
+                            NSLog(@"reward_after_collect: %@", self.bookdata[@"album"][@"reward_after_collect"]);
+                        }
+                        if ([wTools objectExists: self.bookdata[@"album"][@"display_num_of_collect"]]) {
+                            self->displayNumOfCollect = [self.bookdata[@"album"][@"display_num_of_collect"] boolValue];
+                        }
                         
+                        NSLog(@"display_num_of_collect: %@", self.bookdata[@"album"][@"display_num_of_collect"]);
+                        NSLog(@"preview_page_num: %@", self.bookdata[@"album"][@"preview_page_num"]);
+                        NSLog(@"reward_description: %@", self.bookdata[@"album"][@"reward_description"]);
                         // Core Data Setting for RecentBrowsingViewController
                         [self checkBrowsingDataInDatabaseOrNot];
                         [self checkBrowsingDataReachMax];
@@ -2149,12 +2202,29 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)newBuyAlbum: (NSString *)pointStr {
     [wTools ShowMBProgressHUD];
+    
+    NSMutableDictionary *rewardDic = [NSMutableDictionary new];
+    [rewardDic setObject: self->nameTextView.text forKey: @"recipient"];
+    [rewardDic setObject: self->phoneTextView.text forKey: @"recipient_tel"];
+    [rewardDic setObject: self->addressTextView.text forKey: @"recipient_address"];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject: rewardDic options: 0 error: nil];
+    NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI newBuyAlbum: [wTools getUserID]
                                            token: [wTools getUserToken]
                                          albumId: self.albumId
                                         platform: @"apple"
+                                           point: pointStr
+                                          reward: jsonStr];
+        /*
+        NSString *response = [boxAPI newBuyAlbum: [wTools getUserID]
+                                           token: [wTools getUserToken]
+                                         albumId: self.albumId
+                                        platform: @"apple"
                                            point: pointStr];
+         */
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -2173,10 +2243,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    //
                     NSString *resultStr = dic[@"result"];
-                    //NSLog(@"resultStr: %@", resultStr);
+                    NSLog(@"resultStr: %@", resultStr);
                     
                     if ([resultStr isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"resultStr isEqualToString SYSTEM_ERROR");
@@ -2192,7 +2260,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                     duration: 2.0
                                     position: CSToastPositionBottom
                                        style: style];
-                        
                         [self own];
                         [self retrieveAlbum];
                     } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
@@ -2715,10 +2782,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (NSInteger)getCurrentPage {
-//    NSLog(@"");
-//    NSLog(@"getCurrentPage");
     NSInteger page = self.imageScrollCV.contentOffset.x / self.imageScrollCV.frame.size.width;
-//    NSLog(@"page: %ld", (long)page);
     return page;
 }
 
@@ -2730,11 +2794,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     useFor = self.photoArray[page][@"usefor"];
     NSLog(@"useFor: %@", useFor);
-    
     NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
     
     cell.giftImageBtn.hidden = YES;
-    cell.checkCollectionLayout.hidden = YES;
 //    cell.alphaBgV.hidden = YES;
     cell.giftViewBgV.hidden = YES;
     cell.checkCollectionLayout.hidden = YES;
@@ -2994,7 +3056,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"];
-                        
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
@@ -3021,8 +3082,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                     btn.hidden = NO;
                                 }
                             }
-                        }
-                        
+                        }                        
                         // The Toast method below will call scrollViewScroll delegate method
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
@@ -3585,6 +3645,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         albumPoint = [self.bookdata[@"album"][@"point"] intValue];
         userPoint = [[userPrefs objectForKey: @"pPoint"] integerValue];
+        exchangeNumber = [self.bookdata[@"albumstatistics"][@"exchange"] integerValue];
+        
+        NSString *rewardDescription = self.bookdata[@"album"][@"reward_description"];
+        
         NSUInteger countPhoto = [self.bookdata[@"album"][@"count_photo"] intValue];
         NSArray *photoArray = self.bookdata[@"photo"];
         NSUInteger totalPhoto = photoArray.count;
@@ -3637,7 +3701,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //                self.videoPlayerViewController.view.hidden = YES;
             }
         }
-        
         if ([useFor isEqualToString: @"slot"]) {
             cell.alphaBgV.hidden = NO;
             
@@ -3660,49 +3723,72 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 cell.checkCollectionLayout.hidden = NO;
             }
         }
-        
         if ([useFor isEqualToString: @"FinalPage"]) {
             NSLog(@"useFor is equal to Final Page");
             cell.albumPoint = albumPoint;
             NSLog(@"cell.albumPoint: %ld", (long)cell.albumPoint);
             cell.userPoint = userPoint;
             NSLog(@"cell.userPoint: %ld", (long)cell.userPoint);
+            cell.exchangeNumber = exchangeNumber;
+            NSLog(@"cell.exchangeNumber: %ld", (long)cell.exchangeNumber);
+            cell.rewardDescriptionLabel.text = rewardDescription;
             
             cell.finalPageView.hidden = NO;
             
             if (albumPoint == 0) {
                 if (totalPhoto == countPhoto) {
-                    cell.bgV1.hidden = NO;
-                    cell.bgV2.hidden = YES;
-                    cell.bgV3.hidden = YES;
-                    cell.bgV4.hidden = YES;
+                    cell.conditionCheckStr = @"Exit";
                 } else if (totalPhoto != countPhoto) {
-                    cell.bgV1.hidden = YES;
-                    cell.bgV2.hidden = NO;
-                    cell.bgV3.hidden = YES;
-                    cell.bgV4.hidden = YES;
+                    cell.conditionCheckStr = @"FreeCollect";
                 }
             } else if (albumPoint > 0) {
+                NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
+                
+                if (displayNumOfCollect && exchangeNumber > 0) {
+                    cell.sponsoredNumberLabel.hidden = NO;
+                } else {
+                    cell.sponsoredNumberLabel.hidden = YES;
+                }
                 if (totalPhoto == countPhoto) {
-                    cell.bgV1.hidden = YES;
-                    cell.bgV2.hidden = YES;
-                    cell.bgV3.hidden = NO;
-                    inputField = cell.sponsorTextFieldForBgV3;
-                    cell.bgV4.hidden = YES;
+                    if (rewardAfterCollect) {
+                        cell.conditionCheckStr = @"DisplayAllWithReward";
+                        bgSV = cell.bgSV;                        
+                        inputTextField = cell.sponsorTextFieldForBgV3;
+                        nameTextView = cell.nameTextView;
+                        phoneTextView = cell.phoneTextView;
+                        addressTextView = cell.addressTextView;
+                        
+                        inputTextField.delegate = self;
+                        nameTextView.delegate = self;
+                        phoneTextView.delegate = self;
+                        addressTextView.delegate = self;
+                    } else {
+                        cell.conditionCheckStr = @"DisplayAllWithoutReward";
+                        inputTextField = cell.sponsorTextFieldForBgV2;
+                        inputTextField.delegate = self;
+                    }
                 } else if (totalPhoto != countPhoto) {
-                    cell.bgV1.hidden = YES;
-                    cell.bgV2.hidden = YES;
-                    cell.bgV3.hidden = YES;
-                    cell.bgV4.hidden = NO;
-                    inputField = cell.sponsorTextFieldForBgV4;
+                    if (rewardAfterCollect) {
+                        cell.conditionCheckStr = @"DisplayPreviewWithReward";
+                        bgSV = cell.bgSV;
+                        inputTextField = cell.sponsorTextFieldForBgV3;
+                        nameTextView = cell.nameTextView;
+                        phoneTextView = cell.phoneTextView;
+                        addressTextView = cell.addressTextView;
+                        
+                        inputTextField.delegate = self;
+                        nameTextView.delegate = self;
+                        phoneTextView.delegate = self;
+                        addressTextView.delegate = self;
+                    } else {
+                        cell.conditionCheckStr = @"DisplayPreviewWithoutReward";
+                        inputTextField = cell.sponsorTextFieldForBgV2;
+                        inputTextField.delegate = self;
+                    }
                 }
             }
         } else {
             cell.finalPageView.hidden = YES;
-            cell.bgV1.hidden = YES;
-            cell.bgV2.hidden = YES;
-            cell.bgV3.hidden = YES;
-            cell.bgV4.hidden = YES;
         }
         cell.exitBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
             [self backBtnPressed: nil];
@@ -3710,14 +3796,57 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         cell.collectBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
             [self buyAlbum];
         };
-        //__block NSString *inputText = inputField.text;
-        __block typeof(inputField) input = inputField;
+        //__block NSString *inputText = inputTextField.text;
+        __block typeof(inputTextField) input = inputTextField;
+        __block typeof(nameTextView) nameInput = nameTextView;
+        __block typeof(phoneTextView) phoneInput = phoneTextView;
+        __block typeof(addressTextView) addressInput = addressTextView;
         __block typeof(self) wself = self;
+        
         cell.sponsorBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
-            NSString *inputText = input.text;
-            NSLog(@"inputText: %@", inputText);
+//            NSString *inputText = input.text;
+//            NSLog(@"inputText: %@", inputText);
             
-            if ([inputText isEqualToString: @""]) {
+            if ([nameInput.text isEqualToString: @""]) {
+                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                style.messageColor = [UIColor whiteColor];
+                style.backgroundColor = [UIColor thirdPink];
+                
+                [wself.view makeToast: @"請輸入收件人姓名"
+                             duration: 2.0
+                             position: CSToastPositionBottom
+                                style: style];
+                
+                [nameInput resignFirstResponder];
+                return;
+            }
+            if ([phoneInput.text isEqualToString: @""]) {
+                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                style.messageColor = [UIColor whiteColor];
+                style.backgroundColor = [UIColor thirdPink];
+                
+                [wself.view makeToast: @"請輸入電話號碼"
+                             duration: 2.0
+                             position: CSToastPositionBottom
+                                style: style];
+                
+                [phoneInput resignFirstResponder];
+                return;
+            }
+            if ([addressInput.text isEqualToString: @""]) {
+                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                style.messageColor = [UIColor whiteColor];
+                style.backgroundColor = [UIColor thirdPink];
+                
+                [wself.view makeToast: @"請輸入收件人地址"
+                             duration: 2.0
+                             position: CSToastPositionBottom
+                                style: style];
+                
+                [addressInput resignFirstResponder];
+                return;
+            }
+            if ([input.text isEqualToString: @""]) {
                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                 style.messageColor = [UIColor whiteColor];
                 style.backgroundColor = [UIColor thirdPink];
@@ -3728,7 +3857,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                style: style];
                 
                 [input resignFirstResponder];
-            } else if ([inputText intValue] < wself->albumPoint) {
+                return;
+            } else if ([input.text intValue] < wself->albumPoint) {
                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                 style.messageColor = [UIColor whiteColor];
                 style.backgroundColor = [UIColor thirdPink];
@@ -3739,6 +3869,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                style: style];
                 
                 [input resignFirstResponder];
+                return;
             } else {
                 [wself checkBuyingAlbum: wself->albumPoint
                              userPoint: wself->userPoint];
@@ -3942,7 +4073,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                userPoint:(NSUInteger)userPoint {
     NSLog(@"checkBuyingAlbum");
     
-    NSInteger inputPoint = [inputField.text intValue];
+    NSInteger inputPoint = [inputTextField.text intValue];
     NSLog(@"inputPoint: %ld", (long)inputPoint);
     
     if (userPoint >= albumPoint) {
@@ -3958,7 +4089,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)dismissKeyboard {
-    [inputField resignFirstResponder];
+    NSLog(@"dismissKeyboard");
+    [inputTextField resignFirstResponder];
+//    [nameTextView resignFirstResponder];
+//    [phoneTextView resignFirstResponder];
+//    [addressTextView resignFirstResponder];
+//    [sponsorTextView resignFirstResponder];
 }
 
 - (void)textViewContentSetup:(NSInteger)page {
@@ -4925,8 +5061,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [alertPostView show];
 }
 
-- (UIView *)createCheckPostContainerView: (NSString *)msg
-{
+- (UIView *)createCheckPostContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -5113,8 +5248,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     NSLog(@"userPoint: %ld", (long)userPoint);
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-    cell.currentPointLabelForBgV3.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
-    cell.currentPointLabelForBgV4.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
+    cell.currentPointLabelForBgV2.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
 }
 
 #pragma mark - UINavigationControllerDelegate Methods
@@ -5274,4 +5408,75 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     // Pass the selected object to the new view controller.
 }
 */
+
+
+#pragma mark - UITextFieldDelegate Methods
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    NSLog(@"textFieldDidBeginEditing");
+    selectTextField = textField;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    selectTextField = nil;
+}
+
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string {
+    if ((textField.text.length + (string.length - range.length)) > 4) {
+        return false;
+    }
+    return true;
+}
+
+#pragma mark - UITextViewDelegate Methods
+- (void)textViewDidBeginEditing:(UITextView *)textView {
+    NSLog(@"textViewDidBeginEditing");
+    selectTextView = textView;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView {
+    NSLog(@"textViewDidEndEditing");
+    selectTextView = nil;
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+    NSLog(@"textViewDidChange");
+    //每次输入变更都让布局重新布局。
+    if (textView == phoneTextView) {
+        return;
+    }
+    
+    MyBaseLayout *layout = (MyBaseLayout*)textView.superview;
+    [layout setNeedsLayout];
+    
+    UITextRange *tp = textView.selectedTextRange;
+    CGRect caret = [textView firstRectForRange:tp];
+    if (caret.size.width < 1) {
+        caret = [textView caretRectForPosition:[textView endOfDocument]];
+    }
+    
+    CGRect r2 = [bgSV convertRect:caret fromView:textView];
+    
+    [bgSV scrollRectToVisible:CGRectMake(0, r2.origin.y, bgSV.bounds.size.width, r2.size.height) animated:YES];
+    
+    //这里设置在布局结束后将textView滚动到光标所在的位置了。在布局执行布局完毕后如果设置了endLayoutBlock的话可以在这个block里面读取布局里面子视图的真实布局位置和尺寸，也就是可以在block内部读取每个子视图的真实的frame的值。
+    layout.endLayoutBlock = ^{
+        NSRange rg = textView.selectedRange;
+        [textView scrollRangeToVisible:rg];
+    };
+//    [self.bgV3 setNeedsLayout];
+}
+
+- (BOOL)textView:(UITextView *)textView
+shouldChangeTextInRange:(NSRange)range
+ replacementText:(NSString *)text {
+    if (textView == phoneTextView) {
+        if ([text isEqualToString: @"\n"]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 @end

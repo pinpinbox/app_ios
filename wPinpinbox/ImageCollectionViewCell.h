@@ -12,44 +12,58 @@
 typedef void(^ButtonTouch)(BOOL selected, NSInteger tag, UIButton *btn);
 
 @interface ImageCollectionViewCell : UICollectionViewCell
-<UIScrollViewDelegate, UITextFieldDelegate>
+<UIScrollViewDelegate, UITextFieldDelegate, UITextViewDelegate>
+
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
 
 @property (weak, nonatomic) IBOutlet UIView *finalPageView;
 @property (weak, nonatomic) IBOutlet UIImageView *finalPageImageView;
 
+@property (strong, nonatomic) NSString *conditionCheckStr;
+
 @property (weak, nonatomic) IBOutlet UIView *bgV1;
 @property (weak, nonatomic) IBOutlet UILabel *topicLabelForBgV1;
-@property (weak, nonatomic) IBOutlet UIButton *exitBtnForBgV1;
+@property (weak, nonatomic) IBOutlet UIButton *btnForBgV1;
 @property (copy, nonatomic) ButtonTouch exitBlock;
-
-@property (weak, nonatomic) IBOutlet UIView *bgV2;
-@property (weak, nonatomic) IBOutlet UILabel *topicLabelForBgV2;
-@property (weak, nonatomic) IBOutlet UIButton *collectBtnForBgV2;
 @property (copy, nonatomic) ButtonTouch collectBlock;
 
-@property (weak, nonatomic) IBOutlet UIView *bgV3;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bgV3CenterYConstraint;
-@property (weak, nonatomic) IBOutlet UILabel *topicLabelForBgV3;
-@property (weak, nonatomic) IBOutlet UILabel *currentPointLabelForBgV3;
-@property (weak, nonatomic) IBOutlet UILabel *sponsorLabelForBgV3;
-@property (weak, nonatomic) IBOutlet UITextField *sponsorTextFieldForBgV3;
-@property (weak, nonatomic) IBOutlet UILabel *pLabelForBgV3;
-@property (weak, nonatomic) IBOutlet UIButton *sponsorBtnForBgV3;
+@property (weak, nonatomic) IBOutlet UIView *bgV2;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bgV2CenterYConstraint;
+@property (weak, nonatomic) IBOutlet UILabel *topicLabelForBgV2;
+@property (weak, nonatomic) IBOutlet UILabel *currentPointLabelForBgV2;
+@property (weak, nonatomic) IBOutlet UILabel *sponsorLabelForBgV2;
+@property (weak, nonatomic) IBOutlet UITextField *sponsorTextFieldForBgV2;
+@property (weak, nonatomic) IBOutlet UILabel *pLabelForBgV2;
+@property (weak, nonatomic) IBOutlet UIButton *sponsorBtnForBgV2;
 @property (copy, nonatomic) ButtonTouch sponsorBlock;
 
-@property (weak, nonatomic) IBOutlet UIView *bgV4;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bgV4CenterYConstraint;
-@property (weak, nonatomic) IBOutlet UILabel *topicLabelForBgV4;
-@property (weak, nonatomic) IBOutlet UILabel *currentPointLabelForBgV4;
-@property (weak, nonatomic) IBOutlet UILabel *sponsorLabelForBgV4;
-@property (weak, nonatomic) IBOutlet UITextField *sponsorTextFieldForBgV4;
-@property (weak, nonatomic) IBOutlet UILabel *pLabelForBgV4;
-@property (weak, nonatomic) IBOutlet UIButton *sponsorBtnForBgV4;
+@property (weak, nonatomic) IBOutlet UIScrollView *bgSV;
+@property (weak, nonatomic) IBOutlet MyLinearLayout *bgV3;
+@property (weak, nonatomic) IBOutlet UILabel *topicLabelForBgV3;
+@property (weak, nonatomic) IBOutlet UILabel *currentPointLabelForBgV3;
+@property (weak, nonatomic) IBOutlet MyLinearLayout *sponsorHorzLayout;
+@property (weak, nonatomic) IBOutlet UILabel *sponsorLabelForBgV3;
+@property (weak, nonatomic) IBOutlet UITextField *sponsorTextFieldForBgV3;
+//@property (weak, nonatomic) IBOutlet UITextView *sponsorTextViewForBgV3;
+//@property (nonatomic) UILabel *placeHolderSponsorLabel;
+@property (weak, nonatomic) IBOutlet UILabel *pLabelForBgV3;
+@property (weak, nonatomic) IBOutlet UILabel *sponsoredNumberLabel;
+@property (weak, nonatomic) IBOutlet UIView *horzLine;
+@property (weak, nonatomic) IBOutlet UILabel *rewardInfoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UITextView *nameTextView;
+@property (weak, nonatomic) IBOutlet UILabel *phoneLabel;
+@property (weak, nonatomic) IBOutlet UITextView *phoneTextView;
+//@property (weak, nonatomic) IBOutlet UITextField *phoneTextField;
+@property (weak, nonatomic) IBOutlet UILabel *addressLabel;
+@property (weak, nonatomic) IBOutlet UITextView *addressTextView;
+@property (weak, nonatomic) IBOutlet UILabel *rewardDescriptionLabel;
+@property (weak, nonatomic) IBOutlet UIButton *sponsorBtnForBgV3;
 
 @property (nonatomic) NSInteger albumPoint;
 @property (nonatomic) NSInteger userPoint;
+@property (nonatomic) NSInteger exchangeNumber;
 
 @property (weak, nonatomic) IBOutlet UIView *videoView;
 

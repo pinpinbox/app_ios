@@ -349,7 +349,7 @@
     lineView9.backgroundColor = [UIColor secondGrey];
     lineView9.myHeight = kLineHeight;
     [self.vertLayout addSubview: lineView9];
-    
+        
     self.vertLayout.wrapContentHeight = YES;
     
     __block CGFloat h;
