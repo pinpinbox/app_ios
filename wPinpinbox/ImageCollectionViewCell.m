@@ -146,7 +146,8 @@
 //    self.bgSV.backgroundColor = [UIColor redColor];
     self.bgSV.layer.cornerRadius = kCornerRadius;
 //    self.bgSV.contentOffset = CGPointMake(0, 40);
-//    self.bgSV.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
+    self.bgSV.contentInset = UIEdgeInsetsMake(60, 0, 0, 0);
+    self.bgSV.showsVerticalScrollIndicator = NO;
 }
 
 - (void)setupBgV3:(NSString *)topicStr {
@@ -240,7 +241,7 @@
     self.sponsorTextFieldForBgV3.layer.cornerRadius = kCornerRadius;
     self.sponsorTextFieldForBgV3.borderStyle = UITextBorderStyleRoundedRect;
     self.sponsorTextFieldForBgV3.keyboardType = UIKeyboardTypeNumberPad;
-    self.sponsorTextFieldForBgV3.inputAccessoryView = toolBarForDoneBtn;
+//    self.sponsorTextFieldForBgV3.inputAccessoryView = toolBarForDoneBtn;
     self.sponsorTextFieldForBgV3.wrapContentWidth = YES;
     
     
@@ -308,7 +309,7 @@
     self.nameTextView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
     self.nameTextView.layer.cornerRadius = kCornerRadius;
     self.nameTextView.wrapContentHeight = YES;
-    self.nameTextView.inputAccessoryView = toolBarForDoneBtn;
+//    self.nameTextView.inputAccessoryView = toolBarForDoneBtn;
     
     // PhoneLabel
     self.phoneLabel.myTopMargin = 8;
@@ -332,7 +333,7 @@
     self.phoneTextView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
     self.phoneTextView.layer.cornerRadius = kCornerRadius;
     self.phoneTextView.wrapContentHeight = YES;
-    self.phoneTextView.inputAccessoryView = toolBarForDoneBtn;
+//    self.phoneTextView.inputAccessoryView = toolBarForDoneBtn;
     
     /*
     // PhoneTextField
@@ -368,7 +369,7 @@
     self.addressTextView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
     self.addressTextView.layer.cornerRadius = kCornerRadius;
     self.addressTextView.wrapContentHeight = YES;    
-    self.addressTextView.inputAccessoryView = toolBarForDoneBtn;
+//    self.addressTextView.inputAccessoryView = toolBarForDoneBtn;
     
     // RewardDescriptionLabel
     self.rewardDescriptionLabel.myTopMargin = self.rewardDescriptionLabel.myBottomMargin = 8;
@@ -424,8 +425,7 @@
                            //[[UIBarButtonItem alloc] initWithTitle: @"取消" style: UIBarButtonItemStylePlain target: self action: @selector(cancelNumberPad)],
                            [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemFlexibleSpace target: nil action: nil],
                            [[UIBarButtonItem alloc] initWithTitle: @"完成" style: UIBarButtonItemStyleDone target: self action: @selector(toolBarDoneBtnPressed)] ,nil];
-    self.sponsorTextFieldForBgV2.inputAccessoryView = numberToolBar;
-    
+//    self.sponsorTextFieldForBgV2.inputAccessoryView = numberToolBar;
     self.pLabelForBgV2.textColor = [UIColor firstGrey];
     
     self.sponsorBtnForBgV2.backgroundColor = [UIColor firstMain];

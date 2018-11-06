@@ -170,7 +170,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -1109,6 +1108,18 @@
 - (void)textViewDidChange:(UITextView *)textView {
     NSLog(@"textViewDidChange");
     
+    UITextRange *tp = textView.selectedTextRange;
+    NSLog(@"tp: %@", tp);
+    CGRect caret = [textView firstRectForRange:tp];
+    NSLog(@"caret: %@", NSStringFromCGRect(caret));
+    
+    if (caret.size.width < 1) {
+        caret = [textView caretRectForPosition:[textView endOfDocument]];
+    }
+    CGRect r2 = [self.scrollView convertRect:caret fromView:textView];
+    NSLog(@"r2: %@", NSStringFromCGRect(r2));
+    [self.scrollView scrollRectToVisible:CGRectMake(0, r2.origin.y, self.scrollView.bounds.size.width, r2.size.height) animated:YES];
+    
     //每次输入变更都让布局重新布局。
     MyBaseLayout *layout = (MyBaseLayout*)textView.superview;
     [layout setNeedsLayout];
@@ -1118,6 +1129,7 @@
         NSRange rg = textView.selectedRange;
         [textView scrollRangeToVisible:rg];
     };
+    NSLog(@"self.scrollView.contentOffset: %@", NSStringFromCGPoint(self.scrollView.contentOffset));
     
     if ([self.nameTextView.text isEqualToString: @""]) {
         placeHolderNameLabel.alpha = 1;

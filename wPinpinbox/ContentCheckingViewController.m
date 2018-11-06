@@ -80,8 +80,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UITextView *addressTextView;
     UITextField *inputTextField;
     
-    UITextView *selectTextView;
-    UITextField *selectTextField;
 //    UITextField *inputField;
     
     NSUInteger albumPoint;
@@ -202,6 +200,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 @property (strong) NSMutableArray *browseArray;
 @property (nonatomic) NSURL *fbVideoUrl;
+
+@property (nonatomic) UITextField *activeTextField;
+@property (nonatomic) UITextView *activeTextView;
+
+@property (nonatomic) CGPoint lastOffset;
 @end
 
 @implementation ContentCheckingViewController
@@ -447,113 +450,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Keyboard Notification
-- (void)addKeyboardNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-- (void)removeKeyboardNotification {
-    [[NSNotificationCenter defaultCenter] removeObserver: self
-                                                    name: UIKeyboardDidShowNotification
-                                                  object: nil];
-    [[NSNotificationCenter defaultCenter] removeObserver: self
-                                                    name: UIKeyboardWillHideNotification
-                                                  object: nil];
-}
-
-- (void)keyboardWasShown:(NSNotification*)aNotification {
-    NSLog(@"keyboardWasShown");
-    kbShowUp = YES;
-    
-    NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
-    
-    if (rewardAfterCollect) {
-        NSDictionary *info = [aNotification userInfo];
-        CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-        UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
-        bgSV.contentInset = contentInsets;
-        bgSV.scrollIndicatorInsets = contentInsets;
-        
-        // If active textField/textView is hidden by keyboard, scroll it so it's visible
-        CGRect aRect = self.view.frame;
-        aRect.size.height -= kbSize.height;
-        
-        UIView *activeField;
-        
-        if (selectTextView != nil) {
-            activeField = selectTextView;
-        } else if (selectTextField != nil) {
-            activeField = selectTextField;
-        }
-        //    activeField.backgroundColor = [UIColor thirdPink];
-        NSLog(@"activeField: %@", activeField);
-        NSLog(@"aRect: %@", NSStringFromCGRect(aRect));
-        NSLog(@"activeField.frame.origin: %@", NSStringFromCGPoint(activeField.frame.origin));
-        
-        if (!CGRectContainsPoint(aRect, activeField.frame.origin)) {
-            NSLog(@"!CGRectContainsPoint aRect activeField.frame.origin");
-            CGPoint scrollPoint = CGPointMake(0.0, activeField.frame.origin.y - kbSize.height);
-            [bgSV setContentOffset: scrollPoint animated: YES];
-        }
-    } else {
-        UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-        ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-        
-        if (interfaceOrientation == 1) {
-            NSLog(@"interfaceOrientation == 1");
-            [UIView animateWithDuration: 0.3 animations:^{
-                cell.bgV2CenterYConstraint.constant = 0;
-                cell.bgV2CenterYConstraint.constant = -30;
-            }];
-        } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
-            NSLog(@"interfaceOrientation == 3 || 4");
-            [UIView animateWithDuration: 0.3 animations:^{
-                cell.bgV2CenterYConstraint.constant = 0;
-                cell.bgV2CenterYConstraint.constant = -100;
-            }];
-        }
-    }
-}
-
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    NSLog(@"keyboardWillBeHidden");
-    kbShowUp = NO;
-    
-    NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
-    
-    if (rewardAfterCollect) {
-        UIEdgeInsets contentInsets = UIEdgeInsetsZero;
-        bgSV.contentInset = contentInsets;
-        bgSV.scrollIndicatorInsets = contentInsets;
-    } else {
-        UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-        ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-        
-        if (interfaceOrientation == 1) {
-            NSLog(@"interfaceOrientation == 1");
-            [UIView animateWithDuration: 0.3 animations:^{
-                cell.bgV2CenterYConstraint.constant = -30;
-                cell.bgV2CenterYConstraint.constant = 0;
-            }];
-        } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
-            NSLog(@"interfaceOrientation == 3 || 4");
-            [UIView animateWithDuration: 0.3 animations:^{
-                cell.bgV2CenterYConstraint.constant = -60;
-                cell.bgV2CenterYConstraint.constant = 0;
-            }];
-        }
-    }     
-}
-
 #pragma mark - changeOrientationToPortrait
 - (void)changeOrientationToPortrait {
     // Force to return to portrait orientation
@@ -708,6 +604,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)settingSizeBasedOnDevice {
     NSLog(@"settingSizeBasedOnDevice");
     CGRect rect;
+    bgSV.contentInset = UIEdgeInsetsMake(60, 0, 0, 0);
+    
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
             case 1136:
@@ -786,6 +684,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)handleSingleTap {
     NSLog(@"handleSingleTap");
+    [inputTextField resignFirstResponder];
+    [self.activeTextField resignFirstResponder];
+    self.activeTextField = nil;
+    [self.activeTextView resignFirstResponder];
+    self.activeTextView = nil;
     
     [UIView animateWithDuration: 0.2 animations:^{
         self.navBarBgView.hidden = !self.navBarBgView.hidden;
@@ -3748,7 +3651,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 if (totalPhoto == countPhoto) {
                     if (rewardAfterCollect) {
                         cell.conditionCheckStr = @"DisplayAllWithReward";
-                        bgSV = cell.bgSV;                        
+                        bgSV = cell.bgSV;
                         inputTextField = cell.sponsorTextFieldForBgV3;
                         nameTextView = cell.nameTextView;
                         phoneTextView = cell.phoneTextView;
@@ -4095,6 +3998,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)dismissKeyboard {
     NSLog(@"dismissKeyboard");
     [inputTextField resignFirstResponder];
+    [self.activeTextField resignFirstResponder];
+    self.activeTextField = nil;
+    [self.activeTextView resignFirstResponder];
+    self.activeTextView = nil;
 //    [nameTextView resignFirstResponder];
 //    [phoneTextView resignFirstResponder];
 //    [addressTextView resignFirstResponder];
@@ -5416,11 +5323,14 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 #pragma mark - UITextFieldDelegate Methods
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     NSLog(@"textFieldDidBeginEditing");
-    selectTextField = textField;
+    self.activeTextField = textField;
+    self.lastOffset = bgSV.contentOffset;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    selectTextField = nil;
+    NSLog(@"textFieldDidEndEditing");
+    [self.activeTextField resignFirstResponder];
+    self.activeTextField = nil;
 }
 
 - (BOOL)textField:(UITextField *)textField
@@ -5435,12 +5345,14 @@ replacementString:(NSString *)string {
 #pragma mark - UITextViewDelegate Methods
 - (void)textViewDidBeginEditing:(UITextView *)textView {
     NSLog(@"textViewDidBeginEditing");
-    selectTextView = textView;
+    self.activeTextView = textView;
+    self.lastOffset = bgSV.contentOffset;
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
     NSLog(@"textViewDidEndEditing");
-    selectTextView = nil;
+    [self.activeTextView resignFirstResponder];
+    self.activeTextView = nil;
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
@@ -5449,26 +5361,27 @@ replacementString:(NSString *)string {
     if (textView == phoneTextView) {
         return;
     }
+    UITextRange *tp = textView.selectedTextRange;
+    NSLog(@"tp: %@", tp);
+    CGRect caret = [textView firstRectForRange:tp];
+    NSLog(@"caret: %@", NSStringFromCGRect(caret));
+    
+    if (caret.size.width < 1) {
+        caret = [textView caretRectForPosition: [textView endOfDocument]];
+    }
+    CGRect r2 = [bgSV convertRect: caret fromView: textView];
+    NSLog(@"r2: %@", NSStringFromCGRect(r2));
+    [bgSV scrollRectToVisible:CGRectMake(0, r2.origin.y, bgSV.bounds.size.width, r2.size.height) animated:YES];
     
     MyBaseLayout *layout = (MyBaseLayout*)textView.superview;
     [layout setNeedsLayout];
-    
-    UITextRange *tp = textView.selectedTextRange;
-    CGRect caret = [textView firstRectForRange:tp];
-    if (caret.size.width < 1) {
-        caret = [textView caretRectForPosition:[textView endOfDocument]];
-    }
-    
-    CGRect r2 = [bgSV convertRect:caret fromView:textView];
-    
-    [bgSV scrollRectToVisible:CGRectMake(0, r2.origin.y, bgSV.bounds.size.width, r2.size.height) animated:YES];
     
     //这里设置在布局结束后将textView滚动到光标所在的位置了。在布局执行布局完毕后如果设置了endLayoutBlock的话可以在这个block里面读取布局里面子视图的真实布局位置和尺寸，也就是可以在block内部读取每个子视图的真实的frame的值。
     layout.endLayoutBlock = ^{
         NSRange rg = textView.selectedRange;
         [textView scrollRangeToVisible:rg];
     };
-//    [self.bgV3 setNeedsLayout];
+    NSLog(@"bgSV.contentOffset: %@", NSStringFromCGPoint(bgSV.contentOffset));
 }
 
 - (BOOL)textView:(UITextView *)textView
@@ -5480,6 +5393,125 @@ shouldChangeTextInRange:(NSRange)range
         }
     }
     return YES;
+}
+
+#pragma mark - Keyboard Notification
+- (void)addKeyboardNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+}
+
+- (void)removeKeyboardNotification {
+    [[NSNotificationCenter defaultCenter] removeObserver: self
+                                                    name: UIKeyboardDidShowNotification
+                                                  object: nil];
+    [[NSNotificationCenter defaultCenter] removeObserver: self
+                                                    name: UIKeyboardWillHideNotification
+                                                  object: nil];
+}
+
+- (void)keyboardDidShow:(NSNotification*)aNotification {
+    NSLog(@"keyboardDidShow");
+    kbShowUp = YES;
+    NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
+    
+    if (rewardAfterCollect) {
+        NSDictionary *info = [aNotification userInfo];
+        CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+        CGFloat keyboardHeight = kbSize.height;
+        NSLog(@"kbSize: %@", NSStringFromCGSize(kbSize));
+        
+        UIView *activeView;
+        
+        if (self.activeTextView != nil) {
+            NSLog(@"self.activeTextView != nil");
+            activeView = self.activeTextView;
+        } else if (self.activeTextField != nil) {
+            NSLog(@"self.activeTextField != nil");
+            activeView = self.activeTextField;
+        }
+        NSLog(@"bgSV.frame.size.height: %f", bgSV.frame.size.height);
+        NSLog(@"activeView.frame.origin.y: %f", activeView.frame.origin.y);
+        NSLog(@"activeView.frame.size.height: %f", activeView.frame.size.height);
+        
+        CGFloat distanceToBottom = bgSV.frame.size.height - activeView.frame.origin.y - activeView.frame.size.height;
+        NSLog(@"keyboardHeight: %f", keyboardHeight);
+        NSLog(@"distanceToBottom: %f", distanceToBottom);
+        
+        CGFloat collapseSpace = keyboardHeight + 20 - distanceToBottom;
+        
+        if (collapseSpace < 0) {
+            NSLog(@"no collapse");
+            return;
+        }
+        UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+        bgSV.contentInset = contentInsets;
+        
+        [UIView animateWithDuration: 0.3 animations:^{
+            NSLog(@"scroll to the position above keyboard 10 points");
+            [self->bgSV setContentOffset: CGPointMake(self.lastOffset.x, collapseSpace + 10) animated: YES];
+        }];
+    } else {
+        NSLog(@"rewardAfterCollect is NO");
+        NSLog(@"Animate bgV2CenterYConstraint");
+        UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+        ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+        
+        if (interfaceOrientation == 1) {
+            NSLog(@"interfaceOrientation == 1");
+            [UIView animateWithDuration: 0.3 animations:^{
+                cell.bgV2CenterYConstraint.constant = 0;
+                cell.bgV2CenterYConstraint.constant = -30;
+            }];
+        } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
+            NSLog(@"interfaceOrientation == 3 || 4");
+            [UIView animateWithDuration: 0.3 animations:^{
+                cell.bgV2CenterYConstraint.constant = 0;
+                cell.bgV2CenterYConstraint.constant = -100;
+            }];
+        }
+    }
+}
+
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
+    NSLog(@"keyboardWillBeHidden");
+    kbShowUp = NO;
+    NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
+    
+    if (rewardAfterCollect) {
+        [UIView animateWithDuration: 0.3 animations:^{
+            self->bgSV.contentOffset = self.lastOffset;
+//            UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+//            self->bgSV.contentInset = contentInsets;
+            self->bgSV.contentInset = UIEdgeInsetsMake(60, 0, 0, 0);
+//            self->bgSV.scrollIndicatorInsets = contentInsets;
+        }];
+    } else {
+        UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+        ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+        
+        if (interfaceOrientation == 1) {
+            NSLog(@"interfaceOrientation == 1");
+            [UIView animateWithDuration: 0.3 animations:^{
+                cell.bgV2CenterYConstraint.constant = -30;
+                cell.bgV2CenterYConstraint.constant = 0;
+            }];
+        } else if (interfaceOrientation == 3 || interfaceOrientation == 4) {
+            NSLog(@"interfaceOrientation == 3 || 4");
+            [UIView animateWithDuration: 0.3 animations:^{
+                cell.bgV2CenterYConstraint.constant = -60;
+                cell.bgV2CenterYConstraint.constant = 0;
+            }];
+        }
+    }
 }
 
 @end
