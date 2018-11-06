@@ -72,7 +72,6 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
 }
 
@@ -82,7 +81,6 @@
         UIButton *btn = (UIButton *)[v viewWithTag: 104];
         btn.hidden = YES;
     }
-    
     [self getPointStore];
 }
 
@@ -90,14 +88,12 @@
     [super viewDidAppear:animated];
     // Force view to dislay portrait mode
     [[UIDevice currentDevice] setValue: [NSNumber numberWithInteger: UIInterfaceOrientationPortrait] forKey: @"orientation"];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -165,12 +161,65 @@
         }
     }
 }
+
+- (void)getPointStore {
+    NSLog(@"getPointStore");
+    
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSString *response = [boxAPI getpointstore: [userPrefs objectForKey: @"id"]
+                                            token: [userPrefs objectForKey: @"token"]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+    
+            NSLog(@"response from getPointStore: %@", response);
+            
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"BuyPPointViewController");
+                    NSLog(@"getPointStore");
+                    
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"getpointstore"
+                                 selectProductId: @""
+                                   dataSignature: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    [wself processPointStoreResult:dic];
+                }
+            }
+        });
+    });
+}
+
 - (void)processPointStoreResult:(NSDictionary *)dic {
+    NSLog(@"processPointStoreResult");
     if ([dic[@"result"] intValue] == 1) {
         pointlist = [dic[@"data"] mutableCopy];
-        
-        NSMutableArray *testarr=[NSMutableArray new];
-        NSMutableArray *testarr2=[NSMutableArray new];
+        NSLog(@"pointlist: %@", pointlist);
+        NSMutableArray *testarr = [NSMutableArray new];
+        NSMutableArray *testarr2 = [NSMutableArray new];
         NSMutableArray *testarr3 = [NSMutableArray new];
         
         for (NSDictionary *pointdic in pointlist) {
@@ -222,64 +271,12 @@
         
         [self getUrPoints];
     } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"processPointStoreResult");
         NSLog(@"失敗：%@",dic[@"message"]);
         [self showCustomErrorAlert: dic[@"message"]];
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
-}
-- (void)getPointStore
-{
-    NSLog(@"getPointStore");
-    
-    @try {
-        [wTools ShowMBProgressHUD];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    
-    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    __block typeof(self) wself = self;
-    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI getpointstore: [userPrefs objectForKey: @"id"]
-                                            token: [userPrefs objectForKey: @"token"]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [wTools HideMBProgressHUD];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
-            
-            NSLog(@"response from getPointStore: %@", response);
-            
-            if (response != nil) {
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"BuyPPointViewController");
-                    NSLog(@"getPointStore");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getpointstore"
-                                 selectProductId: @""
-                                   dataSignature: @""];
-                } else {
-                    NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
-                    [wself processPointStoreResult:dic];
-                }
-            }
-        });
-    });
 }
 
 - (void)getUrPoints {
@@ -1239,89 +1236,13 @@
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
@@ -1374,8 +1295,7 @@
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -1449,8 +1369,7 @@
     return contentView;
 }
 
-- (BOOL)shouldAutorotate
-{
+- (BOOL)shouldAutorotate {
     NSLog(@"shouldAutorotate");
     return NO;
 }
@@ -1461,15 +1380,12 @@
 //    return NO;
 //}
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     NSLog(@"supportedInterfaceOrientations");
-    
     return UIInterfaceOrientationMaskPortrait;
 }
 
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
-{
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
     NSLog(@"preferredInterfaceOrientationForPresentation");
     return UIInterfaceOrientationPortrait;
 }
