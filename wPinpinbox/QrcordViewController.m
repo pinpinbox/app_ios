@@ -359,10 +359,11 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         }
         
         NSLog(@"%@",[metadataObj stringValue]);
-        //[self ToRetrievealbumpViewControllerproductn:[metadataObj stringValue]];
         productn = [metadataObj stringValue];
         
-        [self ToRetrievealbumpViewControllerproductn];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self ToRetrievealbumpViewControllerproductn];
+        });
     }
 }
 
@@ -436,6 +437,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                                  token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUDForView: wself.view animated: YES];
             if (response != nil) {
                 NSLog(@"%@", response);
                 
@@ -452,7 +454,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        [MBProgressHUD hideHUDForView: wself.view animated: YES];
+                        
                         [wself processAlbumID:[dic[@"data"][@"albumid"] stringValue]];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);

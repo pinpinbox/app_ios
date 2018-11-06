@@ -328,7 +328,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     self.messageView.alpha = alphaValue;
     self.sponsorView.alpha = alphaValue;
 }
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSLog(@"AlbumDetailViewController viewWillAppear");
@@ -345,6 +344,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 //    [self retrieveAlbum];
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [wTools sendScreenTrackingWithScreenName:@"作品資訊頁"];        
 }
 

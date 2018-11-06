@@ -2821,9 +2821,9 @@ replacementString:(NSString *)string {
 //        NSLog(@"backgroundLayout height %f",self.backgroundLayout.frame.size.height);
 //    };
 }
-- (void)deleteAlbumIndexWithfield:(DelTextField *)field {
+- (void)deleteAlbumIndexWithfield:(NSString  *)aid {
     
-    NSString *aid = field.text;
+    //NSString *aid = field.text;
     
     //if (self.albumIndexArray.count >= field.listIndex)
     //    [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
@@ -2837,7 +2837,7 @@ replacementString:(NSString *)string {
     
     //int index = field.listIndex; //
     __block typeof(self) wself = self;
-    __block DelTextField *wfield = field;
+    //__block DelTextField *wfield = field;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
         
@@ -2863,7 +2863,13 @@ replacementString:(NSString *)string {
                     
                     NSString *res = (NSString *)dic[@"result"];
                     if ([res isEqualToString:@"SYSTEM_OK"]) {
-                        [wfield removeFromSuperview];
+                        //[wfield removeFromSuperview];
+                        for (NSString *t in wself.albumIndexArray) {
+                            if ([t isEqualToString:aid]) {
+                                [wself.albumIndexArray removeObject:t];
+                                break;
+                            }
+                        }
                         [wself reloadAlbumIndexList];
                     } else if (dic[@"message"] != nil) {
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -2902,7 +2908,7 @@ replacementString:(NSString *)string {
         [weakAlertView close];
         
         if (buttonIndex == 1) {
-            [wself deleteAlbumIndexWithfield:field];
+            [wself deleteAlbumIndexWithfield:field.text];
         }
     }];
     [alertView setUseMotionEffects: YES];
@@ -2978,7 +2984,7 @@ replacementString:(NSString *)string {
             } else if ([protocolName isEqualToString:@"insertalbumindex"]) {
                 [weakSelf addAlbumIndexWithAid:albumId];
             } else if ([protocolName isEqualToString:@"deletealbumindex"]) {
-                
+                [weakSelf deleteAlbumIndexWithfield:albumId];
             }
         }
     }];
