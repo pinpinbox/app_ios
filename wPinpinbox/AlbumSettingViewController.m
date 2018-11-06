@@ -226,19 +226,15 @@
 @property (weak, nonatomic) IBOutlet UIButton *sponsorCountOFF;
 @property (weak, nonatomic) IBOutlet InfoTextView *sponsorDesc;
 
-
 @property (weak, nonatomic) IBOutlet MyLinearLayout *professionView;
 @property (weak, nonatomic) IBOutlet UITextField *advTextField;
 @property (weak, nonatomic) IBOutlet MyLinearLayout *albslistView;
 @property (nonatomic) UIButton *submitBtn;
 
-
 @property (nonatomic) NSMutableArray *albumIndexArray;
-
 @end
 
 @implementation AlbumSettingViewController
-
 #pragma mark - View Related Methods
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -1638,8 +1634,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     return [pStr intValue];
 }
 #pragma mark - Get Server Data
-- (void)saveData
-{
+- (void)saveData {
     NSLog(@"");
     NSLog(@"saveData");
     

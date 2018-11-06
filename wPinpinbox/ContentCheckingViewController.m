@@ -3543,7 +3543,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         } else {
             [cell.imageView sd_setImageWithURL: data[@"image_url"]];
         }
-        
         albumPoint = [self.bookdata[@"album"][@"point"] intValue];
         userPoint = [[userPrefs objectForKey: @"pPoint"] integerValue];
         exchangeNumber = [self.bookdata[@"albumstatistics"][@"exchange"] integerValue];
@@ -3711,78 +3710,38 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         __block typeof(self) wself = self;
         
         cell.sponsorBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
-//            NSString *inputText = input.text;
-//            NSLog(@"inputText: %@", inputText);
-            
             if ([nameInput.text isEqualToString: @""]) {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
-                
-                [wself.view makeToast: @"請輸入收件人姓名"
-                             duration: 2.0
-                             position: CSToastPositionBottom
-                                style: style];
-                
+                [wself warnToastWithMessage: @"請輸入收件人姓名"];
                 [nameInput resignFirstResponder];
                 return;
             }
             if ([phoneInput.text isEqualToString: @""]) {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
-                
-                [wself.view makeToast: @"請輸入電話號碼"
-                             duration: 2.0
-                             position: CSToastPositionBottom
-                                style: style];
-                
+                [wself warnToastWithMessage: @"請輸入電話號碼"];
                 [phoneInput resignFirstResponder];
                 return;
             }
             if ([addressInput.text isEqualToString: @""]) {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
-                
-                [wself.view makeToast: @"請輸入收件人地址"
-                             duration: 2.0
-                             position: CSToastPositionBottom
-                                style: style];
-                
+                [wself warnToastWithMessage: @"請輸入收件人地址"];
                 [addressInput resignFirstResponder];
                 return;
             }
             if ([input.text isEqualToString: @""]) {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
-                
-                [wself.view makeToast: @"請輸入贊助數量"
-                            duration: 2.0
-                            position: CSToastPositionBottom
-                               style: style];
-                
+                [wself warnToastWithMessage: @"請輸入贊助數量"];
                 [input resignFirstResponder];
                 return;
             } else if ([input.text intValue] < wself->albumPoint) {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
-                
-                [wself.view makeToast: [NSString stringWithFormat: @"最低額度：%lu", (unsigned long)wself->albumPoint]
-                            duration: 2.0
-                            position: CSToastPositionBottom
-                               style: style];
-                
+                [wself warnToastWithMessage: [NSString stringWithFormat: @"最低額度：%lu", (unsigned long)wself->albumPoint]];
+                [input resignFirstResponder];
+                return;
+            } else if ([input.text intValue] > 50000) {
+                [wself warnToastWithMessage: @"超過最高贊助上限"];
                 [input resignFirstResponder];
                 return;
             } else {
                 [wself checkBuyingAlbum: wself->albumPoint
                              userPoint: wself->userPoint];
             }
-        };
-        
+        };        
         __weak MyLinearLayout *weakGiftViewBgV = cell.giftViewBgV;
         cell.giftImageBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
             [wself showSlot: btn giftViewBgV: weakGiftViewBgV indexPathRow: indexPath.row];
@@ -4393,9 +4352,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             //[weakSelf showCustomShareActionSheet];
         } else if ([identifierStr isEqualToString: @"albumInfoItem"]) {
             NSLog(@"reportItem is pressed");
-
             weakSelf.isPresentingOrPushingVC = YES;
-            
             AlbumInfoViewController *albumInfoVC = [[UIStoryboard storyboardWithName: @"AlbumInfoVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumInfoViewController"];
             
             if (weakLocData) {
@@ -4843,8 +4800,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -4919,10 +4875,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 }
 
 #pragma mark - showCustomCheckPostAlertView
-- (void)showCustomCheckPostAlertView: (NSString *)msg
-{
+- (void)showCustomCheckPostAlertView: (NSString *)msg {
     NSLog(@"showCustomCheckPostAlertView msg: %@", msg);
-    
     CustomIOSAlertView *alertPostView = [[CustomIOSAlertView alloc] init];
     //[alertPostView setContainerView: [self createCheckPostContainerView: msg]];
     [alertPostView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -5335,7 +5289,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
-    if ((textField.text.length + (string.length - range.length)) > 4) {
+    if ((textField.text.length + (string.length - range.length)) > 5) {
         return false;
     }
     return true;
@@ -5511,6 +5465,18 @@ shouldChangeTextInRange:(NSRange)range
             }];
         }
     }
+}
+
+#pragma mark - toast message
+- (void)warnToastWithMessage:(NSString *)message {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor thirdPink];
+    
+    [self.view makeToast: message
+                duration: 2.0
+                position: CSToastPositionBottom
+                   style: style];
 }
 
 @end
