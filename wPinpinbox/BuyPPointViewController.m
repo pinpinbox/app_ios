@@ -103,8 +103,7 @@
 }
 
 #pragma mark -
-- (void)initialValueSetup
-{
+- (void)initialValueSetup {
     self.navBarView.backgroundColor = [UIColor barColor];
 
     self.firstBtn.layer.borderColor = [UIColor blackColor].CGColor;
