@@ -2708,6 +2708,9 @@ replacementString:(NSString *)string {
         NSLog(@"!CGRectContainsPoint aRect activeField.frame.origin");
         CGPoint scrollPoint = CGPointMake(0.0, activeField.frame.origin.y - kbSize.height);
         [self.scrollView setContentOffset:scrollPoint animated:YES];
+    } else {
+        CGRect r2 = [self.scrollView convertRect:CGRectMake(0, 0, 16, activeField.frame.size.height) fromView:activeField];
+        [self.scrollView scrollRectToVisible:CGRectMake(0, r2.origin.y, self.scrollView.bounds.size.width, r2.size.height) animated:YES];
     }
 }
 
