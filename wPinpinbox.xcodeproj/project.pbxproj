@@ -3331,7 +3331,7 @@
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.wpinpinbox;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3374,7 +3374,7 @@
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.wpinpinbox;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";

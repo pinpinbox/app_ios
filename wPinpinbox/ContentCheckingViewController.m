@@ -5143,10 +5143,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 }
 
 #pragma mark - SFSafariViewController delegate methods
-- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller
-{
-    // Done button pressed
-    
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
+    // Done button pressed    
     NSLog(@"show");
     [alertView show];
 }
@@ -5160,6 +5158,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     cell.currentPointLabelForBgV2.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
+    cell.currentPointLabelForBgV3.text = [NSString stringWithFormat: @"現有P點：%ld", (long)userPoint];
 }
 
 #pragma mark - UINavigationControllerDelegate Methods
