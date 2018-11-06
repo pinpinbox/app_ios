@@ -142,8 +142,13 @@
         
         NSLog(@"metadataObj type: %@", [metadataObj type]);
 
-        if ([[metadataObj type] isEqualToString: AVMetadataObjectTypeEAN13Code] ||
-            [[metadataObj type] isEqualToString: AVMetadataObjectTypeEAN8Code] ) {
+        if ([[metadataObj type] isEqualToString:AVMetadataObjectTypeQRCode]) {
+        } else if ([[metadataObj type] isEqualToString:AVMetadataObjectTypeAztecCode]) {
+        } else if ([[metadataObj type] isEqualToString:AVMetadataObjectTypeFace]) {
+        } else if ([[metadataObj type] isEqualToString:AVMetadataObjectTypePDF417Code]) {
+        } else if ([[metadataObj type] isEqualToString:AVMetadataObjectTypeDataMatrixCode]) {
+        } else if ([[metadataObj type] isEqualToString:AVMetadataObjectTypeInterleaved2of5Code]) {
+        } else {
             NSLog(@"metadataObj type isEqualToString AVMetadataObjectTypeQRCode");
             NSLog(@"%@", [metadataObj stringValue]);
             
