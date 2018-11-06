@@ -2697,11 +2697,11 @@ static NSString *hostURL = @"www.pinpinbox.com";
 + (NSString *)insertalbumindex:(NSString *)uid
                          token:(NSString *)token
                       album_id:(NSString *)album_id
-                         index:(int)index {
+                         index:(NSString *)index {
     
     NSString *returnStr = @"";
     NSDictionary *dic = @{@"album_id":album_id,
-                          @"index":[NSNumber numberWithInt:index],
+                          @"index":index,//[NSNumber numberWithInt:index],
                           @"user_id":uid,
                           @"token":token};
     returnStr = [self boxAPI: dic URL: @"/insertalbumindex/2.0"];
@@ -2712,10 +2712,10 @@ static NSString *hostURL = @"www.pinpinbox.com";
 + (NSString *)deletealbumindex:(NSString *)uid
                          token:(NSString *)token
                       album_id:(NSString *)album_id
-                         index:(int)index {
+                         index:(NSString *)index {
     NSString *returnStr = @"";
     NSDictionary *dic = @{@"album_id":album_id,
-                          @"index":[NSNumber numberWithInt:index],
+                          @"index":index,//[NSNumber numberWithInt:index],
                           @"user_id":uid,
                           @"token":token};
     returnStr = [self boxAPI: dic URL: @"/deletealbumindex/2.0"];

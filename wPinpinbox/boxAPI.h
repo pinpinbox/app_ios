@@ -355,12 +355,12 @@ static NSString *version = @"";
 + (NSString *)insertalbumindex:(NSString *)uid
                          token:(NSString *)token
                       album_id:(NSString *)album_id
-                         index:(int)index;
+                         index:(NSString *)index;
 
 + (NSString *)deletealbumindex:(NSString *)uid
                          token:(NSString *)token
                       album_id:(NSString *)album_id
-                         index:(int)index;
+                         index:(NSString *)index;
 
 #pragma mark - BuisnessSubUserFastRegister
 // 98

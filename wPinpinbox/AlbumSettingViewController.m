@@ -2731,8 +2731,8 @@ replacementString:(NSString *)string {
         
         NSString *response = [boxAPI insertalbumindex:[wTools getUserID]
                                                 token:[wTools getUserToken]
-                                             album_id:aid
-                                                index:(int)i+1];
+                                             album_id:self.albumId
+                                                index:aid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (response != nil) {
@@ -2751,7 +2751,7 @@ replacementString:(NSString *)string {
                     
                     NSString *res = (NSString *)dic[@"result"];
                     if ([res isEqualToString:@"SYSTEM_OK"]) {
-                        [wself.albumIndexArray addObject:@{@"album_id":aid, @"index":[NSNumber numberWithInteger:i+1]}];
+                        [wself.albumIndexArray addObject:aid];//addObject:@{@"album_id":aid, @"index":[NSNumber numberWithInteger:i+1]}];
                     
                         [wself reloadAlbumIndexList];
                     } else if (dic[@"message"] != nil) {
@@ -2789,22 +2789,8 @@ replacementString:(NSString *)string {
 - (void)retrieveAlbumIndex {
     NSArray *alb = self.data[@"albumindex"];
     [self.albumIndexArray removeAllObjects];
-    NSArray *salb = [alb sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        NSDictionary *a1 = (NSDictionary *)obj1;
-        NSDictionary *a2 = (NSDictionary *)obj2;
-        
-        if ([a1 objectForKey:@"index"] && [a2 objectForKey:@"index"]) {
-            int i1 = [[a1 objectForKey:@"index"] intValue];
-            int i2 = [[a2 objectForKey:@"index"] intValue];
-            if (i1 == i2) return NSOrderedSame;
-            
-            return (i1 > i2)? NSOrderedDescending:NSOrderedAscending;
-        }
-        return NSOrderedSame;
-        
-    }];
     
-    [self.albumIndexArray setArray:salb];
+    [self.albumIndexArray setArray:alb];
     
     [self reloadAlbumIndexList];
     
@@ -2818,10 +2804,10 @@ replacementString:(NSString *)string {
     }
     
     int i = 0;
-    for (NSDictionary *t in self.albumIndexArray) {
-        int i1 = [[t objectForKey:@"index"] intValue];
-        NSString *al = [t objectForKey:@"album_id"];
-        DelTextField *d = [[DelTextField alloc] initWithFrame:CGRectMake(0, i*40, self.albslistView.frame.size.width, 40) listindex:i1 text:al source:self delaction:@selector(delAlbumIndexWithInfo:)];
+    for (NSString *t in self.albumIndexArray) {
+        //int i1 = [[t objectForKey:@"index"] intValue];
+        //NSString *al = [t objectForKey:@"album_id"];
+        DelTextField *d = [[DelTextField alloc] initWithFrame:CGRectMake(0, i*40, self.albslistView.frame.size.width, 40) listindex:i text:t source:self delaction:@selector(delAlbumIndexWithInfo:)];
         d.myBottomMargin = 8;
         d.myLeftMargin = 50;
         d.myRightMargin = 0;
@@ -2837,10 +2823,19 @@ replacementString:(NSString *)string {
 }
 - (void)deleteAlbumIndexWithfield:(DelTextField *)field {
     
-    if (self.albumIndexArray.count >= field.listIndex)
-        [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
     NSString *aid = field.text;
-    int index = field.listIndex;
+    
+    //if (self.albumIndexArray.count >= field.listIndex)
+    //    [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
+    
+    for (NSString *a in self.albumIndexArray) {
+        if ([a isEqualToString:aid]){
+            [self.albumIndexArray removeObject:a];
+            break;
+        }
+    }
+    
+    //int index = field.listIndex; //
     __block typeof(self) wself = self;
     __block DelTextField *wfield = field;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
@@ -2848,8 +2843,8 @@ replacementString:(NSString *)string {
         
         NSString *response = [boxAPI deletealbumindex:[wTools getUserID]
                                                 token:[wTools getUserToken]
-                                             album_id:aid
-                                                index:index];
+                                             album_id:self.albumId
+                                                index:aid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (response != nil) {

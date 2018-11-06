@@ -151,19 +151,23 @@
             if (sv && ![sv isEqualToString:@""] ) {
                 __weak typeof(self) wself = self;
                 NSArray *t1 = @[sv];
-                [self dismissViewControllerAnimated:YES completion:^{
-                    if (wself.finishedBlock)
-                        wself.finishedBlock(t1);
-                }];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself dismissViewControllerAnimated:YES completion:^{
+                        if (wself.finishedBlock)
+                            wself.finishedBlock(t1);
+                    }];
+                });
 
                 return;
             }
         }
         __weak typeof(self) wself = self;
-        [self dismissViewControllerAnimated:YES completion:^{
-            if (wself.finishedBlock)
-                wself.finishedBlock(nil);
-        }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wself dismissViewControllerAnimated:YES completion:^{
+                if (wself.finishedBlock)
+                    wself.finishedBlock(nil);
+            }];
+        });
     }
 }
 
