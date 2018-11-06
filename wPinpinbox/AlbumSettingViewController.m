@@ -2640,8 +2640,9 @@ replacementString:(NSString *)string {
             }
         }
         
-        if (newLength > 4) {
-            [self warnToastWithMessage:@"最多四位數"];
+        int val = [resultString intValue];
+        if (val > 50000){//newLength > 4) {
+            [self warnToastWithMessage:@"贊助P點上限為50,000"];//最多四位數"];
             
             [textField resignFirstResponder];
             
