@@ -2702,7 +2702,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     NSString *returnStr = @"";
     NSDictionary *dic = @{@"album_id":album_id,
                           @"index":[NSNumber numberWithInt:index],
-                          @"uid":uid,
+                          @"user_id":uid,
                           @"token":token};
     returnStr = [self boxAPI: dic URL: @"/insertalbumindex/2.0"];
     
@@ -2716,7 +2716,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     NSString *returnStr = @"";
     NSDictionary *dic = @{@"album_id":album_id,
                           @"index":[NSNumber numberWithInt:index],
-                          @"uid":uid,
+                          @"user_id":uid,
                           @"token":token};
     returnStr = [self boxAPI: dic URL: @"/deletealbumindex/2.0"];
     

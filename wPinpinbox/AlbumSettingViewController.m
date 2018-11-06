@@ -1897,6 +1897,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
             }
             
             [settings setObject:[NSNumber numberWithBool:self.sponsorCountON.selected] forKey:@"display_num_of_collect"];
+            
+            if (self.advTextField.text.length != 0 && ![self.advTextField.text isEqualToString:@" "]){
+                [self warnToastWithMessage:@"還有作品編號未加入"];
+                return NO;
+            }
         }
     }
     return YES;
@@ -2833,8 +2838,6 @@ replacementString:(NSString *)string {
 }
 - (void)deleteAlbumIndexWithfield:(DelTextField *)field {
     
-    
-        
     if (self.albumIndexArray.count >= field.listIndex)
         [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
     NSString *aid = field.text;
@@ -2978,6 +2981,10 @@ replacementString:(NSString *)string {
                 [weakSelf callAlbumSettings: jsonStr];
             } else if ([protocolName isEqualToString: @"retrievealbump"]) {
                 [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
+            } else if ([protocolName isEqualToString:@"insertalbumindex"]) {
+                [weakSelf addAlbumIndexWithAid:albumId];
+            } else if ([protocolName isEqualToString:@"deletealbumindex"]) {
+                
             }
         }
     }];
