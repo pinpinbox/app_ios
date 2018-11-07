@@ -2638,7 +2638,7 @@ replacementString:(NSString *)string {
         int val = [resultString intValue];
         if (val > 50000){//newLength > 4) {
             [self warnToastWithMessage:@"贊助P點上限為50,000"];//最多四位數"];
-            
+            textField.text = @"50000";
             [textField resignFirstResponder];
             
             return NO;
