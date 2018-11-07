@@ -5290,10 +5290,20 @@ shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
     
     if (textField.tag == 50000) {
-        int i = [textField.text intValue];
+        NSMutableString *test = [NSMutableString stringWithString:textField.text];
+        [test replaceCharactersInRange:range withString:string];
+        int i = [test intValue];
         if (i > 50000) {
             textField.text = @"50000";
-            [self warnToastWithMessage: @"超過最高贊助上限"];
+            //[self warnToastWithMessage: @"超過最高贊助上限"];
+            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+            style.messageColor = [UIColor whiteColor];
+            style.backgroundColor = [UIColor thirdPink];
+            
+            [self.view makeToast: @"超過最高贊助上限"
+                        duration: 2.0
+                        position: CSToastPositionCenter
+                           style: style];
             return NO;
         }
     }

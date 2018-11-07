@@ -2637,9 +2637,17 @@ replacementString:(NSString *)string {
         
         int val = [resultString intValue];
         if (val > 50000){//newLength > 4) {
-            [self warnToastWithMessage:@"贊助P點上限為50,000"];//最多四位數"];
+            //[self warnToastWithMessage:@"贊助P點上限為50,000"];//最多四位數"];
+            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+            style.messageColor = [UIColor whiteColor];
+            style.backgroundColor = [UIColor thirdPink];
+            
+            [self.view makeToast: @"贊助P點上限為50,000"
+                        duration: 2.0
+                        position: CSToastPositionCenter
+                           style: style];
             textField.text = @"50000";
-            [textField resignFirstResponder];
+            //[textField resignFirstResponder];
             
             return NO;
         }
