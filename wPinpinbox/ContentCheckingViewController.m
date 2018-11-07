@@ -3734,7 +3734,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [input resignFirstResponder];
                 return;
             } else if ([input.text intValue] > 50000) {
-                [wself warnToastWithMessage: @"超過最高贊助上限"];
+                //[wself warnToastWithMessage: @"超過最高贊助上限"];
+                input.text = @"50000";
                 [input resignFirstResponder];
                 return;
             } else {
