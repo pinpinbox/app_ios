@@ -231,6 +231,7 @@
     
     
     // SponsorTextField
+    self.sponsorTextFieldForBgV3.tag = 50000;
     self.sponsorTextFieldForBgV3.weight = 0.5;
     self.sponsorTextFieldForBgV3.myHeight = 40;
 //    self.sponsorTextFieldForBgV3.backgroundColor = [UIColor greenColor];

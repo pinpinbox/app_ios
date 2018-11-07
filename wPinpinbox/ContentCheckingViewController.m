@@ -3734,8 +3734,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [input resignFirstResponder];
                 return;
             } else if ([input.text intValue] > 50000) {
-                //[wself warnToastWithMessage: @"超過最高贊助上限"];
-                input.text = @"50000";
                 [input resignFirstResponder];
                 return;
             } else {
@@ -5290,6 +5288,16 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
+    
+    if (textField.tag == 50000) {
+        int i = [textField.text intValue];
+        if (i > 50000) {
+            textField.text = @"50000";
+            [self warnToastWithMessage: @"超過最高贊助上限"];
+            return NO;
+        }
+    }
+    
     if ((textField.text.length + (string.length - range.length)) > 5) {
         return false;
     }
