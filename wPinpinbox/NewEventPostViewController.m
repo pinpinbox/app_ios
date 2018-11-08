@@ -7,7 +7,7 @@
 //
 
 #import "NewEventPostViewController.h"
-#import "UIColor+Extensions.m"
+#import "UIColor+Extensions.h"
 #import "MyLinearLayout.h"
 #import <SafariServices/SafariServices.h>
 #import "wTools.h"
