@@ -133,10 +133,24 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
         NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         NSLog(@"remoteN %@",remoteN);
         if (remoteN) {
+            @try {
+                NSMutableDictionary *nr = [NSMutableDictionary dictionaryWithDictionary:remoteN];
+                [nr  removeObjectsForKeys:[remoteN allKeysForObject:[NSNull null]]];
+                if ([nr allKeys].count > 0) {
+                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                    [defaults setObject: nr forKey: @"launchNotification"];
+                    [defaults synchronize];
+                }
+            } @catch (NSException *exception) {
+                NSString *ex = [exception description];
+                NSLog(@"\n\n\n didFinishLaunchingWithOptions fail  %@\n\n\n", ex);
+                
+            } @finally {
+                
+            }
             
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setObject: remoteN forKey: @"launchNotification"];
-            [defaults synchronize];
+            
+            //
 //            self.launchNotification = [[NSMutableDictionary alloc] initWithDictionary:remoteN];
 //            NSLog(@"self.launchNotification %@",self.launchNotification);
         }
@@ -385,6 +399,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // Save changes in the application's managed object context before the application terminates
     [self saveContext];
+    
 }
 
 - (void)saveContext {
