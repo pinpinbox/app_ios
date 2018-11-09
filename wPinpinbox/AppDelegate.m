@@ -132,10 +132,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     if (launchOptions != nil ) {
         NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         NSLog(@"remoteN %@",remoteN);
-        if (remoteN) {
+        if (remoteN && remoteN[@"data"]) {
             @try {
+                NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:remoteN[@"data"]];
+                [data  removeObjectsForKeys:[data allKeysForObject:[NSNull null]]];
                 NSMutableDictionary *nr = [NSMutableDictionary dictionaryWithDictionary:remoteN];
-                [nr  removeObjectsForKeys:[remoteN allKeysForObject:[NSNull null]]];
+                [nr setObject:data forKey:@"data"];
+                
                 if ([nr allKeys].count > 0) {
                     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                     [defaults setObject: nr forKey: @"launchNotification"];
@@ -145,14 +148,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                 NSString *ex = [exception description];
                 NSLog(@"\n\n\n didFinishLaunchingWithOptions fail  %@\n\n\n", ex);
                 
-            } @finally {
-                
             }
-            
-            
-            //
-//            self.launchNotification = [[NSMutableDictionary alloc] initWithDictionary:remoteN];
-//            NSLog(@"self.launchNotification %@",self.launchNotification);
         }
         
         
