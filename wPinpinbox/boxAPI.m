@@ -1400,6 +1400,9 @@ static NSString *hostURL = @"www.pinpinbox.com";
             NSLog(@"str: %@", str);
         } else {
             NSLog(@"error :%@", error);
+            if (error.code == -1001) {
+                str = timeOutErrorCode;
+            }
         }
         
         dispatch_semaphore_signal(semaphore);

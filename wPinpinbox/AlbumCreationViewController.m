@@ -53,6 +53,14 @@
 
 #import "MultipartInputStream.h"
 
+#if TARGET_OS_SIMULATOR
+#else
+#import <DSPhotoEditorSDK/DSPhotoEditorSDK.h>
+#import <DSPhotoEditorSDK/DSPhotoEditorViewController.h>
+#endif
+
+#define DSAPIKey @"8bc8d28be0f41df4032b69285f4bbf91ff89ff71"
+
 #define kWidthForUpload 720
 #define kHeightForUpload 960
 
@@ -69,8 +77,13 @@
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
-
+#if TARGET_OS_SIMULATOR
 @interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate>
+
+#else
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate, DSPhotoEditorViewControllerDelegate>
+
+#endif
 {
     __weak IBOutlet UIButton *refreshBtn;
     __weak IBOutlet UIButton *conbtn;
@@ -129,7 +142,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // For Observing NSOperationQueue
     NSString *responseImageStr;
     
-    MBProgressHUD *hud;
+    
     
     ReorderViewController *reorderVC;
     PreviewPageSetupViewController *previewPageVC;
@@ -174,6 +187,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) DDAUIActionSheetViewController *customSettingActionSheet;
 @property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) MBProgressHUD *vidHud;
+
+
+@property (nonatomic) IBOutlet UIButton *presentPhotoEditButton;
+@property (nonatomic) IBOutlet UIButton *presentLocationEditButton;
+@property (nonatomic) IBOutlet UIButton *presentUrlEditButton;
+@property (nonatomic) MBProgressHUD *hud;
 @end
 
 @implementation AlbumCreationViewController
@@ -276,19 +295,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         textBgView.hidden = YES;
         deleteTextBtn.hidden = YES;
     }
-    
-    //    NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
-    //    NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
-    //    [[AdobeUXAuthManager sharedManager] setAuthenticationParametersWithClientID:CreativeSDKClientId clientSecret:CreativeSDKClientSecret enableSignUp:true];
-    //
-    //    //The authManager caches our login, so check on startup
-    //    BOOL loggedIn = [AdobeUXAuthManager sharedManager].authenticated;
-    //
-    //    if(loggedIn) {
-    //        [[AdobeUXAuthManager sharedManager] logout:nil onError:nil];
-    //        AdobeAuthUserProfile *up = [AdobeUXAuthManager sharedManager].userProfile;
-    //        NSLog(@"User Profile: %@", up);
-    //    }
     
     [self audioSetUp];
     [self photoSetup];
@@ -393,8 +399,63 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [previewPageVC callBackButtonFunction];
     }
 }
-
+#pragma mark -
+- (void)presentDSPhotoEditorWithImage:(UIImage *)image {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        DSPhotoEditorViewController *editor = [[DSPhotoEditorViewController alloc] initWithImage:image apiKey:@"f324df227eb76414dbdb69a7cc1e3f2534b8622f" /*DSAPIKey*/ toolsToHide:@[@(TOOL_ROUND),@(TOOL_CIRCLE)]];
+        editor.delegate = self;
+        [self presentViewController:editor animated:YES completion:nil];
+        
+    });
+}
 #pragma mark - IBAction Methods
+- (IBAction)presentPhotoEditor:(id)sender {
+    
+    NSDictionary *media = ImageDataArr[selectItem];
+    NSLog(@"presentPhotoEditor %@",media);
+    
+    // it's a video item
+    if (media[@"video_url"] != nil && [media[@"video_url"] isKindOfClass:[NSString class]] ) {
+        return;
+    }
+    
+    if (media[@"image_url"] == nil || ![media[@"image_url"] isKindOfClass:[NSString class]] ) {
+        return;
+    }
+    
+#if TARGET_OS_SIMULATOR
+#else
+    NSString *path = (NSString *)media[@"image_url"];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    __block typeof(self) wself = self;
+    NSURLSessionDataTask *task = [session dataTaskWithURL:[NSURL URLWithString:path] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //[wTools HideMBProgressHUD];
+            [wself dismissProgressHud];
+        });
+        
+        if (!error && data) {
+            UIImage *im = [UIImage imageWithData:data];
+            if (im) {
+                [wself presentDSPhotoEditorWithImage:im];
+            }
+        }
+        
+    }];
+    
+    [task resume];
+    [self showHUDWithMessage:@"載入照片..."];
+    
+#endif
+}
+- (IBAction)presentLocationEditor:(id)sender {
+    
+}
+- (IBAction)presentURLEditor:(id)sender {
+    
+}
+
 - (IBAction)settingBtnPress:(id)sender {
     if (![self.userIdentity isEqualToString: @"admin"]) {
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -1607,7 +1668,7 @@ shouldChangeTextInRange:(NSRange)range
                         
                         
                         if (stSelf->ImageDataArr.count == 0) {
-                            
+                            stSelf->_presentPhotoEditButton.hidden = YES;
                             stSelf->recordPausePlayBtn.hidden = YES;
                             stSelf->audioBgView.hidden = YES;
                             stSelf->deleteAudioBtn.hidden = YES;
@@ -2524,89 +2585,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     }];
     
     [task resume];
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-//        __strong typeof(weakSelf) stSelf = weakSelf;
-//        NSString *response = @"";
-//        response = [boxAPI insertVideoOfDiy: [wTools getUserID]
-//                                      token: [wTools getUserToken]
-//                                   album_id: stSelf.albumid
-//                                       file: data];
-//
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            @try {
-//                [wTools HideMBProgressHUD];
-//            } @catch (NSException *exception) {
-//                // Print exception information
-//                NSLog( @"NSException caught" );
-//                NSLog( @"Name: %@", exception.name);
-//                NSLog( @"Reason: %@", exception.reason );
-//                return;
-//            }
-//
-//            if (response != nil) {
-//                if ([response isEqualToString: timeOutErrorCode]) {
-//                    NSLog(@"Time Out Message Return");
-//                    NSLog(@"AlbumCollectionViewController");
-//                    NSLog(@"callInsertVideoOfDiy");
-//
-//                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-//                                    protocolName: @"insertVideoOfDiy"
-//                                         textStr: @""
-//                                            data: data
-//                                           image: nil
-//                                         jsonStr: @""
-//                                       audioMode: @""
-//                                          option: @""];
-//                } else {
-//                    NSLog(@"Get Real Response");
-//                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-//
-//                    if ([dic[@"result"] intValue] == 1) {
-//                        NSLog(@"insertvideoofdiy Success");
-//
-//                        stSelf->ImageDataArr = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
-//                        NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
-//
-//                        stSelf->selectItem = stSelf->ImageDataArr.count - 1;
-//                        NSLog(@"selectItem: %ld", (long)stSelf->selectItem);
-//
-//                        [stSelf myshowimage];
-//                        NSLog(@"[_dataCollectionView reloadData]");
-//                        //[self.dataCollectionView reloadData];
-//                    } else if ([dic[@"result"] intValue] == 0) {
-//                        NSLog(@"insertvideoofdiy Failed");
-//                        NSLog(@"message: %@", dic[@"message"]);
-//
-//                        if (dic[@"message"] == nil) {
-//                            NSLog(@"dic message is nil");
-//                            NSLog(@"response from insertvideoofdiy: %@", response);
-//
-//                            if (![response isKindOfClass: [NSNull class]]) {
-//                                if (![response isEqualToString: @""]) {
-//                                    //                                    UIAlertController *alert = [UIAlertController alertControllerWithTitle: response message: @"目前網路不穩定，請確認網路品質再繼續使用pinpinbox唷!" preferredStyle: UIAlertControllerStyleAlert];
-//                                    //                                    UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
-//                                    //                                    [alert addAction: okBtn];
-//                                    //                                    [stSelf presentViewController: alert animated: YES completion: nil];
-//                                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-//                                                      protocolName: @"insertVideoOfDiy"
-//                                                           textStr: @""
-//                                                              data: data
-//                                                             image: nil
-//                                                           jsonStr: @""
-//                                                         audioMode: @""
-//                                                            option: @""];
-//                                }
-//                            }
-//                        } else {
-//                            [stSelf showCustomErrorAlert: dic[@"message"]];
-//                        }
-//                    } else {
-//                        [stSelf showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-//                    }
-//                }
-//            }
-//        });
-//    });
 }
 
 #pragma mark - Long Press Gesture
@@ -2698,6 +2676,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         
         //        adobeEidt.hidden = YES;
         recordPausePlayBtn.hidden = YES;
+        self.presentPhotoEditButton.hidden = YES;
         audioBgView.hidden = YES;
         deleteAudioBtn.hidden = YES;
         
@@ -2723,6 +2702,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         deleteAudioBtn.hidden = YES;
         
         deleteImageBtn.hidden = NO;
+        self.presentPhotoEditButton.hidden = NO;
     }
     
     // For Array Counting
@@ -2799,18 +2779,23 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
                 videoBtn.center = CGPointMake(imgv.bounds.size.width / 2, imgv.bounds.size.height / 2);
                 [stSelf.ShowView addSubview: videoBtn];
                 
+                [UIView animateWithDuration:0.2 animations:^{
+                    stSelf->recordPausePlayBtn.hidden = YES;
+                    stSelf->audioBgView.hidden = YES;
+                    stSelf->deleteAudioBtn.hidden = YES;
+                    stSelf->_presentPhotoEditButton.hidden = YES;
+                }];
                 
-                stSelf->recordPausePlayBtn.hidden = YES;
-                stSelf->audioBgView.hidden = YES;
-                stSelf->deleteAudioBtn.hidden = YES;
                 
             } else if ([videoStr isKindOfClass: [NSNull class]]) {
                 NSLog(@"videoStr is null");
                 [videoBtn removeFromSuperview];
-                
-                stSelf->recordPausePlayBtn.hidden = NO;
-                stSelf->audioBgView.hidden = NO;
-                stSelf->deleteAudioBtn.hidden = NO;
+                [UIView animateWithDuration:0.2 animations:^{
+                    stSelf->recordPausePlayBtn.hidden = NO;
+                    stSelf->audioBgView.hidden = NO;
+                    stSelf->deleteAudioBtn.hidden = NO;
+                    stSelf->_presentPhotoEditButton.hidden = NO;
+                }];
             }
             
             stSelf->audio_url = stSelf->ImageDataArr[stSelf->selectItem][@"audio_url"];
@@ -3223,10 +3208,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     //[collectionView reloadData];
 }
 
--(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CGSizeMake(54, 94);
-}
+//-(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return CGSizeMake(54,70);
+//}
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 1.f;
@@ -3396,7 +3381,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     //上傳照片
     @try {
-        [wTools ShowMBProgressHUD];
+        //[wTools ShowMBProgressHUD];
+        [self showHUDWithMessage:@"更新照片..."];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -3417,8 +3403,11 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                     setting: stSelf->textForDescription];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"PhotoEditor Response %@",response);
+            
             @try {
-                [wTools HideMBProgressHUD];
+                //[wTools HideMBProgressHUD];
+                [stSelf dismissProgressHud];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -3427,7 +3416,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 return;
             }
             if (response != nil) {
-                NSLog(@"Adobe PhotoEditor Response");
+                
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -4799,4 +4788,30 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [self reload: nil];
 }
 
+#pragma mark - DSPhotoEditDelegate
+- (void)dsPhotoEditorCanceled:(DSPhotoEditorViewController *)editor {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+- (void)dsPhotoEditor:(DSPhotoEditorViewController *)editor finishedWithImage:(UIImage *)image {
+    __block typeof(self) wself = self;
+    [self dismissViewControllerAnimated:YES completion:^{
+        [wself callUpdatePhotoOfDiyWithPhoto:image];
+    }];
+    
+    
+}
+#pragma mark - MBProgressHUD
+- (void)showHUDWithMessage:(NSString *)message {
+    
+    self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+    self.hud.mode = MBProgressHUDModeIndeterminate;
+    self.hud.label.text = message;
+
+}
+- (void)dismissProgressHud{
+    if (self.hud) {
+        [self.hud hideAnimated:YES];
+        self.hud = nil;
+    }
+}
 @end
