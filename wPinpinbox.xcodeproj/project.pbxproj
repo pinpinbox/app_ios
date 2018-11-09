@@ -20,6 +20,8 @@
 		540D749B2161DE1F0061E463 /* NewCooperationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 540D74932161DE1F0061E463 /* NewCooperationViewController.m */; };
 		540D749C2161DE1F0061E463 /* IdentityCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 540D74952161DE1F0061E463 /* IdentityCollectionViewCell.m */; };
 		540D749D2161DE1F0061E463 /* CreatorListCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 540D74982161DE1F0061E463 /* CreatorListCollectionViewCell.m */; };
+		540D74A121626E9F0061E463 /* CooperationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 540D749F21626E9F0061E463 /* CooperationInfoViewController.m */; };
+		540D74A221626E9F0061E463 /* CooperationInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 540D74A021626E9F0061E463 /* CooperationInfoViewController.xib */; };
 		540DE2A920281C5C0090F584 /* ChangeInterestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 540DE2A820281C5C0090F584 /* ChangeInterestsViewController.m */; };
 		540DE2AB20281C680090F584 /* ChangeInterestsVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 540DE2AA20281C680090F584 /* ChangeInterestsVC.storyboard */; };
 		540DE2AE20283A8E0090F584 /* ChangeInterestsCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 540DE2AD20283A8E0090F584 /* ChangeInterestsCollectionViewCell.m */; };
@@ -362,9 +364,6 @@
 		CB0C0DB32146509F00FAF438 /* image01.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB12146509F00FAF438 /* image01.xcassets */; };
 		CB0C0DB42146509F00FAF438 /* image00.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB22146509F00FAF438 /* image00.xcassets */; };
 		CB0C0DB6214653BA00FAF438 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB5214653BA00FAF438 /* Images.xcassets */; };
-		CB5E68EA2193E81B00CB47F5 /* DSPhotoEditorSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		CB5E68EE2193EF1F00CB47F5 /* CooperationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */; };
-		CB5E68EF2193EF1F00CB47F5 /* CooperationInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */; };
 		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
 		CB8404DA218718DB00E1C2A7 /* InfoTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8404D9218718DB00E1C2A7 /* InfoTextView.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
@@ -397,6 +396,9 @@
 		540D74962161DE1F0061E463 /* CreatorListCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatorListCollectionViewCell.h; sourceTree = "<group>"; };
 		540D74972161DE1F0061E463 /* IdentityCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IdentityCollectionViewCell.h; sourceTree = "<group>"; };
 		540D74982161DE1F0061E463 /* CreatorListCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorListCollectionViewCell.m; sourceTree = "<group>"; };
+		540D749E21626E9F0061E463 /* CooperationInfoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CooperationInfoViewController.h; sourceTree = "<group>"; };
+		540D749F21626E9F0061E463 /* CooperationInfoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CooperationInfoViewController.m; sourceTree = "<group>"; };
+		540D74A021626E9F0061E463 /* CooperationInfoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CooperationInfoViewController.xib; sourceTree = "<group>"; };
 		540DE2A720281C5C0090F584 /* ChangeInterestsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChangeInterestsViewController.h; sourceTree = "<group>"; };
 		540DE2A820281C5C0090F584 /* ChangeInterestsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChangeInterestsViewController.m; sourceTree = "<group>"; };
 		540DE2AA20281C680090F584 /* ChangeInterestsVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChangeInterestsVC.storyboard; sourceTree = "<group>"; };
@@ -975,10 +977,6 @@
 		CB0C0DB12146509F00FAF438 /* image01.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image01.xcassets; path = "Image Resources/image01.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB22146509F00FAF438 /* image00.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image00.xcassets; path = "Image Resources/image00.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB5214653BA00FAF438 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Image Resources/Images.xcassets"; sourceTree = "<group>"; };
-		CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DSPhotoEditorSDK.framework; sourceTree = "<group>"; };
-		CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CooperationInfoViewController.m; sourceTree = "<group>"; };
-		CB5E68EC2193EF1F00CB47F5 /* CooperationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CooperationInfoViewController.h; sourceTree = "<group>"; };
-		CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CooperationInfoViewController.xib; sourceTree = "<group>"; };
 		CB7F2E40216C97AA00A3E1AD /* MultipartInputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultipartInputStream.h; path = MultipartInputStream/MultipartInputStream.h; sourceTree = "<group>"; };
 		CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MultipartInputStream.m; path = MultipartInputStream/MultipartInputStream.m; sourceTree = "<group>"; };
 		CB8404D9218718DB00E1C2A7 /* InfoTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoTextView.m; sourceTree = "<group>"; };
@@ -1004,7 +1002,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB5E68EA2193E81B00CB47F5 /* DSPhotoEditorSDK.framework in Frameworks */,
 				542497AA1FB336BE0021D75D /* libSDWebImage.a in Frameworks */,
 				549B48AC1F6EC3190012FE13 /* libicucore.tbd in Frameworks */,
 				630AD0961D88EBE8009C511A /* CoreMedia.framework in Frameworks */,
@@ -1103,11 +1100,11 @@
 		540D74A321626EA60061E463 /* CooperationInfoVC */ = {
 			isa = PBXGroup;
 			children = (
-				CB5E68EC2193EF1F00CB47F5 /* CooperationInfoViewController.h */,
-				CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */,
-				CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */,
+				540D749E21626E9F0061E463 /* CooperationInfoViewController.h */,
+				540D749F21626E9F0061E463 /* CooperationInfoViewController.m */,
+				540D74A021626E9F0061E463 /* CooperationInfoViewController.xib */,
 			);
-			path = CooperationInfoVC;
+			name = CooperationInfoVC;
 			sourceTree = "<group>";
 		};
 		540DE2AF20283ADC0090F584 /* InfoEdit */ = {
@@ -1338,7 +1335,7 @@
 				5430446220B8121800018AF4 /* TKImageView.h */,
 				5430446320B8121900018AF4 /* TKImageView.m */,
 			);
-			path = TKImageView;
+			name = TKImageView;
 			sourceTree = "<group>";
 		};
 		543A03F920BBEE1900CD1CA4 /* CropImageVC */ = {
@@ -1376,7 +1373,7 @@
 				630544081E5FE5E200B0CB6D /* UIView+Toast.h */,
 				630544091E5FE5E200B0CB6D /* UIView+Toast.m */,
 			);
-			path = "UIView+Toast";
+			name = "UIView+Toast";
 			sourceTree = "<group>";
 		};
 		543B11A32056199900111102 /* FXBlurView */ = {
@@ -1385,7 +1382,7 @@
 				634B603F1F3484AD00C776E0 /* FXBlurView.h */,
 				634B60401F3484AD00C776E0 /* FXBlurView.m */,
 			);
-			path = FXBlurView;
+			name = FXBlurView;
 			sourceTree = "<group>";
 		};
 		543B11A4205619A900111102 /* ZOZolaZoomTransition */ = {
@@ -1466,7 +1463,7 @@
 				63093A371EF8E0CA00BA5507 /* OldCustomAlertView.h */,
 				63093A381EF8E0CA00BA5507 /* OldCustomAlertView.m */,
 			);
-			path = CustomIOSAlertView;
+			name = CustomIOSAlertView;
 			sourceTree = "<group>";
 		};
 		5486C25C205122940016BB9D /* CAPSPageMenu */ = {
@@ -1475,7 +1472,7 @@
 				63B3B3CF1E0D21980028CCAA /* CAPSPageMenu.h */,
 				63B3B3D01E0D21980028CCAA /* CAPSPageMenu.m */,
 			);
-			path = CAPSPageMenu;
+			name = CAPSPageMenu;
 			sourceTree = "<group>";
 		};
 		5486C25D205122A80016BB9D /* UIColor Related */ = {
@@ -1487,7 +1484,6 @@
 				5427BBD21F4FE237000B438D /* UIColor+HexString.m */,
 			);
 			name = "UIColor Related";
-			path = UIColorRelated;
 			sourceTree = "<group>";
 		};
 		5486C25E205122B50016BB9D /* BFPaperButton */ = {
@@ -1496,7 +1492,7 @@
 				54A32A061F5EAD8900CECE58 /* BFPaperButton.h */,
 				54A32A071F5EAD8900CECE58 /* BFPaperButton.m */,
 			);
-			path = BFPaperButton;
+			name = BFPaperButton;
 			sourceTree = "<group>";
 		};
 		5486C25F205122CB0016BB9D /* DropDownMenu */ = {
@@ -1505,7 +1501,7 @@
 				638128991DFFCEAF00605466 /* MKDropdownMenu.h */,
 				6381289A1DFFCEAF00605466 /* MKDropdownMenu.m */,
 			);
-			path = DropDownMenu;
+			name = DropDownMenu;
 			sourceTree = "<group>";
 		};
 		5486C260205122E20016BB9D /* UIImage Related */ = {
@@ -1519,7 +1515,6 @@
 				6306F3491E78165F00C5C9CB /* UIImage+Extras.m */,
 			);
 			name = "UIImage Related";
-			path = UIImageRelated;
 			sourceTree = "<group>";
 		};
 		5486C261205122F90016BB9D /* GHContextMenu */ = {
@@ -1528,7 +1523,7 @@
 				63A574161DE7FA7D00C9EFAF /* GHContextMenuView.h */,
 				63A574171DE7FA7D00C9EFAF /* GHContextMenuView.m */,
 			);
-			path = GHContextMenu;
+			name = GHContextMenu;
 			sourceTree = "<group>";
 		};
 		54885DAD20DA83E200644A82 /* LikeListVC */ = {
@@ -1648,7 +1643,7 @@
 				544DA7C21F4B271C00E80C45 /* MapShowingViewController.m */,
 				544DA7C31F4B271C00E80C45 /* MapShowingViewController.xib */,
 			);
-			path = MapShowingVC;
+			name = MapShowingVC;
 			sourceTree = "<group>";
 		};
 		54E6EA7C20A0509B00DA7D99 /* FollowFromListVC */ = {
@@ -1853,7 +1848,6 @@
 				630A83DB1EB1D07300AC8479 /* MyTableLayout.m */,
 			);
 			name = "MyLayout Lib";
-			path = MyLayoutLib;
 			sourceTree = "<group>";
 		};
 		630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */ = {
@@ -2011,7 +2005,7 @@
 				54E3E619206CE7F200A631A9 /* MapShowingVC */,
 				92AE90621C1E914D00C53413 /* MessageBoardVC */,
 			);
-			path = CustomActionSheet;
+			name = CustomActionSheet;
 			sourceTree = "<group>";
 		};
 		63C375BA1EB9B735000C7FC1 /* Creator Cell */ = {
@@ -2099,7 +2093,7 @@
 				9222B2191BEC78C800DF2CAD /* MyScrollView.h */,
 				9222B21A1BEC78C800DF2CAD /* MyScrollView.m */,
 			);
-			path = bookLib;
+			name = bookLib;
 			sourceTree = "<group>";
 		};
 		9225573F1BDF593600CD4E9B /* cell */ = {
@@ -2122,7 +2116,6 @@
 				922557471BDF621200CD4E9B /* MTRadialMenu.m */,
 			);
 			name = "長按選單";
-			path = MTMenuItem;
 			sourceTree = "<group>";
 		};
 		922A4ADF1BD5F12E006D5A36 /* 忘記密碼 */ = {
@@ -2171,7 +2164,6 @@
 				924A92B91BD48EA400E3D610 /* UICustomLineLabel.m */,
 			);
 			name = "文字底線";
-			path = UICustomLineLabel;
 			sourceTree = "<group>";
 		};
 		924A92E51BD4F47400E3D610 /* 登入 */ = {
@@ -2325,7 +2317,6 @@
 				9295A3B71C22528300317FEA /* wShowImageList.m */,
 			);
 			name = "圖片放大預覽器";
-			path = wShowImageList;
 			sourceTree = "<group>";
 		};
 		929C79131BD89AAB0093E65E /* 首頁 */ = {
@@ -2339,7 +2330,6 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
-				CB5E68E82193E81B00CB47F5 /* DSPhotoEditor */,
 				CB7F2E3F216C972200A3E1AD /* MultipartInputStream */,
 				CB071CF5213E476A003D01D8 /* dailymotion-player-objc */,
 				630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */,
@@ -2403,7 +2393,7 @@
 				CB8404D9218718DB00E1C2A7 /* InfoTextView.m */,
 				CB8404DB2187190D00E1C2A7 /* InfoTextView.h */,
 			);
-			path = Lib;
+			name = Lib;
 			sourceTree = "<group>";
 		};
 		929ED4AA1B788F3500D21CF0 /* 相片選擇 */ = {
@@ -2462,7 +2452,7 @@
 				54933AA3207DFA7B001582C3 /* TagCollectionViewCell.m */,
 				54933AA4207DFA7B001582C3 /* TagCollectionViewCell.xib */,
 			);
-			path = MessageBoardVC;
+			name = MessageBoardVC;
 			sourceTree = "<group>";
 		};
 		92B8CB141C1A856400035F06 /* 內購相關 */ = {
@@ -2472,7 +2462,6 @@
 				92B8CB161C1AA93600035F06 /* InAppPurchaseManager.m */,
 			);
 			name = "內購相關";
-			path = InAppPurchaseManager;
 			sourceTree = "<group>";
 		};
 		92C4D5061B74570C00504B57 /* 註冊 */ = {
@@ -2558,7 +2547,6 @@
 				92D525FE1BCF9E41002C157B /* UIViewController+CWPopup.m */,
 			);
 			name = "彈跳視窗";
-			path = "UIViewController+CWPopup";
 			sourceTree = "<group>";
 		};
 		92D526001BCF9E47002C157B /* 選擇器 */ = {
@@ -2569,7 +2557,6 @@
 				92D526031BCF9E58002C157B /* SelectBarViewController.xib */,
 			);
 			name = "選擇器";
-			path = SelectBarViewController;
 			sourceTree = "<group>";
 		};
 		92DF72121C5F01E600062FC6 /* 套版製作 */ = {
@@ -2650,14 +2637,6 @@
 				CB071CF7213E476A003D01D8 /* DMPlayerViewController.m */,
 			);
 			path = "dailymotion-player-objc";
-			sourceTree = "<group>";
-		};
-		CB5E68E82193E81B00CB47F5 /* DSPhotoEditor */ = {
-			isa = PBXGroup;
-			children = (
-				CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */,
-			);
-			path = DSPhotoEditor;
 			sourceTree = "<group>";
 		};
 		CB7F2E3F216C972200A3E1AD /* MultipartInputStream */ = {
@@ -2847,7 +2826,7 @@
 				630848F61E4978D500CA40AF /* beep.mp3 in Resources */,
 				54331AA61FE6B963005E6ACE /* ActivityDetailVC.storyboard in Resources */,
 				54F777DE20ABE02B00A6E195 /* TestReadBook.xcassets in Resources */,
-				CB5E68EF2193EF1F00CB47F5 /* CooperationInfoViewController.xib in Resources */,
+				540D74A221626E9F0061E463 /* CooperationInfoViewController.xib in Resources */,
 				54F777F420ABE99800A6E195 /* SettingsVC.xcassets in Resources */,
 				54F777F220ABE80D00A6E195 /* Voting.xcassets in Resources */,
 				54C964BC2015E9C800F995DF /* SignVC_3.storyboard in Resources */,
@@ -3029,6 +3008,7 @@
 				638F4A5F1E5D499400F7130B /* FTWCache.m in Sources */,
 				63094A711D999F7B00725680 /* AsyncImageView.m in Sources */,
 				92A8B73F1C521EA0000B7D61 /* OpenUDID.m in Sources */,
+				540D74A121626E9F0061E463 /* CooperationInfoViewController.m in Sources */,
 				5478874F214613D600F7B8BB /* WdataButton.m in Sources */,
 				92D3ABC21BB287FC00EA8C54 /* PhotoCollectionViewCell.m in Sources */,
 				630A83E31EB1D07300AC8479 /* MyLayoutSizeClass.m in Sources */,
@@ -3069,7 +3049,6 @@
 				92C4D50F1B74591100504B57 /* SignViewController_2.m in Sources */,
 				543B11AA20561ACA00111102 /* ExchangeStuff.m in Sources */,
 				540D749D2161DE1F0061E463 /* CreatorListCollectionViewCell.m in Sources */,
-				CB5E68EE2193EF1F00CB47F5 /* CooperationInfoViewController.m in Sources */,
 				63093A391EF8E0CA00BA5507 /* OldCustomAlertView.m in Sources */,
 				544FBEE2208D988800681097 /* SponsorListViewController.m in Sources */,
 				630E1A631EC053CE003FE76A /* MeCollectionReusableView.m in Sources */,
@@ -3339,7 +3318,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/wPinpinbox/Lib/DSPhotoEditor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "wpinpinbox/wPinpinbox-Prefix.pch";
@@ -3383,7 +3361,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/wPinpinbox/Lib/DSPhotoEditor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
