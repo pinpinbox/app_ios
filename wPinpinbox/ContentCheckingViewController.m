@@ -2105,9 +2105,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [wTools ShowMBProgressHUD];
     
     NSMutableDictionary *rewardDic = [NSMutableDictionary new];
-    [rewardDic setObject: self->nameTextView.text forKey: @"recipient"];
-    [rewardDic setObject: self->phoneTextView.text forKey: @"recipient_tel"];
-    [rewardDic setObject: self->addressTextView.text forKey: @"recipient_address"];
+    if (self->nameTextView) {
+        [rewardDic setObject: self->nameTextView.text forKey: @"recipient"];
+        [rewardDic setObject: self->phoneTextView.text forKey: @"recipient_tel"];
+        [rewardDic setObject: self->addressTextView.text forKey: @"recipient_address"];
+    }
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: rewardDic options: 0 error: nil];
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
