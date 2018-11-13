@@ -2104,15 +2104,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)newBuyAlbum: (NSString *)pointStr {
     [wTools ShowMBProgressHUD];
     
-    NSMutableDictionary *rewardDic = [NSMutableDictionary new];
-    if (self->nameTextView) {
-        [rewardDic setObject: self->nameTextView.text forKey: @"recipient"];
-        [rewardDic setObject: self->phoneTextView.text forKey: @"recipient_tel"];
-        [rewardDic setObject: self->addressTextView.text forKey: @"recipient_address"];
-    }
+    NSMutableDictionary *rewardDic;
+    NSData *jsonData;
+    NSString *jsonStr;
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject: rewardDic options: 0 error: nil];
     if (rewardAfterCollect) {
+        rewardDic = [NSMutableDictionary new];
         [rewardDic setObject: nameTextView.text forKey: @"recipient"];
         [rewardDic setObject: phoneTextView.text forKey: @"recipient_tel"];
         [rewardDic setObject: addressTextView.text forKey: @"recipient_address"];
