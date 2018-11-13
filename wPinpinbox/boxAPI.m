@@ -482,8 +482,10 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject: albumId forKey: @"album_id"];
     [dic setObject: platform forKey: @"platform"];
     [dic setObject: point forKey: @"point"];
-    [dic setObject: reward forKey: @"reward"];
     
+    if ([wTools objectExists: reward]) {
+        [dic setObject: reward forKey: @"reward"];
+    }        
     returnStr = [self boxAPIWithoutSign: dic URL: @"/buyalbum/2.0"];
     
     return returnStr;

@@ -2109,13 +2109,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)newBuyAlbum: (NSString *)pointStr {
     [wTools ShowMBProgressHUD];
     
-    NSMutableDictionary *rewardDic = [NSMutableDictionary new];
-    [rewardDic setObject: self->nameTextView.text forKey: @"recipient"];
-    [rewardDic setObject: self->phoneTextView.text forKey: @"recipient_tel"];
-    [rewardDic setObject: self->addressTextView.text forKey: @"recipient_address"];
+    NSMutableDictionary *rewardDic;
+    NSData *jsonData;
+    NSString *jsonStr;
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject: rewardDic options: 0 error: nil];
-    NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
+    if (rewardAfterCollect) {
+        rewardDic = [NSMutableDictionary new];
+        [rewardDic setObject: nameTextView.text forKey: @"recipient"];
+        [rewardDic setObject: phoneTextView.text forKey: @"recipient_tel"];
+        [rewardDic setObject: addressTextView.text forKey: @"recipient_address"];
+        jsonData = [NSJSONSerialization dataWithJSONObject: rewardDic options: 0 error: nil];
+        jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
+    } else {
+        jsonStr = nil;
+    }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI newBuyAlbum: [wTools getUserID]
