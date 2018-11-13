@@ -132,6 +132,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     if (launchOptions != nil ) {
         NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         NSLog(@"remoteN %@",remoteN);
+
         if (remoteN && remoteN[@"data"]) {
             @try {
                 NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:remoteN[@"data"]];
@@ -147,12 +148,21 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
             } @catch (NSException *exception) {
                 NSString *ex = [exception description];
                 NSLog(@"\n\n\n didFinishLaunchingWithOptions fail  %@\n\n\n", ex);
+            } @finally {
                 
             }
         }
-        
-        
     }
+//    if (launchOptions != nil ) {
+//        NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+//        NSLog(@"remoteN %@",remoteN);
+//
+//        if (remoteN) {
+//            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//            [defaults setObject: remoteN forKey: @"launchNotification"];
+////            [defaults synchronize];
+//        }
+//    }
     
 #pragma mark  Google Analytics setup
     GAI *gai = [GAI sharedInstance];

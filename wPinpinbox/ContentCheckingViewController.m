@@ -2112,7 +2112,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: rewardDic options: 0 error: nil];
-    NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
+    if (rewardAfterCollect) {
+        [rewardDic setObject: nameTextView.text forKey: @"recipient"];
+        [rewardDic setObject: phoneTextView.text forKey: @"recipient_tel"];
+        [rewardDic setObject: addressTextView.text forKey: @"recipient_address"];
+        jsonData = [NSJSONSerialization dataWithJSONObject: rewardDic options: 0 error: nil];
+        jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
+    } else {
+        jsonStr = nil;
+    }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI newBuyAlbum: [wTools getUserID]
