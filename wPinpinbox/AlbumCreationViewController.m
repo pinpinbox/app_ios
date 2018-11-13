@@ -59,6 +59,9 @@
 #import <DSPhotoEditorSDK/DSPhotoEditorViewController.h>
 #endif
 
+#import <MobileCoreServices/MobileCoreServices.h>
+#import "PDFUploader.h"
+
 #define DSAPIKey @"8bc8d28be0f41df4032b69285f4bbf91ff89ff71"
 
 #define kWidthForUpload 720
@@ -77,6 +80,29 @@
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
+
+
+@interface decorView : UIView
+@property (nonatomic) CALayer *decorlayer;
+@property (nonatomic) IBOutlet UIStackView *container;
+@end
+@implementation decorView
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if (self.decorlayer == nil) {
+        self.decorlayer = [[CALayer alloc] init];
+        self.decorlayer.backgroundColor = [UIColor whiteColor].CGColor;
+        [self.layer insertSublayer:self.decorlayer atIndex:0];//addSublayer:self.decorlayer];
+        
+    }
+    CGSize s = self.container.frame.size;
+    self.decorlayer.frame = CGRectMake(5, 5, s.width -10, s.height-15);
+}
+@end
+
+
+
+
 #if TARGET_OS_SIMULATOR
 @interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate>
 
@@ -98,7 +124,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     __weak IBOutlet UIButton *deleteTextBtn;
     
     __weak IBOutlet UIView *audioBgView;
-    __weak IBOutlet UIButton *deleteAudioBtn;
+    
     __weak IBOutlet UIButton *deleteImageBtn;
     
     NSMutableArray *ImageDataArr;
@@ -193,6 +219,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) IBOutlet UIButton *presentLocationEditButton;
 @property (nonatomic) IBOutlet UIButton *presentUrlEditButton;
 @property (nonatomic) MBProgressHUD *hud;
+
+@property (nonatomic) IBOutlet UIButton *deleteLocationBtn;
+@property (nonatomic) IBOutlet UIButton *deleteURLBtn;
+@property (nonatomic) IBOutlet UIButton *deleteAudioBtn;
+@property (nonatomic) PDFUploader *pdfUploader;
 @end
 
 @implementation AlbumCreationViewController
@@ -289,8 +320,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (_imagedata==nil) {
         ImageDataArr=[NSMutableArray new];
         
-        audioBgView.hidden = YES;
-        deleteAudioBtn.hidden = YES;
+        _deleteAudioBtn.hidden = YES;
+        _deleteURLBtn.hidden = YES;
+        _deleteLocationBtn.hidden = YES;
         
         textBgView.hidden = YES;
         deleteTextBtn.hidden = YES;
@@ -319,7 +351,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // CustomActionSheet
     self.customAddActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customAddActionSheet.delegate = self;
-    self.customAddActionSheet.topicStr = @"為作品新增相片/影片";
+    self.customAddActionSheet.topicStr = @"為作品新增相片/影片/PDF";
     
     self.customVideoActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customVideoActionSheet.delegate = self;
@@ -401,12 +433,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 #pragma mark -
 - (void)presentDSPhotoEditorWithImage:(UIImage *)image {
+#if TARGET_OS_SIMULATOR
+#else
     dispatch_async(dispatch_get_main_queue(), ^{
         DSPhotoEditorViewController *editor = [[DSPhotoEditorViewController alloc] initWithImage:image apiKey:@"f324df227eb76414dbdb69a7cc1e3f2534b8622f" /*DSAPIKey*/ toolsToHide:@[@(TOOL_ROUND),@(TOOL_CIRCLE)]];
         editor.delegate = self;
         [self presentViewController:editor animated:YES completion:nil];
         
     });
+#endif
 }
 #pragma mark - IBAction Methods
 - (IBAction)presentPhotoEditor:(id)sender {
@@ -458,14 +493,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (IBAction)settingBtnPress:(id)sender {
     if (![self.userIdentity isEqualToString: @"admin"]) {
-        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-        style.messageColor = [UIColor whiteColor];
-        style.backgroundColor = [UIColor thirdPink];
-
-        [self.view makeToast: @"權限不足"
-                    duration: 1.0
-                    position: CSToastPositionBottom
-                       style: style];
+        [self showErrorToastWithMessage:@"權限不足" duration:1.0];
         return;
     }
     
@@ -505,27 +533,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if (stSelf->ImageDataArr.count > 0) {
                 [stSelf showReorderVC];
             } else if (stSelf->ImageDataArr.count == 0) {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
+                [weakSelf showErrorToastWithMessage:@"作品數量多於1項才可編排順序" duration:2.0];
                 
-                [weakSelf.view makeToast: @"作品數量多於1項才可編排順序"
-                                duration: 2.0
-                                position: CSToastPositionBottom
-                                   style: style];
             }
         } else if ([identifierStr isEqualToString: @"choosePreview"]) {
             if (stSelf->ImageDataArr.count > 0) {
                 [stSelf showPreviewPageSetupVC];
             } else if (stSelf->ImageDataArr.count == 0) {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
-                
-                [weakSelf.view makeToast: @"作品內沒有內容"
-                                duration: 2.0
-                                position: CSToastPositionBottom
-                                   style: style];
+                [weakSelf showErrorToastWithMessage:@"作品內沒有內容" duration:2.0];
             }
         } else if ([identifierStr isEqualToString: @"setupMusic"]) {
             SetupMusicViewController *setupMusicVC = [[UIStoryboard storyboardWithName: @"SetupMusicVC" bundle: nil] instantiateViewControllerWithIdentifier: @"SetupMusicViewController"];
@@ -580,14 +595,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
                 [self showTextEditing];
             } else {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
-                
-                [self.view makeToast: @"只能操作你上傳的項目"
-                            duration: 1.0
-                            position: CSToastPositionBottom
-                               style: style];
+                [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
                 return;
             }
         }
@@ -604,14 +612,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
                 [self showCustomAlertForText: @"確定刪除本頁敘述"];
             } else {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
-                
-                [self.view makeToast: @"只能操作你上傳的項目"
-                            duration: 1.0
-                            position: CSToastPositionBottom
-                               style: style];
+                [self showErrorToastWithMessage: @"只能操作你上傳的項目" duration:1.0];
                 return;
             }
         }
@@ -852,14 +853,8 @@ shouldChangeTextInRange:(NSRange)range
                     if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
                         [self checkAudioStatus];
                     } else {
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
+                        [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
                         
-                        [self.view makeToast: @"只能操作你上傳的項目"
-                                    duration: 1.0
-                                    position: CSToastPositionBottom
-                                       style: style];
                         return;
                     }
                 }
@@ -873,14 +868,7 @@ shouldChangeTextInRange:(NSRange)range
                 if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
                     [self checkAudioStatus];
                 } else {
-                    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                    style.messageColor = [UIColor whiteColor];
-                    style.backgroundColor = [UIColor thirdPink];
-                    
-                    [self.view makeToast: @"只能操作你上傳的項目"
-                                duration: 1.0
-                                position: CSToastPositionBottom
-                                   style: style];
+                    [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
                     return;
                 }
             }
@@ -1316,14 +1304,8 @@ shouldChangeTextInRange:(NSRange)range
             if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
                 [self showCustomAlertForAudio: @"確定刪除本頁錄音檔"];
             } else {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
+                [self showErrorToastWithMessage: @"只能操作你上傳的項目" duration: 1.0];
                 
-                [self.view makeToast: @"只能操作你上傳的項目"
-                            duration: 1.0
-                            position: CSToastPositionBottom
-                               style: style];
                 return;
             }
         }
@@ -1420,7 +1402,7 @@ shouldChangeTextInRange:(NSRange)range
                         [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
                         
                         stSelf->audioBgView.hidden = NO;
-                        stSelf->deleteAudioBtn.hidden = NO;
+                        stSelf.deleteAudioBtn.hidden = NO;
                         
                         stSelf->isRecorded = YES;
                         
@@ -1430,7 +1412,7 @@ shouldChangeTextInRange:(NSRange)range
                         // Can not Record
                         [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
                         stSelf->audioBgView.hidden = YES;
-                        stSelf->deleteAudioBtn.hidden = YES;
+                        stSelf.deleteAudioBtn.hidden = YES;
                         
                         stSelf->isRecorded = NO;
                         
@@ -1519,7 +1501,7 @@ shouldChangeTextInRange:(NSRange)range
                         stSelf->isPlayingAudio = NO;
                         
                         stSelf->audioBgView.hidden = YES;
-                        stSelf->deleteAudioBtn.hidden = YES;
+                        stSelf.deleteAudioBtn.hidden = YES;
                         [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
                     } else if ([dic[@"result"] boolValue] == 0) {
                         NSLog(@"message: %@", dic[@"message"]);
@@ -1671,7 +1653,7 @@ shouldChangeTextInRange:(NSRange)range
                             stSelf->_presentPhotoEditButton.hidden = YES;
                             stSelf->recordPausePlayBtn.hidden = YES;
                             stSelf->audioBgView.hidden = YES;
-                            stSelf->deleteAudioBtn.hidden = YES;
+                            stSelf.deleteAudioBtn.hidden = YES;
                             
                             stSelf->textBgView.hidden = YES;
                             stSelf->addTextBtn.hidden = YES;
@@ -1801,13 +1783,9 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"快速建立相本 儲存");
     
     if (ImageDataArr.count == 0) {
-        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-        style.messageColor = [UIColor whiteColor];
-        style.backgroundColor = [UIColor thirdPink];
-        [self.view makeToast: @"你的作品還沒有內容唷!"
-                    duration: 2.0
-                    position: CSToastPositionBottom
-                       style: style];
+        [self showErrorToastWithMessage: @"你的作品還沒有內容唷!"
+                               duration: 2.0];
+        
     } else {        
         if ([self.userIdentity isEqualToString:@"editor"] || [self.userIdentity isEqualToString: @"approver"]) {
             [self removeObserAndNotificationAndRipple];
@@ -1965,14 +1943,9 @@ shouldChangeTextInRange:(NSRange)range
                     });
                 });
             } else {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
+                [self showErrorToastWithMessage:@"只能操作你上傳的項目"
+                                       duration: 1.0];
                 
-                [self.view makeToast: @"只能操作你上傳的項目"
-                            duration: 1.0
-                            position: CSToastPositionBottom
-                               style: style];
                 return;
             }
         }
@@ -2350,13 +2323,13 @@ didFinishSavingWithError:(NSError *)error
         __weak typeof(self) weakSelf = self;
         [exportSession exportAsynchronouslyWithCompletionHandler:^{
             __strong typeof(weakSelf) stSelf = weakSelf;
-            dispatch_sync(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.vidHud hideAnimated:YES];
             });
             switch ([exportSession status]) {
                 case AVAssetExportSessionStatusFailed:
                 {
-                    dispatch_sync(dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
                         [weakSelf showCustomErrorAlert:[[exportSession error] localizedDescription]];
                     });
                     break;
@@ -2368,7 +2341,7 @@ didFinishSavingWithError:(NSError *)error
                 {
                     // Video conversion finished
                     NSLog(@"Successful!");
-                    dispatch_sync(dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
                         NSString *mp4Path = [NSHomeDirectory() stringByAppendingFormat: @"/Documents/%@.mp4", @"temp"];
                         NSLog(@"mp4Path: %@", mp4Path);
                         
@@ -2678,7 +2651,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         recordPausePlayBtn.hidden = YES;
         self.presentPhotoEditButton.hidden = YES;
         audioBgView.hidden = YES;
-        deleteAudioBtn.hidden = YES;
+        _deleteAudioBtn.hidden = YES;
         
         textBgView.hidden = YES;
         addTextBtn.hidden = YES;
@@ -2699,7 +2672,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         
         recordPausePlayBtn.hidden = NO;
         audioBgView.hidden = YES;
-        deleteAudioBtn.hidden = YES;
+        _deleteAudioBtn.hidden = YES;
         
         deleteImageBtn.hidden = NO;
         self.presentPhotoEditButton.hidden = NO;
@@ -2782,7 +2755,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
                 [UIView animateWithDuration:0.2 animations:^{
                     stSelf->recordPausePlayBtn.hidden = YES;
                     stSelf->audioBgView.hidden = YES;
-                    stSelf->deleteAudioBtn.hidden = YES;
+                    stSelf.deleteAudioBtn.hidden = YES;
                     stSelf->_presentPhotoEditButton.hidden = YES;
                 }];
                 
@@ -2793,7 +2766,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
                 [UIView animateWithDuration:0.2 animations:^{
                     stSelf->recordPausePlayBtn.hidden = NO;
                     stSelf->audioBgView.hidden = NO;
-                    stSelf->deleteAudioBtn.hidden = NO;
+                    stSelf.deleteAudioBtn.hidden = NO;
                     stSelf->_presentPhotoEditButton.hidden = NO;
                 }];
             }
@@ -2808,13 +2781,13 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
                     
                     [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
                     stSelf->audioBgView.hidden = NO;
-                    stSelf->deleteAudioBtn.hidden = NO;
+                    stSelf.deleteAudioBtn.hidden = NO;
                     stSelf->isRecorded = YES;
                 }
             } else {
                 NSLog(@"audio_url is empty");
                 stSelf->audioBgView.hidden = YES;
-                stSelf->deleteAudioBtn.hidden = YES;
+                stSelf.deleteAudioBtn.hidden = YES;
                 [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
                 stSelf->isRecorded = NO;
             }
@@ -2954,7 +2927,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     addTextBtn.userInteractionEnabled = YES;
     deleteTextBtn.userInteractionEnabled = YES;
     
-    deleteAudioBtn.userInteractionEnabled = YES;
+    _deleteAudioBtn.userInteractionEnabled = YES;
     deleteImageBtn.userInteractionEnabled = YES;
 }
 
@@ -2970,7 +2943,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     addTextBtn.userInteractionEnabled = NO;
     deleteTextBtn.userInteractionEnabled = NO;
     
-    deleteAudioBtn.userInteractionEnabled = NO;
+    _deleteAudioBtn.userInteractionEnabled = NO;
     deleteImageBtn.userInteractionEnabled = NO;
 }
 
@@ -3166,13 +3139,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"indexPath.item: %ld", (long)indexPath.item);
         
         if (ImageDataArr.count >= self.selectrow) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor thirdPink];
-            [self.view makeToast: @"已達最大上限"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
+            [self showErrorToastWithMessage:@"已達最大上限"
+                                   duration: 2.0];
+            
         } else {
             NSLog(@"self.templateid: %@", self.templateid);
             NSLog(@"[self.templateid intValue]: %d", [self.templateid intValue]);
@@ -3247,6 +3216,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [self.customAddActionSheet addSelectItem: @"ic200_camera_dark" title: @"相片" btnStr: @"" tagInt: 1 identifierStr: @"photo"];
     [self.customAddActionSheet addSelectItem: @"ic200_videomake_dark" title: @"影片" btnStr: @"" tagInt: 2 identifierStr: @"video"];
     
+    if (@available(iOS 11.0, *)) {
+        [self.customAddActionSheet addSelectItem: @"ic200_user_about_dark" title: @"PDF" btnStr: @"" tagInt: 2 identifierStr: @"pdf"];
+    }
     __weak typeof(self) weakSelf = self;
     self.customAddActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         NSLog(@"");
@@ -3259,6 +3231,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             [weakSelf addimagedata];
         } else if ([identifierStr isEqualToString: @"video"]) {
             [weakSelf showVideoMode];
+        } else if ([identifierStr isEqualToString:@"pdf"]) {
+            [weakSelf showPDFPicker];
         }
     };
 }
@@ -3301,7 +3275,65 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         }
     };
 }
-
+- (void)showPDFPicker {
+    if (@available(iOS 11.0, *)) {
+        __block typeof(self) wself = self;
+        
+        self.pdfUploader = [[PDFUploader alloc] initWithAlbumID: self.albumid availablePages:20 progressblock:^(int currentPage, int totalPage) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (currentPage == 0) {
+                    wself.vidHud = [MBProgressHUD showHUDAddedTo: wself.view animated: YES];
+                    wself.vidHud.label.font = [UIFont systemFontOfSize: 18];
+                    wself.vidHud.label.text = @"轉換PDF檔案...";
+                }
+                wself.vidHud.mode =  MBProgressHUDModeDeterminateHorizontalBar;
+                wself.vidHud.progress = (float)(currentPage+1) / (float) totalPage;
+                
+            });
+            
+        } exportFinishedblock:^(NSError * _Nullable error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (error) {
+                    [wself.vidHud hideAnimated:YES];
+                    [wself showErrorToastWithMessage:[error localizedDescription] duration:1.0];
+                } else {
+                    wself.vidHud.mode =  MBProgressHUDModeIndeterminate;
+                    wself.vidHud.label.text = @"準備上傳PDF檔案...";
+                    [wself.vidHud.button setTitle: @"取消" forState: UIControlStateNormal];
+                    [wself.vidHud.button addTarget: self action: @selector(cancelPDFUploaderWork:) forControlEvents: UIControlEventTouchUpInside];
+                }
+            });
+            
+        } uploadProgressBlock:^(int currentPage, int totalPage) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                wself.vidHud.mode =  MBProgressHUDModeDeterminateHorizontalBar;
+                wself.vidHud.label.text = @"上傳中...請稍候";
+                wself.vidHud.detailsLabel.text = [NSString stringWithFormat:@"已上傳 %d / %d", currentPage+1, totalPage];
+                wself.vidHud.progress = (float)(currentPage+1) / (float) totalPage;
+                [wself.vidHud.button setTitle: @"取消" forState: UIControlStateNormal];
+                [wself.vidHud.button addTarget: self action: @selector(cancelPDFUploaderWork:) forControlEvents: UIControlEventTouchUpInside];
+            });
+            
+        } uploadResultBlock:^(NSError * _Nullable error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself.vidHud hideAnimated:YES];
+                [wself reload:nil];
+            });
+        }];
+        
+        
+        UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes: @[(__bridge NSString * )kUTTypePDF] inMode:UIDocumentPickerModeImport];
+        picker.delegate = self.pdfUploader;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+}
+- (void)cancelPDFUploaderWork:(id)sender {
+    if (@available(iOS 11.0, *)) {
+        [self.pdfUploader cacenlCurrentWork];
+    }
+}
 #pragma mark - DDAUIActionSheetViewController Method
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller
 {
@@ -3458,14 +3490,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [appDelegate.myNav pushViewController: newCooperationVC animated: YES];
     } else {
-        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-        style.messageColor = [UIColor whiteColor];
-        style.backgroundColor = [UIColor thirdPink];
-        
-        [self.view makeToast: @"權限不足"
-                    duration: 1.0
-                    position: CSToastPositionBottom
-                       style: style];
+        [self showErrorToastWithMessage:@"權限不足"
+                               duration: 1.0];
         return;
     }
 }
@@ -3651,14 +3677,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         [self showCustomErrorAlert: msg];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
-                        
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
+                        [self showErrorToastWithMessage:@"用戶驗證異常請重新登入"
+                                               duration: 2.0];
                         
                         [NSTimer scheduledTimerWithTimeInterval: 1.0
                                                          target: self
@@ -3764,14 +3784,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"resultStr isEqualToString TOKEN_ERROR");
                         
-                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [UIColor thirdPink];
-                        
-                        [self.view makeToast: @"用戶驗證異常請重新登入"
-                                    duration: 2.0
-                                    position: CSToastPositionBottom
-                                       style: style];
+                        [self showErrorToastWithMessage:@"用戶驗證異常請重新登入"
+                                               duration: 2.0];
                         
                         [NSTimer scheduledTimerWithTimeInterval: 1.0
                                                          target: self
@@ -4636,7 +4650,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)processUpdate{
     [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
     audioBgView.hidden = YES;
-    deleteAudioBtn.hidden = YES;
+    _deleteAudioBtn.hidden = YES;
     
     isRecorded = NO;
 }
@@ -4788,6 +4802,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [self reload: nil];
 }
 
+#if TARGET_OS_SIMULATOR
+#else
 #pragma mark - DSPhotoEditDelegate
 - (void)dsPhotoEditorCanceled:(DSPhotoEditorViewController *)editor {
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -4797,9 +4813,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [self dismissViewControllerAnimated:YES completion:^{
         [wself callUpdatePhotoOfDiyWithPhoto:image];
     }];
-    
-    
+
 }
+#endif
+
 #pragma mark - MBProgressHUD
 - (void)showHUDWithMessage:(NSString *)message {
     
@@ -4814,4 +4831,16 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         self.hud = nil;
     }
 }
+
+- (void)showErrorToastWithMessage:(NSString *)message duration:(CGFloat)duration{
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor thirdPink];
+    
+    [self.view makeToast: message
+                duration: duration
+                position: CSToastPositionBottom
+                   style: style];
+}
+
 @end

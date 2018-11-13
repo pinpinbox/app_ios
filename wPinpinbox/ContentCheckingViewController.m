@@ -53,6 +53,8 @@
 #import "DMViewController.h"
 #import "UIViewController+ErrorAlert.h"
 
+
+#import "WKVideoPlayerView.h"
 #define kTextContentHeight 155
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
@@ -1644,6 +1646,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     
+    WKVideoPlayerView *v2 = (WKVideoPlayerView *)[cell viewWithTag:20002];
+    NSLog(@"WKVideoPlayerView %@",v2);
     // Reset
     [self.videoPlayer pause];
     
@@ -1711,6 +1715,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         self.isPresentingOrPushingVC = YES;
         NSString *urlString = self.photoArray[page][@"video_target"];
         [self openSafari: [NSURL URLWithString: urlString]];
+        
     }
     videoIsPlaying = YES;
     [self.avPlayer pause];
@@ -3589,14 +3594,50 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //                self.videoPlayerViewController.view.hidden = NO;
             } else if ([refer isEqualToString: @"embed"]) {
                 NSLog(@"refer is equal to embed");
+                NSURL *url = [NSURL URLWithString: self.photoArray[indexPath.row][@"video_target"]];
                 cell.alphaBgV.hidden = NO;
-                cell.videoBtn.hidden = NO;
-                cell.videoView.hidden = YES;
                 
-                for (UIView *view in cell.videoView.subviews) {
-                    NSLog(@"view: %@", view);
-//                    view.backgroundColor = [UIColor redColor];
-                    view.hidden = YES;
+                //  YT Video embedded player
+                if (!([[url host] rangeOfString: @"youtube"].location == NSNotFound) ||
+                    !([[url host] rangeOfString: @"youtu.be"].location == NSNotFound)||
+                    !([[url host] rangeOfString: @"vimeo"].location == NSNotFound)) {
+                    
+                    cell.alphaBgV.hidden = YES;
+                    cell.videoBtn.hidden = YES;
+                    cell.videoView.hidden = NO;
+                    
+                    
+                    NSString *urlString = self.photoArray[indexPath.row][@"video_target"];
+                    UIView *w = [cell.videoView viewWithTag:20002];
+                    if (w)
+                        [w removeFromSuperview];
+                    
+                    
+                    NSArray *a = [urlString findURLs];
+                    NSString *vpath = urlString;
+                    
+                    if (a && a.count ) {
+                        WKVideoPlayerView *v2 = [[WKVideoPlayerView alloc] initWithString:vpath];
+                        CGFloat width = UIScreen.mainScreen.bounds.size.width;//cell.videoView.frame.size.width;
+                        //CGFloat height = UIScreen.mainScreen.bounds.size.height;
+                        v2.frame = CGRectMake(0, 0 ,width , width*0.5625);
+                        v2.contentMode = UIViewContentModeScaleAspectFit;
+                        v2.center = self.view.center;
+                        v2.tag = 20002;
+                        [cell.videoView addSubview:v2];
+                    } else {
+                        
+                    }
+                    
+                    
+                } else {
+                    cell.videoBtn.hidden = NO;
+                    cell.videoView.hidden = YES;
+                    for (UIView *view in cell.videoView.subviews) {
+                        NSLog(@"view: %@", view);
+    //                    view.backgroundColor = [UIColor redColor];
+                        view.hidden = YES;
+                    }
                 }
 //                self.videoPlayerViewController.view.hidden = YES;
             }
@@ -3884,6 +3925,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 #pragma mark - UIScrollViewDelegate Methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
     NSLog(@"");
     NSLog(@"scrollViewDidScroll");
     [self dismissKeyboard];

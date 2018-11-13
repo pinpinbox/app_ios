@@ -362,11 +362,14 @@
 		CB0C0DB32146509F00FAF438 /* image01.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB12146509F00FAF438 /* image01.xcassets */; };
 		CB0C0DB42146509F00FAF438 /* image00.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB22146509F00FAF438 /* image00.xcassets */; };
 		CB0C0DB6214653BA00FAF438 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB5214653BA00FAF438 /* Images.xcassets */; };
+		CB1B38FE21991957003C8B3F /* WKVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB1B38FC21991956003C8B3F /* WKVideoPlayerView.m */; };
 		CB5E68EA2193E81B00CB47F5 /* DSPhotoEditorSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		CB5E68EE2193EF1F00CB47F5 /* CooperationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */; };
 		CB5E68EF2193EF1F00CB47F5 /* CooperationInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */; };
 		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
 		CB8404DA218718DB00E1C2A7 /* InfoTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8404D9218718DB00E1C2A7 /* InfoTextView.m */; };
+		CB8FB77E21991CB700D3C23C /* PDFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8FB77D21991CB700D3C23C /* PDFUploader.m */; };
+		CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
@@ -975,6 +978,8 @@
 		CB0C0DB12146509F00FAF438 /* image01.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image01.xcassets; path = "Image Resources/image01.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB22146509F00FAF438 /* image00.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image00.xcassets; path = "Image Resources/image00.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB5214653BA00FAF438 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Image Resources/Images.xcassets"; sourceTree = "<group>"; };
+		CB1B38FC21991956003C8B3F /* WKVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKVideoPlayerView.m; sourceTree = "<group>"; };
+		CB1B38FD21991956003C8B3F /* WKVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKVideoPlayerView.h; sourceTree = "<group>"; };
 		CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DSPhotoEditorSDK.framework; sourceTree = "<group>"; };
 		CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CooperationInfoViewController.m; sourceTree = "<group>"; };
 		CB5E68EC2193EF1F00CB47F5 /* CooperationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CooperationInfoViewController.h; sourceTree = "<group>"; };
@@ -983,6 +988,9 @@
 		CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MultipartInputStream.m; path = MultipartInputStream/MultipartInputStream.m; sourceTree = "<group>"; };
 		CB8404D9218718DB00E1C2A7 /* InfoTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoTextView.m; sourceTree = "<group>"; };
 		CB8404DB2187190D00E1C2A7 /* InfoTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoTextView.h; sourceTree = "<group>"; };
+		CB8FB77C21991CB700D3C23C /* PDFUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFUploader.h; sourceTree = "<group>"; };
+		CB8FB77D21991CB700D3C23C /* PDFUploader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFUploader.m; sourceTree = "<group>"; };
+		CB8FB77F2199223600D3C23C /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -1004,6 +1012,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92CFB5C31BE75679001B7B78 /* MobileCoreServices.framework in Frameworks */,
+				CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */,
 				CB5E68EA2193E81B00CB47F5 /* DSPhotoEditorSDK.framework in Frameworks */,
 				542497AA1FB336BE0021D75D /* libSDWebImage.a in Frameworks */,
 				549B48AC1F6EC3190012FE13 /* libicucore.tbd in Frameworks */,
@@ -1016,7 +1026,6 @@
 				9222B2301BEC9EA900DF2CAD /* AudioToolbox.framework in Frameworks */,
 				92CFB5C71BE75688001B7B78 /* libc++.dylib in Frameworks */,
 				92CFB5C51BE7567E001B7B78 /* UIKit.framework in Frameworks */,
-				92CFB5C31BE75679001B7B78 /* MobileCoreServices.framework in Frameworks */,
 				92CFB5BF1BE75664001B7B78 /* QuartzCore.framework in Frameworks */,
 				92CFB5BD1BE75659001B7B78 /* OpenGLES.framework in Frameworks */,
 				92CFB5BB1BE75654001B7B78 /* MessageUI.framework in Frameworks */,
@@ -1582,6 +1591,7 @@
 		549B48AA1F6EC3190012FE13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CB8FB77F2199223600D3C23C /* PDFKit.framework */,
 				5484D58D1FC43BB000177DD6 /* SystemConfiguration.framework */,
 				5484D58C1FC43BA100177DD6 /* CFNetwork.framework */,
 				5484D58B1FC43B8C00177DD6 /* Security.framework */,
@@ -2339,6 +2349,8 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CB1B38FA21991956003C8B3F /* PDFUploader */,
+				CB1B38FB21991956003C8B3F /* WKWebVideoPlayer */,
 				CB5E68E82193E81B00CB47F5 /* DSPhotoEditor */,
 				CB7F2E3F216C972200A3E1AD /* MultipartInputStream */,
 				CB071CF5213E476A003D01D8 /* dailymotion-player-objc */,
@@ -2650,6 +2662,24 @@
 				CB071CF7213E476A003D01D8 /* DMPlayerViewController.m */,
 			);
 			path = "dailymotion-player-objc";
+			sourceTree = "<group>";
+		};
+		CB1B38FA21991956003C8B3F /* PDFUploader */ = {
+			isa = PBXGroup;
+			children = (
+				CB8FB77C21991CB700D3C23C /* PDFUploader.h */,
+				CB8FB77D21991CB700D3C23C /* PDFUploader.m */,
+			);
+			path = PDFUploader;
+			sourceTree = "<group>";
+		};
+		CB1B38FB21991956003C8B3F /* WKWebVideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				CB1B38FC21991956003C8B3F /* WKVideoPlayerView.m */,
+				CB1B38FD21991956003C8B3F /* WKVideoPlayerView.h */,
+			);
+			path = WKWebVideoPlayer;
 			sourceTree = "<group>";
 		};
 		CB5E68E82193E81B00CB47F5 /* DSPhotoEditor */ = {
@@ -3052,6 +3082,7 @@
 				6319A36B1DABB60C001CB8BD /* JCCollectionHeaderView.m in Sources */,
 				630A83E41EB1D07300AC8479 /* MyLinearLayout.m in Sources */,
 				543B11A7205619A900111102 /* ZOZolaZoomTransition.m in Sources */,
+				CB8FB77E21991CB700D3C23C /* PDFUploader.m in Sources */,
 				630AD8521EA7659000825BBA /* FBFriendNotFoundViewController.m in Sources */,
 				6308C4591EACA84C00F99AC0 /* ScanCodeViewController.m in Sources */,
 				CB071CF8213E476A003D01D8 /* DMPlayerViewController.m in Sources */,
@@ -3169,6 +3200,7 @@
 				63A574181DE7FA7D00C9EFAF /* GHContextMenuView.m in Sources */,
 				54D2694C21194EAF00AE3273 /* AlbumInfoViewController.m in Sources */,
 				63090C8F1EAE828600788DA6 /* HomeDataCollectionViewCell.m in Sources */,
+				CB1B38FE21991957003C8B3F /* WKVideoPlayerView.m in Sources */,
 				54885DBF20DB419800644A82 /* LikeListTableViewCell.m in Sources */,
 				9295A3B81C22528400317FEA /* wShowImageList.m in Sources */,
 				631768CE1EA0B5270047BAB7 /* CustomIOSAlertView.m in Sources */,

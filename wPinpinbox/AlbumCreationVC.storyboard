@@ -118,133 +118,139 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0eE-qQ-MhU">
                                         <rect key="frame" x="324" y="8" width="35" height="454"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFg-3t-EGg">
-                                                <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="35" id="8Eq-cp-FF9"/>
-                                                    <constraint firstAttribute="height" constant="35" id="RAA-1q-mUm"/>
-                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="XAc-aL-O68"/>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="bfr-dc-KAp"/>
-                                                </constraints>
-                                                <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
-                                                <state key="normal" image="ic200_aviary_white"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                        <integer key="value" value="18"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="presentPhotoEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="a6n-6L-tZa"/>
-                                                </connections>
-                                            </button>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="hcG-yz-t5a">
-                                                <rect key="frame" x="0.0" y="43" width="35" height="74"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="QEg-hW-tRR">
+                                                <rect key="frame" x="0.0" y="0.0" width="35" height="281"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GUg-Ut-m3O" customClass="BFPaperButton">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFg-3t-EGg">
                                                         <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
                                                         <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="35" id="LgO-Wk-W70"/>
-                                                            <constraint firstAttribute="width" constant="35" id="p0E-qQ-BaV"/>
+                                                            <constraint firstAttribute="width" constant="35" id="8Eq-cp-FF9"/>
+                                                            <constraint firstAttribute="height" constant="35" id="RAA-1q-mUm"/>
+                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="XAc-aL-O68"/>
+                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="bfr-dc-KAp"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
-                                                        <state key="normal" image="ic200_micro_white"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                <integer key="value" value="18"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="loweredShadowOpacity">
-                                                                <real key="value" value="0.0"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="loweredShadowRadius">
-                                                                <real key="value" value="0.0"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="size" keyPath="loweredShadowOffset">
-                                                                <size key="value" width="0.0" height="0.0"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <action selector="recordPausePlayTapped:" destination="zap-Ke-wb3" eventType="touchUpInside" id="guN-M6-ZaL"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ca7-uq-mtx">
-                                                        <rect key="frame" x="0.0" y="39" width="35" height="35"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="35" id="HlT-OL-q5a"/>
-                                                            <constraint firstAttribute="height" constant="35" id="yI1-te-Aez"/>
-                                                        </constraints>
-                                                        <state key="normal" title="Button" image="icon_delete_pink_120x120"/>
-                                                        <connections>
-                                                            <action selector="deleteAudio:" destination="zap-Ke-wb3" eventType="touchUpInside" id="cBC-gV-a9a"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="QFQ-az-gN1">
-                                                <rect key="frame" x="0.0" y="125" width="35" height="35"/>
-                                                <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lGf-eR-yh3">
-                                                        <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                        <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="2Y6-48-ndP"/>
-                                                            <constraint firstAttribute="width" constant="35" id="DbL-UG-Jf9"/>
-                                                            <constraint firstAttribute="height" constant="35" id="JKx-dX-xvr"/>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="Rc2-Dv-O9P"/>
-                                                        </constraints>
-                                                        <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
-                                                        <state key="normal" image="ic200_location_white"/>
+                                                        <state key="normal" image="ic200_aviary_white"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                                 <integer key="value" value="18"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
-                                                            <action selector="presentLocationEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="IWL-bv-cLs"/>
+                                                            <action selector="presentPhotoEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="a6n-6L-tZa"/>
                                                         </connections>
                                                     </button>
-                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qOX-bn-cIw">
-                                                        <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="35" id="DNh-1J-wlQ"/>
-                                                            <constraint firstAttribute="width" constant="35" id="PqZ-HF-zMX"/>
-                                                        </constraints>
-                                                        <state key="normal" title="Button" image="icon_delete_pink_120x120"/>
-                                                    </button>
-                                                </subviews>
-                                            </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="yL8-i9-dum">
-                                                <rect key="frame" x="0.0" y="168" width="35" height="35"/>
-                                                <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Es8-07-pkr">
-                                                        <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                        <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="D5E-v5-ybA"/>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="T6w-LV-TeC"/>
-                                                            <constraint firstAttribute="width" constant="35" id="ZNg-Nb-s6o"/>
-                                                            <constraint firstAttribute="height" constant="35" id="ttI-nB-NJZ"/>
-                                                        </constraints>
-                                                        <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
-                                                        <state key="normal" image="ic200_share_white"/>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                <integer key="value" value="18"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <action selector="presentURLEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="lIC-oy-IMF"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ms3-KW-6Nf">
-                                                        <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="35" id="fAg-mw-tEX"/>
-                                                            <constraint firstAttribute="width" constant="35" id="x5X-0Y-uEo"/>
-                                                        </constraints>
-                                                        <state key="normal" title="Button" image="icon_delete_pink_120x120"/>
-                                                    </button>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="hcG-yz-t5a">
+                                                        <rect key="frame" x="0.0" y="43" width="35" height="74"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GUg-Ut-m3O" customClass="BFPaperButton">
+                                                                <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
+                                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="35" id="LgO-Wk-W70"/>
+                                                                    <constraint firstAttribute="width" constant="35" id="p0E-qQ-BaV"/>
+                                                                </constraints>
+                                                                <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
+                                                                <state key="normal" image="ic200_micro_white"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="18"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="loweredShadowOpacity">
+                                                                        <real key="value" value="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="loweredShadowRadius">
+                                                                        <real key="value" value="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="size" keyPath="loweredShadowOffset">
+                                                                        <size key="value" width="0.0" height="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <action selector="recordPausePlayTapped:" destination="zap-Ke-wb3" eventType="touchUpInside" id="guN-M6-ZaL"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ca7-uq-mtx">
+                                                                <rect key="frame" x="0.0" y="39" width="35" height="35"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="35" id="HlT-OL-q5a"/>
+                                                                    <constraint firstAttribute="height" constant="35" id="yI1-te-Aez"/>
+                                                                </constraints>
+                                                                <state key="normal" title="Button" image="icon_delete_pink_120x120"/>
+                                                                <connections>
+                                                                    <action selector="deleteAudio:" destination="zap-Ke-wb3" eventType="touchUpInside" id="cBC-gV-a9a"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="QFQ-az-gN1">
+                                                        <rect key="frame" x="0.0" y="125" width="35" height="74"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lGf-eR-yh3">
+                                                                <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
+                                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="2Y6-48-ndP"/>
+                                                                    <constraint firstAttribute="width" constant="35" id="DbL-UG-Jf9"/>
+                                                                    <constraint firstAttribute="height" constant="35" id="JKx-dX-xvr"/>
+                                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="Rc2-Dv-O9P"/>
+                                                                </constraints>
+                                                                <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
+                                                                <state key="normal" image="ic200_location_white"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="18"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <action selector="presentLocationEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="IWL-bv-cLs"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qOX-bn-cIw">
+                                                                <rect key="frame" x="0.0" y="39" width="35" height="35"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="35" id="DNh-1J-wlQ"/>
+                                                                    <constraint firstAttribute="width" constant="35" id="PqZ-HF-zMX"/>
+                                                                </constraints>
+                                                                <state key="normal" title="Button" image="icon_delete_pink_120x120"/>
+                                                            </button>
+                                                        </subviews>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="yL8-i9-dum">
+                                                        <rect key="frame" x="0.0" y="207" width="35" height="74"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Es8-07-pkr">
+                                                                <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
+                                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="D5E-v5-ybA"/>
+                                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="T6w-LV-TeC"/>
+                                                                    <constraint firstAttribute="width" constant="35" id="ZNg-Nb-s6o"/>
+                                                                    <constraint firstAttribute="height" constant="35" id="ttI-nB-NJZ"/>
+                                                                </constraints>
+                                                                <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
+                                                                <state key="normal" image="ic200_share_white"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="18"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <action selector="presentURLEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="lIC-oy-IMF"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ms3-KW-6Nf">
+                                                                <rect key="frame" x="0.0" y="39" width="35" height="35"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="35" id="fAg-mw-tEX"/>
+                                                                    <constraint firstAttribute="width" constant="35" id="x5X-0Y-uEo"/>
+                                                                </constraints>
+                                                                <state key="normal" title="Button" image="icon_delete_pink_120x120"/>
+                                                            </button>
+                                                        </subviews>
+                                                    </stackView>
                                                 </subviews>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZxS-QF-hp3">
@@ -269,17 +275,8 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="cFg-3t-EGg" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="1ks-IP-UQE"/>
-                                            <constraint firstItem="hcG-yz-t5a" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="2MR-oI-b5U"/>
-                                            <constraint firstItem="yL8-i9-dum" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="39C-KV-mxK"/>
-                                            <constraint firstItem="cFg-3t-EGg" firstAttribute="top" secondItem="0eE-qQ-MhU" secondAttribute="top" id="4EQ-Sf-7HV"/>
-                                            <constraint firstItem="hcG-yz-t5a" firstAttribute="top" secondItem="cFg-3t-EGg" secondAttribute="bottom" constant="8" id="6is-AK-tFW"/>
-                                            <constraint firstItem="QFQ-az-gN1" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="6rT-eL-8WI"/>
-                                            <constraint firstItem="QFQ-az-gN1" firstAttribute="top" secondItem="hcG-yz-t5a" secondAttribute="bottom" constant="8" id="HJ1-TY-vnU"/>
-                                            <constraint firstAttribute="trailing" secondItem="hcG-yz-t5a" secondAttribute="trailing" id="J4S-y3-plr"/>
                                             <constraint firstAttribute="bottom" secondItem="ZxS-QF-hp3" secondAttribute="bottom" id="Ni5-of-XS4"/>
                                             <constraint firstItem="ZxS-QF-hp3" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="Qq1-fY-h44"/>
-                                            <constraint firstItem="yL8-i9-dum" firstAttribute="top" secondItem="QFQ-az-gN1" secondAttribute="bottom" constant="8" id="W8g-Pd-gQE"/>
                                             <constraint firstAttribute="trailing" secondItem="ZxS-QF-hp3" secondAttribute="trailing" id="kpi-aH-Ye7"/>
                                         </constraints>
                                     </view>
@@ -421,7 +418,7 @@
                             <constraint firstItem="twK-0x-5FJ" firstAttribute="bottom" secondItem="orm-Co-MdZ" secondAttribute="top" id="1Uq-1H-sCg"/>
                             <constraint firstItem="orm-Co-MdZ" firstAttribute="leading" secondItem="0Lx-ex-F47" secondAttribute="leading" constant="16" id="2jQ-JB-e7Q"/>
                             <constraint firstItem="2IG-uS-S58" firstAttribute="leading" secondItem="5Sk-Wz-Kra" secondAttribute="leading" id="3Iy-mP-urN"/>
-                            <constraint firstItem="MdE-zC-psy" firstAttribute="top" secondItem="0Lx-ex-F47" secondAttribute="top" constant="20" symbolic="YES" id="54g-LM-i2a"/>
+                            <constraint firstItem="MdE-zC-psy" firstAttribute="top" secondItem="5Sk-Wz-Kra" secondAttribute="top" symbolic="YES" id="54g-LM-i2a"/>
                             <constraint firstItem="twK-0x-5FJ" firstAttribute="leading" secondItem="5Sk-Wz-Kra" secondAttribute="leading" id="5VN-VI-OAa"/>
                             <constraint firstItem="MdE-zC-psy" firstAttribute="trailing" secondItem="5Sk-Wz-Kra" secondAttribute="trailing" id="7Vu-mp-Hjo"/>
                             <constraint firstItem="MdE-zC-psy" firstAttribute="leading" secondItem="5Sk-Wz-Kra" secondAttribute="leading" id="8Yd-Fe-Xpy"/>
@@ -438,8 +435,9 @@
                         <outlet property="ShowView" destination="XZr-ef-acy" id="PGs-Yg-ygm"/>
                         <outlet property="conbtn" destination="0ju-l5-i4K" id="sOx-Vr-USM"/>
                         <outlet property="dataCollectionView" destination="2IG-uS-S58" id="2m4-jr-ckk"/>
-                        <outlet property="deleteAudioBtn" destination="ca7-uq-mtx" id="Xfm-Pd-e2g"/>
-                        <outlet property="deleteImageBtn" destination="ZxS-QF-hp3" id="7kR-UM-n4f"/>
+                        <outlet property="deleteAudioBtn" destination="ca7-uq-mtx" id="Wbi-Lb-D2Z"/>
+                        <outlet property="deleteLocationBtn" destination="qOX-bn-cIw" id="57T-5U-vkk"/>
+                        <outlet property="deleteURLBtn" destination="Ms3-KW-6Nf" id="ADM-tX-7d5"/>
                         <outlet property="navBarHeight" destination="Lul-ei-u88" id="Fek-T3-lvI"/>
                         <outlet property="navBarView" destination="MdE-zC-psy" id="lMi-sg-ipd"/>
                         <outlet property="nextBtn" destination="P0t-Nw-p6L" id="2r5-CB-1CF"/>
