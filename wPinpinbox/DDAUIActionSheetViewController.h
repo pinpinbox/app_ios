@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 typedef void(^buttonTouch)(BOOL selected);
+typedef void(^buttonTouchForPreview)(BOOL selected, NSString *previewPageStr);
 typedef void(^buttonTap)(NSInteger tag, NSString *identifierStr);
 typedef void(^viewTouch)(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr);
 
@@ -24,14 +25,45 @@ typedef void(^viewTouch)(NSInteger tagId, BOOL isTouchDown, NSString *identifier
 @property (copy, nonatomic) buttonTouch customButtonBlock;
 @property (copy, nonatomic) viewTouch customViewBlock;
 @property (copy, nonatomic) buttonTap customButtonTapBlock;
+@property (copy, nonatomic) buttonTouchForPreview customButtonBlockForPreview;
 
 @property (strong, nonatomic) NSString *topicStr;
 
 - (void)slideOut;
 //- (void)addSelectItem:(NSString *)imgName title:(NSString *)title btnStr:(NSString *)btnStr tagInt:(NSInteger)tagInt;
 
-- (void)addSelectItem:(NSString *)imgName title:(NSString *)title btnStr:(NSString *)btnStr tagInt:(NSInteger)tagInt identifierStr:(NSString *)identifierStr;
-- (void)addSelectItem:(NSString *)imgName title:(NSString *)title btnStr:(NSString *)btnStr tagInt:(NSInteger)tagInt identifierStr:(NSString *)identifierStr isCollected:(BOOL)isCollected;
-- (void)addSelectButtons:(NSArray *)btnStrs identifierStrs:(NSArray *)identifierStrs;
+- (void)addSelectButtons:(NSArray *)btnStrs
+          identifierStrs:(NSArray *)identifierStrs;
+
+- (void)addSelectItemForPreviewPage:(BOOL)gridViewSelected
+                        hasTextView:(BOOL)hasTextView
+                     firstLabelText:(NSString *)firstLabelText
+                    secondLabelText:(NSString *)secondLabelText
+                     previewPageNum:(NSInteger)previewPageNum
+                             tagInt:(NSInteger)tagInt
+                      identifierStr:(NSString *)identifierStr;
+
+- (void)addSelectItemForPreviewPage:(NSString *)imgName
+                              title:(NSString *)title
+                           horzLine:(BOOL)horzLine
+                             btnStr:(NSString *)btnStr
+                             tagInt:(NSInteger)tagInt
+                      identifierStr:(NSString *)identifierStr;
+
+- (void)addSelectItem:(NSString *)imgName
+                title:(NSString *)title
+               btnStr:(NSString *)btnStr
+               tagInt:(NSInteger)tagInt
+        identifierStr:(NSString *)identifierStr;
+
+- (void)addSelectItem:(NSString *)imgName
+                title:(NSString *)title
+               btnStr:(NSString *)btnStr
+               tagInt:(NSInteger)tagInt
+        identifierStr:(NSString *)identifierStr
+          isCollected:(BOOL)isCollected;
+
 - (void)addHorizontalLine;
+
+- (void)addSafeArea;
 @end

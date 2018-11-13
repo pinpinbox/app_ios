@@ -109,22 +109,19 @@
     }
 }
 
-- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer
-{
+- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer {
     /*
     for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
         NSIndexPath *indexPath = [self.collectionView indexPathForCell: cell];
         NSLog(@"indexPath: %@", indexPath);
     }
     */
-    
     NSLog(@"handleTapGesture");
         
     CGPoint location = [gestureRecognizer locationInView: self.collectionView];
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint: location];
     NSLog(@"indexPath: %@", indexPath);
     NSLog(@"indexPath.row: %ld", (long)indexPath.row);
-    
     NSLog(@"indexPath.item: %ld", (long)indexPath.item);
     
     if (indexPath != nil) {
@@ -169,8 +166,7 @@
     }
 }
 
-- (IBAction)back:(id)sender
-{
+- (IBAction)back:(id)sender {
     // For Presenting as ChildViewController
 //    [UIView animateWithDuration: 0.2 animations:^{
 //        self.view.frame = CGRectMake(0, kViewHeightForPreview, 320, kCellHeightForPreview);
@@ -186,18 +182,13 @@
             [self.delegate previewPageSetupViewControllerDisappear: self];
         }
     });
-    
     [self createDataForCallingServer];
-    
     [self dismissViewControllerAnimated: YES completion: nil];
 }
 
-- (void)createDataForCallingServer
-{
+- (void)createDataForCallingServer {
     NSLog(@"createArrayForCallingServer");
-    
     NSMutableArray *arrayForSending = [[NSMutableArray alloc] init];
-    
     NSLog(@"self.imageArray: %@", self.imageArray);
     
     for (int i = 0; i < self.imageArray.count; i++) {
@@ -219,7 +210,6 @@
             [photoIdStr appendString: [NSString stringWithFormat: @"%@", arrayForSending[i]]];
         }
     }
-    
     NSLog(@"photoIdStr: %@", photoIdStr);
     
     NSMutableDictionary *settingsDic = [NSMutableDictionary new];
@@ -235,8 +225,7 @@
     [self callAlbumSettings: jsonStr];
 }
 
-- (void)callAlbumSettings: (NSString *)jsonStr
-{
+- (void)callAlbumSettings: (NSString *)jsonStr {
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -246,7 +235,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI albumsettings: [wTools getUserID]
                                              token: [wTools getUserToken]
@@ -279,8 +267,6 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        
-                        
                         if ([self.delegate respondsToSelector: @selector(previewPageSetupViewControllerDisappearAfterCalling:modifySuccess:imageArray:)]) {
                             [self.delegate previewPageSetupViewControllerDisappearAfterCalling: self modifySuccess: [dic[@"result"] boolValue] imageArray: self.imageArray];
                         }
@@ -299,19 +285,18 @@
     });
 }
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section {
     NSLog(@"self.imageArray.count: %lu", (unsigned long)self.imageArray.count);
     return self.imageArray.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForItemAtIndexPath");
     
     static NSString *identifier = @"Cell";
@@ -348,109 +333,31 @@
     return cell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(UICollectionView *)collectionView
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
-    
     NSLog(@"indexPath.item: %ld", (long)indexPath.item);
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(UICollectionView *)collectionView
+didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didHighlightItemAtIndexPath");
     NSLog(@"indexPath.item: %ld", (long)indexPath.item);
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
     
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       jsonStr: (NSString *)jsonStr
-{
+                       jsonStr: (NSString *)jsonStr {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -485,8 +392,7 @@
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
