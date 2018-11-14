@@ -71,11 +71,15 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     _locationManager.distanceFilter = kCLDistanceFilterNone;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+    if ([CLLocationManager locationServicesEnabled] &&[[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         [_locationManager requestWhenInUseAuthorization];
     }
+}
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     
-    [_locationManager startUpdatingLocation];
+    if (status ==kCLAuthorizationStatusAuthorizedWhenInUse || status == kCLAuthorizationStatusAuthorizedAlways) {
+        [_locationManager startUpdatingLocation];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

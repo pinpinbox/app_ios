@@ -103,11 +103,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     locationManager.distanceFilter = kCLDistanceFilterNone;
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+    if ([CLLocationManager locationServicesEnabled] && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         [locationManager requestWhenInUseAuthorization];
     }
     
-    [locationManager startUpdatingLocation];
     
     self.horizontalLineView1.backgroundColor = [UIColor secondGrey];
     self.middleTextLabel.textColor = [UIColor secondGrey];
@@ -222,11 +221,18 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         locationManager.distanceFilter = kCLDistanceFilterNone;
         locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+        if ([CLLocationManager locationServicesEnabled] && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
             [locationManager requestWhenInUseAuthorization];
         }
-        
+    }
+}
+    
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    
+    if (status ==kCLAuthorizationStatusAuthorizedWhenInUse || status == kCLAuthorizationStatusAuthorizedAlways) {
         [locationManager startUpdatingLocation];
+    } else if (status == kCLAuthorizationStatusNotDetermined) {
+        [locationManager requestWhenInUseAuthorization];
     }
 }
 
@@ -375,6 +381,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                             NSLog(@"失敗： %@", dic[@"message"]);
                             if ([wTools objectExists: dic[@"message"]]) {
                                 [wself showCustomErrorAlert: dic[@"message"]];
+                                [wTools logOut];
                             } else {
                                 [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                             }
