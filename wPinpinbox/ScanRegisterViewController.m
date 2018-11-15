@@ -443,7 +443,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 - (void)handleFBLoginParam:(NSMutableDictionary *)paramDic fbid:(NSString *)fbid{
     
     NSLog(@"currentLocation: %@", currentLocation);
-    
+    [self stopReading];
     if (currentLocation != nil) {
         NSString *latStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.latitude];
         NSString *longStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.longitude];
@@ -458,7 +458,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: paramDic options: 0 error: nil];
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
-    
+
     [self buisnessSubUserFastRegister: fbid jsonStr: jsonStr];
 }
 - (void)buisnessSubUserFastRegister:(NSString *)fbId
