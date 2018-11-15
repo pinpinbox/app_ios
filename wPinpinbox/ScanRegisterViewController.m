@@ -304,29 +304,35 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         if ([[metadataObj type] isEqualToString: AVMetadataObjectTypeQRCode]) {
             NSLog(@"metadataObj type isEqualToString AVMetadataObjectTypeQRCode");
             NSLog(@"%@", [metadataObj stringValue]);
+        
+            [_locationManager stopUpdatingLocation];
+            [self stopReading];
             
             NSString *sv = [metadataObj stringValue];
             NSArray *strArray = [sv componentsSeparatedByString: @"?"];
             NSLog(@"strArray: %@", strArray);
-            
+            __block typeof(self) wself = self;
             if (strArray.count > 1) {
+                
                 if (!([strArray[1] rangeOfString: @"businessuser_id"].location == NSNotFound)) {
                     NSLog(@"strArray[1] rangeOfString is businessuser_id");
                     strArray = [strArray[1] componentsSeparatedByString: @"businessuser_id="];
                     NSLog(@"strArray: %@", strArray);
                     
                     businessUserId = strArray[1];
-                    [self Facebookbtn: nil];
-                    [self stopReading];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself Facebookbtn: nil];
+                    });
                 } else {
-                    [self performSelectorOnMainThread: @selector(showError:)
-                                           withObject: @"本次掃描無效"
-                                        waitUntilDone: NO];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself showError:@"本次掃描無效"];
+                    });
+                    
                 }
             } else {
-                [self performSelectorOnMainThread: @selector(showError:)
-                                       withObject: @"本次掃描無效"
-                                    waitUntilDone: NO];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself showError:@"本次掃描無效"];
+                });
             }
         }
     }
@@ -578,6 +584,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
     //public_profile
     //publish_actions
+    __block typeof(self) wself = self;
     [login
      logInWithReadPermissions: @[@"public_profile", @"user_birthday", @"email"]
      fromViewController:self
@@ -603,6 +610,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
          
          if (declinedOrCanceledHandler) {
              declinedOrCanceledHandler();
+             [wself startReading];
+             [wself.locationManager startUpdatingLocation];
          }
      }];
 }
@@ -904,12 +913,14 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
+    __block typeof(self) wself = self;
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
         
         if (buttonIndex == 0) {
-            [self startReading];
+            [wself startReading];
+            [wself.locationManager startUpdatingLocation];
         }
     }];
 }
@@ -1042,9 +1053,9 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
-    NSLog(@"didUpdateLocations: %@", locations);
+    //NSLog(@"didUpdateLocations: %@", locations);
     currentLocation = [locations lastObject];
-    NSLog(@"currentLocation: %@", currentLocation);
+    //NSLog(@"currentLocation: %@", currentLocation);
 }
 
 /*
