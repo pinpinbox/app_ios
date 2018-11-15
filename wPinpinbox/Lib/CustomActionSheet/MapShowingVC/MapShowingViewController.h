@@ -23,4 +23,5 @@
 
 - (void)slideOut;
 
+- (void)addButtonAction:(NSString *)title target:(id)target action:(SEL)action;
 @end

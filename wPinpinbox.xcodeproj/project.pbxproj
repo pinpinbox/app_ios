@@ -362,6 +362,7 @@
 		CB0C0DB32146509F00FAF438 /* image01.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB12146509F00FAF438 /* image01.xcassets */; };
 		CB0C0DB42146509F00FAF438 /* image00.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB22146509F00FAF438 /* image00.xcassets */; };
 		CB0C0DB6214653BA00FAF438 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB5214653BA00FAF438 /* Images.xcassets */; };
+		CB0CA8E1219AC5A800B5018B /* SwitchButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */; };
 		CB1B38FE21991957003C8B3F /* WKVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB1B38FC21991956003C8B3F /* WKVideoPlayerView.m */; };
 		CB5E68EA2193E81B00CB47F5 /* DSPhotoEditorSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		CB5E68EE2193EF1F00CB47F5 /* CooperationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */; };
@@ -370,6 +371,7 @@
 		CB8404DA218718DB00E1C2A7 /* InfoTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8404D9218718DB00E1C2A7 /* InfoTextView.m */; };
 		CB8FB77E21991CB700D3C23C /* PDFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8FB77D21991CB700D3C23C /* PDFUploader.m */; };
 		CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
+		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
@@ -978,6 +980,8 @@
 		CB0C0DB12146509F00FAF438 /* image01.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image01.xcassets; path = "Image Resources/image01.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB22146509F00FAF438 /* image00.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image00.xcassets; path = "Image Resources/image00.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB5214653BA00FAF438 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Image Resources/Images.xcassets"; sourceTree = "<group>"; };
+		CB0CA8DF219AC5A800B5018B /* SwitchButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchButtonView.h; sourceTree = "<group>"; };
+		CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchButtonView.m; sourceTree = "<group>"; };
 		CB1B38FC21991956003C8B3F /* WKVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKVideoPlayerView.m; sourceTree = "<group>"; };
 		CB1B38FD21991956003C8B3F /* WKVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKVideoPlayerView.h; sourceTree = "<group>"; };
 		CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DSPhotoEditorSDK.framework; sourceTree = "<group>"; };
@@ -991,6 +995,8 @@
 		CB8FB77C21991CB700D3C23C /* PDFUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFUploader.h; sourceTree = "<group>"; };
 		CB8FB77D21991CB700D3C23C /* PDFUploader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFUploader.m; sourceTree = "<group>"; };
 		CB8FB77F2199223600D3C23C /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
+		CBCE8572219C074600ED185D /* LocationMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationMapViewController.h; sourceTree = "<group>"; };
+		CBCE8573219C074600ED185D /* LocationMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationMapViewController.m; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -1823,6 +1829,8 @@
 				547BC6D11F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m */,
 				540D748D2161DE1F0061E463 /* NewCooperationRelated */,
 				54DC76241FB40D81005F3252 /* Collection Related */,
+				CBCE8572219C074600ED185D /* LocationMapViewController.h */,
+				CBCE8573219C074600ED185D /* LocationMapViewController.m */,
 			);
 			name = "CenterButton Related";
 			sourceTree = "<group>";
@@ -2349,6 +2357,7 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CB0CA8DE219AC5A800B5018B /* SwitchButtonView */,
 				CB1B38FA21991956003C8B3F /* PDFUploader */,
 				CB1B38FB21991956003C8B3F /* WKWebVideoPlayer */,
 				CB5E68E82193E81B00CB47F5 /* DSPhotoEditor */,
@@ -2662,6 +2671,15 @@
 				CB071CF7213E476A003D01D8 /* DMPlayerViewController.m */,
 			);
 			path = "dailymotion-player-objc";
+			sourceTree = "<group>";
+		};
+		CB0CA8DE219AC5A800B5018B /* SwitchButtonView */ = {
+			isa = PBXGroup;
+			children = (
+				CB0CA8DF219AC5A800B5018B /* SwitchButtonView.h */,
+				CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */,
+			);
+			path = SwitchButtonView;
 			sourceTree = "<group>";
 		};
 		CB1B38FA21991956003C8B3F /* PDFUploader */ = {
@@ -3165,6 +3183,7 @@
 				54B2C3A4206AB05200ABEC76 /* UIImage+Resize.m in Sources */,
 				92DF72231C5F553800062FC6 /* TemplateViewController.m in Sources */,
 				630E1A601EC00F63003FE76A /* MeCollectionViewCell.m in Sources */,
+				CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */,
 				54BBFB182008AA3E00492D3E /* HomeCategoryCollectionViewCell.m in Sources */,
 				630AB6011F0CEEFB0023CA26 /* NavigationController.m in Sources */,
 				92C4D5151B745E8900504B57 /* SignViewController_4.m in Sources */,
@@ -3194,6 +3213,7 @@
 				543FC4F920EB24320090DF43 /* MoreTabViewController.m in Sources */,
 				540D749B2161DE1F0061E463 /* NewCooperationViewController.m in Sources */,
 				635775DA1ED3ECFB00637914 /* RecentBrowsingViewController.m in Sources */,
+				CB0CA8E1219AC5A800B5018B /* SwitchButtonView.m in Sources */,
 				92A384A01CFD786A00C1CDBC /* OfflineViewController.m in Sources */,
 				54B08C8D2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m in Sources */,
 				92F6CD021B7B5382002E547C /* O_drag.m in Sources */,

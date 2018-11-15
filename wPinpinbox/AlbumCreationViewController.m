@@ -61,6 +61,9 @@
 
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "PDFUploader.h"
+#import "SwitchButtonView.h"
+
+#import "LocationMapViewController.h"
 
 #define DSAPIKey @"8bc8d28be0f41df4032b69285f4bbf91ff89ff71"
 
@@ -82,32 +85,12 @@ static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPla
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
 
-@interface decorView : UIView
-@property (nonatomic) CALayer *decorlayer;
-@property (nonatomic) IBOutlet UIStackView *container;
-@end
-@implementation decorView
-- (void)drawRect:(CGRect)rect {
-    [super drawRect:rect];
-    if (self.decorlayer == nil) {
-        self.decorlayer = [[CALayer alloc] init];
-        self.decorlayer.backgroundColor = [UIColor whiteColor].CGColor;
-        [self.layer insertSublayer:self.decorlayer atIndex:0];//addSublayer:self.decorlayer];
-        
-    }
-    CGSize s = self.container.frame.size;
-    self.decorlayer.frame = CGRectMake(5, 5, s.width -10, s.height-15);
-}
-@end
-
-
-
-
 #if TARGET_OS_SIMULATOR
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate>
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate>
 
 #else
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate, DSPhotoEditorViewControllerDelegate>
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,
+    DSPhotoEditorViewControllerDelegate>
 
 #endif
 {
@@ -115,9 +98,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     __weak IBOutlet UIButton *conbtn;
     __weak IBOutlet UIButton *settingBtn;
     __weak IBOutlet UIButton *nextBtn;
-    
-    //    __weak IBOutlet UIButton *adobeEidt;
-    __weak IBOutlet BFPaperButton *recordPausePlayBtn;
     
     __weak IBOutlet UIView *textBgView;
     __weak IBOutlet UIButton *addTextBtn;
@@ -214,16 +194,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) MBProgressHUD *vidHud;
 
+@property (nonatomic) IBOutlet SwitchButtonView *audioSwitchView;
+@property (nonatomic) IBOutlet SwitchButtonView *locationSwitchView;
+@property (nonatomic) IBOutlet SwitchButtonView *urlSwitchView;
+@property (nonatomic) IBOutlet UIView *switchBaseView;
 
+@property (nonatomic) BFPaperButton *recordPausePlayBtn;
 @property (nonatomic) IBOutlet UIButton *presentPhotoEditButton;
-@property (nonatomic) IBOutlet UIButton *presentLocationEditButton;
-@property (nonatomic) IBOutlet UIButton *presentUrlEditButton;
 @property (nonatomic) MBProgressHUD *hud;
 
-@property (nonatomic) IBOutlet UIButton *deleteLocationBtn;
-@property (nonatomic) IBOutlet UIButton *deleteURLBtn;
-@property (nonatomic) IBOutlet UIButton *deleteAudioBtn;
 @property (nonatomic) PDFUploader *pdfUploader;
+
+
+@property (nonatomic) LocationMapViewController *mapShowingActionSheet;
+
 @end
 
 @implementation AlbumCreationViewController
@@ -239,6 +223,47 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     selectItem = item;
     NSLog(@"selectItem: %ld", (long)selectItem);
 }
+
+// set up all switch buttons at right (record, location, url...)
+- (void)setupSwitchButtonViews {
+    
+    self.recordPausePlayBtn = [[BFPaperButton alloc] init];
+    self.recordPausePlayBtn.frame = CGRectMake(0, 0, 35, 35);
+    [self.recordPausePlayBtn setImage:[UIImage imageNamed:@"ic200_micro_white"] forState:UIControlStateNormal];
+    self.recordPausePlayBtn.layer.cornerRadius = self.recordPausePlayBtn.bounds.size.width / 2;
+    self.recordPausePlayBtn.imageEdgeInsets = UIEdgeInsetsMake(6, 6, 6, 6);
+    self.recordPausePlayBtn.myWidth = 35;
+    self.recordPausePlayBtn.myHeight = 35;
+    self.recordPausePlayBtn.backgroundColor = [UIColor hintGrey];
+    
+    self.recordPausePlayBtn.isRaised = NO;
+    self.recordPausePlayBtn.rippleFromTapLocation = NO;
+    self.recordPausePlayBtn.rippleBeyondBounds = YES;
+    self.recordPausePlayBtn.tapCircleDiameter = MAX(self.recordPausePlayBtn.frame.size.width, self.recordPausePlayBtn.frame.size.height) * 1.3;
+    
+    
+    [self.audioSwitchView setSwitchButtons:self.recordPausePlayBtn switchBtn:nil];
+    self.audioSwitchView.switchDelegate = self;
+    [self.audioSwitchView addTarget:self mainSelector:@selector(recordPausePlayTapped:) switchSelector:@selector(deleteAudio:) ];
+    
+    UIButton *loc = [UIButton buttonWithType:UIButtonTypeCustom];
+    [loc setImage:[UIImage imageNamed:@"ic200_location_white"] forState:UIControlStateNormal];
+    loc.imageEdgeInsets = UIEdgeInsetsMake(6, 6, 6, 6);
+    loc.backgroundColor = [UIColor hintGrey];
+    [self.locationSwitchView setSwitchButtons:loc switchBtn:nil];
+    [self.locationSwitchView addTarget:self mainSelector:@selector(showLocationMap:) switchSelector:@selector(deleteLocationData:)];
+    self.locationSwitchView.switchDelegate = self;
+    
+    UIButton *url = [UIButton buttonWithType:UIButtonTypeCustom];
+    [url setImage:[UIImage imageNamed:@"ic200_share_white"] forState:UIControlStateNormal];
+    url.imageEdgeInsets = UIEdgeInsetsMake(6, 6, 6, 6);
+    url.backgroundColor = [UIColor hintGrey];
+    [self.urlSwitchView setSwitchButtons:url switchBtn:nil];
+    [self.urlSwitchView addTarget:self mainSelector:@selector(showURLEditor:) switchSelector:@selector(deleteURLData:)];
+    self.urlSwitchView.switchDelegate = self;
+    
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -285,18 +310,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     addTextBtn.layer.cornerRadius = addTextBtn.bounds.size.width / 2;
     addTextBtn.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
     
-    recordPausePlayBtn.layer.cornerRadius = recordPausePlayBtn.bounds.size.width / 2;
-    recordPausePlayBtn.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-    recordPausePlayBtn.myWidth = 35;
-    recordPausePlayBtn.myHeight = 35;
-    
-    recordPausePlayBtn.isRaised = NO;
-    recordPausePlayBtn.rippleFromTapLocation = NO;
-    recordPausePlayBtn.rippleBeyondBounds = YES;
-    recordPausePlayBtn.tapCircleDiameter = MAX(recordPausePlayBtn.frame.size.width, recordPausePlayBtn.frame.size.height) * 1.3;
-    
     deleteImageBtn.layer.cornerRadius = deleteImageBtn.bounds.size.width / 2;
     deleteImageBtn.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+    
+    [self setupSwitchButtonViews];
     
     NSLog(@"self.shareCollection: %d", self.shareCollection);
     
@@ -319,10 +336,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if (_imagedata==nil) {
         ImageDataArr=[NSMutableArray new];
-        
-        _deleteAudioBtn.hidden = YES;
-        _deleteURLBtn.hidden = YES;
-        _deleteLocationBtn.hidden = YES;
         
         textBgView.hidden = YES;
         deleteTextBtn.hidden = YES;
@@ -894,7 +907,7 @@ shouldChangeTextInRange:(NSRange)range
 
 - (void)disableRecordAndPlayBtn {
     NSLog(@"disableRecordAndPlayBtn");
-    recordPausePlayBtn.userInteractionEnabled = NO;
+    self.recordPausePlayBtn.userInteractionEnabled = NO;
 }
 
 - (void)enableRecordAndPlayBtn {
@@ -903,7 +916,7 @@ shouldChangeTextInRange:(NSRange)range
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSLog(@"enableRecordAndPlayBtn in get_main_queue");
         __strong typeof(weakSelf) stSelf = weakSelf;
-        stSelf->recordPausePlayBtn.userInteractionEnabled = YES;
+        stSelf.recordPausePlayBtn.userInteractionEnabled = YES;
     });
 }
 
@@ -937,9 +950,9 @@ shouldChangeTextInRange:(NSRange)range
                 NSLog(@"");
                 NSLog(@"Start recording");
                 [recorder record];
-                [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_recording_white.png"] forState: UIControlStateNormal];
+                [self.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_recording_white.png"] forState: UIControlStateNormal];
                 isRecordingAudio = YES;
-                recordPausePlayBtn.tapCircleColor = [UIColor secondPink];
+                self.recordPausePlayBtn.tapCircleColor = [UIColor secondPink];
                 
                 [self activateRipple];
             } else {
@@ -950,18 +963,19 @@ shouldChangeTextInRange:(NSRange)range
                 NSLog(@"Stop Recording");
                 [recorder stop];
                 //isRecordingAudio = NO;
-                recordPausePlayBtn.tapCircleColor = [UIColor clearColor];
+                self.recordPausePlayBtn.tapCircleColor = [UIColor clearColor];
                 
                 if ([self.audioMode isEqualToString: @"none"]) {
                     [self changeAudioMode: @"plural"];
                 }
+                [self.audioSwitchView switchOnWithAnimation];
             }
         } else if (isRecorded) {
             NSLog(@"");
             NSLog(@"");
             NSLog(@"is recorded already");
             [self playTapped];
-            recordPausePlayBtn.tapCircleColor = [UIColor secondMain];
+            self.recordPausePlayBtn.tapCircleColor = [UIColor secondMain];
         }
     } else {
         [self enableRecordAndPlayBtn];
@@ -1277,13 +1291,13 @@ shouldChangeTextInRange:(NSRange)range
 - (void)startRipple {
     NSLog(@"");
     NSLog(@"startRipple");
-    [recordPausePlayBtn fadeInBackgroundAndRippleTapCircle];
+    [self.recordPausePlayBtn fadeInBackgroundAndRippleTapCircle];
     double delayInSeconds = 0.2;
     __weak typeof(self) weakSelf = self;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^{
         __strong typeof(weakSelf) stSelf = weakSelf;
-        [stSelf->recordPausePlayBtn burstTapCircle];
+        [stSelf.recordPausePlayBtn burstTapCircle];
     });
 }
 
@@ -1399,20 +1413,21 @@ shouldChangeTextInRange:(NSRange)range
                         [stSelf.dataCollectionView reloadData];
                         
                         // Is Recorded
-                        [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
-                        
-                        stSelf->audioBgView.hidden = NO;
-                        stSelf.deleteAudioBtn.hidden = NO;
-                        
+                        [stSelf.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+                        [stSelf.audioSwitchView switchOnWithAnimation];
+//                        stSelf->audioBgView.hidden = NO;
+//                        stSelf.deleteAudioBtn.hidden = NO;
+//
                         stSelf->isRecorded = YES;
                         
                     } else if ([dic[@"result"] boolValue] == 0) {
                         NSLog(@"message: %@", dic[@"message"]);
                         
                         // Can not Record
-                        [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
-                        stSelf->audioBgView.hidden = YES;
-                        stSelf.deleteAudioBtn.hidden = YES;
+                        [stSelf.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+                        [stSelf.audioSwitchView switchOffWithAnimation];
+//                        stSelf->audioBgView.hidden = YES;
+//                        stSelf.deleteAudioBtn.hidden = YES;
                         
                         stSelf->isRecorded = NO;
                         
@@ -1499,10 +1514,10 @@ shouldChangeTextInRange:(NSRange)range
                         //[avPlayer pause];
                         [stSelf.avPlayer pause];
                         stSelf->isPlayingAudio = NO;
-                        
-                        stSelf->audioBgView.hidden = YES;
-                        stSelf.deleteAudioBtn.hidden = YES;
-                        [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+                        [stSelf.audioSwitchView switchOffWithAnimation];
+                        //stSelf->audioBgView.hidden = YES;
+                        //stSelf.deleteAudioBtn.hidden = YES;
+                        [stSelf.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
                     } else if ([dic[@"result"] boolValue] == 0) {
                         NSLog(@"message: %@", dic[@"message"]);
                         [stSelf showPermission];
@@ -1650,15 +1665,17 @@ shouldChangeTextInRange:(NSRange)range
                         
                         
                         if (stSelf->ImageDataArr.count == 0) {
-                            stSelf->_presentPhotoEditButton.hidden = YES;
-                            stSelf->recordPausePlayBtn.hidden = YES;
-                            stSelf->audioBgView.hidden = YES;
-                            stSelf.deleteAudioBtn.hidden = YES;
-                            
-                            stSelf->textBgView.hidden = YES;
-                            stSelf->addTextBtn.hidden = YES;
-                            stSelf->deleteTextBtn.hidden = YES;
-                            
+                            //stSelf.presentPhotoEditButton.hidden = YES;
+                            //stSelf.recordPausePlayBtn.hidden = YES;
+                            [stSelf.audioSwitchView switchOffWithAnimation];
+//                            //stSelf->audioBgView.hidden = YES;
+//                            //stSelf.deleteAudioBtn.hidden = YES;
+//
+//                            stSelf->textBgView.hidden = YES;
+//                            stSelf->addTextBtn.hidden = YES;
+//                            stSelf->deleteTextBtn.hidden = YES;
+//
+                            [stSelf.audioSwitchView setViewHidden:YES];//.hidden = YES;
                             stSelf->deleteImageBtn.hidden = YES;
                             
                             [stSelf.dataCollectionView reloadData];
@@ -2648,10 +2665,12 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
         //        adobeEidt.hidden = YES;
-        recordPausePlayBtn.hidden = YES;
+        //self.recordPausePlayBtn.hidden = YES;
         self.presentPhotoEditButton.hidden = YES;
-        audioBgView.hidden = YES;
-        _deleteAudioBtn.hidden = YES;
+        [self.audioSwitchView setViewHidden:YES];//.hidden = YES;
+        
+//        audioBgView.hidden = YES;
+//        _deleteAudioBtn.hidden = YES;
         
         textBgView.hidden = YES;
         addTextBtn.hidden = YES;
@@ -2670,10 +2689,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         //        adobeEidt.hidden = NO;
         addTextBtn.hidden = NO;
         
-        recordPausePlayBtn.hidden = NO;
-        audioBgView.hidden = YES;
-        _deleteAudioBtn.hidden = YES;
-        
+        [self.audioSwitchView setViewHidden:NO];//.hidden = NO;
         deleteImageBtn.hidden = NO;
         self.presentPhotoEditButton.hidden = NO;
     }
@@ -2753,10 +2769,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
                 [stSelf.ShowView addSubview: videoBtn];
                 
                 [UIView animateWithDuration:0.2 animations:^{
-                    stSelf->recordPausePlayBtn.hidden = YES;
-                    stSelf->audioBgView.hidden = YES;
-                    stSelf.deleteAudioBtn.hidden = YES;
-                    stSelf->_presentPhotoEditButton.hidden = YES;
+                  [stSelf.audioSwitchView setViewHidden:YES];//.hidden = YES;//recordPausePlayBtn.hidden = YES;
+                    stSelf.presentPhotoEditButton.hidden = YES;
                 }];
                 
                 
@@ -2764,33 +2778,39 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
                 NSLog(@"videoStr is null");
                 [videoBtn removeFromSuperview];
                 [UIView animateWithDuration:0.2 animations:^{
-                    stSelf->recordPausePlayBtn.hidden = NO;
-                    stSelf->audioBgView.hidden = NO;
-                    stSelf.deleteAudioBtn.hidden = NO;
-                    stSelf->_presentPhotoEditButton.hidden = NO;
+                    [stSelf.audioSwitchView setViewHidden:NO];//.hidden = NO;
+//                    stSelf.recordPausePlayBtn.hidden = NO;
+//                    [stSelf.audioSwitchView switchOnWithAnimation];
+//                    stSelf->audioBgView.hidden = NO;
+//                    stSelf.deleteAudioBtn.hidden = NO;
+                    stSelf.presentPhotoEditButton.hidden = NO;
                 }];
-            }
-            
-            stSelf->audio_url = stSelf->ImageDataArr[stSelf->selectItem][@"audio_url"];
-            NSLog(@"audio_url: %@", stSelf->audio_url);
-            
-            if (![stSelf->audio_url isKindOfClass: [NSNull class]]) {
-                if (![stSelf->audio_url isEqualToString: @""]) {
-                    NSLog(@"audio_url is not empty");
-                    NSLog(@"audio_url: %@", stSelf->audio_url);
-                    
-                    [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
-                    stSelf->audioBgView.hidden = NO;
-                    stSelf.deleteAudioBtn.hidden = NO;
-                    stSelf->isRecorded = YES;
+                
+                stSelf->audio_url = stSelf->ImageDataArr[stSelf->selectItem][@"audio_url"];
+                NSLog(@"audio_url: %@", stSelf->audio_url);
+                
+                if (![stSelf->audio_url isKindOfClass: [NSNull class]]) {
+                    if (![stSelf->audio_url isEqualToString: @""]) {
+                        NSLog(@"audio_url is not empty");
+                        NSLog(@"audio_url: %@", stSelf->audio_url);
+                        
+                        [stSelf.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+                        [stSelf.audioSwitchView switchOnWithAnimation];
+                        //                    stSelf->audioBgView.hidden = NO;
+                        //                    stSelf.deleteAudioBtn.hidden = NO;
+                        stSelf->isRecorded = YES;
+                    }
+                } else {
+                    NSLog(@"audio_url is empty");
+                    [stSelf.audioSwitchView switchOffWithAnimation];
+                    //                stSelf->audioBgView.hidden = YES;
+                    //                stSelf.deleteAudioBtn.hidden = YES;
+                    [stSelf.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+                    stSelf->isRecorded = NO;
                 }
-            } else {
-                NSLog(@"audio_url is empty");
-                stSelf->audioBgView.hidden = YES;
-                stSelf.deleteAudioBtn.hidden = YES;
-                [stSelf->recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
-                stSelf->isRecorded = NO;
             }
+            
+            
             
             stSelf->textForDescription = stSelf->ImageDataArr[stSelf->selectItem][@"description"];
             NSLog(@"textForDescription: %@", stSelf->textForDescription);
@@ -2927,7 +2947,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     addTextBtn.userInteractionEnabled = YES;
     deleteTextBtn.userInteractionEnabled = YES;
     
-    _deleteAudioBtn.userInteractionEnabled = YES;
+//    _deleteAudioBtn.userInteractionEnabled = YES;
     deleteImageBtn.userInteractionEnabled = YES;
 }
 
@@ -2943,7 +2963,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     addTextBtn.userInteractionEnabled = NO;
     deleteTextBtn.userInteractionEnabled = NO;
     
-    _deleteAudioBtn.userInteractionEnabled = NO;
+//    _deleteAudioBtn.userInteractionEnabled = NO;
     deleteImageBtn.userInteractionEnabled = NO;
 }
 
@@ -4648,9 +4668,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
  */
 #pragma mark - Custom Method for TimeOut
 - (void)processUpdate{
-    [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
-    audioBgView.hidden = YES;
-    _deleteAudioBtn.hidden = YES;
+    [self.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+    [self.audioSwitchView switchOffWithAnimation];
+//    audioBgView.hidden = YES;
+//    _deleteAudioBtn.hidden = YES;
     
     isRecorded = NO;
 }
@@ -4843,4 +4864,30 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                    style: style];
 }
 
+#pragma mark -
+- (void)didFinishedSwitchAnimation {
+    
+    //[self.switchBaseView layoutIfNeeded];
+}
+
+#pragma mark -
+- (void)didSelectLocation:(id)sender {
+    
+}
+- (IBAction)showLocationMap:(id)sender {
+    
+    
+    self.mapShowingActionSheet = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"LocationVC"];
+    
+    [self presentViewController:self.mapShowingActionSheet animated:YES completion:nil];
+}
+- (IBAction)deleteLocationData:(id)sender {
+    
+}
+- (IBAction)showURLEditor:(id)sender {
+    
+}
+- (IBAction)deleteURLData:(id)sender {
+    
+}
 @end

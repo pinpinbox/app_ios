@@ -210,5 +210,13 @@
         [self.view removeFromSuperview];
     }
 }
+#pragma mark -
 
+- (void)addButtonAction:(NSString *)title target:(id)target action:(SEL)action {
+    
+    [self.dismissBtn setImage:nil forState:UIControlStateNormal];
+    [self.dismissBtn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    [self.dismissBtn setTitle:title forState:UIControlStateNormal];
+    
+}
 @end

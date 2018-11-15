@@ -118,18 +118,29 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0eE-qQ-MhU">
                                         <rect key="frame" x="324" y="8" width="35" height="454"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="QEg-hW-tRR">
-                                                <rect key="frame" x="0.0" y="0.0" width="35" height="281"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LjA-Kf-R0d">
+                                                <rect key="frame" x="0.0" y="0.0" width="35" height="414"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFg-3t-EGg">
+                                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xZs-a2-tBO" customClass="SwitchButtonView">
+                                                        <rect key="frame" x="0.0" y="43" width="35" height="35"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="35" id="6t0-pt-i1a"/>
+                                                            <constraint firstAttribute="height" constant="35" id="lK4-Lh-FgH"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LJk-JI-TQ8" customClass="SwitchButtonView">
+                                                        <rect key="frame" x="0.0" y="86" width="35" height="35"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="35" id="iyt-A9-Suv"/>
+                                                            <constraint firstAttribute="width" constant="35" id="oNb-pj-Ki5"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sdL-41-ogu">
                                                         <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
                                                         <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="35" id="8Eq-cp-FF9"/>
-                                                            <constraint firstAttribute="height" constant="35" id="RAA-1q-mUm"/>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="XAc-aL-O68"/>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="bfr-dc-KAp"/>
+                                                            <constraint firstAttribute="height" constant="35" id="Z6j-G5-bIu"/>
+                                                            <constraint firstAttribute="width" constant="35" id="nt4-Bd-XHm"/>
                                                         </constraints>
                                                         <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
                                                         <state key="normal" image="ic200_aviary_white"/>
@@ -139,120 +150,29 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
-                                                            <action selector="presentPhotoEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="a6n-6L-tZa"/>
+                                                            <action selector="presentPhotoEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="hwt-SV-3ZJ"/>
                                                         </connections>
                                                     </button>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="hcG-yz-t5a">
-                                                        <rect key="frame" x="0.0" y="43" width="35" height="74"/>
-                                                        <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GUg-Ut-m3O" customClass="BFPaperButton">
-                                                                <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="LgO-Wk-W70"/>
-                                                                    <constraint firstAttribute="width" constant="35" id="p0E-qQ-BaV"/>
-                                                                </constraints>
-                                                                <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
-                                                                <state key="normal" image="ic200_micro_white"/>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                        <integer key="value" value="18"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="loweredShadowOpacity">
-                                                                        <real key="value" value="0.0"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="loweredShadowRadius">
-                                                                        <real key="value" value="0.0"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="size" keyPath="loweredShadowOffset">
-                                                                        <size key="value" width="0.0" height="0.0"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="recordPausePlayTapped:" destination="zap-Ke-wb3" eventType="touchUpInside" id="guN-M6-ZaL"/>
-                                                                </connections>
-                                                            </button>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ca7-uq-mtx">
-                                                                <rect key="frame" x="0.0" y="39" width="35" height="35"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" constant="35" id="HlT-OL-q5a"/>
-                                                                    <constraint firstAttribute="height" constant="35" id="yI1-te-Aez"/>
-                                                                </constraints>
-                                                                <state key="normal" title="Button" image="icon_delete_pink_120x120"/>
-                                                                <connections>
-                                                                    <action selector="deleteAudio:" destination="zap-Ke-wb3" eventType="touchUpInside" id="cBC-gV-a9a"/>
-                                                                </connections>
-                                                            </button>
-                                                        </subviews>
-                                                    </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="QFQ-az-gN1">
-                                                        <rect key="frame" x="0.0" y="125" width="35" height="74"/>
-                                                        <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lGf-eR-yh3">
-                                                                <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="2Y6-48-ndP"/>
-                                                                    <constraint firstAttribute="width" constant="35" id="DbL-UG-Jf9"/>
-                                                                    <constraint firstAttribute="height" constant="35" id="JKx-dX-xvr"/>
-                                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="Rc2-Dv-O9P"/>
-                                                                </constraints>
-                                                                <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
-                                                                <state key="normal" image="ic200_location_white"/>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                        <integer key="value" value="18"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="presentLocationEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="IWL-bv-cLs"/>
-                                                                </connections>
-                                                            </button>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qOX-bn-cIw">
-                                                                <rect key="frame" x="0.0" y="39" width="35" height="35"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="DNh-1J-wlQ"/>
-                                                                    <constraint firstAttribute="width" constant="35" id="PqZ-HF-zMX"/>
-                                                                </constraints>
-                                                                <state key="normal" title="Button" image="icon_delete_pink_120x120"/>
-                                                            </button>
-                                                        </subviews>
-                                                    </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="yL8-i9-dum">
-                                                        <rect key="frame" x="0.0" y="207" width="35" height="74"/>
-                                                        <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Es8-07-pkr">
-                                                                <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                                <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="35" id="D5E-v5-ybA"/>
-                                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="35" id="T6w-LV-TeC"/>
-                                                                    <constraint firstAttribute="width" constant="35" id="ZNg-Nb-s6o"/>
-                                                                    <constraint firstAttribute="height" constant="35" id="ttI-nB-NJZ"/>
-                                                                </constraints>
-                                                                <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
-                                                                <state key="normal" image="ic200_share_white"/>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                        <integer key="value" value="18"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <action selector="presentURLEditor:" destination="zap-Ke-wb3" eventType="touchUpInside" id="lIC-oy-IMF"/>
-                                                                </connections>
-                                                            </button>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ms3-KW-6Nf">
-                                                                <rect key="frame" x="0.0" y="39" width="35" height="35"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="35" id="fAg-mw-tEX"/>
-                                                                    <constraint firstAttribute="width" constant="35" id="x5X-0Y-uEo"/>
-                                                                </constraints>
-                                                                <state key="normal" title="Button" image="icon_delete_pink_120x120"/>
-                                                            </button>
-                                                        </subviews>
-                                                    </stackView>
+                                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="udg-YZ-z2K" customClass="SwitchButtonView">
+                                                        <rect key="frame" x="0.0" y="129" width="35" height="35"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="35" id="7qX-k6-ibB"/>
+                                                            <constraint firstAttribute="width" constant="35" id="VfP-Xs-E6m"/>
+                                                        </constraints>
+                                                    </view>
                                                 </subviews>
-                                            </stackView>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="35" id="7bn-jw-PCE"/>
+                                                    <constraint firstItem="xZs-a2-tBO" firstAttribute="top" secondItem="sdL-41-ogu" secondAttribute="bottom" constant="8" id="Eog-ua-z1l"/>
+                                                    <constraint firstItem="LJk-JI-TQ8" firstAttribute="leading" secondItem="xZs-a2-tBO" secondAttribute="leading" id="GUV-FK-I7k"/>
+                                                    <constraint firstItem="sdL-41-ogu" firstAttribute="leading" secondItem="LjA-Kf-R0d" secondAttribute="leading" id="H8i-Hg-gUG"/>
+                                                    <constraint firstItem="xZs-a2-tBO" firstAttribute="leading" secondItem="sdL-41-ogu" secondAttribute="leading" id="IDX-8S-6st"/>
+                                                    <constraint firstItem="LJk-JI-TQ8" firstAttribute="top" secondItem="xZs-a2-tBO" secondAttribute="bottom" constant="8" id="Lgx-yf-y7q"/>
+                                                    <constraint firstItem="udg-YZ-z2K" firstAttribute="top" secondItem="LJk-JI-TQ8" secondAttribute="bottom" constant="8" id="QbP-cB-UX8"/>
+                                                    <constraint firstItem="udg-YZ-z2K" firstAttribute="leading" secondItem="LJk-JI-TQ8" secondAttribute="leading" id="bHW-7w-iKR"/>
+                                                    <constraint firstItem="sdL-41-ogu" firstAttribute="top" secondItem="LjA-Kf-R0d" secondAttribute="top" id="wYU-ve-V7C"/>
+                                                </constraints>
+                                            </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZxS-QF-hp3">
                                                 <rect key="frame" x="0.0" y="419" width="35" height="35"/>
                                                 <color key="backgroundColor" red="0.61960784310000006" green="0.61960784310000006" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -275,8 +195,11 @@
                                             </button>
                                         </subviews>
                                         <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="LjA-Kf-R0d" secondAttribute="bottom" constant="40" id="4qu-Vo-HGE"/>
+                                            <constraint firstItem="LjA-Kf-R0d" firstAttribute="top" secondItem="0eE-qQ-MhU" secondAttribute="top" id="FkT-tY-jga"/>
                                             <constraint firstAttribute="bottom" secondItem="ZxS-QF-hp3" secondAttribute="bottom" id="Ni5-of-XS4"/>
                                             <constraint firstItem="ZxS-QF-hp3" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="Qq1-fY-h44"/>
+                                            <constraint firstItem="LjA-Kf-R0d" firstAttribute="leading" secondItem="0eE-qQ-MhU" secondAttribute="leading" id="Zvl-cl-e9I"/>
                                             <constraint firstAttribute="trailing" secondItem="ZxS-QF-hp3" secondAttribute="trailing" id="kpi-aH-Ye7"/>
                                         </constraints>
                                     </view>
@@ -433,25 +356,85 @@
                     </view>
                     <connections>
                         <outlet property="ShowView" destination="XZr-ef-acy" id="PGs-Yg-ygm"/>
+                        <outlet property="audioSwitchView" destination="xZs-a2-tBO" id="QdQ-Oe-XkY"/>
                         <outlet property="conbtn" destination="0ju-l5-i4K" id="sOx-Vr-USM"/>
                         <outlet property="dataCollectionView" destination="2IG-uS-S58" id="2m4-jr-ckk"/>
-                        <outlet property="deleteAudioBtn" destination="ca7-uq-mtx" id="Wbi-Lb-D2Z"/>
-                        <outlet property="deleteLocationBtn" destination="qOX-bn-cIw" id="57T-5U-vkk"/>
-                        <outlet property="deleteURLBtn" destination="Ms3-KW-6Nf" id="ADM-tX-7d5"/>
+                        <outlet property="locationSwitchView" destination="LJk-JI-TQ8" id="Eve-rf-JFw"/>
                         <outlet property="navBarHeight" destination="Lul-ei-u88" id="Fek-T3-lvI"/>
                         <outlet property="navBarView" destination="MdE-zC-psy" id="lMi-sg-ipd"/>
                         <outlet property="nextBtn" destination="P0t-Nw-p6L" id="2r5-CB-1CF"/>
-                        <outlet property="presentLocationEditButton" destination="lGf-eR-yh3" id="ut4-R1-lfd"/>
-                        <outlet property="presentPhotoEditButton" destination="cFg-3t-EGg" id="7qh-DD-Gbr"/>
-                        <outlet property="presentUrlEditButton" destination="Es8-07-pkr" id="L8c-xg-Sbw"/>
-                        <outlet property="recordPausePlayBtn" destination="GUg-Ut-m3O" id="gOg-UJ-O0a"/>
+                        <outlet property="presentPhotoEditButton" destination="sdL-41-ogu" id="tU5-mf-nIV"/>
                         <outlet property="refreshBtn" destination="1LT-Mw-zy7" id="r7h-lH-1gG"/>
                         <outlet property="settingBtn" destination="prA-cI-afY" id="a2f-Qk-IkY"/>
+                        <outlet property="urlSwitchView" destination="udg-YZ-z2K" id="jsq-zF-dz4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GOA-Qa-mZN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="82.400000000000006" y="1040.3298350824589"/>
+        </scene>
+        <!--Location Map View Controller-->
+        <scene sceneID="8Kb-bx-rvQ">
+            <objects>
+                <viewController storyboardIdentifier="LocationVC" id="zrl-rj-YrH" customClass="LocationMapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="UyF-Ey-0CR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e04-Ej-ER1">
+                                <rect key="frame" x="0.0" y="342" width="375" height="325"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nay-BW-UXg">
+                                        <rect key="frame" x="16" y="271" width="343" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.61960784313725492" green="0.61960784313725492" blue="0.61960784313725492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="加入地點">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="dismissAndAdd:" destination="zrl-rj-YrH" eventType="touchUpInside" id="t70-zH-TPx"/>
+                                        </connections>
+                                    </button>
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" pitchEnabled="NO" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0A2-La-gFy">
+                                        <rect key="frame" x="16" y="61" width="343" height="202"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="delegate" destination="zrl-rj-YrH" id="jhC-9R-pf0"/>
+                                        </connections>
+                                    </mapView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="325" id="aB8-Yg-jtB"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="e04-Ej-ER1" firstAttribute="leading" secondItem="076-OX-O66" secondAttribute="leading" id="HEX-la-vyV"/>
+                            <constraint firstItem="e04-Ej-ER1" firstAttribute="trailing" secondItem="076-OX-O66" secondAttribute="trailing" id="Szc-pO-HXw"/>
+                            <constraint firstItem="e04-Ej-ER1" firstAttribute="bottom" secondItem="076-OX-O66" secondAttribute="bottom" id="pML-ds-AW1"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="076-OX-O66"/>
+                    </view>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="bottomConstraint" destination="pML-ds-AW1" id="6aW-WQ-CVY"/>
+                        <outlet property="map" destination="0A2-La-gFy" id="ngr-bu-xiL"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xnj-Tw-KwK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="80.799999999999997" y="1699.7001499250375"/>
         </scene>
     </scenes>
     <resources>
@@ -462,11 +445,7 @@
         <image name="ic200_aviary_white" width="144" height="144"/>
         <image name="ic200_cooperation_dark" width="144" height="144"/>
         <image name="ic200_delete_white" width="144" height="144"/>
-        <image name="ic200_location_white" width="144" height="144"/>
-        <image name="ic200_micro_white" width="144" height="144"/>
         <image name="ic200_refresh_dark" width="144" height="144"/>
         <image name="ic200_setting_dark" width="144" height="144"/>
-        <image name="ic200_share_white" width="144" height="144"/>
-        <image name="icon_delete_pink_120x120" width="120" height="120"/>
     </resources>
 </document>
