@@ -958,6 +958,11 @@ shouldChangeTextInRange:(NSRange)range
         //[wTools showAlertTile:NSLocalizedString(@"PicText-tipAccessPrivacy", @"") Message:@"" ButtonTitle:nil];
         [self showNoAccessAlertAndCancel: @"audio"];
         audioGranted = NO;
+    } else if (authStatus == AVAuthorizationStatusNotDetermined) {
+        __block typeof(self) wself = self;
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeAudio completionHandler:^(BOOL granted) {
+            wself->audioGranted = granted;
+        }];
     } else {
         audioGranted = YES;
     }
@@ -1524,11 +1529,15 @@ shouldChangeTextInRange:(NSRange)range
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle: titleStr message: msgStr preferredStyle: UIAlertControllerStyleAlert];
     
-    [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
         
     }]];
     
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+
+    }];
+    [alert addAction:cancel];
     [self presentViewController: alert animated: YES completion: nil];
 }
 
@@ -1538,6 +1547,19 @@ shouldChangeTextInRange:(NSRange)range
     
     if (authStatus == AVAuthorizationStatusDenied || authStatus == AVAuthorizationStatusRestricted) {
         [self showNoAccessAlertAndCancel: @"camera"];
+    } else if (authStatus == AVAuthorizationStatusNotDetermined) {
+        __block typeof(self) wself = self;
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            if (!granted) {
+                [wself showNoAccessAlertAndCancel: @"camera"];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself proceedToVideoCamera];
+                });
+            }
+        }];
+    } else {
+        [self proceedToVideoCamera];
     }
 }
 
@@ -2080,7 +2102,8 @@ shouldChangeTextInRange:(NSRange)range
     videoMode = @"RecordVideo";
     [alertView close];
     [self checkCamera];
-    
+}
+- (void)proceedToVideoCamera {
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         UIImagePickerController *videoPicker = [[UIImagePickerController alloc] init];
         videoPicker.sourceType = UIImagePickerControllerSourceTypeCamera;
