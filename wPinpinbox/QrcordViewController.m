@@ -66,7 +66,8 @@
     NSLog(@"QrcordViewController viewWillAppear");    
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
-    [self startReading];
+    //[self startReading];
+    [self checkCamera];
     [_bbitemStart setTitle:@"開始" forState:UIControlStateNormal];
     
     for (UIView *view in self.tabBarController.view.subviews) {
@@ -122,7 +123,50 @@
         }
     }    
 }
-
+- (void)checkCamera {
+    
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    
+    if (authStatus == AVAuthorizationStatusDenied ||
+        authStatus == AVAuthorizationStatusRestricted){ //||
+        [self showNoAccessAlertAndCancel];
+    } else if (authStatus == AVAuthorizationStatusNotDetermined ) {
+        __block typeof(self) wself = self;
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (granted) {
+                    [wself startReading];
+                } else {
+                    [wself showNoAccessAlertAndCancel];
+                }
+            });
+        }];
+    } else {
+        [self startReading];
+    }
+}
+- (void)showNoAccessAlertAndCancel {
+    
+    NSString *titleStr = @"沒有相機存取權";
+    NSString *msgStr = @"請打開相機權限設定";
+    
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle: titleStr message: msgStr preferredStyle: UIAlertControllerStyleAlert];
+    
+    [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
+        
+    }]];
+    __block typeof(self) wself = self;
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wself back:nil];
+        });
+        
+    }];
+    [alert addAction:cancel];
+    [self presentViewController: alert animated: YES completion: nil];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

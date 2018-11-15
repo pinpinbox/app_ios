@@ -36,7 +36,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0.19</string>
+	<string>1.0.5</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -74,7 +74,7 @@
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>您的藍芽裝置將作為作品內容用途</string>
 	<key>NSCameraUsageDescription</key>
-	<string>您的相機將作為作品內容用途</string>
+	<string>您的相機將作為作品內容用途或是用以掃描QR Code取得相關內容</string>
 	<key>NSContactsUsageDescription</key>
 	<string>您的通訊錄將作為推薦職人用途</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
