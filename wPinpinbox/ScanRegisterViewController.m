@@ -317,6 +317,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     
                     businessUserId = strArray[1];
                     [self Facebookbtn: nil];
+                    [self stopReading];
                 } else {
                     [self performSelectorOnMainThread: @selector(showError:)
                                            withObject: @"本次掃描無效"
