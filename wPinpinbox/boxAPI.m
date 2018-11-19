@@ -1320,6 +1320,77 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnstr;
 }
 
+//更新相片SETTINGS -> settings key : @"settings[description]", @"settings[hyperlink]", @"settings[location]"
++ (void) updatephotoofdiy:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id photo_id:(NSString *)photo_id  key:(NSString *)key settingStr:(NSString *)settingStr completed:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+    
+    NSDictionary *p = @{@"id": uid, @"token":token, @"album_id":album_id,@"photo_id":photo_id};
+    NSMutableDictionary *param =[NSMutableDictionary dictionaryWithDictionary: p];
+    NSString *ss = [self signGenerator2:p];
+    [param setObject:ss forKey:@"sign"];
+    
+    [param setObject:settingStr forKey:[NSString stringWithFormat:@"settings[%@]",key]];
+    
+    
+    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/updatephotoofdiy",@"/1.2"]];
+    
+    // create request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval: [kTimeOut floatValue]];
+    [request setHTTPMethod:@"POST"];
+    
+    NSString *BoundaryConstant =@"----------V2ymHFg03ehbqgZCaKO6jy";
+    
+    // set Content-Type in HTTP header
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    // post body
+    NSMutableData *body = [NSMutableData data];
+    for (NSString *p in param) {
+        NSLog(@"param: %@", p);
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", @"----------V2ymHFg03ehbqgZCaKO6jy"] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", p] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", [param objectForKey:p]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    
+    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [request setHTTPBody:body];
+
+    NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[body length]];
+    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+
+    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
+
+    [request setURL:requestURL];
+    
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSString *str = nil;
+        if (data) {
+            str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
+            NSError *er = nil;
+            NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &er];
+            completionBlock(dic, er);
+            NSLog(@"str: %@", dic);
+        
+        } else {
+            NSLog(@"error :%@", error);
+            if (error.code == -1001) {
+                str = timeOutErrorCode;
+            }
+            completionBlock(nil, error);
+        }
+        
+    }];
+    [task resume];
+}
+
 //更新相片
 + (NSString *)updatephotoofdiy:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id photo_id:(NSString *)photo_id image:(UIImage *)image setting:(NSString *)setting {
     NSLog(@"");

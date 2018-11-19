@@ -372,6 +372,7 @@
 		CB8FB77E21991CB700D3C23C /* PDFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8FB77D21991CB700D3C23C /* PDFUploader.m */; };
 		CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
+		CBD977EF21A2574600F04205 /* URLAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD977EE21A2574600F04205 /* URLAddViewController.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
@@ -997,6 +998,8 @@
 		CB8FB77F2199223600D3C23C /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
 		CBCE8572219C074600ED185D /* LocationMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationMapViewController.h; sourceTree = "<group>"; };
 		CBCE8573219C074600ED185D /* LocationMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationMapViewController.m; sourceTree = "<group>"; };
+		CBD977ED21A2574600F04205 /* URLAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLAddViewController.h; sourceTree = "<group>"; };
+		CBD977EE21A2574600F04205 /* URLAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = URLAddViewController.m; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -1831,6 +1834,8 @@
 				54DC76241FB40D81005F3252 /* Collection Related */,
 				CBCE8572219C074600ED185D /* LocationMapViewController.h */,
 				CBCE8573219C074600ED185D /* LocationMapViewController.m */,
+				CBD977ED21A2574600F04205 /* URLAddViewController.h */,
+				CBD977EE21A2574600F04205 /* URLAddViewController.m */,
 			);
 			name = "CenterButton Related";
 			sourceTree = "<group>";
@@ -2781,9 +2786,8 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = APD4588SHJ;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -2946,15 +2950,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-wPinpinbox-checkManifestLockResult.txt",
 			);
@@ -2981,17 +2981,15 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3137,6 +3135,7 @@
 				5427BBD31F4FE237000B438D /* UIColor+HexString.m in Sources */,
 				543043D320B2A5F600018AF4 /* BannerCollectionViewCell.m in Sources */,
 				63B340E81EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m in Sources */,
+				CBD977EF21A2574600F04205 /* URLAddViewController.m in Sources */,
 				92C4D50C1B74578000504B57 /* SignViewController_1.m in Sources */,
 				54885DBA20DB413E00644A82 /* AlbumSponsorListViewController.m in Sources */,
 				54FA3EF3202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.m in Sources */,
@@ -3385,8 +3384,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3429,8 +3428,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

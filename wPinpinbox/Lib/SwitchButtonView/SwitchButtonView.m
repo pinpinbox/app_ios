@@ -29,13 +29,13 @@
         self.switchBtn = [UIButton buttonWithType:UIButtonTypeCustom];//[[UIButton alloc] initWithFrame:
         self.switchBtn.frame = CGRectMake(0,0, s.width*0.8, s.width*0.8);
         self.main = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.main setBackgroundColor:[UIColor grayColor]];
+        //[self.main setBackgroundColor:[UIColor grayColor]];
         [self addSubview:self.switchBtn];
         [self addSubview:self.main];
         
         self.main.frame = CGRectMake(0, 0, s.width, s.width);
         self.main.layer.cornerRadius = s.width/2;
-        self.main.clipsToBounds = YES;
+        //self.main.clipsToBounds = YES;
         
         if (!switchImageName ) {
             switchImageName = @"icon_delete_pink_120x120";
@@ -75,13 +75,13 @@
         self.main = [UIButton buttonWithType:UIButtonTypeCustom];
     else
         _main = main;
-    [self.main setBackgroundColor:[UIColor grayColor]];
+    //[self.main setBackgroundColor:[UIColor grayColor]];
     [self addSubview:self.switchBtn];
     [self addSubview:self.main];
     
     self.main.frame = CGRectMake(0, 0, s.width, s.width);
     self.main.layer.cornerRadius = s.width/2;
-    self.main.clipsToBounds = YES;
+    //self.main.clipsToBounds = YES;
     
     self.switchBtn.center = self.main.center;
     self.switchBtn.hidden = YES;
@@ -93,9 +93,13 @@
     CGPoint p = self.frame.origin;
     CGFloat w = self.frame.size.width;
     if (hidden) {
+        self.frame = CGRectMake(p.x, p.y, w, w);
+        CGSize s = self.frame.size;
+        self.connectorLayer.frame = CGRectMake(s.width*0.25, s.width*0.5, s.width*0.5, 0);
+        self.switchBtn.center = self.main.center;
+        //self.heightConstraint.constant = 0;
         self.frame = CGRectMake(p.x, p.y, w, 0);
         [self updateConstraints];
-        self.heightConstraint.constant = 0;
         [self layoutIfNeeded];
     } else {
         self.frame = CGRectMake(p.x, p.y, w, w);
@@ -115,7 +119,7 @@
     CGSize s = self.frame.size;
     self.main.frame = CGRectMake(0, 0, s.width, s.width);
     self.main.layer.cornerRadius = s.width/2;
-    self.main.clipsToBounds = YES;
+    //self.main.clipsToBounds = YES;
     
     [self.main addTarget:target action:mainSelector forControlEvents:UIControlEventTouchUpInside];
     [self.switchBtn addTarget:target action:switchSelector forControlEvents:UIControlEventTouchUpInside];
@@ -139,27 +143,26 @@
     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1 initialSpringVelocity:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         self.frame = CGRectMake(p.x, p.y,w, w*2+4);
         
-        [self updateConstraints];
+        //[self updateConstraints];
         self.switchBtn.frame = CGRectMake(0, (w*2+4)-w, w, w);
         self.switchBtn.layer.cornerRadius = w*0.4;
         
         CGSize s = self.frame.size;
         //if (self.switchBtn && !self.switchBtn.hidden) {
         self.connectorLayer.frame = CGRectMake(s.width*0.25, s.width*0.5, s.width*0.5, self.switchBtn.center.y - s.width*0.5);
-        //} else {
-            
-        //}
-        
-    } completion:^(BOOL finished) {
         for (NSLayoutConstraint *c in  self.constraints ) {
-            NSLog(@"NSLayoutConstraint %@",c);
+            //NSLog(@"NSLayoutConstraint %@",c);
             if (c.firstAttribute == NSLayoutAttributeHeight) {
                 c.constant = w*2+4;
+                [self updateConstraints];
                 break;
             }
             
         }
         [self layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        
         if (self.switchDelegate)
             [self.switchDelegate didFinishedSwitchAnimation];
     }];
@@ -175,17 +178,19 @@
         self.connectorLayer.frame = CGRectMake(s.width*0.25, s.width*0.5, s.width*0.5, 0);
         self.switchBtn.center = self.main.center;
         
-    } completion:^(BOOL finished) {
-        self.switchBtn.hidden = YES;
         for (NSLayoutConstraint *c in  self.constraints ) {
             NSLog(@"NSLayoutConstraint %@",c);
             if (c.firstAttribute == NSLayoutAttributeHeight) {
                 c.constant = w;
+                [self updateConstraints];
                 break;
             }
             
         }
         [self layoutIfNeeded];
+        
+    } completion:^(BOOL finished) {
+        self.switchBtn.hidden = YES;
         if (self.switchDelegate)
             [self.switchDelegate didFinishedSwitchAnimation];
     }];

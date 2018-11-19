@@ -225,6 +225,10 @@ static NSString *version = @"";
 +(NSString *)deletephotoofdiy:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id photo_id:(NSString *)photo_id;
 //更新diy相本
 +(NSString *)updatealbumofdiy:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id;
+
+//更新相片SETTINGS  -> settings key : @"settings[description]", @"settings[hyperlink]", @"settings[location]"
++ (void) updatephotoofdiy:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id photo_id:(NSString *)photo_id  key:(NSString *)key settingStr:(NSString *)settingStr completed:(void(^)(NSDictionary *result, NSError *error))completionBlock;
+
 //更新相片
 +(NSString *)updatephotoofdiy:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id photo_id:(NSString *)photo_id image:(UIImage *)image setting:(NSString *)setting;
 //取得相本資訊表單資料

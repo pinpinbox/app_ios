@@ -20,4 +20,6 @@ target 'wPinpinbox' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'GoogleAnalytics'
+
+  pod 'GoogleMaps'
 end

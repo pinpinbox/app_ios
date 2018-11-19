@@ -19,6 +19,11 @@ PODS:
     - Flurry-iOS-SDK/FlurrySDK
   - Flurry-iOS-SDK/FlurrySDK (9.2.3)
   - GoogleAnalytics (3.17.0)
+  - GoogleMaps (2.7.0):
+    - GoogleMaps/Maps (= 2.7.0)
+  - GoogleMaps/Base (2.7.0)
+  - GoogleMaps/Maps (2.7.0):
+    - GoogleMaps/Base
   - RMPZoomTransitionAnimator (1.0.3)
   - SDWebImage (4.4.2):
     - SDWebImage/Core (= 4.4.2)
@@ -36,6 +41,7 @@ DEPENDENCIES:
   - Flurry-iOS-SDK/FlurryAds
   - Flurry-iOS-SDK/FlurrySDK
   - GoogleAnalytics
+  - GoogleMaps
   - RMPZoomTransitionAnimator
   - SDWebImage (~> 4.0)
   - SSFadingScrollView (~> 1.1)
@@ -52,6 +58,7 @@ SPEC REPOS:
     - FLAnimatedImage
     - Flurry-iOS-SDK
     - GoogleAnalytics
+    - GoogleMaps
     - RMPZoomTransitionAnimator
     - SDWebImage
     - SSFadingScrollView
@@ -67,11 +74,12 @@ SPEC CHECKSUMS:
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flurry-iOS-SDK: 2ea1973a6c9c6b3675765d73ea290b281f8cb084
   GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
+  GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848
   RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
   SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
   SSFadingScrollView: ac908f565594b1faa748d2d55973f2dde919f754
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: be5515577b09d1930db1a7f80f9f0ef56c96d922
+PODFILE CHECKSUM: 8873388c761383b90963521b70dbedbb84e6a04b
 
 COCOAPODS: 1.5.3
