@@ -739,7 +739,8 @@ sourceController:(UIViewController *)source
     NSLog(@"checkAd");
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+//        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -755,7 +756,8 @@ sourceController:(UIViewController *)source
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: wself.view animated: YES];
+//                [MBProgressHUD hideHUDForView: wself.view animated: YES];
+                [wTools HideMBProgressHUD];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1346,7 +1348,8 @@ sourceController:(UIViewController *)source
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+//        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1361,7 +1364,8 @@ sourceController:(UIViewController *)source
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+//                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [wTools HideMBProgressHUD];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

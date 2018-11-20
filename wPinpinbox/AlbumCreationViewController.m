@@ -437,16 +437,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"ImageDataArr.count: %ld", ImageDataArr.count);
     NSLog(@"previewPageNum: %ld", previewPageNum);
     
-    BOOL previewPageSelected;
-    BOOL allPageSelected;
+    BOOL previewPageSelected = NO;
+    BOOL allPageSelected = NO;
     
-    if (ImageDataArr.count == previewPageNum) {
+    if (self.isNew || previewPageNum == 0) {
         previewPageSelected = NO;
         allPageSelected = YES;
     } else {
-        previewPageSelected = YES;
-        allPageSelected = NO;
+        if (previewPageNum == ImageDataArr.count) {
+            previewPageSelected = NO;
+            allPageSelected = YES;
+        } else {
+            previewPageSelected = YES;
+            allPageSelected = NO;
+        }
     }
+    NSLog(@"previewPageSelected: %d", previewPageSelected);
+    NSLog(@"allPageSelected: %d", allPageSelected);
+    
     [self.customSettingActionSheet addSelectItemForPreviewPage: previewPageSelected hasTextView: YES firstLabelText: @"開放前" secondLabelText: @"頁" previewPageNum: previewPageNum tagInt: 998 identifierStr: @"setupPages"];
     [self.customSettingActionSheet addSelectItemForPreviewPage: allPageSelected hasTextView: NO firstLabelText: @"全部" secondLabelText: @"" previewPageNum: 0 tagInt: 997 identifierStr: @"setupAllPages"];
     [self.customSettingActionSheet addSafeArea];
@@ -3629,8 +3637,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - Reorder Function
-- (void)showReorderVC
-{
+- (void)showReorderVC {
     NSLog(@"showReorderVC");
     
     reorderVC = [[UIStoryboard storyboardWithName: @"ReorderVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ReorderViewController"];
@@ -3642,10 +3649,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - PreviewPage Setup Function
-- (void)showPreviewPageSetupVC
-{
+- (void)showPreviewPageSetupVC {
     NSLog(@"showPreviewPageSetupVC");
-    
     previewPageVC = [[UIStoryboard storyboardWithName: @"PreviewPageSetupVC" bundle: nil] instantiateViewControllerWithIdentifier: @"PreviewPageSetupViewController"];
     previewPageVC.imageArray = ImageDataArr;
     previewPageVC.albumId = self.albumid;
@@ -3659,14 +3664,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - ReorderViewControllerDelegate Method
-- (void)reorderViewControllerDisappear:(ReorderViewController *)controller imageArray:(NSMutableArray *)ImageArray
-{
+- (void)reorderViewControllerDisappear:(ReorderViewController *)controller imageArray:(NSMutableArray *)ImageArray {
     ImageDataArr = ImageArray;
     //[self.dimVC.view removeFromSuperview];
 }
 
-- (void)reorderViewControllerDisappearAfterCalling:(ReorderViewController *)controller
-{
+- (void)reorderViewControllerDisappearAfterCalling:(ReorderViewController *)controller {
     NSLog(@"reorderViewControllerDisappear");
     
     //NSLog(@"ImageArray: %@", ImageArray);
@@ -3684,8 +3687,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - PreviewPageSetupViewControllerDelegate Method
-- (void)previewPageSetupViewControllerDisappear:(PreviewPageSetupViewController *)controller
-{
+- (void)previewPageSetupViewControllerDisappear:(PreviewPageSetupViewController *)controller {
     //[self.dimVC.view removeFromSuperview];
 }
 

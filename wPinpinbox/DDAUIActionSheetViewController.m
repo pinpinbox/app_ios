@@ -10,6 +10,7 @@
 #import "MyLayout.h"
 #import "UIColor+Extensions.h"
 #import "GlobalVars.h"
+#import "wTools.h"
 //#import "LabelAttributeStyle.h"
 
 @interface DDAUIActionSheetViewController () <UITextViewDelegate> {
@@ -84,10 +85,31 @@
     kbHeight = kbSize.height;
     NSLog(@"kbSize.height: %f", kbSize.height);
     
-    CGRect frame = self.actionSheetView.frame;
-    frame.origin.y -= kbHeight;
-    self.actionSheetView.frame = frame;
-    self.actionSheetView.myBottomMargin = kbHeight;
+    if (@available(iOS 11.0, *)) {
+        CGFloat bt = self.view.safeAreaInsets.bottom;
+        NSLog(@"bt: %f", bt);
+        
+        if (bt > 0) {
+            NSLog(@"For Full Screen");
+            CGRect frame = self.actionSheetView.frame;
+            frame.origin.y -= kbHeight;
+            self.actionSheetView.frame = frame;
+            self.actionSheetView.myBottomMargin = kbHeight;
+        } else {
+            NSLog(@"For Non Full Screen");
+            CGRect frame = self.actionSheetView.frame;
+            frame.origin.y -= 100;
+            self.actionSheetView.frame = frame;
+            self.actionSheetView.myBottomMargin = 100;
+        }
+    } else {
+        NSLog(@"For iOS Version earlier than 11.0");
+        NSLog(@"For Non Full Screen");
+        CGRect frame = self.actionSheetView.frame;
+        frame.origin.y -= 100;
+        self.actionSheetView.frame = frame;
+        self.actionSheetView.myBottomMargin = 100;
+    }
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
@@ -95,7 +117,7 @@
     kbShowsUp = NO;
     
     CGRect frame = self.actionSheetView.frame;
-    frame.origin.y += kbHeight;
+    frame.origin.y = self.view.bounds.size.height - self.actionSheetView.frame.size.height;
     self.actionSheetView.frame = frame;
     self.actionSheetView.myBottomMargin = 0;
 }
@@ -170,8 +192,6 @@
                              tagInt:(NSInteger)tagInt
                       identifierStr:(NSString *)identifierStr {
     NSLog(@"addSelectItemForPreviewPage");
-    previewPageStr = [NSString stringWithFormat: @"%ld", previewPageNum];
-    
     MyLinearLayout *horzLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Horz];
     horzLayout.myLeftMargin = horzLayout.myRightMargin = 0;
     horzLayout.myTopMargin = horzLayout.myBottomMargin = 0;
@@ -227,7 +247,7 @@
         inputTextView.accessibilityIdentifier = @"inputTextView";
         inputTextView.delegate = self;
         inputTextView.myCenterYOffset = 0;
-        inputTextView.mySize = CGSizeMake(70.0, 33.0);
+        inputTextView.mySize = CGSizeMake(56.0, 33.0);
         inputTextView.inputAccessoryView = toolBarForDoneBtn;
         inputTextView.keyboardType = UIKeyboardTypeNumberPad;
         
@@ -242,6 +262,7 @@
         inputTextView.textContainerInset = UIEdgeInsetsMake(4, 4, 4, 4);
         inputTextView.font = [UIFont systemFontOfSize: 18];
         inputTextView.text = [NSString stringWithFormat: @"%ld", previewPageNum];
+//        inputTextView.text = @"";
         [horzLayout addSubview: inputTextView];
     }
     if (![secondLabelText isEqualToString: @""]) {
@@ -262,6 +283,7 @@
     }
     if ([identifierStr isEqualToString: @"setupPages"]) {
         setupPagesViewSelected = gridViewSelected;
+        previewPageStr = [NSString stringWithFormat: @"%ld", previewPageNum];
     }
     if ([identifierStr isEqualToString: @"setupAllPages"]) {
         setupAllPagesViewSelected = gridViewSelected;
@@ -311,7 +333,6 @@
             } else {
                 label.myLeftMargin = 8;
             }
-            
             label.text = title;
             //[LabelAttributeStyle changeGapString: label content: title];
             label.textColor = [UIColor firstGrey];
@@ -595,9 +616,6 @@
     NSLog(@"After setting self.view.frame");
     NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
     
-    NSLog(@"Before setting bounds");
-    NSLog(@"self.actionSheetView: %@", self.actionSheetView);
-    
     //[self.actionSheetView setBounds: CGRectMake(0, [[UIScreen mainScreen] bounds].origin.y, [[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)];
     
     NSLog(@"");
@@ -606,8 +624,7 @@
     
     // Set initial location at bottom of view
     CGRect frame = self.actionSheetView.frame;
-//    frame.origin = CGPointMake(0.0, self.view.bounds.size.height - self.actionSheetView.frame.size.height);
-    frame.origin = CGPointMake(0.0, 300);
+    frame.origin = CGPointMake(0.0, self.view.bounds.size.height - self.actionSheetView.frame.size.height);
     self.actionSheetView.frame = frame;
     
     self.actionSheetView.myLeftMargin = self.actionSheetView.myRightMargin = 0;
@@ -668,13 +685,15 @@
 - (void)slideOut {
     NSLog(@"");
     NSLog(@"slideOut");
-    if (kbShowsUp) {
-        // Reset CustomActionSheet Origin
-        CGRect frame = self.actionSheetView.frame;
-        frame.origin.y += kbHeight;
-        self.actionSheetView.frame = frame;
-        self.actionSheetView.myBottomMargin = 0;
-    }
+    NSLog(@"kbShowsUp: %d", kbShowsUp);
+    
+//    if (kbShowsUp) {
+//        // Reset CustomActionSheet Origin
+//        CGRect frame = self.actionSheetView.frame;
+//        frame.origin.y = self.view.bounds.size.height - self.actionSheetView.frame.size.height;
+//        self.actionSheetView.frame = frame;
+//        self.actionSheetView.myBottomMargin = 0;
+//    }
     [self removeKeyboardNotification];
     
     [UIView beginAnimations: @"removeFromSuperviewWithAnimation" context: nil];
@@ -691,7 +710,8 @@
     CGRect frame = self.actionSheetView.frame;
     frame.origin = CGPointMake(0.0, self.view.bounds.size.height);
     self.actionSheetView.frame = frame;
-
+    self.actionSheetView.myBottomMargin = 0;
+    
     NSLog(@"");
     NSLog(@"After setting bounds");
     NSLog(@"self.actionSheetView: %@", self.actionSheetView);
@@ -806,6 +826,19 @@
         } else if ([identifierStr isEqualToString: @"setupAllPages"]) {
             touch.view.backgroundColor = [UIColor clearColor];
             [self changePreviewPageSetupViews: touch.view];
+            return;
+        } else if ([identifierStr isEqualToString: @"gridView"]) {
+            NSLog(@"touch.view.superview: %@", touch.view.superview);
+            NSLog(@"touch.view.superview.accessibilityIdentifier: %@", touch.view.superview.accessibilityIdentifier);
+            NSString *identifierStr1 = touch.view.superview.accessibilityIdentifier;
+            if ([identifierStr1 isEqualToString: @"setupPages"]) {
+                touch.view.backgroundColor = [UIColor clearColor];
+                [self changePreviewPageSetupViews: touch.view.superview];
+                return;
+            } else if ([identifierStr1 isEqualToString: @"setupAllPages"]) {
+                [self changePreviewPageSetupViews: touch.view.superview];
+                return;
+            }
             return;
         }
     }
@@ -973,6 +1006,9 @@
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
     NSLog(@"textViewDidBeginEditing");
+    if ([textView.accessibilityIdentifier isEqualToString: @"inputTextView"]) {
+        textView.text = previewPageStr;
+    }
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
@@ -989,10 +1025,20 @@
 - (BOOL)textView:(UITextView *)textView
 shouldChangeTextInRange:(NSRange)range
  replacementText:(NSString *)text {
-    if ([text isEqualToString: @"\n"]) {
+    NSLog(@"shouldChangeTextInRange");
+    NSLog(@"DDAUIActionSheetViewController");
+    NSLog(@"textView.text.length: %lu", (unsigned long)textView.text.length);
+    NSLog(@"range.length: %lu", range.length);
+    NSLog(@"text.length: %lu", text.length);
+    if ((textView.text.length + (text.length - range.length)) > 3) {
         return NO;
     }
     return YES;
+//    if ([text isEqualToString: @"\n"]) {
+//        return NO;
+//    }
+    
+//    return YES;
 }
 
 /*
