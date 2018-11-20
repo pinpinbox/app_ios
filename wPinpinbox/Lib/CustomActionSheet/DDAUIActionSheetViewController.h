@@ -40,6 +40,7 @@ typedef void(^viewTouch)(NSInteger tagId, BOOL isTouchDown, NSString *identifier
                      firstLabelText:(NSString *)firstLabelText
                     secondLabelText:(NSString *)secondLabelText
                      previewPageNum:(NSInteger)previewPageNum
+                         allPageNum:(NSInteger)allPageNum
                              tagInt:(NSInteger)tagInt
                       identifierStr:(NSString *)identifierStr;
 

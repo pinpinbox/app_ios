@@ -20,12 +20,14 @@
     BOOL kbShowsUp;
     NSInteger kbHeight;
     NSString *previewPageStr;
+//    NSInteger allPageNum;
 }
 @property (weak, nonatomic) IBOutlet UIView *blackView;
 //@property (nonatomic) UIVisualEffectView *effectView;
 @property (weak, nonatomic) IBOutlet UIView *actionSheetView;
 @property (weak, nonatomic) IBOutlet UILabel *topicLabel;
 @property (weak, nonatomic) IBOutlet MyLinearLayout *contentLayout;
+@property (nonatomic) NSInteger allPageNum;
 
 @end
 
@@ -189,6 +191,7 @@
                      firstLabelText:(NSString *)firstLabelText
                     secondLabelText:(NSString *)secondLabelText
                      previewPageNum:(NSInteger)previewPageNum
+                         allPageNum:(NSInteger)allPageNum
                              tagInt:(NSInteger)tagInt
                       identifierStr:(NSString *)identifierStr {
     NSLog(@"addSelectItemForPreviewPage");
@@ -281,12 +284,23 @@
         [secondLabel sizeToFit];
         [horzLayout addSubview: secondLabel];
     }
+    
+    self.allPageNum = allPageNum;
+    NSLog(@"self.allPageNum: %ld", (long)self.allPageNum);
+    
     if ([identifierStr isEqualToString: @"setupPages"]) {
         setupPagesViewSelected = gridViewSelected;
-        previewPageStr = [NSString stringWithFormat: @"%ld", previewPageNum];
+        if (setupPagesViewSelected) {
+            previewPageStr = [NSString stringWithFormat: @"%ld", previewPageNum];
+        }
     }
     if ([identifierStr isEqualToString: @"setupAllPages"]) {
         setupAllPagesViewSelected = gridViewSelected;
+        
+        if (setupAllPagesViewSelected) {
+            previewPageStr = [NSString stringWithFormat: @"%ld", self.allPageNum];
+            NSLog(@"previewPageStr: %@", previewPageStr);
+        }
     }
     [self.contentLayout addSubview: horzLayout];
 }
@@ -825,6 +839,9 @@
             return;
         } else if ([identifierStr isEqualToString: @"setupAllPages"]) {
             touch.view.backgroundColor = [UIColor clearColor];
+            NSLog(@"self.allPageNum: %ld", self.allPageNum);
+            previewPageStr = [NSString stringWithFormat: @"%ld", self.allPageNum];
+            NSLog(@"previewPageStr: %@", previewPageStr);
             [self changePreviewPageSetupViews: touch.view];
             return;
         } else if ([identifierStr isEqualToString: @"gridView"]) {
@@ -836,6 +853,9 @@
                 [self changePreviewPageSetupViews: touch.view.superview];
                 return;
             } else if ([identifierStr1 isEqualToString: @"setupAllPages"]) {
+                NSLog(@"self.allPageNum: %ld", self.allPageNum);
+                previewPageStr = [NSString stringWithFormat: @"%ld", self.allPageNum];
+                NSLog(@"previewPageStr: %@", previewPageStr);
                 [self changePreviewPageSetupViews: touch.view.superview];
                 return;
             }
