@@ -14,7 +14,7 @@
 #import "AsyncImageView.h"
 #import "CooperationViewController.h"
 
-#import "UIColor+Extensions.m"
+#import "UIColor+Extensions.h"
 #import "CustomIOSAlertView.h"
 #import "AlbumCreationViewController.h"
 
