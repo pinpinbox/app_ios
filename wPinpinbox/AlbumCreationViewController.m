@@ -145,6 +145,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     NSInteger viewHeightForPreview;
     NSInteger previewPageNum;
+    NSInteger previewPageStrToInt;
 }
 
 @property (strong, nonatomic) AVPlayer *avPlayer;
@@ -514,9 +515,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.customSettingActionSheet.customButtonBlockForPreview = ^(BOOL selected, NSString *previewPageStr) {
         NSLog(@"SaveBtn for PreviewPage is pressed");
         NSLog(@"previewPageStr: %@", previewPageStr);
+        
         __strong typeof(weakSelf) stSelf = weakSelf;
         
         if ([wTools objectExists: previewPageStr]) {
+            stSelf->previewPageStrToInt = [previewPageStr intValue];
+            
             if ([previewPageStr isEqualToString: @""]) {
                 [stSelf warnToastWithMessage: @"請輸入開放頁數"];
             } else {
@@ -737,6 +741,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error: nil];
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        stSelf->previewPageNum = previewPageStrToInt;
                         [stSelf remindToastWithMessage: @"修改完成"];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"失敗： %@", dic[@"message"]);
