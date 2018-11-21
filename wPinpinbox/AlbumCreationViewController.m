@@ -145,6 +145,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     NSInteger viewHeightForPreview;
     NSInteger previewPageNum;
+    NSInteger previewPageStrToInt;
 }
 
 @property (strong, nonatomic) AVPlayer *avPlayer;
@@ -454,9 +455,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     NSLog(@"previewPageSelected: %d", previewPageSelected);
     NSLog(@"allPageSelected: %d", allPageSelected);
+
+    [self.customSettingActionSheet addSelectItemForPreviewPage: previewPageSelected hasTextView: YES firstLabelText: @"開放前" secondLabelText: @"頁" previewPageNum: previewPageNum allPageNum: ImageDataArr.count tagInt: 998 identifierStr: @"setupPages"];
+    [self.customSettingActionSheet addSelectItemForPreviewPage: allPageSelected hasTextView: NO firstLabelText: @"全部" secondLabelText: @"" previewPageNum: 0 allPageNum: ImageDataArr.count tagInt: 997 identifierStr: @"setupAllPages"];
     
-    [self.customSettingActionSheet addSelectItemForPreviewPage: previewPageSelected hasTextView: YES firstLabelText: @"開放前" secondLabelText: @"頁" previewPageNum: previewPageNum tagInt: 998 identifierStr: @"setupPages"];
-    [self.customSettingActionSheet addSelectItemForPreviewPage: allPageSelected hasTextView: NO firstLabelText: @"全部" secondLabelText: @"" previewPageNum: 0 tagInt: 997 identifierStr: @"setupAllPages"];
+//    [self.customSettingActionSheet addSelectItemForPreviewPage: previewPageSelected hasTextView: YES firstLabelText: @"開放前" secondLabelText: @"頁" previewPageNum: previewPageNum tagInt: 998 identifierStr: @"setupPages"];
+//    [self.customSettingActionSheet addSelectItemForPreviewPage: allPageSelected hasTextView: NO firstLabelText: @"全部" secondLabelText: @"" previewPageNum: 0 tagInt: 997 identifierStr: @"setupAllPages"];
     [self.customSettingActionSheet addSafeArea];
     
 //    [self.customSettingActionSheet addSelectItem: @"" title: @"設定預覽頁" btnStr: @"保存" tagInt: 2 identifierStr: @"choosePreview"];
@@ -514,9 +518,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.customSettingActionSheet.customButtonBlockForPreview = ^(BOOL selected, NSString *previewPageStr) {
         NSLog(@"SaveBtn for PreviewPage is pressed");
         NSLog(@"previewPageStr: %@", previewPageStr);
+        
         __strong typeof(weakSelf) stSelf = weakSelf;
         
         if ([wTools objectExists: previewPageStr]) {
+            stSelf->previewPageStrToInt = [previewPageStr intValue];
+            
             if ([previewPageStr isEqualToString: @""]) {
                 [stSelf warnToastWithMessage: @"請輸入開放頁數"];
             } else {
@@ -737,6 +744,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error: nil];
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        stSelf->previewPageNum = stSelf->previewPageStrToInt;
                         [stSelf remindToastWithMessage: @"修改完成"];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"失敗： %@", dic[@"message"]);
