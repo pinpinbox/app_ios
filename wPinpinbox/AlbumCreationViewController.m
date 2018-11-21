@@ -4276,7 +4276,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     return contentView;
 }
 
->>>>>>> origin/TestAnthy
 #pragma mark - Custom AlertView For Text
 - (void)showTextEditing {
     NSLog(@"showTextEditing");
@@ -4804,7 +4803,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [self reload: nil];
 }
 
-<<<<<<< HEAD
+
 #if TARGET_OS_SIMULATOR
 #else
 #pragma mark - DSPhotoEditDelegate
@@ -4846,7 +4845,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 position: CSToastPositionBottom
                    style: style];
 }
-
+- (void)warnToastWithMessage:(NSString *)message {
+    [self showErrorToastWithMessage:message duration:2.0];
+}
 - (void)showErrorToastWithMessage:(NSString *)message duration:(CGFloat)duration {
 
     CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];

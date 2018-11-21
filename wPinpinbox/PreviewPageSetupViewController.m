@@ -98,13 +98,13 @@
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 break;
-            case 2436:
+            default://case 2436:
                 printf("iPhone X");
                 self.navBarHeight.constant = 80;
                 break;
-            default:
-                printf("unknown");
-                break;
+//            default:
+//                printf("unknown");
+//                break;
         }
     }
 }

@@ -1180,7 +1180,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidScroll");
     NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
-    
+    if (!collectionView || collectionView.visibleCells.count < 1) return;
     BannerCollectionViewCell *cell = collectionView.visibleCells[0];
     
     CGFloat yAxis = 0;
@@ -1203,14 +1203,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 printf("iPhone 6+/6S+/7+/8+");
                 yAxis = -48;
                 break;
-            case 2436:
+            default:
                 printf("iPhone X");
                 yAxis = -72;
                 break;
-            default:
-                printf("unknown");
-                yAxis = -48;
-                break;
+//            default:
+//                printf("unknown");
+//                yAxis = -48;
+//                break;
         }
     }
     

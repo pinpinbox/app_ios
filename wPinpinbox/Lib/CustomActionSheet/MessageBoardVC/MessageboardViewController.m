@@ -969,14 +969,14 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 printf("iPhone 6+/6S+/7+/8+");
                 topMargin = 20;
                 break;
-            case 2436:
+            default://case 2436:
                 printf("iPhone X");
                 topMargin = 44;
                 break;
-            default:
-                printf("unknown");
-                topMargin = 20;
-                break;
+//            default:
+//                printf("unknown");
+//                topMargin = 20;
+//                break;
         }
     }
     

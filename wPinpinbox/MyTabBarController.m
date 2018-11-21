@@ -190,14 +190,14 @@ const CGFloat kBarHeight = 56;
                 printf("iPhone 6+/6S+/7+/8+");
                 isiPhoneX = NO;
                 break;
-            case 2436:
+            default://case 2436:
                 printf("iPhone X");
                 isiPhoneX = YES;
                 break;
-            default:
-                printf("unknown");
-                isiPhoneX = NO;
-                break;
+//            default:
+//                printf("unknown");
+//                isiPhoneX = NO;
+//                break;
         }
     }
 }
