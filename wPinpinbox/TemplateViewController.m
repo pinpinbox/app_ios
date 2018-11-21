@@ -947,6 +947,7 @@
                 albumCreationVC.event_id = _event_id;
                 albumCreationVC.postMode = _postMode;
                 albumCreationVC.choice = @"Template";
+                albumCreationVC.isNew = NO;
                 
                 [appDelegate.myNav popToViewController: vc animated: YES];
                 return;

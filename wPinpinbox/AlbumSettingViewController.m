@@ -869,6 +869,7 @@
     
     self.nameBgView.layer.cornerRadius = kCornerRadius;
     self.nameBgView.backgroundColor = [UIColor thirdGrey];
+    self.nameBgView.padding = UIEdgeInsetsMake(4, 4, 4, 4);
     self.nameTextField.textColor = [UIColor firstGrey];
     
     if (![self.prefixText isEqual: [NSNull null]]) {
@@ -1429,6 +1430,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         acVC.shareCollection = self.shareCollection;
         acVC.postMode = NO;
         acVC.fromVC = self.fromVC;
+        acVC.isNew = NO;
         NSLog(@"self.fromVC: %@", self.fromVC);
         
         if ([self.templateId isEqualToString:@"0"]) {

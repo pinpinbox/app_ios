@@ -623,6 +623,7 @@
     acVC.shareCollection = shareCollection;
     acVC.postMode = NO;
     acVC.fromVC = @"AlbumCollectionVC";
+    acVC.isNew = NO;
     
     if ([templateId isEqualToString:@"0"]) {
         acVC.booktype = 0;

@@ -317,9 +317,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber: badgeCount];
     
     NSLog(@"APNSArray: %@", [defaults objectForKey: @"APNSArray"]);
-    
-    
-    
+            
     return YES;
 }
 

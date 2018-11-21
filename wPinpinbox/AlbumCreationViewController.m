@@ -144,6 +144,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     BOOL isViewDidLoad;
     
     NSInteger viewHeightForPreview;
+    NSInteger previewPageNum;
 }
 
 @property (strong, nonatomic) AVPlayer *avPlayer;
@@ -430,8 +431,35 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.customSettingActionSheet viewWillAppear: NO];
     
     [self.customSettingActionSheet addSelectItem: @"" title: @"排序作品" btnStr: @"" tagInt: 1 identifierStr: @"reorder"];
-    [self.customSettingActionSheet addSelectItem: @"" title: @"選擇預覽頁" btnStr: @"" tagInt: 2 identifierStr: @"choosePreview"];
-    [self.customSettingActionSheet addSelectItem: @"" title: @"設定音樂" btnStr: @"" tagInt: 3 identifierStr: @"setupMusic"];
+    [self.customSettingActionSheet addSelectItem: @"" title: @"設定音樂" btnStr: @"" tagInt: 2 identifierStr: @"setupMusic"];
+    [self.customSettingActionSheet addSelectItemForPreviewPage: @"" title: @"設定預覽頁" horzLine: YES btnStr: @"保存" tagInt: 999 identifierStr: @"setupPreview"];
+    
+    NSLog(@"ImageDataArr.count: %ld", ImageDataArr.count);
+    NSLog(@"previewPageNum: %ld", previewPageNum);
+    
+    BOOL previewPageSelected = NO;
+    BOOL allPageSelected = NO;
+    
+    if (self.isNew || previewPageNum == 0) {
+        previewPageSelected = NO;
+        allPageSelected = YES;
+    } else {
+        if (previewPageNum == ImageDataArr.count) {
+            previewPageSelected = NO;
+            allPageSelected = YES;
+        } else {
+            previewPageSelected = YES;
+            allPageSelected = NO;
+        }
+    }
+    NSLog(@"previewPageSelected: %d", previewPageSelected);
+    NSLog(@"allPageSelected: %d", allPageSelected);
+    
+    [self.customSettingActionSheet addSelectItemForPreviewPage: previewPageSelected hasTextView: YES firstLabelText: @"開放前" secondLabelText: @"頁" previewPageNum: previewPageNum tagInt: 998 identifierStr: @"setupPages"];
+    [self.customSettingActionSheet addSelectItemForPreviewPage: allPageSelected hasTextView: NO firstLabelText: @"全部" secondLabelText: @"" previewPageNum: 0 tagInt: 997 identifierStr: @"setupAllPages"];
+    [self.customSettingActionSheet addSafeArea];
+    
+//    [self.customSettingActionSheet addSelectItem: @"" title: @"設定預覽頁" btnStr: @"保存" tagInt: 2 identifierStr: @"choosePreview"];
     
     __weak typeof(self) weakSelf = self;
     self.customSettingActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
@@ -440,6 +468,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"isTouchDown: %d", isTouchDown);
         NSLog(@"identifierStr: %@", identifierStr);
         __strong typeof(weakSelf) stSelf = weakSelf;
+        
         if ([identifierStr isEqualToString: @"reorder"]) {
             if (stSelf->ImageDataArr.count > 0) {
                 [stSelf showReorderVC];
@@ -449,19 +478,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 style.backgroundColor = [UIColor thirdPink];
                 
                 [weakSelf.view makeToast: @"作品數量多於1項才可編排順序"
-                                duration: 2.0
-                                position: CSToastPositionBottom
-                                   style: style];
-            }
-        } else if ([identifierStr isEqualToString: @"choosePreview"]) {
-            if (stSelf->ImageDataArr.count > 0) {
-                [stSelf showPreviewPageSetupVC];
-            } else if (stSelf->ImageDataArr.count == 0) {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor thirdPink];
-                
-                [weakSelf.view makeToast: @"作品內沒有內容"
                                 duration: 2.0
                                 position: CSToastPositionBottom
                                    style: style];
@@ -476,6 +492,74 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             setupMusicVC.audioMode = weakSelf.audioMode;
             setupMusicVC.albumId = weakSelf.albumid;
             [weakSelf presentViewController: setupMusicVC animated: YES completion: nil];
+        } else if ([identifierStr isEqualToString: @"setupPreview"]) {
+            NSLog(@"identifierStr isEqualToString setupPreview");
+            
+            /*
+            if (stSelf->ImageDataArr.count > 0) {
+                [stSelf showPreviewPageSetupVC];
+            } else if (stSelf->ImageDataArr.count == 0) {
+                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                style.messageColor = [UIColor whiteColor];
+                style.backgroundColor = [UIColor thirdPink];
+                
+                [weakSelf.view makeToast: @"作品內沒有內容"
+                                duration: 2.0
+                                position: CSToastPositionBottom
+                                   style: style];
+            }
+             */
+        }
+    };
+    self.customSettingActionSheet.customButtonBlockForPreview = ^(BOOL selected, NSString *previewPageStr) {
+        NSLog(@"SaveBtn for PreviewPage is pressed");
+        NSLog(@"previewPageStr: %@", previewPageStr);
+        __strong typeof(weakSelf) stSelf = weakSelf;
+        
+        if ([wTools objectExists: previewPageStr]) {
+            if ([previewPageStr isEqualToString: @""]) {
+                [stSelf warnToastWithMessage: @"請輸入開放頁數"];
+            } else {
+                if ([previewPageStr intValue] <= 0) {
+                    [stSelf warnToastWithMessage: @"至少1頁"];
+                } else if ([previewPageStr intValue] > stSelf->ImageDataArr.count) {
+                    [stSelf warnToastWithMessage: @"不可大於作品總張數"];
+                } else if ([previewPageStr intValue] <= stSelf->ImageDataArr.count) {
+                    NSLog(@"ImageDataArr: %@", stSelf->ImageDataArr);
+                    
+                    // Array for PhotoID
+                    NSMutableArray *arrayForSending = [[NSMutableArray alloc] init];
+                    
+                    for (NSInteger i = 0; i < [previewPageStr intValue]; i++) {
+                        [arrayForSending addObject: stSelf->ImageDataArr[i][@"photo_id"]];
+                    }
+                    NSLog(@"arrayForSending: %@", arrayForSending);
+                    
+                    // Connect Strings
+                    NSMutableString *photoIdStr = [NSMutableString string];
+                    
+                    for (NSInteger i = 0; i < arrayForSending.count; i++) {
+                        if (i + 1 != arrayForSending.count) {
+                            [photoIdStr appendString: [NSString stringWithFormat: @"%@%@", arrayForSending[i], @","]];
+                        } else {
+                            [photoIdStr appendString: [NSString stringWithFormat: @"%@", arrayForSending[i]]];
+                        }
+                    }
+                    NSLog(@"photoIdStr: %@", photoIdStr);
+                    
+                    NSMutableDictionary *settingsDic = [NSMutableDictionary new];
+                    [settingsDic setObject: photoIdStr forKey: @"preview"];
+                    NSLog(@"settingsDic: %@", settingsDic);
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject: settingsDic
+                                                                       options: 0
+                                                                         error: nil];
+                    NSString *jsonStr = [[NSString alloc] initWithData: jsonData
+                                                              encoding: NSUTF8StringEncoding];
+                    [stSelf callAlbumSettingsForPreviewPage: jsonStr];
+                }
+            }
+        } else {
+            [stSelf warnToastWithMessage: @"請輸入開放頁數"];
         }
     };
 }
@@ -611,6 +695,70 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+}
+
+- (void)callAlbumSettingsForPreviewPage:(NSString *)jsonStr {
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    __block AlbumCreationViewController *weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __strong typeof(weakSelf) stSelf = weakSelf;
+        
+        NSString *response = [boxAPI albumsettings: [wTools getUserID]
+                                             token: [wTools getUserToken]
+                                          album_id: stSelf.albumid
+                                          settings: jsonStr];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"AlbumCreationViewController");
+                    NSLog(@"callAlbumSettingsForPreviewPage");
+                    
+                    [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"") protocolName: @"albumSettingsForPreviewPage" textStr: @"" data: nil image: nil jsonStr: jsonStr audioMode: @"" option: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error: nil];
+                    
+                    if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        [stSelf remindToastWithMessage: @"修改完成"];
+                    } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        NSString *msg = dic[@"message"];
+                        
+                        if (msg == nil) {
+                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        }
+                        [self showCustomErrorAlert: msg];
+                    } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
+                        NSLog(@"TOKEN_ERROR");
+                        [stSelf warnToastWithMessage: @"用戶驗證異常請重新登入"];
+                        [NSTimer scheduledTimerWithTimeInterval: 1.0
+                                                         target: self
+                                                       selector: @selector(logOut)
+                                                       userInfo: nil
+                                                        repeats: NO];
+                    }
+                }
+            }
+        });
+    });
 }
 
 - (void)callUpdatePhotoOfDiyWithoutPhoto: (NSString *)textStr {
@@ -958,11 +1106,6 @@ shouldChangeTextInRange:(NSRange)range
         //[wTools showAlertTile:NSLocalizedString(@"PicText-tipAccessPrivacy", @"") Message:@"" ButtonTitle:nil];
         [self showNoAccessAlertAndCancel: @"audio"];
         audioGranted = NO;
-    } else if (authStatus == AVAuthorizationStatusNotDetermined) {
-        __block typeof(self) wself = self;
-        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeAudio completionHandler:^(BOOL granted) {
-            wself->audioGranted = granted;
-        }];
     } else {
         audioGranted = YES;
     }
@@ -1529,15 +1672,11 @@ shouldChangeTextInRange:(NSRange)range
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle: titleStr message: msgStr preferredStyle: UIAlertControllerStyleAlert];
     
-    [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
         
     }]];
     
-    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-
-    }];
-    [alert addAction:cancel];
     [self presentViewController: alert animated: YES completion: nil];
 }
 
@@ -1547,19 +1686,6 @@ shouldChangeTextInRange:(NSRange)range
     
     if (authStatus == AVAuthorizationStatusDenied || authStatus == AVAuthorizationStatusRestricted) {
         [self showNoAccessAlertAndCancel: @"camera"];
-    } else if (authStatus == AVAuthorizationStatusNotDetermined) {
-        __block typeof(self) wself = self;
-        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-            if (!granted) {
-                [wself showNoAccessAlertAndCancel: @"camera"];
-            } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [wself proceedToVideoCamera];
-                });
-            }
-        }];
-    } else {
-        [self proceedToVideoCamera];
     }
 }
 
@@ -1616,30 +1742,23 @@ shouldChangeTextInRange:(NSRange)range
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"call getalbumofdiy success");
-                        
-                        
                         stSelf.selectrow = [dic[@"data"][@"usergrade"][@"photo_limit_of_album"] intValue];
                         NSLog(@"self.selectrow: %ld", (long)stSelf.selectrow);
-                        
                         stSelf.audioMode = dic[@"data"][@"album"][@"audio_mode"];
                         NSLog(@"audioMode: %@", stSelf.audioMode);
-                        
                         stSelf->ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
-                        
+                        stSelf->previewPageNum = [dic[@"data"][@"album"][@"preview_page_num"] intValue];
+                        NSLog(@"previewPageNum: %ld", stSelf->previewPageNum);
                         
                         if (stSelf->ImageDataArr.count == 0) {
-                            
                             stSelf->recordPausePlayBtn.hidden = YES;
                             stSelf->audioBgView.hidden = YES;
                             stSelf->deleteAudioBtn.hidden = YES;
-                            
                             stSelf->textBgView.hidden = YES;
                             stSelf->addTextBtn.hidden = YES;
                             stSelf->deleteTextBtn.hidden = YES;
-                            
                             stSelf->deleteImageBtn.hidden = YES;
-                            
                             [stSelf.dataCollectionView reloadData];
                             
                             // Check whether is in template mode or not
@@ -2102,8 +2221,7 @@ shouldChangeTextInRange:(NSRange)range
     videoMode = @"RecordVideo";
     [alertView close];
     [self checkCamera];
-}
-- (void)proceedToVideoCamera {
+    
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         UIImagePickerController *videoPicker = [[UIImagePickerController alloc] init];
         videoPicker.sourceType = UIImagePickerControllerSourceTypeCamera;
@@ -3519,8 +3637,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - Reorder Function
-- (void)showReorderVC
-{
+- (void)showReorderVC {
     NSLog(@"showReorderVC");
     
     reorderVC = [[UIStoryboard storyboardWithName: @"ReorderVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ReorderViewController"];
@@ -3532,10 +3649,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - PreviewPage Setup Function
-- (void)showPreviewPageSetupVC
-{
+- (void)showPreviewPageSetupVC {
     NSLog(@"showPreviewPageSetupVC");
-    
     previewPageVC = [[UIStoryboard storyboardWithName: @"PreviewPageSetupVC" bundle: nil] instantiateViewControllerWithIdentifier: @"PreviewPageSetupViewController"];
     previewPageVC.imageArray = ImageDataArr;
     previewPageVC.albumId = self.albumid;
@@ -3549,14 +3664,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - ReorderViewControllerDelegate Method
-- (void)reorderViewControllerDisappear:(ReorderViewController *)controller imageArray:(NSMutableArray *)ImageArray
-{
+- (void)reorderViewControllerDisappear:(ReorderViewController *)controller imageArray:(NSMutableArray *)ImageArray {
     ImageDataArr = ImageArray;
     //[self.dimVC.view removeFromSuperview];
 }
 
-- (void)reorderViewControllerDisappearAfterCalling:(ReorderViewController *)controller
-{
+- (void)reorderViewControllerDisappearAfterCalling:(ReorderViewController *)controller {
     NSLog(@"reorderViewControllerDisappear");
     
     //NSLog(@"ImageArray: %@", ImageArray);
@@ -3574,8 +3687,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - PreviewPageSetupViewControllerDelegate Method
-- (void)previewPageSetupViewControllerDisappear:(PreviewPageSetupViewController *)controller
-{
+- (void)previewPageSetupViewControllerDisappear:(PreviewPageSetupViewController *)controller {
     //[self.dimVC.view removeFromSuperview];
 }
 
@@ -3630,8 +3742,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [self callAlbumSettings: jsonStr audioMode: audioMode];
 }
 
-- (void)callAlbumSettings: (NSString *)jsonStr
-                audioMode: (NSString *)audioMode {
+- (void)callAlbumSettings:(NSString *)jsonStr
+                audioMode:(NSString *)audioMode {
     NSLog(@"callAlbumSettings");
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
@@ -3663,8 +3775,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     
                     //if ([dic[@"result"]boolValue]) {
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-                        
-                        
                         self.audioMode = audioMode;
                         
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -3779,8 +3889,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    
-                    
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                         [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"privacyStatusChange"];
@@ -3874,8 +3982,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertBackView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg
-{
+- (UIView *)createContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -3950,8 +4057,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - CustomAlertForPermission
-- (void)showPermissionAlert: (NSString *)msg
-{
+- (void)showPermissionAlert: (NSString *)msg {
     CustomIOSAlertView *alertPermissionView = [[CustomIOSAlertView alloc] init];
     //[alertPermissionView setContainerView: [self createContainerViewForPermission: msg]];
     [alertPermissionView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -3983,8 +4089,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertPermissionView show];
 }
 
-- (UIView *)createContainerViewForPermission: (NSString *)msg
-{
+- (UIView *)createContainerViewForPermission: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -4060,8 +4165,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - CustomAlertForDeletingImageOrVideo
 - (void)showCustomAlertForDeletingImageOrVideo: (NSString *)msg
-                                          type: (NSString *)type
-{
+                                          type: (NSString *)type {
     CustomIOSAlertView *alertDeletingImageView = [[CustomIOSAlertView alloc] init];
     //[alertDeletingImageView setContainerView: [self createContainerViewForDeletingImageOrVideo: msg]];
     [alertDeletingImageView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -4097,8 +4201,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertDeletingImageView show];
 }
 
-- (UIView *)createContainerViewForDeletingImageOrVideo: (NSString *)msg
-{
+- (UIView *)createContainerViewForDeletingImageOrVideo: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -4204,8 +4307,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertViewForText show];
 }
 
-- (UIView *)createViewForText
-{
+- (UIView *)createViewForText {
     NSLog(@"createViewForText");
     
     // Parent View
@@ -4255,8 +4357,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - CustomAlertForText
-- (void)showCustomAlertForText: (NSString *)msg
-{
+- (void)showCustomAlertForText: (NSString *)msg {
     CustomIOSAlertView *alertTextView = [[CustomIOSAlertView alloc] init];
     //[alertTextView setContainerView: [self createContainerViewForText: msg]];
     [alertTextView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -4288,8 +4389,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertTextView show];
 }
 
-- (UIView *)createContainerViewForText: (NSString *)msg
-{
+- (UIView *)createContainerViewForText: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -4364,8 +4464,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - CustomAlertForAudio
-- (void)showCustomAlertForAudio: (NSString *)msg
-{
+- (void)showCustomAlertForAudio: (NSString *)msg {
     CustomIOSAlertView *alertAudioView = [[CustomIOSAlertView alloc] init];
     //[alertAudioView setContainerView: [self createContainerViewForAudio: msg]];
     [alertAudioView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -4397,8 +4496,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertAudioView show];
 }
 
-- (UIView *)createContainerViewForAudio: (NSString *)msg
-{
+- (UIView *)createContainerViewForAudio: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -4506,8 +4604,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertAudioModeView show];
 }
 
-- (UIView *)createAudioModeCheckContainerView: (NSString *)msg
-{
+- (UIView *)createAudioModeCheckContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -4582,90 +4679,14 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
     
 }
-/*
- - (UIView *)createErrorContainerView: (NSString *)msg
- {
- // TextView Setting
- UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
- //textView.text = @"帳號已經存在，請使用另一個";
- textView.text = msg;
- textView.backgroundColor = [UIColor clearColor];
- textView.textColor = [UIColor whiteColor];
- textView.font = [UIFont systemFontOfSize: 16];
- textView.editable = NO;
- 
- // Adjust textView frame size for the content
- CGFloat fixedWidth = textView.frame.size.width;
- CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
- CGRect newFrame = textView.frame;
- 
- NSLog(@"newSize.height: %f", newSize.height);
- 
- // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
- if (newSize.height > 300) {
- newSize.height = 300;
- }
- 
- // Adjust textView frame size when the content height reach its maximum
- newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
- textView.frame = newFrame;
- 
- CGFloat textViewY = textView.frame.origin.y;
- NSLog(@"textViewY: %f", textViewY);
- 
- CGFloat textViewHeight = textView.frame.size.height;
- NSLog(@"textViewHeight: %f", textViewHeight);
- NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
- 
- 
- // ImageView Setting
- UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
- [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
- 
- CGFloat viewHeight;
- 
- if ((textViewY + textViewHeight) > 96) {
- if ((textViewY + textViewHeight) > 450) {
- viewHeight = 450;
- } else {
- viewHeight = textViewY + textViewHeight;
- }
- } else {
- viewHeight = 96;
- }
- NSLog(@"demoHeight: %f", viewHeight);
- 
- 
- // ContentView Setting
- UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
- contentView.backgroundColor = [UIColor firstPink];
- 
- // Set up corner radius for only upper right and upper left corner
- UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
- CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
- maskLayer.frame = self.view.bounds;
- maskLayer.path  = maskPath.CGPath;
- contentView.layer.mask = maskLayer;
- 
- // Add imageView and textView
- [contentView addSubview: imageView];
- [contentView addSubview: textView];
- 
- NSLog(@"");
- NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
- NSLog(@"");
- 
- return contentView;
- }
- */
+
 #pragma mark - Custom Method for TimeOut
 - (void)processUpdate{
     [recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
@@ -4674,14 +4695,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     isRecorded = NO;
 }
-- (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-                       textStr: (NSString *)textStr
-                          data: (NSData *)data
-                         image: (UIImage *)image
-                       jsonStr: (NSString *)jsonStr
-                     audioMode: (NSString *)audioMode
-                        option: (NSString *)option
+
+- (void)showCustomTimeOutAlert:(NSString *)msg
+                  protocolName:(NSString *)protocolName
+                       textStr:(NSString *)textStr
+                          data:(NSData *)data
+                         image:(UIImage *)image
+                       jsonStr:(NSString *)jsonStr
+                     audioMode:(NSString *)audioMode
+                        option:(NSString *)option
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
@@ -4733,6 +4755,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 [weakSelf updateAudio];
             } else if ([protocolName isEqualToString: @"albumsettings"]) {
                 [weakSelf callAlbumSettings];
+            } else if ([protocolName isEqualToString: @"albumSettingsForPreviewPage"]) {
+                [weakSelf callAlbumSettingsForPreviewPage: jsonStr];
             }
         }
     }];
@@ -4740,8 +4764,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -4816,10 +4839,32 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - TemplateViewControllerDelegate Method
-- (void)uploadPhotoDidComplete:(TemplateViewController *)controller
-{
+- (void)uploadPhotoDidComplete:(TemplateViewController *)controller {
     NSLog(@"uploadPhotoDidComplete");
     [self reload: nil];
+}
+
+#pragma mark - toast message
+- (void)remindToastWithMessage:(NSString *)message {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor firstMain];
+    
+    [self.view makeToast: message
+                duration: 2.0
+                position: CSToastPositionBottom
+                   style: style];
+}
+
+- (void)warnToastWithMessage:(NSString *)message {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor thirdPink];
+    
+    [self.view makeToast: message
+                duration: 2.0
+                position: CSToastPositionBottom
+                   style: style];
 }
 
 @end
