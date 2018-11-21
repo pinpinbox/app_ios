@@ -1181,6 +1181,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"scrollViewDidScroll");
     NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
     
+    if (!collectionView || collectionView.visibleCells.count < 1) return ;
+    
     BannerCollectionViewCell *cell = collectionView.visibleCells[0];
     
     CGFloat yAxis = 0;
@@ -1227,7 +1229,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidEndDecelerating");
     
-    if (scrollView == collectionView) {
+    if (scrollView == collectionView && collectionView.visibleCells.count > 0) {        
         BannerCollectionViewCell *cell = collectionView.visibleCells[0];
         [cell.playerView stopVideo];
         [cell.playerView playVideo];
