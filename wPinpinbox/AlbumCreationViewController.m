@@ -146,6 +146,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSInteger viewHeightForPreview;
     NSInteger previewPageNum;
     NSInteger previewPageStrToInt;
+    BOOL isPreviewPageModified;
 }
 
 @property (strong, nonatomic) AVPlayer *avPlayer;
@@ -204,6 +205,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"self.selectrow: %ld", (long)self.selectrow);
     NSLog(@"self.prefixText: %@", self.prefixText);
     NSLog(@"self.specialUrl: %@", self.specialUrl);
+    
+    isPreviewPageModified = NO;
     
     [wTools sendScreenTrackingWithScreenName:@"編輯器"];
     viewHeightForPreview = [UIScreen mainScreen].bounds.size.height;
@@ -385,8 +388,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark - handleTapGesture
-- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer
-{
+- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer {
     NSLog(@"handleTapGesture");
     
     if ([modalVC isEqualToString: @"ReorderVC"]) {
@@ -434,7 +436,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.customSettingActionSheet addSelectItem: @"" title: @"排序作品" btnStr: @"" tagInt: 1 identifierStr: @"reorder"];
     [self.customSettingActionSheet addSelectItem: @"" title: @"設定音樂" btnStr: @"" tagInt: 2 identifierStr: @"setupMusic"];
     [self.customSettingActionSheet addSelectItemForPreviewPage: @"" title: @"設定預覽頁" horzLine: YES btnStr: @"保存" tagInt: 999 identifierStr: @"setupPreview"];
-    
     NSLog(@"ImageDataArr.count: %ld", ImageDataArr.count);
     NSLog(@"previewPageNum: %ld", previewPageNum);
     
@@ -442,8 +443,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     BOOL allPageSelected = NO;
     
     if (self.isNew || previewPageNum == 0) {
-        previewPageSelected = NO;
-        allPageSelected = YES;
+        if (isPreviewPageModified) {
+            if (previewPageNum == ImageDataArr.count) {
+                previewPageSelected = NO;
+                allPageSelected = YES;
+            } else {
+                previewPageSelected = YES;
+                allPageSelected = NO;
+            }
+        } else {
+            previewPageSelected = NO;
+            allPageSelected = YES;
+        }
     } else {
         if (previewPageNum == ImageDataArr.count) {
             previewPageSelected = NO;
@@ -744,6 +755,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error: nil];
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        stSelf->isPreviewPageModified = YES;
                         stSelf->previewPageNum = stSelf->previewPageStrToInt;
                         [stSelf remindToastWithMessage: @"修改完成"];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
