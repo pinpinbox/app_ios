@@ -61,8 +61,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.        
     //NSLog(@"");
-    NSLog(@"AlbumCollectionViewController");
-    NSLog(@"viewDidLoad");
+    NSLog(@"AlbumCollectionViewController viewDidLoad");    
     
 //    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
 //    appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
@@ -158,16 +157,19 @@
     self.pageMenu.delegate = self;
     // ViewController Array Setup
     CalbumlistViewController *myVC = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CalbumlistViewController"];
+    myVC.fromVC = @"AlbumCollectionVC";
     myVC.title = @"";
     myVC.collectionType = 0;
     myVC.delegate = self;
     
     CalbumlistViewController *otherVC = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CalbumlistViewController"];
+    otherVC.fromVC = @"AlbumCollectionVC";
     otherVC.title = @"";
     otherVC.collectionType = 1;
     otherVC.delegate = self;
     
     CalbumlistViewController *collaborateVC = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CalbumlistViewController"];
+    collaborateVC.fromVC = @"AlbumCollectionVC";
     collaborateVC.title = @"";
     collaborateVC.collectionType = 2;
     collaborateVC.delegate = self;

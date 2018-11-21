@@ -1973,8 +1973,10 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    
                     if ([dic[@"result"] intValue] == 1) {
+                        NSLog(@"option: %@", option);
+                        NSLog(@"stSelf.fromVC: %@", stSelf.fromVC);
+                        
                         if ([option isEqualToString: @"save"]) {
                             AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
                             aSVC.albumId = stSelf.albumid;
@@ -1985,13 +1987,15 @@ shouldChangeTextInRange:(NSRange)range
                             aSVC.isNew = YES;
                             aSVC.prefixText = stSelf.prefixText;
                             aSVC.specialUrl = stSelf.specialUrl;
+                            aSVC.userIdentity = stSelf.userIdentity;
+                            
                             if (self.delegate && [self.delegate respondsToSelector:@selector(albumSettingViewControllerUpdate:)]) {
                                 aSVC.delegate = (id<AlbumSettingViewControllerDelegate>)self.delegate;
                             }
                             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                             [appDelegate.myNav pushViewController: aSVC animated: NO];
                         } else if ([option isEqualToString: @"back"]) {
-                            if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {
+                            if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {                                
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 
                                 for (UIViewController *vc in appDelegate.myNav.viewControllers) {
@@ -3989,6 +3993,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                              style: style];
             
             if (stSelf->ImageDataArr.count == 0) {
+                NSLog(@"ImageDataArr.count == 0");
                 // if there is no image then should set to close
 //                [stSelf callAlbumSettings];
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
