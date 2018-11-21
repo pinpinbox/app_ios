@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol URLSAddDelegate
-- (void)didSetURLs:(NSArray *)url;
+- (void)didSetURLs:(NSArray * _Nullable )url;
 @end
 @interface URLAddViewController : UIViewController<UIViewControllerTransitioningDelegate>
 @property (nonatomic) id<URLSAddDelegate> urlDelegate;

@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface WKVideoPlayerView : WKWebView
-- (id)initWithString:(NSString *)text;
+- (id)initWithString:(NSString *)path configuration:(nonnull WKWebViewConfiguration *)configuration;
 - (BOOL)isURLsContained;
 - (NSString *)stringWithURLs;
 - (void)setVideoPath:(NSString *)path;

@@ -373,6 +373,7 @@
 		CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
 		CBD977EF21A2574600F04205 /* URLAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD977EE21A2574600F04205 /* URLAddViewController.m */; };
+		CBFB400221A3ACE7008ED644 /* webviewVideoPlayer.js in Resources */ = {isa = PBXBuildFile; fileRef = CBFB400121A3ACE7008ED644 /* webviewVideoPlayer.js */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
@@ -1000,6 +1001,7 @@
 		CBCE8573219C074600ED185D /* LocationMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationMapViewController.m; sourceTree = "<group>"; };
 		CBD977ED21A2574600F04205 /* URLAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLAddViewController.h; sourceTree = "<group>"; };
 		CBD977EE21A2574600F04205 /* URLAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = URLAddViewController.m; sourceTree = "<group>"; };
+		CBFB400121A3ACE7008ED644 /* webviewVideoPlayer.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = webviewVideoPlayer.js; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -2293,6 +2295,7 @@
 				9276DFA51B72FDC000E6ACC9 /* main.m */,
 				929ED49A1B7849DE00D21CF0 /* wPinpinbox-Prefix.pch */,
 				9251197D1CF2B4DB002D4678 /* Localizable.strings */,
+				CBFB400121A3ACE7008ED644 /* webviewVideoPlayer.js */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -2919,6 +2922,7 @@
 				54B9F4981FE6C27300A694E4 /* InfoEditVC.storyboard in Resources */,
 				54A2645C20187B230066DD09 /* PreviewPageSetupVC.storyboard in Resources */,
 				F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */,
+				CBFB400221A3ACE7008ED644 /* webviewVideoPlayer.js in Resources */,
 				54E00ED11FF35B41007881ED /* CategoryDetailVC.storyboard in Resources */,
 				54B9F49A1FE6C59300A694E4 /* ChangePwdVC.storyboard in Resources */,
 				54885DBC20DB415F00644A82 /* AlbumSponsorVC.storyboard in Resources */,

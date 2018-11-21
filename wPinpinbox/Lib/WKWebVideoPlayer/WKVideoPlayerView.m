@@ -53,19 +53,24 @@
 @end
 
 #pragma mark -
+
 @interface WKVideoPlayerView()
 @property (nonatomic, strong) NSString *path;
 @property (nonatomic, strong) NSMutableArray *urls;
+//@property (nonatomic, strong) WKUserContentController *cntController;
 @end
+
 @implementation WKVideoPlayerView
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+
+- (id)initWithFrame:(CGRect)frame configuration:(nonnull WKWebViewConfiguration *)configuration {
+    self = [super initWithFrame:frame configuration:configuration];
     return self;
 }
-- (id)initWithString:(NSString *)path {
+- (id)initWithString:(NSString *)path configuration:(nonnull WKWebViewConfiguration *)configuration {
     CGFloat w = UIScreen.mainScreen.bounds.size.width;
     CGFloat h = w*0.5625;
-    self = [self initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, h)];
+    
+    self = [self initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, h) configuration:configuration];
     if (self) {
         [self setVideoPath:path];
     }
@@ -105,11 +110,17 @@
     return res;
 }
 - (NSString *)getYTString:(NSString *)link {
-    return [NSString stringWithFormat:@"<head> <meta name=viewport content='width=device-width, initial-scale=1'><style type='text/css'> body { margin: 0; background: #fafafa;} </style></head><iframe src='%@' width='100%%' height='100%%' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'></iframe>",link];
+    
+    
+    NSString *iid = [link lastPathComponent];
+    NSArray *yids = [iid componentsSeparatedByString:@"?"];
+    iid = [NSString stringWithFormat:@"https://www.youtube.com/embed/%@?enablejsapi=1",[yids firstObject]];
+    NSString *scr = @"<head>     <meta name='viewport' content='initial-scale=1'>    <style type='text/css'> body { margin: 0; background: #fafafa;} </style>    </head> <iframe id='player' width='100%%'             height='100%%'  src= %@ frameborder='0'></iframe>        <script type=\"text/javascript\">        var tag = document.createElement('script');        tag.id='videoiframe';        tag.src = \"https://www.youtube.com/iframe_api\";        var firstScriptTag = document.getElementsByTagName('script')[0];        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);        var player;        function onYouTubeIframeAPIReady() {            player = new YT.Player('player', {'events': {                    'onStateChange': onPlayerStateChange                    }                });        }        var done = false;        function onPlayerStateChange(event) {            console.log('YT.player changed:: '+event);            if (event.data == YT.PlayerState.PLAYING) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPlaying');                console.log('VideoIsPlaying');                done = true;            } else if (event.data == YT.PlayerState.PAUSED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPaused');                console.log('VideoIsPaused');            } else if (event.data == YT.PlayerState.ENDED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsEnded');                console.log('VideoIsEnded');            }        }    </script>";
+    return [NSString stringWithFormat:scr,iid];
     
 }
 - (NSString *)getVimeoString:(NSString *)link {
-    return [NSString stringWithFormat:@"<head> <meta name=viewport content='width=device-width, initial-scale=1'><style type='text/css'> body { margin: 0;background: #fafafa;} </style></head><iframe src='%@' width='100%%' height='100%%' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>", link];
+    return [NSString stringWithFormat:@"<head> <meta name=viewport content='width=device-width, initial-scale=1'><style type='text/css'> body { margin: 0;background: #fafafa;} </style></head><iframe src='%@' width='100%%' height='100%%' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <script src=\"https://player.vimeo.com/api/player.js\"></script><script>var iframe = document.querySelector('iframe');var player = new Vimeo.Player(iframe);player.on('play', function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPlaying');}); player.on('pause',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');});player.on('ended',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');});</script>", link];
 }
 
 - (void)setup {
@@ -126,6 +137,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSString *html = [self getYTString:realLink];
                     [self loadHTMLString:html baseURL:nil];
+                    
                 });
             }
         } else if ([url.absoluteString containsString:@"vimeo.com"]) {

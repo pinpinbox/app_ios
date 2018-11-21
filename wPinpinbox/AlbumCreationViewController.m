@@ -4707,7 +4707,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         }
     }];
 }
-- (void)didSetURLs:(NSArray *)url {
+- (void)didSetURLs:(NSArray * _Nullable )url {
     NSArray *ar = [NSArray arrayWithArray:url];
     NSString *string = @"[]";
     
@@ -4828,6 +4828,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 - (IBAction)deleteLocationData:(id)sender {
     
+    __block typeof(self) wself = self;
+    [self showCustomOptionAlert:@"是否要刪除地點？" cancelblock:nil confirmBlock:^{
+        [wself didSelectLocation:@""];
+    }];
 }
 - (IBAction)showURLEditor:(id)sender {
     
