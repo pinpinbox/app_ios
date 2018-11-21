@@ -257,30 +257,63 @@
 
 - (void)checkCameraPermission {
     NSLog(@"checkCameraPermission");
-    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
     
-    if (status == PHAuthorizationStatusRestricted || status == PHAuthorizationStatusDenied) {
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    
+    if (authStatus == AVAuthorizationStatusDenied ||
+        authStatus == AVAuthorizationStatusRestricted ) {
+        [self showCameraAlert];
+    } else if (authStatus == AVAuthorizationStatusNotDetermined ) {
+        __block typeof(self) wself = self;
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (granted) {
+                    [wself activateCamera];
+                } else {
+                    [wself showCameraAlert];
+                }
+                
+            });
+        }];
+    } else {
+        [self activateCamera];
+    }
+    
+}
+    
+- (void) showCameraAlert{
+    dispatch_async(dispatch_get_main_queue(), ^{
+
         //无权限
         UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"PicText-tipAccessPrivacy", @"") message: @"" preferredStyle: UIAlertControllerStyleAlert];
-        [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             //[[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
         }]];
-        
+        //__block typeof(self) wself = self;
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:cancel];
         [self presentViewController: alert animated: YES completion: nil];
-    }
-    
-    //拍照
-    // 先檢查裝置是否配備相機
-    if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
-        UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
-        // 設定相片來源為裝置上的相機
-        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-        // 設定imagePicker的delegate為ViewController
-        imagePicker.delegate = self;
-        //開起相機拍照界面
-        [self presentViewController:imagePicker animated:YES completion:nil];
-    }
+    });
+}
+- (void)activateCamera {
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        //拍照
+        // 先檢查裝置是否配備相機
+        if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+            UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
+            // 設定相片來源為裝置上的相機
+            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            // 設定imagePicker的delegate為ViewController
+            imagePicker.delegate = self;
+            //開起相機拍照界面
+            [self presentViewController:imagePicker animated:YES completion:nil];
+        }
+        
+    });
 }
 
 - (IBAction)cameraBtnPress:(id)sender {

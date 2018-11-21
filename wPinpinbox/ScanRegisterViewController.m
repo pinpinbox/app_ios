@@ -71,18 +71,78 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     _locationManager.distanceFilter = kCLDistanceFilterNone;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+    if ([CLLocationManager locationServicesEnabled] &&[[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         [_locationManager requestWhenInUseAuthorization];
     }
     
-    [_locationManager startUpdatingLocation];
+}
+
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    
+    if (status ==kCLAuthorizationStatusAuthorizedWhenInUse || status == kCLAuthorizationStatusAuthorizedAlways) {
+        [_locationManager startUpdatingLocation];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self startReading];
+    
+    [self checkCamera];
 }
-
+- (void)checkCamera {
+    
+    AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    
+    if (authStatus == AVAuthorizationStatusDenied ||
+        authStatus == AVAuthorizationStatusRestricted){ //||
+        [self showNoAccessAlertAndCancel: @"camera"];
+    } else if (authStatus == AVAuthorizationStatusNotDetermined ) {
+        __block typeof(self) wself = self;
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (granted) {
+                    [wself startReading];
+                } else {
+                    [wself showNoAccessAlertAndCancel: @"camera"];
+                }
+            });
+        }];
+    } else {
+        [self startReading];
+    }
+}
+- (void)showNoAccessAlertAndCancel: (NSString *)option {
+    NSString *titleStr;
+    NSString *msgStr;
+    
+    if ([option isEqualToString: @"photo"]) {
+        titleStr = @"沒有照片存取權";
+        msgStr = @"請打開照片權限設定";
+    } else if ([option isEqualToString: @"audio"]) {
+        titleStr = @"沒有麥克風存取權";
+        msgStr = @"請打開麥克風權限設定";
+    } else if ([option isEqualToString: @"camera"]) {
+        titleStr = @"沒有相機存取權";
+        msgStr = @"請打開相機權限設定";
+    }
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle: titleStr message: msgStr preferredStyle: UIAlertControllerStyleAlert];
+    
+    [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
+        
+    }]];
+    __block typeof(self) wself = self;
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wself backBtnPress:nil];
+        });
+        
+    }];
+    [alert addAction:cancel];
+    [self presentViewController: alert animated: YES completion: nil];
+}
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -244,28 +304,35 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         if ([[metadataObj type] isEqualToString: AVMetadataObjectTypeQRCode]) {
             NSLog(@"metadataObj type isEqualToString AVMetadataObjectTypeQRCode");
             NSLog(@"%@", [metadataObj stringValue]);
+        
+            [_locationManager stopUpdatingLocation];
+            [self stopReading];
             
             NSString *sv = [metadataObj stringValue];
             NSArray *strArray = [sv componentsSeparatedByString: @"?"];
             NSLog(@"strArray: %@", strArray);
-            
+            __block typeof(self) wself = self;
             if (strArray.count > 1) {
+                
                 if (!([strArray[1] rangeOfString: @"businessuser_id"].location == NSNotFound)) {
                     NSLog(@"strArray[1] rangeOfString is businessuser_id");
                     strArray = [strArray[1] componentsSeparatedByString: @"businessuser_id="];
                     NSLog(@"strArray: %@", strArray);
                     
                     businessUserId = strArray[1];
-                    [self Facebookbtn: nil];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself Facebookbtn: nil];
+                    });
                 } else {
-                    [self performSelectorOnMainThread: @selector(showError:)
-                                           withObject: @"本次掃描無效"
-                                        waitUntilDone: NO];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself showError:@"本次掃描無效"];
+                    });
+                    
                 }
             } else {
-                [self performSelectorOnMainThread: @selector(showError:)
-                                       withObject: @"本次掃描無效"
-                                    waitUntilDone: NO];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself showError:@"本次掃描無效"];
+                });
             }
         }
     }
@@ -376,7 +443,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 - (void)handleFBLoginParam:(NSMutableDictionary *)paramDic fbid:(NSString *)fbid{
     
     NSLog(@"currentLocation: %@", currentLocation);
-    
+    [self stopReading];
     if (currentLocation != nil) {
         NSString *latStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.latitude];
         NSString *longStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.longitude];
@@ -391,7 +458,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: paramDic options: 0 error: nil];
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
-    
+
     [self buisnessSubUserFastRegister: fbid jsonStr: jsonStr];
 }
 - (void)buisnessSubUserFastRegister:(NSString *)fbId
@@ -517,6 +584,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
     //public_profile
     //publish_actions
+    __block typeof(self) wself = self;
     [login
      logInWithReadPermissions: @[@"public_profile", @"user_birthday", @"email"]
      fromViewController:self
@@ -542,6 +610,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
          
          if (declinedOrCanceledHandler) {
              declinedOrCanceledHandler();
+             [wself startReading];
+             [wself.locationManager startUpdatingLocation];
          }
      }];
 }
@@ -843,12 +913,14 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
+    __block typeof(self) wself = self;
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
         
         if (buttonIndex == 0) {
-            [self startReading];
+            [wself startReading];
+            [wself.locationManager startUpdatingLocation];
         }
     }];
 }
@@ -981,9 +1053,9 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
-    NSLog(@"didUpdateLocations: %@", locations);
+    //NSLog(@"didUpdateLocations: %@", locations);
     currentLocation = [locations lastObject];
-    NSLog(@"currentLocation: %@", currentLocation);
+    //NSLog(@"currentLocation: %@", currentLocation);
 }
 
 /*

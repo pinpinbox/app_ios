@@ -4015,7 +4015,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     btnUrl1 = dic[@"url"];
                     self.linkBtn1.hidden = NO;
                     
-                    if ([dic[@"text"] isEqualToString: @""]) {
+                    if ([dic[@"text"] isKindOfClass:[NSNull class]] || [dic[@"text"] isEqualToString: @""]) {
                         [self.linkBtn1 setTitle: @"連結1" forState: UIControlStateNormal];
                     } else {
                         [self.linkBtn1 setTitle: dic[@"text"] forState: UIControlStateNormal];
@@ -4025,7 +4025,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     btnUrl2 = dic[@"url"];
                     self.linkBtn2.hidden = NO;
                     
-                    if ([dic[@"text"] isEqualToString: @""]) {
+                    if ([dic[@"text"] isKindOfClass:[NSNull class]] || [dic[@"text"] isEqualToString: @""]) {
                         [self.linkBtn2 setTitle: @"連結2" forState: UIControlStateNormal];
                     } else {
                         [self.linkBtn2 setTitle: dic[@"text"] forState: UIControlStateNormal];

@@ -2938,7 +2938,6 @@ replacementString:(NSString *)string {
                 position: CSToastPositionBottom
                    style: style];
 }
-
 - (void)warnToastWithMessage:(NSString *)message {
     CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
     style.messageColor = [UIColor whiteColor];
@@ -2949,7 +2948,6 @@ replacementString:(NSString *)string {
                 position: CSToastPositionBottom
                    style: style];
 }
-
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName

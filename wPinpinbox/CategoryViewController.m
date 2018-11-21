@@ -175,16 +175,71 @@
     NSLog(@"self.categoryAreaId: %@", self.categoryAreaId);
     
     if ([self.categoryAreaId isEqualToString: @"-1"]) {
-        NSLog(@"self.categoryAreaId isEqualToString: -1");
-        NSLog(@"self.dic: %@", self.dic);
+    //    NSLog(@"self.categoryAreaId isEqualToString: -1");
+    //    NSLog(@"self.dic: %@", self.dic);
+        
+        
         [self setupData];
+        [self setupCategoryArea:self.dic];
+        
     } else {
         [self getCategoryArea];
     }
     
     
 }
-
+- (void)setupCategoryArea:(NSDictionary *)cdic {
+    
+    if (![cdic[@"data"][@"categoryarea_style"] isEqual: [NSNull null]]) {
+        self.categoryareaStyleArray = [NSMutableArray arrayWithArray: cdic[@"data"][@"categoryarea_style"]];
+    }
+    
+    if (self.categoryareaStyleArray.count > 0) {
+        for (NSDictionary *styleDic1 in self.categoryareaStyleArray) {
+            NSLog(@"styleDic1: %@", styleDic1);
+            
+            if ([styleDic1[@"banner_type"] isEqualToString: @"creative"]) {
+                NSLog(@"styleDic1 banner_type_data: %@", styleDic1[@"banner_type_data"]);
+                
+                if (styleDic1[@"banner_type"] != nil) {
+                    self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
+                }
+                if (self.categoryAreaArray.count != 0) {
+                    self.userLayout.userInteractionEnabled = YES;
+                    [self addUserView];
+                } else {
+                    self.userLayout.userInteractionEnabled = NO;
+                }
+            } else {
+                [self.bannerDataArray addObject: styleDic1];
+            }
+        }
+    }
+    
+    if (![cdic[@"data"][@"albumexplore"] isEqual: [NSNull null]]) {
+        self.albumArray = [NSMutableArray arrayWithArray: cdic[@"data"][@"albumexplore"]];
+        
+        NSLog(@"self.albumArray.count: %lu", (unsigned long)self.albumArray.count);
+        NSLog(@"self.albumArray: %@", self.albumArray);
+        
+        [self.albumExploreArray removeAllObjects];
+        [self.horzAlbumArray removeAllObjects];
+        
+        for (NSDictionary *dic1 in self.albumArray) {
+            NSLog(@"dic1 album: %@", dic1[@"album"]);
+            [self.horzAlbumArray addObject: dic1[@"album"]];
+            [self.albumExploreArray addObject: dic1[@"albumexplore"]];
+        }
+        
+        NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
+        NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
+        
+        self.tableView.hidden = NO;
+    }
+    [self setupTableViewHeader];
+    [self.tableView reloadData];
+    [self.userCollectionView reloadData];
+}
 - (void)setupData {
     self.categoryName = self.categoryNameStr;
     self.albumArray = [NSMutableArray arrayWithArray: self.dic[@"data"][@"albumexplore"]];
@@ -349,57 +404,58 @@
                         if (![dic[@"data"][@"categoryarea"][@"name"] isEqual: [NSNull null]]) {
                             self.categoryName = dic[@"data"][@"categoryarea"][@"name"];
                         }
+                        [self setupCategoryArea:dic];
+//                        if (![dic[@"data"][@"categoryarea_style"] isEqual: [NSNull null]]) {
+//                            self.categoryareaStyleArray = [NSMutableArray arrayWithArray: dic[@"data"][@"categoryarea_style"]];
+//                        }
+//                        NSLog(@"self.categoryareaStyleArray: %@", self.categoryareaStyleArray);
+//
+//                        if (self.categoryareaStyleArray.count > 0) {
+//                            for (NSDictionary *styleDic1 in self.categoryareaStyleArray) {
+//                                NSLog(@"styleDic1: %@", styleDic1);
+//
+//                                if ([styleDic1[@"banner_type"] isEqualToString: @"creative"]) {
+//                                    NSLog(@"styleDic1 banner_type_data: %@", styleDic1[@"banner_type_data"]);
+//
+//                                    if (styleDic1[@"banner_type"] != nil) {
+//                                        self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
+//                                    }
+//                                    if (self.categoryAreaArray.count != 0) {
+//                                        self.userLayout.userInteractionEnabled = YES;
+//                                        [self addUserView];
+//                                    } else {
+//                                        self.userLayout.userInteractionEnabled = NO;
+//                                    }
+//                                } else {
+//                                    [self.bannerDataArray addObject: styleDic1];
+//                                }
+//                            }
+//                        }
+//
+//                        if (![dic[@"data"][@"albumexplore"] isEqual: [NSNull null]]) {
+//                            self.albumArray = [NSMutableArray arrayWithArray: dic[@"data"][@"albumexplore"]];
+//
+//                            NSLog(@"self.albumArray.count: %lu", (unsigned long)self.albumArray.count);
+//                            NSLog(@"self.albumArray: %@", self.albumArray);
+//
+//                            [self.albumExploreArray removeAllObjects];
+//                            [self.horzAlbumArray removeAllObjects];
+//
+//                            for (NSDictionary *dic1 in self.albumArray) {
+//                                NSLog(@"dic1 album: %@", dic1[@"album"]);
+//                                [self.horzAlbumArray addObject: dic1[@"album"]];
+//                                [self.albumExploreArray addObject: dic1[@"albumexplore"]];
+//                            }
+//
+//                            NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
+//                            NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
+//
+//                            self.tableView.hidden = NO;
+//                        }
+//                        [self setupTableViewHeader];
+//                        [self.tableView reloadData];
+//                        [self.userCollectionView reloadData];
                         
-                        if (![dic[@"data"][@"categoryarea_style"] isEqual: [NSNull null]]) {
-                            self.categoryareaStyleArray = [NSMutableArray arrayWithArray: dic[@"data"][@"categoryarea_style"]];
-                        }
-                        NSLog(@"self.categoryareaStyleArray: %@", self.categoryareaStyleArray);
-                        
-                        if (self.categoryareaStyleArray.count > 0) {
-                            for (NSDictionary *styleDic1 in self.categoryareaStyleArray) {
-                                NSLog(@"styleDic1: %@", styleDic1);
-                                
-                                if ([styleDic1[@"banner_type"] isEqualToString: @"creative"]) {
-                                    NSLog(@"styleDic1 banner_type_data: %@", styleDic1[@"banner_type_data"]);
-                                    
-                                    if (styleDic1[@"banner_type"] != nil) {
-                                        self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
-                                    }
-                                    if (self.categoryAreaArray.count != 0) {
-                                        self.userLayout.userInteractionEnabled = YES;
-                                        [self addUserView];
-                                    } else {
-                                        self.userLayout.userInteractionEnabled = NO;
-                                    }
-                                } else {
-                                    [self.bannerDataArray addObject: styleDic1];
-                                }
-                            }
-                        }                        
-                        
-                        if (![dic[@"data"][@"albumexplore"] isEqual: [NSNull null]]) {
-                            self.albumArray = [NSMutableArray arrayWithArray: dic[@"data"][@"albumexplore"]];
-                            
-                            NSLog(@"self.albumArray.count: %lu", (unsigned long)self.albumArray.count);
-                            NSLog(@"self.albumArray: %@", self.albumArray);
-                            
-                            [self.albumExploreArray removeAllObjects];
-                            [self.horzAlbumArray removeAllObjects];
-                            
-                            for (NSDictionary *dic1 in self.albumArray) {
-                                NSLog(@"dic1 album: %@", dic1[@"album"]);
-                                [self.horzAlbumArray addObject: dic1[@"album"]];
-                                [self.albumExploreArray addObject: dic1[@"albumexplore"]];
-                            }
-                            
-                            NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
-                            NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
-                            
-                            self.tableView.hidden = NO;
-                        }
-                        [self setupTableViewHeader];
-                        [self.tableView reloadData];
-                        [self.userCollectionView reloadData];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
