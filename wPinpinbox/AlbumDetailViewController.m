@@ -2282,6 +2282,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     acVC.postMode = NO;
     acVC.fromVC = @"AlbumDetailVC";
     acVC.delegate = self;
+    acVC.isNew = NO;
     
     NSString * u = [NSString stringWithFormat:@"%lu", [self.data[@"user"][@"user_id"] longValue] ];
     if ([u isEqualToString: [wTools getUserID]])

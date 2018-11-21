@@ -40,14 +40,6 @@ typedef void(^viewTouch)(NSInteger tagId, BOOL isTouchDown, NSString *identifier
                      firstLabelText:(NSString *)firstLabelText
                     secondLabelText:(NSString *)secondLabelText
                      previewPageNum:(NSInteger)previewPageNum
-                             tagInt:(NSInteger)tagInt
-                      identifierStr:(NSString *)identifierStr;
-
-- (void)addSelectItemForPreviewPage:(BOOL)gridViewSelected
-                        hasTextView:(BOOL)hasTextView
-                     firstLabelText:(NSString *)firstLabelText
-                    secondLabelText:(NSString *)secondLabelText
-                     previewPageNum:(NSInteger)previewPageNum
                          allPageNum:(NSInteger)allPageNum
                              tagInt:(NSInteger)tagInt
                       identifierStr:(NSString *)identifierStr;

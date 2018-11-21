@@ -638,6 +638,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                         albumCreationVC.event_id = wself.event_id;
                         albumCreationVC.postMode = wself.postMode;
                         albumCreationVC.choice = @"Template";
+                        albumCreationVC.isNew = YES;
                         //[self.navigationController pushViewController: albumCreationVC animated: YES];
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav pushViewController: albumCreationVC animated: YES];

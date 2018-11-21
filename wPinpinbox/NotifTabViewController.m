@@ -518,6 +518,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                     acVC.postMode = NO;
                     acVC.fromVC = @"NotifTabVC";
                     acVC.delegate = self;
+                    acVC.isNew = NO;
                     
                     if ([templateId isEqualToString:@"0"]) {
                         acVC.booktype = 0;

@@ -1825,7 +1825,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         }
                     }
                 }
-                
                 [self showToastMessage:@"權限不足"];
             }
                 break;
@@ -1862,13 +1861,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                             newCooperationVC.vDelegate = self;
                             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                             [appDelegate.myNav pushViewController: newCooperationVC animated: YES];
-                            
-                            /*
-                            CoCreatorListViewController *cv = [[UIStoryboard storyboardWithName: @"Calbumlist" bundle: nil] instantiateViewControllerWithIdentifier: @"CoCreatorListViewController"];
-                            [cv setAlbumId:[data[@"album_id"] stringValue]];
-                            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                            [appDelegate.myNav pushViewController:cv animated: YES];
-                             */
                             return;
                         }
                     }
@@ -1879,24 +1871,20 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             default:
                 break;
         }
-        
     }
-    
-    
 }
+
 #pragma mark - opMenu edit
 - (void)showCustomEditActionSheet:(NSString *)albumid
                      userIdentity:(NSString *)userIdentity
                         cellIndex:(NSInteger) index {
+    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
-    
     self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
     self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
     self.effectView.alpha = 0.8;
     
     [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
@@ -1944,6 +1932,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     acVC.postMode = NO;
     acVC.fromVC = @"CalbumlistViewController";
     acVC.delegate = self;
+    acVC.isNew = NO;
     
     if ([templateId isEqualToString:@"0"]) {
         acVC.booktype = 0;
@@ -1982,7 +1971,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 #pragma mark - opMenu share
 - (void)handleShare:(NSString *)albumId {
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -2077,16 +2065,16 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     });
     
 }
-- (void)showCustomShareActionSheet:(NSDictionary *)eventjoin albumid:(NSString *)albumid autoplayStr:(NSString *)autoplayStr {
+- (void)showCustomShareActionSheet:(NSDictionary *)eventjoin
+                           albumid:(NSString *)albumid
+                       autoplayStr:(NSString *)autoplayStr {
+    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
-    
     self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
     self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
     self.effectView.alpha = 0.8;
     
     [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
@@ -2197,7 +2185,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
-    
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     [self.effectView removeFromSuperview];
     self.effectView = nil;
 }
