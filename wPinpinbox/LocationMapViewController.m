@@ -7,21 +7,22 @@
 //
 
 #import "LocationMapViewController.h"
+#import "MapHelper.h"
 
 #if(DEBUG)
 #define MAPAPIKEY @"AIzaSyBKCVhRB6zjhZ0d0gcXALT8Ts4s8AfxMBk"
 #else
 #define MAPAPIKEY @"AIzaSyBccGhjCogT8jAtxA9H8wpjL-chOjJI1HE"
 #endif
-
 #define mapboxkey @"sk.eyJ1IjoiYW50aHkwMTExIiwiYSI6ImNqb3Fzank4NzA3cDgzcGxoNGt0Z3JiMWYifQ.lpjmNxrbXh5L6WZ4bETD9Q"
 
 @import MapKit;
-@import GoogleMaps;
+@import CoreLocation;
+//@import GoogleMaps;
 
 
 
-@interface LocationMapViewController ()<CLLocationManagerDelegate, UITextFieldDelegate, GMSMapViewDelegate>
+@interface LocationMapViewController ()<CLLocationManagerDelegate, UITextFieldDelegate>//, GMSMapViewDelegate>
 @property (nonatomic) IBOutlet MKMapView *map;
 @property (nonatomic) CLLocationManager *locationManager;
 
@@ -29,8 +30,8 @@
 @property (nonatomic) IBOutlet UIButton *locSearch;
 @property (nonatomic) MKPointAnnotation *userTapAnnotation;
 
-@property (nonatomic) GMSMapView *glMap;
-@property (nonatomic) GMSMarker *curMarker;
+//@property (nonatomic) GMSMapView *glMap;
+//@property (nonatomic) GMSMarker *curMarker;
 
 @end
 
@@ -152,9 +153,8 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     
-    self.map.hidden = YES;
-    [GMSServices provideAPIKey:MAPAPIKEY];
-    //[GMSPlacesClient provideAPIKey:MAPAPIKEY];
+    //[GMSServices provideAPIKey:MAPAPIKEY];
+    
     //self.placeClient = [[GMSPlacesClient alloc] init];
     
     [self addKeyboardNotification];
@@ -216,63 +216,85 @@
         }
     }];
 }
-
+//  use MKLocalSearch to find a place
 - (IBAction)searchViaGeocoder:(id)sender {
     [self.locationName resignFirstResponder];
     
     if (self.locationName.text.length > 1) {
         
         self.locSearch.enabled = NO;
-        NSURLSession *s = [NSURLSession sharedSession];
-        NSString *ss = @"https://api.mapbox.com/geocoding/v5/mapbox.places/%@.json?limit=3&access_token=%@";
-        NSString *target = [NSString stringWithFormat:ss,self.locationName.text, mapboxkey];
-        NSURL *u = [NSURL URLWithString:[target stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-        
         __block typeof(self) wself = self;
-        NSURLSessionDataTask *task = [s dataTaskWithURL:u completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [MapHelper searchLocation:self.locationName.text CompletionBlock:^(MKMapItem * _Nullable item, NSError * _Nullable error) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 wself.locSearch.enabled = YES;
             });
             
-            if (!error && data.length) {
-                NSError *err = nil;
-                
-                NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-                
-                if (!err && result) {
-                    //NSLog(@"Geocoding result : %@",result);
-                    NSArray *features = result[@"features"];
-                    if (features && features.count) {
-                        NSDictionary *loc = [features firstObject];
-                        NSDictionary *gl =loc[@"geometry"];
-                        NSArray *cord = gl[@"coordinates"];
-                        if (cord && cord.count == 2) {
-                            CLLocationDegrees lo = [cord[0] doubleValue];
-                            CLLocationDegrees la = [cord[1] doubleValue];
-                            [wself moveMapWithLatitude:la Longitude:lo];
-                        }
-                    }
-                }
-                
+            if (!error && item) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself loadMapItem:item];
+                });
             } else {
-                NSLog(@"Geocoding Error %@",error);
+                [wself planBForGeocoding];
             }
-            
         }];
-        [task resume];
-
     }
 }
+//  Plan B For Geocoding : Mapbox API
+- (void)planBForGeocoding {
+    
+    NSURLSession *s = [NSURLSession sharedSession];
+    NSString *ss = @"https://api.mapbox.com/geocoding/v5/mapbox.places/%@.json?limit=3&access_token=%@";
+    NSString *target = [NSString stringWithFormat:ss,self.locationName.text, mapboxkey];
+    NSURL *u = [NSURL URLWithString:[target stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    
+    __block typeof(self) wself = self;
+    NSURLSessionDataTask *task = [s dataTaskWithURL:u completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            wself.locSearch.enabled = YES;
+        });
+        
+        if (!error && data.length) {
+            NSError *err = nil;
+            
+            NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+            
+            if (!err && result) {
+                //NSLog(@"Geocoding result : %@",result);
+                NSArray *features = result[@"features"];
+                if (features && features.count) {
+                    NSDictionary *loc = [features firstObject];
+                    NSDictionary *gl =loc[@"geometry"];
+                    NSArray *cord = gl[@"coordinates"];
+                    if (cord && cord.count == 2) {
+                        CLLocationDegrees lo = [cord[0] doubleValue];
+                        CLLocationDegrees la = [cord[1] doubleValue];
+                        [wself moveMapWithLatitude:la Longitude:lo];
+                    }
+                }
+            }
+            
+        } else {
+            NSLog(@"Geocoding Error %@",error);
+        }
+        
+    }];
+    [task resume];
+}
+
 - (IBAction)cancelAndDismiss:(id)sender {
+    [self cancelAndDismiss];
+}
+- (void)cancelAndDismiss {
     [self removeKeyboardNotification];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)addMapTap {
-    /*
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer  alloc] initWithTarget:self action:@selector(handleMapTap:)];
     [self.map addGestureRecognizer:tap];
-     */
+    
 }
 - (void)addDismissTap {
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissTap:)];
@@ -281,13 +303,39 @@
 }
 - (void)handleMapTap:(UITapGestureRecognizer *)tap {
     
+    [wTools ShowMBProgressHUD];
+    CGPoint p = [tap locationInView:self.map];
+    CLLocationCoordinate2D coord = [self.map convertPoint:p toCoordinateFromView:nil];
+//    CLLocation *loc = [[CLLocation alloc] initWithLatitude:coord.latitude longitude:coord.longitude];
+//    CLGeocoder *coder = [[CLGeocoder alloc] init];
+    __block typeof(self) wself = self;
+    MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
+    //request.naturalLanguageQuery = @"location address";
+    request.region = MKCoordinateRegionMakeWithDistance(coord,50,50);
+    MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
+    [search startWithCompletionHandler:^(MKLocalSearchResponse * _Nullable response, NSError * _Nullable error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+        });
+        if (!error && response) {
+            NSArray *res = response.mapItems;
+            MKMapItem *first = [res firstObject];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself loadMapItem:first];
+                wself.locationName.text = first.name;
+            });
+        } else {
+            NSLog(@"MKLocalSearch Error %@",error);
+            
+        }
+    }];
 }
 - (void)handleDismissTap:(UITapGestureRecognizer *)tap {
     
     CGPoint p = [tap locationInView:self.view];
     CGSize s = UIScreen.mainScreen.bounds.size;
     if (p.y > 0 && p.y < s.height - 325) {
-        [self cancelAndDismiss:nil];
+        [self cancelAndDismiss];
     }
     
 }
@@ -297,22 +345,38 @@
         [self searchViaGeocoder:self.locSearch];
     }
 }
+
 - (void)moveMapWithLatitude:(CLLocationDegrees)la Longitude:(CLLocationDegrees)lo {
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:la longitude:lo
-                                                                    zoom:15];
-        [self.glMap clear];
-        [self.glMap animateToCameraPosition:camera];
-        
-        self.locSearch.enabled = YES;
-        
-        self.curMarker = [[GMSMarker alloc] init];
-        self.curMarker.position = CLLocationCoordinate2DMake(la,lo);
-        self.curMarker.title = @"";
-        self.curMarker.map = self.glMap;
-    });
+    NSArray *ans = [NSArray arrayWithArray:self.map.annotations];
+    [self.map removeAnnotations:ans];
+    
+    CLLocationCoordinate2D l = CLLocationCoordinate2DMake(la, lo);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(l,200,200);
+    [self.map setRegion: [self.map regionThatFits: region] animated: YES];
+    self.userTapAnnotation = [[MKPointAnnotation alloc] init];
+    self.userTapAnnotation.coordinate = l;
+    self.userTapAnnotation.title = @"";
+    
+    
+    [self.map addAnnotation: self.userTapAnnotation];
+    
+//
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:la longitude:lo
+//                                                                    zoom:15];
+//        [self.glMap clear];
+//        [self.glMap animateToCameraPosition:camera];
+//
+//        self.locSearch.enabled = YES;
+//
+//        self.curMarker = [[GMSMarker alloc] init];
+//        self.curMarker.position = CLLocationCoordinate2DMake(la,lo);
+//        self.curMarker.title = @"";
+//        self.curMarker.map = self.glMap;
+//    });
 }
+/*
 #pragma mark - GMSMapViewDelegate
 - (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate {
     
@@ -360,6 +424,41 @@
     
     
 }
+*/
+#pragma mark - Add the poi to map
+- (void)loadMapItem:(MKMapItem *)item {
+    MKPlacemark *mark = item.placemark;
+    
+    NSArray *ans = [NSArray arrayWithArray:self.map.annotations];
+    [self.map removeAnnotations:ans];
+    
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(mark.coordinate,300,300);
+    [self.map setRegion: [self.map regionThatFits: region] animated: YES];
+    
+    self.userTapAnnotation = [[MKPointAnnotation alloc] init];
+    self.userTapAnnotation.coordinate = mark.coordinate;
+    self.userTapAnnotation.title = item.name;
+    
+    
+    [self.map addAnnotation: self.userTapAnnotation];
+}
+- (void)loadPlacemark:(CLPlacemark *)mark {
+    
+    
+    NSArray *ans = [NSArray arrayWithArray:self.map.annotations];
+    [self.map removeAnnotations:ans];
+    
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(mark.location.coordinate,300,300);
+    [self.map setRegion: [self.map regionThatFits: region] animated: YES];
+    
+    self.userTapAnnotation = [[MKPointAnnotation alloc] init];
+    self.userTapAnnotation.coordinate = mark.location.coordinate;
+    self.userTapAnnotation.title = mark.name;
+    
+    
+    [self.map addAnnotation: self.userTapAnnotation];
+}
+
 #pragma mark CLLocationManagerDelegate functions
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray<CLLocation *> *)locations {
@@ -369,7 +468,7 @@
         [self.map setRegion: [self.map regionThatFits: region] animated: YES];
         MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
         point.coordinate = l.coordinate;
-        point.title = @"current";
+        point.title = @"";
         
         NSArray *ans = [NSArray arrayWithArray:self.map.annotations];
         [self.map removeAnnotations:ans];
@@ -378,7 +477,7 @@
         [self.locationManager stopUpdatingLocation];
         
         
-        
+        /*
         GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:l.coordinate.latitude longitude:l.coordinate.longitude
                                                                      zoom:12];
         self.glMap = [GMSMapView mapWithFrame:CGRectZero camera:camera];
@@ -393,7 +492,7 @@
         self.curMarker.position = CLLocationCoordinate2DMake(l.coordinate.latitude, l.coordinate.longitude);
         self.curMarker.title = @"";
         self.curMarker.map = self.glMap;
-
+         */
     }
     
 }

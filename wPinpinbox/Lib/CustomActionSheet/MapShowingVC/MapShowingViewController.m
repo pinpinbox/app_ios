@@ -14,11 +14,9 @@
 #import "boxAPI.h"
 #import "LabelAttributeStyle.h"
 
+#import "MapHelper.h"
+
 @interface MapShowingViewController ()
-{
-    float lon;
-    float lat;
-}
 @property (weak, nonatomic) IBOutlet MyLinearLayout *actionSheetView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
@@ -73,6 +71,22 @@
 - (IBAction)dismissBtnPress:(id)sender {    
     [self slideOut];
 }
+- (void)processGeocodingMapItem:(MKMapItem *) item {
+    
+    MKPlacemark *mark = item.placemark;
+    CLLocationCoordinate2D result = mark.coordinate;
+    
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(result, 1000, 1000);
+    [self.mapView setRegion: [self.mapView regionThatFits: region] animated: YES];
+    
+    
+    // Add an annotation
+    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+    point.coordinate = result;
+    point.title = item.name;
+    
+    [self.mapView addAnnotation: point];
+}
 - (void)processGeoDataResult:(NSDictionary *)locationData {
     
     if (locationData == nil) {
@@ -87,8 +101,8 @@
                 if (result.count > 0) {
                     NSDictionary *dic = result[0];
                     NSDictionary *location = dic[@"geometry"][@"location"];
-                    lat = [location[@"lat"] floatValue];
-                    lon = [location[@"lng"] floatValue];
+                    CLLocationDegrees lat = [location[@"lat"] floatValue];
+                    CLLocationDegrees lon = [location[@"lng"] floatValue];
                     
                     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(lat, lon), 3000, 3000);
                     [self.mapView setRegion: [self.mapView regionThatFits: region] animated: YES];
@@ -158,8 +172,16 @@
     
     // MapView Data Setting
     if (![self.locationStr isEqualToString:@""]) {
-        //[MBProgressHUD showHUDAddedTo: self.view animated: YES];
+    
         __block typeof(self) wself = self;
+        [MapHelper searchLocation:self.locationStr CompletionBlock:^(MKMapItem * _Nullable item, NSError * _Nullable error) {
+            if (!error && item) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself processGeocodingMapItem:item];
+                });
+            }
+        }];
+        /*
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             
             NSString *respone=[boxAPI api_GET:[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?address=%@&sensor=false", wself.locationStr] ];
@@ -181,6 +203,7 @@
                 }
             });
         });
+         */
     }
 }
 

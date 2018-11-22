@@ -55,6 +55,8 @@
 
 
 #import "WKVideoPlayerView.h"
+#import "MapHelper.h"
+
 #define kTextContentHeight 155
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
@@ -739,9 +741,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     WKVideoPlayerView *v2 = (WKVideoPlayerView *)[cell.videoView viewWithTag:20002];
     if (v2) {
+        
+        CGRect box = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(560, 315),CGRectMake(0,0 , self.view.frame.size.width,self.view.frame.size.height));
+        //[v2 refreshLayoutWithOrientation];
+        v2.frame = box;
         v2.center = cell.videoView.center;
-        [v2 layoutSubviews];
-        //[v2 reload];
     }
     
     if (orientation == 1) {
@@ -953,7 +957,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         self.photoArray = [NSMutableArray arrayWithArray: dic[@"data"][@"photo"]];
                         [self checkIsOwnedOrNot: dic[@"data"]];
                         
-                        [self getGoogleAPI];
+                        [self getMapAPI];
                         [self checkLocationBtn: wself->oldCurrentPage];
                         [self checkAudio: wself->oldCurrentPage];
                         [self.imageScrollCV reloadData];
@@ -1024,7 +1028,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"checkAudio");
     // Get audioMode first
     self.mScrubber.hidden = NO;
-    
+
     audioMode = self.bookdata[@"album"][@"audio_mode"];
     NSLog(@"audioMode: %@", audioMode);
     
@@ -1036,8 +1040,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"audioMode is singular");
         audioTarget = self.bookdata[@"album"][@"audio_target"];
         NSLog(@"audioTarget: %@", audioTarget);
-        self.soundBtn.hidden = NO;
-        self.mScrubber.hidden = NO;
+        if (![audioTarget isKindOfClass:[NSNull class]]) {
+            self.soundBtn.hidden = NO;
+            self.mScrubber.hidden = NO;
+        } else {
+            self.mScrubber.hidden = YES;
+        }
     } else if ([audioMode isEqualToString: @"plural"]) {
         [self.avPlayer pause];
         NSLog(@"audioMode is plural");
@@ -2203,7 +2211,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [wTools logOut];
 }
 
-- (void)getGoogleAPI {
+- (void)getMapAPI {
     // Location
     NSString *location = self.bookdata[@"album"][@"location"];
     //NSLog(@"location: %@", location);
@@ -2211,35 +2219,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (![location isEqualToString:@""]) {
         [wTools ShowMBProgressHUD];
         __block typeof(self) wself = self;
-        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-            NSString *response = [boxAPI api_GET:[NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?address=%@&sensor=false",location ] ];
-            
+        [MapHelper searchLocation:location CompletionBlock:^(MKMapItem * _Nullable item, NSError * _Nullable error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wTools HideMBProgressHUD];
-                
-                if (response != nil) {
-                    //                    NSLog(@"response from api_GET: %@",response);
-                    
-                    if ([response isEqualToString: timeOutErrorCode]) {
-                        NSLog(@"Time Out Message Return");
-                        NSLog(@"ContentCheckingViewController");
-                        NSLog(@"getGoogleAPI");
-                        
-                        [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                         protocolName: @"api_GET"
-                                             pointStr: @""
-                                                  btn: nil
-                                                  bgV: nil];
-                    } else {
-                        NSLog(@"Get Real Response");
-                        NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                        
-                        [wself setLocdata:dic];
-                        
-                    }
-                }
             });
-        });
+            if (!error && item) {
+                NSDictionary *result = @{@"mapitem" : item};
+                [wself setLocdata:result];
+            }
+            
+        }];
+        
     }
 }
 - (void)setLocdata:(NSDictionary *)dic {
@@ -3620,22 +3610,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     
                     if (a && a.count ) {
                         WKVideoPlayerView *v2 = [[WKVideoPlayerView alloc] initWithString:vpath configuration:[self getConfiguration]];
-                        CGFloat width = UIScreen.mainScreen.bounds.size.width;//cell.videoView.frame.size.width;
-                        //CGFloat height = UIScreen.mainScreen.bounds.size.height;
-                        v2.frame = CGRectMake(0, 0 ,width , width*0.5625);
-                        v2.contentMode = UIViewContentModeScaleAspectFit;
+                        CGRect box = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(560, 315),CGRectMake(0,0 , self.view.frame.size.width,self.view.frame.size.height));
+                        //CGFloat width = UIScreen.mainScreen.bounds.size.width;//cell.videoView.frame.size.width;
                         
-                        v2.tag = 20002;                
-                        v2.translatesAutoresizingMaskIntoConstraints = NO;
-                        v2.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-                        
-                        NSLayoutConstraint *cx = [NSLayoutConstraint constraintWithItem:v2 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:cell.videoView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
-                        NSLayoutConstraint *cy = [NSLayoutConstraint constraintWithItem:v2 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:cell.videoView attribute:NSLayoutAttributeCenterY multiplier:1 constant:1];
-                        NSLayoutConstraint *s = [NSLayoutConstraint constraintWithItem:v2 attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:cell.videoView attribute:NSLayoutAttributeWidth multiplier:1 constant:0];
-                        NSLayoutConstraint *sh = [NSLayoutConstraint constraintWithItem:v2 attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:v2 attribute:NSLayoutAttributeWidth multiplier:0.5625 constant:0];
-                        [cell.videoView addSubview:v2];
-                        v2.center = cell.center;
-                        [cell.videoView addConstraints:@[cx,cy,s,sh]];
+                        [v2 addViewLayoutWithView:cell.videoView];
+                        v2.frame = box;//CGRectMake(0, 0 ,width , width*0.5625);
+                        v2.center = cell.videoView.center;
+                        self.soundBtn.hidden = YES;
+                        self.mScrubber.hidden = YES;
                     } else {
                         
                     }
@@ -4827,7 +4809,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         } else {
             
             if ([protocolName isEqualToString: @"api_GET"]) {
-                [weakSelf getGoogleAPI];
+                [weakSelf getMapAPI];
             } else if ([protocolName isEqualToString: @"insertAlbum2Likes"]) {
                 [weakSelf insertAlbumToLikes];
             } else if ([protocolName isEqualToString: @"deleteAlbum2Likes"]) {

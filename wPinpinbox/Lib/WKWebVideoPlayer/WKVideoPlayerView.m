@@ -54,9 +54,10 @@
 
 #pragma mark -
 
-@interface WKVideoPlayerView()
+@interface WKVideoPlayerView()<UIGestureRecognizerDelegate>
 @property (nonatomic, strong) NSString *path;
 @property (nonatomic, strong) NSMutableArray *urls;
+@property (nonatomic, strong) NSLayoutConstraint *widthheight;
 //@property (nonatomic, strong) WKUserContentController *cntController;
 @end
 
@@ -77,6 +78,7 @@
     
     return self;
 }
+
 - (void)setVideoPath:(NSString *)path {
     
     self.path = path;
@@ -95,7 +97,13 @@
     
     return NO;
 }
-
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    
+    return YES;
+}
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    NSLog(@"event  %@", event);
+}
 - (NSString *)stringWithURLs {
     
     NSString *res = self.path;
@@ -153,6 +161,69 @@
         }
     }
 
+}
+- (void)addViewLayoutWithView:(UIView *)base {
+    
+    self.contentMode = UIViewContentModeScaleAspectFit;
+    
+    self.tag = 20002;
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+//
+//    NSLayoutConstraint *cx = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
+//    NSLayoutConstraint *cy = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeCenterY multiplier:1 constant:1];
+//    NSLayoutConstraint *s = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeWidth multiplier:1 constant:0];
+//    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:0.5625 constant:0];
+//    [self addConstraint:self.widthheight];
+    [base addSubview:self];
+//    [base addConstraints:@[cx,cy,s]];
+}
+- (void)refreshLayoutWithOrientation {
+    UIView *base = self.superview;
+    
+    switch ([UIDevice currentDevice].orientation) {
+        case UIDeviceOrientationPortrait:
+        case UIDeviceOrientationPortraitUpsideDown: {
+            for (NSLayoutConstraint *c in base.constraints) {
+                if (c.firstItem == self && c.firstAttribute == NSLayoutAttributeHeight) {
+                    [base removeConstraint:c];
+                    [base addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
+                    [self removeConstraint:self.widthheight];
+                    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:0.5625 constant:0];
+                    [self addConstraint:self.widthheight];
+                    [base setNeedsLayout];
+                    [self setNeedsLayout];
+                    break;
+                    
+                }
+                
+            }
+            
+            
+            
+        } break;
+        case UIDeviceOrientationLandscapeLeft:
+        case UIDeviceOrientationLandscapeRight:{
+            
+            for (NSLayoutConstraint *c in base.constraints) {
+                if (c.firstItem == self && c.firstAttribute == NSLayoutAttributeWidth) {
+                    [base removeConstraint:c];
+                    [base addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeHeight multiplier:1 constant:0]];
+                    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:(16.0/9.0) constant:0];
+                    [self addConstraint:self.widthheight];
+                    [base setNeedsLayout];
+                    [self setNeedsLayout];
+                    break;
+                }
+                
+            }
+        } break;
+            
+        default:
+            break;
+    }
+    
+    //[self setNeedsLayout];
 }
 
 @end

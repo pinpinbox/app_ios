@@ -20,7 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isURLsContained;
 - (NSString *)stringWithURLs;
 - (void)setVideoPath:(NSString *)path;
-
+- (void)addViewLayoutWithView:(UIView *)base;
+- (void)refreshLayoutWithOrientation;
 @end
 
 NS_ASSUME_NONNULL_END

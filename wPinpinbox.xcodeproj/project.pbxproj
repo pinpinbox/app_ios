@@ -370,6 +370,7 @@
 		CB5E68EF2193EF1F00CB47F5 /* CooperationInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */; };
 		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
 		CB8404DA218718DB00E1C2A7 /* InfoTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8404D9218718DB00E1C2A7 /* InfoTextView.m */; };
+		CB84C63321A68903000D348C /* MapHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB84C63221A68903000D348C /* MapHelper.m */; };
 		CB8FB77E21991CB700D3C23C /* PDFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8FB77D21991CB700D3C23C /* PDFUploader.m */; };
 		CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
@@ -996,6 +997,8 @@
 		CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MultipartInputStream.m; path = MultipartInputStream/MultipartInputStream.m; sourceTree = "<group>"; };
 		CB8404D9218718DB00E1C2A7 /* InfoTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoTextView.m; sourceTree = "<group>"; };
 		CB8404DB2187190D00E1C2A7 /* InfoTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoTextView.h; sourceTree = "<group>"; };
+		CB84C63121A68903000D348C /* MapHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapHelper.h; sourceTree = "<group>"; };
+		CB84C63221A68903000D348C /* MapHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapHelper.m; sourceTree = "<group>"; };
 		CB8FB77C21991CB700D3C23C /* PDFUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFUploader.h; sourceTree = "<group>"; };
 		CB8FB77D21991CB700D3C23C /* PDFUploader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFUploader.m; sourceTree = "<group>"; };
 		CB8FB77F2199223600D3C23C /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
@@ -2367,6 +2370,7 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CB84C63021A68903000D348C /* MapHelper */,
 				CB0CA8DE219AC5A800B5018B /* SwitchButtonView */,
 				CB1B38FA21991956003C8B3F /* PDFUploader */,
 				CB1B38FB21991956003C8B3F /* WKWebVideoPlayer */,
@@ -2727,6 +2731,15 @@
 			name = MultipartInputStream;
 			sourceTree = "<group>";
 		};
+		CB84C63021A68903000D348C /* MapHelper */ = {
+			isa = PBXGroup;
+			children = (
+				CB84C63121A68903000D348C /* MapHelper.h */,
+				CB84C63221A68903000D348C /* MapHelper.m */,
+			);
+			path = MapHelper;
+			sourceTree = "<group>";
+		};
 		D70145001D1A7F20005D8CDE /* Email 驗證 */ = {
 			isa = PBXGroup;
 			children = (
@@ -3059,6 +3072,7 @@
 				92D362FA1BE06C170084C746 /* TYMProgressBarView.m in Sources */,
 				540473301FB066D00075BBD8 /* PointCalculationViewController.m in Sources */,
 				63301DE11EF69EB0002C082A /* OtherCollectionTableViewCell.m in Sources */,
+				CB84C63321A68903000D348C /* MapHelper.m in Sources */,
 				6305440A1E5FE5E200B0CB6D /* UIView+Toast.m in Sources */,
 				54E6EA7920A0508500DA7D99 /* FollowFromListViewController.m in Sources */,
 				5498BF751FC7200A007BD033 /* ActivityDetailViewController.m in Sources */,

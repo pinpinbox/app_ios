@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@import MapKit;
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol AddLocationDelegate
@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleDismissTap:(UITapGestureRecognizer *)tap;
 - (void)addKeyboardNotification;
 - (void)removeKeyboardNotification;
-- (void)keyboardWasShown;
+- (void)keyboardWasShown:(NSNotification*)aNotification;
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification;
 @end
 

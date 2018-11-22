@@ -13,6 +13,8 @@
 #import "AppDelegate.h"
 #import "GlobalVars.h"
 
+#import "MapHelper.h"
+
 @interface AlbumInfoViewController () {
     float lon;
     float lat;
@@ -217,28 +219,22 @@
         self.mapView.hidden = NO;
         
         if (self.localData) {
-            if (self.localData[@"results"]) {
-                NSArray *result = self.localData[@"results"];
+            MKMapItem *item = self.localData[@"mapitem"];
+            if (item) {
+                MKPlacemark *mark = item.placemark;
+                CLLocationCoordinate2D result = mark.coordinate;
                 
-                if (result.count > 0) {
-                    NSDictionary *dic = result[0];
-                    NSDictionary *location = dic[@"geometry"][@"location"];
-                    lat = [location[@"lat"] floatValue];
-                    lon = [location[@"lng"] floatValue];
-                    
-                    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(lat, lon), 3000, 3000);
-                    [self.mapView setRegion: [self.mapView regionThatFits: region] animated: YES];
-                    
-                    NSLog(@"formatted_address: %@", dic[@"formatted_address"]);
-                    NSString *formattedAddress = dic[@"formatted_address"];
-                    
-                    // Add an annotation
-                    MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
-                    point.coordinate = CLLocationCoordinate2DMake(lat, lon);
-                    point.title = formattedAddress;
-                    
-                    [self.mapView addAnnotation: point];
-                }
+                MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(result, 3000, 3000);
+                [self.mapView setRegion: [self.mapView regionThatFits: region] animated: YES];
+
+                // Add an annotation
+                MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
+                point.coordinate = result;
+
+                point.title = item.name;
+                
+                [self.mapView addAnnotation: point];
+    
             }
         }
     }
