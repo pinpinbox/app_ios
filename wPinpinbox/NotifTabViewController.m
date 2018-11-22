@@ -31,14 +31,11 @@
 #import "AlbumCreationViewController.h"
 #import "AlbumCollectionViewController.h"
 
-@interface NotifTabViewController () <UITableViewDataSource, UITableViewDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate>
-{
+@interface NotifTabViewController () <UITableViewDataSource, UITableViewDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate> {
     NSMutableArray *notificationData;
-    
     BOOL isLoading;
     BOOL isReloading;
     NSInteger nextId;
-    
     UIView *view;
 }
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -58,14 +55,12 @@
     NSLog(@"");
     NSLog(@"NotifTabTableViewController viewWillAppear");
     [super viewWillAppear:animated];
-    
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     
     for (UIView *v in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[v viewWithTag: 104];
         btn.hidden = NO;
     }
-    
     // Set Badge to 0 in the storage
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSLog(@"badgeCount: %d", [[defaults objectForKey: @"badgeCount"] intValue]);
@@ -75,7 +70,6 @@
     } else {
         [self loadData];
     }
-    
     [defaults setObject: [NSNumber numberWithInteger: 0] forKey: @"badgeCount"];
     [defaults synchronize];
     
@@ -107,14 +101,11 @@
     nextId = 0;
     isLoading = NO;
     isReloading = NO;
-    
     notificationData = [NSMutableArray new];
-    
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget: self
                             action: @selector(refresh)
                   forControlEvents: UIControlEventValueChanged];
-    
     [self.tableView addSubview: self.refreshControl];
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.separatorColor = [UIColor thirdGrey];
@@ -141,9 +132,7 @@
         if (nextId == 0) {
             
         }
-        
         isLoading = YES;
-        
         [self getPushQueue];
     }
 }
@@ -193,13 +182,9 @@
                     
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     NSLog(@"response from getPushQueue");
-                    
                     [wself processPushQueue:dic];
-                    
                 }
             } else {
                 [wself.refreshControl endRefreshing];
@@ -208,6 +193,7 @@
         });
     });
 }
+
 - (void)processPushQueue:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         if (nextId == 0)
@@ -216,11 +202,12 @@
         // s for counting how much data is loaded
         int s = 0;
         
-        for (NSMutableDictionary *notifData in [dic objectForKey: @"data"]) {
-            s++;
-            [notificationData addObject: notifData];
+        if ([wTools objectExists: dic[@"data"]]) {
+            for (NSMutableDictionary *notifData in [dic objectForKey: @"data"]) {
+                s++;
+                [notificationData addObject: notifData];
+            }
         }
-        
         // If data keeps loading then the nextId is accumulating
         nextId = nextId + s;
         NSLog(@"nextId is: %ld", (long)nextId);
@@ -245,7 +232,6 @@
         
         isReloading = NO;
         
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSLog(@"badgeCount: %d", [[defaults objectForKey: @"badgeCount"] intValue]);
         
@@ -263,10 +249,15 @@
             }
         }
     } else if ([dic[@"result"] intValue] == 0) {
+//        NSLog(@"失敗： %@", dic[@"message"]);
+//        NSString *msg = dic[@"message"];
+//        [self showCustomErrorAlert: msg];
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        [self showCustomErrorAlert: msg];
-        
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
         [self.refreshControl endRefreshing];
         isReloading = NO;
     } else {
@@ -275,10 +266,9 @@
         isReloading = NO;
     }
 }
-- (void)addNoInfoView
-{
+
+- (void)addNoInfoView {
     UILabel *label;
-    
     view = [[UIView alloc] initWithFrame: CGRectMake(16, 192, self.view.bounds.size.width - 32, 120)];
     view.backgroundColor = [UIColor secondGrey];
     view.layer.cornerRadius = 32;
@@ -313,8 +303,6 @@
     NotifTabTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"Cell" forIndexPath: indexPath];
     
     NSDictionary *dic = [notificationData[indexPath.row] copy];
-    
-    
     NSString *imageUrl = dic[@"pushqueue"][@"image_url"];
     NSLog(@"imageUrl: %@", imageUrl);
     NSString *message = dic[@"pushqueue"][@"message"];
@@ -325,10 +313,8 @@
     
 //    cell.headshotImaveView.showActivityIndicator = NO;
     cell.headshotImaveView.backgroundColor = [UIColor thirdGrey];
-    
     cell.messageLabel.text = message;
     [LabelAttributeStyle changeGapString: cell.messageLabel content: message];
-    
     cell.insertTimeLabel.text = insertTime;
     [LabelAttributeStyle changeGapString: cell.insertTimeLabel content: insertTime];
     
@@ -501,9 +487,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 //                    [self showCustomAlert: msg messageType: @"confirmation"];
                 } else {
                     NSLog(@"identity is not viewer");
-                    
                     AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
-                    
                     if ([notificationData[indexPath.row][@"cooperation"][@"identity"] isEqual: [NSNull null]]) {
                         acVC.userIdentity = @"";
                     } else {
@@ -598,9 +582,7 @@ viewForHeaderInSection:(NSInteger)section {
         [updateLabel sizeToFit];
         UITapGestureRecognizer *newVersionLabelTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleNewVersionLabelTap)];
         [updateLabel addGestureRecognizer: newVersionLabelTap];
-        
         [headerVertLayout addSubview: updateLabel];
-        
         headerVertLayout.heightDime.max(100);
     }
     
@@ -616,7 +598,6 @@ viewForHeaderInSection:(NSInteger)section {
     sectionHeaderTitle.backgroundColor = [UIColor clearColor];
     [sectionHeaderTitle sizeToFit];
     [headerVertLayout addSubview: sectionHeaderTitle];
-    
     [headerVertLayout sizeToFit];
     self.tableView.tableHeaderView = headerVertLayout;
     
@@ -727,9 +708,7 @@ heightForHeaderInSection:(NSInteger)section {
             time = [NSString stringWithFormat: @"%ld 秒", (long)components.second];
         }
     }
-    
     NSLog(@"time: %@", time);
-    
     return [NSString stringWithFormat: @"%@前", time];
 }
 
@@ -764,24 +743,28 @@ heightForHeaderInSection:(NSInteger)section {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         
                         AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                        aDVC.data = [dic[@"data"] mutableCopy];
-                        aDVC.albumId = albumid;
-                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-                        
-                        CATransition *transition = [CATransition animation];
-                        transition.duration = 0.5;
-                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                        transition.type = kCATransitionMoveIn;
-                        transition.subtype = kCATransitionFromTop;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-                        [appDelegate.myNav pushViewController: aDVC animated: NO];
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            aDVC.data = [dic[@"data"] mutableCopy];
+                            
+                            if ([wTools objectExists: albumid]) {
+                                aDVC.albumId = albumid;
+                                aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+                                
+                                CATransition *transition = [CATransition animation];
+                                transition.duration = 0.5;
+                                transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+                                transition.type = kCATransitionMoveIn;
+                                transition.subtype = kCATransitionFromTop;
+                                
+                                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+                                [appDelegate.myNav pushViewController: aDVC animated: NO];
+                            }
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
@@ -911,7 +894,6 @@ heightForHeaderInSection:(NSInteger)section {
 #pragma mark - Custom AlertView for Yes and No
 - (void)showCustomAlert: (NSString *)msg {
     NSLog(@"showCustomAlert: Msg: %@", msg);
-    
     CustomIOSAlertView *alertBackView = [[CustomIOSAlertView alloc] init];
     //[alertBackView setContainerView: [self createContainerView: msg]];
     [alertBackView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -987,8 +969,7 @@ heightForHeaderInSection:(NSInteger)section {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
