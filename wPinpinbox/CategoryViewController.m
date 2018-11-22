@@ -335,7 +335,7 @@
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 break;
-            case 2436:
+            default://case 2436:
                 NSLog(@"\n");
                 printf("iPhone X");
                 NSLog(@"UI Setting");
@@ -345,9 +345,9 @@
                 self.creatorLabelTopConstraint.constant = 90;
                 self.closeBtnTopConstraint.constant = 90;
                 break;
-            default:
-                printf("unknown");
-                break;
+//            default:
+//                printf("unknown");
+//                break;
         }
     }
 }
@@ -1303,14 +1303,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     printf("iPhone 6+/6S+/7+/8+");
                     yAxis = -48;
                     break;
-                case 2436:
+                default://case 2436:
                     printf("iPhone X");
                     yAxis = -72;
                     break;
-                default:
-                    printf("unknown");
-                    yAxis = -48;
-                    break;
+//                default:
+//                    printf("unknown");
+//                    yAxis = -48;
+//                    break;
             }
         }
         

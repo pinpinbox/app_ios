@@ -59,6 +59,7 @@
 
 #import "LocationMapViewController.h"
 #import "URLAddViewController.h"
+#import "PhotoDescriptionAddViewController.h"
 
 
 #pragma mark - Photo Editor SDK
@@ -211,6 +212,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 @property (nonatomic) LocationMapViewController *mapShowingActionSheet;
 @property (nonatomic) URLAddViewController *urlAddingActionSheet;
+@property (nonatomic) PhotoDescriptionAddViewController *descAddActionSheet;
 
 @property (nonatomic) IBOutlet UIButton *deleteImageBtn;
 @end
@@ -366,7 +368,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // CustomActionSheet
     self.customAddActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customAddActionSheet.delegate = self;
-    self.customAddActionSheet.topicStr = @"為作品新增相片/影片/PDF";
+    //  file broswer is available in iOS >= 11.0 //
+    if (@available(iOS 11.0, *)) {
+        self.customAddActionSheet.topicStr = @"為作品新增相片/影片/PDF";
+    } else {
+        self.customAddActionSheet.topicStr = @"為作品新增相片/影片";
+    }
     
     self.customVideoActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customVideoActionSheet.delegate = self;
@@ -759,14 +766,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-- (void)setUpTextAdding {
+- (void)setUpTextAdding:(NSString *)desc {
     NSLog(@"setUpTextAdding");
     
     NSMutableDictionary *settingsDic = [NSMutableDictionary new];
-    [settingsDic setObject: textV.text forKey: @"description"];
-    NSLog(@"textV.text: %@", textV.text);
+    [settingsDic setObject: desc forKey: @"description"];
+    NSLog(@"textV.text: %@", desc);
     
-    textForDescription = textV.text;
+    textForDescription = desc;
     
     @try {
         [self callUpdatePhotoOfDiyWithoutPhoto: textForDescription];
@@ -3358,6 +3365,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [self.customAddActionSheet addSelectItem: @"ic200_camera_dark" title: @"相片" btnStr: @"" tagInt: 1 identifierStr: @"photo"];
     [self.customAddActionSheet addSelectItem: @"ic200_videomake_dark" title: @"影片" btnStr: @"" tagInt: 2 identifierStr: @"video"];
     
+    //  file broswer is available in iOS >= 11.0 //
     if (@available(iOS 11.0, *)) {
         [self.customAddActionSheet addSelectItem: @"ic200_user_about_dark" title: @"PDF" btnStr: @"" tagInt: 2 identifierStr: @"pdf"];
     }
@@ -4278,34 +4286,52 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - Custom AlertView For Text
 - (void)showTextEditing {
-    NSLog(@"showTextEditing");
     
-    UIImage *imgForText1 = [UIImage imageNamed: @"icon_cancel_pink500_120x120"];
-    UIImage *imgForText2 = [UIImage imageNamed: @"icon_comfirm_teal500_120x120"];
+    self.descAddActionSheet = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"DescriptionAddVC"];
     
-    OldCustomAlertView *alertViewForText = [[OldCustomAlertView alloc] init];
-    [alertViewForText setContainerView: [self createViewForText]];
-    alertViewForText.useImages = YES;
-    [alertViewForText setButtonImages: [NSMutableArray arrayWithObjects: imgForText1, imgForText2, nil]];
+    //self.descAddActionSheet.locationDelegate = self;
+    __block typeof(self) wself = self;
     
-    __weak typeof(self) weakSelf = self;
-    __weak OldCustomAlertView *weakAlertViewForText = alertViewForText;
-    [alertViewForText setOnButtonTouchUpInside:^(OldCustomAlertView *alertViewForText, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForText tag]);
-        [weakAlertViewForText close];
+    
+    [self presentViewController:self.descAddActionSheet animated:YES completion:nil];
+    
+    [self.descAddActionSheet addDesc:(textForDescription)? textForDescription:@"" submitBlock:^(NSString * _Nonnull desc) {
+        __strong typeof(wself) sself = wself;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [sself setUpTextAdding:desc];
+        });
         
-        if (buttonIndex == 0) {
-            NSLog(@"0");
-        } else if (buttonIndex == 1) {
-            NSLog(@"1");
-            [weakSelf setUpTextAdding];
-        } else {
-            NSLog(@"buttonIndex: %d", buttonIndex);
-        }
     }];
     
-    [alertViewForText setUseMotionEffects: true];
-    [alertViewForText show];
+    
+//    NSLog(@"showTextEditing");
+//
+//    UIImage *imgForText1 = [UIImage imageNamed: @"icon_cancel_pink500_120x120"];
+//    UIImage *imgForText2 = [UIImage imageNamed: @"icon_comfirm_teal500_120x120"];
+//
+//    OldCustomAlertView *alertViewForText = [[OldCustomAlertView alloc] init];
+//    [alertViewForText setContainerView: [self createViewForText]];
+//    alertViewForText.useImages = YES;
+//    [alertViewForText setButtonImages: [NSMutableArray arrayWithObjects: imgForText1, imgForText2, nil]];
+//
+//    __weak typeof(self) weakSelf = self;
+//    __weak OldCustomAlertView *weakAlertViewForText = alertViewForText;
+//    [alertViewForText setOnButtonTouchUpInside:^(OldCustomAlertView *alertViewForText, int buttonIndex) {
+//        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForText tag]);
+//        [weakAlertViewForText close];
+//
+//        if (buttonIndex == 0) {
+//            NSLog(@"0");
+//        } else if (buttonIndex == 1) {
+//            NSLog(@"1");
+//            [weakSelf setUpTextAdding];
+//        } else {
+//            NSLog(@"buttonIndex: %d", buttonIndex);
+//        }
+//    }];
+//
+//    [alertViewForText setUseMotionEffects: true];
+//    [alertViewForText show];
 }
 
 - (UIView *)createViewForText {
@@ -4874,9 +4900,21 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark -
 - (void)didSelectLocation:(NSString *)location {
     
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        
+    }
+    
+    
+    
     NSString *pid = [ImageDataArr [selectItem][@"photo_id"] stringValue];
     __block typeof(self) wself = self;
     [boxAPI updatephotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:self.albumid photo_id:pid key:@"location" settingStr:location  completed:^(NSDictionary *result, NSError *error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+        });
         
         if (result) {
             //NSLog(@"didSelectLocation  %@", result);
@@ -4943,12 +4981,22 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark -
 - (void)addHyperLinks:(NSString *)jsonstr {
     
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+    
+    }
     //  only 2 hyperlinks available ...
     NSString *pid = [ImageDataArr [selectItem][@"photo_id"] stringValue];
     
 
     __block typeof(self) wself = self;
     [boxAPI updatephotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:self.albumid photo_id:pid key:@"hyperlink" settingStr:jsonstr  completed:^(NSDictionary *result, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+        });
         
         if (result) {
             //NSLog(@"didSelectLocation  %@", result);

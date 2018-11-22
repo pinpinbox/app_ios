@@ -7,11 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#if(DEBUG)
-#define MAPAPIKEY @"AIzaSyBKCVhRB6zjhZ0d0gcXALT8Ts4s8AfxMBk"
-#else
-#define MAPAPIKEY @"AIzaSyBccGhjCogT8jAtxA9H8wpjL-chOjJI1HE"
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,7 +22,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LocationMapViewController : UIViewController<UIViewControllerTransitioningDelegate>
 @property (nonatomic) id<AddLocationDelegate> locationDelegate;
 - (void)loadLocation:(NSString *)l;
-
+- (IBAction)cancelAndDismiss:(id)sender;
+- (void)addDismissTap;
+- (void)handleDismissTap:(UITapGestureRecognizer *)tap;
+- (void)addKeyboardNotification;
+- (void)removeKeyboardNotification;
+- (void)keyboardWasShown;
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification;
 @end
 
 NS_ASSUME_NONNULL_END

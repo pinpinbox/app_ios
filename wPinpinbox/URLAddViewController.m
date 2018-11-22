@@ -22,20 +22,6 @@
 
 @implementation URLAddViewController
 
-- (id)init {
-    self = [super init];
-    self.modalPresentationStyle = UIModalPresentationCustom;
-    self.transitioningDelegate = self;
-    self.modalPresentationCapturesStatusBarAppearance = YES;
-    return self;
-}
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    self.modalPresentationStyle = UIModalPresentationCustom;
-    self.transitioningDelegate = self;
-    self.modalPresentationCapturesStatusBarAppearance = YES;
-    return self;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,13 +30,8 @@
     self.url2.delegate = self;
     self.desc1.delegate = self;
     self.desc2.delegate = self;
-    [self addDismissTap];
-    [self addKeyboardNotification];
+    
 }
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
-
 - (void)loadURLs:(NSArray *)urls {
     
     NSDictionary *d1 = [urls firstObject];
@@ -83,10 +64,6 @@
         [self cancelAndDismiss:nil];
     }
     
-}
-- (IBAction)cancelAndDismiss:(id)sender {
-    [self removeKeyboardNotification];
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)showErrorToastWithMessage:(NSString *)message {
     CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -133,70 +110,8 @@
     }
     return nil;
 }
-- (void)addDismissTap {
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDismissTap:)];
-    
-    [self.view addGestureRecognizer:tap];
-}
-- (void)handleDismissTap:(UITapGestureRecognizer *)tap {
-    
-    CGPoint p = [tap locationInView:self.view];
-    CGSize s = UIScreen.mainScreen.bounds.size;
-    if (p.y > 0 && p.y < s.height - 325) {
-        [self cancelAndDismiss:nil];
-    }
-    
-}
-#pragma mark -
-- (void)addKeyboardNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-- (void)removeKeyboardNotification {
-    NSLog(@"");
-    NSLog(@"removeKeyboardNotification");
-    
-    [[NSNotificationCenter defaultCenter] removeObserver: self
-                                                    name: UIKeyboardDidShowNotification
-                                                  object: nil];
-    [[NSNotificationCenter defaultCenter] removeObserver: self
-                                                    name: UIKeyboardWillHideNotification
-                                                  object: nil];
-}
-- (void)keyboardWasShown:(NSNotification*)aNotification {
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    
-    self.view.transform = CGAffineTransformMakeTranslation(0, -kbSize.height);
-    
-}
-
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    self.view.transform = CGAffineTransformIdentity;
-}
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     return YES;
     
-}
-
-#pragma mark -
-- (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
-    
-    return [[MapAnimationTransitioning alloc] initWithType:YES];
-}
-
-- (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-    return [[MapAnimationTransitioning alloc] initWithType:NO];
-}
-- (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(nullable UIViewController *)presenting sourceViewController:(UIViewController *)source {
-    
-    return [[MapPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
 }
 @end

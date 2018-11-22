@@ -209,6 +209,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) CGPoint lastOffset;
 
 @property (nonatomic) WKWebViewConfiguration *wkvideoplayerConf;
+@property (nonatomic) BOOL is3rdPartyVideoPlaying;
 @end
 
 @implementation ContentCheckingViewController
@@ -361,6 +362,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self initialValueSetup];
     [self retrieveAlbum];
     //self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIWindowDidBecomeKeyNotification
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification* notification) {
+                                                      if ([UIApplication sharedApplication].keyWindow.tag == 10001) {
+                                                          [self pageCalculation:[self getCurrentPage]];
+                                                      }
+                                                  }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -394,14 +404,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    NSLog(@"viewWillLayoutSubviews");
-}
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    NSLog(@"viewDidLayoutSubviews");
+    //NSLog(@"viewDidLayoutSubviews");
     
     NSLog(@"isRotated: %d", isRotated);
     if (self.isPresentingOrPushingVC) {
@@ -3922,8 +3928,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section {
-    NSLog(@"");
-    NSLog(@"insetForSectionAtIndex");
+    //NSLog(@"");
+    //NSLog(@"insetForSectionAtIndex");
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 0, 0, 0);
     return itemInset;
 }
@@ -3931,6 +3937,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - UIScrollViewDelegate Methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
+    NSLog(@" [UIApplication sharedApplication].keyWindow.tag %ld",[UIApplication sharedApplication].keyWindow.tag);
+    
+    if ([UIApplication sharedApplication].keyWindow.tag != 10001 ) return;
+
     NSLog(@"");
     NSLog(@"scrollViewDidScroll");
     [self dismissKeyboard];
@@ -3942,7 +3952,11 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    NSLog(@"");
+
+    NSLog(@" [UIApplication sharedApplication].keyWindow.tag %ld",[UIApplication sharedApplication].keyWindow.tag);
+
+    if ([UIApplication sharedApplication].keyWindow.tag != 10001 ) return;
+    
     NSLog(@"scrollViewDidEndDecelerating");
     NSLog(@"self.imageScrollCV.contentOffset.x: %f", self.imageScrollCV.contentOffset.x);
     NSLog(@"self.imageScrollCV.frame.size.width: %f", self.imageScrollCV.frame.size.width);
@@ -5563,6 +5577,12 @@ shouldChangeTextInRange:(NSRange)range
 - (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
     if ([message.body isKindOfClass:[NSString class]]) {
         NSString *msg = (NSString *)message.body;
+        
+        if ([[msg lowercaseString] containsString:@"playing"] || [[msg lowercaseString] containsString:@"pause"]) {
+            self.is3rdPartyVideoPlaying = YES;
+        } else {
+            self.is3rdPartyVideoPlaying = NO;
+        }
         NSLog(@"userContentController didreceive : %@",msg);
     }
 }

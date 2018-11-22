@@ -7,10 +7,19 @@
 //
 
 #import "LocationMapViewController.h"
+
+#if(DEBUG)
+#define MAPAPIKEY @"AIzaSyBKCVhRB6zjhZ0d0gcXALT8Ts4s8AfxMBk"
+#else
+#define MAPAPIKEY @"AIzaSyBccGhjCogT8jAtxA9H8wpjL-chOjJI1HE"
+#endif
+
+#define mapboxkey @"sk.eyJ1IjoiYW50aHkwMTExIiwiYSI6ImNqb3Fzank4NzA3cDgzcGxoNGt0Z3JiMWYifQ.lpjmNxrbXh5L6WZ4bETD9Q"
+
 @import MapKit;
 @import GoogleMaps;
 
-#define mapboxkey @"sk.eyJ1IjoiYW50aHkwMTExIiwiYSI6ImNqb3Fzank4NzA3cDgzcGxoNGt0Z3JiMWYifQ.lpjmNxrbXh5L6WZ4bETD9Q"
+
 
 @interface LocationMapViewController ()<CLLocationManagerDelegate, UITextFieldDelegate, GMSMapViewDelegate>
 @property (nonatomic) IBOutlet MKMapView *map;

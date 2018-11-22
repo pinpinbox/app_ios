@@ -364,6 +364,7 @@
 		CB0C0DB6214653BA00FAF438 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB5214653BA00FAF438 /* Images.xcassets */; };
 		CB0CA8E1219AC5A800B5018B /* SwitchButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */; };
 		CB1B38FE21991957003C8B3F /* WKVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB1B38FC21991956003C8B3F /* WKVideoPlayerView.m */; };
+		CB34E73321A650AA004D054E /* PhotoDescriptionAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB34E73221A650AA004D054E /* PhotoDescriptionAddViewController.m */; };
 		CB5E68EA2193E81B00CB47F5 /* DSPhotoEditorSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		CB5E68EE2193EF1F00CB47F5 /* CooperationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */; };
 		CB5E68EF2193EF1F00CB47F5 /* CooperationInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */; };
@@ -985,6 +986,8 @@
 		CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwitchButtonView.m; sourceTree = "<group>"; };
 		CB1B38FC21991956003C8B3F /* WKVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKVideoPlayerView.m; sourceTree = "<group>"; };
 		CB1B38FD21991956003C8B3F /* WKVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKVideoPlayerView.h; sourceTree = "<group>"; };
+		CB34E73121A650AA004D054E /* PhotoDescriptionAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoDescriptionAddViewController.h; sourceTree = "<group>"; };
+		CB34E73221A650AA004D054E /* PhotoDescriptionAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoDescriptionAddViewController.m; sourceTree = "<group>"; };
 		CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DSPhotoEditorSDK.framework; sourceTree = "<group>"; };
 		CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CooperationInfoViewController.m; sourceTree = "<group>"; };
 		CB5E68EC2193EF1F00CB47F5 /* CooperationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CooperationInfoViewController.h; sourceTree = "<group>"; };
@@ -1836,6 +1839,8 @@
 				CBCE8573219C074600ED185D /* LocationMapViewController.m */,
 				CBD977ED21A2574600F04205 /* URLAddViewController.h */,
 				CBD977EE21A2574600F04205 /* URLAddViewController.m */,
+				CB34E73121A650AA004D054E /* PhotoDescriptionAddViewController.h */,
+				CB34E73221A650AA004D054E /* PhotoDescriptionAddViewController.m */,
 			);
 			name = "CenterButton Related";
 			sourceTree = "<group>";
@@ -3151,6 +3156,7 @@
 				922A4AE21BD5F16A006D5A36 /* retrievepasswordViewController.m in Sources */,
 				54F3BA5C1FA8BC0300F52BE2 /* VotingViewController.m in Sources */,
 				6303C4C91ED32124009E6160 /* FollowListsViewController.m in Sources */,
+				CB34E73321A650AA004D054E /* PhotoDescriptionAddViewController.m in Sources */,
 				92F6CCDF1B79AB9F002E547C /* RSKImageScrollView.m in Sources */,
 				540C59D71F85DDAC000B633E /* BuyPPointViewController.m in Sources */,
 				6319A36D1DABB60C001CB8BD /* JCCollectionViewWaterfallLayout.m in Sources */,
