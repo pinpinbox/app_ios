@@ -242,6 +242,8 @@
     NSLog(@"AlbumSettingViewController viewDidLoad");
     NSLog(@"self.prefixText: %@", self.prefixText);    
     NSLog(@"self.postMode: %d", self.postMode);
+    NSLog(@"self.fromVC: %@", self.fromVC);
+    NSLog(@"self.userIdentity: %@", self.userIdentity);
     [self setupUI1];
     [self getAlbumDataOptions];
     //[self checkCreatePointTask];
@@ -1413,13 +1415,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog(@"isModified is NO");
         NSLog(@"isModified: %d", isModified);
         NSLog(@"self.fromVC: %@", self.fromVC);
-        
         [self checkBeforeGoingToAlbumCreationVC];
     }
 }
 
 - (void)checkBeforeGoingToAlbumCreationVC {
     NSLog(@"checkBeforeGoingToAlbumCreationVC");
+    NSLog(@"self.fromVC: %@", self.fromVC);
     
     if ([self.fromVC isEqualToString: @"AlbumCollectionVC"] || [self.fromVC isEqualToString: @"AlbumDetailVC"]) {
         NSLog(@"self.fromVC is AlbumColletionVC");
@@ -1431,6 +1433,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         acVC.postMode = NO;
         acVC.fromVC = self.fromVC;
         acVC.isNew = NO;
+        acVC.userIdentity = self.userIdentity;
+        
         NSLog(@"self.fromVC: %@", self.fromVC);
         
         if ([self.templateId isEqualToString:@"0"]) {

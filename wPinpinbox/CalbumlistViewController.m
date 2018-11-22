@@ -1816,9 +1816,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                             if (![data[@"album_id"] isEqual: [NSNull null]]) {
                                 if ([i isEqual: [NSNull null]]) {
                                     [self showCustomEditActionSheet: [data[@"album_id"] stringValue]
-                                                       userIdentity: @"admin" cellIndex:index];
+                                                       userIdentity: @"admin"
+                                                          cellIndex: index];
                                 } else if ([i isEqualToString: @"approver"] || [i isEqualToString: @"editor"]) {
-                                    [self toAlbumCreationViewController: [data[@"album_id"] stringValue] templateId: @"0" shareCollection: NO userIdentity: i cellIndex:index];
+//                                    [self toAlbumCreationViewController: [data[@"album_id"] stringValue] templateId: @"0" shareCollection: NO userIdentity: i cellIndex:index];
+                                    
+                                    [self toAlbumCreationViewController: [data[@"album_id"] stringValue] templateId: @"0" shareCollection: NO userIdentity: i cellIndex: index fromVC: self.fromVC];
                                 }
                             }                            
                             return;
@@ -1878,6 +1881,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showCustomEditActionSheet:(NSString *)albumid
                      userIdentity:(NSString *)userIdentity
                         cellIndex:(NSInteger) index {
+    NSLog(@"showCustomEditActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
@@ -1899,28 +1903,43 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         if ([identifierStr isEqualToString: @"albumEdit"]) {
             NSLog(@"albumEdit item is pressed");
             dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf toAlbumCreationViewController: albumid
-                                         templateId: @"0"
-                                    shareCollection: NO
-                                       userIdentity: userIdentity cellIndex:index];
+                [weakSelf toAlbumCreationViewController: albumid
+                                             templateId: @"0"
+                                        shareCollection: NO
+                                           userIdentity: userIdentity
+                                              cellIndex: index
+                                                 fromVC: weakSelf.fromVC];
+//            [weakSelf toAlbumCreationViewController: albumid
+//                                         templateId: @"0"
+//                                    shareCollection: NO
+//                                       userIdentity: userIdentity
+//                                          cellIndex: index];
             });
         } else if ([identifierStr isEqualToString: @"modifyInfo"]) {
             NSLog(@"modifyInfo item is pressed");
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf toAlbumSettingViewController: albumid
                                             templateId: @"0"
+                                          userIdentity: userIdentity
                                        shareCollection: NO
-                                             cellIndex:index];
+                                             cellIndex: index
+                                                fromVC: weakSelf.fromVC];
+                
+//                [weakSelf toAlbumSettingViewController: albumid
+//                                            templateId: @"0"
+//                                       shareCollection: NO
+//                                             cellIndex: index];
             });
         }
     };
 }
 
-- (void)toAlbumCreationViewController: (NSString *)albumId
-                           templateId: (NSString *)templateId
-                      shareCollection: (BOOL)shareCollection
-                         userIdentity: (NSString *)userIdentity
-                            cellIndex:(NSInteger) index {
+- (void)toAlbumCreationViewController:(NSString *)albumId
+                           templateId:(NSString *)templateId
+                      shareCollection:(BOOL)shareCollection
+                         userIdentity:(NSString *)userIdentity
+                            cellIndex:(NSInteger)index
+                               fromVC:(NSString *)fromVC {
     NSLog(@"toAlbumCreationViewController");    
     AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
     //acVC.selectrow = [wTools userbook];
@@ -1930,7 +1949,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     acVC.templateid = [NSString stringWithFormat:@"%@", templateId];
     acVC.shareCollection = shareCollection;
     acVC.postMode = NO;
-    acVC.fromVC = @"CalbumlistViewController";
+    acVC.fromVC = fromVC;
     acVC.delegate = self;
     acVC.isNew = NO;
     
@@ -1948,18 +1967,20 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [appDelegate.myNav pushViewController: acVC animated: YES];
 }
 
-- (void)toAlbumSettingViewController: (NSString *)albumId
-                          templateId: (NSString *)templateId
-                     shareCollection: (BOOL)shareCollection
-                           cellIndex:(NSInteger) index {
+- (void)toAlbumSettingViewController:(NSString *)albumId
+                          templateId:(NSString *)templateId
+                        userIdentity:(NSString *)userIdentity
+                     shareCollection:(BOOL)shareCollection
+                           cellIndex:(NSInteger)index
+                              fromVC:(NSString *)fromVC {
     NSLog(@"toAlbumSettingViewController");
-    
     AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
     aSVC.albumId = albumId;
     aSVC.postMode = NO;
     aSVC.templateId = [NSString stringWithFormat:@"%@", templateId];
+    aSVC.userIdentity = userIdentity;
     aSVC.shareCollection = shareCollection;
-    aSVC.fromVC = @"AlbumDetailVC";
+    aSVC.fromVC = fromVC;
     aSVC.delegate = self;
     NSDictionary *al = dataarr[index][@"album"];
     //  check if album has contents

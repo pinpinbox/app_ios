@@ -167,6 +167,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSInteger viewHeightForPreview;
     NSInteger previewPageNum;
     NSInteger previewPageStrToInt;
+    BOOL isPreviewPageModified;
 }
 
 @property (strong, nonatomic) AVPlayer *avPlayer;
@@ -281,6 +282,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    isPreviewPageModified = NO;
     
     [wTools sendScreenTrackingWithScreenName:@"編輯器"];
     viewHeightForPreview = [UIScreen mainScreen].bounds.size.height;
@@ -443,8 +446,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark - handleTapGesture
-- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer
-{
+- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer {
     NSLog(@"handleTapGesture");
     
     if ([modalVC isEqualToString: @"ReorderVC"]) {
@@ -543,7 +545,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.customSettingActionSheet addSelectItem: @"" title: @"排序作品" btnStr: @"" tagInt: 1 identifierStr: @"reorder"];
     [self.customSettingActionSheet addSelectItem: @"" title: @"設定音樂" btnStr: @"" tagInt: 2 identifierStr: @"setupMusic"];
     [self.customSettingActionSheet addSelectItemForPreviewPage: @"" title: @"設定預覽頁" horzLine: YES btnStr: @"保存" tagInt: 999 identifierStr: @"setupPreview"];
-    
     NSLog(@"ImageDataArr.count: %ld", ImageDataArr.count);
     NSLog(@"previewPageNum: %ld", previewPageNum);
     
@@ -551,8 +552,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     BOOL allPageSelected = NO;
     
     if (self.isNew || previewPageNum == 0) {
-        previewPageSelected = NO;
-        allPageSelected = YES;
+        if (isPreviewPageModified) {
+            if (previewPageNum == ImageDataArr.count) {
+                previewPageSelected = NO;
+                allPageSelected = YES;
+            } else {
+                previewPageSelected = YES;
+                allPageSelected = NO;
+            }
+        } else {
+            previewPageSelected = NO;
+            allPageSelected = YES;
+        }
     } else {
         if (previewPageNum == ImageDataArr.count) {
             previewPageSelected = NO;
@@ -826,6 +837,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error: nil];
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        stSelf->isPreviewPageModified = YES;
                         stSelf->previewPageNum = stSelf->previewPageStrToInt;
                         [stSelf remindToastWithMessage: @"修改完成"];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
@@ -2001,8 +2013,10 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    
                     if ([dic[@"result"] intValue] == 1) {
+                        NSLog(@"option: %@", option);
+                        NSLog(@"stSelf.fromVC: %@", stSelf.fromVC);
+                        
                         if ([option isEqualToString: @"save"]) {
                             AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
                             aSVC.albumId = stSelf.albumid;
@@ -2013,13 +2027,15 @@ shouldChangeTextInRange:(NSRange)range
                             aSVC.isNew = YES;
                             aSVC.prefixText = stSelf.prefixText;
                             aSVC.specialUrl = stSelf.specialUrl;
+                            aSVC.userIdentity = stSelf.userIdentity;
+                            
                             if (self.delegate && [self.delegate respondsToSelector:@selector(albumSettingViewControllerUpdate:)]) {
                                 aSVC.delegate = (id<AlbumSettingViewControllerDelegate>)self.delegate;
                             }
                             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                             [appDelegate.myNav pushViewController: aSVC animated: NO];
                         } else if ([option isEqualToString: @"back"]) {
-                            if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {
+                            if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {                                
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 
                                 for (UIViewController *vc in appDelegate.myNav.viewControllers) {
@@ -3978,6 +3994,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                              style: style];
             
             if (stSelf->ImageDataArr.count == 0) {
+                NSLog(@"ImageDataArr.count == 0");
                 // if there is no image then should set to close
 //                [stSelf callAlbumSettings];
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

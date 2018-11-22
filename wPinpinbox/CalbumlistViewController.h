@@ -24,6 +24,7 @@
 @interface CalbumlistViewController : UIViewController {
     __weak IBOutlet UILabel *wtitle;
 }
+@property (nonatomic) NSString *fromVC;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionview;
 //@property (weak, nonatomic) IBOutlet UIButton *btn1;
 //@property (weak, nonatomic) IBOutlet UIButton *btn2;

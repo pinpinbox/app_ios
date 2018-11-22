@@ -16,6 +16,7 @@
 @interface AlbumSettingViewController : UIViewController
 @property (weak) id <AlbumSettingViewControllerDelegate> delegate;
 
+@property (nonatomic) NSString *userIdentity;
 @property (strong, nonatomic) NSString *albumId;
 @property (nonatomic) BOOL postMode;
 @property (nonatomic) NSString *eventId;
