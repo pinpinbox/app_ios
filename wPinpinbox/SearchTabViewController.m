@@ -204,8 +204,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                  forControlEvents: UIControlEventTouchUpInside];        
 }
 
-- (void)dismissKeyboard
-{
+- (void)dismissKeyboard {
     [self.view endEditing:YES];
 }
 
@@ -249,17 +248,13 @@ static NSString *hostURL = @"www.pinpinbox.com";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    //
-                    
                     if (![dic[@"result"] boolValue]) {
                         return ;
                     }
-                    
                     //判斷目前table和 搜尋結果是否相同
                     if (![data[@"type"] isEqualToString: @"user"]) {
                         return;
                     }
-                    
                     [wself processResult:dic];
                 }
             }
@@ -278,19 +273,23 @@ static NSString *hostURL = @"www.pinpinbox.com";
         NSLog(@"");
         NSLog(@"");
         
-        userData = [NSMutableArray arrayWithArray:dic[@"data"]];
-        nextUserId = userData.count;
-        
-        [self.userCollectionView reloadData];
-        
-        [self showAlbumRecommendedList];
+        if ([wTools objectExists: dic[@"data"]]) {
+            userData = [NSMutableArray arrayWithArray:dic[@"data"]];
+            nextUserId = userData.count;
+            [self.userCollectionView reloadData];
+            [self showAlbumRecommendedList];
+        }
     } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 - (void)showAlbumRecommendedList {
     NSLog(@"showAlbumRecommendedList");
     albumRecommendationLabel.text = @"人氣精選";
@@ -327,7 +326,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                                          albumId: @""];
                 } else {
                     NSLog(@"Get Real Response");
-                    NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if (![dic[@"result"] boolValue]) {
                         return ;
@@ -343,7 +342,6 @@ static NSString *hostURL = @"www.pinpinbox.com";
     });
 }
 - (void)processSearchResult:(NSDictionary *)dic {
-    
     if ([dic[@"result"] intValue] == 1) {
         NSLog(@"dic result boolValue is 1");
         
@@ -352,29 +350,32 @@ static NSString *hostURL = @"www.pinpinbox.com";
         } else {
             isAlbumLoading = YES;
         }
-        albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
-        nextAlbumId = albumData.count;
         
-        [self.albumCollectionView reloadData];
+        if ([wTools objectExists: dic[@"data"]]) {
+            albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
+            nextAlbumId = albumData.count;
+            [self.albumCollectionView reloadData];
+        }
     } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 #pragma mark - UIButton Selector Methods
-- (void)cancelButtonHighlight: (UIButton *)sender
-{
+- (void)cancelButtonHighlight: (UIButton *)sender {
     NSLog(@"cancelButtonHighlight");
     sender.backgroundColor = [UIColor thirdMain];
     self.cancelTextBtn.hidden = YES;
-    
     self.searchTextField.text = @"";
     isSearching = NO;
     noInfoHorzView.hidden = YES;
     noInfoVertView.hidden = YES;
-    
     [self showUserRecommendedList];
     //[self showAlbumRecommendedList];
 }
@@ -445,7 +446,6 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     if (collectionView.tag == 1) {
         NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
-        
         NSLog(@"albumRecommendationLabel: %@", albumRecommendationLabel);
         
         if (isSearching) {
@@ -455,9 +455,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
             albumRecommendationLabel.text = @"人氣精選";
             [LabelAttributeStyle changeGapString: albumRecommendationLabel content: albumRecommendationLabel.text];
         }
-        
         SearchTabCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"SearchCell" forIndexPath: indexPath];
-        
         cell.contentView.subviews[0].backgroundColor = nil;
         
         if (albumData.count == 0) {
@@ -531,7 +529,6 @@ static NSString *hostURL = @"www.pinpinbox.com";
             }
         } else if (gotExchange || gotSlot) {
             NSLog(@"gotExchange or gotSlot");
-            
             cell.userInfoView.hidden = NO;
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
             
@@ -546,7 +543,6 @@ static NSString *hostURL = @"www.pinpinbox.com";
             [LabelAttributeStyle changeGapString: cell.albumNameLabel content: cell.albumNameLabel.text];
         }
         NSLog(@"cell.albumNameLabel.text: %@", cell.albumNameLabel.text);
-        
         NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
         
         return cell;
@@ -593,9 +589,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
 shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
-    
     //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    
     return YES;
 }
 
@@ -618,8 +612,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         //NSDictionary *albumDic = albumData[indexPath.row][@"album"];
         //NSLog(@"albumDic: %@", albumDic);
         
-        NSString *albumId = [albumData[indexPath.row][@"album"][@"album_id"] stringValue];
-        [self ToRetrievealbumpViewControlleralbumid: albumId];
+        if ([wTools objectExists: albumData[indexPath.row][@"album"][@"album_id"]]) {
+            NSString *albumId = [albumData[indexPath.row][@"album"][@"album_id"] stringValue];
+            [self ToRetrievealbumpViewControlleralbumid: albumId];
+        }
     } else {
         NSLog(@"");
         NSLog(@"");
@@ -627,20 +623,22 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
         //cell.contentView.backgroundColor = [UIColor thirdMain];
-        NSDictionary *userDic = userData[indexPath.row][@"user"];
         
-        CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-        cVC.userId = userDic[@"user_id"];
-        //[self.navigationController pushViewController: cVC animated: YES];
-        
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav pushViewController: cVC animated: YES];
+        if ([wTools objectExists: userData[indexPath.row][@"user"]]) {
+            NSDictionary *userDic = userData[indexPath.row][@"user"];
+            
+            CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+            cVC.userId = userDic[@"user_id"];
+            //[self.navigationController pushViewController: cVC animated: YES];
+            
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav pushViewController: cVC animated: YES];
+        }
     }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 //    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.backgroundColor = nil;
     //cell.contentView.subviews[0].backgroundColor = nil;
@@ -808,8 +806,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
-replacementString:(NSString *)string
-{
+replacementString:(NSString *)string {
     NSLog(@"shouldChangeCharactersInRange");
     NSString *resultString = [textField.text stringByReplacingCharactersInRange: range
                                                                      withString: string];    
@@ -839,7 +836,6 @@ replacementString:(NSString *)string
     
     if ([text isEqualToString: @""]) {
         isSearching = NO;
-        
         [self showUserRecommendedList];
         //[self showAlbumRecommendedList];
     } else {
@@ -878,9 +874,7 @@ replacementString:(NSString *)string
                     NSLog(@"Time Out Message Return");
                     NSLog(@"SearchTableViewController");
                     NSLog(@"filterUserContentForSearchText");
-                    
                     [wself dismissKeyboard];
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"filterUserContentForSearchText"
                                             text: text
@@ -900,15 +894,14 @@ replacementString:(NSString *)string
                     if (![data[@"searchtype"] isEqualToString: @"user"]) {
                         return;
                     }
-                    
                     [wself processFilterUserContent:dic text:text];
                 }
             }
         });
     });
 }
-- (void)processFilterUserContent:(NSDictionary *)dic text:(NSString *)text{
-    
+- (void)processFilterUserContent:(NSDictionary *)dic
+                            text:(NSString *)text{
     if ([dic[@"result"] intValue] == 1) {
         NSLog(@"dic result boolValue is 1");
         
@@ -917,35 +910,33 @@ replacementString:(NSString *)string
         } else {
             isUserLoading = YES;
         }
-        
-        NSLog(@"");
-        NSLog(@"");
-        
-        userData = [NSMutableArray arrayWithArray:dic[@"data"]];
-        nextUserId = userData.count;
-        
-        //                        NSLog(@"userData: %@", userData);
-        NSLog(@"userData.count: %lu", (unsigned long)userData.count);
-        
-        if (userData.count == 0) {
-            if (!isNoInfoHorzViewCreate) {
-                [self addNoInfoViewOnHorizontalCollectionView: @"沒有符合關鍵字的創作人"];
+        if ([wTools objectExists: dic[@"data"]]) {
+            userData = [NSMutableArray arrayWithArray:dic[@"data"]];
+            nextUserId = userData.count;
+            NSLog(@"userData.count: %lu", (unsigned long)userData.count);
+            
+            if (userData.count == 0) {
+                if (!isNoInfoHorzViewCreate) {
+                    [self addNoInfoViewOnHorizontalCollectionView: @"沒有符合關鍵字的創作人"];
+                }
+                noInfoHorzView.hidden = NO;
+            } else if (userData.count > 0) {
+                noInfoHorzView.hidden = YES;
             }
-            noInfoHorzView.hidden = NO;
-        } else if (userData.count > 0) {
-            noInfoHorzView.hidden = YES;
+            [self.userCollectionView reloadData];
+            [self filterAlbumContentForSearchText: text];
         }
-        
-        [self.userCollectionView reloadData];
-        
-        [self filterAlbumContentForSearchText: text];
     } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 - (void)filterAlbumContentForSearchText: (NSString *)text {
     NSLog(@"filterAlbumContentForSearchText");
     NSLog(@"text: %@", text);
@@ -1003,7 +994,6 @@ replacementString:(NSString *)string
     });
 }
 - (void)filterAlbumContentWithResult:(NSDictionary *) dic{
-    
     if ([dic[@"result"] intValue] == 1) {
         NSLog(@"dic result boolValue is 1");
         
@@ -1015,26 +1005,31 @@ replacementString:(NSString *)string
         NSLog(@"");
         NSLog(@"");
         
-        albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
-        nextAlbumId = albumData.count;
-        
-        if (albumData.count == 0) {
-            if (!isNoInfoVertViewCreate) {
-                [self addNoInfoViewOnVerticalCollectionView: @"沒有符合關鍵字的作品"];
+        if ([wTools objectExists: dic[@"data"]]) {
+            albumData = [NSMutableArray arrayWithArray:dic[@"data"]];
+            nextAlbumId = albumData.count;
+            
+            if (albumData.count == 0) {
+                if (!isNoInfoVertViewCreate) {
+                    [self addNoInfoViewOnVerticalCollectionView: @"沒有符合關鍵字的作品"];
+                }
+                noInfoVertView.hidden = NO;
+            } else if (albumData.count > 0) {
+                noInfoVertView.hidden = YES;
             }
-            noInfoVertView.hidden = NO;
-        } else if (albumData.count > 0) {
-            noInfoVertView.hidden = YES;
+            [self.albumCollectionView reloadData];
         }
-        
-        [self.albumCollectionView reloadData];
     } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 #pragma mark - Method Only Called Once
 - (void)addNoInfoViewOnHorizontalCollectionView:(NSString *)msg {
     NSLog(@"addNoInfoViewOnHorizontalCollectionView");
@@ -1055,7 +1050,6 @@ replacementString:(NSString *)string
         UILabel *label = [self createLabel: msg];
         [frameLayout addSubview: label];
     }
-    
     isNoInfoHorzViewCreate = YES;
 }
 
@@ -1078,12 +1072,10 @@ replacementString:(NSString *)string
         UILabel *label = [self createLabel: msg];
         [frameLayout addSubview: label];
     }
-    
     isNoInfoVertViewCreate = YES;
 }
 
-- (MyFrameLayout *)createFrameLayout
-{
+- (MyFrameLayout *)createFrameLayout {
     MyFrameLayout *frameLayout = [MyFrameLayout new];
     frameLayout.myMargin = 0;
     frameLayout.myCenterXOffset = 0;
@@ -1093,16 +1085,13 @@ replacementString:(NSString *)string
     return frameLayout;
 }
 
-- (UILabel *)createLabel: (NSString *)title
-{
+- (UILabel *)createLabel: (NSString *)title {
     UILabel *label = [UILabel new];
     label.text = title;
     label.font = [UIFont systemFontOfSize: 17];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor whiteColor];
-    
     [label sizeToFit];
-    
     label.myCenterXOffset = 0;
     label.myCenterYOffset = 0;
     
@@ -1115,10 +1104,6 @@ replacementString:(NSString *)string
     QrcordViewController *qVC = [[UIStoryboard storyboardWithName: @"QRCodeVC" bundle: nil] instantiateViewControllerWithIdentifier: @"QrcordViewController"];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: qVC animated: YES];
-    /*
-    ScanCodeViewController *scanCodeVC = [[UIStoryboard storyboardWithName: @"Main" bundle: [NSBundle mainBundle]] instantiateViewControllerWithIdentifier: @"ScanCodeViewController"];
-    [self.navigationController pushViewController: scanCodeVC animated: YES];
-     */
 }
 
 #pragma mark - Call Protocol
@@ -1155,29 +1140,32 @@ replacementString:(NSString *)string
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        
-                        
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
-                        
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
-                        
-                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                        aDVC.data = [dic[@"data"] mutableCopy];
-                        aDVC.albumId = albumid;
-                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-                        
-                        CATransition *transition = [CATransition animation];
-                        transition.duration = 0.5;
-                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                        transition.type = kCATransitionMoveIn;
-                        transition.subtype = kCATransitionFromTop;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-                        [appDelegate.myNav pushViewController: aDVC animated: NO];
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            if ([wTools objectExists: albumid]) {
+                                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+                                aDVC.data = [dic[@"data"] mutableCopy];
+                                aDVC.albumId = albumid;
+                                aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+                                
+                                CATransition *transition = [CATransition animation];
+                                transition.duration = 0.5;
+                                transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+                                transition.type = kCATransitionMoveIn;
+                                transition.subtype = kCATransitionFromTop;
+                                
+                                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+                                [appDelegate.myNav pushViewController: aDVC animated: NO];
+                            }
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1188,96 +1176,18 @@ replacementString:(NSString *)string
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                           text: (NSString *)text
-                       albumId: (NSString *)albumId
-{
+                       albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
@@ -1322,8 +1232,7 @@ replacementString:(NSString *)string
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
