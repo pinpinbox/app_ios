@@ -898,9 +898,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                                  atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"viewForSupplementaryElementOfKind");
     NSLog(@"self.userDic: %@", self.userDic);
-    
     MeCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
-    
     [LabelAttributeStyle changeGapString: headerView.viewedLabel content: headerView.viewedLabel.text];
     [LabelAttributeStyle changeGapString: headerView.likeLabel content: headerView.likeLabel.text];
     [LabelAttributeStyle changeGapString: headerView.sponsoredLabel content: headerView.sponsoredLabel.text];
@@ -921,8 +919,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
             [appDelegate.myNav pushViewController: sponsorListVC animated: YES];
         }
     };
-    
-    [LabelAttributeStyle changeGapString: headerView.albumCollectionLabel content: headerView.albumCollectionLabel.text];
+    [LabelAttributeStyle changeGapString: headerView.albumCollectionLabel
+                                 content: headerView.albumCollectionLabel.text];
     
     // Cover Image
     if ([self.userDic[@"cover"] isEqual: [NSNull null]]) {

@@ -15,8 +15,7 @@
 
 @implementation CropResultViewController
 
-- (void)viewDidLoad {
-    
+- (void)viewDidLoad {    
     [super viewDidLoad];
     self.cropResultImageView.image = _cropResultImage;
     NSLog(@"self.cropResultImageView.image: %@", self.cropResultImageView.image);
