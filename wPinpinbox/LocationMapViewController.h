@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didSelectLocation:(NSString *)location;
 @end
 
+@interface LeftPaddingTextfield : UITextField
+@end
+
 @interface MapPresentationController : UIPresentationController
 @end
 @interface MapAnimationTransitioning : NSObject<UIViewControllerAnimatedTransitioning>

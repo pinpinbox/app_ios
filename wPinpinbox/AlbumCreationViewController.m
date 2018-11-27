@@ -5106,7 +5106,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 if ([photo[@"location"] isEqual:[NSNull null]] )
                     location = nil;
             }
-
+            self.mapShowingActionSheet.modalPresentationCapturesStatusBarAppearance = YES;
             [self presentViewController:self.mapShowingActionSheet animated:YES completion:^{
                 if (location != nil)
                     [wself.mapShowingActionSheet loadLocation:location];
@@ -5154,7 +5154,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         if ([photo[@"hyperlink"] isEqual:[NSNull null]] )
             urls = nil;
     }
-    
+    self.urlAddingActionSheet.modalPresentationCapturesStatusBarAppearance = YES;
     [self presentViewController:self.urlAddingActionSheet animated:YES completion:^{
         
         if(urls && urls.count > 0) {
@@ -5204,15 +5204,17 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 - (void)presentIntroVC {
     
-    CGRect rect3 = [self.view convertRect:conbtn.frame fromView:conbtn.superview];
-    CGRect rect2 = [self.view convertRect:settingBtn.frame fromView:settingBtn.superview];
-    CGRect r0 = self.dataCollectionView.frame;
-    CGRect rect1 = CGRectMake(r0.origin.x+8, r0.origin.y+24, r0.size.height-16, r0.size.height-16);//
     AlbumCreationIntroViewController *v =  [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreationIntroVC"];
-    
-    [v setStep1Rect:rect1 step2Rect:rect2 step3Rect:rect3];
+    v.modalPresentationCapturesStatusBarAppearance = YES;
+    //[v setStep1Rect:rect1 step2Rect:rect2 step3Rect:rect3];
+    __block typeof(self) wself = self;
     [self presentViewController:v animated:YES completion:^{
+        CGRect rect3 = [wself.view convertRect:wself->conbtn.frame fromView:wself->conbtn.superview];
+        CGRect rect2 = [wself.view convertRect:wself->settingBtn.frame fromView:wself->settingBtn.superview];
+        CGRect r0 = wself.dataCollectionView.frame;
+        CGRect rect1 = CGRectMake(r0.origin.x+8, r0.origin.y+24, r0.size.height-16, r0.size.height-16);//
         [v setStep1Rect:rect1 step2Rect:rect2 step3Rect:rect3];
+        [v startAnimationSequence];
     }];
     
 

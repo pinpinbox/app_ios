@@ -12,10 +12,10 @@
 #import "UIColor+Extensions.h"
 
 @interface URLAddViewController ()<UITextFieldDelegate>
-@property (nonatomic) IBOutlet UITextField *desc1;
-@property (nonatomic) IBOutlet UITextField *url1;
-@property (nonatomic) IBOutlet UITextField *desc2;
-@property (nonatomic) IBOutlet UITextField *url2;
+@property (nonatomic) IBOutlet LeftPaddingTextfield *desc1;
+@property (nonatomic) IBOutlet LeftPaddingTextfield *url1;
+@property (nonatomic) IBOutlet LeftPaddingTextfield *desc2;
+@property (nonatomic) IBOutlet LeftPaddingTextfield *url2;
 
 
 @end

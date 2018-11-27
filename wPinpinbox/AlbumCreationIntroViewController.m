@@ -10,7 +10,7 @@
 #import "InfoBubbleView.h"
 
 @interface IntroPresentationController ()
-@property (nonatomic) UIVisualEffectView *dimmyView;
+//@property (nonatomic) UIView *dimmyView;
 @end
 
 @interface IntroAnimationTransitioning()
@@ -29,12 +29,11 @@
 @end
 
 @implementation IntroPresentationController
-- (void)presentationTransitionDidEnd:(BOOL)completed {
-    
-    AlbumCreationIntroViewController *p = (AlbumCreationIntroViewController *)self.presentedViewController;
-    [p startAnimationSequence];
+- (CGRect)frameOfPresentedViewInContainerView {
+    return [UIScreen mainScreen].bounds;
 }
 @end
+
 @implementation IntroAnimationTransitioning
 - (NSTimeInterval)transitionDuration:(nullable id<UIViewControllerContextTransitioning>)transitionContext {
     return 0.5;
@@ -47,10 +46,8 @@
     __block BOOL ispresent = self.isPresenting;
     if (!ispresent) {
         to = (AlbumCreationIntroViewController *) [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-        //to.view.transform = CGAffineTransformIdentity;
         to.view.alpha = 1;
     } else {
-        //to.view.transform = CGAffineTransformMakeTranslation(0, 325);
         to.view.alpha = 0;
         [transitionContext.containerView addSubview:to.view];
     }
@@ -81,8 +78,9 @@
     
     self = [super initWithCoder:aDecoder];
     self.modalPresentationStyle = UIModalPresentationCustom;
+    
     self.transitioningDelegate = self;
-    self.modalPresentationCapturesStatusBarAppearance = YES;
+    //self.modalPresentationCapturesStatusBarAppearance = YES;
     
     return self;
 }
@@ -101,6 +99,12 @@
     base.layer.borderColor = [UIColor darkGrayColor].CGColor;
     base.layer.borderWidth = 1;
     _proceedBtn.hidden = YES;
+}
+- (BOOL)prefersStatusBarHidden  {
+    return YES;
+}
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 - (void)tapToDismiss:(UITapGestureRecognizer *)tap {
     [self dismissViewControllerAnimated:YES completion:nil];

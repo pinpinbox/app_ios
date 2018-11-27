@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AlbumCreationIntroViewController : UIViewController<UIViewControllerTransitioningDelegate>
 - (void)setStep1Rect:(CGRect) rect1 step2Rect:(CGRect)rect2 step3Rect:(CGRect)rect3;
+- (void)startAnimationSequence;
 @end
 
 NS_ASSUME_NONNULL_END
