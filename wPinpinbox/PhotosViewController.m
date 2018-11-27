@@ -29,11 +29,14 @@
 #import "UIViewController+ErrorAlert.h"
 
 #import "MultipartInputStream.h"
+#import "HudIndicatorView.h"
 
 #define kFontSize 18
 
 #define kFontSizeForUploading 18
 #define kFontSizeForConnection 16
+
+
 
 @interface PhotosViewController () <UICollectionViewDataSource,UICollectionViewDelegate,RSKImageCropViewControllerDelegate,
                                     UIImagePickerControllerDelegate,UINavigationControllerDelegate, UIGestureRecognizerDelegate,NSURLSessionDelegate>
@@ -75,7 +78,6 @@
 @property (nonatomic) MBProgressHUD *hud;
 @property (nonatomic) NSURLSession *session;
 @property (nonatomic) NSMutableArray *imgs;
-
 @end
 
 @implementation PhotosViewController
@@ -376,6 +378,10 @@
     self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     self.hud.mode = MBProgressHUDModeIndeterminate;
     self.hud.label.text = @"圖片載入中";
+    self.hud.layer.shadowOffset = CGSizeMake(1, 5);
+    self.hud.layer.shadowRadius = 8;
+    self.hud.layer.shadowOpacity = 0.5;
+    self.hud.layer.shadowColor = UIColor.blackColor.CGColor;
     
     //處理所有則的圖片
     _imgs = [NSMutableArray new];
@@ -532,13 +538,27 @@
     self.totalPhoto = imgArray.count;
     @try {
         self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-        self.hud.mode =  MBProgressHUDModeDeterminateHorizontalBar;//MBProgressHUDModeAnnularDeterminate;
+        self.hud.mode = MBProgressHUDModeCustomView;
+        self.hud.layer.shadowOffset = CGSizeMake(1, 5);
+        self.hud.layer.shadowRadius = 8;
+        self.hud.layer.shadowOpacity = 0.5;
+        self.hud.layer.shadowColor = UIColor.blackColor.CGColor;
+        
+        //self.hud.mode =  MBProgressHUDModeDeterminateHorizontalBar;//MBProgressHUDModeAnnularDeterminate;
 
-        self.hud.progress = 0;
+        //self.hud.progress = 0;
+        if (!self.hud.customView) {
+            HudIndicatorView *v = [[HudIndicatorView alloc]initWithFrame:CGRectMake(0, 0, 72, 32)];//[[HudIndicatorView alloc] initWithImage:[imgArray firstObject] ];
+            //v.layer.cornerRadius = 36;
+            //v.clipsToBounds = YES;
+            v.backgroundColor = UIColor.clearColor;
+            self.hud.customView = v;
+        }
         self.hud.label.text = [NSString stringWithFormat: @"%d 項目等待上傳", (int)self.totalPhoto];
         self.hud.label.font = [UIFont systemFontOfSize: kFontSizeForUploading];
         [self.hud.button setTitle: @"取消" forState: UIControlStateNormal];
         [self.hud.button addTarget: self action: @selector(cancelWork:) forControlEvents: UIControlEventTouchUpInside];
+       
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -590,8 +610,9 @@
 //            NSLog(@"width: %f, height: %f", image.size.width, image.size.height);
             
         NSLog(@"boxAPI insertPhotoOfDiy");
+        
         NSData *imageData = UIImageJPEGRepresentation(imageForResize, 1.0);
-        [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];//insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];
+        [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData ];//insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];
         
         [imgArray removeObjectAtIndex:0];
             //NSLog(@"response: %@", response);
@@ -1262,8 +1283,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     dispatch_async(dispatch_get_main_queue(), ^{
         wself.hud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%d；失敗：%d",(int)wself.photoFinished, (int)wself.photoFailed];
         wself.hud.label.text = [NSString stringWithFormat: @"%d 項目等待上傳",(int)(wself.totalPhoto-(wself.photoFinished+wself.photoFailed))];
-        CGFloat p0 = (CGFloat) (wself.photoFinished+wself.photoFailed)/ (CGFloat)wself.totalPhoto;
-        wself.hud.progress = p0;
+        //CGFloat p0 = (CGFloat) (wself.photoFinished+wself.photoFailed)/ (CGFloat)wself.totalPhoto;
+        //wself.hud.progress = p0;
     });
 }
 
@@ -1403,6 +1424,20 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     for (NSURLSessionDataTask *t in dataTaskArray) {
         if ([taskDesc isEqualToString: t.taskDescription]) {
             
+            __block NSString *key = t.taskDescription;
+            __block typeof(self) wself = self;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                HudIndicatorView *v = (HudIndicatorView *)wself.hud.customView;
+                if (v)
+                    [v removeIconWithIdentifier:key];
+                wself.hud.layer.shadowOffset = CGSizeMake(1, 5);
+                wself.hud.layer.shadowRadius = 8;
+                wself.hud.layer.shadowOpacity = 0.5;
+                wself.hud.layer.shadowColor = UIColor.blackColor.CGColor;
+
+                [wself.hud setNeedsLayout];
+            });
+            
             [dataTaskArray removeObject:t];
             
             [self updateProgress:0];
@@ -1411,7 +1446,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
             //NSURLSessionDataTask *tt = [dataTaskArray firstObject];
             //[tt resume];
             
-            NSLog(@"removeDataTask ([tt resume]) %lu",(unsigned long)[dataTaskArray count]);
+            //NSLog(@"removeDataTask ([tt resume]) %lu",(unsigned long)[dataTaskArray count]);
             return;
         }
     }
@@ -1425,6 +1460,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 - (void)sendWithStream:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id imageData:(NSData *)imageData {
 
     if (!imageData || imageData.length < 1) return;
+    
+    
     // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
     [_params setObject:uid forKey:@"id"];
@@ -1473,8 +1510,14 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     __block typeof(self) wself = self;
     
-    
     __block NSString *desc = [[NSUUID UUID] UUIDString];
+    
+    HudIndicatorView *v = (HudIndicatorView *)wself.hud.customView;
+    if (v) {
+        UIImage *icon = [UIImage imageWithData:imageData scale:0.25];
+        [v addIconWithIdentifier:icon identifier:desc];
+        [v setNeedsLayout];
+    }
     NSURLSessionDataTask *task = [_session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
         
@@ -1521,7 +1564,9 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     }];
     NSLog(@"task resume");
     
+    
     [task setTaskDescription:desc];
+    
     [dataTaskArray addObject: task];
     //// instead of running task one by one, resume the task immediately ////
     //if ([dataTaskArray count] == 1)

@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) id<AddLocationDelegate> locationDelegate;
 - (void)loadLocation:(NSString *)l;
 - (IBAction)cancelAndDismiss:(id)sender;
+- (void)cancelAndDismiss;
 - (void)addDismissTap;
 - (void)handleDismissTap:(UITapGestureRecognizer *)tap;
 - (void)addKeyboardNotification;

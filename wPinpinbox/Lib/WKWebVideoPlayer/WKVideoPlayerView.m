@@ -80,7 +80,7 @@
 }
 
 - (void)setVideoPath:(NSString *)path {
-    
+    self.backgroundColor = [UIColor blackColor];
     self.path = path;
     self.urls = [NSMutableArray arrayWithArray:[path findURLs]];
     [self.scrollView setScrollEnabled:NO];
@@ -123,16 +123,21 @@
     NSString *iid = [link lastPathComponent];
     NSArray *yids = [iid componentsSeparatedByString:@"?"];
     iid = [NSString stringWithFormat:@"https://www.youtube.com/embed/%@?enablejsapi=1",[yids firstObject]];
-    NSString *scr = @"<head>     <meta name='viewport' content='initial-scale=1'>    <style type='text/css'> body { margin: 0; background: #fafafa;} </style>    </head> <iframe id='player' width='100%%'             height='100%%'  src= %@ frameborder='0'></iframe>        <script type=\"text/javascript\">        var tag = document.createElement('script');        tag.id='videoiframe';        tag.src = \"https://www.youtube.com/iframe_api\";        var firstScriptTag = document.getElementsByTagName('script')[0];        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);        var player;        function onYouTubeIframeAPIReady() {            player = new YT.Player('player', {'events': {                    'onStateChange': onPlayerStateChange                    }                });        }        var done = false;        function onPlayerStateChange(event) {            console.log('YT.player changed:: '+event);            if (event.data == YT.PlayerState.PLAYING) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPlaying');                console.log('VideoIsPlaying');                done = true;            } else if (event.data == YT.PlayerState.PAUSED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPaused');                console.log('VideoIsPaused');            } else if (event.data == YT.PlayerState.ENDED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsEnded');                console.log('VideoIsEnded');            }        } </script>";
+    NSString *scr = @"<head>     <meta name='viewport' content='initial-scale=1'>    <style type='text/css'> body { margin: 0; background: #000;} </style>    </head> <iframe id='player' width='100%%'             height='100%%'  src= %@ frameborder='0' style='background: #000;'></iframe>        <script type=\"text/javascript\">        var tag = document.createElement('script');        tag.id='videoiframe';        tag.src = \"https://www.youtube.com/iframe_api\";        var firstScriptTag = document.getElementsByTagName('script')[0];        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);        var player;        function onYouTubeIframeAPIReady() {            player = new YT.Player('player', {'events': {                    'onStateChange': onPlayerStateChange                    }                });        }        var done = false;        function onPlayerStateChange(event) {            console.log('YT.player changed:: '+event);            if (event.data == YT.PlayerState.PLAYING) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPlaying');                console.log('VideoIsPlaying');                done = true;            } else if (event.data == YT.PlayerState.PAUSED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPaused');                console.log('VideoIsPaused');            } else if (event.data == YT.PlayerState.ENDED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsEnded');                console.log('VideoIsEnded');            }        } </script>";
     
     return [NSString stringWithFormat:scr,iid];
     
 }
 - (NSString *)getVimeoString:(NSString *)link {
-    return [NSString stringWithFormat:@"<head> <meta name=viewport content='width=device-width, initial-scale=1'><style type='text/css'> body { margin: 0;background: #fafafa;} </style></head><iframe src='%@' width='100%%' height='100%%' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <script src=\"https://player.vimeo.com/api/player.js\"></script><script>var iframe = document.querySelector('iframe');var player = new Vimeo.Player(iframe);player.on('play', function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPlaying');}); player.on('pause',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');});player.on('ended',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');});</script>", link];
+    return [NSString stringWithFormat:@"<head> <meta name=viewport content='width=device-width, initial-scale=1'><style type='text/css'> body { margin: 0;background: #000;} </style></head><iframe src='%@' width='100%%' height='100%%' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen style='background: #000;'></iframe> <script src=\"https://player.vimeo.com/api/player.js\"></script><script>var iframe = document.querySelector('iframe');var player = new Vimeo.Player(iframe);player.on('play', function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPlaying');}); player.on('pause',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');});player.on('ended',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');});</script>", link];
 }
 
 - (void)setup {
+    UITapGestureRecognizer *t =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOuterTap:)];
+    t.delegate = self;
+    [self addGestureRecognizer:t];
+    
+    
     for (NSURL *url in self.urls) {
         if ([url.absoluteString containsString:@"youtu"]) {
             NSString *realLink = nil;
@@ -162,6 +167,9 @@
     }
 
 }
+- (void)handleOuterTap:(UITapGestureRecognizer *)tap {
+    NSLog(@"handleOuterTap %@",tap);
+}
 - (void)addViewLayoutWithView:(UIView *)base {
     
     self.contentMode = UIViewContentModeScaleAspectFit;
@@ -178,26 +186,31 @@
     [base addSubview:self];
 //    [base addConstraints:@[cx,cy,s]];
 }
-- (void)refreshLayoutWithOrientation {
-    UIView *base = self.superview;
-    
+- (void)refreshLayoutWithOrientation:(BOOL)finished offset:(CGPoint)offset {
+    //UIView *base = self.superview;
+    //CGPoint p = self.scrollView.contentOffset;
+    if (finished)
+        [self.scrollView setContentOffset:CGPointMake(offset.x, offset.y) animated:YES];
+    else
+        [self.scrollView setContentOffset:CGPointMake(offset.x, offset.y+1) animated:YES];
     switch ([UIDevice currentDevice].orientation) {
         case UIDeviceOrientationPortrait:
         case UIDeviceOrientationPortraitUpsideDown: {
-            for (NSLayoutConstraint *c in base.constraints) {
-                if (c.firstItem == self && c.firstAttribute == NSLayoutAttributeHeight) {
-                    [base removeConstraint:c];
-                    [base addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
-                    [self removeConstraint:self.widthheight];
-                    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:0.5625 constant:0];
-                    [self addConstraint:self.widthheight];
-                    [base setNeedsLayout];
-                    [self setNeedsLayout];
-                    break;
-                    
-                }
-                
-            }
+            
+//            for (NSLayoutConstraint *c in base.constraints) {
+//                if (c.firstItem == self && c.firstAttribute == NSLayoutAttributeHeight) {
+//                    [base removeConstraint:c];
+//                    [base addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
+//                    [self removeConstraint:self.widthheight];
+//                    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:0.5625 constant:0];
+//                    [self addConstraint:self.widthheight];
+//                    [base setNeedsLayout];
+//                    [self setNeedsLayout];
+//                    break;
+//
+//                }
+//
+//            }
             
             
             
@@ -205,18 +218,18 @@
         case UIDeviceOrientationLandscapeLeft:
         case UIDeviceOrientationLandscapeRight:{
             
-            for (NSLayoutConstraint *c in base.constraints) {
-                if (c.firstItem == self && c.firstAttribute == NSLayoutAttributeWidth) {
-                    [base removeConstraint:c];
-                    [base addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeHeight multiplier:1 constant:0]];
-                    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:(16.0/9.0) constant:0];
-                    [self addConstraint:self.widthheight];
-                    [base setNeedsLayout];
-                    [self setNeedsLayout];
-                    break;
-                }
-                
-            }
+//            for (NSLayoutConstraint *c in base.constraints) {
+//                if (c.firstItem == self && c.firstAttribute == NSLayoutAttributeWidth) {
+//                    [base removeConstraint:c];
+//                    [base addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeHeight multiplier:1 constant:0]];
+//                    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:(16.0/9.0) constant:0];
+//                    [self addConstraint:self.widthheight];
+//                    [base setNeedsLayout];
+//                    [self setNeedsLayout];
+//                    break;
+//                }
+//
+//            }
         } break;
             
         default:

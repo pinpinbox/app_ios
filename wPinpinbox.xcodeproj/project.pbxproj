@@ -375,6 +375,9 @@
 		CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
 		CBD977EF21A2574600F04205 /* URLAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD977EE21A2574600F04205 /* URLAddViewController.m */; };
+		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
+		CBFB1AE021ABA94800813611 /* InfoBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBFB1ADE21ABA94800813611 /* InfoBubbleView.m */; };
+		CBFB1AE321ABAE7500813611 /* AlbumCreationIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBFB1AE221ABAE7500813611 /* AlbumCreationIntroViewController.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
@@ -1006,6 +1009,12 @@
 		CBCE8573219C074600ED185D /* LocationMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationMapViewController.m; sourceTree = "<group>"; };
 		CBD977ED21A2574600F04205 /* URLAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLAddViewController.h; sourceTree = "<group>"; };
 		CBD977EE21A2574600F04205 /* URLAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = URLAddViewController.m; sourceTree = "<group>"; };
+		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
+		CBE2773921A8045600A6E80D /* HudIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudIndicatorView.m; sourceTree = "<group>"; };
+		CBFB1ADE21ABA94800813611 /* InfoBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoBubbleView.m; sourceTree = "<group>"; };
+		CBFB1ADF21ABA94800813611 /* InfoBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoBubbleView.h; sourceTree = "<group>"; };
+		CBFB1AE121ABAE7500813611 /* AlbumCreationIntroViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumCreationIntroViewController.h; sourceTree = "<group>"; };
+		CBFB1AE221ABAE7500813611 /* AlbumCreationIntroViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumCreationIntroViewController.m; sourceTree = "<group>"; };
 		D70144FD1D1A49DA005D8CDE /* NSString+emailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+emailValidation.h"; sourceTree = "<group>"; };
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
@@ -1844,6 +1853,8 @@
 				CBD977EE21A2574600F04205 /* URLAddViewController.m */,
 				CB34E73121A650AA004D054E /* PhotoDescriptionAddViewController.h */,
 				CB34E73221A650AA004D054E /* PhotoDescriptionAddViewController.m */,
+				CBFB1AE121ABAE7500813611 /* AlbumCreationIntroViewController.h */,
+				CBFB1AE221ABAE7500813611 /* AlbumCreationIntroViewController.m */,
 			);
 			name = "CenterButton Related";
 			sourceTree = "<group>";
@@ -2370,6 +2381,8 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CBFB1ADD21ABA94800813611 /* InfoBubbleView */,
+				CBE2773721A8045600A6E80D /* HudIndicatorView */,
 				CB84C63021A68903000D348C /* MapHelper */,
 				CB0CA8DE219AC5A800B5018B /* SwitchButtonView */,
 				CB1B38FA21991956003C8B3F /* PDFUploader */,
@@ -2740,6 +2753,24 @@
 			path = MapHelper;
 			sourceTree = "<group>";
 		};
+		CBE2773721A8045600A6E80D /* HudIndicatorView */ = {
+			isa = PBXGroup;
+			children = (
+				CBE2773821A8045600A6E80D /* HudIndicatorView.h */,
+				CBE2773921A8045600A6E80D /* HudIndicatorView.m */,
+			);
+			path = HudIndicatorView;
+			sourceTree = "<group>";
+		};
+		CBFB1ADD21ABA94800813611 /* InfoBubbleView */ = {
+			isa = PBXGroup;
+			children = (
+				CBFB1ADE21ABA94800813611 /* InfoBubbleView.m */,
+				CBFB1ADF21ABA94800813611 /* InfoBubbleView.h */,
+			);
+			path = InfoBubbleView;
+			sourceTree = "<group>";
+		};
 		D70145001D1A7F20005D8CDE /* Email 驗證 */ = {
 			isa = PBXGroup;
 			children = (
@@ -3049,6 +3080,7 @@
 				54E00F131FF39B6D007881ED /* customLayout.m in Sources */,
 				630A83DD1EB1D07300AC8479 /* MyDimeScale.m in Sources */,
 				630D31E51E531C42001506EE /* NSMutableArray+Reverse.m in Sources */,
+				CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */,
 				6308C44C1EAC9AC300F99AC0 /* SearchTabViewController.m in Sources */,
 				6318800E1EC4135B00B8CB4F /* SearchTabCollectionViewCell.m in Sources */,
 				5430446E20B8129600018AF4 /* CropImageViewController.m in Sources */,
@@ -3084,6 +3116,7 @@
 				54B2C3A2206AB05200ABEC76 /* UIImage+Alpha.m in Sources */,
 				929ED4991B78448500D21CF0 /* wTools.m in Sources */,
 				63842E5F1EF9D8B100C871A0 /* AlbumSettingViewController.m in Sources */,
+				CBFB1AE021ABA94800813611 /* InfoBubbleView.m in Sources */,
 				92C4D5121B745D2D00504B57 /* SignViewController_3.m in Sources */,
 				922D92D61BD9E4DA00640639 /* QrcordViewController.m in Sources */,
 				630A83E21EB1D07300AC8479 /* MyLayoutSize.m in Sources */,
@@ -3213,6 +3246,7 @@
 				D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */,
 				6308C45F1EACD1AA00F99AC0 /* CreaterViewController.m in Sources */,
 				63E634B21EB88DF600A938CF /* HomeDataCollectionReusableView.m in Sources */,
+				CBFB1AE321ABAE7500813611 /* AlbumCreationIntroViewController.m in Sources */,
 				9299FFC41BCB6A1100BB9D84 /* NSString+MD5.m in Sources */,
 				92F6CCE21B79AB9F002E547C /* UIImage+RSKImageCropper.m in Sources */,
 				D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */,

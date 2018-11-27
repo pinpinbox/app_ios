@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+
 @class PhotosViewController;
 @protocol PhotosViewDelegate <NSObject>
 @optional

@@ -365,14 +365,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self retrieveAlbum];
     //self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:UIWindowDidBecomeKeyNotification
-                                                      object:nil
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification* notification) {
-                                                      if ([UIApplication sharedApplication].keyWindow.tag == 10001) {
-                                                          [self pageCalculation:[self getCurrentPage]];
-                                                      }
-                                                  }];
+//    [[NSNotificationCenter defaultCenter] addObserverForName:UIWindowDidBecomeKeyNotification
+//                                                      object:nil
+//                                                       queue:nil
+//                                                  usingBlock:^(NSNotification* notification) {
+//                                                      if ([UIApplication sharedApplication].keyWindow.tag == 10001) {
+//                                                          [self pageCalculation:[self getCurrentPage]];
+//                                                      }
+//                                                  }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -737,16 +737,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.previousOrientation = orientation;
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-    WKVideoPlayerView *v2 = (WKVideoPlayerView *)[cell.videoView viewWithTag:20002];
-    if (v2) {
-        
-        CGRect box = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(560, 315),CGRectMake(0,0 , self.view.frame.size.width,self.view.frame.size.height));
-        //[v2 refreshLayoutWithOrientation];
-        v2.frame = box;
-        v2.center = cell.videoView.center;
-    }
     
     if (orientation == 1) {
         NSLog(@"Portrait Mode");
@@ -820,6 +810,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [UIView animateWithDuration: 0.1f animations:^{
         self.imageScrollCV.alpha = 1.0f;
     }];
+    
+    
     //        NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.pageBeforePresentingOrPushing inSection: 0];
     [self.thumbnailImageScrollCV reloadData];
     //        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
@@ -852,12 +844,33 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.pageBeforePresentingOrPushing = currentOffset.x / self.imageScrollCV.frame.size.width;
     NSLog(@"self.pageBeforePresentingOrPushing: %d", self.pageBeforePresentingOrPushing);
     __block typeof(self) wself = self;
+    
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    __block WKVideoPlayerView *v2 = (WKVideoPlayerView *)[cell.videoView viewWithTag:20002];
+    CGPoint p = CGPointZero;
+    if (v2) {
+        p = v2.scrollView.contentOffset;
+    }
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         [wself processVCTransition];
+        
+        if (v2) {
+            
+            //CGRect box = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(560, 315),CGRectMake(0,0 , wself.view.frame.size.width,wself.view.frame.size.height));
+            v2.frame = CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height);
+            [v2 refreshLayoutWithOrientation:NO offset:p];
+            //v2.frame = box;
+            
+            v2.center = cell.videoView.center;
+        }
+        
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         NSLog(@"");
         NSLog(@"coordinator completion");
         [wself settingSizeBasedOnDevice];
+        
 //        NSLog(@"Before");
 //        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
 //        CGFloat width;
@@ -887,6 +900,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //        NSLog(@"After");
 //        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
         [wself processTransitionCompletion];
+        if (v2) {
+            
+            //CGRect box = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(560, 315),CGRectMake(0,0 , wself.view.frame.size.width,wself.view.frame.size.height));
+            v2.frame = CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height);
+            [v2 refreshLayoutWithOrientation:YES offset:p];
+            //v2.frame = box;            
+            v2.center = cell.videoView.center;
+        }
     }];
 }
 
@@ -2680,6 +2701,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (NSInteger)getCurrentPage {
+    
     NSInteger page = self.imageScrollCV.contentOffset.x / self.imageScrollCV.frame.size.width;
     return page;
 }
@@ -3568,6 +3590,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"refer: %@", refer);
         NSLog(@"useFor: %@", useFor);
         
+        UIView *w = [cell.videoView viewWithTag:20002];
+        if (w)
+            [w removeFromSuperview];
+        
+        
         if ([useFor isEqualToString: @"video"]) {
             NSLog(@"useFor is equal to video");
             //            NSURL *url = [NSURL URLWithString: self.photoArray[indexPath.row][@"video_target"]];
@@ -3600,10 +3627,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     
                     
                     NSString *urlString = self.photoArray[indexPath.row][@"video_target"];
-                    UIView *w = [cell.videoView viewWithTag:20002];
-                    if (w)
-                        [w removeFromSuperview];
-                    
                     
                     NSArray *a = [urlString findURLs];
                     NSString *vpath = urlString;
@@ -4032,6 +4055,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog(@"hyperlink section");
         NSLog(@"hyperLinkArray: %@", hyperLinkArray);
         
+        self.linkBtn1.hidden = YES;
+        self.linkBtn2.hidden = YES;
+        
         for (NSInteger i = 0; i < hyperLinkArray.count; i++) {
             NSDictionary *dic = hyperLinkArray[i];
             if ([dic[@"url"] isEqualToString: @""]) {
@@ -4099,7 +4125,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
         
         if ([description isEqualToString: @""]) {
-            self.descriptionScrollViewHeightConstraint.constant = 0;
+            self.descriptionScrollViewHeightConstraint.constant = btnHeight;
         }
     } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
         self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;
@@ -5560,11 +5586,13 @@ shouldChangeTextInRange:(NSRange)range
     if ([message.body isKindOfClass:[NSString class]]) {
         NSString *msg = (NSString *)message.body;
         
-        if ([[msg lowercaseString] containsString:@"playing"] || [[msg lowercaseString] containsString:@"pause"]) {
+        if ([[msg lowercaseString] containsString:@"playing"]){
             self.is3rdPartyVideoPlaying = YES;
+            
         } else {
             self.is3rdPartyVideoPlaying = NO;
         }
+        self.imageScrollCV.scrollEnabled = !self.is3rdPartyVideoPlaying;
         NSLog(@"userContentController didreceive : %@",msg);
     }
 }

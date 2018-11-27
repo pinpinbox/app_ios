@@ -68,13 +68,15 @@ API_AVAILABLE(ios(11.0))
             //  number of pdf page is more than upload limit
             if (wself.totalPages > wself.availablePages) {
                 if (wself.exportFinishedblock)
-                    wself.exportFinishedblock([NSError errorWithDomain:@"" code:-1111 userInfo:@{NSLocalizedDescriptionKey:@"PDF檔頁數超過可上傳上限"}]);
+                    wself.exportFinishedblock([NSError errorWithDomain:@"" code:-1111 userInfo:@{NSLocalizedDescriptionKey:@"PDF檔頁數超過可上傳上限"}], nil,nil);
                 [wself cleanUp];
                 
                 return;
             }
-            
+            NSMutableArray *descs = [NSMutableArray array];
+            NSMutableArray *icons = [NSMutableArray array];
             for(int i = 0; i < wself.totalPages;i++ ) {
+                [descs addObject:[[NSUUID UUID] UUIDString]];
                 PDFPage *page = [wself.curPDFDocument pageAtIndex:i];
                 
                 
@@ -94,6 +96,8 @@ API_AVAILABLE(ios(11.0))
                 }];
                 
                 if (imageData) {
+                    UIImage *icon = [UIImage imageWithData:imageData scale:0.25];
+                    [icons addObject:icon];
                     [wself.imageDataArray addObject:imageData];
                 }
                 if (wself.progressblock) {
@@ -103,8 +107,8 @@ API_AVAILABLE(ios(11.0))
             }
             
             if (self.exportFinishedblock) {
-                self.exportFinishedblock(nil);
-                [self sendingImage];
+                self.exportFinishedblock(nil,icons,descs);
+                [self sendingImage:descs];
             }
         });
         
@@ -126,7 +130,7 @@ API_AVAILABLE(ios(11.0))
     [self.imageDataArray removeAllObjects];
 }
 #pragma mark -
-- (void)sendingImage {
+- (void)sendingImage:(NSMutableArray *)descs {
     
     [_dataTaskArray removeAllObjects];
     if (!_session) {
@@ -134,13 +138,17 @@ API_AVAILABLE(ios(11.0))
         config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
         _session = [NSURLSession sessionWithConfiguration: config delegate:nil delegateQueue:nil];
     }
-    
+
+    int i = 0;
     while ([self.imageDataArray count]) {
         
         @try {
             NSData *imageData = [self.imageDataArray firstObject];
-            [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumID imageData: imageData];
+            NSString *desc = [descs objectAtIndex:i];
+            [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumID imageData: imageData taskDesc:desc];
             [self.imageDataArray removeObjectAtIndex:0];
+            i++;
+            //[descs removeObjectAtIndex:0];
             
         } @catch (NSException *exception) {
             if (self.uploadResultBlock) {
@@ -153,7 +161,7 @@ API_AVAILABLE(ios(11.0))
         
     }
 }
-- (void)sendWithStream:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id imageData:(NSData *)imageData {
+- (void)sendWithStream:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id imageData:(NSData *)imageData taskDesc:(NSString *) taskDesc {
     
     if (!imageData || imageData.length < 1) return;
     // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
@@ -205,12 +213,12 @@ API_AVAILABLE(ios(11.0))
     __block typeof(self) wself = self;
     
     
-    __block NSString *desc = [[NSUUID UUID] UUIDString];
+    __block NSString *desc = taskDesc;//[[NSUUID UUID] UUIDString];
     NSURLSessionDataTask *task = [_session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
         
         if (wself.uploadProgressBlock)
-            wself.uploadProgressBlock((int)wself.pageFinished, (int)wself.totalPages);
+            wself.uploadProgressBlock((int)wself.pageFinished, (int)wself.totalPages,desc);
         
         __strong typeof(wself) sself = wself;
         if (error) {
@@ -255,12 +263,12 @@ API_AVAILABLE(ios(11.0))
         
         
     }];
-    NSLog(@"task resume");
+    //NSLog(@"task resume");
     
     [task setTaskDescription:desc];
     [_dataTaskArray addObject: task];
-    
-    [task resume];
+    if ([_dataTaskArray count] <= 1)
+        [task resume];
 }
 - (void)increaseFinished {
     self.pageFinished++;
@@ -271,8 +279,11 @@ API_AVAILABLE(ios(11.0))
         if ([taskDesc isEqualToString: t.taskDescription]) {
             
             [_dataTaskArray removeObject:t];
-            if (_dataTaskArray.count > 0)
+            if (_dataTaskArray.count > 0) {
+                NSURLSessionDataTask *t = [_dataTaskArray firstObject];
+                [t resume];
                 return;
+            }
         }
     }
     
@@ -289,8 +300,12 @@ API_AVAILABLE(ios(11.0))
     
     if (self.uploadResultBlock) {
         self.uploadResultBlock([NSError errorWithDomain:@"" code:9999 userInfo:@{NSLocalizedDescriptionKey:@"上傳PDF已中止"}]);
+        
+        self.uploadResultBlock = nil;
     }
-    
+    self.progressblock = nil;
+    self.exportFinishedblock = nil;
+    self.uploadProgressBlock = nil;
     for (NSURLSessionDataTask *task in _dataTaskArray) {
         [task cancel];
     }

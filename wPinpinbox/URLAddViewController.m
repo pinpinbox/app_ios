@@ -61,7 +61,7 @@
     } else if (!urls || urls.count < 1){
         [self showErrorToastWithMessage:@"請至少填上一組連結"];
     } else {
-        [self cancelAndDismiss:nil];
+        [self cancelAndDismiss];
     }
     
 }

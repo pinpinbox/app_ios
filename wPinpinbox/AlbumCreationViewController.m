@@ -60,6 +60,8 @@
 #import "LocationMapViewController.h"
 #import "URLAddViewController.h"
 #import "PhotoDescriptionAddViewController.h"
+#import "HudIndicatorView.h"
+#import "AlbumCreationIntroViewController.h"
 
 
 #pragma mark - Photo Editor SDK
@@ -349,7 +351,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     
     [self audioSetUp];
-    [self photoSetup];
+    if ([self checkIntro])
+        [self photoSetup];
     
     // For Reorder & PreviewPage Setting Methods
     self.dimVC = [[UIViewController alloc] init];
@@ -409,6 +412,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self enableButton];
     [self.dataCollectionView reloadData];
     [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
+    if (![self checkIntro])
+        [self presentIntroVC];
+    
 }
 
 - (void)viewDidLayoutSubviews {
@@ -1846,7 +1852,9 @@ shouldChangeTextInRange:(NSRange)range
                                     if (stSelf->isViewDidLoad) {
                                         // And it's first time to go to AlbumCreationVC
                                         // will call actionSheet
-                                        [stSelf showPhotoAndVideoActionSheet];
+                                        
+                                        if ([stSelf checkIntro])
+                                            [stSelf showPhotoAndVideoActionSheet];
                                         stSelf->isViewDidLoad = NO;
                                     }
                                 }
@@ -1854,6 +1862,8 @@ shouldChangeTextInRange:(NSRange)range
                         } else {
                             [stSelf myshowimage];
                         }
+                        
+                        
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [stSelf showCustomErrorAlert: dic[@"message"]];
@@ -2967,7 +2977,9 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
                 
                 [stSelf removeTextDescriptionView];
             }
-            
+            [stSelf refreshURLSwitch];
+            [stSelf refreshLocationSwitch];
+            [stSelf refreshAudioSwitch];
             [stSelf.dataCollectionView reloadData];
         });
     });
@@ -3356,6 +3368,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)showPhotoAndVideoActionSheet {
+    
     NSLog(@"showPhotoAndVideoActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
@@ -3444,8 +3457,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showPDFPicker {
     if (@available(iOS 11.0, *)) {
         __block typeof(self) wself = self;
-        
-        self.pdfUploader = [[PDFUploader alloc] initWithAlbumID: self.albumid availablePages:20 progressblock:^(int currentPage, int totalPage) {
+        int count = (int)(self.selectrow - ImageDataArr.count);
+        if (count < 1) {
+            [self showErrorToastWithMessage:@"頁數已滿，無法再上傳" duration:1.0];
+            return ;
+        }
+        self.pdfUploader = [[PDFUploader alloc] initWithAlbumID: self.albumid availablePages:count progressblock:^(int currentPage, int totalPage) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (currentPage == 0) {
@@ -3458,26 +3475,48 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 
             });
             
-        } exportFinishedblock:^(NSError * _Nullable error) {
+        } exportFinishedblock:^(NSError * _Nullable error, NSArray *icons, NSArray *ids) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (error) {
                     [wself.vidHud hideAnimated:YES];
                     [wself showErrorToastWithMessage:[error localizedDescription] duration:1.0];
                 } else {
-                    wself.vidHud.mode =  MBProgressHUDModeIndeterminate;
+                    wself.vidHud.mode =  MBProgressHUDModeCustomView;//MBProgressHUDModeIndeterminate;
+                    if (!wself.vidHud.customView) {
+                        HudIndicatorView *v = [[HudIndicatorView alloc]initWithFrame:CGRectMake(0, 0, 126, 32)];//[[HudIndicatorView alloc]
+                        v.backgroundColor = UIColor.clearColor;
+                        wself.vidHud.customView = v;
+                    }
+                    HudIndicatorView *v = (HudIndicatorView *)wself.vidHud.customView;
+                    for (int i = 0; i < icons.count; i++){
+                        UIImage *icon = [icons objectAtIndex:i];
+                        NSString *desc = [ids objectAtIndex:i];
+                        [v addIconWithIdentifier:icon identifier:desc];
+                    }
+                    
                     wself.vidHud.label.text = @"準備上傳PDF檔案...";
                     [wself.vidHud.button setTitle: @"取消" forState: UIControlStateNormal];
                     [wself.vidHud.button addTarget: self action: @selector(cancelPDFUploaderWork:) forControlEvents: UIControlEventTouchUpInside];
+                    wself.hud.layer.shadowOffset = CGSizeMake(1, 5);
+                    wself.hud.layer.shadowRadius = 8;
+                    wself.hud.layer.shadowOpacity = 0.5;
+                    wself.hud.layer.shadowColor = UIColor.blackColor.CGColor;
+                    
+                    [wself.hud setNeedsLayout];
                 }
             });
             
-        } uploadProgressBlock:^(int currentPage, int totalPage) {
+        } uploadProgressBlock:^(int currentPage, int totalPage, NSString *desc) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                wself.vidHud.mode =  MBProgressHUDModeDeterminateHorizontalBar;
+                wself.vidHud.mode =  MBProgressHUDModeCustomView;//MBProgressHUDModeDeterminateHorizontalBar;
+                HudIndicatorView *v = (HudIndicatorView *)wself.vidHud.customView;
+                if (v) {
+                    [v removeIconWithIdentifier:desc];
+                }
                 wself.vidHud.label.text = @"上傳中...請稍候";
                 wself.vidHud.detailsLabel.text = [NSString stringWithFormat:@"已上傳 %d / %d", currentPage+1, totalPage];
-                wself.vidHud.progress = (float)(currentPage+1) / (float) totalPage;
+                //wself.vidHud.progress = (float)(currentPage+1) / (float) totalPage;
                 [wself.vidHud.button setTitle: @"取消" forState: UIControlStateNormal];
                 [wself.vidHud.button addTarget: self action: @selector(cancelPDFUploaderWork:) forControlEvents: UIControlEventTouchUpInside];
             });
@@ -5163,9 +5202,26 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: tVC animated: YES];
 }
+- (void)presentIntroVC {
+    
+    CGRect rect3 = [self.view convertRect:conbtn.frame fromView:conbtn.superview];
+    CGRect rect2 = [self.view convertRect:settingBtn.frame fromView:settingBtn.superview];
+    CGRect r0 = self.dataCollectionView.frame;
+    CGRect rect1 = CGRectMake(r0.origin.x+8, r0.origin.y+24, r0.size.height-16, r0.size.height-16);//
+    AlbumCreationIntroViewController *v =  [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreationIntroVC"];
+    
+    [v setStep1Rect:rect1 step2Rect:rect2 step3Rect:rect3];
+    [self presentViewController:v animated:YES completion:^{
+        [v setStep1Rect:rect1 step2Rect:rect2 step3Rect:rect3];
+    }];
+    
+
+}
 #pragma mark -
 - (void)refreshURLSwitch{
     if (selectItem >= 0) {
+        if (self.urlSwitchView.hidden)
+            self.urlSwitchView.hidden = NO;
         NSDictionary *photo = ImageDataArr[selectItem];
         NSArray *a = photo[@"hyperlink"];
         if(!a ||  [photo[@"hyperlink"] isEqual:[NSNull null]] || a.count < 1) {
@@ -5192,6 +5248,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 - (void)refreshLocationSwitch{
     if (selectItem >= 0) {
+        if (self.locationSwitchView.hidden)
+            self.locationSwitchView.hidden = NO;
         NSDictionary *photo = ImageDataArr[selectItem];
         NSString *loc = photo[@"location"];
         if (loc && ![photo[@"location"] isEqual:[NSNull null]] && loc.length > 0) {
@@ -5203,5 +5261,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         [self.locationSwitchView switchOffWithAnimation];
     }
 }
-
+- (BOOL)checkIntro {
+    
+    NSString *val = [[NSUserDefaults standardUserDefaults] objectForKey:@"editorIntro"];
+    if (val)
+        return YES;
+    
+    return NO;
+}
 @end
