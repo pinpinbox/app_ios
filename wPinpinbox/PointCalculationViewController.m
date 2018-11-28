@@ -108,7 +108,6 @@
                 break;
         }
     }
-    
     self.navBarView.backgroundColor = [UIColor barColor];
     
     // Total Point
@@ -168,15 +167,17 @@
     
     NSLog(@"self.identity: %@", self.identity);
     
-    if ([self.identity isEqualToString: @"company_downline"]) {
-        self.exchangeHorizontalView.hidden = YES;
-        self.exchangeTitleLabel.hidden = YES;
-        self.exchangeNumberLabel.hidden = YES;
-    } else {
-        self.exchangeHorizontalView.hidden = NO;
-        self.exchangeTitleLabel.hidden = NO;
-        self.exchangeNumberLabel.hidden = NO;
-    }
+    if ([wTools objectExists: self.identity]) {
+        if ([self.identity isEqualToString: @"company_downline"]) {
+            self.exchangeHorizontalView.hidden = YES;
+            self.exchangeTitleLabel.hidden = YES;
+            self.exchangeNumberLabel.hidden = YES;
+        } else {
+            self.exchangeHorizontalView.hidden = NO;
+            self.exchangeTitleLabel.hidden = NO;
+            self.exchangeNumberLabel.hidden = NO;
+        }
+    }    
 }
 
 /*
