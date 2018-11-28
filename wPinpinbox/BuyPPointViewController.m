@@ -19,21 +19,16 @@
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
 
-@interface BuyPPointViewController () <SFSafariViewControllerDelegate, UIGestureRecognizerDelegate>
-{
+@interface BuyPPointViewController () <SFSafariViewControllerDelegate, UIGestureRecognizerDelegate> {
     //NSString *pointstr;
     NSDictionary *pointlist;
     NSArray *listdata;
     NSArray *totalArray;
     NSString *selectproductid;
-    
     NSArray *datakey;
     
     //價格表
     NSDictionary *pointdata;
-    
-    
-    
     // For Showing Message of Getting Point
     NSString *missionTopicStr;
     NSString *rewardType;
@@ -164,7 +159,6 @@
 
 - (void)getPointStore {
     NSLog(@"getPointStore");
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -174,7 +168,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
@@ -190,7 +183,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-    
             NSLog(@"response from getPointStore: %@", response);
             
             if (response != nil) {
@@ -198,7 +190,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"BuyPPointViewController");
                     NSLog(@"getPointStore");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getpointstore"
                                  selectProductId: @""
@@ -222,58 +213,74 @@
         NSMutableArray *testarr2 = [NSMutableArray new];
         NSMutableArray *testarr3 = [NSMutableArray new];
         
-        for (NSDictionary *pointdic in pointlist) {
-            NSString *platform_flag = pointdic[@"platform_flag"];
-            NSString *obtain = [pointdic[@"obtain"] stringValue];
-            NSString *total = pointdic[@"total"];
+        if ([wTools objectExists: pointlist]) {
+            for (NSDictionary *pointdic in pointlist) {
+                NSString *platform_flag = pointdic[@"platform_flag"];
+                NSString *obtain = [pointdic[@"obtain"] stringValue];
+                NSString *total = pointdic[@"total"];
+                
+                NSArray *strArray = [total componentsSeparatedByString: @"."];
+                NSString *newTotal = [strArray objectAtIndex: 0];
+                
+                [testarr addObject: platform_flag];
+                [testarr2 addObject: obtain];
+                [testarr3 addObject: newTotal];
+            }
+            datakey = [NSArray arrayWithArray:testarr];
+            NSLog(@"datakey: %@", datakey);
             
-            NSArray *strArray = [total componentsSeparatedByString: @"."];
-            NSString *newTotal = [strArray objectAtIndex: 0];
+            listdata = [NSArray arrayWithArray:testarr2];
+            NSLog(@"listdata: %@", listdata);
             
-            [testarr addObject: platform_flag];
-            [testarr2 addObject: obtain];
-            [testarr3 addObject: newTotal];
+            totalArray = [NSArray arrayWithArray: testarr3];
+            NSLog(@"totalArray: %@", totalArray);
+            //NSString *str = [NSString stringWithFormat: @"還有%ldP點可使用", (long)point];
+            //self.userPointLabel.text = str;
+            
+            // Setup Btn Title for P Point
+            if ([wTools objectExists: listdata[0]]) {
+                [self.firstBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[0]]
+                               forState: UIControlStateNormal];
+            }
+            if ([wTools objectExists: listdata[1]]) {
+                [self.secondBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[1]]
+                                forState: UIControlStateNormal];
+            }
+            if ([wTools objectExists: listdata[2]]) {
+                [self.thirdBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[2]]
+                               forState: UIControlStateNormal];
+            }
+            if ([wTools objectExists: listdata[3]]) {
+                [self.fourthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[3]]
+                                forState: UIControlStateNormal];
+            }
+            if ([wTools objectExists: listdata[4]]) {
+                [self.fifthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[4]]
+                               forState: UIControlStateNormal];
+            }
+            if (pointlist.count <= 5) {
+                self.sixthBtn.hidden = YES;
+            } else {
+                self.sixthBtn.hidden = NO;
+                if ([wTools objectExists: listdata[5]]) {
+                    [self.sixthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[5]]
+                                   forState: UIControlStateNormal];
+                }
+            }
+            if ([wTools objectExists: totalArray[0]]) {
+                self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[0]];
+            }
+            selectproductid = datakey[0];
+            [self getUrPoints];
         }
-        datakey = [NSArray arrayWithArray:testarr];
-        NSLog(@"datakey: %@", datakey);
-        
-        listdata = [NSArray arrayWithArray:testarr2];
-        NSLog(@"listdata: %@", listdata);
-        
-        totalArray = [NSArray arrayWithArray: testarr3];
-        NSLog(@"totalArray: %@", totalArray);
-        
-        //NSString *str = [NSString stringWithFormat: @"還有%ldP點可使用", (long)point];
-        //self.userPointLabel.text = str;
-        
-        // Setup Btn Title for P Point
-        [self.firstBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[0]]
-                       forState: UIControlStateNormal];
-        [self.secondBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[1]]
-                        forState: UIControlStateNormal];
-        [self.thirdBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[2]]
-                       forState: UIControlStateNormal];
-        [self.fourthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[3]]
-                        forState: UIControlStateNormal];
-        [self.fifthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[4]]
-                       forState: UIControlStateNormal];
-        
-        if (pointlist.count <= 5) {
-            self.sixthBtn.hidden = YES;
-        } else {
-            self.sixthBtn.hidden = NO;
-            [self.sixthBtn setTitle: [NSString stringWithFormat: @"%@ P", listdata[5]]
-                           forState: UIControlStateNormal];
-        }
-        self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[0]];
-        
-        selectproductid = datakey[0];
-        
-        [self getUrPoints];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"processPointStoreResult");
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
@@ -301,22 +308,23 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *pointdic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[pointstr dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     NSLog(@"pointdic: %@", pointdic);
-                    NSInteger point = [pointdic[@"data"] integerValue];
-                    
-                    [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
-                    [userPrefs synchronize];
-                    
-                    //pointstr = [NSString stringWithFormat:@"%ld",(long)point];
-                    
-                    NSString *str = [NSString stringWithFormat: @"還有%ldP點可使用", (long)point];
-                    NSLog(@"str: %@", str);
-                    self.userPointLabel.text = str;
-                    
-                    [InAppPurchaseManager getInstance].delegate = self;
-                    [InAppPurchaseManager getInstance].priceid = wself->datakey;
-                    [[InAppPurchaseManager getInstance] loadStore]; //讀取商店資訊
+                    if ([wTools objectExists: pointdic[@"data"]]) {
+                        NSInteger point = [pointdic[@"data"] integerValue];
+                        [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
+                        [userPrefs synchronize];
+                        
+                        //pointstr = [NSString stringWithFormat:@"%ld",(long)point];
+                        
+                        NSString *str = [NSString stringWithFormat: @"還有%ldP點可使用", (long)point];
+                        NSLog(@"str: %@", str);
+                        if ([wTools objectExists: str]) {
+                            self.userPointLabel.text = str;
+                        }
+                        [InAppPurchaseManager getInstance].delegate = self;
+                        [InAppPurchaseManager getInstance].priceid = wself->datakey;
+                        [[InAppPurchaseManager getInstance] loadStore]; //讀取商店資訊
+                    }
                 }
             }
         });
@@ -338,8 +346,9 @@
 //            NSString *str = [strArray objectAtIndex: 0];
             
             //self.priceLabel.text = str;
-            self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[0]];
-            
+            if ([wTools objectExists: totalArray[0]]) {
+                self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[0]];
+            }
             selectproductid = datakey[0];
             
             self.firstBtn.layer.borderWidth = 0;
@@ -375,8 +384,9 @@
 //            NSString *str = [strArray objectAtIndex: 0];
             
             //self.priceLabel.text = str;
-            self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[1]];
-            
+            if ([wTools objectExists: totalArray[1]]) {
+                self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[1]];
+            }
             selectproductid = datakey[1];
             
             self.firstBtn.layer.borderColor = [UIColor blackColor].CGColor;
@@ -412,8 +422,9 @@
 //            NSString *str = [strArray objectAtIndex: 0];
             
             //self.priceLabel.text = str;
-            self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[2]];
-            
+            if ([wTools objectExists: totalArray[2]]) {
+                self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[2]];
+            }
             selectproductid = datakey[2];
             
             self.firstBtn.layer.borderColor = [UIColor blackColor].CGColor;
@@ -449,8 +460,9 @@
 //            NSString *str = [strArray objectAtIndex: 0];
             
             //self.priceLabel.text = str;
-            self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[3]];
-            
+            if ([wTools objectExists: totalArray[3]]) {
+                self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[3]];
+            }
             selectproductid = datakey[3];
             
             self.firstBtn.layer.borderColor = [UIColor blackColor].CGColor;
@@ -486,8 +498,9 @@
 //            NSString *str = [strArray objectAtIndex: 0];
             
             //self.priceLabel.text = str;
-            self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[4]];
-            
+            if ([wTools objectExists: totalArray[4]]) {
+                self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[4]];
+            }
             selectproductid = datakey[4];
             
             self.firstBtn.layer.borderColor = [UIColor blackColor].CGColor;
@@ -523,8 +536,9 @@
 //            NSString *str = [strArray objectAtIndex: 0];
             
             //self.priceLabel.text = str;
-            self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[5]];
-            
+            if ([wTools objectExists: totalArray[5]]) {
+                self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[5]];
+            }
             selectproductid = datakey[5];
             
             self.firstBtn.layer.borderColor = [UIColor blackColor].CGColor;
@@ -583,67 +597,65 @@
 }
 
 - (IBAction)buyBtnPress:(id)sender {
-    
     NSLog(@"%@", selectproductid);
-    
     NSString *originalStr;
     NSString *priceStr;
-    
-    if ([selectproductid isEqualToString: datakey[0]]) {
-        originalStr = [NSString stringWithFormat: @"%@", datakey[0]];
-        priceStr = [NSString stringWithFormat: @"%@", totalArray[0]];
-        //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[0]]];
-    }
-    if ([selectproductid isEqualToString: datakey[1]]) {
-        originalStr = [NSString stringWithFormat: @"%@", datakey[1]];
-        priceStr = [NSString stringWithFormat: @"%@", totalArray[1]];
-        //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[1]]];
-    }
-    if ([selectproductid isEqualToString: datakey[2]]) {
-        originalStr = [NSString stringWithFormat: @"%@", datakey[2]];
-        priceStr = [NSString stringWithFormat: @"%@", totalArray[2]];
-        //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[2]]];
-    }
-    if ([selectproductid isEqualToString: datakey[3]]) {
-        originalStr = [NSString stringWithFormat: @"%@", datakey[3]];
-        priceStr = [NSString stringWithFormat: @"%@", totalArray[3]];
-        //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[3]]];
-    }
-    if ([selectproductid isEqualToString: datakey[4]]) {
-        originalStr = [NSString stringWithFormat: @"%@", datakey[4]];
-        priceStr = [NSString stringWithFormat: @"%@", totalArray[4]];
-        //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[4]]];
-    }
-    
-    if (pointlist.count <= 5) {
-        NSLog(@"pointlist.count <= 5");
-    } else {
-        NSLog(@"pointlist.count > 5");
-        
-        if ([selectproductid isEqualToString: datakey[5]]) {
-            originalStr = [NSString stringWithFormat: @"%@", datakey[5]];
-            priceStr = [NSString stringWithFormat: @"%@", totalArray[5]];
-            //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[5]]];
+    if ([wTools objectExists: selectproductid]) {
+        if ([selectproductid isEqualToString: datakey[0]]) {
+            originalStr = [NSString stringWithFormat: @"%@", datakey[0]];
+            priceStr = [NSString stringWithFormat: @"%@", totalArray[0]];
+            //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[0]]];
         }
-    }
-    
-    NSLog(@"originalStr: %@", originalStr);
-    NSArray *strArray1 = [originalStr componentsSeparatedByString: @"_"];
-    NSString *pointStr = [strArray1 objectAtIndex: 1];
-    NSLog(@"pointStr: %@", pointStr);
-    
-    NSArray *strArray2 = [priceStr componentsSeparatedByString: @"."];
-    NSString *newPriceStr = [strArray2 objectAtIndex: 0];
-    NSLog(@"newPriceStr: %@", newPriceStr);
-    
-    NSString *msgStr = [NSString stringWithFormat: @"確定購買%@P:NT %@", pointStr, newPriceStr];
-    NSLog(@"msgStr: %@", msgStr);
-    
-    if ([priceStr isKindOfClass: [NSNull class]]) {
-        NSLog(@"priceStr is kind of null");
-    } else {
-        NSLog(@"priceStr is not null");
-        [self showCustomAlert: msgStr productId: selectproductid];
+        if ([selectproductid isEqualToString: datakey[1]]) {
+            originalStr = [NSString stringWithFormat: @"%@", datakey[1]];
+            priceStr = [NSString stringWithFormat: @"%@", totalArray[1]];
+            //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[1]]];
+        }
+        if ([selectproductid isEqualToString: datakey[2]]) {
+            originalStr = [NSString stringWithFormat: @"%@", datakey[2]];
+            priceStr = [NSString stringWithFormat: @"%@", totalArray[2]];
+            //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[2]]];
+        }
+        if ([selectproductid isEqualToString: datakey[3]]) {
+            originalStr = [NSString stringWithFormat: @"%@", datakey[3]];
+            priceStr = [NSString stringWithFormat: @"%@", totalArray[3]];
+            //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[3]]];
+        }
+        if ([selectproductid isEqualToString: datakey[4]]) {
+            originalStr = [NSString stringWithFormat: @"%@", datakey[4]];
+            priceStr = [NSString stringWithFormat: @"%@", totalArray[4]];
+            //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[4]]];
+        }
+        
+        if (pointlist.count <= 5) {
+            NSLog(@"pointlist.count <= 5");
+        } else {
+            NSLog(@"pointlist.count > 5");
+            
+            if ([selectproductid isEqualToString: datakey[5]]) {
+                originalStr = [NSString stringWithFormat: @"%@", datakey[5]];
+                priceStr = [NSString stringWithFormat: @"%@", totalArray[5]];
+                //priceStr = [NSString stringWithFormat: @"%@", pointdata[datakey[5]]];
+            }
+        }
+        NSLog(@"originalStr: %@", originalStr);
+        NSArray *strArray1 = [originalStr componentsSeparatedByString: @"_"];
+        NSString *pointStr = [strArray1 objectAtIndex: 1];
+        NSLog(@"pointStr: %@", pointStr);
+        
+        NSArray *strArray2 = [priceStr componentsSeparatedByString: @"."];
+        NSString *newPriceStr = [strArray2 objectAtIndex: 0];
+        NSLog(@"newPriceStr: %@", newPriceStr);
+        
+        NSString *msgStr = [NSString stringWithFormat: @"確定購買%@P:NT %@", pointStr, newPriceStr];
+        NSLog(@"msgStr: %@", msgStr);
+        
+        if ([priceStr isKindOfClass: [NSNull class]]) {
+            NSLog(@"priceStr is kind of null");
+        } else {
+            NSLog(@"priceStr is not null");
+            [self showCustomAlert: msgStr productId: selectproductid];
+        }
     }
 }
 
@@ -694,17 +706,19 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
-                    
                     if ([dic[@"result"] intValue] == 1) {
-                        wself.orderid = dic[@"data"];
-                        NSLog(@"orderid: %@", wself.orderid);
-                        
-                        [[InAppPurchaseManager getInstance] purchaseProUpgrade2:wself->selectproductid];
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            wself.orderid = dic[@"data"];
+                            NSLog(@"orderid: %@", wself.orderid);
+                            [[InAppPurchaseManager getInstance] purchaseProUpgrade2:wself->selectproductid];
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -758,7 +772,6 @@
 //商品資訊
 -(void)giveMeItemInfo:(NSMutableDictionary*)products{
     NSLog(@"giveMeItemInfo");
-    
     NSLog(@"商品詳細Info:%@", products);
     pointdata = [NSDictionary dictionaryWithDictionary:products];
     NSLog(@"pointdata: %@", pointdata);
@@ -824,33 +837,39 @@
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        NSString *pointstr = [dic[@"data"] stringValue];
-                        NSLog(@"old pointstr: %@", pointstr);
-                        
-                        NSString *str = [NSString stringWithFormat: @"還有%@P點可使用", pointstr];
-                        NSLog(@"str: %@", str);
-                        self.userPointLabel.text = str;
-                        
-                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                        [defaults setObject: [NSNumber numberWithInteger: [pointstr integerValue]] forKey: @"pPoint"];
-                        
-                        //_mypoint.text=pointstr;
-                        
-                        NSLog(@"Purchase is Successful");
-                        // Check whether getting P-Point-Buying point or not
-                        
-                        BOOL firsttime_buy_point = [[defaults objectForKey: @"firsttime_buy_point"] boolValue];
-                        NSLog(@"firsttime_buy_point: %d", (int)firsttime_buy_point);
-                        
-                        if (firsttime_buy_point) {
-                            NSLog(@"Get the First Time Buying P Point Task Already");
-                            [self pointsUPdate];
-                        } else {
-                            [self checkPoint];
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            NSString *pointstr = [dic[@"data"] stringValue];
+                            NSLog(@"old pointstr: %@", pointstr);
+                            
+                            NSString *str = [NSString stringWithFormat: @"還有%@P點可使用", pointstr];
+                            NSLog(@"str: %@", str);
+                            if ([wTools objectExists: str]) {
+                                self.userPointLabel.text = str;
+                            }
+                            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                            [defaults setObject: [NSNumber numberWithInteger: [pointstr integerValue]] forKey: @"pPoint"];
+                            [defaults synchronize];
+                            //_mypoint.text=pointstr;
+                            NSLog(@"Purchase is Successful");
+                            // Check whether getting P-Point-Buying point or not
+                            
+                            BOOL firsttime_buy_point = [[defaults objectForKey: @"firsttime_buy_point"] boolValue];
+                            NSLog(@"firsttime_buy_point: %d", (int)firsttime_buy_point);
+                            
+                            if (firsttime_buy_point) {
+                                NSLog(@"Get the First Time Buying P Point Task Already");
+                                [self pointsUPdate];
+                            } else {
+                                [self checkPoint];
+                            }
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -872,10 +891,8 @@
 
 #pragma mark - Check Point Method
 
-- (void)checkPoint
-{
+- (void)checkPoint {
     NSLog(@"checkPoint");
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -906,7 +923,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from doTask1");
                 
@@ -914,7 +930,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"BuyPPointViewController");
                     NSLog(@"checkPoint");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"doTask1"
                                  selectProductId: @""
@@ -922,7 +937,6 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processCheckPointResult:data];
                 }
             }
@@ -930,7 +944,6 @@
     });
 }
 - (void)processCheckPointResult:(NSDictionary *)data {
-    
     if ([data[@"result"] intValue] == 1) {
         missionTopicStr = data[@"data"][@"task"][@"name"];
         NSLog(@"name: %@", missionTopicStr);
@@ -956,7 +969,6 @@
         [self pointsUPdate];
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
-        
         // Save data for first collect album
         BOOL firsttime_buy_point = YES;
         
@@ -965,30 +977,25 @@
                      forKey: @"firsttime_buy_point"];
         [defaults synchronize];
     } else if ([data[@"result"] intValue] == 0) {
-        NSString *errorMessage = data[@"message"];
-        NSLog(@"error messsage: %@", errorMessage);
+        NSLog(@"error message: %@", data[@"message"]);
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 #pragma mark - Custom AlertView for Getting Point
-- (void)showAlertView
-{
+- (void)showAlertView {
     NSLog(@"Show Alert View");
-    
     // Custom AlertView shows up when getting the point
     alertTaskView = [[OldCustomAlertView alloc] init];
     [alertTaskView setContainerView: [self createPointView]];
     [alertTaskView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
     [alertTaskView setUseMotionEffects: true];
-    
     [alertTaskView show];
 }
 
-- (UIView *)createPointView
-{
+- (UIView *)createPointView {
     NSLog(@"createPointView");
-    
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
     
     // Mission Topic Label
@@ -1046,22 +1053,16 @@
                              forState: UIControlStateNormal];
         [pointView addSubview: activityButton];
     }
-    
     return pointView;
 }
 
-- (void)showTheActivityPage
-{
+- (void)showTheActivityPage {
     NSLog(@"showTheActivityPage");
-    
     //NSString *activityLink = @"http://www.apple.com";
     NSString *activityLink = eventUrl;
-    
     NSURL *url = [NSURL URLWithString: activityLink];
-    
     // Close for present safari view controller, otherwise alertView will hide the background
     [alertTaskView close];
-    
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
     safariVC.delegate = self;
     safariVC.preferredBarTintColor = [UIColor whiteColor];
@@ -1069,10 +1070,8 @@
 }
 
 #pragma mark - SFSafariViewController delegate methods
-- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller
-{
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
     // Done button pressed
-    
     NSLog(@"show");
     [alertTaskView show];
 }
@@ -1103,27 +1102,29 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *pointDic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [pointstr dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    NSInteger point = [pointDic[@"data"] integerValue];
-                    
-                    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-                    [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
-                    [userPrefs synchronize];
-                    
-                    //pointstr = [NSString stringWithFormat: @"%ld", (long)point];
-                    //NSLog(@"new pointstr: %@", pointstr);
-                    
-                    //_mypoint.text=pointstr;
-                    
-                    NSString *str = [NSString stringWithFormat: @"還有%ldP點可使用", (long)point];
-                    NSLog(@"str: %@", str);
-                    self.userPointLabel.text = str;
+                    if ([wTools objectExists: pointDic[@"data"]]) {
+                        NSInteger point = [pointDic[@"data"] integerValue];
+                        
+                        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+                        [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
+                        [userPrefs synchronize];
+                        
+                        //pointstr = [NSString stringWithFormat: @"%ld", (long)point];
+                        //NSLog(@"new pointstr: %@", pointstr);
+                        
+                        //_mypoint.text=pointstr;
+                        
+                        NSString *str = [NSString stringWithFormat: @"還有%ldP點可使用", (long)point];
+                        NSLog(@"str: %@", str);
+                        if ([wTools objectExists: str]) {
+                            self.userPointLabel.text = str;
+                        }
+                    }
                 }
             }
         });
     });
 }
-
 
 #pragma mark - Custom Alert Method
 - (void)showCustomAlert: (NSString *)msg productId: (NSString *)productId {
@@ -1146,7 +1147,6 @@
     __weak CustomIOSAlertView *weakAlertView = alertView;
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        
         [weakAlertView close];
         
         if (buttonIndex == 0) {
@@ -1160,8 +1160,7 @@
     [alertView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg
-{
+- (UIView *)createContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -1247,8 +1246,7 @@
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                selectProductId: (NSString *)selectProductId
-                 dataSignature: (NSString *)dataSignature
-{
+                 dataSignature: (NSString *)dataSignature {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1269,7 +1267,6 @@
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
