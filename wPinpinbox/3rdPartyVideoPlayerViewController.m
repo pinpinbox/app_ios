@@ -12,7 +12,7 @@
 @property (nonatomic) BOOL isPresenting;
 @end
 @interface ThirdPartyVideoPlayerViewController ()<WKScriptMessageHandler>
-@property (nonatomic, strong) WKVideoPlayerView *videoView;
+@property (nonatomic, strong) WKVideoPlayerView *videoview;
 @property (nonatomic, strong) NSString *videoPath;
 @property (nonatomic, strong) WKWebViewConfiguration *wkvideoplayerConf;
 @property (nonatomic) IBOutlet UIButton *close;
@@ -94,11 +94,11 @@
 }
 #pragma mark
 - (void)prepareVideoPlayerView {
-    WKVideoPlayerView *videoview = [[WKVideoPlayerView alloc] initWithString:self.videoPath configuration:[self getConfiguration]];
+    self.videoview = [[WKVideoPlayerView alloc] initWithString:self.videoPath configuration:[self getConfiguration]];
     
-    videoview.translatesAutoresizingMaskIntoConstraints = NO;
+    self.videoview.translatesAutoresizingMaskIntoConstraints = NO;
     NSLayoutConstraint *topConstraint = [NSLayoutConstraint
-                                         constraintWithItem:videoview
+                                         constraintWithItem:self.videoview
                                          attribute:NSLayoutAttributeTop
                                          relatedBy:NSLayoutRelationEqual
                                          toItem:self.view
@@ -106,21 +106,21 @@
                                          multiplier:1.0
                                          constant:0.0];
     
-    NSLayoutConstraint *leftConstraint = [NSLayoutConstraint constraintWithItem:videoview
+    NSLayoutConstraint *leftConstraint = [NSLayoutConstraint constraintWithItem:self.videoview
                                                                       attribute:NSLayoutAttributeLeft
                                                                       relatedBy:NSLayoutRelationEqual
                                                                          toItem:self.view
                                                                       attribute:NSLayoutAttributeLeft
                                                                      multiplier:1.0
                                                                        constant:0.0];
-    NSLayoutConstraint *rightConstraint = [NSLayoutConstraint constraintWithItem:videoview
+    NSLayoutConstraint *rightConstraint = [NSLayoutConstraint constraintWithItem:self.videoview
                                                                        attribute:NSLayoutAttributeRight
                                                                        relatedBy:NSLayoutRelationEqual
                                                                           toItem:self.view
                                                                        attribute:NSLayoutAttributeRight
                                                                       multiplier:1.0
                                                                         constant:0.0];
-    NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:videoview
+    NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:self.videoview
                                                                         attribute:NSLayoutAttributeBottom
                                                                         relatedBy:NSLayoutRelationEqual
                                                                            toItem:self.view
@@ -129,56 +129,53 @@
                                                                          constant:0.0];
     NSArray *constraints = @[topConstraint, leftConstraint, rightConstraint, bottomConstraint];
     
-    [self.view addSubview:videoview];
+    [self.view addSubview:self.videoview];
     
     [self.view addConstraints:constraints];
     
-    [videoview setVideoPath:self.videoPath];
+    [self.videoview setVideoPath:self.videoPath];
     [self.view bringSubviewToFront:self.hint];
-    [self.view sendSubviewToBack:videoview];
+    [self.view sendSubviewToBack:self.videoview];
 }
-
+// WKWebViewConfiguration for setting up embedded video player
 - (WKWebViewConfiguration *)getConfiguration {
     if (!self.wkvideoplayerConf) {
         self.wkvideoplayerConf =  [[WKWebViewConfiguration alloc] init];
+        //  for video autoplay in WKWebView
         self.wkvideoplayerConf.allowsInlineMediaPlayback = YES;
         self.wkvideoplayerConf.mediaTypesRequiringUserActionForPlayback = NO;
         WKUserContentController *cntController = [[WKUserContentController alloc] init];
         
         [cntController addScriptMessageHandler:self name:@"callbackHandler"];
+        
         self.wkvideoplayerConf.userContentController = cntController;
 
     }
     
     return self.wkvideoplayerConf;
 }
+//  receive video status from JS
 - (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
     if ([message.body isKindOfClass:[NSString class]]) {
         NSString *msg = (NSString *)message.body;
         [self.view bringSubviewToFront:self.close];
         if (!self.hint.hidden && [[msg lowercaseString] containsString:@"videoisready"])
             self.hint.hidden = YES;
-//        NSLog(@"didReceiveScriptMessage %@",msg);
-//
-//        
-//        if ([[msg lowercaseString] containsString:@"playing"]){
-//            self.is3rdPartyVideoPlaying = YES;
-//
-//        } else {
-//            self.is3rdPartyVideoPlaying = NO;
-//        }
-//        self.imageScrollCV.scrollEnabled = !self.is3rdPartyVideoPlaying;
-//        NSLog(@"userContentController didreceive : %@",msg);
     }
 }
+
+//  dismiss this VC when user stopped the video
 - (void)closedVideoScreen:(NSNotification *)notification {
+    //  remove UIWindowDidBecomeHiddenNotification target
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIWindowDidBecomeHiddenNotification object:nil];
-    // perhaps after dismiss call ContentCheckingVC to scroll to right cell.... //
+    //  pause the video first
+    [self.videoview pauseVid];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (IBAction)dismissPlayer:(id)sender {
     [self closedVideoScreen:nil];
 }
+
 #pragma mark UIViewControllerTransitioningDelegat functions
 - (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
     PlayerVCAnimationTransitioning *at = [[PlayerVCAnimationTransitioning alloc] init];
