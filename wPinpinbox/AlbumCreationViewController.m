@@ -5059,8 +5059,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             int res = [result[@"result"] intValue];
             switch (res) {
                 case 0: {
-                    NSString *err = result[@"message"];
+                    __block NSString *err = result[@"message"];
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        if (!err || err.length < 1)
+                            err = @"請稍後再試";
                         [wself showErrorToastWithMessage:err duration:2.0];
                     });
                 }
@@ -5081,7 +5083,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [wself showErrorToastWithMessage:[error localizedDescription] duration:2.0];
+                    NSString *err = [error localizedDescription];
+                    if (!err || err.length < 1)
+                        err = @"請稍後再試";
+                    [wself showErrorToastWithMessage:err duration:2.0];
                 });
             }
         }
