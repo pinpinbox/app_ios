@@ -20,8 +20,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIViewController+ErrorAlert.h"
 
-@interface MyAlbumCollectionViewController () <UITableViewDelegate, UITableViewDataSource>
-{
+@interface MyAlbumCollectionViewController () <UITableViewDelegate, UITableViewDataSource> {
     BOOL isLoading;
     BOOL isReloading;
     NSInteger nextId;
@@ -47,7 +46,6 @@
     [super viewWillAppear:animated];
     NSLog(@"MyAlbumCollectionViewController");
     NSLog(@"viewWillAppear");
-    
     [self loadData];
 }
 
@@ -72,8 +70,7 @@
     [self.tableView addSubview: self.refreshControl];
 }
 
-- (void)refresh
-{
+- (void)refresh {
     if (!isReloading) {
         @try {
             [MBProgressHUD showHUDAddedTo: self.view animated: YES];
@@ -84,24 +81,19 @@
             NSLog( @"Reason: %@", exception.reason );
             return;
         }
-        
-        
         isReloading = YES;
         nextId = 0;
         isLoading = NO;
-        
         [self loadData];
     }
 }
 
-- (void)loadData
-{
+- (void)loadData {
     if (!isLoading) {
         if (nextId == 0) {
             NSLog(@"nextId is: %ld", (long)nextId);
         }
         isLoading = YES;
-        
         [self getcalbumlist];
     }
 }
@@ -141,7 +133,6 @@
                     wself->isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processCalbumList:dic];
                 }
             } else {
@@ -151,6 +142,7 @@
         });
     });
 }
+
 - (void)processCalbumList : (NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         NSLog(@"get result from getcalbumlist");
@@ -160,28 +152,34 @@
         }
         int s = 0;
         
-        for (NSMutableDictionary *collectDic in [dic objectForKey: @"data"]) {
-            s++;
-            [dataArray addObject: collectDic];
+        if ([wTools objectExists: dic[@"data"]]) {
+            for (NSMutableDictionary *collectDic in [dic objectForKey: @"data"]) {
+                s++;
+                [dataArray addObject: collectDic];
+            }
+            nextId = nextId + s;
+            
+            NSLog(@"dataArray: %@", dataArray);
+            NSLog(@"dataArray.count: %lu", (unsigned long)dataArray.count);
+            
+            [self.refreshControl endRefreshing];
+            [self.tableView reloadData];
+            
+            if (nextId >= 0) {
+                isLoading = NO;
+            }
+            if (s == 0) {
+                isLoading = YES;
+            }
+            isReloading = NO;
         }
-        nextId = nextId + s;
-        
-        NSLog(@"dataArray: %@", dataArray);
-        NSLog(@"dataArray.count: %lu", (unsigned long)dataArray.count);
-        
-        [self.refreshControl endRefreshing];
-        [self.tableView reloadData];
-        
-        if (nextId >= 0) {
-            isLoading = NO;
-        }
-        if (s == 0) {
-            isLoading = YES;
-        }
-        isReloading = NO;
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
         [self.refreshControl endRefreshing];
         isReloading = NO;
     } else {
@@ -190,25 +188,23 @@
         isReloading = NO;
     }
 }
-#pragma mark - UITableViewDataSource Methods
 
+#pragma mark - UITableViewDataSource Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section {
     NSLog(@"dataArray.count: %lu", (unsigned long)dataArray.count);
     return dataArray.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cellForRowAtIndexPath");
-    
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"cellForRowAtIndexPath");    
     MyAlbumCollectionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"cell" forIndexPath: indexPath];
-    
     NSDictionary *dic = [dataArray[indexPath.row] copy];
-    
-    
     NSString *imageUrl = dic[@"album"][@"cover"];
     NSString *name = dic[@"album"][@"name"];
     NSString *time = dic[@"album"][@"insertdate"];
@@ -236,16 +232,13 @@
     
     if (cooperationStatistics == 0) {
         NSLog(@"cooperationStatistics == 0");
-        
         cell.cooperativeImageView.hidden = YES;
         cell.cooperativeNumberLabel.hidden = YES;
         cell.cooperativeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)cooperationStatistics];
     } else {
         NSLog(@"cooperationStatistics != 0");
-        
         cell.cooperativeImageView.hidden = NO;
         cell.cooperativeNumberLabel.hidden = NO;
-        
         cell.cooperativeNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)cooperationStatistics];
     }
     
@@ -256,35 +249,32 @@
         NSLog(@"select: %d", select);
         NSLog(@"userId: %@", userId);
         NSLog(@"albumId: %@", albumId);
-        
         wself->isCellSubViewHidden = !(wself->isCellSubViewHidden);
-        
         [wself.tableView reloadData];
     };
-    
     cell.cellSubView.hidden = isCellSubViewHidden;
     
     return cell;
 }
 
 #pragma mark - UITableViewDelegate Methods
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectRowAtIndexPath");
-    
     NSDictionary *dic = [dataArray[indexPath.row] copy];
-    
     
     if ([self.delegate respondsToSelector: @selector(toReadBookController:)]) {
         NSLog(@"self.delegate respondsToSelector toReadBookController");
-        [self.delegate toReadBookController: [dic[@"album"][@"album_id"] stringValue]];
+        if ([wTools objectExists: dic[@"album"][@"album_id"]]) {
+            [self.delegate toReadBookController: [dic[@"album"][@"album_id"] stringValue]];
+        }
     }
-    
     [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView
+  willDisplayCell:(UITableViewCell *)cell
+forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"willDisplayCell");
     
     if (indexPath.item == (dataArray.count - 1)) {
@@ -293,95 +283,17 @@
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    //NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    //NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       albumId: (NSString *)albumId
-{
+                       albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -417,8 +329,7 @@
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
