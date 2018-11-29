@@ -128,7 +128,7 @@
                                                                        multiplier:1.0
                                                                          constant:0.0];
     NSArray *constraints = @[topConstraint, leftConstraint, rightConstraint, bottomConstraint];
-    
+    self.videoview.alpha = 0;
     [self.view addSubview:self.videoview];
     
     [self.view addConstraints:constraints];
@@ -159,8 +159,10 @@
     if ([message.body isKindOfClass:[NSString class]]) {
         NSString *msg = (NSString *)message.body;
         [self.view bringSubviewToFront:self.close];
-        if (!self.hint.hidden && [[msg lowercaseString] containsString:@"videoisready"])
+        if (!self.hint.hidden && [[msg lowercaseString] containsString:@"videoisready"]){
             self.hint.hidden = YES;
+            self.videoview.alpha = 1;
+        }
     }
 }
 
