@@ -32,7 +32,7 @@
     ic.layer.cornerRadius = 14;
     ic.clipsToBounds = YES;
     ic.layer.borderColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5].CGColor;
-    ic.layer.borderWidth = 1;
+    ic.layer.borderWidth = 0.5;
     
     [self addSubview:ic];
     [_iconList setObject:ic forKey:identifier];

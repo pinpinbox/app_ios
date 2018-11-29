@@ -48,13 +48,14 @@
 #import "ZOZolaZoomTransition.h"
 #import <SSFadingScrollView.h>
 
-#import "YoutubePlayerViewController.h"
+//#import "YoutubePlayerViewController.h"
 
 #import "DMViewController.h"
 #import "UIViewController+ErrorAlert.h"
 
 
 #import "WKVideoPlayerView.h"
+#import "3rdPartyVideoPlayerViewController.h"
 #import "MapHelper.h"
 
 #define kTextContentHeight 155
@@ -67,7 +68,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, ExchangeInfoEditViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, NewMessageBoardViewControllerDelegate, YoutubePlayerViewControllerDelegate, AlbumInfoViewControllerDelegate, UITextViewDelegate, UITextFieldDelegate, WKScriptMessageHandler> {
+@interface ContentCheckingViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, TTTAttributedLabelDelegate, BuyPPointViewControllerDelegate, MessageboardViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, MapShowingViewControllerDelegate, FBSDKSharingDelegate, SFSafariViewControllerDelegate, ExchangeInfoEditViewControllerDelegate, ZOZolaZoomTransitionDelegate, UINavigationControllerDelegate, NewMessageBoardViewControllerDelegate, /*YoutubePlayerViewControllerDelegate, */AlbumInfoViewControllerDelegate, UITextViewDelegate, UITextFieldDelegate> {
     BOOL isDataLoaded;
     BOOL isRotating;
     BOOL kbShowUp;
@@ -420,7 +421,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self.imageScrollCV setContentOffset: CGPointMake(offsetAfterRotating, 0)];
         }
     }
-    
+    NSLog(@"self.imageScrollCV contentOffset.x  %f",self.imageScrollCV.contentOffset.x);
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.navBarBgViewHeight.constant = 48;
     }
@@ -583,7 +584,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (void)settingSizeBasedOnDevice {
-    NSLog(@"settingSizeBasedOnDevice %ld",[[UIScreen mainScreen] nativeBounds].size.height);
+
     CGRect rect;
     bgSV.contentInset = UIEdgeInsetsMake(60, 0, 0, 0);
     
@@ -778,27 +779,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 - (void)processTransitionCompletion {
     
-//    CGSize currentSize = self.imageScrollCV.frame.size;
-//    offsetAfterRotating = self.pageBeforePresentingOrPushing * currentSize.width;
-//    NSLog(@"offsetAfterRotating: %f", offsetAfterRotating);
-//    [self.imageScrollCV setContentOffset: CGPointMake(offsetAfterRotating, 0)];
-//    NSLog(@"");
-//    NSLog(@"self.imageScrollCV.contentOffset: %@", NSStringFromCGPoint(self.imageScrollCV.contentOffset));
-//
-//    [UIView animateWithDuration: 0.1f animations:^{
-//        self.imageScrollCV.alpha = 1.0f;
-//    }];
-//    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.pageBeforePresentingOrPushing inSection: 0];
-//    [self.imageScrollCV reloadData];
-//    [self.thumbnailImageScrollCV reloadData];
-//    [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-//
-//    NSLog(@"self.videoPlayerViewController: %@", self.videoPlayerViewController.view);
-//
-//    //        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-//    isRotating = NO;
-    
-    
     CGSize currentSize = self.imageScrollCV.frame.size;
     offsetAfterRotating = self.pageBeforePresentingOrPushing * currentSize.width;
     NSLog(@"offsetAfterRotating: %f", offsetAfterRotating);
@@ -839,78 +819,31 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"");
     NSLog(@"self.imageScrollCV.frame.size: %@", NSStringFromCGSize(self.imageScrollCV.frame.size));
     
-    CGPoint currentOffset = [self.imageScrollCV contentOffset];
-    NSLog(@"currentOffset: %@", NSStringFromCGPoint(currentOffset));
-    self.pageBeforePresentingOrPushing = currentOffset.x / self.imageScrollCV.frame.size.width;
+    [self updatePageBeforePresentingOrPushing];
     NSLog(@"self.pageBeforePresentingOrPushing: %d", self.pageBeforePresentingOrPushing);
     __block typeof(self) wself = self;
     
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
-    ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
-    __block WKVideoPlayerView *v2 = (WKVideoPlayerView *)[cell.videoView viewWithTag:20002];
-    CGPoint p = CGPointZero;
-    if (v2) {
-        p = v2.scrollView.contentOffset;
-    }
+    //NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
+    //ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         [wself processVCTransition];
-        
-        if (v2) {
-            
-            //CGRect box = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(560, 315),CGRectMake(0,0 , wself.view.frame.size.width,wself.view.frame.size.height));
-            v2.frame = CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height);
-            [v2 refreshLayoutWithOrientation:NO offset:p];
-            //v2.frame = box;
-            
-            v2.center = cell.videoView.center;
-        }
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         NSLog(@"");
         NSLog(@"coordinator completion");
         [wself settingSizeBasedOnDevice];
         
-//        NSLog(@"Before");
-//        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
-//        CGFloat width;
-//        CGFloat height;
-//
-//        if (size.height > size.width) {
-//            NSLog(@"Background in Portrait");
-//            if (currentSize.height > currentSize.width) {
-//                NSLog(@"imageScrollCV in Portrait");
-//            } else if (currentSize.width > currentSize.height) {
-//                NSLog(@"imageScrollCV in Landscape");
-//                height = currentSize.width;
-//                width = currentSize.height;
-//                currentSize = CGSizeMake(width, height);
-//            }
-//        } else if (size.width > size.height) {
-//            NSLog(@"Background in Landscape");
-//            if (currentSize.width > currentSize.height=) {
-//                NSLog(@"imageScrollCV in Landscape");
-//            } else if (currentSize.height > currentSize.width) {
-//                NSLog(@"imageScrollCV in Portrait");
-//                width = currentSize.height;
-//                height = currentSize.width;
-//                currentSize = CGSizeMake(width, height);
-//            }
-//        }
-//        NSLog(@"After");
-//        NSLog(@"currentSize: %@", NSStringFromCGSize(currentSize));
         [wself processTransitionCompletion];
-        if (v2) {
-            
-            //CGRect box = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(560, 315),CGRectMake(0,0 , wself.view.frame.size.width,wself.view.frame.size.height));
-            v2.frame = CGRectMake(0, 0, cell.videoView.frame.size.width, cell.videoView.frame.size.height);
-            [v2 refreshLayoutWithOrientation:YES offset:p];
-            //v2.frame = box;            
-            v2.center = cell.videoView.center;
-        }
+        
     }];
 }
-
+- (void)updatePageBeforePresentingOrPushing {
+    CGPoint currentOffset = [self.imageScrollCV contentOffset];
+    NSLog(@"currentOffset: %@", NSStringFromCGPoint(currentOffset));
+    self.pageBeforePresentingOrPushing = currentOffset.x / self.imageScrollCV.frame.size.width;
+}
 
 #pragma mark - Calling API
 - (void)retrieveAlbum {
@@ -1668,8 +1601,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     
-    WKVideoPlayerView *v2 = (WKVideoPlayerView *)[cell viewWithTag:20002];
-    NSLog(@"WKVideoPlayerView %@",v2);
+    
     // Reset
     [self.videoPlayer pause];
     
@@ -1681,7 +1613,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     
 }
-
+#pragma mark - Embedded videos
 - (void)playEmbeddedVideo:(ImageCollectionViewCell *)cell
                      page:(NSInteger)page {
     NSURL *url = [NSURL URLWithString: self.photoArray[page][@"video_target"]];
@@ -1706,39 +1638,53 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         self.navigationController.delegate = nil;
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [appDelegate.myNav pushViewController: dmVC animated: YES];
-    }
-    if (!([[url host] rangeOfString: @"vimeo"].location == NSNotFound)) {
-        NSLog(@"url contains vimeo");
-        [wTools ShowMBProgressHUD];
+    } else if (!([[url host] rangeOfString: @"vimeo"].location == NSNotFound)) {
+        NSString *path = self.photoArray[page][@"video_target"];
+        ThirdPartyVideoPlayerViewController *v =  [[UIStoryboard storyboardWithName: @"3rdPartyVideoPlayerVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ThirdPartyVideoPlayer"];
         
-        [[YTVimeoExtractor sharedExtractor] fetchVideoWithVimeoURL: self.photoArray[page][@"video_target"] withReferer: nil completionHandler:^(YTVimeoVideo * _Nullable video, NSError * _Nullable error) {
-            [wTools HideMBProgressHUD];
-            
-            if (video) {
-                // Get URL
-                self.isPresentingOrPushingVC = YES;
-                NSURL *highQualityURL = [video lowestQualityStreamURL];
-                AVPlayer *player = [AVPlayer playerWithURL: highQualityURL];
-                AVPlayerViewController *playerViewController = [AVPlayerViewController new];
-                playerViewController.player = player;
-                [player play];
-                [self presentViewController: playerViewController animated: YES completion: nil];
-            }
+        self.isPresentingOrPushingVC = YES;
+        
+        [self updatePageBeforePresentingOrPushing];
+        [self presentViewController:v animated:YES completion:^{
+            [v setVideoPath:path];
         }];
-    }
-    if (!([[url host] rangeOfString: @"facebook"].location == NSNotFound)) {
+//        NSLog(@"url contains vimeo");
+//        [wTools ShowMBProgressHUD];
+//
+//        [[YTVimeoExtractor sharedExtractor] fetchVideoWithVimeoURL: self.photoArray[page][@"video_target"] withReferer: nil completionHandler:^(YTVimeoVideo * _Nullable video, NSError * _Nullable error) {
+//            [wTools HideMBProgressHUD];
+//
+//            if (video) {
+//                // Get URL
+//                self.isPresentingOrPushingVC = YES;
+//                NSURL *highQualityURL = [video lowestQualityStreamURL];
+//                AVPlayer *player = [AVPlayer playerWithURL: highQualityURL];
+//                AVPlayerViewController *playerViewController = [AVPlayerViewController new];
+//                playerViewController.player = player;
+//                [player play];
+//                [self presentViewController: playerViewController animated: YES completion: nil];
+//            }
+//        }];
+    } else if (!([[url host] rangeOfString: @"facebook"].location == NSNotFound)) {
         NSLog(@"url host contains facebook");
         self.fbVideoUrl = url;
         cell.imageView.alpha = 1;
         cell.alphaBgV.hidden = NO;
         cell.videoBtn.hidden = NO;
         [self checkFBSDK: cell url: url];
-    }
-    if (!([[url host] rangeOfString: @"youtube"].location == NSNotFound) || !([[url host] rangeOfString: @"youtu.be"].location == NSNotFound)) {
-        NSLog(@"url host contains youtube");
-        self.isPresentingOrPushingVC = YES;
-        NSString *urlString = self.photoArray[page][@"video_target"];
-        [self openSafari: [NSURL URLWithString: urlString]];
+    } else if (!([[url host] rangeOfString: @"youtube"].location == NSNotFound) || !([[url host] rangeOfString: @"youtu.be"].location == NSNotFound)) {
+        NSString *path = self.photoArray[page][@"video_target"];
+        [self updatePageBeforePresentingOrPushing];
+        ThirdPartyVideoPlayerViewController *v =  [[UIStoryboard storyboardWithName: @"3rdPartyVideoPlayerVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ThirdPartyVideoPlayer"];
+        
+        [self presentViewController:v animated:YES completion:^{
+            [v setVideoPath:path];
+        }];
+        
+//        NSLog(@"url host contains youtube");
+//        self.isPresentingOrPushingVC = YES;
+//        NSString *urlString = self.photoArray[page][@"video_target"];
+//        [self openSafari: [NSURL URLWithString: urlString]];
         
     }
     videoIsPlaying = YES;
@@ -1947,7 +1893,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"openSafari");
     NSLog(@"url: %@", url);
     self.isPresentingOrPushingVC = YES;
-    
+    [self updatePageBeforePresentingOrPushing];
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
     safariVC.preferredBarTintColor = [UIColor whiteColor];
     [self presentViewController: safariVC animated: YES completion: nil];
@@ -3613,49 +3559,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 //                self.videoPlayerViewController.view.hidden = NO;
             } else if ([refer isEqualToString: @"embed"]) {
                 NSLog(@"refer is equal to embed");
-                NSURL *url = [NSURL URLWithString: self.photoArray[indexPath.row][@"video_target"]];
                 cell.alphaBgV.hidden = NO;
                 
-                //  YT Video embedded player
-                if (!([[url host] rangeOfString: @"youtube"].location == NSNotFound) ||
-                    !([[url host] rangeOfString: @"youtu.be"].location == NSNotFound)||
-                    !([[url host] rangeOfString: @"vimeo"].location == NSNotFound)) {
+                cell.videoBtn.hidden = NO;
+                cell.videoView.hidden = YES;
+                for (UIView *view in cell.videoView.subviews) {
                     
-                    cell.alphaBgV.hidden = YES;
-                    cell.videoBtn.hidden = YES;
-                    cell.videoView.hidden = NO;
-                    
-                    
-                    NSString *urlString = self.photoArray[indexPath.row][@"video_target"];
-                    
-                    NSArray *a = [urlString findURLs];
-                    NSString *vpath = urlString;
-                    
-                    if (a && a.count ) {
-                        WKVideoPlayerView *v2 = [[WKVideoPlayerView alloc] initWithString:vpath configuration:[self getConfiguration]];
-                        CGRect box = AVMakeRectWithAspectRatioInsideRect(CGSizeMake(560, 315),CGRectMake(0,0 , self.view.frame.size.width,self.view.frame.size.height));
-                        //CGFloat width = UIScreen.mainScreen.bounds.size.width;//cell.videoView.frame.size.width;
-                        
-                        [v2 addViewLayoutWithView:cell.videoView];
-                        v2.frame = box;//CGRectMake(0, 0 ,width , width*0.5625);
-                        v2.center = cell.videoView.center;
-                        self.soundBtn.hidden = YES;
-                        self.mScrubber.hidden = YES;
-                    } else {
-                        
-                    }
-                    
-                    
-                } else {
-                    cell.videoBtn.hidden = NO;
-                    cell.videoView.hidden = YES;
-                    for (UIView *view in cell.videoView.subviews) {
-                        NSLog(@"view: %@", view);
-                        //                    view.backgroundColor = [UIColor redColor];
-                        view.hidden = YES;
-                    }
+                    view.hidden = YES;
                 }
-                //                self.videoPlayerViewController.view.hidden = YES;
             }
         }
         if ([useFor isEqualToString: @"slot"]) {
@@ -4145,7 +4056,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         if (![urlString isEqualToString: @""]) {
             if ([urlString containsString: @"http://"] || [urlString containsString: @"https://"]) {
                 NSURL *url = [NSURL URLWithString: urlString];
-                [self presentSFSafariVC: url];
+                [self openSafari: url];
             } else {
                 CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                 style.messageColor = [UIColor whiteColor];
@@ -4166,13 +4077,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url {
-    [self presentSFSafariVC: url];
-}
-
-- (void)presentSFSafariVC:(NSURL *)url {
-    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
-    safariVC.preferredBarTintColor = [UIColor whiteColor];
-    [self presentViewController: safariVC animated: YES completion: nil];
+    [self openSafari: url];
 }
 
 #pragma mark - IBAction Methods
@@ -5312,26 +5217,26 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 }
 
 #pragma mark - YoutubePlayerViewControllerDelegate Method
-- (void)youtubePlayerViewControllerDidDisappeared:(YoutubePlayerViewController *)controller currentPage:(NSInteger)currentPage {
-    NSLog(@"youtubePlayerViewControllerDidDisappeared");
-    NSLog(@"currentPage: %ld", (long)currentPage);
-    
-    //    CGSize currentSize = self.imageScrollCV.bounds.size;
-    //    float offset = self.currentIndex * currentSize.width;
-    //    [self.imageScrollCV setContentOffset: CGPointMake(offset, 0)];
-    
-    //    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: currentPage inSection: 0];
-    //    NSLog(@"self.imageScrollCV: %@", self.imageScrollCV);
-    //    [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-    //
-    //    NSLog(@"self.thumbnailImageScrollCV: %@", self.thumbnailImageScrollCV);
-    //    [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-}
-
-- (void)albumInfoViewControllerDisappear:(AlbumInfoViewController *)controller {
-    NSLog(@"");
-    NSLog(@"albumInfoViewControllerDisappear");
-}
+//- (void)youtubePlayerViewControllerDidDisappeared:(YoutubePlayerViewController *)controller currentPage:(NSInteger)currentPage {
+//    NSLog(@"youtubePlayerViewControllerDidDisappeared");
+//    NSLog(@"currentPage: %ld", (long)currentPage);
+//
+//    //    CGSize currentSize = self.imageScrollCV.bounds.size;
+//    //    float offset = self.currentIndex * currentSize.width;
+//    //    [self.imageScrollCV setContentOffset: CGPointMake(offset, 0)];
+//
+//    //    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: currentPage inSection: 0];
+//    //    NSLog(@"self.imageScrollCV: %@", self.imageScrollCV);
+//    //    [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+//    //
+//    //    NSLog(@"self.thumbnailImageScrollCV: %@", self.thumbnailImageScrollCV);
+//    //    [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+//}
+//
+//- (void)albumInfoViewControllerDisappear:(AlbumInfoViewController *)controller {
+//    NSLog(@"");
+//    NSLog(@"albumInfoViewControllerDisappear");
+//}
 
 /*
  #pragma mark - Navigation
@@ -5568,32 +5473,8 @@ shouldChangeTextInRange:(NSRange)range
                 position: CSToastPositionBottom
                    style: style];
 }
-#pragma mark - WKVideoPlayerView related -
-- (WKWebViewConfiguration *)getConfiguration {
-    if (!self.wkvideoplayerConf) {
-        self.wkvideoplayerConf =  [[WKWebViewConfiguration alloc] init];
-        WKUserContentController *cntController = [[WKUserContentController alloc] init];
-        
-        [cntController addScriptMessageHandler:self name:@"callbackHandler"];
-        self.wkvideoplayerConf.userContentController = cntController;
-        
-        
-    }
-
-    return self.wkvideoplayerConf;
-}
-- (void)userContentController:(nonnull WKUserContentController *)userContentController didReceiveScriptMessage:(nonnull WKScriptMessage *)message {
-    if ([message.body isKindOfClass:[NSString class]]) {
-        NSString *msg = (NSString *)message.body;
-        
-        if ([[msg lowercaseString] containsString:@"playing"]){
-            self.is3rdPartyVideoPlaying = YES;
-            
-        } else {
-            self.is3rdPartyVideoPlaying = NO;
-        }
-        self.imageScrollCV.scrollEnabled = !self.is3rdPartyVideoPlaying;
-        NSLog(@"userContentController didreceive : %@",msg);
-    }
+#pragma mark -
+- (void)albumInfoViewControllerDisappear: (AlbumInfoViewController *)controller {
+    
 }
 @end

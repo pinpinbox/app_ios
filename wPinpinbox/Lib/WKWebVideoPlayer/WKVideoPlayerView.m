@@ -78,6 +78,13 @@
     
     return self;
 }
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    return YES;
+}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+    
+}
 
 - (void)setVideoPath:(NSString *)path {
     self.backgroundColor = [UIColor blackColor];
@@ -122,14 +129,14 @@
     
     NSString *iid = [link lastPathComponent];
     NSArray *yids = [iid componentsSeparatedByString:@"?"];
-    iid = [NSString stringWithFormat:@"https://www.youtube.com/embed/%@?enablejsapi=1",[yids firstObject]];
-    NSString *scr = @"<head>     <meta name='viewport' content='initial-scale=1'>    <style type='text/css'> body { margin: 0; background: #000;} </style>    </head> <iframe id='player' width='100%%'             height='100%%'  src= %@ frameborder='0' style='background: #000;'></iframe>        <script type=\"text/javascript\">        var tag = document.createElement('script');        tag.id='videoiframe';        tag.src = \"https://www.youtube.com/iframe_api\";        var firstScriptTag = document.getElementsByTagName('script')[0];        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);        var player;        function onYouTubeIframeAPIReady() {            player = new YT.Player('player', {'events': {                    'onStateChange': onPlayerStateChange                    }                });        }        var done = false;        function onPlayerStateChange(event) {            console.log('YT.player changed:: '+event);            if (event.data == YT.PlayerState.PLAYING) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPlaying');                console.log('VideoIsPlaying');                done = true;            } else if (event.data == YT.PlayerState.PAUSED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPaused');                console.log('VideoIsPaused');            } else if (event.data == YT.PlayerState.ENDED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsEnded');                console.log('VideoIsEnded');            }        } </script>";
+    iid = [NSString stringWithFormat:@"https://www.youtube.com/embed/%@?enablejsapi=1&playsinline=1",[yids firstObject]];
+    NSString *scr = @"<head>     <meta name='viewport' content='initial-scale=1'>    <style type='text/css'> body { margin: 0; width:100%%; height:100%%;  background-color:#000000; }   html { width:100%%; height:100%%; background-color:#000000; }.embed-container iframe,.embed-container object,.embed-container embed position: absolute;top: 0;left: 0;width: 100%% !important;height: 100%% !important;} </style>    </head> <iframe id='player' width='100%%'             height='100%%'  src= %@ frameborder='0' autoplay='1' style='background: #000;'></iframe>        <script type=\"text/javascript\">        var tag = document.createElement('script');        tag.id='videoiframe';        tag.src = \"https://www.youtube.com/iframe_api\";        var firstScriptTag = document.getElementsByTagName('script')[0];        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);        var player; function onYouTubeIframeAPIReady(){webkit.messageHandlers.callbackHandler.postMessage('APIisReady');  player = new YT.Player('player', {'events': { 'onReady':onPlayerReady,                   'onStateChange': onPlayerStateChange                    }});}        var done = false; function onPlayerReady(){webkit.messageHandlers.callbackHandler.postMessage('VideoIsReady');player.playVideo();} function onPlayerStateChange(event) {            console.log('YT.player changed:: '+event);            if (event.data == YT.PlayerState.PLAYING) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPlaying');                console.log('VideoIsPlaying');                done = true;            } else if (event.data == YT.PlayerState.PAUSED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsPaused');                console.log('VideoIsPaused');            } else if (event.data == YT.PlayerState.ENDED) {                webkit.messageHandlers.callbackHandler.postMessage('VideoIsEnded');                console.log('VideoIsEnded');            }        } </script>";
     
     return [NSString stringWithFormat:scr,iid];
     
 }
 - (NSString *)getVimeoString:(NSString *)link {
-    return [NSString stringWithFormat:@"<head> <meta name=viewport content='width=device-width, initial-scale=1'><style type='text/css'> body { margin: 0;background: #000;} </style></head><iframe src='%@' width='100%%' height='100%%' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen style='background: #000;'></iframe> <script src=\"https://player.vimeo.com/api/player.js\"></script><script>var iframe = document.querySelector('iframe');var player = new Vimeo.Player(iframe);player.on('play', function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPlaying');}); player.on('pause',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');});player.on('ended',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');});</script>", link];
+    return [NSString stringWithFormat:@"<head> <meta name=viewport content='width=device-width, initial-scale=1'><style type='text/css'> body { margin: 0; width:100%%; height:100%%;  background-color:#000000; }   html { width:100%%; height:100%%; background-color:#000000; }.embed-container iframe,.embed-container object,.embed-container embed position: absolute;top: 0;left: 0;width: 100%% !important;height: 100%% !important;} </style></head><iframe src='%@' width='100%%' height='100%%' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen style='background: #000;'></iframe> <script src=\"https://player.vimeo.com/api/player.js\"></script><script>var iframe = document.querySelector('iframe');var player = new Vimeo.Player(iframe);player.on('play', function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPlaying'); console.log('playing');});player.on('loaded', function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsReady');console.log('ready'); player.play();});player.on('pause',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');console.log('paused');});player.on('ended',function(){webkit.messageHandlers.callbackHandler.postMessage('VideoIsEnded');console.log('ended');});</script>", link];
 }
 
 - (void)setup {
@@ -142,9 +149,9 @@
         if ([url.absoluteString containsString:@"youtu"]) {
             NSString *realLink = nil;
             if ([url.host containsString:@"youtube.com"]) {
-                realLink = [NSString stringWithFormat:@"https://www.youtube.com/embed/%@?rel=0",[url queryParam:@"v"]];
+                realLink = [url queryParam:@"v"];//[NSString stringWithFormat:@"https://www.youtube.com/embed/%@?rel=0",[url queryParam:@"v"]];
             } else if ([url.host containsString:@"youtu.be"]) {
-                realLink = [NSString stringWithFormat:@"https://www.youtube.com/embed/%@?rel=0",[url lastPathComponent]];
+                realLink = [url lastPathComponent];//[NSString stringWithFormat:@"https://www.youtube.com/embed/%@?rel=0",[url lastPathComponent]];
             }
             
             if (realLink && realLink.length > 1) {
@@ -156,7 +163,7 @@
             }
         } else if ([url.absoluteString containsString:@"vimeo.com"]) {
             NSString *videoPath = url.lastPathComponent;
-            NSString *realLink = [NSString stringWithFormat:@"https://player.vimeo.com/video/%@",videoPath];
+            NSString *realLink = [NSString stringWithFormat:@"https://player.vimeo.com/video/%@?autoplay=1&quality=720p",videoPath];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *html = [self getVimeoString:realLink];
@@ -169,74 +176,6 @@
 }
 - (void)handleOuterTap:(UITapGestureRecognizer *)tap {
     NSLog(@"handleOuterTap %@",tap);
-}
-- (void)addViewLayoutWithView:(UIView *)base {
-    
-    self.contentMode = UIViewContentModeScaleAspectFit;
-    
-    self.tag = 20002;
-    self.translatesAutoresizingMaskIntoConstraints = NO;
-    self.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-//
-//    NSLayoutConstraint *cx = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeCenterX multiplier:1 constant:0];
-//    NSLayoutConstraint *cy = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeCenterY multiplier:1 constant:1];
-//    NSLayoutConstraint *s = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeWidth multiplier:1 constant:0];
-//    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:0.5625 constant:0];
-//    [self addConstraint:self.widthheight];
-    [base addSubview:self];
-//    [base addConstraints:@[cx,cy,s]];
-}
-- (void)refreshLayoutWithOrientation:(BOOL)finished offset:(CGPoint)offset {
-    //UIView *base = self.superview;
-    //CGPoint p = self.scrollView.contentOffset;
-    if (finished)
-        [self.scrollView setContentOffset:CGPointMake(offset.x, offset.y) animated:YES];
-    else
-        [self.scrollView setContentOffset:CGPointMake(offset.x, offset.y+1) animated:YES];
-    switch ([UIDevice currentDevice].orientation) {
-        case UIDeviceOrientationPortrait:
-        case UIDeviceOrientationPortraitUpsideDown: {
-            
-//            for (NSLayoutConstraint *c in base.constraints) {
-//                if (c.firstItem == self && c.firstAttribute == NSLayoutAttributeHeight) {
-//                    [base removeConstraint:c];
-//                    [base addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
-//                    [self removeConstraint:self.widthheight];
-//                    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:0.5625 constant:0];
-//                    [self addConstraint:self.widthheight];
-//                    [base setNeedsLayout];
-//                    [self setNeedsLayout];
-//                    break;
-//
-//                }
-//
-//            }
-            
-            
-            
-        } break;
-        case UIDeviceOrientationLandscapeLeft:
-        case UIDeviceOrientationLandscapeRight:{
-            
-//            for (NSLayoutConstraint *c in base.constraints) {
-//                if (c.firstItem == self && c.firstAttribute == NSLayoutAttributeWidth) {
-//                    [base removeConstraint:c];
-//                    [base addConstraint:[NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:base attribute:NSLayoutAttributeHeight multiplier:1 constant:0]];
-//                    self.widthheight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:(16.0/9.0) constant:0];
-//                    [self addConstraint:self.widthheight];
-//                    [base setNeedsLayout];
-//                    [self setNeedsLayout];
-//                    break;
-//                }
-//
-//            }
-        } break;
-            
-        default:
-            break;
-    }
-    
-    //[self setNeedsLayout];
 }
 
 @end

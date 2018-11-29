@@ -58,8 +58,6 @@
 		5451457B200EE2DB00332E9A /* CategoryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5451457A200EE2DB00332E9A /* CategoryCollectionViewCell.m */; };
 		545685332018894400A5FD07 /* ReorderVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 545685322018894400A5FD07 /* ReorderVC.storyboard */; };
 		545D502D20AE7A7D00BA14F5 /* 4-19.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 545D502C20AE7A7D00BA14F5 /* 4-19.xcassets */; };
-		54659A68212FA49300311FF4 /* YoutubePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54659A67212FA49300311FF4 /* YoutubePlayerViewController.m */; };
-		54659A6A212FA91F00311FF4 /* YoutubePlayerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54659A69212FA91F00311FF4 /* YoutubePlayerVC.storyboard */; };
 		5466A49C200FAADF003F901A /* UserCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5466A49B200FAADF003F901A /* UserCollectionViewCell.m */; };
 		546DF49D20723F790056B73F /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 546DF49B20723F790056B73F /* MessageTableViewCell.m */; };
 		546DF49E20723F790056B73F /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546DF49C20723F790056B73F /* MessageTableViewCell.xib */; };
@@ -373,6 +371,8 @@
 		CB84C63321A68903000D348C /* MapHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB84C63221A68903000D348C /* MapHelper.m */; };
 		CB8FB77E21991CB700D3C23C /* PDFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8FB77D21991CB700D3C23C /* PDFUploader.m */; };
 		CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
+		CBAD7DE621AE50090084682B /* 3rdPartyVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */; };
+		CBAD7DE821AE50DD0084682B /* 3rdPartyVideoPlayerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
 		CBD977EF21A2574600F04205 /* URLAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD977EE21A2574600F04205 /* URLAddViewController.m */; };
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
@@ -465,9 +465,6 @@
 		5451457A200EE2DB00332E9A /* CategoryCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryCollectionViewCell.m; sourceTree = "<group>"; };
 		545685322018894400A5FD07 /* ReorderVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ReorderVC.storyboard; sourceTree = "<group>"; };
 		545D502C20AE7A7D00BA14F5 /* 4-19.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "4-19.xcassets"; path = "Image Resources/4-19.xcassets"; sourceTree = "<group>"; };
-		54659A66212FA49300311FF4 /* YoutubePlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YoutubePlayerViewController.h; sourceTree = "<group>"; };
-		54659A67212FA49300311FF4 /* YoutubePlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YoutubePlayerViewController.m; sourceTree = "<group>"; };
-		54659A69212FA91F00311FF4 /* YoutubePlayerVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = YoutubePlayerVC.storyboard; sourceTree = "<group>"; };
 		5466A49A200FAADF003F901A /* UserCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserCollectionViewCell.h; sourceTree = "<group>"; };
 		5466A49B200FAADF003F901A /* UserCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserCollectionViewCell.m; sourceTree = "<group>"; };
 		546DF49A20723F790056B73F /* MessageTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageTableViewCell.h; sourceTree = "<group>"; };
@@ -1005,6 +1002,9 @@
 		CB8FB77C21991CB700D3C23C /* PDFUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFUploader.h; sourceTree = "<group>"; };
 		CB8FB77D21991CB700D3C23C /* PDFUploader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFUploader.m; sourceTree = "<group>"; };
 		CB8FB77F2199223600D3C23C /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = System/Library/Frameworks/PDFKit.framework; sourceTree = SDKROOT; };
+		CBAD7DE421AE50090084682B /* 3rdPartyVideoPlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 3rdPartyVideoPlayerViewController.h; sourceTree = "<group>"; };
+		CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = 3rdPartyVideoPlayerViewController.m; sourceTree = "<group>"; };
+		CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = 3rdPartyVideoPlayerVC.storyboard; sourceTree = "<group>"; };
 		CBCE8572219C074600ED185D /* LocationMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationMapViewController.h; sourceTree = "<group>"; };
 		CBCE8573219C074600ED185D /* LocationMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationMapViewController.m; sourceTree = "<group>"; };
 		CBD977ED21A2574600F04205 /* URLAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLAddViewController.h; sourceTree = "<group>"; };
@@ -1471,13 +1471,13 @@
 				54B08C802105BCCB00ADC09A /* ImageCollectionViewCell.m */,
 				54B08C8B2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.h */,
 				54B08C8C2106D38C00ADC09A /* ThumbnailImageCollectionViewCell.m */,
-				54659A66212FA49300311FF4 /* YoutubePlayerViewController.h */,
-				54659A67212FA49300311FF4 /* YoutubePlayerViewController.m */,
-				54659A69212FA91F00311FF4 /* YoutubePlayerVC.storyboard */,
 				CB071CF0213E4754003D01D8 /* DMViewController.h */,
 				CB071CF2213E4754003D01D8 /* DMViewController.m */,
 				CB071CF1213E4754003D01D8 /* DMVC.storyboard */,
 				54B8CF3A2119E69A006DFE06 /* AlbumInfoVC */,
+				CBAD7DE421AE50090084682B /* 3rdPartyVideoPlayerViewController.h */,
+				CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */,
+				CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */,
 			);
 			name = ContentCheckingVC;
 			sourceTree = "<group>";
@@ -2835,8 +2835,9 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 392DCPHLMM;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -2878,6 +2879,7 @@
 				54F777E820ABE50200A6E195 /* NotifTab.xcassets in Resources */,
 				630BE4751E8A8D2A007C4810 /* Info-tvOS.plist in Resources */,
 				54AB12CD20AD3EA900C7CC1A /* AlbumCreation.xcassets in Resources */,
+				CBAD7DE821AE50DD0084682B /* 3rdPartyVideoPlayerVC.storyboard in Resources */,
 				54AB12CF20AD77EC00C7CC1A /* MapShowing.xcassets in Resources */,
 				9276DFAF1B72FDC000E6ACC9 /* Main.storyboard in Resources */,
 				545685332018894400A5FD07 /* ReorderVC.storyboard in Resources */,
@@ -2929,7 +2931,6 @@
 				544FBEE8208D994400681097 /* SponsorListVC.storyboard in Resources */,
 				54C964BA2015E76500F995DF /* SignVC_1.storyboard in Resources */,
 				54C964C4201642D000F995DF /* FBFriendsListVC.storyboard in Resources */,
-				54659A6A212FA91F00311FF4 /* YoutubePlayerVC.storyboard in Resources */,
 				54A2645A201873760066DD09 /* SetupMusicVC.storyboard in Resources */,
 				925119741CEF000D002D4678 /* CalbumV3.xib in Resources */,
 				92A155A51C33A87C00E83EC5 /* Taoban3TableViewCell.xib in Resources */,
@@ -3092,7 +3093,6 @@
 				630A83E01EB1D07300AC8479 /* MyFrameLayout.m in Sources */,
 				921156391C4F644A00F9200A /* TaobannameTableViewCell.m in Sources */,
 				54885DB120DA854500644A82 /* LikeListViewController.m in Sources */,
-				54659A68212FA49300311FF4 /* YoutubePlayerViewController.m in Sources */,
 				540636292050DEAB004C9F21 /* CheckExchangeViewController.m in Sources */,
 				63C375BD1EB9E44A000C7FC1 /* CreatorCollectionReusableView.m in Sources */,
 				540DE2A920281C5C0090F584 /* ChangeInterestsViewController.m in Sources */,
@@ -3121,6 +3121,7 @@
 				922D92D61BD9E4DA00640639 /* QrcordViewController.m in Sources */,
 				630A83E21EB1D07300AC8479 /* MyLayoutSize.m in Sources */,
 				922557481BDF621200CD4E9B /* MTMenuItem.m in Sources */,
+				CBAD7DE621AE50090084682B /* 3rdPartyVideoPlayerViewController.m in Sources */,
 				92A155901C3386E000E83EC5 /* TaobanViewController.m in Sources */,
 				635775DD1ED3F94400637914 /* RecentBrowsingTableViewCell.m in Sources */,
 				54B08C7E2105B8B500ADC09A /* ContentCheckingViewController.m in Sources */,
@@ -3438,8 +3439,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 392DCPHLMM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3458,7 +3459,7 @@
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox2;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3482,8 +3483,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 392DCPHLMM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3502,7 +3503,7 @@
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox2;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
