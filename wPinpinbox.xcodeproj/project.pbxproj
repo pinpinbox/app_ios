@@ -363,7 +363,6 @@
 		CB0CA8E1219AC5A800B5018B /* SwitchButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */; };
 		CB1B38FE21991957003C8B3F /* WKVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB1B38FC21991956003C8B3F /* WKVideoPlayerView.m */; };
 		CB34E73321A650AA004D054E /* PhotoDescriptionAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB34E73221A650AA004D054E /* PhotoDescriptionAddViewController.m */; };
-		CB5E68EA2193E81B00CB47F5 /* DSPhotoEditorSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		CB5E68EE2193EF1F00CB47F5 /* CooperationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */; };
 		CB5E68EF2193EF1F00CB47F5 /* CooperationInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */; };
 		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
@@ -382,9 +381,24 @@
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
 		D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78F738D1D226D8700D8A271 /* YTPlayerView.m */; };
+		F016647821AF9F6C006A1E79 /* DSPhotoEditorSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F016647521AF9E5D006A1E79 /* DSPhotoEditorSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F039BD192148B8C6007AEA85 /* SystemImages.xcassets */; };
 		F0AC57542142353D00F63B82 /* UIViewController+ErrorAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F016647921AF9F6C006A1E79 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F016647821AF9F6C006A1E79 /* DSPhotoEditorSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5404732E1FB066D00075BBD8 /* PointCalculationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PointCalculationViewController.h; sourceTree = "<group>"; };
@@ -989,7 +1003,6 @@
 		CB1B38FD21991956003C8B3F /* WKVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKVideoPlayerView.h; sourceTree = "<group>"; };
 		CB34E73121A650AA004D054E /* PhotoDescriptionAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoDescriptionAddViewController.h; sourceTree = "<group>"; };
 		CB34E73221A650AA004D054E /* PhotoDescriptionAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoDescriptionAddViewController.m; sourceTree = "<group>"; };
-		CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DSPhotoEditorSDK.framework; sourceTree = "<group>"; };
 		CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CooperationInfoViewController.m; sourceTree = "<group>"; };
 		CB5E68EC2193EF1F00CB47F5 /* CooperationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CooperationInfoViewController.h; sourceTree = "<group>"; };
 		CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CooperationInfoViewController.xib; sourceTree = "<group>"; };
@@ -1026,6 +1039,7 @@
 		D78F738D1D226D8700D8A271 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
 		D9824607428AC70EBD679637 /* Pods-wPinpinbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.debug.xcconfig"; sourceTree = "<group>"; };
 		E17DE3DBBC43F631EC294B4D /* libPods-wPinpinbox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wPinpinbox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F016647521AF9E5D006A1E79 /* DSPhotoEditorSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DSPhotoEditorSDK.framework; path = wPinpinbox/Lib/DSPhotoEditor/DSPhotoEditorSDK.framework; sourceTree = "<group>"; };
 		F039BD192148B8C6007AEA85 /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SystemImages.xcassets; sourceTree = "<group>"; };
 		F0AC57522142353D00F63B82 /* UIViewController+ErrorAlert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ErrorAlert.h"; sourceTree = "<group>"; };
 		F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ErrorAlert.m"; sourceTree = "<group>"; };
@@ -1038,7 +1052,6 @@
 			files = (
 				92CFB5C31BE75679001B7B78 /* MobileCoreServices.framework in Frameworks */,
 				CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */,
-				CB5E68EA2193E81B00CB47F5 /* DSPhotoEditorSDK.framework in Frameworks */,
 				542497AA1FB336BE0021D75D /* libSDWebImage.a in Frameworks */,
 				549B48AC1F6EC3190012FE13 /* libicucore.tbd in Frameworks */,
 				630AD0961D88EBE8009C511A /* CoreMedia.framework in Frameworks */,
@@ -1615,6 +1628,7 @@
 		549B48AA1F6EC3190012FE13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F016647521AF9E5D006A1E79 /* DSPhotoEditorSDK.framework */,
 				CB8FB77F2199223600D3C23C /* PDFKit.framework */,
 				5484D58D1FC43BB000177DD6 /* SystemConfiguration.framework */,
 				5484D58C1FC43BA100177DD6 /* CFNetwork.framework */,
@@ -2387,7 +2401,6 @@
 				CB0CA8DE219AC5A800B5018B /* SwitchButtonView */,
 				CB1B38FA21991956003C8B3F /* PDFUploader */,
 				CB1B38FB21991956003C8B3F /* WKWebVideoPlayer */,
-				CB5E68E82193E81B00CB47F5 /* DSPhotoEditor */,
 				CB7F2E3F216C972200A3E1AD /* MultipartInputStream */,
 				CB071CF5213E476A003D01D8 /* dailymotion-player-objc */,
 				630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */,
@@ -2727,14 +2740,6 @@
 			path = WKWebVideoPlayer;
 			sourceTree = "<group>";
 		};
-		CB5E68E82193E81B00CB47F5 /* DSPhotoEditor */ = {
-			isa = PBXGroup;
-			children = (
-				CB5E68E92193E81B00CB47F5 /* DSPhotoEditorSDK.framework */,
-			);
-			path = DSPhotoEditor;
-			sourceTree = "<group>";
-		};
 		CB7F2E3F216C972200A3E1AD /* MultipartInputStream */ = {
 			isa = PBXGroup;
 			children = (
@@ -2814,6 +2819,7 @@
 				9276DF9E1B72FDC000E6ACC9 /* Resources */,
 				54E232B21FA6DA9400D95FD5 /* ShellScript */,
 				C01B748071BE34F2815A01EF /* [CP] Copy Pods Resources */,
+				F016647921AF9F6C006A1E79 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2835,7 +2841,7 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = 392DCPHLMM;
+						DevelopmentTeam = APD4588SHJ;
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -3440,7 +3446,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 392DCPHLMM;
+				DEVELOPMENT_TEAM = APD4588SHJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3459,7 +3465,7 @@
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -3484,7 +3490,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 392DCPHLMM;
+				DEVELOPMENT_TEAM = APD4588SHJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3503,7 +3509,7 @@
 					"-ObjC",
 					"-l\"Flurry-iOS-SDK\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox;
 				PRODUCT_NAME = Pinpinbox;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";

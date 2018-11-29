@@ -265,7 +265,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.locationSwitchView.switchDelegate = self;
     
     UIButton *url = [UIButton buttonWithType:UIButtonTypeCustom];
-    [url setImage:[UIImage imageNamed:@"ic200_share_white"] forState:UIControlStateNormal];
+    [url setImage:[UIImage imageNamed:@"ic200_link_white"] forState:UIControlStateNormal];
     url.imageEdgeInsets = UIEdgeInsetsMake(6, 6, 6, 6);
     url.backgroundColor = [UIColor hintGrey];
     [self.urlSwitchView setSwitchButtons:url switchBtn:nil];
@@ -3396,7 +3396,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     //  file broswer is available in iOS >= 11.0 //
     if (@available(iOS 11.0, *)) {
-        [self.customAddActionSheet addSelectItem: @"ic200_user_about_dark" title: @"PDF" btnStr: @"" tagInt: 2 identifierStr: @"pdf"];
+        [self.customAddActionSheet addSelectItem: @"ic200_pdf_dark" title: @"PDF" btnStr: @"" tagInt: 2 identifierStr: @"pdf"];
     }
     __weak typeof(self) weakSelf = self;
     self.customAddActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {

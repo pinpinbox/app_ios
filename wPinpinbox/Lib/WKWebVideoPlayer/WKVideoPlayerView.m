@@ -163,7 +163,7 @@
             }
         } else if ([url.absoluteString containsString:@"vimeo.com"]) {
             NSString *videoPath = url.lastPathComponent;
-            NSString *realLink = [NSString stringWithFormat:@"https://player.vimeo.com/video/%@?autoplay=1&quality=720p",videoPath];
+            NSString *realLink = [NSString stringWithFormat:@"https://player.vimeo.com/video/%@?autoplay=1&quality=108v0p",videoPath];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *html = [self getVimeoString:realLink];
