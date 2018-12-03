@@ -25,4 +25,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *recommendationLabel;
 @property (weak, nonatomic) IBOutlet UIView *recommendationHorzView;
 
+@property (weak, nonatomic) IBOutlet UITableView *recommandListView;
+
 @end

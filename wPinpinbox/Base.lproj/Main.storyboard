@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7eV-yR-QAC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7eV-yR-QAC">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,7 +14,7 @@
         <scene sceneID="a1G-1v-Kmo">
             <objects>
                 <tabBarController storyboardIdentifier="MyTabBarController" id="ikc-X2-lvI" customClass="MyTabBarController" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleAspectFit" translucent="NO" id="2dP-Lv-yKV">
+                    <tabBar key="tabBar" contentMode="scaleAspectFit" translucent="NO" itemPositioning="centered" id="2dP-Lv-yKV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1403,7 +1403,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="awe-FP-i0H"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="MeTab" selectedImage="MeSelectedTab" id="btT-45-6Ig"/>
+                    <tabBarItem key="tabBarItem" title="" image="MeTab" selectedImage="MeSelectedTab" id="btT-45-6Ig">
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
+                    </tabBarItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yMx-W9-QUU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2166,12 +2168,13 @@
             </objects>
             <point key="canvasLocation" x="-114" y="-1730"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--首頁-->
         <scene sceneID="a65-Md-40r">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="Jmh-WL-GbA" customClass="NavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="PinPinBoxTab" selectedImage="PinPinBoxSelectedTab" id="pUp-1r-2Ld">
+                    <tabBarItem key="tabBarItem" title="首頁" image="PinPinBoxTab" selectedImage="PinPinBoxSelectedTab" id="pUp-1r-2Ld">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="4"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <nil key="simulatedTopBarMetrics"/>
@@ -2681,12 +2684,13 @@
             </objects>
             <point key="canvasLocation" x="-941" y="-1730"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--選單-->
         <scene sceneID="Tlt-te-Vtv">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="WNv-eg-MSy" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="ic200_menu_light" selectedImage="ic200_menu_dark" id="Df0-zN-OWb">
+                    <tabBarItem key="tabBarItem" title="選單" image="ic200_menu_light" selectedImage="ic200_menu_dark" id="Df0-zN-OWb">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="4"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <nil key="simulatedTopBarMetrics"/>
@@ -2722,16 +2726,16 @@
         <image name="3-03bg.png" width="540" height="960"/>
         <image name="4-08button_cooperation_click.png" width="60" height="60"/>
         <image name="4-08photo-size.png" width="88" height="132"/>
-        <image name="MeSelectedTab" width="25" height="25"/>
-        <image name="MeTab" width="25" height="25"/>
-        <image name="PinPinBoxSelectedTab" width="25" height="25"/>
-        <image name="PinPinBoxTab" width="25" height="25"/>
-        <image name="bg200_login" width="1080" height="1920"/>
+        <image name="MeSelectedTab" width="37.5" height="37.5"/>
+        <image name="MeTab" width="50" height="50"/>
+        <image name="PinPinBoxSelectedTab" width="37.5" height="37.5"/>
+        <image name="PinPinBoxTab" width="50" height="50"/>
+        <image name="bg200_login" width="259.20001220703125" height="460.79998779296875"/>
         <image name="button_back.png" width="35" height="35"/>
         <image name="button_buy.png" width="130" height="50"/>
         <image name="button_pull.png" width="55" height="55"/>
-        <image name="button_take-photo" width="128" height="128"/>
-        <image name="button_video_recording_120x120" width="120" height="120"/>
+        <image name="button_take-photo" width="128.5" height="128.5"/>
+        <image name="button_video_recording_120x120" width="57.599998474121094" height="57.599998474121094"/>
         <image name="downbutton.png" width="270" height="72"/>
         <image name="frame_click.png" width="142" height="70"/>
         <image name="ic200_arrow_left_dark.png" width="144" height="144"/>

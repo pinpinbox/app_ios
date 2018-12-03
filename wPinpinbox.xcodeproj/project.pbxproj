@@ -364,6 +364,7 @@
 		CB0C0DB32146509F00FAF438 /* image01.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB12146509F00FAF438 /* image01.xcassets */; };
 		CB0C0DB42146509F00FAF438 /* image00.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB22146509F00FAF438 /* image00.xcassets */; };
 		CB0C0DB6214653BA00FAF438 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0C0DB5214653BA00FAF438 /* Images.xcassets */; };
+		CB44299F21B1336600B0E19A /* RecommandCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CB44299E21B1336600B0E19A /* RecommandCollectionViewCell.m */; };
 		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
 		CB8404DA218718DB00E1C2A7 /* InfoTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8404D9218718DB00E1C2A7 /* InfoTextView.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
@@ -977,6 +978,8 @@
 		CB0C0DB12146509F00FAF438 /* image01.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image01.xcassets; path = "Image Resources/image01.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB22146509F00FAF438 /* image00.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = image00.xcassets; path = "Image Resources/image00.xcassets"; sourceTree = "<group>"; };
 		CB0C0DB5214653BA00FAF438 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Image Resources/Images.xcassets"; sourceTree = "<group>"; };
+		CB44299D21B1336600B0E19A /* RecommandCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RecommandCollectionViewCell.h; sourceTree = "<group>"; };
+		CB44299E21B1336600B0E19A /* RecommandCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RecommandCollectionViewCell.m; sourceTree = "<group>"; };
 		CB7F2E40216C97AA00A3E1AD /* MultipartInputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultipartInputStream.h; path = MultipartInputStream/MultipartInputStream.h; sourceTree = "<group>"; };
 		CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MultipartInputStream.m; path = MultipartInputStream/MultipartInputStream.m; sourceTree = "<group>"; };
 		CB8404D9218718DB00E1C2A7 /* InfoTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoTextView.m; sourceTree = "<group>"; };
@@ -2030,6 +2033,8 @@
 				54BBFB172008AA3E00492D3E /* HomeCategoryCollectionViewCell.m */,
 				63E634B01EB88DF600A938CF /* HomeDataCollectionReusableView.h */,
 				63E634B11EB88DF600A938CF /* HomeDataCollectionReusableView.m */,
+				CB44299D21B1336600B0E19A /* RecommandCollectionViewCell.h */,
+				CB44299E21B1336600B0E19A /* RecommandCollectionViewCell.m */,
 			);
 			name = "Home Data Cell";
 			sourceTree = "<group>";
@@ -2712,7 +2717,6 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = APD4588SHJ;
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -3130,6 +3134,7 @@
 				630B8F931EDD0F16009D72FB /* CategoryDetailViewController.m in Sources */,
 				6306D6501DB4CEA5005EC98C /* UIImage+AverageColor.m in Sources */,
 				540D74992161DE1F0061E463 /* CreatorListCollectionReusableView.m in Sources */,
+				CB44299F21B1336600B0E19A /* RecommandCollectionViewCell.m in Sources */,
 				63175B1E1EA54CF6008ADEC4 /* FBFriendsListViewController.m in Sources */,
 				928348A11C62F53C002DBC6A /* SearchuserTableViewCell.m in Sources */,
 				920279A21C449D8500A63027 /* CoopTopTableViewCell.m in Sources */,
@@ -3313,7 +3318,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3356,7 +3361,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
