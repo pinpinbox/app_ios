@@ -30,10 +30,6 @@
 #import <SafariServices/SafariServices.h>
 #import "UIViewController+ErrorAlert.h"
 
-#import <sys/utsname.h>
-
-
-
 //#define kUserImageViewNumber 6
 
 @interface CategoryViewController () <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SFSafariViewControllerDelegate, YTPlayerViewDelegate, UIGestureRecognizerDelegate>
@@ -324,7 +320,7 @@
 }
 
 - (void)viewDidLayoutSubviews {
-    NSLog(@"viewDidLayoutSubviews %@",[UIDevice currentDevice].model);
+    NSLog(@"viewDidLayoutSubviews ");
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
                 
         int screenHeight = (int)[[UIScreen mainScreen] nativeBounds].size.height;

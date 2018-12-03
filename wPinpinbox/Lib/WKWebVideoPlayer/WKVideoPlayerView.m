@@ -76,14 +76,6 @@
     
     return self;
 }
-/*
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    return YES;
-}
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-*/
 - (void)setVideoPath:(NSString *)path {
     self.backgroundColor = [UIColor blackColor];
     self.path = path;
@@ -102,12 +94,6 @@
     
     return NO;
 }
-/*
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    
-    return YES;
-}
-*/
 - (NSString *)stringWithURLs {
     
     NSString *res = self.path;
@@ -140,11 +126,6 @@
 //  find video id from path and compose html
 - (void)setup {
     
-//    UITapGestureRecognizer *t =[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleOuterTap:)];
-//    t.delegate = self;
-//    [self addGestureRecognizer:t];
-    
-    
     for (NSURL *url in self.urls) {
         if ([url.absoluteString containsString:@"youtu"]) {
             NSString *realLink = nil;
@@ -174,9 +155,6 @@
     }
 
 }
-//- (void)handleOuterTap:(UITapGestureRecognizer *)tap {
-//    NSLog(@"handleOuterTap %@",tap);
-//}
 
 //  pause video on web page from native code
 - (void)pauseVid {
