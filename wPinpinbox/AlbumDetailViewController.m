@@ -1033,7 +1033,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark -
-
 - (void)checkTaskComplete {
     NSLog(@"checkTaskComplete");
     
@@ -1047,11 +1046,17 @@ static NSString *autoPlayStr = @"&autoplay=1";
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
         NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
                                                   token: [wTools getUserToken]
                                                task_for: @"share_to_fb"
-                                               platform: @"apple"];
+                                               platform: @"apple"
+                                                   type: @"album"
+                                                 typeId: self.albumId];
+        
+//        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+//                                                  token: [wTools getUserToken]
+//                                               task_for: @"share_to_fb"
+//                                               platform: @"apple"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1062,8 +1067,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Name: %@", exception.name);
                 NSLog( @"Reason: %@", exception.reason );
                 return;
-            }
-            
+            }            
             if (response != nil) {
                 NSLog(@"");
                 NSLog(@"");
@@ -1471,7 +1475,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processCheckPointResult:data];
                 }
             }
@@ -1480,7 +1483,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 - (void)processCheckPointResult:(NSDictionary *)data {
     if ([data[@"result"] intValue] == 1) {
-        
         missionTopicStr = data[@"data"][@"task"][@"name"];
         NSLog(@"name: %@", missionTopicStr);
         
@@ -2467,10 +2469,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 #pragma mark - FBSDKSharing Delegate Methods
 
-- (void)sharer:(id<FBSDKSharing>)sharer didCompleteWithResults:(NSDictionary *)results
-{
+- (void)sharer:(id<FBSDKSharing>)sharer
+didCompleteWithResults:(NSDictionary *)results {
     NSLog(@"Sharing Complete");
-    
     // Check whether getting Sharing Point or not
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL share_to_fb = [[defaults objectForKey: @"share_to_fb"] boolValue];
@@ -2486,33 +2487,27 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
 }
 
-- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error
-{
+- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error {
     NSLog(@"Sharing didFailWithError");
 }
 
-- (void)sharerDidCancel:(id<FBSDKSharing>)sharer
-{
+- (void)sharerDidCancel:(id<FBSDKSharing>)sharer {
     NSLog(@"Sharing Did Cancel");
 }
-
 
 #pragma mark - Custom AlertView for Getting Point
 - (void)showAlertPointView {
     NSLog(@"Show Alert View");
-    
     // Custom AlertView shows up when getting the point
     alertGetPointView = [[OldCustomAlertView alloc] init];
     [alertGetPointView setContainerView: [self createPointView]];
     [alertGetPointView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
     [alertGetPointView setUseMotionEffects: true];
-    
     [alertGetPointView show];
 }
 
 - (UIView *)createPointView {
     NSLog(@"createPointView");
-    
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
     
     // Mission Topic Label
@@ -2574,10 +2569,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     return pointView;
 }
 
-- (void)showTheActivityPage
-{
+- (void)showTheActivityPage {
     NSLog(@"showTheActivityPage");
-    
     //NSString *activityLink = @"http://www.apple.com";
     NSString *activityLink = eventUrl;
     
@@ -2593,17 +2586,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - SFSafariViewController delegate methods
-- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller
-{
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
     // Done button pressed
-    
     NSLog(@"show");
     [alertGetPointView show];
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomAlert: (NSString *)msg option:(NSString *)option
-{
+- (void)showCustomAlert: (NSString *)msg option:(NSString *)option {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     [alertView setContainerView: [self createContainerView: msg]];
     
@@ -2649,8 +2639,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [alertView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg
-{
+- (UIView *)createContainerView: (NSString *)msg {
     ///Users/davidlee/Documents/Programming/PINPINBOX Related/PinPinBox Xcode Project Files/Pinpinbox (1.6.7)(1.0.3)(6:20)/wPinpinbox TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
