@@ -30,6 +30,10 @@
 #import <SafariServices/SafariServices.h>
 #import "UIViewController+ErrorAlert.h"
 
+#import <sys/utsname.h>
+
+
+
 //#define kUserImageViewNumber 6
 
 @interface CategoryViewController () <UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, SFSafariViewControllerDelegate, YTPlayerViewDelegate, UIGestureRecognizerDelegate>
@@ -320,9 +324,11 @@
 }
 
 - (void)viewDidLayoutSubviews {
-    NSLog(@"viewDidLayoutSubviews");
+    NSLog(@"viewDidLayoutSubviews %@",[UIDevice currentDevice].model);
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+                
+        int screenHeight = (int)[[UIScreen mainScreen] nativeBounds].size.height;
+        switch (screenHeight){
             case 1136:
                 printf("iPhone 5 or 5S or 5C");
                 break;
@@ -335,15 +341,18 @@
             case 2208:
                 printf("iPhone 6+/6S+/7+/8+");
                 break;
-            default://case 2436:
+            //case 2436:
+            default:
                 NSLog(@"\n");
                 printf("iPhone X");
-                NSLog(@"UI Setting");
                 //self.userLayout.myCenterYOffset = 20;
                 //self.navBtn.myCenterYOffset = 20;
-                self.navBarViewHeight.constant = navBarHeightConstant + 5;
-                self.creatorLabelTopConstraint.constant = 90;
-                self.closeBtnTopConstraint.constant = 90;
+                //if (screenHeight >= 2436)
+                {
+                    self.navBarViewHeight.constant = navBarHeightConstant + 5;
+                    self.creatorLabelTopConstraint.constant = 90;
+                    self.closeBtnTopConstraint.constant = 90;
+                }
                 break;
 //            default:
 //                printf("unknown");
@@ -1187,7 +1196,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     CGFloat yAxis = 0;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+        int screenHeight = (int)[[UIScreen mainScreen] nativeBounds].size.height;
+        switch (screenHeight) {
             case 1136:
                 printf("iPhone 5 or 5S or 5C");
                 yAxis = -48;
@@ -1204,8 +1214,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 printf("iPhone 6+/6S+/7+/8+");
                 yAxis = -48;
                 break;
+            //case 2436:
             default:
-                printf("iPhone X");
+                //printf("iPhone X");
+                yAxis = -48;
+                //if (screenHeight >= 2436)
+
                 yAxis = -72;
                 break;
 //            default:
@@ -1287,7 +1301,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         CGFloat yAxis = 0;
         
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
+            int screenHeight = (int)[[UIScreen mainScreen] nativeBounds].size.height;
+            switch (screenHeight) {
                 case 1136:
                     printf("iPhone 5 or 5S or 5C");
                     yAxis = -48;
@@ -1304,8 +1319,11 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     printf("iPhone 6+/6S+/7+/8+");
                     yAxis = -48;
                     break;
-                default://case 2436:
+                //case 2436:
+                default:
                     printf("iPhone X");
+                    yAxis = -48;
+                    //if (screenHeight >= 2436)
                     yAxis = -72;
                     break;
 //                default:

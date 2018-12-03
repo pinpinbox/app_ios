@@ -66,11 +66,23 @@
 #import "QrcordViewController.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "RecommandCollectionViewCell.h"
+
 #define kAdHeight 142
 #define kBtnWidth 78
 #define kBtnGap 16
 
-@interface HomeTabViewController () <UICollectionViewDataSource, UICollectionViewDelegate, JCCollectionViewWaterfallLayoutDelegate, UICollectionViewDelegateFlowLayout, SFSafariViewControllerDelegate, UIGestureRecognizerDelegate, RMPZoomTransitionAnimating, UIViewControllerTransitioningDelegate, UITextFieldDelegate>
+@implementation CustomTintButton
+- (void) setImage:(UIImage *)image forState:(UIControlState)state {
+    if (state == UIControlStateNormal) {
+        UIImage *aimage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    
+        [super setImage:aimage forState:state];
+    }
+}
+@end
+
+@interface HomeTabViewController () <UICollectionViewDataSource, UICollectionViewDelegate, JCCollectionViewWaterfallLayoutDelegate, UICollectionViewDelegateFlowLayout, SFSafariViewControllerDelegate, UIGestureRecognizerDelegate, RMPZoomTransitionAnimating, UIViewControllerTransitioningDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
 {
     BOOL isLoading;
     BOOL isReloading;
@@ -169,7 +181,7 @@
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UICollectionView *homeCollectionView;
 @property (weak, nonatomic) UICollectionView *bannerCollectionView;
-@property (weak, nonatomic) UICollectionView *categoryCollectionView;
+@property (weak, nonatomic) IBOutlet UICollectionView *categoryCollectionView;
 @property (weak, nonatomic) UICollectionView *followUserCollectionView;
 @property (weak, nonatomic) UICollectionView *followAlbumCollectionView;
 
@@ -186,8 +198,10 @@
 @property (weak, nonatomic) IBOutlet UIView *searchView;
 @property (weak, nonatomic) IBOutlet UITextField *searchTextField;
 @property (weak, nonatomic) IBOutlet UIButton *scanBtn;
+@property (weak, nonatomic) IBOutlet CustomTintButton *categoryBtn;
 
 @property (nonatomic, assign) CGFloat lastContentOffset;
+@property (nonatomic) UITableView *recommandListView;
 
 @end
 
@@ -265,6 +279,12 @@
     [self setupPushNotification];
     [self checkVersion];
     [self settingSizeBasedOnDevice];
+    
+    [self.categoryBtn setImage:[UIImage imageNamed:@"ic200_category_dark"] forState:UIControlStateNormal];
+    [self.categoryBtn setTitleColor:[UIColor firstGrey] forState:UIControlStateSelected];
+    [self.categoryBtn setTitleColor:[UIColor secondGrey] forState:UIControlStateNormal];
+    [self.categoryBtn setTintColor:[UIColor secondGrey]];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -283,7 +303,6 @@
     }
     [wTools sendScreenTrackingWithScreenName:@"首頁"];
     
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -299,7 +318,7 @@
 - (void)settingSizeBasedOnDevice {
     self.navBarHeight.constant = 48;
     topContentOffset = self.navBarView.frame.size.height;
-    headerHeight = 871;
+    headerHeight = 1032;//871;
     self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
     
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
@@ -1114,7 +1133,8 @@ sourceController:(UIViewController *)source
     if ([dic[@"result"] intValue] == 1) {
         followAlbumData = [NSMutableArray arrayWithArray: dic[@"data"]];
         NSLog(@"followAlbumData.count: %lu", (unsigned long)followAlbumData.count);
-        [self.followAlbumCollectionView reloadData];
+        //[self.followAlbumCollectionView reloadData];
+        [self.recommandListView reloadData];
         [self checkFirstTimeLogin];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
@@ -1569,6 +1589,7 @@ sourceController:(UIViewController *)source
     return 1;
 }
 
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section {
     if (collectionView.tag == 1) {
@@ -1576,13 +1597,16 @@ sourceController:(UIViewController *)source
     } else if (collectionView.tag == 2) {
         return adArray.count;
     } else if (collectionView.tag == 3) {
-        return categoryArray.count;
+        return categoryArray.count-1;
     } else if (collectionView.tag == 4) {
         return followUserData.count;
     } else if (collectionView.tag == 5) {
+        
         return followAlbumData.count;
     } else if (collectionView.tag == 6) {
         return albumData.count;
+    } else if (collectionView.tag == 71 || collectionView.tag == 72) {
+        return followAlbumData.count;
     } else {
         return userData.count;
     }
@@ -1601,7 +1625,7 @@ sourceController:(UIViewController *)source
         self.pageControl = headerView.pageControl;
         
         self.bannerCollectionView = headerView.homeBannerCollectionView;
-        self.categoryCollectionView = headerView.categoryCollectionView;
+        //self.categoryCollectionView = headerView.categoryCollectionView;
         self.followUserCollectionView = headerView.followUserCollectionView;
         self.followAlbumCollectionView = headerView.followAlbumCollectionView;
         
@@ -1618,9 +1642,30 @@ sourceController:(UIViewController *)source
         
         recommendationHorzView = headerView.recommendationHorzView;
         
+        self.recommandListView = headerView.recommandListView;
+        
         [self.homeCollectionView.collectionViewLayout invalidateLayout];
         
         return headerView;
+    } else if (collectionView.tag == 3) {
+        HomeCategoryCollectionHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"CategoryHeader" forIndexPath: indexPath];
+        header.backgroundColor = UIColor.clearColor;
+        if (categoryArray && categoryArray.count) {
+            __block NSDictionary *top = [categoryArray firstObject][@"categoryarea"];
+            if (![top[@"image_360x360"] isEqual: [NSNull null]]) {
+                NSString *str = top[@"image_360x360"];
+                [header.headerImage sd_setImageWithURL: [NSURL URLWithString: str]
+                                          placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+            }
+            __block typeof(self) wself = self;
+            
+            header.tapBlock = ^{
+                
+                [wself toCategoryVC: [top[@"categoryarea_id"] stringValue]
+                   categoryNameStr: top[@"name"]];
+            };
+        }
+        return header;
     } else {
         NSLog(@"SearchTabCollectionReusableView *headerView");
         SearchTabCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"SearchHeaderId" forIndexPath: indexPath];
@@ -1761,65 +1806,33 @@ sourceController:(UIViewController *)source
         HomeBannerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"HomeBannerCell" forIndexPath: indexPath];
         NSLog(@"adArray: %@", adArray);
         NSDictionary *adData = adArray[indexPath.row];
-        cell.bannerImageView.image = nil;
-        
-        if ([adData[@"ad"][@"image"] isEqual: [NSNull null]]) {
-            cell.bannerImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
-        } else {
-            NSString *urlString = adData[@"ad"][@"image"];
-            
-            if ([[urlString pathExtension] isEqualToString: @"gif"]) {
-                NSLog(@"file is gif");
-                NSURL *urlImage = [NSURL URLWithString: urlString];
-                __block NSData *data;
-                
-                dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-                dispatch_async(queue, ^{
-                    NSLog(@"data = [NSData dataWithContentsOfURL: urlImage]");
-                    data = [NSData dataWithContentsOfURL: urlImage];
-                    FLAnimatedImage *image = [FLAnimatedImage animatedImageWithGIFData: data];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"dispatch_get_main_queue");
-                        NSLog(@"cell.bannerImageView.animatedImage = image");
-                        cell.bannerImageView.animatedImage = image;
-                        NSLog(@"cell.bannerImageView.animatedImage: %@", cell.bannerImageView.animatedImage);
-                        
-                        [self checkToPresentViewOrNot: indexPath
-                                                 cell: cell];
-                    });
-                });
-            } else {
-                NSLog(@"adData ad image: %@", [NSURL URLWithString: adData[@"ad"][@"image"]]);
-                [cell.bannerImageView sd_setImageWithURL: [NSURL URLWithString: adData[@"ad"][@"image"]] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                    [self checkToPresentViewOrNot: indexPath
-                                             cell: cell];
-                }];
-            }
-        }
+        __block typeof(self) wself = self;
+        [cell loadCellWithData:adData indexPath:indexPath completionBlock:^(NSIndexPath *indexpath, HomeBannerCollectionViewCell *cell) {
+            [wself checkToPresentViewOrNot:indexPath cell:cell];
+        }];
         return cell;
     } else if (collectionView.tag == 3) {
         NSLog(@"collectionView.tag == 3");
         HomeCategoryCollectionViewCell *cell = nil;        
         cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
-        NSDictionary *dic = categoryArray[indexPath.row][@"categoryarea"];
-        
-        NSLog(@"dic name: %@", dic[@"name"]);
-        NSLog(@"dic image_360x360: %@", dic[@"image_360x360"]);
-        
-        if (![dic[@"image_360x360"] isEqual: [NSNull null]]) {
-            [cell.categoryImageView sd_setImageWithURL: [NSURL URLWithString: dic[@"image_360x360"]]
-                                      placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
-        }
-        
-        if (![dic[@"name"] isEqual:[NSNull null]]) {
-            cell.categoryNameLabel.text = dic[@"name"];
-            //[LabelAttributeStyle changeGapString: cell.categoryNameLabel content: dic[@"name"]];
-        }
-        
-        if (![dic[@"colorhex"] isEqual: [NSNull null]]) {
-            NSLog(@"colorhex: %@", dic[@"colorhex"]);
-            //cell.categoryBgView.backgroundColor = [UIColor colorFromHexString: dic[@"colorhex"]];
+        if (indexPath.row + 1 < categoryArray.count) {
+            
+            NSDictionary *dic = categoryArray[indexPath.row+1][@"categoryarea"];
+            
+            NSLog(@"dic name: %@", dic[@"name"]);
+            NSLog(@"dic image_360x360: %@", dic[@"image_360x360"]);
+            
+            if (![dic[@"image_360x360"] isEqual: [NSNull null]]) {
+                [cell.categoryImageView sd_setImageWithURL: [NSURL URLWithString: dic[@"image_360x360"]]
+                                          placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+            }
+            
+            if (![dic[@"name"] isEqual:[NSNull null]]) {
+                cell.categoryNameLabel.text = dic[@"name"];
+                //[LabelAttributeStyle changeGapString: cell.categoryNameLabel content: dic[@"name"]];
+            }
+            
+            
         }
         return cell;
     } else if (collectionView.tag == 4) {
@@ -1843,88 +1856,10 @@ sourceController:(UIViewController *)source
         return cell;
     } else if (collectionView.tag == 5) {
         NSLog(@"collectionView.tag == 5");
-        SearchTabCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"SearchCell" forIndexPath: indexPath];
-        NSDictionary *albumDic = followAlbumData[indexPath.row][@"album"];
-        //NSLog(@"albumDic: %@", albumDic);
-        
-        if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
-            cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
-        } else {
-            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]];
-        }
-        // UserForView Info Setting
-        BOOL gotAudio = [albumDic[@"usefor"][@"audio"] boolValue];
-        BOOL gotVideo = [albumDic[@"usefor"][@"video"] boolValue];
-        BOOL gotExchange = [albumDic[@"usefor"][@"exchange"] boolValue];
-        BOOL gotSlot = [albumDic[@"usefor"][@"slot"] boolValue];
-        
-        [cell.btn1 setImage: nil forState: UIControlStateNormal];
-        [cell.btn2 setImage: nil forState: UIControlStateNormal];
-        [cell.btn3 setImage: nil forState: UIControlStateNormal];
-        
-        cell.userInfoView.hidden = YES;
-        
-        if (gotAudio) {
-            cell.userInfoView.hidden = NO;
-            [cell.btn3 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
-            
-            CGRect rect = cell.userInfoView.frame;
-            rect.size.width = 28 * 1;
-            cell.userInfoView.frame = rect;
-            
-            if (gotVideo) {
-                [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
-                [cell.btn2 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
-                
-                CGRect rect = cell.userInfoView.frame;
-                rect.size.width = 28 * 2;
-                cell.userInfoView.frame = rect;
-                
-                if (gotExchange || gotSlot) {
-                    [cell.btn1 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
-                    [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
-                    [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
-                    
-                    CGRect rect = cell.userInfoView.frame;
-                    rect.size.width = 28 * 3;
-                    cell.userInfoView.frame = rect;
-                }
-            }
-        } else if (gotVideo) {
-            cell.userInfoView.hidden = NO;
-            [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
-            
-            CGRect rect = cell.userInfoView.frame;
-            rect.size.width = 28 * 1;
-            cell.userInfoView.frame = rect;
-            
-            if (gotExchange || gotSlot) {
-                [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
-                [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
-                
-                CGRect rect = cell.userInfoView.frame;
-                rect.size.width = 28 * 2;
-                cell.userInfoView.frame = rect;
-            }
-        } else if (gotExchange || gotSlot) {
-            NSLog(@"gotExchange or gotSlot");
-            
-            cell.userInfoView.hidden = NO;
-            [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
-            
-            CGRect rect = cell.userInfoView.frame;
-            rect.size.width = 28 * 1;
-            cell.userInfoView.frame = rect;
-        }
-        
-        // AlbumNameLabel Setting
-        if (![albumDic[@"name"] isEqual: [NSNull null]]) {
-            cell.albumNameLabel.text = albumDic[@"name"];
-            cell.albumNameLabel.numberOfLines = 1;
-            [LabelAttributeStyle changeGapString: cell.albumNameLabel content: cell.albumNameLabel.text];
-        }
-        NSLog(@"cell.albumNameLabel.text: %@", cell.albumNameLabel.text);
-        NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
+        RecommandCollectionViewCell *cell =  [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath: indexPath];
+        cell.albumImageView.backgroundColor = UIColor.purpleColor;
+        cell.albumDesc.text = [NSString stringWithFormat:@"%ld -- %ld\n\n=======",(long)indexPath.section, (long)indexPath.row];
+        cell.personnelView.backgroundColor = UIColor.yellowColor;
         
         return cell;
     } else if (collectionView.tag == 6) {
@@ -2028,6 +1963,23 @@ sourceController:(UIViewController *)source
         NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
         
         return cell;
+    } else if (collectionView.tag == 71 || collectionView.tag == 72) {
+        
+        RecommandCollectionViewCell *c = [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath:indexPath];
+        NSDictionary *data = followAlbumData[indexPath.row];
+        NSDictionary *album = data[@"album"];
+        if ([album[@"cover"] isEqual: [NSNull null]]) {
+            c.albumImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        } else {
+            [c.albumImageView sd_setImageWithURL: [NSURL URLWithString: album[@"cover"]]];
+        }
+        
+        c.albumDesc.text = [[NSUUID UUID] UUIDString];
+        c.albumImageView.layer.cornerRadius = 8;
+        c.albumImageView.clipsToBounds = YES;
+        c.personnelView.backgroundColor = UIColor.yellowColor;
+        return c;
+        
     } else {
         NSLog(@"collectionView.tag == 7");
         userRecommendationLabel.text = @"找到的創作人";
@@ -2109,24 +2061,28 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     } else if (collectionView.tag == 2) {
         [self tapDetectedForURL: indexPath.row];
     } else if (collectionView.tag == 3) {
-        NSDictionary *data = categoryArray[indexPath.row];
-        //NSLog(@"data: %@", data);
-        NSLog(@"categoryarea: %@", data[@"categoryarea"]);
-        NSLog(@"categoryarea_id: %@", [data[@"categoryarea"][@"categoryarea_id"] stringValue]);
-        
-        NSDictionary *categoryareaDic = categoryArray[indexPath.row][@"categoryarea"];
-        
-        [self toCategoryVC: [data[@"categoryarea"][@"categoryarea_id"] stringValue]
-           categoryNameStr: categoryareaDic[@"name"]];
+        if (indexPath.row + 1 < categoryArray.count) {
+            NSDictionary *data = categoryArray[indexPath.row+1];
+            //NSLog(@"data: %@", data);
+            NSLog(@"categoryarea: %@", data[@"categoryarea"]);
+            NSLog(@"categoryarea_id: %@", [data[@"categoryarea"][@"categoryarea_id"] stringValue]);
+            
+            NSDictionary *categoryareaDic = data[@"categoryarea"];
+            
+            [self toCategoryVC: [categoryareaDic[@"categoryarea_id"] stringValue]
+               categoryNameStr: categoryareaDic[@"name"]];
+        }
     } else if (collectionView.tag == 4) {
         NSDictionary *userDic = followUserData[indexPath.row][@"user"];
         [self toCreatorVC: userDic[@"user_id"]];
     } else if (collectionView.tag == 5) {
-        NSString *albumId = [followAlbumData[indexPath.row][@"album"][@"album_id"] stringValue];
-        [self toAlbumDetailVC: albumId];
+        
     } else if (collectionView.tag == 6) {
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
         [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue]];
+    } else if (collectionView.tag == 71 || collectionView.tag == 72) {
+        NSString *albumId = [followAlbumData[indexPath.row][@"album"][@"album_id"] stringValue];
+        [self toAlbumDetailVC: albumId];
     } else {
         NSDictionary *userDic = userData[indexPath.row][@"user"];
         [self toCreatorVC: userDic[@"user_id"]];
@@ -2382,17 +2338,17 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         
         return finalSize;
     } else if (collectionView.tag == 2) {
-        CGFloat bannerWidth = [UIScreen mainScreen].bounds.size.width;
-        NSLog(@"bannerWidth: %f", bannerWidth);
-        CGFloat bannerHeight = bannerWidth * 540 / 960;
-        NSLog(@"bannerHeight: %f", bannerHeight);
-        return CGSizeMake(bannerWidth, bannerHeight);
+        //CGFloat bannerWidth = [UIScreen mainScreen].bounds.size.width;
+        //NSLog(@"bannerWidth: %f", bannerWidth);
+        //CGFloat bannerHeight = bannerWidth * 540 / 960;
+        //NSLog(@"bannerHeight: %f", bannerHeight);
+        return CGSizeMake(343,237);//bannerWidth, bannerHeight);
     } else if (collectionView.tag == 3) {
         return CGSizeMake(96.0, 96.0);
     } else if (collectionView.tag == 4) {
         return CGSizeMake(96.0, 144.0);
     } else if (collectionView.tag == 5) {
-        return CGSizeMake(128.0, 160.0);
+        return CGSizeMake(273, 168);
     } else if (collectionView.tag == 6) {
         CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
         NSDictionary *data = albumData[indexPath.row][@"album"];
@@ -2442,7 +2398,9 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"size: %@",NSStringFromCGSize(finalSize));
         
         return finalSize;
-    } else {
+    } else if (collectionView.tag == 71 || collectionView.tag == 72) {
+        return CGSizeMake(273,168);
+    }else {
         return CGSizeMake(96, 130);
     }
 }
@@ -2482,7 +2440,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     if (collectionView.tag == 1) {
         return 16.0f;
     } else if (collectionView.tag == 2) {
-        return 0.0f;
+        return 8.0f;
     } else if (collectionView.tag == 3) {
         return 16.0f;
     } else if (collectionView.tag == 4) {
@@ -2500,14 +2458,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                         layout:(UICollectionViewLayout *)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
-    
-    if (collectionView.tag == 2) {
-        itemInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        return itemInset;
-    } else {
-        itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
-        return itemInset;
-    }
+    return itemInset;
 }
 
 #pragma mark - JCCollectionViewWaterfallLayoutDelegate
@@ -2516,6 +2467,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
  heightForHeaderInSection:(NSInteger)section {
     if (collectionView.tag == 1) {
         return self.jccLayout.headerHeight;
+    } else if (collectionView.tag == 2) {
+        return 0;
     } else {
         return self.jccLayout1.headerHeight;
     }
@@ -2660,6 +2613,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     selectTextField = textField;
     self.homeCollectionView.hidden = YES;
+    [self onSwitchCategoryViewHidden:YES];
     
     isSearchTextFieldSelected = YES;
     [self.scanBtn setImage: [UIImage imageNamed: @"ic200_cancel_dark"]
@@ -2674,6 +2628,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     selectTextField = nil;
+    self.scanBtn.hidden = NO;
+    self.categoryBtn.hidden = NO;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -3470,5 +3426,79 @@ replacementString:(NSString *)string {
 {
     [self removeNotification];
 }
+- (void)onSwitchCategoryViewHidden:(BOOL)hidden {
+    self.categoryCollectionView.hidden = hidden;
+    self.categoryBtn.selected = !hidden;
+    if (hidden) {
+        [self.categoryBtn setTintColor:[UIColor secondGrey]];
+    }
+    else {
+        [self.categoryBtn setTintColor:[UIColor firstGrey]];
+    }
+    [self.categoryBtn setNeedsLayout];
+    [self.categoryBtn setNeedsFocusUpdate];
+}
+- (IBAction)switchCategoryView:(id)sender {
 
+    self.albumCollectionView.hidden = YES;
+    BOOL c = self.categoryBtn.selected;
+    if (c) {
+        self.homeCollectionView.hidden = NO;
+        [self onSwitchCategoryViewHidden:YES];
+    } else {
+        [self onSwitchCategoryViewHidden:NO];
+        if (isSearchTextFieldSelected) {
+            [self.scanBtn setImage: [UIImage imageNamed: @"ic200_scancamera_dark"] forState: UIControlStateNormal];
+            [self dismissKeyboard];
+            self.searchTextField.text = @"";
+            isSearchTextFieldSelected = NO;
+        }
+        self.homeCollectionView.hidden = YES;
+        
+    }
+    
+}
+#pragma mark - 專區精選
+- (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    RecommandListViewCell *cell = (RecommandListViewCell *)[tableView dequeueReusableCellWithIdentifier:@"ListViewCell"];
+    if (!cell)
+        cell = [[RecommandListViewCell alloc] init];
+    if (indexPath.section == 0)
+        cell.recommandListView.tag = 71;
+    else
+        cell.recommandListView.tag = 72;
+    
+    cell.recommandListView.dataSource = self;
+    cell.recommandListView.delegate = self;
+    [cell.recommandListView reloadData];
+    
+    return cell;
+    
+}
+
+- (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 1;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UILabel *l = [[UILabel alloc] init];
+    UIView *v = [[UIView alloc] init];
+    l.textColor = [UIColor hintGrey];
+    l.font = [UIFont boldSystemFontOfSize:18];
+    if (section == 0)
+        l.text = @"推薦";
+    else
+        l.text = @"熱門";
+    l.backgroundColor = UIColor.clearColor;
+    [l sizeToFit];
+    //CGSize s = l.frame.size;
+    v.frame = CGRectMake(0, 0, 60,22);
+    [v addSubview:l];
+    l.frame = CGRectMake(16,0, 40, 22);
+    return v;
+}
 @end
