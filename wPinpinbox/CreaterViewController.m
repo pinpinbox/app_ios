@@ -1285,6 +1285,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     // Gift Image
     UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(50, 90, 100, 100)];
     imageView.image = [UIImage imageNamed: @"icon_present"];
+    imageView.center = CGPointMake(pointView.frame.size.width / 2, pointView.frame.size.height / 2);
     [pointView addSubview: imageView];
     
     // Message Label
@@ -1397,7 +1398,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);                        
+                        NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         
                         AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
@@ -1439,7 +1440,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
 
 #pragma mark - Custom Method for TimeOut

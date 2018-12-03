@@ -2138,7 +2138,7 @@ didCompleteWithResults:(NSDictionary *)results {
 
 #pragma mark - Custom AlertView for Getting Point
 - (void)showAlertViewForGettingPoint {
-    NSLog(@"Show Alert View");
+    NSLog(@"showAlertViewForGettingPoint");
     // Custom AlertView shows up when getting the point
     alertView = [[OldCustomAlertView alloc] init];
     [alertView setContainerView: [self createPointView]];
@@ -2148,15 +2148,12 @@ didCompleteWithResults:(NSDictionary *)results {
 }
 
 - (UIView *)createPointView {
-    NSLog(@"createPointView");
-    
+    NSLog(@"createPointView"); 
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
-    
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
     //missionTopicLabel.text = @"收藏相本得點";
     missionTopicLabel.text = missionTopicStr;
-    
     NSLog(@"Topic Label Text: %@", missionTopicStr);
     [pointView addSubview: missionTopicLabel];
     
@@ -2165,13 +2162,12 @@ didCompleteWithResults:(NSDictionary *)results {
         restrictionLabel.textColor = [UIColor firstGrey];
         restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
         NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
-        
         [pointView addSubview: restrictionLabel];
     }
-    
     // Gift Image
     UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(50, 90, 100, 100)];
     imageView.image = [UIImage imageNamed: @"icon_present"];
+    imageView.center = CGPointMake(pointView.frame.size.width / 2, pointView.frame.size.height / 2);
     [pointView addSubview: imageView];
     
     // Message Label
