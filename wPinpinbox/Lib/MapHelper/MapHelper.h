@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 @import MapKit;
 NS_ASSUME_NONNULL_BEGIN
+@interface UIDevice(Model)
++ (NSString *)deviceModelName;
+@end
 
 @interface MapHelper : NSObject
 + (NSString *)getLocationQuery:(NSString *)place encoding:(BOOL)encoding;

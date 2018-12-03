@@ -2186,6 +2186,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (![location isEqualToString:@""]) {
         [wTools ShowMBProgressHUD];
         __block typeof(self) wself = self;
+        NSLog(@"Model Name %@",[UIDevice deviceModelName]);
         [MapHelper searchLocation:location CompletionBlock:^(MKMapItem * _Nullable item, NSError * _Nullable error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wTools HideMBProgressHUD];

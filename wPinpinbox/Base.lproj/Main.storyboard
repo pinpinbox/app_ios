@@ -2173,8 +2173,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="Jmh-WL-GbA" customClass="NavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="首頁" image="PinPinBoxTab" selectedImage="PinPinBoxSelectedTab" id="pUp-1r-2Ld">
-                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="4"/>
+                        <inset key="imageInsets" minX="0.0" minY="-5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <nil key="simulatedTopBarMetrics"/>
@@ -2689,8 +2688,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="WNv-eg-MSy" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="選單" image="ic200_menu_light" selectedImage="ic200_menu_dark" id="Df0-zN-OWb">
-                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="4"/>
+                        <inset key="imageInsets" minX="0.0" minY="-5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <nil key="simulatedTopBarMetrics"/>

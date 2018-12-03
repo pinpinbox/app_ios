@@ -127,8 +127,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="lqx-km-tXh" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="通知" image="NotifTab" selectedImage="NotifSelectedTab" id="Ozx-ee-18h">
-                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="4"/>
+                        <inset key="imageInsets" minX="0.0" minY="-5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <nil key="simulatedTopBarMetrics"/>

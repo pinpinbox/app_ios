@@ -637,8 +637,7 @@
             <objects>
                 <navigationController extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="a7l-EA-aN9" customClass="NavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="個人專區" image="MeTab" selectedImage="MeSelectedTab" id="Riu-ay-L8L">
-                        <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="4"/>
+                        <inset key="imageInsets" minX="0.0" minY="-5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
