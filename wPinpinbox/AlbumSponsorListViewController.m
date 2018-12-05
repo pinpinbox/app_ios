@@ -130,7 +130,6 @@
         isReloading = YES;
         nextId = 0;
         isLoading = NO;
-        
         [self loadData];
     }
 }
@@ -144,10 +143,47 @@
             NSLog(@"nextId: %ld", (long)nextId);
         }
         isLoading = YES;
-        
         [self getSponsorList];
     }
 }
+
+- (void)getSponsorList {
+    NSLog(@"getSponsorList");
+    [wTools ShowMBProgressHUD];
+    
+    NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
+    __block typeof(self) wself = self;
+    __block typeof(self.albumId) aid = self.albumId;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = [boxAPI getAlbumSponsorList: aid
+                                                   limit: limit
+                                                   token: [wTools getUserToken]
+                                                  userId: [wTools getUserID]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+            
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"SponsorListViewController");
+                    NSLog(@"getSponsorList");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"getSponsorList"
+                                          userId: 0
+                                            cell: nil];
+                    [wself.refreshControl endRefreshing];
+                    wself->isReloading = NO;
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    [wself processSponsorListResult:dic];
+                }
+            }
+        });
+    });
+}
+
 - (void)processSponsorListResult:(NSDictionary *)dic {
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         NSLog(@"SYSTEM_OK");
@@ -157,6 +193,10 @@
         
         if (nextId == 0) {
             albumSponsorArray = [[NSMutableArray alloc] init];
+        }
+        
+        if (![wTools objectExists: dic[@"data"]]) {
+            return;
         }
         
         // s for counting how much data is loaded
@@ -192,12 +232,11 @@
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"SYSTEM_ERROR");
         NSLog(@"失敗：%@",dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: dic[@"message"]];
         
         [self.refreshControl endRefreshing];
         isReloading = NO;
@@ -222,54 +261,15 @@
         isReloading = NO;
     } else if ([dic[@"result"] isEqualToString: @"USER_ERROR"]) {
         NSLog(@"錯誤：%@",dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: dic[@"message"]];
         
         [self.refreshControl endRefreshing];
         isReloading = NO;
     }
-}
-- (void)getSponsorList {
-    NSLog(@"getSponsorList");
-    [wTools ShowMBProgressHUD];
-    
-    NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
-    __block typeof(self) wself = self;
-    __block typeof(self.albumId) aid = self.albumId;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI getAlbumSponsorList: aid
-                                                   limit: limit
-                                                   token: [wTools getUserToken]
-                                                  userId: [wTools getUserID]];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
-            
-            if (response != nil) {
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"SponsorListViewController");
-                    NSLog(@"getSponsorList");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getSponsorList"
-                                          userId: 0
-                                            cell: nil];
-                    [wself.refreshControl endRefreshing];
-                    wself->isReloading = NO;
-                } else {
-                    NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    [wself processSponsorListResult:dic];
-                    
-                }
-            }
-        });
-    });
 }
 
 - (void)logOut {
@@ -293,31 +293,24 @@
     
     __weak AlbumSponsorListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"Cell" forIndexPath: indexPath];
     NSDictionary *dic = [albumSponsorArray[indexPath.row] copy];
-    
     NSString *imageUrl = dic[@"user"][@"picture"];
     NSString *name = dic[@"user"][@"name"];
     NSInteger point = [dic[@"user"][@"point"] integerValue];
     NSInteger userId = [dic[@"user"][@"user_id"] integerValue];
     
-    //    cell.headshotImageView.layer.cornerRadius = cell.headshotImageView.frame.size.height / 2;
-    
     if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
         cell.headshotImageView.image = [UIImage imageNamed: @"member_back_head.png"];
     } else {
-        //        [cell.headshotImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
         [cell.headshotImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl] placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
     }
     
     if (![name isEqual: [NSNull null]]) {
         cell.userNameLabel.text = name;
-        
         [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
     }
     cell.pPointLabel.text = [NSString stringWithFormat: @"%ld P", (long)point];
     
     NSLog(@"user is_follow: %d", [dic[@"user"][@"is_follow"] boolValue]);
-    //    cell.isFollow = [dic[@"user"][@"is_follow"] boolValue];
-    
     [self updateFollowBtnStatus: cell.followBtn isFollow: [dic[@"user"][@"is_follow"] boolValue]];
     
     __weak typeof(self) weakSelf = self;
@@ -334,7 +327,6 @@
             [weakSelf followBtnPress: userId cell: cell];
         }
     };
-    
     return cell;
 }
 
@@ -351,7 +343,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
     cVC.userId = albumSponsorArray[indexPath.row][@"user"][@"user_id"];
     
-    //[self.navigationController pushViewController: cVC animated: YES];
+    if (![wTools objectExists: cVC.userId]) {
+        return;
+    }
+    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: cVC animated: YES];
 }
@@ -404,7 +399,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Call Server For Follow Function
 - (void)followBtnPress:(NSInteger)userId
                   cell:(AlbumSponsorListTableViewCell *)cell {
-    
     [wTools ShowMBProgressHUD];
     NSString *userIdStr = [NSString stringWithFormat: @"%ld", (long)userId];
     
@@ -423,7 +417,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (respnose != nil) {
                 NSLog(@"response from changefollowstatus");
                 
@@ -431,7 +424,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CreaterViewController");
                     NSLog(@"followBtnPress");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"followBtnPress"
                                           userId: userId
@@ -441,13 +433,19 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respnose dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         NSDictionary *d = dic[@"data"];
-                        
                         [self updateFollowBtnStatus: cell.followBtn
                                            isFollow: [d[@"followstatus" ]boolValue]];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -476,86 +474,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - Custom Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
-    
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
@@ -582,8 +506,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
