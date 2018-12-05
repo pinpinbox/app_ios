@@ -286,7 +286,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         isReloading = YES;
         nextId = 0;
         isLoading = NO;
-        
         [self loadData];
     }
 }
@@ -306,7 +305,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (void)getCreatorInfo {
     NSLog(@"getCreatorInfo");
-    
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     } @catch (NSException *exception) {
@@ -316,7 +314,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat:@"%ld,%d", (long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
@@ -344,7 +341,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Time Out Message Return");
                     NSLog(@"MeTabViewController");
                     NSLog(@"getCreatorInfo");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcreative"
                                          albumId: @""];
@@ -379,33 +375,35 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
         int s = 0;
         
-        if ([wTools objectExists: dic[@"data"][@"album"]]) {
-            for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
-                s++;
-                [pictures addObject: picture];
-            }
-            NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
-            nextId = nextId + s;
-            NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
-            followDic = dic[@"data"][@"follow"];
-            sponsorDic = dic[@"data"][@"userstatistics"];
-            [self.collectionView reloadData];
-            
-            NSLog(@"nextId: %ld", (long)nextId);
-            NSLog(@"s: %d", s);
-            
-            if (nextId >= 0)
-                isLoading = NO;
-            
-            if (s == 0) {
-                isLoading = YES;
-            }
-            NSLog(@"After getting data");
-            NSLog(@"\n\nisLoading: %d", isLoading);
-            [self layoutSetup];
-            [self getProfile];
-            isReloading = NO;
+        if (![wTools objectExists: dic[@"data"][@"album"]]) {
+            return;
         }
+        
+        for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
+            s++;
+            [pictures addObject: picture];
+        }
+        NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
+        nextId = nextId + s;
+        NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
+        followDic = dic[@"data"][@"follow"];
+        sponsorDic = dic[@"data"][@"userstatistics"];
+        [self.collectionView reloadData];
+        
+        NSLog(@"nextId: %ld", (long)nextId);
+        NSLog(@"s: %d", s);
+        
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        if (s == 0) {
+            isLoading = YES;
+        }
+        NSLog(@"After getting data");
+        NSLog(@"\n\nisLoading: %d", isLoading);
+        [self layoutSetup];
+        [self getProfile];
+        isReloading = NO;
     } else if ([dic[@"result"] intValue] == 0) {
         if ([wTools objectExists: dic[@"message"]]) {
             [self showCustomErrorAlert: dic[@"message"]];
@@ -472,19 +470,21 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
         
-        if ([wTools objectExists: [dataIc allKeys]]) {
-            for (NSString *key in [dataIc allKeys]) {
-                id objective = [dataIc objectForKey: key];
-                
-                if ([objective isKindOfClass: [NSNull class]]) {
-                    [dataIc setObject: @"" forKey: key];
-                }
-            }
-            [userPrefs setValue: dataIc forKey: @"profile"];
-            [userPrefs synchronize];
-            
-            myData = [dataIc mutableCopy];
+        if (![wTools objectExists: [dataIc allKeys]]) {
+            return;
         }
+        
+        for (NSString *key in [dataIc allKeys]) {
+            id objective = [dataIc objectForKey: key];
+            
+            if ([objective isKindOfClass: [NSNull class]]) {
+                [dataIc setObject: @"" forKey: key];
+            }
+        }
+        [userPrefs setValue: dataIc forKey: @"profile"];
+        [userPrefs synchronize];
+        
+        myData = [dataIc mutableCopy];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
         if ([wTools objectExists: dic[@"message"]]) {
@@ -512,22 +512,38 @@ static NSString *autoPlayStr = @"&autoplay=1";
     socialLinkInt = 0;
     
     if (![self.userDic[@"sociallink"] isKindOfClass: [NSNull class]]) {
-        if (![self.userDic[@"sociallink"][@"facebook"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"google"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"instagram"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"linkedin"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"pinterest"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"twitter"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"web"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"youtube"] isEqualToString: @""])
-            socialLinkInt++;
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"facebook"]]) {
+            if (![self.userDic[@"sociallink"][@"facebook"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"google"]]) {
+            if (![self.userDic[@"sociallink"][@"google"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"instagram"]]) {
+            if (![self.userDic[@"sociallink"][@"instagram"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"linkedin"]]) {
+            if (![self.userDic[@"sociallink"][@"linkedin"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"pinterest"]]) {
+            if (![self.userDic[@"sociallink"][@"pinterest"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"twitter"]]) {
+            if (![self.userDic[@"sociallink"][@"twitter"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"web"]]) {
+            if (![self.userDic[@"sociallink"][@"web"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"youtube"]]) {
+            if (![self.userDic[@"sociallink"][@"youtube"] isEqualToString: @""])
+                socialLinkInt++;
+        }                
     }
     NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
     self.jccLayout.headerHeight = 300;
