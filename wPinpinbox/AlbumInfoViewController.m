@@ -147,9 +147,10 @@
     self.contentVertLayout.padding = UIEdgeInsetsMake(0, 16, 5, 16);
     //self.contetVertLayout.backgroundColor = [UIColor greenColor];
     
-    self.topicLabel.text = self.data[@"album"][@"name"];
-    NSLog(@"self.topicLabel.text: %@", self.topicLabel.text);
-    
+    if ([wTools objectExists: self.data[@"album"][@"name"]]) {
+        self.topicLabel.text = self.data[@"album"][@"name"];
+        NSLog(@"self.topicLabel.text: %@", self.topicLabel.text);
+    }
     self.topicLabel.textColor = [UIColor firstGrey];
     self.topicLabel.font = [UIFont boldSystemFontOfSize: 28];
     self.topicLabel.numberOfLines = 0;
@@ -159,8 +160,10 @@
     //    self.topicLabel.myRightMargin = 16;
     self.topicLabel.wrapContentHeight = YES;
     
-    self.descriptionLabel.text = self.data[@"album"][@"description"];
-    NSLog(@"self.descriptionLabel.text: %@", self.descriptionLabel.text);
+    if ([wTools objectExists: self.data[@"album"][@"description"]]) {
+        self.descriptionLabel.text = self.data[@"album"][@"description"];
+        NSLog(@"self.descriptionLabel.text: %@", self.descriptionLabel.text);
+    }
     
     self.descriptionLabel.textColor = [UIColor firstGrey];
     self.descriptionLabel.font = [UIFont systemFontOfSize: 18];
@@ -184,8 +187,10 @@
     self.nameImgView.myWidth = 20;
     self.nameImgView.myHeight = 20;
     
-    self.nameLabel.text = self.data[@"user"][@"name"];
-    NSLog(@"self.nameLabel.text: %@", self.nameLabel.text);
+    if ([wTools objectExists: self.data[@"user"][@"name"]]) {
+        self.nameLabel.text = self.data[@"user"][@"name"];
+        NSLog(@"self.nameLabel.text: %@", self.nameLabel.text);
+    }
     
     self.nameLabel.textColor = [UIColor secondGrey];
     self.nameLabel.font = [UIFont systemFontOfSize: 16];
@@ -222,6 +227,11 @@
                 
                 if (result.count > 0) {
                     NSDictionary *dic = result[0];
+                    
+                    if (![wTools objectExists: dic[@"geometry"][@"location"]]) {
+                        return;
+                    }
+                    
                     NSDictionary *location = dic[@"geometry"][@"location"];
                     lat = [location[@"lat"] floatValue];
                     lon = [location[@"lng"] floatValue];
