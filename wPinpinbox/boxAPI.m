@@ -2134,11 +2134,12 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnStr;
 }
 
-+ (NSString *)checkTaskCompleted: (NSString *)uid token: (NSString *)token task_for: (NSString *)task_for platform: (NSString *)platform
-{
++ (NSString *)checkTaskCompleted:(NSString *)uid
+                           token:(NSString *)token
+                        task_for:(NSString *)task_for
+                        platform:(NSString *)platform {
     NSLog(@"");
     NSLog(@"checkTaskCompleted");
-    
     NSString *returnStr = @"";
     NSMutableDictionary *dic = [NSMutableDictionary new];
     
@@ -2148,6 +2149,38 @@ static NSString *hostURL = @"www.pinpinbox.com";
     [dic setObject: platform forKey: @"platform"];
     
     returnStr = [self boxAPI: dic URL: @"/checktaskcompleted/1.3"];
+    
+    return returnStr;
+}
+
++ (NSString *)checkTaskCompleted:(NSString *)uid
+                           token:(NSString *)token
+                        task_for:(NSString *)task_for
+                        platform:(NSString *)platform
+                            type:(NSString *)type
+                          typeId:(NSString *)typeId {
+    NSLog(@"");
+    NSLog(@"checkTaskCompleted");
+    NSString *returnStr = @"";
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    [dic setObject: uid forKey: @"id"];
+    [dic setObject: token forKey: @"token"];
+    [dic setObject: task_for forKey: @"task_for"];
+    [dic setObject: platform forKey: @"platform"];
+    
+    NSMutableDictionary *wData = [NSMutableDictionary new];
+    
+    for (NSString *key in dic.allKeys) {
+        if ([dic[key] isKindOfClass: [NSString class]]) {
+            [wData setObject: dic[key] forKey: key];
+        } else {
+            [wData setObject: [dic[key] stringValue] forKey: key];
+        }
+    }
+    [dic setObject: [self signGenerator2: dic] forKey: @"sign"];
+    [dic setObject: type forKey: @"type"];
+    [dic setObject: typeId forKey: @"type_id"];
+    returnStr = [self api_Wine: @"/checktaskcompleted/1.3" dic: dic];
     
     return returnStr;
 }

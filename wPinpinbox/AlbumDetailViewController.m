@@ -1033,7 +1033,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark -
-
 - (void)checkTaskComplete {
     NSLog(@"checkTaskComplete");
     
@@ -1047,11 +1046,17 @@ static NSString *autoPlayStr = @"&autoplay=1";
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
         NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
                                                   token: [wTools getUserToken]
                                                task_for: @"share_to_fb"
-                                               platform: @"apple"];
+                                               platform: @"apple"
+                                                   type: @"album"
+                                                 typeId: self.albumId];
+        
+//        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+//                                                  token: [wTools getUserToken]
+//                                               task_for: @"share_to_fb"
+//                                               platform: @"apple"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1062,8 +1067,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Name: %@", exception.name);
                 NSLog( @"Reason: %@", exception.reason );
                 return;
-            }
-            
+            }            
             if (response != nil) {
                 NSLog(@"");
                 NSLog(@"");
@@ -1083,12 +1087,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     NSLog(@"data: %@", data);
+                    NSLog(@"data message: %@", data[@"message"]);
                     
                     if ([data[@"result"] intValue] == 1) {
-                        
                         // Task is completed, so calling the original sharing function
                         //[wTools Activitymessage:[NSString stringWithFormat: sharingLink , _album_id, autoPlayStr]];
-                        
                         NSString *message;
                         
                         if ([self.data[@"eventjoin"] isEqual: [NSNull null]]) {
@@ -1101,12 +1104,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
                         
                     } else if ([data[@"result"] intValue] == 2) {
                         NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
-                        
                         // Task is not completed, so pop ups alert view
                         //[self showSharingAlertView];
                         //[self showShareActionSheet];
                         [self showCustomShareActionSheet];
-                        
                     } else if ([data[@"result"] intValue] == 0) {
                         NSString *message;
                         
@@ -1134,12 +1135,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     contentCheckingVC.delegate = self;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
-    
 }
 
 #pragma mark - ActionSheet
-- (void)showMoreActionSheet
-{
+- (void)showMoreActionSheet {
     self.moreBtn.backgroundColor = [UIColor clearColor];
     
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
@@ -1377,8 +1376,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     });
 }
 
-- (void)checkAlbumCollectTask
-{
+- (void)checkAlbumCollectTask {
     NSLog(@"checkAlbumCollectTask");
     
     if (albumPoint == 0) {
@@ -1418,8 +1416,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
 }
 
-- (void)checkPoint
-{
+- (void)checkPoint {
     NSLog(@"checkPoint");
     
     @try {
@@ -1471,16 +1468,15 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processCheckPointResult:data];
                 }
             }
         });
     });
 }
+
 - (void)processCheckPointResult:(NSDictionary *)data {
     if ([data[@"result"] intValue] == 1) {
-        
         missionTopicStr = data[@"data"][@"task"][@"name"];
         NSLog(@"name: %@", missionTopicStr);
         
@@ -1502,20 +1498,15 @@ static NSString *autoPlayStr = @"&autoplay=1";
         numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
         NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
         
-        [self showAlertPointView];
+        [self showAlertViewForGettingPoint];
         [self saveCollectInfoToDevice: NO];
         [self retrieveAlbum];
-        
         //[self getPointStore];
-        
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
-        
         [self saveCollectInfoToDevice: YES];
-        
     } else if ([data[@"result"] intValue] == 0) {
         NSLog(@"失敗： %@", data[@"message"]);
-        
         [self saveCollectInfoToDevice: YES];
     } else if ([data[@"result"] intValue] == 3) {
         NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
@@ -1523,36 +1514,29 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
-- (void)saveCollectInfoToDevice: (BOOL)isCollect
-{
+
+- (void)saveCollectInfoToDevice: (BOOL)isCollect {
     if ([task_for isEqualToString: @"collect_free_album"]) {
-        
         // Save data for first collect album
         BOOL collect_free_album = isCollect;
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject: [NSNumber numberWithBool: collect_free_album]
                      forKey: @"collect_free_album"];
         [defaults synchronize];
-        
         //[self getPointStore];
-        
     } else if ([task_for isEqualToString: @"collect_pay_album"]) {
-        
         // Save data for first collect paid album
         BOOL collect_pay_album = isCollect;
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject: [NSNumber numberWithBool: collect_pay_album]
                      forKey: @"collect_pay_album"];
         [defaults synchronize];
-        
         //[self getPointStore];
     }
 }
 
 #pragma mark - Report Section
-- (void)insertReport
-{
+- (void)insertReport {
     NSLog(@"insertReport");
     @try {
         [wTools ShowMBProgressHUD];
@@ -2342,8 +2326,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
-- (void)insertAlbumToLikes
-{
+
+- (void)insertAlbumToLikes {
     NSLog(@"insertAlbumToLikes");
     @try {
         [wTools ShowMBProgressHUD];
@@ -2386,13 +2370,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processInsertAlbumLikesResult:dic];
                 }
             }
         });
     });
 }
+
 - (void)processDeleteAlbumLikesResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         likesInt--;
@@ -2410,8 +2394,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
-- (void)deleteAlbumToLikes
-{
+
+- (void)deleteAlbumToLikes {
     NSLog(@"deleteAlbumToLikes");
     
     @try {
@@ -2444,7 +2428,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Time Out Message Return");
                     NSLog(@"AlbumDetailViewController");
                     NSLog(@"deleteAlbumToLikes");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"deleteAlbum2Likes"
                                              row: 0
@@ -2452,7 +2435,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processDeleteAlbumLikesResult:dic];
                 }
             }
@@ -2467,10 +2449,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 #pragma mark - FBSDKSharing Delegate Methods
 
-- (void)sharer:(id<FBSDKSharing>)sharer didCompleteWithResults:(NSDictionary *)results
-{
+- (void)sharer:(id<FBSDKSharing>)sharer
+didCompleteWithResults:(NSDictionary *)results {
     NSLog(@"Sharing Complete");
-    
     // Check whether getting Sharing Point or not
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL share_to_fb = [[defaults objectForKey: @"share_to_fb"] boolValue];
@@ -2486,40 +2467,32 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
 }
 
-- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error
-{
+- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error {
     NSLog(@"Sharing didFailWithError");
 }
 
-- (void)sharerDidCancel:(id<FBSDKSharing>)sharer
-{
+- (void)sharerDidCancel:(id<FBSDKSharing>)sharer {
     NSLog(@"Sharing Did Cancel");
 }
 
-
 #pragma mark - Custom AlertView for Getting Point
-- (void)showAlertPointView {
-    NSLog(@"Show Alert View");
-    
+- (void)showAlertViewForGettingPoint {
+    NSLog(@"showAlertViewForGettingPoint");
     // Custom AlertView shows up when getting the point
     alertGetPointView = [[OldCustomAlertView alloc] init];
     [alertGetPointView setContainerView: [self createPointView]];
     [alertGetPointView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
     [alertGetPointView setUseMotionEffects: true];
-    
     [alertGetPointView show];
 }
 
 - (UIView *)createPointView {
     NSLog(@"createPointView");
-    
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
-    
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
     //missionTopicLabel.text = @"收藏相本得點";
     missionTopicLabel.text = missionTopicStr;
-    
     NSLog(@"Topic Label Text: %@", missionTopicStr);
     [pointView addSubview: missionTopicLabel];
     
@@ -2528,14 +2501,15 @@ static NSString *autoPlayStr = @"&autoplay=1";
         restrictionLabel.textColor = [UIColor firstGrey];
         restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
         NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
-        
         [pointView addSubview: restrictionLabel];
     }
-    
     // Gift Image
     UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(50, 90, 100, 100)];
     imageView.image = [UIImage imageNamed: @"icon_present"];
+    imageView.center = CGPointMake(pointView.frame.size.width / 2, pointView.frame.size.height / 2);
     [pointView addSubview: imageView];
+    
+    NSLog(@"imageView.center: %@", NSStringFromCGPoint(imageView.center));
     
     // Message Label
     UILabel *messageLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 200, 200, 10)];
@@ -2574,10 +2548,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     return pointView;
 }
 
-- (void)showTheActivityPage
-{
+- (void)showTheActivityPage {
     NSLog(@"showTheActivityPage");
-    
     //NSString *activityLink = @"http://www.apple.com";
     NSString *activityLink = eventUrl;
     
@@ -2593,17 +2565,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - SFSafariViewController delegate methods
-- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller
-{
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
     // Done button pressed
-    
     NSLog(@"show");
     [alertGetPointView show];
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomAlert: (NSString *)msg option:(NSString *)option
-{
+- (void)showCustomAlert: (NSString *)msg option:(NSString *)option {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     [alertView setContainerView: [self createContainerView: msg]];
     
@@ -2649,8 +2618,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [alertView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg
-{
+- (UIView *)createContainerView: (NSString *)msg {
     ///Users/davidlee/Documents/Programming/PINPINBOX Related/PinPinBox Xcode Project Files/Pinpinbox (1.6.7)(1.0.3)(6:20)/wPinpinbox TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -3052,8 +3020,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                            row: (NSInteger)row
-                       eventId: (NSString *)eventId
-{
+                       eventId: (NSString *)eventId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
@@ -3107,8 +3074,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

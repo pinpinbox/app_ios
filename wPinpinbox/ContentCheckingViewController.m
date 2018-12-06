@@ -2209,11 +2209,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"checkTask");
     [wTools ShowMBProgressHUD];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
                                                   token: [wTools getUserToken]
                                                task_for: @"share_to_fb"
-                                               platform: @"apple"];
+                                               platform: @"apple"
+                                                   type: @"album"
+                                                 typeId: self.albumId];
+        
+//        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+//                                                  token: [wTools getUserToken]
+//                                               task_for: @"share_to_fb"
+//                                               platform: @"apple"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -2461,6 +2468,63 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
     }
 }
+
+- (void)checkPoint {
+    NSLog(@"checkPoint");
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSString *response = [boxAPI doTask2: [wTools getUserID]
+                                       token: [wTools getUserToken]
+                                    task_for: wself->task_for
+                                    platform: @"apple"
+                                        type: @"album"
+                                     type_id: wself.albumId];
+        
+        NSLog(@"User ID: %@", [wTools getUserID]);
+        NSLog(@"Token: %@", [wTools getUserToken]);
+        NSLog(@"Task_For: %@", wself->task_for);
+        NSLog(@"Album ID: %@", wself.albumId);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"ContentCheckingViewController");
+                    NSLog(@"checkPoint");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"doTask2"
+                                         pointStr: @""
+                                              btn: nil
+                                              bgV: nil];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    //NSLog(@"data: %@", data);
+                    [wself processCheckPoint:data];
+                }
+            }
+        });
+    });
+}
+
 - (void)processCheckPoint:(NSDictionary *)data {
     if ([data[@"result"] intValue] == 1) {
         missionTopicStr = data[@"data"][@"task"][@"name"];
@@ -2485,85 +2549,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
         
         [self showAlertViewForGettingPoint];
-        
         [self saveCollectInfoToDevice: NO];
-        
         //[self getPointStore];
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
-        
         [self saveCollectInfoToDevice: YES];
-        
     } else if ([data[@"result"] intValue] == 0) {
         NSLog(@"失敗： %@", data[@"message"]);
         [self saveCollectInfoToDevice: YES];
-        
     } else if ([data[@"result"] intValue] == 3) {
         NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
-}
-- (void)checkPoint {
-    NSLog(@"checkPoint");
-    
-    @try {
-        [wTools ShowMBProgressHUD];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    __block typeof(self) wself = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
-        NSString *response = [boxAPI doTask2: [wTools getUserID]
-                                       token: [wTools getUserToken]
-                                    task_for: wself->task_for
-                                    platform: @"apple"
-                                        type: @"album"
-                                     type_id: wself.albumId];
-        
-        NSLog(@"User ID: %@", [wTools getUserID]);
-        NSLog(@"Token: %@", [wTools getUserToken]);
-        NSLog(@"Task_For: %@", wself->task_for);
-        NSLog(@"Album ID: %@", wself.albumId);
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [wTools HideMBProgressHUD];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
-            
-            if (response != nil) {
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"ContentCheckingViewController");
-                    NSLog(@"checkPoint");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                     protocolName: @"doTask2"
-                                         pointStr: @""
-                                              btn: nil
-                                              bgV: nil];
-                } else {
-                    NSLog(@"Get Real Response");
-                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    //NSLog(@"data: %@", data);
-                    [wself processCheckPoint:data];
-                    
-                }
-            }
-        });
-    });
 }
 
 - (void)saveCollectInfoToDevice: (BOOL)isCollect {
@@ -4979,20 +4977,17 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 #pragma mark - Custom AlertView for Getting Point
 - (void)showAlertViewForGettingPoint {
-    NSLog(@"Show Alert View");
-    
+    NSLog(@"showAlertViewForGettingPoint");
     // Custom AlertView shows up when getting the point
     alertView = [[OldCustomAlertView alloc] init];
     [alertView setContainerView: [self createPointView]];
     [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
     [alertView setUseMotionEffects: true];
-    
     [alertView show];
 }
 
 - (UIView *)createPointView {
     NSLog(@"createPointView");
-    
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
     
     // Mission Topic Label
@@ -5015,6 +5010,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     // Gift Image
     UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(50, 90, 100, 100)];
     imageView.image = [UIImage imageNamed: @"icon_present"];
+    imageView.center = CGPointMake(pointView.frame.size.width / 2, pointView.frame.size.height / 2);
     [pointView addSubview: imageView];
     
     // Message Label
