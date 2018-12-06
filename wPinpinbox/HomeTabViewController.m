@@ -1804,7 +1804,7 @@ sourceController:(UIViewController *)source
     } else if (collectionView.tag == 2) {
         NSLog(@"collectionView.tag == 2");
         HomeBannerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"HomeBannerCell" forIndexPath: indexPath];
-        NSLog(@"adArray: %@", adArray);
+        //NSLog(@"adArray: %@", adArray);
         NSDictionary *adData = adArray[indexPath.row];
         __block typeof(self) wself = self;
         [cell loadCellWithData:adData indexPath:indexPath completionBlock:^(NSIndexPath *indexpath, HomeBannerCollectionViewCell *cell) {

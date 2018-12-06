@@ -472,7 +472,10 @@ static NSString *version = @"";
                             limit:(NSString *)limit
                             token:(NSString *)token
                            userId:(NSString *)userId;
-
+//  115
++ (NSString *)getHotList:(NSString *)limit
+                   token:(NSString *)token
+                  userId:(NSString *)userId;
 //測試sign
 +(NSString *)testsign;
 

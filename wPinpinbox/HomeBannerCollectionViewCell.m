@@ -23,9 +23,14 @@
 - (void)loadCellWithData:(NSDictionary *)data indexPath:(NSIndexPath *)indexPath completionBlock:(void(^)(NSIndexPath *indexpath, HomeBannerCollectionViewCell *cell))completionBlock {
     
     self.bannerImageView.image = nil;
+    
     if (![data[@"event"] isKindOfClass:[NSNull class]] && data[@"event"] != nil) {
         self.bannerTitle.text = data[@"event"];
-    } 
+    }
+    if (data[@"ad"][@"name"] && ![data[@"ad"][@"name"] isEqual:[NSNull null]]) {
+        self.bannerTitle.text = data[@"ad"][@"name"];
+    }
+    
     if ([data[@"ad"][@"image"] isEqual: [NSNull null]]) {
         self.bannerImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
     } else {
