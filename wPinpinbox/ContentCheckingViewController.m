@@ -1666,12 +1666,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //            }
 //        }];
     } else if (!([[url host] rangeOfString: @"facebook"].location == NSNotFound)) {
-        NSLog(@"url host contains facebook");
-        self.fbVideoUrl = url;
-        cell.imageView.alpha = 1;
-        cell.alphaBgV.hidden = NO;
-        cell.videoBtn.hidden = NO;
-        [self checkFBSDK: cell url: url];
+//        NSLog(@"url host contains facebook");
+//        self.fbVideoUrl = url;
+//        cell.imageView.alpha = 1;
+//        cell.alphaBgV.hidden = NO;
+//        cell.videoBtn.hidden = NO;
+//        [self checkFBSDK: cell url: url];
+        
+        NSString *path = self.photoArray[page][@"video_target"];
+        ThirdPartyVideoPlayerViewController *v =  [[UIStoryboard storyboardWithName: @"3rdPartyVideoPlayerVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ThirdPartyVideoPlayer"];
+        
+        self.isPresentingOrPushingVC = YES;
+        
+        [self updatePageBeforePresentingOrPushing];
+        [self presentViewController:v animated:YES completion:^{
+            [v setVideoPath:path];
+        }];
+        
     } else if (!([[url host] rangeOfString: @"youtube"].location == NSNotFound) || !([[url host] rangeOfString: @"youtu.be"].location == NSNotFound)) {
         NSString *path = self.photoArray[page][@"video_target"];
         [self updatePageBeforePresentingOrPushing];

@@ -86,7 +86,7 @@
 - (BOOL)isURLsContained {
     if (self.urls.count) {
         for (NSURL *url in self.urls) {
-            if([url.absoluteString containsString:@"youtu"] || [url.absoluteString containsString:@"vimeo.com"])
+            if([url.absoluteString containsString:@"youtu"] || [url.absoluteString containsString:@"vimeo.com"]||[url.absoluteString containsString:@"facebook"])
                 return YES;
         
         }
@@ -123,6 +123,12 @@
 - (NSString *)getVimeoString:(NSString *)link {
     return [NSString stringWithFormat:@"<head> <meta name=viewport content='width=device-width, initial-scale=1'><style type='text/css'> body { margin: 0; width:100%%; height:100%%;  background-color:#000000; }   html { width:100%%; height:100%%; background-color:#000000; }.embed-container iframe,.embed-container object,.embed-container embed position: absolute;top: 0;left: 0;width: 100%% !important;height: 100%% !important;} </style></head><iframe src='%@' width='100%%' height='100%%' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen style='background: #000;'></iframe> <script src=\"https://player.vimeo.com/api/player.js\"></script><script>var iframe = document.querySelector('iframe');var player = new Vimeo.Player(iframe);player.on('play', function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPlaying'); console.log('playing');});player.on('loaded', function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsReady');console.log('ready'); player.play();});player.on('pause',function() {webkit.messageHandlers.callbackHandler.postMessage('Vimeo VideoIsPaused');console.log('paused');});player.on('ended',function(){webkit.messageHandlers.callbackHandler.postMessage('VideoIsEnded');console.log('ended');}); function stopPlayer() {player.pause();} </script>", link];
 }
+- (NSString *)getFBVideoString:(NSString *)link {
+    
+    NSString *src = @"<html><head><style type='text/css'> body { margin: 0; width:100%%; height:100%%;  background-color:#000000; }</style></head><body><div id=\"fb-root\"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = \"https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6\";  fjs.parentNode.insertBefore(js, fjs); webkit.messageHandlers.callbackHandler.postMessage(' VideoIsReady');}(document, 'script', 'facebook-jssdk')); function stopPlayer() {} </script> <div style='width:100%%;height:100%%;display: flex;vertical-align: middle;align-items:center;' ><div style='width:100%%; ' class=\"fb-video\" data-href=\"%@\" data-width=\"auto\" data-autoplay=\"true\" data-allowfullscreen=\"true\" data-show-text=\"false\"></div></body></html>";
+    
+    return [NSString stringWithFormat:src, link];
+}
 //  find video id from path and compose html
 - (void)setup {
     
@@ -149,6 +155,12 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *html = [self getVimeoString:realLink];
                 [self loadHTMLString:html baseURL:nil];
+            });
+            
+        } else if ([url.absoluteString containsString:@"facebook"]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSString *html = [self getFBVideoString:url.absoluteString];
+                [self loadHTMLString:html baseURL:[NSURL URLWithString:@"https://www.apple.com"]];
             });
             
         }

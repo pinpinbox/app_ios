@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -444,9 +444,12 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0g1-hn-Xj7">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0g1-hn-Xj7">
                                         <rect key="frame" x="320" y="249" width="39" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="FVR-mp-dpN"/>
+                                            <constraint firstAttribute="width" constant="39" id="gOW-hB-kqX"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <state key="normal" title="顯示"/>
                                         <connections>
@@ -462,7 +465,9 @@
                                     <constraint firstAttribute="bottom" secondItem="kf3-fG-bYb" secondAttribute="bottom" constant="46" id="FQ2-zu-yWg"/>
                                     <constraint firstItem="Nay-BW-UXg" firstAttribute="trailing" secondItem="e04-Ej-ER1" secondAttribute="trailing" constant="-16" id="HjA-Kf-Gvp"/>
                                     <constraint firstItem="0A2-La-gFy" firstAttribute="top" secondItem="e04-Ej-ER1" secondAttribute="top" constant="46" id="KoJ-Yv-w1f"/>
+                                    <constraint firstItem="0g1-hn-Xj7" firstAttribute="top" secondItem="kf3-fG-bYb" secondAttribute="top" id="NIy-Ta-Fnj"/>
                                     <constraint firstItem="WLK-Y7-pCt" firstAttribute="bottom" secondItem="e04-Ej-ER1" secondAttribute="bottom" id="QCb-rj-dc3"/>
+                                    <constraint firstItem="0g1-hn-Xj7" firstAttribute="trailing" secondItem="kf3-fG-bYb" secondAttribute="trailing" id="QHb-uT-1ER"/>
                                     <constraint firstItem="kf3-fG-bYb" firstAttribute="trailing" secondItem="e04-Ej-ER1" secondAttribute="trailing" constant="-16" id="Wpx-sm-hkU"/>
                                     <constraint firstItem="0A2-La-gFy" firstAttribute="leading" secondItem="qzb-PJ-D4d" secondAttribute="leading" id="XzY-3u-brK"/>
                                     <constraint firstItem="qzb-PJ-D4d" firstAttribute="top" secondItem="e04-Ej-ER1" secondAttribute="top" id="Ygt-e2-Ej9"/>
@@ -471,6 +476,7 @@
                                     <constraint firstItem="Nay-BW-UXg" firstAttribute="bottom" secondItem="e04-Ej-ER1" secondAttribute="bottom" id="fbM-p5-Ujq"/>
                                     <constraint firstItem="0A2-La-gFy" firstAttribute="trailing" secondItem="e04-Ej-ER1" secondAttribute="trailing" constant="-16" id="ksv-De-djY"/>
                                     <constraint firstItem="wtn-BG-gVP" firstAttribute="leading" secondItem="e04-Ej-ER1" secondAttribute="leading" id="n4f-eS-819"/>
+                                    <constraint firstItem="0g1-hn-Xj7" firstAttribute="trailing" secondItem="kf3-fG-bYb" secondAttribute="trailing" id="vaI-FF-l8E"/>
                                     <constraint firstItem="kf3-fG-bYb" firstAttribute="leading" secondItem="e04-Ej-ER1" secondAttribute="leading" constant="16" id="wgd-Ra-Cva"/>
                                 </constraints>
                             </view>
