@@ -2819,7 +2819,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnStr;
     
 }
-#pragma mark - Get New joined (Hometab)
+#pragma mark - Get Newly joined (Hometab)
 //  116
 + (NSString *)getNewJoinList:(NSString *)limit
                        token:(NSString *)token

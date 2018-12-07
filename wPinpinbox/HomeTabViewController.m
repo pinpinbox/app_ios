@@ -390,7 +390,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *version = [self getVersion];
         NSLog(@"version: %@", version);
-        
+        __block typeof(self) wself = self;
         NSString *response = [boxAPI checkUpdateVersion: @"apple" version: version];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -398,15 +398,7 @@
             
             if (response != nil) {
                 NSLog(@"checkVersion Response != nil");
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"checkVersion");
-                    
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"checkVersion"
-                                         eventId: @""
-                                            text: @""];
-                } else {
+                if (![wself checkTimedOut:response api:@"checkVersion" eventId:@"" text:@""]) {
                     NSLog(@"Get Real Response");
                     NSLog(@"response from checkVersion");
                     
@@ -662,15 +654,7 @@ sourceController:(UIViewController *)source
                 NSLog(@"response from updateList");
                 //NSLog(@"response: %@", response);
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"HomeTabViewController");
-                    NSLog(@"updateList");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"updatelist"
-                                         eventId: @""
-                                            text: @""];
+                if ([wself checkTimedOut:response api:@"updatelist" eventId:@"" text:@""]) {
                     [wself.refreshControl endRefreshing];
                     wself->isReloading = NO;
                 } else {
@@ -792,16 +776,7 @@ sourceController:(UIViewController *)source
                 NSLog(@"checkAd Response");
                 //NSLog(@"reponse: %@", response);
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"HomeTabViewController");
-                    NSLog(@"checkAd");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getAdList"
-                                         eventId: @""
-                                            text: @""];
-                } else {
+                if (![wself checkTimedOut:response api:@"getAdList" eventId:@"" text:@""]) {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
                     
@@ -864,17 +839,7 @@ sourceController:(UIViewController *)source
             if (response != nil) {
                 NSLog(@"response from retrievecatgeorylist");
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"HomeTabVC");
-                    NSLog(@"getCategoryList");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"retrievecatgeorylist"
-                                         eventId: @""
-                                            text: @""];
-                    
-                } else {
+                if (![wself checkTimedOut:response api:@"retrievecatgeorylist" eventId:@"" text:@""])  {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
@@ -932,16 +897,7 @@ sourceController:(UIViewController *)source
             if (response != nil) {
                 NSLog(@"response from getTheMeArea");
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"HomeTabVC");
-                    NSLog(@"getTheMeArea");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getTheMeArea"
-                                         eventId: @""
-                                            text: @""];
-                } else {
+                if (![wself checkTimedOut:response api:@"getTheMeArea" eventId:@"" text:@""]) {
                     NSLog(@"Get Real Response");
                     NSLog(@"Get response from getTheMeArea");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -1019,7 +975,7 @@ sourceController:(UIViewController *)source
 - (void)logOut {
     [wTools logOut];
 }
-#pragma mark - Get New joined user list (116)
+#pragma mark - Get Newly joined user list (116)
 - (void)showNewJoinUsersList {
     [wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
@@ -1138,16 +1094,7 @@ sourceController:(UIViewController *)source
                 NSLog(@"showUserRecommendedList");
                 NSLog(@"response from getRecommendedList");
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"HomeTabViewController");
-                    NSLog(@"showUserRecommendedList");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"showUserRecommendedList"
-                                         eventId: @""
-                                            text: @""];
-                } else {
+                if (![wself checkTimedOut:response api:@"showUserRecommendedList" eventId:@"" text:@""]) {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     if (![dic[@"result"] boolValue]) {
@@ -1200,20 +1147,10 @@ sourceController:(UIViewController *)source
                 NSLog(@"showAlbumRecommendedList");
                 NSLog(@"response from showAlbumRecommendedList");
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"HomeTabViewController");
-                    NSLog(@"showAlbumRecommendedList");
-
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"showAlbumRecommendedList"
-                                         eventId: @""
-                                            text: @""];
-                } else {
+                if (![wself checkTimedOut:response api:@"showAlbumRecommendedList" eventId:@"" text:@""]) {
+                    
                     NSLog(@"Get Real Response");
                     NSDictionary *dic =  (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    
                     
                     if (![dic[@"result"] boolValue]) {
                         return ;
@@ -1396,18 +1333,9 @@ sourceController:(UIViewController *)source
             if (response != nil) {
                 NSLog(@"response from doTask1");
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"HomeTabViewController");
-                    NSLog(@"checkPoint");
+                if (![wself checkTimedOut:response api:@"doTask1" eventId:@"" text:@""]){
                     
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"doTask1"
-                                         eventId: @""
-                                            text: @""];
-                } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     [wself processCheckPointResult:data];
@@ -1480,7 +1408,7 @@ sourceController:(UIViewController *)source
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
                                            token: [userPrefs objectForKey:@"token"]];
@@ -1500,16 +1428,7 @@ sourceController:(UIViewController *)source
             if (response != nil) {
                 NSLog(@"response from geturpoints");
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"HomeTabViewController");
-                    NSLog(@"getUrPoints");
-                    
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"geturpoints"
-                                         eventId: @""
-                                            text: @""];
-                } else {
+                if (![wself checkTimedOut:response api:@"geturpoints" eventId:@"" text:@""]) {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
@@ -1598,7 +1517,7 @@ sourceController:(UIViewController *)source
         NSLog( @"Reason: %@", exception.reason);
         return;
     }
-    
+    __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI getEvent: [wTools getUserID]
                                         token: [wTools getUserToken]
@@ -1619,16 +1538,7 @@ sourceController:(UIViewController *)source
                 NSLog(@"getEvent Response");
                 //NSLog(@"response: %@", response);
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"HomeTabViewController");
-                    NSLog(@"getEventData eventId");
-                    
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getEvent"
-                                         eventId: eventId
-                                            text: @""];
-                } else {
+                if (![wself checkTimedOut:response api:@"getEvent" eventId:eventId text:@""]) {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
                     
@@ -1991,7 +1901,8 @@ sourceController:(UIViewController *)source
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
         } else {
-            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]];
+            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]
+                                   placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
         }
         
         // UserForView Info Setting
@@ -2080,11 +1991,13 @@ sourceController:(UIViewController *)source
         if ([user[@"cover"] isEqual: [NSNull null]]) {
             c.albumImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
         } else {
-            [c.albumImageView sd_setImageWithURL: [NSURL URLWithString: user[@"cover"]]];
+            [c.albumImageView sd_setImageWithURL: [NSURL URLWithString: user[@"cover"]]
+                                placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
         }
         
         if (user[@"picture"] && ![user[@"picture"] isEqual: [NSNull null]]) {
-            [c.personnelView sd_setImageWithURL:[NSURL URLWithString:user[@"picture"]]];
+            [c.personnelView sd_setImageWithURL:[NSURL URLWithString:user[@"picture"]]
+                               placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
         } else {
             c.personnelView.image = nil;
             c.personnelView.backgroundColor = [UIColor secondGrey];
@@ -2862,18 +2775,7 @@ replacementString:(NSString *)string {
                 NSLog(@"filterUserContentForSearchText");
                 NSLog(@"response from search");
                 
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"SearchTableViewController");
-                    NSLog(@"filterUserContentForSearchText");
-                    
-                    [wself dismissKeyboard];
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"filterUserContentForSearchText"
-                                         eventId: @""
-                                            text: text];
-                } else {
+                if (![wself checkTimedOut:response api:@"filterUserContentForSearchText" eventId:@"" text:text]) {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
@@ -3339,6 +3241,10 @@ replacementString:(NSString *)string {
                 [weakSelf filterAlbumContentForSearchText: text];
             } else if ([protocolName isEqualToString: @"updateUser"]) {
                 [weakSelf updateUser];
+            } else if ([protocolName isEqualToString:@"getHotList"]) {
+                [weakSelf showHotList];
+            } else if ([protocolName isEqualToString:@"getNewJoinList"]) {
+                [weakSelf showNewJoinUsersList];
             }
         }
     }];
@@ -3471,16 +3377,8 @@ replacementString:(NSString *)string {
             [wTools HideMBProgressHUD];
             
             if (response != nil) {
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"InfoEditViewController");
-                    NSLog(@"saveBtnPress");
-
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"updateUser"
-                                         eventId: @""
-                                            text: @""];
-                } else {
+                if (![wself checkTimedOut:response api:@"updateUser" eventId:@"" text:@""]) {
+                    
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"dic: %@", dic);

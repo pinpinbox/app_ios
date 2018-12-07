@@ -479,7 +479,7 @@ static NSString *version = @"";
                    token:(NSString *)token
                   userId:(NSString *)userId;
 
-#pragma mark - Get New joined (Hometab)
+#pragma mark - Get Newly joined (Hometab)
 //  116
 + (NSString *)getNewJoinList:(NSString *)limit
                        token:(NSString *)token
