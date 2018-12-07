@@ -203,6 +203,9 @@
 @property (nonatomic, assign) CGFloat lastContentOffset;
 @property (nonatomic) UITableView *recommandListView;
 
+@property (nonatomic, strong) NSMutableArray *hotListArray;
+@property (nonatomic, strong) NSMutableArray *justJoinedListArray;
+
 @end
 
 @implementation HomeTabViewController
@@ -1016,16 +1019,114 @@ sourceController:(UIViewController *)source
 - (void)logOut {
     [wTools logOut];
 }
+#pragma mark - Get New joined user list (116)
+- (void)showNewJoinUsersList {
+    [wTools ShowMBProgressHUD];
+    __block typeof(self) wself = self;
+    NSUInteger count = _justJoinedListArray? _justJoinedListArray.count:0;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = @"";
+        response = [boxAPI getNewJoinList:[NSString stringWithFormat:@"%lu, 16",(unsigned long)count]
+                                    token:[wTools getUserToken]
+                                   userId:[wTools getUserID]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+            if (response) {
+                if (![wself checkTimedOut:response api:@"getNewJoinList" eventId:@"" text:@""]){
+                    
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    if (![dic[@"result"] isEqualToString:@"SYSTEM_OK"]) {
+                        NSLog(@"showHotList result: %@", dic[@"result"]);
+                        
+                        if (dic[@"message"])
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        else
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        
+                        return ;
+                    }
+                    
+                    [wself processNewJoinedList:dic];
+                }
+            }
+            
+        });
 
+    });
+}
+- (void)processNewJoinedList:(NSDictionary *)dict {
+    
+    if (!self.justJoinedListArray)
+        self.justJoinedListArray = [NSMutableArray array];
+    
+    NSArray *users = (NSArray *)dict[@"data"];
+    
+    [self.justJoinedListArray addObjectsFromArray:users];
+    
+    [self.followUserCollectionView reloadData];
+    [self showAlbumRecommendedList];
+}
+#pragma mark - Get hotlist (115)
+- (void)showHotList {
+    
+    [wTools ShowMBProgressHUD];
+    __block typeof(self) wself = self;
+    NSUInteger count = _hotListArray? _hotListArray.count:0;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = @"";
+        
+        response = [boxAPI getHotList:[NSString stringWithFormat:@"%lu, 16",(unsigned long)count]
+                                token:[wTools getUserToken]
+                               userId:[wTools getUserID]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wTools HideMBProgressHUD];
+            if (response) {
+                if (![wself checkTimedOut:response api:@"getHotList" eventId:@"" text:@""]){
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    if (![dic[@"result"] isEqualToString:@"SYSTEM_OK"]) {
+                        NSLog(@"showHotList result: %@", dic[@"result"]);
+                        
+                        if (dic[@"message"])
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        else
+                           [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    
+                        return ;
+                    }
+                    
+                    [wself processHotList:dic];
+                }
+            }
+        });
+    });
+}
+- (void)processHotList:(NSDictionary *)dict {
+    if (!self.hotListArray)
+        self.hotListArray = [NSMutableArray array];
+    
+    NSArray *users = (NSArray *)dict[@"data"];
+    
+    [self.hotListArray addObjectsFromArray:users];
+    
+    [self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    //  get new joined list
+    [self showNewJoinUsersList];
+}
 #pragma mark - Get Recommended User List
 - (void)showUserRecommendedList {
     [wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
+    NSUInteger count = followUserData? followUserData.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = @"";
         NSMutableDictionary *data = [NSMutableDictionary new];
         [data setObject: @"user" forKey: @"type"];
-        [data setObject: @"0, 16" forKey: @"limit"];
+        [data setObject: [NSString stringWithFormat:@"%lu, 16",(unsigned long)count] forKey: @"limit"];
         
         response = [boxAPI getRecommendedList: [wTools getUserID]
                                         token: [wTools getUserToken]
@@ -1063,11 +1164,13 @@ sourceController:(UIViewController *)source
 
 - (void)processUserRecommandedListResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
-        followUserData = [NSMutableArray arrayWithArray: dic[@"data"]];
-        NSLog(@"followUserData: %@", followUserData);
-        [self.followUserCollectionView reloadData];
+        if (!followUserData)
+            followUserData = [[NSMutableArray alloc] init];
+        [followUserData addObjectsFromArray: dic[@"data"]];//= [NSMutableArray arrayWithArray: dic[@"data"]];
         
-        [self showAlbumRecommendedList];
+        [self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self showHotList];
+        
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
         [self showCustomErrorAlert: dic[@"message"]];
@@ -1599,14 +1702,16 @@ sourceController:(UIViewController *)source
     } else if (collectionView.tag == 3) {
         return categoryArray.count-1;
     } else if (collectionView.tag == 4) {
-        return followUserData.count;
+        return self.justJoinedListArray.count;
     } else if (collectionView.tag == 5) {
         
         return followAlbumData.count;
     } else if (collectionView.tag == 6) {
         return albumData.count;
-    } else if (collectionView.tag == 71 || collectionView.tag == 72) {
-        return followAlbumData.count;
+    } else if (collectionView.tag == 71){
+        return followUserData.count;
+    } else if (collectionView.tag == 72) {
+        return self.hotListArray.count;
     } else {
         return userData.count;
     }
@@ -1616,9 +1721,9 @@ sourceController:(UIViewController *)source
            viewForSupplementaryElementOfKind:(NSString *)kind
                                  atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
-    NSLog(@"viewForSupplementaryElementOfKind");
+    //NSLog(@"viewForSupplementaryElementOfKind");
     
-    NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
+    //NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
     
     if (collectionView.tag == 1) {
         HomeDataCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
@@ -1713,9 +1818,9 @@ sourceController:(UIViewController *)source
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"");
-    NSLog(@"cellForItemAtIndexPath");
-    NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
+    //NSLog(@"");
+    //NSLog(@"cellForItemAtIndexPath");
+    //NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
     
     if (collectionView.tag == 1) {
         NSLog(@"collectionView.tag == 1");
@@ -1837,7 +1942,7 @@ sourceController:(UIViewController *)source
         return cell;
     } else if (collectionView.tag == 4) {
         NSLog(@"collectionView.tag == 4");
-        NSDictionary *userDic = followUserData[indexPath.row][@"user"];        
+        NSDictionary *userDic = self.justJoinedListArray[indexPath.row][@"user"];
         
         SearchTabHorizontalCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"horizontalCell" forIndexPath: indexPath];
         
@@ -1963,23 +2068,37 @@ sourceController:(UIViewController *)source
         NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
         
         return cell;
-    } else if (collectionView.tag == 71 || collectionView.tag == 72) {
+    } else if (collectionView.tag == 71 || collectionView.tag == 72){
         
         RecommandCollectionViewCell *c = [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath:indexPath];
-        NSDictionary *data = followAlbumData[indexPath.row];
-        NSDictionary *album = data[@"album"];
-        if ([album[@"cover"] isEqual: [NSNull null]]) {
+        NSDictionary *data = followUserData[indexPath.row];
+        if (collectionView.tag == 72)
+            data = self.hotListArray[indexPath.row];
+        
+        NSDictionary *user = data[@"user"];
+        c.albumImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        if ([user[@"cover"] isEqual: [NSNull null]]) {
             c.albumImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
         } else {
-            [c.albumImageView sd_setImageWithURL: [NSURL URLWithString: album[@"cover"]]];
+            [c.albumImageView sd_setImageWithURL: [NSURL URLWithString: user[@"cover"]]];
         }
         
-        c.albumDesc.text = [[NSUUID UUID] UUIDString];
+        if (user[@"picture"] && ![user[@"picture"] isEqual: [NSNull null]]) {
+            [c.personnelView sd_setImageWithURL:[NSURL URLWithString:user[@"picture"]]];
+        } else {
+            c.personnelView.image = nil;
+            c.personnelView.backgroundColor = [UIColor secondGrey];
+        }
+        
+        if (user[@"description"] && ![user[@"description"] isEqual: [NSNull null]]) {
+            c.albumDesc.text = user[@"description"];
+        }
+        c.personnelView.layer.cornerRadius = 16;
+        c.personnelView.clipsToBounds = YES;
         c.albumImageView.layer.cornerRadius = 8;
         c.albumImageView.clipsToBounds = YES;
-        c.personnelView.backgroundColor = UIColor.yellowColor;
+    
         return c;
-        
     } else {
         NSLog(@"collectionView.tag == 7");
         userRecommendationLabel.text = @"找到的創作人";
@@ -2073,7 +2192,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                categoryNameStr: categoryareaDic[@"name"]];
         }
     } else if (collectionView.tag == 4) {
-        NSDictionary *userDic = followUserData[indexPath.row][@"user"];
+        NSDictionary *userDic = self.justJoinedListArray[indexPath.row][@"user"];
         [self toCreatorVC: userDic[@"user_id"]];
     } else if (collectionView.tag == 5) {
         
@@ -2081,8 +2200,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
         [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue]];
     } else if (collectionView.tag == 71 || collectionView.tag == 72) {
-        NSString *albumId = [followAlbumData[indexPath.row][@"album"][@"album_id"] stringValue];
-        [self toAlbumDetailVC: albumId];
+        NSDictionary *userDic = followUserData[indexPath.row][@"user"];
+        if (collectionView.tag == 72)
+            userDic = self.hotListArray[indexPath.row][@"user"];
+        [self toCreatorVC: userDic[@"user_id"]];
     } else {
         NSDictionary *userDic = userData[indexPath.row][@"user"];
         [self toCreatorVC: userDic[@"user_id"]];
@@ -2267,9 +2388,9 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)collectionView:(UICollectionView *)collectionView
        willDisplayCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"willDisplayCell");
-    NSLog(@"indexPath.item: %ld", (long)indexPath.item);
-    NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
+//    NSLog(@"willDisplayCell");
+//    NSLog(@"indexPath.item: %ld", (long)indexPath.item);
+//    NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
     
     if (collectionView.tag == 1) {
         if (indexPath.item == (pictures.count - 1)) {
@@ -3150,6 +3271,17 @@ replacementString:(NSString *)string {
 }
 
 #pragma mark - Custom Method for TimeOut
+- (BOOL)checkTimedOut: (NSString *)result api:(NSString *)api eventId:(NSString *)eventId text:(NSString *)text{
+    
+    if ([result isEqualToString:timeOutErrorCode] ) {
+        [self showCustomTimeOutAlert:NSLocalizedString(@"Connection-Timeout", @"")
+                        protocolName:api
+                             eventId:eventId
+                                text:text];
+        return YES;
+    }
+    return NO;
+}
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                        eventId: (NSString *)eventId

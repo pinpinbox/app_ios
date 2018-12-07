@@ -2819,6 +2819,24 @@ static NSString *hostURL = @"www.pinpinbox.com";
     return returnStr;
     
 }
+#pragma mark - Get New joined (Hometab)
+//  116
++ (NSString *)getNewJoinList:(NSString *)limit
+                       token:(NSString *)token
+                      userId:(NSString *)userId {
+    
+    NSString *returnStr = @"";
+    
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    
+    [dic setObject: limit forKey: @"limit"];
+    [dic setObject: token forKey: @"token"];
+    [dic setObject: userId forKey: @"user_id"];
+    
+    returnStr = [self boxAPI: dic URL: @"/getnewjoinlist/2.0"];
+    
+    return returnStr;
+}
 #pragma mark - albumindex
 // 96
 + (NSString *)insertalbumindex:(NSString *)uid

@@ -472,10 +472,19 @@ static NSString *version = @"";
                             limit:(NSString *)limit
                             token:(NSString *)token
                            userId:(NSString *)userId;
+
+#pragma mark - Get HotList (HomeTab)
 //  115
 + (NSString *)getHotList:(NSString *)limit
                    token:(NSString *)token
                   userId:(NSString *)userId;
+
+#pragma mark - Get New joined (Hometab)
+//  116
++ (NSString *)getNewJoinList:(NSString *)limit
+                       token:(NSString *)token
+                      userId:(NSString *)userId;
+
 //測試sign
 +(NSString *)testsign;
 
