@@ -10,9 +10,9 @@ PODS:
   - Fabric (1.9.0)
   - FBSDKCoreKit (4.38.1):
     - Bolts (~> 1.9)
-  - FBSDKLoginKit (4.39.0):
+  - FBSDKLoginKit (4.38.1):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.39.0):
+  - FBSDKShareKit (4.38.1):
     - FBSDKCoreKit
   - FLAnimatedImage (1.0.12)
   - Flurry-iOS-SDK/FlurryAds (9.2.3):
@@ -80,6 +80,6 @@ SPEC CHECKSUMS:
   SSFadingScrollView: ac908f565594b1faa748d2d55973f2dde919f754
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: feb032ab56d22ed17212242b1f7b70fa06a0e7eb
+PODFILE CHECKSUM: e5b384b47ac151a28ea595f8bf2cbf1f32b6b168
 
 COCOAPODS: 1.5.3

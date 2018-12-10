@@ -1014,15 +1014,18 @@ sourceController:(UIViewController *)source
 }
 - (void)processNewJoinedList:(NSDictionary *)dict {
     
-    if (!self.justJoinedListArray)
-        self.justJoinedListArray = [NSMutableArray array];
-    
-    NSArray *users = (NSArray *)dict[@"data"];
-    
-    [self.justJoinedListArray addObjectsFromArray:users];
-    
-    [self.followUserCollectionView reloadData];
-    [self showAlbumRecommendedList];
+    if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]){
+        NSArray *users = dict[@"data"];
+        if (users && users.count ) {
+            if (!self.justJoinedListArray)
+                self.justJoinedListArray = [NSMutableArray array];
+            
+            [self.justJoinedListArray addObjectsFromArray:users];
+            
+            [self.followUserCollectionView reloadData];
+            [self showAlbumRecommendedList];
+        }
+    }
 }
 #pragma mark - Get hotlist (115)
 - (void)showHotList {
@@ -1061,17 +1064,15 @@ sourceController:(UIViewController *)source
     });
 }
 - (void)processHotList:(NSDictionary *)dict {
-    if (!self.hotListArray)
-        self.hotListArray = [NSMutableArray array];
-    
-    NSArray *users = (NSArray *)dict[@"data"];
-    
-    [self.hotListArray addObjectsFromArray:users];
-    
-    [self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
     
     //  get new joined list
     [self showNewJoinUsersList];
+            //[self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+            
+            
+            
+        }
+    }
 }
 #pragma mark - Get Recommended User List
 - (void)showUserRecommendedList {
@@ -1110,14 +1111,32 @@ sourceController:(UIViewController *)source
 }
 
 - (void)processUserRecommandedListResult:(NSDictionary *)dic {
+    
     if ([dic[@"result"] intValue] == 1) {
-        if (!followUserData)
-            followUserData = [[NSMutableArray alloc] init];
-        [followUserData addObjectsFromArray: dic[@"data"]];//= [NSMutableArray arrayWithArray: dic[@"data"]];
-        
-        [self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [self showHotList];
-        
+        NSArray *list = dic[@"data"];
+        if (list && list.count) {
+            if (!followUserData)
+                followUserData = [[NSMutableArray alloc] init];
+            
+            NSIndexPath *p = [NSIndexPath indexPathForRow:0 inSection:0];
+            RecommandListViewCell *cell = (RecommandListViewCell *)[self.recommandListView cellForRowAtIndexPath:p];
+            UICollectionView *c = cell.recommandListView;
+            
+            NSUInteger count =  followUserData.count;
+            NSMutableArray *index = [NSMutableArray array];
+            
+            [followUserData addObjectsFromArray:list];
+            
+            if (count <= 0) {
+                [self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationMiddle];
+                [self showHotList];
+            } else {
+                for (NSUInteger i = 0;i < list.count; i++ ){
+                    [index addObject:[NSIndexPath indexPathForItem:i+count inSection:0]];
+                }
+                [c insertItemsAtIndexPaths:index];
+            }
+        }
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
         [self showCustomErrorAlert: dic[@"message"]];
@@ -2509,6 +2528,19 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - UIScrollViewDelegate Methods
+//- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    CGFloat offset = scrollView.contentOffset.x;
+    if (offset+self.view.frame.size.width >= scrollView.contentSize.width) {
+        if (scrollView.tag == 4) {
+            [self showNewJoinUsersList];
+        } else if (scrollView.tag == 72) {
+            [self showHotList];
+        } else if (scrollView.tag == 71) {
+            [self showUserRecommendedList];
+        }
+    }
+}
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [selectTextField resignFirstResponder];
     //NSLog(@"scrollViewDidScroll");
