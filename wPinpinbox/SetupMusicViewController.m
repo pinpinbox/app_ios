@@ -22,8 +22,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface SetupMusicViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
-{
+@interface SetupMusicViewController () <UICollectionViewDelegate, UICollectionViewDataSource> {
     NSMutableArray *musicArray;
     NSDictionary *mdata;
     
@@ -68,10 +67,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self getAlbumDataOptions];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
     @try {
         [self removeObserverForAVPlayerItem];
     } @catch (NSException *exception) {
@@ -81,7 +78,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,8 +85,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setupUI
-{
+- (void)setupUI {
     self.saveBtn.layer.cornerRadius = 8;
     
     self.noMusicSelectionView.layer.cornerRadius = 8;
@@ -107,19 +102,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.collectionView.showsHorizontalScrollIndicator = NO;
 }
+
 - (void)processAlbumDataOptions:(NSDictionary *)dic {
-    
     if ([dic[@"result"] intValue] == 1) {
         mdata = [dic[@"data"] mutableCopy];
         //NSLog(@"mdata: %@", mdata);
         [self getAlbumSettings];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 - (void)getAlbumDataOptions {
     NSLog(@"getAlbumDataOptions");
     @try {
@@ -151,7 +151,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"SetupMusicViewController");
                     NSLog(@"getAlbumDataOptions");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getalbumdataoptions"
                                          jsonStr: @""];
@@ -159,7 +158,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     NSLog(@"getalbumdataoptions");
-                    
                     [wself processAlbumDataOptions:dic];
                 }
             }
@@ -169,7 +167,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)getAlbumSettings {
     NSLog(@"getAlbumSettings");
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI getalbumsettings: [wTools getUserID]
                                                 token: [wTools getUserToken]
@@ -182,21 +179,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"SetupMusicViewController");
                     NSLog(@"getAlbumSettings");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getalbumsettings"
                                          jsonStr: @""];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     NSString *res = (NSString *)dic[@"result"];
+                    
                     if ([res isEqualToString:@"SYSTEM_OK"]) {
                         self.data = [dic[@"data"] mutableCopy];
                         NSLog(@"self.data: %@", self.data);
                     } else if (dic[@"message"]) {//([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -207,14 +207,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     });
 }
 
-- (void)initialValueSetup
-{
+- (void)initialValueSetup {
     NSLog(@"initialValueSetup");
-    
     NSLog(@"self.audioMode: %@", self.audioMode);
-    
     isAudioModeChanged = NO;
-    
     oldAudioMode = self.audioMode;
     
     if ([self.audioMode isEqualToString: @"none"]) {
@@ -232,6 +228,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if (![self.data[@"audio"] isEqualToString: @""]) {
             NSLog(@"self.data audio is not equal to string empty");
             
+            if (![wTools objectExists: mdata[@"audio"]]) {
+                return;
+            }
+            
             for (NSMutableDictionary *d in mdata[@"audio"]) {
                 NSLog(@"self.data audio: %@", self.data[@"audio"]);
                 NSLog(@"d id: %@", d[@"id"]);
@@ -246,6 +246,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         } else {
             NSLog(@"self.data audio is equal to string empty");
             
+            if (![wTools objectExists: mdata[@"audio"]]) {
+                return;
+            }
+            
             for (NSMutableDictionary *d in mdata[@"audio"]) {
                 [d setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
                 [musicArray addObject: d];
@@ -254,25 +258,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     } else {
         NSLog(@"self.data audio is kind of null calss");
         
+        if (![wTools objectExists: mdata[@"audio"]]) {
+            return;
+        }
+        
         for (NSMutableDictionary *d in mdata[@"audio"]) {
             [d setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
             [musicArray addObject: d];
         }
     }
-
-    
-    NSLog(@"");
-    NSLog(@"");
-    //NSLog(@"musicArray: %@", musicArray);
-    
     [self.collectionView reloadData];
 }
 
 #pragma mark - Touches Methods
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
     NSLog(@"touchesBegan");
-    
     CGPoint location = [[touches anyObject] locationInView: self.view];
     CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
     
@@ -319,8 +320,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesMoved:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
     NSLog(@"touchesMoved");
     
     CGPoint location = [[touches anyObject] locationInView: self.view];
@@ -336,8 +337,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesEnded:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
     NSLog(@"touchesEnded");
     
     CGPoint location = [[touches anyObject] locationInView: self.view];
@@ -366,8 +367,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches
+               withEvent:(UIEvent *)event {
     NSLog(@"touchesCancelled");
     
     CGPoint location = [[touches anyObject] locationInView: self.view];
@@ -384,14 +385,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark - UICollectionViewDataSource Methods
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section {
     NSLog(@"musicArray.count: %lu", (unsigned long)musicArray.count);
     return musicArray.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"");
     NSLog(@"cellForItemAtIndexPath");
@@ -402,7 +403,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     cell.layer.cornerRadius = 8;
     
     UILabel *textLabel = (UILabel *)[cell viewWithTag: 100];
-    textLabel.text = musicArray[indexPath.row][@"name"];
+    
+    if ([wTools objectExists: musicArray[indexPath.row][@"name"]]) {
+        textLabel.text = musicArray[indexPath.row][@"name"];
+    }
     
     if ([musicArray[indexPath.row][@"selected"] boolValue]) {
         cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
@@ -414,8 +418,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 #pragma mark - UICollectionViewDelegate Methods
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(UICollectionView *)collectionView
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
     
     // Switch to Singluar Mode
@@ -433,6 +437,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSArray *arr = mdata[@"audio"];
     NSString *strUrl = arr[indexPath.row][@"url"];
     NSLog(@"strUrl: %@", strUrl);
+    
+    if (![wTools  objectExists: strUrl]) {
+        return;
+    }
     
     [self avPlayerSetUp: strUrl];
     
@@ -453,6 +461,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         });
     });
     */
+    
+    if (![wTools objectExists: musicArray]) {
+        return;
+    }
+    
     for (NSMutableDictionary *d in musicArray) {
         if ([d[@"selected"] boolValue]) {
             [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
@@ -465,26 +478,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     for (NSDictionary *d in musicArray) {
         NSLog(@"selected: %@", d[@"selected"]);
     }
-    
     [self.collectionView reloadData];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(UICollectionView *)collectionView
+didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didDeselectItemAtIndexPath");
-    
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     cell.layer.cornerRadius = 8;
     cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
-    
-    //self.selectedIndexPath = nil;
 }
 
 #pragma mark - AVPlayer Section
-- (void)avPlayerSetUp: (NSString *)audioData
-{
+- (void)avPlayerSetUp: (NSString *)audioData {
     NSLog(@"avPlayerSetUp");
-    
     //註冊audioInterrupted
     [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: nil];
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -512,8 +519,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
  If so, sets up an AVPlayerItem and an AVPlayer to play the asset.
  */
 
-- (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys
-{
+- (void)prepareToPlayAsset:(AVURLAsset *)asset
+                  withKeys:(NSArray *)requestedKeys {
     NSLog(@"");
     NSLog(@"prepareToPlayAsset");
     
@@ -620,8 +627,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 // From Apple API Reference
 // Informs the observing object when the value at the specified key path
 // relative to the observed object has changed
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     NSLog(@"");
     NSLog(@"observeValueForKeyPath");
     
@@ -694,16 +700,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
  **  3) the item did not become ready to play.
  ** ----------------------------------------------------------- */
 
--(void)assetFailedToPrepareForPlayback:(NSError *)error
-{
+-(void)assetFailedToPrepareForPlayback:(NSError *)error {
     NSLog(@"");
     NSLog(@"assetFailedToPrepareForPlayback");
 }
 
 #pragma mark - IBAction Methods
 
-- (void)removeObserverForAVPlayerItem
-{
+- (void)removeObserverForAVPlayerItem {
     if (self.avPlayerItem) {
         NSLog(@"self.avPlayerItem Existed");
         NSLog(@"self.avPlayerItem removeObserver: self forKeyPath: status");
@@ -790,8 +794,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomAlert: (NSString *)msg
-{
+- (void)showCustomAlert: (NSString *)msg {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     //[alertView setContainerView: [self createContainerView: msg]];
     [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -809,7 +812,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        
         [alertView close];
         
         if (buttonIndex == 0) {
@@ -822,8 +824,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [alertView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg
-{
+- (UIView *)createContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -899,8 +900,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 #pragma mark -
 
-- (void)changeAudioMode
-{
+- (void)changeAudioMode {
     NSLog(@"");
     NSLog(@"");
     NSLog(@"changeAudioMode");
@@ -944,12 +944,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [self callAlbumSettings: jsonStr];
 }
+
 - (void)processCallAlbumSettings:(NSDictionary *)dic {
-    
     //if ([dic[@"result"]boolValue]) {
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
-        
-        
         if ([self.audioMode isEqualToString: oldAudioMode]) {
             isAudioModeChanged = NO;
         } else {
@@ -965,12 +963,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self dismissViewControllerAnimated: YES completion: nil];
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: msg];
     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
         NSLog(@"TOKEN_ERROR");
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -989,8 +986,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                         repeats: NO];
     }
 }
-- (void)callAlbumSettings: (NSString *)jsonStr
-{
+
+- (void)callAlbumSettings: (NSString *)jsonStr {
     NSLog(@"callAlbumSettings");
     @try {
         [wTools ShowMBProgressHUD];
@@ -1018,7 +1015,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"respone from albumsettings: %@", response);
                 
@@ -1026,14 +1022,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"SetupMusicViewController");
                     NSLog(@"callAlbumSettings");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"albumsettings"
                                          jsonStr: jsonStr];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     [wself processCallAlbumSettings:dic];
                 }
             }
@@ -1046,94 +1040,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
-    }];
-    
+    }];    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       jsonStr: (NSString *)jsonStr
-{
+                       jsonStr: (NSString *)jsonStr {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1154,7 +1070,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -1173,8 +1088,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
