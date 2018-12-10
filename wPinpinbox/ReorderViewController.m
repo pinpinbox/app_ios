@@ -56,11 +56,13 @@ static NSString * const reuseIdentifier = @"Cell";
     //NSLog(@"self.imageArray: %@", self.imageArray);
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     self.labelArray = [[NSMutableArray alloc] init];
+    
+    if (![wTools objectExists: self.imageArray]) {
+        return;
+    }
     
     for (int i = 0; i < self.imageArray.count; i++) {
         if (i == 0) {
@@ -99,8 +101,7 @@ static NSString * const reuseIdentifier = @"Cell";
     }
 }
 
-- (void)handleLongGesture: (UILongPressGestureRecognizer *)gestureRecognizer
-{
+- (void)handleLongGesture:(UILongPressGestureRecognizer *)gestureRecognizer {
     //NSLog(@"handleLongPress");
     
     switch (gestureRecognizer.state) {
@@ -152,8 +153,7 @@ static NSString * const reuseIdentifier = @"Cell";
     // Dispose of any resources that can be recreated.
 }
 
-- (void)callBackButtonFunction
-{
+- (void)callBackButtonFunction {
     [self back: nil];
 }
 
@@ -178,14 +178,16 @@ static NSString * const reuseIdentifier = @"Cell";
             [self.delegate reorderViewControllerDisappear: self imageArray: self.imageArray];
         }
     });
-    
     [self callSortPhotoOfDiy];
     [self dismissViewControllerAnimated: YES completion: nil];
 }
 
-- (void)callSortPhotoOfDiy
-{
+- (void)callSortPhotoOfDiy {
     NSMutableString *photoIdStr = [NSMutableString string];
+    
+    if (![wTools objectExists: self.imageArray]) {
+        return;
+    }
     
     for (int i = 0; i < self.imageArray.count; i++) {
         if (i + 1 != self.imageArray.count) {
@@ -204,7 +206,6 @@ static NSString * const reuseIdentifier = @"Cell";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI sortPhotoOfDiy: [wTools getUserID]
@@ -229,7 +230,6 @@ static NSString * const reuseIdentifier = @"Cell";
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ReorderViewController");
                     NSLog(@"callSortPhotoOfDiy");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"sortPhotoOfDiy"];
                 } else {
@@ -238,14 +238,16 @@ static NSString * const reuseIdentifier = @"Cell";
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result is successful");
-                        
-                        
                         if ([self.delegate respondsToSelector: @selector(reorderViewControllerDisappearAfterCalling:)]) {
                             [self.delegate reorderViewControllerDisappearAfterCalling: self];
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -255,24 +257,18 @@ static NSString * const reuseIdentifier = @"Cell";
     });
 }
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
-    //NSLog(@"numberOfItemsInSection");
-    
+     numberOfItemsInSection:(NSInteger)section {
     return _imageArray.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForItemAtIndexPath");
-    
     static NSString *identifier = @"Cell";
     
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: identifier
@@ -314,8 +310,7 @@ static NSString * const reuseIdentifier = @"Cell";
 
 - (void)collectionView:(UICollectionView *)collectionView
    moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath
-           toIndexPath:(NSIndexPath *)destinationIndexPath
-{
+           toIndexPath:(NSIndexPath *)destinationIndexPath {
     NSLog(@"moveItemAtIndexPath");
     
     //NSIndexPath *selectedIndexPath = [self.collectionView indexPathForItemAtPoint: [_longPress locationInView: self.collectionView]];
@@ -348,23 +343,20 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
     NSLog(@"indexPath.item: %ld", (long)indexPath.item);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didHighlightItemAtIndexPath");
     NSLog(@"indexPath.item: %ld", (long)indexPath.item);
 }
 
 - (NSIndexPath *)collectionView:(UICollectionView *)collectionView
 targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)originalIndexPath
-            toProposedIndexPath:(NSIndexPath *)proposedIndexPath
-{
+            toProposedIndexPath:(NSIndexPath *)proposedIndexPath {
     // Detect every single cell movement
     NSLog(@"targetIndexPathForMoveFromItemAtIndexPath");
     
@@ -466,94 +458,17 @@ targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)originalIndexPath
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
     
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-{
+                  protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -574,7 +489,6 @@ targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)originalIndexPath
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -589,8 +503,7 @@ targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)originalIndexPath
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
