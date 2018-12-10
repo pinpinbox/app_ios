@@ -31,9 +31,7 @@
 #import "UIViewController+ErrorAlert.h"
 #import "CustomIOSAlertView.h"
 
-@interface TemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,PhotosViewDelegate, UIGestureRecognizerDelegate>
-
-{
+@interface TemplateViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,PhotosViewDelegate, UIGestureRecognizerDelegate> {
     __weak IBOutlet UICollectionView *mycollection;
     __weak IBOutlet UIButton *conbtn;
     
@@ -63,8 +61,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"TemplateViewController");
-    
+    NSLog(@"TemplateViewController");    
     NSLog(@"self.choice: %@", self.choice);
     NSLog(@"self.templateid: %@", self.templateid);
     
@@ -81,9 +78,9 @@
 //    NSString* const CreativeSDKClientId = @"9acbf5b342a8419584a67069e305fa39";
 //    NSString* const CreativeSDKClientSecret = @"b4d92522-49ac-4a69-9ffe-eac1f494c6fc";
     
-    
     [self getAlbumOfDiy];
 }
+
 - (void)processAlbumDiyResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         _templatelist = [dic[@"data"][@"frame"]mutableCopy];
@@ -92,6 +89,10 @@
         NSDictionary *data = _templatelist[selectItem];
         //NSLog(@"data: %@", data);
         NSArray *frame = data[@"blank"];
+        
+        if (![wTools objectExists: frame]) {
+            return;
+        }
         
         for (int i = 0; i < frame.count; i++) {
             NSMutableDictionary *dic = [NSMutableDictionary new];
@@ -114,15 +115,19 @@
         [self getCooperation];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
         [wTools HideMBProgressHUD];
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         [wTools HideMBProgressHUD];
     }
 }
-- (void)getAlbumOfDiy
-{
+
+- (void)getAlbumOfDiy {
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -156,15 +161,11 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"TemplateViewController");
                     NSLog(@"getAlbumOfDiy");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getalbumofdiy"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
-                    
                     [wself processAlbumDiyResult:dic];
                 }
             }
@@ -172,10 +173,8 @@
     });
 }
 
-- (void)getCooperation
-{
+- (void)getCooperation {
     NSLog(@"getCooperation");
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -185,7 +184,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSMutableDictionary *data = [NSMutableDictionary new];
     [data setObject: _albumid forKey: @"type_id"];
     [data setObject: [wTools getUserID] forKey: @"user_id"];
@@ -206,27 +204,25 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"TemplateViewController");
                     NSLog(@"getCooperation");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcooperation"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
-                    
                     if ([dic[@"result"] boolValue]) {
                         wself.identity = dic[@"data"];
                     } else {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     }
                 }
             }
@@ -236,10 +232,8 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     CGSize iOSDeviceScreenSize = [[UIScreen mainScreen] bounds].size;
-    
     //判斷3.5吋或4吋螢幕以載入不同storyboard
-    if (iOSDeviceScreenSize.height == 480)
-    {
+    if (iOSDeviceScreenSize.height == 480) {
         CGPoint con=_ShowView.center;
         float s=0.8f;
         _ShowView.frame=CGRectMake(_ShowView.frame.origin.x, _ShowView.frame.origin.y, 258*s, 387*s);
@@ -253,8 +247,6 @@
 }
 
 - (IBAction)back:(id)sender {
-    //[self.navigationController popViewControllerAnimated:YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
@@ -265,7 +257,10 @@
     
     NSUInteger imageCount = 0;
     
-    NSLog(@"");
+    if (![wTools objectExists: _ShowView.subviews]) {
+        return;
+    }
+    
     for (UIView *v in _ShowView.subviews) {
         NSLog(@"v: %@", v);
         
@@ -277,7 +272,6 @@
     
     if (imageCount < 2) {
         NSLog(@"imageCount < 2");
-        
         isSwap = NO;
         
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -298,7 +292,6 @@
     if (isSwap) {
         self.backBtn.hidden = YES;
         self.saveBtn.hidden = YES;
-        
         [self.swapBtn setImage: [UIImage imageNamed: @"ic200_template_photo_change_dark"] forState: UIControlStateNormal];
         
         UIView *msgView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.dataCollectionView.bounds.size.width, self.dataCollectionView.bounds.size.height)];
@@ -324,7 +317,6 @@
         
         for (UIView *v in _ShowView.subviews) {
             NSLog(@"\n v: %@", v);
-            
             if ([v isKindOfClass: [O_drag class]]) {
                 v.userInteractionEnabled = NO;
             }
@@ -332,8 +324,11 @@
     } else {
         self.backBtn.hidden = NO;
         self.saveBtn.hidden = NO;
-        
         [self.swapBtn setImage: [UIImage imageNamed: @"ic200_template_photo_change_light"] forState: UIControlStateNormal];
+        
+        if (![wTools objectExists: self.dataCollectionView.subviews]) {
+            return;
+        }
         
         for (UIView *v in self.dataCollectionView.subviews) {
             if ([v.accessibilityIdentifier isEqualToString: @"msgView"]) {
@@ -341,6 +336,10 @@
             }
         }
         selectImgCount = 0;
+        
+        if (![wTools objectExists: _ShowView.subviews]) {
+            return;
+        }
         
         for (UIView *v in _ShowView.subviews) {
             NSLog(@"");
@@ -375,9 +374,7 @@
                 
                 if (withinBounds) {
                     NSLog(@"withinBounds");
-                    
                     NSLog(@"v.subviews: %@", v.subviews);
-                    
                     NSLog(@"v.accessibilityIdentifier: %@", v.accessibilityIdentifier);
                     
                     if ([v.accessibilityIdentifier isEqualToString: @"selected"]) {
@@ -414,9 +411,7 @@
                 
                 if (withinBounds) {
                     NSLog(@"withinBounds");
-                    
                     NSLog(@"v.subviews: %@", v.subviews);
-                    
                     NSLog(@"v.accessibilityIdentifier: %@", v.accessibilityIdentifier);
                     
                     if ([v.accessibilityIdentifier isEqualToString: @"selected"]) {
@@ -492,7 +487,6 @@
                             
                             if ([subView isKindOfClass: [UIImageView class]]) {
                                 UIImageView *imgV = (UIImageView *)subView;
-                                
                                 NSLog(@"img1: %@", img1);
                                 NSLog(@"img2: %@", img2);
                                 
@@ -540,32 +534,24 @@
         }];
         return;
     }
-    
-    //CooperationViewController *copv=[[CooperationViewController alloc]initWithNibName:@"CooperationViewController" bundle:nil];
     CooperationViewController *copv = [[UIStoryboard storyboardWithName: @"Home" bundle: nil] instantiateViewControllerWithIdentifier: @"CooperationViewController"];
     copv.albumid=_albumid;
     copv.identity=_identity;
-    //[self.navigationController pushViewController:copv animated:YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: copv animated: YES];
 }
 
-- (void)checkTemplatePhoto
-{
+- (void)checkTemplatePhoto {
     templatePhotoExist = YES;
     
     for (int i = 0; i < imagearr.count; i++) {
-        
         NSMutableDictionary *data = imagearr[i];
-        
         NSLog(@"imagearr count: %lu", (unsigned long)imagearr.count);
         
         if (data[@"image"]) {
             NSLog(@"image exists");
         } else {
             NSLog(@"image does not exist");
-            
             templatePhotoExist = NO;
         }
     }
@@ -584,7 +570,6 @@
             templatePhotoNumber++;
         }
     }
-    
     NSLog(@"templatePhotoNumber: %lu", (unsigned long)templatePhotoNumber);
     NSLog(@"imagearr count: %lu", (unsigned long)imagearr.count);
     
@@ -593,53 +578,46 @@
     
     if (templatePhotoNumber == imagearr.count) {
         NSLog(@"All the fields are full with photo");
-        
         [self upphoto];
     } else {
         NSLog(@"There is at least one empty photo field");
-        
         UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: @"還有欄位沒放相片" preferredStyle: UIAlertControllerStyleAlert];
         UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
-        
         [alert addAction: okBtn];
         [self presentViewController: alert animated: YES completion: nil];
     }
 }
 
-#pragma mark -
-#pragma mark UICollectionViewDataSource
-
--(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+#pragma mark - UICollectionViewDataSource
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView
-    numberOfItemsInSection:(NSInteger)section
-{
+    numberOfItemsInSection:(NSInteger)section {
     return _templatelist.count;
 }
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
-    
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
+           viewForSupplementaryElementOfKind:(NSString *)kind
+                                 atIndexPath:(NSIndexPath *)indexPath{
     UICollectionReusableView *reusableview = nil;
     
     //photocell
     UICollectionReusableView *footerview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"photocell" forIndexPath:indexPath];
     reusableview=footerview;
     //        return myCell;
-    
     return reusableview;
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                 cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+                 cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *myCell = [collectionView
                                     dequeueReusableCellWithReuseIdentifier:@"FastV"
                                     forIndexPath:indexPath];
     AsyncImageView *imagev=(AsyncImageView *)[myCell viewWithTag:2222];
     imagev.showActivityIndicator = NO;
-    imagev.image=nil;
+    imagev.image = nil;
     imagev.contentMode = UIViewContentModeScaleAspectFill;
     [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: imagev];
     
@@ -648,11 +626,10 @@
     } else {
         imagev.imageURL=[NSURL URLWithString:_templatelist[indexPath.row][@"image_url_thumbnail"]];
     }
-    
     [[imagev layer]setMasksToBounds:YES];
     
-    UILabel *lab=(UILabel *)[myCell viewWithTag:1111];
-    lab.text=@"";
+    UILabel *lab = (UILabel *)[myCell viewWithTag:1111];
+    lab.text = @"";
     
     // Set up the Selected Cell
     if (indexPath.item == selectItem) {
@@ -662,13 +639,12 @@
         myCell.layer.borderWidth = 0;
         myCell.layer.borderColor = [UIColor clearColor].CGColor;
     }
-    
     return myCell;
 }
 
 #pragma mark - UICollectionViewDelegate Methods
-- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(UICollectionView *)collectionView
+didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     //選擇
     BOOL hasImage = NO;
     
@@ -683,38 +659,38 @@
     if (hasImage) {
         [self showCustomForChangeTemplate: @"更換版型樣式?" indexPathRow: indexPath.row];
     } else {
-        selectItem=indexPath.row;
-        imagearr=[NSMutableArray new];
+        selectItem = indexPath.row;
+        imagearr = [NSMutableArray new];
         
-        NSDictionary *data=_templatelist[selectItem];
+        NSDictionary *data = _templatelist[selectItem];
+        NSArray *frame = data[@"blank"];
         
-        //NSLog(@"data: %@", data);
-        
-        NSArray *frame=data[@"blank"];
-        
-        for (int i=0; i<frame.count; i++) {
-            NSMutableDictionary *dic=[NSMutableDictionary new];
+        for (int i = 0; i < frame.count; i++) {
+            NSMutableDictionary *dic = [NSMutableDictionary new];
             [dic setObject:frame[i] forKey:@"frame"];
             [imagearr addObject:dic];
         }
-        
         [self showimageview];
-        
         [self.dataCollectionView reloadData];
     }
 }
 
 #pragma mark - UICollectionViewFlowLayoutDelegate Methods
--(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+-(CGSize)collectionView:(UICollectionView *)collectionView
+                 layout:(UICollectionViewLayout *)collectionViewLayout
+ sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake(54, 94);
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(UICollectionView *)collectionView
+                   layout:(UICollectionViewLayout *)collectionViewLayout
+minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 1.f;
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(UICollectionView *)collectionView
+                   layout:(UICollectionViewLayout *)collectionViewLayout
+minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     return 5;
 }
 
@@ -725,11 +701,14 @@
     for (UIView *v in [_ShowView subviews]) {
         [v removeFromSuperview];
     }
-    
     //1336/2004
     
     float mag =_ShowView.bounds.size.width/1336;
-    int i=0;
+    int i = 0;
+    
+    if (![wTools objectExists: imagearr]) {
+        return;
+    }
     
     for (NSDictionary *dic in imagearr) {
         NSDictionary *f=dic[@"frame"];
@@ -767,10 +746,8 @@
             [btn addTarget:self action:@selector(addimage:) forControlEvents:UIControlEventTouchUpInside];
             [v addSubview:btn];
         }
-        
         i++;
     }
-    
     AsyncImageView *imagev=[[AsyncImageView alloc]initWithFrame:CGRectMake(0, 0, _ShowView.frame.size.width, _ShowView.frame.size.height)];
     imagev.showActivityIndicator = NO;
     [_ShowView addSubview:imagev];
@@ -785,18 +762,14 @@
 -(void)addimage:(UIButton *)sender{
     NSLog(@"11");
     editimage=sender.tag;
-    
     NSLog(@"editimage: %ld", (long)editimage);
     
     PhotosViewController *pvc=[[UIStoryboard storyboardWithName:@"PhotosVC" bundle:nil]instantiateViewControllerWithIdentifier:@"PhotosViewController2"];
-    //PhotosViewController *pvc=[[UIStoryboard storyboardWithName:@"Home" bundle:nil]instantiateViewControllerWithIdentifier:@"PhotosViewController2"];
     pvc.selectrow=1;
     pvc.phototype=@"1";
     pvc.delegate=self;
     pvc.choice = _choice;
     pvc.fromVC = @"TemplateViewController";
-    //[self.navigationController pushViewController:pvc animated:YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: pvc animated: YES];
 }
@@ -804,7 +777,9 @@
 #pragma mark - PhotoViewControllerDelegate Methods
 //delegate
 //-(void)imageCropViewController:(PhotosViewController *)controller ImageArr:(NSArray *)Images{
-- (void)imageCropViewController:(PhotosViewController *)controller ImageArr:(NSArray *)Images compression:(CGFloat)compressionQuality {
+- (void)imageCropViewController:(PhotosViewController *)controller
+                       ImageArr:(NSArray *)Images
+                    compression:(CGFloat)compressionQuality {
     
     imgForCancel = Images[0];
     [self showCustomAlertForEffect: @"要使用特效編輯嗎?" ImageArr: Images];
@@ -955,11 +930,16 @@
         }
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 -(void)upphoto {
     NSLog(@"upPhoto");
     NSLog(@"imagearr: %@", imagearr);
@@ -974,10 +954,12 @@
         return;
     }
     
+    if (![wTools objectExists: imagearr]) {
+        return;
+    }
+    
     for (int i = 0; i < imagearr.count; i++) {
-        
         NSMutableDictionary *data = imagearr[i];
-        
         NSLog(@"imagearr count: %lu", (unsigned long)imagearr.count);
         
         if (data[@"image"]) {
@@ -1088,6 +1070,10 @@
     UIGraphicsEndImageContext();
     
     
+    if (![wTools objectExists: _ShowView.subviews]) {
+        return;
+    }
+    
     for (UIButton *btn in _ShowView.subviews) {
         if ([btn isKindOfClass: [UIButton class]]) {
             btn.hidden = YES;
@@ -1121,7 +1107,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from insertphotoofdiy: %@", response);
                 
@@ -1129,13 +1114,11 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"TemplateViewController");
                     NSLog(@"upphoto");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"insertphotoofdiy"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     [wself processUploadPhotoResult:dic];
                 }
             }
@@ -1159,8 +1142,8 @@
 }
 
 #pragma mark - Custom AlertView
-- (void)showCustomForDeletingImage: (NSString *)msg btn:(UIButton *)sender
-{
+- (void)showCustomForDeletingImage:(NSString *)msg
+                               btn:(UIButton *)sender {
     CustomIOSAlertView *alertViewForDeletingImage = [[CustomIOSAlertView alloc] init];
     //[alertViewForDeletingImage setContainerView: [self createDeletingImageContainerView: msg]];
     [alertViewForDeletingImage setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin"];
@@ -1220,8 +1203,7 @@
     [alertViewForDeletingImage show];
 }
 
-- (UIView *)createDeletingImageContainerView: (NSString *)msg
-{
+- (UIView *)createDeletingImageContainerView:(NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -1295,8 +1277,8 @@
     return contentView;
 }
 
-- (void)showCustomForChangeTemplate: (NSString *)msg indexPathRow:(NSInteger)indexPathRow
-{
+- (void)showCustomForChangeTemplate:(NSString *)msg
+                       indexPathRow:(NSInteger)indexPathRow {
     CustomIOSAlertView *alertViewForTemplate = [[CustomIOSAlertView alloc] init];
     //[alertViewForTemplate setContainerView: [self createTemplateContainerView: msg]];
     [alertViewForTemplate setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin"];
@@ -1326,6 +1308,7 @@
     [alertViewForTemplate setUseMotionEffects: YES];
     [alertViewForTemplate show];
 }
+
 - (void)processChangeTemplate:(NSInteger)indexPathRow {
     selectItem = indexPathRow;
     imagearr = [NSMutableArray new];
@@ -1333,19 +1316,21 @@
     NSDictionary *data = _templatelist[selectItem];
     NSArray *frame = data[@"blank"];
     
+    if (![wTools objectExists: frame]) {
+        return;
+    }
+    
     for (int i = 0; i < frame.count; i++) {
         NSMutableDictionary *dic = [NSMutableDictionary new];
         [dic setObject: frame[i] forKey: @"frame"];
         [imagearr addObject: dic];
     }
-    
     [self showimageview];
     [self.dataCollectionView reloadData];
     
 }
 
-- (UIView *)createTemplateContainerView: (NSString *)msg
-{
+- (UIView *)createTemplateContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -1419,8 +1404,8 @@
     return contentView;
 }
 
-- (void)showCustomAlertForEffect: (NSString *)msg ImageArr:(NSArray *)Images
-{
+- (void)showCustomAlertForEffect:(NSString *)msg
+                        ImageArr:(NSArray *)Images {
     CustomIOSAlertView *alertViewForEffect = [[CustomIOSAlertView alloc] init];
     [alertViewForEffect setContainerView: [self createEffectContainerView: msg]];
     
@@ -1451,8 +1436,7 @@
     [alertViewForEffect show];
 }
 
-- (UIView *)createEffectContainerView: (NSString *)msg
-{
+- (UIView *)createEffectContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -1527,94 +1511,16 @@
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
+}
 
-}
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-{
+                  protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1635,7 +1541,6 @@
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -1654,8 +1559,7 @@
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView:(NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
