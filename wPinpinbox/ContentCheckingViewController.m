@@ -1674,7 +1674,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSString *path = self.photoArray[page][@"video_target"];
         ThirdPartyVideoPlayerViewController *v =  [[UIStoryboard storyboardWithName: @"3rdPartyVideoPlayerVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ThirdPartyVideoPlayer"];
         
-        self.isPresentingOrPushingVC = YES;
+        //self.isPresentingOrPushingVC = YES;
         
         [self updatePageBeforePresentingOrPushing];
         [self presentViewController:v animated:YES completion:^{
@@ -1708,7 +1708,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSString *path = self.photoArray[page][@"video_target"];
         ThirdPartyVideoPlayerViewController *v =  [[UIStoryboard storyboardWithName: @"3rdPartyVideoPlayerVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ThirdPartyVideoPlayer"];
         
-        self.isPresentingOrPushingVC = YES;
+        //self.isPresentingOrPushingVC = YES;
         
         [self updatePageBeforePresentingOrPushing];
         [self presentViewController:v animated:YES completion:^{
