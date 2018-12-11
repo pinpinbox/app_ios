@@ -1065,8 +1065,34 @@ sourceController:(UIViewController *)source
 }
 - (void)processHotList:(NSDictionary *)dict {
     
-    //  get new joined list
-    [self showNewJoinUsersList];
+    if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]) {
+        NSArray *users = dict[@"data"];
+        if (users && users.count ) {
+            if (!self.hotListArray)
+                self.hotListArray = [NSMutableArray array];
+            
+            
+            NSIndexPath *p = [NSIndexPath indexPathForRow:0 inSection:1];
+            RecommandListViewCell *cell = (RecommandListViewCell *)[self.recommandListView cellForRowAtIndexPath:p];
+            UICollectionView *c = cell.recommandListView;
+            
+            NSUInteger count =  self.hotListArray.count;
+            NSMutableArray *index = [NSMutableArray array];
+            
+            [self.hotListArray addObjectsFromArray:users];
+            
+            if (count <= 0) {
+                [self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationMiddle];
+                //  get new joined list
+                [self showNewJoinUsersList];
+            } else {
+                for (NSUInteger i = 0;i < users.count; i++ ){
+                    [index addObject:[NSIndexPath indexPathForItem:i+count inSection:0]];
+                }
+                [c insertItemsAtIndexPaths:index];
+            }
+            
+            
             //[self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
             
             
@@ -2086,27 +2112,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         NSDictionary *data = pictures[indexPath.row];
         NSString *albumId = [data[@"album"][@"album_id"] stringValue];
-        
-        NSNumber *coverWidth = data[@"album"][@"cover_width"];
-        NSNumber *coverHeight = data[@"album"][@"cover_height"];
-        
-        NSInteger tempWidth = [coverWidth integerValue];
-        NSInteger tempHeight = [coverHeight integerValue];
-        
-        CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
-        NSLog(@"screenWidth: %f", screenWidth);
-        CGFloat headerImageHeight = 0;
-        
-        if (tempWidth > tempHeight) {
-            headerImageHeight = (2 * screenWidth) / 3;
-        } else if (tempWidth < tempHeight) {
-            headerImageHeight = (4 * screenWidth) / 3;
-        } else if (tempWidth == tempHeight) {
-            headerImageHeight = screenWidth;
-        }
-        NSLog(@"headerImageHeight: %f", headerImageHeight);
-        
-        //[self ToRetrievealbumpViewControlleralbumid: albumId];
         
         [self toAlbumDetailVC: albumId];
     } else if (collectionView.tag == 2) {
