@@ -529,6 +529,15 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
     NSLog(@"");
     NSLog(@"");
     NSLog(@"openURL sourceApplication");
+    
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    NSString *tokenStr = [userPrefs objectForKey: @"token"];
+    NSString *idStr = [userPrefs objectForKey: @"id"];
+    
+    if ([wTools objectExists: tokenStr] && [wTools objectExists: idStr]) {
+    } else {
+        return NO;
+    }
     [self handleRouting: url];
     
     NSLog(@"Calling Application Bundle ID: %@", sourceApplication);
@@ -765,6 +774,7 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [self popToMyTabBarVC: appDelegate];
             [appDelegate.myNav pushViewController: aDVC animated: NO];
+            
         }
         if (pairs[@"user_id"] != nil) {
             NSLog(@"user_id is not nil");
