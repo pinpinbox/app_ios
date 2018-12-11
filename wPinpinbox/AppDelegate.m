@@ -52,6 +52,8 @@
 
 
 @interface AppDelegate ()
+@property (nonatomic, strong) NSDictionary *tempLaunchOptions;
+@property (nonatomic, strong) UIApplication *tempApp;
 @property (nonatomic, strong) NSURL *launchedURL;
 @property (nonatomic) BOOL isInBackground;
 @property (nonatomic, assign) CGRect currentStatusBarFrame;
@@ -127,9 +129,12 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [Flurry startSession:@"GSPHT8B4KV8F89VHQ6D8"
       withSessionBuilder:[[[FlurrySessionBuilder new]
                            withCrashReporting:YES]
-                          withLogLevel:FlurryLogLevelDebug]];        
-
-    if (launchOptions != nil ) {
+                          withLogLevel:FlurryLogLevelDebug]];
+    
+    if (launchOptions) {
+        self.tempApp = application;
+        self.tempLaunchOptions = launchOptions;
+        
         NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         NSLog(@"remoteN %@",remoteN);
 
@@ -153,16 +158,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
             }
         }
     }
-//    if (launchOptions != nil ) {
-//        NSDictionary *remoteN = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-//        NSLog(@"remoteN %@",remoteN);
-//
-//        if (remoteN) {
-//            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//            [defaults setObject: remoteN forKey: @"launchNotification"];
-////            [defaults synchronize];
-//        }
-//    }
     
 #pragma mark  Google Analytics setup
     GAI *gai = [GAI sharedInstance];
@@ -183,45 +178,14 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                                      withAppVersion: version];
     
     [builder withShowErrorInLog: YES];
-    
     //[Flurry startSession: w3FlurryAPIKey withSessionBuilder:builder];
     [Flurry startSession: wwwFlurryAPIKey withSessionBuilder: builder];
     
-//    VersionUpdate *vu = [[VersionUpdate alloc] initWithFrame: self.window.bounds];
-//    [vu checkVersion];
-    
-    // Collect Log
-    /*
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *fileName =[NSString stringWithFormat:@"%@.log",[NSDate date]];
-    NSString *logFilePath = [documentsDirectory stringByAppendingPathComponent:fileName];
-    freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding],"a+",stderr);
-    */
-    
-    //[self initApp];
-    
-    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment: UIOffsetMake(-60, -60) forBarMetrics: UIBarMetricsDefault];            
-    
-    // Status Bar Setting
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0f) {
-        NSLog(@"System Version is >= 7.0f");
-        
-        /*
-        UIView *view = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 320, 20)];
-        view.backgroundColor = [UIColor colorWithRed: 32.0/255.0 green: 191.0/255.0 blue: 193.0/255.0 alpha: 1.0];
-        [self.window.rootViewController.view addSubview: view];
-         */
-    }
-    
+    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment: UIOffsetMake(-60, -60) forBarMetrics: UIBarMetricsDefault];
     self.isInBackground = NO;
-    
-    //[[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithObjects:@"en", nil] forKey:@"AppleLanguages"];
-    
     // Override point for customization after application launch.
     [[FBSDKApplicationDelegate sharedInstance] application:application
                              didFinishLaunchingWithOptions:launchOptions];
-    
     
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
@@ -230,19 +194,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
             [userPrefs setObject:[[userPrefs objectForKey:@"id"] stringValue] forKey:@"id"];
             [userPrefs synchronize];
         }
-    }        
-    
-    /*
-    CGSize iOSDeviceScreenSize = [[UIScreen mainScreen] bounds].size;
-    //判斷3.5吋或4吋螢幕以載入不同storyboard
-    if (iOSDeviceScreenSize.height == 480) {
-        UIStoryboard *iPhone35Storyboard = [UIStoryboard storyboardWithName:@"Main35" bundle:nil];
-        UIViewController *initialViewController = [iPhone35Storyboard instantiateInitialViewController];
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        self.window.rootViewController  = initialViewController;
-        [self.window makeKeyAndVisible];
     }
-     */
     
     NSLog(@"launchOptions: %@", launchOptions);
     
@@ -330,7 +282,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 
 #pragma mark - Location Method
--(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+-(void)locationManager:(CLLocationManager *)manager
+    didUpdateLocations:(NSArray *)locations{
     NSLog(@"didUpdateLocations");
     
     CLLocation *c =[locations objectAtIndex:0];
@@ -342,10 +295,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 
 #pragma mark -
-
 - (void)applicationWillResignActive:(UIApplication *)application {
     NSLog(@"applicationWillResignActive");
-    
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     self.isInBackground = YES;
@@ -368,10 +319,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     NSLog(@"applicationWillEnterForeground");
-    
-
     [self checkBadge];
-    
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     self.isInBackground = YES;
 }
@@ -379,9 +327,19 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"AppDelegate");
     NSLog(@"applicationDidBecomeActive");
-    
     [FBSDKAppEvents activateApp];
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+//    if (self.launchedURL) {
+//        NSString *source = [self.tempLaunchOptions objectForKey:UIApplicationOpenURLOptionsSourceApplicationKey];
+//        id annotation = [self.tempLaunchOptions objectForKey:UIApplicationOpenURLOptionsAnnotationKey];
+//        [self processOpenURL: application
+//                         url: self.launchedURL
+//           sourceApplication: source
+//                  annotation: annotation];
+//
+//        self.launchedURL = nil;
+//    }
     
     if (self.isInBackground) {
         // The method below can open the app through urlScheme while in the background
@@ -403,7 +361,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // Save changes in the application's managed object context before the application terminates
     [self saveContext];
-    
 }
 
 - (void)saveContext {
@@ -420,11 +377,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 
 #pragma mark - Core Data stack
-
 // Returns the managed object context for the application.
 // If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
-- (NSManagedObjectContext *)managedObjectContext
-{
+- (NSManagedObjectContext *)managedObjectContext {
     if (_managedObjectContext != nil) {
         return _managedObjectContext;
     }
@@ -443,8 +398,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.
-- (NSManagedObjectModel *)managedObjectModel
-{
+- (NSManagedObjectModel *)managedObjectModel {
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
@@ -455,8 +409,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 // Returns the persistent store coordinator for the application.
 // If the coordinator doesn't already exist, it is created and the application's store added to it.
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
-{
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
@@ -492,30 +445,38 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
-    
     return _persistentStoreCoordinator;
 }
 
 #pragma mark - Application's Documents directory
-
 // Returns the URL to the application's Documents directory.
-- (NSURL *)applicationDocumentsDirectory
-{
+- (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
-
 
 #pragma mark - Backgrounding Methods -
 - (void)application:(UIApplication *)application
 handleEventsForBackgroundURLSession:(NSString *)identifier
-  completionHandler:(void (^)(void))completionHandler
-{
+  completionHandler:(void (^)(void))completionHandler {
     NSLog(@"handleEventsForBackgroundURLSession");
-    
     self.backgroundSessionCompletionHandler = completionHandler;
 }
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+
+    if (!self.isInBackground) {
+        return NO;
+    }
+    
+//    NSURL *openUrl = url;
+//    if (!openUrl) {
+//        return NO;
+//    }
+    
     NSString *source = [options objectForKey:UIApplicationOpenURLOptionsSourceApplicationKey];
+    
     if (source) {
         id annotation = [options objectForKey:UIApplicationOpenURLOptionsAnnotationKey];
         return [self processOpenURL:app url:url sourceApplication:source annotation:annotation];
@@ -527,13 +488,12 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
     if ([urlString hasPrefix: @"pinpinbox://"]) {
         returnValue = YES;
     }
-    
     return returnValue;
 }
+
 #ifndef __IPHONE_10_0
 - (BOOL)application:(UIApplication *)application
-      handleOpenURL:(NSURL *)url
-{
+      handleOpenURL:(NSURL *)url {
     NSLog(@"handleOpenURL");
     
     BOOL returnValue = NO;
@@ -542,10 +502,6 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
     if ([urlString hasPrefix: @"pinpinbox://"]) {
         returnValue = YES;
     }
-    
-//    homeViewController *hVC = [[homeViewController alloc] init];
-//    hVC.urlString = url.absoluteString;
-    
     return returnValue;
 }
 
@@ -554,10 +510,18 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-    
+   
+    if (!self.isInBackground) {
+        return NO;
+    }
+//    NSURL *openUrl = url;
+//    if (!openUrl) {
+//        return NO;
+//    }
     return [self processOpenURL:application url:url sourceApplication:sourceApplication annotation:annotation];
 }
 #endif
+
 - (BOOL)processOpenURL:(UIApplication *)application
                    url:(NSURL *)url
      sourceApplication:(NSString *)sourceApplication
@@ -634,15 +598,11 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
             
             for (NSString *queryPair in queryPairs) {
                 NSArray *bits = [queryPair componentsSeparatedByString: @"="];
-                
                 NSLog(@"bits: %@", bits);
                 
                 if ([bits count] != 2) {
                     continue;
                 }
-                
-//                NSString *key = [[bits objectAtIndex: 0] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-//                NSString *value = [[bits objectAtIndex: 1] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
                 NSString *key = [[bits objectAtIndex:0] stringByRemovingPercentEncoding];
                 NSString *value = [[bits objectAtIndex:1] stringByRemovingPercentEncoding];
                 
@@ -653,13 +613,10 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
             
             if (pairs[@"identity"] != nil) {
                 NSLog(@"identity is not nil");
-                
                 if ([pairs[@"identity"] isEqualToString: @"admin"]) {
                     NSLog(@"identity is admin");
-                    
                     if (pairs[@"album_id"] != nil) {
                         NSLog(@"album_id is not nil");
-                        
                         if (pairs[@"template_id"] != nil) {
                             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                             [defaults setObject: @"diyContent" forKey: @"urlScheme"];
@@ -668,9 +625,7 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
                             
                             BOOL diyContentOn = YES;
                             [defaults setObject: [NSNumber numberWithBool: diyContentOn] forKey: @"diyContentOn"];
-                            
                             [defaults synchronize];
-                            
                             [self retrieveAlbum: pairs[@"album_id"]];
                             
                             /*
@@ -707,15 +662,11 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
             
             for (NSString *queryPair in queryPairs) {
                 NSArray *bits = [queryPair componentsSeparatedByString: @"="];
-                
                 NSLog(@"bits: %@", bits);
                 
                 if ([bits count] != 2) {
                     continue;
                 }
-                
-//                NSString *key = [[bits objectAtIndex: 0] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-//                NSString *value = [[bits objectAtIndex: 1] stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
                 NSString *key = [[bits objectAtIndex:0] stringByRemovingPercentEncoding];
                 NSString *value = [[bits objectAtIndex:1] stringByRemovingPercentEncoding];
                 
@@ -810,9 +761,9 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
             NSLog(@"album_id is not nil");
             //[wTools ToRetrievealbumpViewControlleralbumid: pairs[@"album_id"]];
             AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-            aDVC.albumId = pairs[@"album_id"];            
-            
+            aDVC.albumId = pairs[@"album_id"];
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [self popToMyTabBarVC: appDelegate];
             [appDelegate.myNav pushViewController: aDVC animated: NO];
         }
         if (pairs[@"user_id"] != nil) {
@@ -910,12 +861,9 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo0
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    
     NSDictionary *userInfo = [NSDictionary dictionaryWithDictionary:userInfo0];
-
     NSLog(@"didReceiveRemoteNotification fetchCompletionHandler");
     NSLog(@"接收到訊息: %@", [userInfo description]);
-
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
@@ -1194,10 +1142,8 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"appDelegate.myNav.viewControllers: %@", appDelegate.myNav.viewControllers);
 }
 
-
 - (void)application:(UIApplication *)application
-willChangeStatusBarFrame:(CGRect)newStatusBarFrame
-{
+willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
     NSLog(@"willChangeStatusBarFrame");
     self.currentStatusBarFrame = newStatusBarFrame;
     [[NSNotificationCenter defaultCenter] postNotificationName: @"Status Bar Frame Change" object: self userInfo: @{@"current status bar frame": [NSValue valueWithCGRect:newStatusBarFrame]}];
@@ -1492,7 +1438,6 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
-    
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
@@ -1502,90 +1447,33 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame
 //  handling app launched by remote notification
 - (void)checkInitialLaunchCase {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *remote = (NSDictionary *)[defaults  objectForKey: @"launchNotification"];
+    NSDictionary *remote = (NSDictionary *)[defaults objectForKey: @"launchNotification"];
     
-    
-    NSLog(@"checkInitialLaunchCase  %@",remote);
+    NSLog(@"checkInitialLaunchCase: %@", remote);
     if (remote != nil && remote.allKeys.count) {
         [self application:[UIApplication sharedApplication] didReceiveRemoteNotification:remote fetchCompletionHandler:^(UIBackgroundFetchResult result) {}];
         [defaults removeObjectForKey:@"launchNotification"];
         [defaults synchronize];
     }
-}
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
     
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
+//    if ([wTools objectExists: self.tempLaunchOptions]) {
+//        [self showCustomErrorAlert: @"self.tempLaunchOptions exists"];
+//    } else {
+//        [self showCustomErrorAlert: @"self.tempLaunchOptions does not exists"];
+//    }
     
-    NSLog(@"newSize.height: %f", newSize.height);
+    self.launchedURL = [self.tempLaunchOptions objectForKey: UIApplicationLaunchOptionsURLKey];
     
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
+    if ([wTools objectExists: self.launchedURL] ) {
+        NSString *source = [self.tempLaunchOptions objectForKey:UIApplicationOpenURLOptionsSourceApplicationKey];
+        id annotation = [self.tempLaunchOptions objectForKey:UIApplicationOpenURLOptionsAnnotationKey];
+        [self processOpenURL: self.tempApp
+                         url: self.launchedURL
+           sourceApplication: source
+                  annotation: annotation];
+        
+        self.launchedURL = nil;
     }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.window.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
 }
-*/
+
 @end
