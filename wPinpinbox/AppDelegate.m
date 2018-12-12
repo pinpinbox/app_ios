@@ -549,7 +549,7 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
         } else {
             return NO;
         }
-    }            
+    }
     [self handleRouting: url];
     
     NSLog(@"Calling Application Bundle ID: %@", sourceApplication);
@@ -1495,9 +1495,8 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
                          url: self.launchedURL
            sourceApplication: source
                   annotation: annotation];
-        
-        self.launchedURL = nil;
     }
+    self.tempLaunchOptions = nil;
 }
 
 @end
