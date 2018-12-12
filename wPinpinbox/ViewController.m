@@ -587,8 +587,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 //Facebook
 -(IBAction)Facebookbtn:(id)sender {
     NSLog(@"Facebookbtn Pressed");
-    
     [self defaultSetupForAudio];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject: @"fbLogin" forKey: @"fbBtnPressed"];
+    [defaults synchronize];
     
     if ([FBSDKAccessToken currentAccessToken]) {
         NSLog(@"FBSDKAccessToken currentAccessToken");
@@ -835,7 +838,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 - (void)facebookLogin:(NSString *)fbId {
-    NSLog(@"\nfacebookLogin");
+    NSLog(@"");
+    NSLog(@"facebookLogin fbID: %@", fbId);
     
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated:YES];
@@ -1023,17 +1027,20 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 - (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock) successHandler
                            declinedOrCanceledHandler:(FBBlock) declinedOrCanceledHandler
-                                        errorHandler:(void (^)(NSError *)) errorHandler
-{
+                                        errorHandler:(void (^)(NSError *)) errorHandler {
     NSLog(@"loginAndRequestPermissionsWithSuccessHandler declinedOrCanceledHandler errorHandler");
     
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
     //public_profile
     //publish_actions
+    
+    NSLog(@"FBSDKLoginManager alloc init");
+    
     [login
      logInWithReadPermissions: @[@"public_profile", @"user_birthday", @"email"]
      fromViewController:self
      handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+         NSLog(@"logInWithReadPermissions");
          
          if (error) {
              if (errorHandler) {
@@ -1041,16 +1048,15 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
              }
              return;
          }
-         
          if ([FBSDKAccessToken currentAccessToken] &&
              [[FBSDKAccessToken currentAccessToken].permissions containsObject:@"public_profile"]) {
              
              if (successHandler) {
+                 NSLog(@"successHandler is YES");
                  successHandler();
              }
              return;
          }
-         
          if (declinedOrCanceledHandler) {
              declinedOrCanceledHandler();
          }
