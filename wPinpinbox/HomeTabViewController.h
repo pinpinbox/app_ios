@@ -7,8 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-@interface CustomTintButton : UIButton
-@end
 
 @interface HomeTabViewController : UIViewController
 - (void)getEventData: (NSString *)eventId;

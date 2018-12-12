@@ -17,12 +17,15 @@
 
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
+#import <MobileCoreServices/MobileCoreServices.h>
+#import "SwitchButtonView.h"
+#import "AudioUploader.h"
 
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
-@interface SetupMusicViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
+@interface SetupMusicViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UIDocumentPickerDelegate>
 {
     NSMutableArray *musicArray;
     NSDictionary *mdata;
@@ -51,6 +54,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (weak, nonatomic) IBOutlet UIView *bgMusicView;
 @property (weak, nonatomic) IBOutlet UIButton *saveBtn;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+
+
+@property (weak, nonatomic) IBOutlet UIView *audioBrowserView;
+@property (weak, nonatomic) IBOutlet UIView *uploadMusicSelectionView;
+@property (weak, nonatomic) IBOutlet UIView *audioUploadedView;
+@property (weak, nonatomic) IBOutlet CustomTintButton *playerBtn;
+@property (nonatomic) AudioUploader *audioUploader;
+@property (weak, nonatomic) IBOutlet  UILabel *uploadAudioFileName;
 
 @end
 
@@ -106,6 +117,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.bgMusicSelectionView.layer.borderWidth = 1.0;
     
     self.collectionView.showsHorizontalScrollIndicator = NO;
+    
+    if (@available(iOS 11.0, *)) {
+        self.uploadMusicSelectionView.layer.cornerRadius = 8;
+        self.uploadMusicSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
+        self.uploadMusicSelectionView.layer.borderWidth = 1.0;
+        
+        [self.playerBtn setImage:[UIImage imageNamed:@"button_play"] forState:UIControlStateNormal];
+        [self.playerBtn setImage:[UIImage imageNamed:@"button_stop"] forState:UIControlStateSelected];
+        [self.playerBtn setTintColor:[UIColor darkGrayColor]];
+    } else {
+        self.audioBrowserView.hidden = YES;
+    }
 }
 - (void)processAlbumDataOptions:(NSDictionary *)dic {
     
@@ -290,8 +313,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     self.noMusicSelectionView.backgroundColor = [UIColor thirdMain];
                     self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
                     self.bgMusicSelectionView.backgroundColor = [UIColor clearColor];
-                    
+                    [self switchToUploadMusic: NO];
                     self.audioMode = @"none";
+                    
                     break;
                 case 2:
 //                    self.eachPageMusicView.backgroundColor = [UIColor thirdMain];
@@ -299,6 +323,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
                     self.eachPageSelectionView.backgroundColor = [UIColor thirdMain];
                     self.bgMusicSelectionView.backgroundColor = [UIColor clearColor];
+                    [self switchToUploadMusic: NO];
                     
                     self.audioMode = @"plural";
                     break;
@@ -308,9 +333,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
                     self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
                     self.bgMusicSelectionView.backgroundColor = [UIColor thirdMain];
+                    [self switchToUploadMusic: NO];
                     
                     self.audioMode = @"singular";
                     
+                    break;
+                case 4:
+                    [self switchToUploadMusic:YES];
                     break;
                 default:
                     break;
@@ -359,6 +388,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     break;
                 case 3:
                     self.bgMusicView.backgroundColor = [UIColor clearColor];
+                    break;
+                case 4:
+                    self.audioBrowserView.backgroundColor = [UIColor clearColor];
                 default:
                     break;
             }
@@ -424,6 +456,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.bgMusicSelectionView.backgroundColor = [UIColor thirdMain];
     
     self.audioMode = @"singular";
+    [self switchToUploadMusic:NO];
     
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
@@ -492,17 +525,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     // 1. Set Up URL Audio Source
     NSURL *audioUrl = [NSURL URLWithString: audioData];
+    if (audioUrl == nil)
+        audioUrl = [NSURL fileURLWithPath:audioData];
     
-    // 2. PlayerItem Setup
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL: audioUrl options: nil];
-    NSArray *requestedKeys = @[@"playable"];
-    
-    // Tells the asset to load the values of any of the specified keys that are not already loaded.
-    [asset loadValuesAsynchronouslyForKeys: requestedKeys completionHandler:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self prepareToPlayAsset: asset withKeys: requestedKeys];
-        });
-    }];
+    if (audioUrl == nil) {
+        [self showCustomErrorAlert:@"檔案位置有誤，無法播放"];
+        
+    } else {
+        // 2. PlayerItem Setup
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL: audioUrl options: nil];
+        NSArray *requestedKeys = @[@"playable"];
+        
+        // Tells the asset to load the values of any of the specified keys that are not already loaded.
+        [asset loadValuesAsynchronouslyForKeys: requestedKeys completionHandler:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self prepareToPlayAsset: asset withKeys: requestedKeys];
+            });
+        }];
+    }
 }
 
 #pragma mark Prepare to play asset, URL
@@ -553,27 +593,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         return;
     }
     
-    if (self.avPlayerItem) {
-        NSLog(@"self.avPlayerItem Existed");
-        NSLog(@"self.avPlayerItem removeObserver: self forKeyPath: status");
-        @try {
-            [self.avPlayerItem removeObserver: self
-                                   forKeyPath: @"status"];
-        } @catch (NSException *exception) {
-            // Print exception information
-            NSLog( @"NSException caught" );
-            NSLog( @"Name: %@", exception.name);
-            NSLog( @"Reason: %@", exception.reason );
-            return;
-        }
-        
-        /*
-        NSLog(@"NSNotificationCenter removeObserver");
-        [[NSNotificationCenter defaultCenter] removeObserver: self
-                                                        name: AVPlayerItemDidPlayToEndTimeNotification
-                                                      object: self.avPlayerItem];
-         */
-    }
+//    if (self.avPlayerItem) {
+//        NSLog(@"self.avPlayerItem Existed");
+//        NSLog(@"self.avPlayerItem removeObserver: self forKeyPath: status");
+//        @try {
+//            [self.avPlayerItem removeObserver: self
+//                                   forKeyPath: @"status"];
+//        } @catch (NSException *exception) {
+//            // Print exception information
+//            NSLog( @"NSException caught" );
+//            NSLog( @"Name: %@", exception.name);
+//            NSLog( @"Reason: %@", exception.reason );
+//            return;
+//        }
+//
+//        /*
+//        NSLog(@"NSNotificationCenter removeObserver");
+//        [[NSNotificationCenter defaultCenter] removeObserver: self
+//                                                        name: AVPlayerItemDidPlayToEndTimeNotification
+//                                                      object: self.avPlayerItem];
+//         */
+//    }
     
     NSLog(@"self.avPlayerItem = [AVPlayerItem playerItemWithAsset: asset]");
     self.avPlayerItem = [AVPlayerItem playerItemWithAsset: asset];
@@ -587,13 +627,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (self.avPlayer != nil) {
         NSLog(@"self.avPlayer != nil");
         NSLog(@"self.avPlayer removeObserver: self forKeyPath: rate");
+        [self.avPlayer pause];
+        [self.avPlayer replaceCurrentItemWithPlayerItem:self.avPlayerItem];
+        
+    } else {
+        NSLog(@"self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem]");
+        self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem];
+        [self.avPlayer addObserver:self forKeyPath:@"timeControlStatus" options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:nil];
     }
-    
-    [self.avPlayer pause];
-    NSLog(@"self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem]");
-    self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem];
     // This loading audio faster feature is available iOS 10.0 not lower version
     self.avPlayer.automaticallyWaitsToMinimizeStalling = NO;
+    
 }
 
 #pragma mark - Audio Interrupted
@@ -626,8 +670,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"observeValueForKeyPath");
     
     NSLog(@"object: %@", object);
-    
-    if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext) {
+    if ([keyPath isEqualToString:@"timeControlStatus"]) {
+        if (self.avPlayer)
+            [self.playerBtn setSelected:(self.avPlayer.rate == 1.0)];
+    } else if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext) {
         NSLog(@"context == AVPlayerDemoPlaybackViewControllerStatusObservationContext");
         
         switch (self.avPlayer.status) {
@@ -1028,7 +1074,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"callAlbumSettings");
                     
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"albumsettings"
+                                    protocolName: @"updatealbumsettings"
                                          jsonStr: jsonStr];
                 } else {
                     NSLog(@"Get Real Response");
@@ -1053,93 +1099,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }];
     
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                        jsonStr: (NSString *)jsonStr
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
-    //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
     alertTimeOutView.arrangeStyle = @"Horizontal";
     
     alertTimeOutView.parentView = self.view;
@@ -1164,7 +1131,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [weakSelf getAlbumDataOptions];
             } else if ([protocolName isEqualToString: @"getalbumsettings"]) {
                 [weakSelf getAlbumSettings];
-            } else if ([protocolName isEqualToString: @"albumsettings"]) {
+            } else if ([protocolName isEqualToString: @"updatealbumsettings"]) {
                 [weakSelf callAlbumSettings: jsonStr];
             }
         }
@@ -1257,5 +1224,66 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // Pass the selected object to the new view controller.
 }
 */
+#pragma mark - Audio upload section
+- (void)switchToUploadMusic:(BOOL)on {
+    
+    if (!on) {
+        self.uploadMusicSelectionView.backgroundColor = [UIColor clearColor];
+        self.audioUploadedView.hidden = YES;
+        self.uploadAudioFileName.text = @"點擊保存後開始上傳";
+        if (self.audioUploader) {
+            [self.avPlayer pause];
+            [self.audioUploader cacenlCurrentWork];
+            self.audioUploader = nil;
+        }
+    } else {
+        self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
+        self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
+        self.bgMusicSelectionView.backgroundColor = [UIColor clearColor];
+        self.uploadMusicSelectionView.backgroundColor = [UIColor thirdMain];
+        
+        self.audioMode = @"singular";
+    }
+}
+- (IBAction)openFileBrowser:(id)sender {
+    if (@available(iOS 11.0, *)) {
+        
+        UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes: @[(__bridge NSString * )kUTTypeMP3,(__bridge NSString * )kUTTypeWaveformAudio,(__bridge NSString * )kUTTypeMPEG4, (__bridge NSString *)kUTTypeMPEG4Audio] inMode:UIDocumentPickerModeImport];
+        
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+}
+- (IBAction)playPause:(id)sender {
+    BOOL s = self.playerBtn.isSelected;
+    self.playerBtn.selected = !s;
+    if (self.playerBtn.selected)
+        [self.avPlayer play];
+    else
+        [self.avPlayer pause];
+        
+}
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray <NSURL *>*)urls {
+    
+    if (self.avPlayer)
+        [self.avPlayer pause];
+    if (self.audioUploader) {
+        [self.audioUploader cacenlCurrentWork];
+        self.audioUploader = nil;
+    }
+    
+    self.audioUploadedView.hidden = NO;
+    self.audioUploader = [[AudioUploader alloc] initWithAudio:[urls firstObject]  albumID:self.albumId];
+    NSString *path = [[urls firstObject] path];
+    self.uploadAudioFileName.text = [NSString stringWithFormat:@"%@ (點擊保存後開始上傳)", [path lastPathComponent]];
+    [self switchToUploadMusic:YES];
+    [self avPlayerSetUp:path];
+    
+
+}
+- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
+    
+}
 
 @end
+

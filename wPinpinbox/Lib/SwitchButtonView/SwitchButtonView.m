@@ -197,3 +197,13 @@
 }
 
 @end
+
+
+@implementation CustomTintButton
+- (void) setImage:(UIImage *)image forState:(UIControlState)state {
+    //if (state == UIControlStateNormal) {
+    UIImage *aimage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];        
+    [super setImage:aimage forState:state];
+    //}
+}
+@end

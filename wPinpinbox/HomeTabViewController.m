@@ -67,20 +67,12 @@
 #import "UIViewController+ErrorAlert.h"
 
 #import "RecommandCollectionViewCell.h"
+#import "SwitchButtonView.h"
 
 #define kAdHeight 142
 #define kBtnWidth 78
 #define kBtnGap 16
 
-@implementation CustomTintButton
-- (void) setImage:(UIImage *)image forState:(UIControlState)state {
-    if (state == UIControlStateNormal) {
-        UIImage *aimage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    
-        [super setImage:aimage forState:state];
-    }
-}
-@end
 
 @interface HomeTabViewController () <UICollectionViewDataSource, UICollectionViewDelegate, JCCollectionViewWaterfallLayoutDelegate, UICollectionViewDelegateFlowLayout, SFSafariViewControllerDelegate, UIGestureRecognizerDelegate, RMPZoomTransitionAnimating, UIViewControllerTransitioningDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
 {
