@@ -5217,13 +5217,25 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 }
 #pragma mark -
+- (BOOL)checkHyperLink:(NSDictionary *)photo {
+    NSArray *a = photo[@"hyperlink"];
+    if (!a ||  [photo[@"hyperlink"] isEqual:[NSNull null]] || a.count < 1)
+        return NO;
+    int count = 0;
+    for (NSDictionary *l in a) {
+        NSString *url = l[@"url"];
+        if (url && url.length > 4)
+            count++;
+    }
+    return (count > 0);
+}
 - (void)refreshURLSwitch{
     if (selectItem >= 0) {
         if (self.urlSwitchView.hidden)
             self.urlSwitchView.hidden = NO;
         NSDictionary *photo = ImageDataArr[selectItem];
-        NSArray *a = photo[@"hyperlink"];
-        if(!a ||  [photo[@"hyperlink"] isEqual:[NSNull null]] || a.count < 1) {
+        
+        if(![self checkHyperLink: photo]) {
             [self.urlSwitchView switchOffWithAnimation] ;
         } else {
             [self.urlSwitchView switchOnWithAnimation] ;
