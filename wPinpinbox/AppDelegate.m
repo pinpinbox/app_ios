@@ -315,7 +315,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber: badgeCount];
     
     NSLog(@"APNSArray: %@", [defaults objectForKey: @"APNSArray"]);
-    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -351,7 +350,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     NSLog(@"applicationWillTerminate");
-    
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     self.isInBackground = NO;
     
@@ -466,7 +464,9 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
 - (BOOL)application:(UIApplication *)app
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-
+    NSLog(@"");
+    NSLog(@"application openURL options");
+    
     if (!self.isInBackground) {
         return NO;
     }
@@ -511,7 +511,9 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-   
+    NSLog(@"");
+    NSLog(@"application openURL sourceApplication");
+    
     if (!self.isInBackground) {
         return NO;
     }
@@ -528,16 +530,26 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
      sourceApplication:(NSString *)sourceApplication
             annotation:(id)annotation {
     NSLog(@"");
-    NSLog(@"");
     NSLog(@"openURL sourceApplication");
+    
+    NSLog(@"url: %@", url);
+    NSLog(@"url.absoluteString: %@", url.absoluteString);
+    NSLog(@"annotation: %@", annotation);
     
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     NSString *tokenStr = [userPrefs objectForKey: @"token"];
     NSString *idStr = [userPrefs objectForKey: @"id"];
     
-    if ([wTools objectExists: tokenStr] && [wTools objectExists: idStr]) {
+    NSLog(@"tokenStr: %@", tokenStr);
+    NSLog(@"idStr: %@", idStr);
+    
+    if ([url.absoluteString containsString: @"fb"] && [url.absoluteString containsString: @"access_token"]) {
+        
     } else {
-        return NO;
+        if ([wTools objectExists: tokenStr] && [wTools objectExists: idStr]) {
+        } else {
+            return NO;
+        }
     }
     [self handleRouting: url];
     
@@ -1203,8 +1215,7 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
     return YES;
 }
 
-- (void)handleRouting: (NSURL *)url
-{
+- (void)handleRouting: (NSURL *)url {
     NSLog(@"handleRouting");
     NSLog(@"url: %@", url);
 }
@@ -1457,6 +1468,7 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
 }
 //  handling app launched by remote notification
 - (void)checkInitialLaunchCase {
+    NSLog(@"checkInitialLaunchCase");
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *remote = (NSDictionary *)[defaults objectForKey: @"launchNotification"];
     
@@ -1475,16 +1487,17 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
     
     self.launchedURL = [self.tempLaunchOptions objectForKey: UIApplicationLaunchOptionsURLKey];
     
-    if ([wTools objectExists: self.launchedURL] ) {
+    if ([wTools objectExists: self.launchedURL]) {
+        NSLog(@"self.launchedURL exists");
+        
         NSString *source = [self.tempLaunchOptions objectForKey:UIApplicationOpenURLOptionsSourceApplicationKey];
         id annotation = [self.tempLaunchOptions objectForKey:UIApplicationOpenURLOptionsAnnotationKey];
         [self processOpenURL: self.tempApp
                          url: self.launchedURL
            sourceApplication: source
                   annotation: annotation];
-        
-        self.launchedURL = nil;
     }
+    self.tempLaunchOptions = nil;
 }
 
 @end
