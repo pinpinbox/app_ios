@@ -248,20 +248,32 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         });
     });
 }
-- (void)collectLegacyAudioSetting {
+- (void)collectSingularAudioSetting {
     if (self.data[@"audio"] && ![self.data[@"audio"] isKindOfClass: [NSNull class]]) {
         
         if (![self.data[@"audio"] isEqualToString: @""]) {
+            int i = [self.data[@"audio_target"] intValue];
             [self.data setObject:self.data[@"audio"] forKey:@"audio_target"];
             [self.data setObject:@"system" forKey:@"audio_refer"];
             for (NSMutableDictionary *d in musicArray) {
-                if ([d[@"id"] intValue] == [self.data[@"audio_target"] intValue]) {
+                if ([d[@"id"] intValue] == i) {
                     [d setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
                     break;
                 }
             }
         }
         
+    } else {
+        //  refresh selected cell
+        if ( self.data[@"audio_target"] && ![self.data[@"audio_target"] isKindOfClass:[NSNull class]]) {
+            int i = [self.data[@"audio_target"] intValue];
+            for (NSMutableDictionary *d in musicArray) {
+                if ([d[@"id"] intValue] == i) {
+                    [d setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
+                    break;
+                }
+            }
+        }
     }
 }
 - (void)setDataAudioType {
@@ -319,7 +331,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         else {
             self.bgMusicSelectionView.backgroundColor = [UIColor thirdMain];
-            [self collectLegacyAudioSetting];
+            [self collectSingularAudioSetting];
         }
         
     } else if ([self.audioMode isEqualToString: @"plural"]) {
