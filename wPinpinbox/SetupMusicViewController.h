@@ -14,7 +14,7 @@
 @end
 
 @interface SetupMusicViewController : UIViewController
-@property (strong, nonatomic) NSDictionary *data;
+@property (strong, nonatomic) NSMutableDictionary *data;
 @property (strong, nonatomic) NSString *audioMode;
 @property (strong, nonatomic) NSString *albumId;
 @property (weak) id <SetupMusicViewControllerDelegate> delegate;

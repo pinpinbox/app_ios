@@ -377,6 +377,7 @@
                         <outlet property="playerBtn" destination="UjB-0T-AUQ" id="od2-q0-yBe"/>
                         <outlet property="saveBtn" destination="EcD-zM-gZL" id="x0e-0i-PdK"/>
                         <outlet property="uploadAudioFileName" destination="56c-Vk-gmm" id="UIH-Bh-2V9"/>
+                        <outlet property="uploadBtn" destination="ObX-ia-dF4" id="VFy-Nz-cuL"/>
                         <outlet property="uploadMusicSelectionView" destination="pbv-rN-PpH" id="QXN-rL-OAw"/>
                     </connections>
                 </viewController>

@@ -17,9 +17,12 @@ typedef void(^AudioUploaderResultBlock)(NSError * _Nullable error);
 
 @interface AudioUploader : NSObject
 - (id) initWithAudio:(NSURL *)itemURL albumID:(NSString *)albumID;
-- (void)startUpload:(AudioUploaderProgressBlock)uploadblock
+- (void)startUpload:(NSMutableDictionary *)params
+        uploadblock:(AudioUploaderProgressBlock)uploadblock
   uploadResultBlock:(AudioUploaderResultBlock)resultblock;
 - (void)cacenlCurrentWork;
+- (BOOL)isReady;
+@property (nonatomic, readonly) NSString *audioName;
 @end
 
 NS_ASSUME_NONNULL_END

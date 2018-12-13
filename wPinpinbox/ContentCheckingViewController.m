@@ -1538,7 +1538,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             
             __weak ContentCheckingViewController *weakSelf = self;
             mTimeObserver = [self.avPlayer addPeriodicTimeObserverForInterval: CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue: NULL usingBlock:^(CMTime time) {
-                NSLog(@"call syncScrubber in Block of endScrubbing method");
+                //NSLog(@"call syncScrubber in Block of endScrubbing method");
                 [weakSelf syncScrubber];
             }];
         }

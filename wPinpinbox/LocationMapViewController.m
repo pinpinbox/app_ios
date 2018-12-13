@@ -8,6 +8,7 @@
 
 #import "LocationMapViewController.h"
 #import "MapHelper.h"
+#import "wTools.h"
 
 #if(DEBUG)
 #define MAPAPIKEY @"AIzaSyBKCVhRB6zjhZ0d0gcXALT8Ts4s8AfxMBk"

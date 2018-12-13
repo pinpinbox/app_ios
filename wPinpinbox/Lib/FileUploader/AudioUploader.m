@@ -7,7 +7,9 @@
 //
 
 #import "AudioUploader.h"
-@interface AudioUploader()
+#import "boxAPI.h"
+
+@interface AudioUploader()<NSURLSessionTaskDelegate>
 @property (nonatomic) AudioUploaderProgressBlock uploadProgress;
 @property (nonatomic) AudioUploaderResultBlock resultBlock;
 @property (nonatomic) NSURL *audioItemURL;
@@ -25,8 +27,15 @@
     }
     return self;
 }
-- (void)startUpload:(AudioUploaderProgressBlock)uploadblock
+- (void)startUpload:(NSMutableDictionary *)params
+        uploadblock:(AudioUploaderProgressBlock)uploadblock
   uploadResultBlock:(AudioUploaderResultBlock)resultblock {
+    
+    [boxAPI uploadMusicWithAlbumSettings:params audioUrl:self.audioItemURL sessionDelegate:self completionBlock:^(NSDictionary *result, NSError *error) {
+        
+        if (resultblock)
+            resultblock(error);
+    }];
     
     self.resultBlock = resultblock;
     self.uploadProgress = uploadblock;
@@ -37,5 +46,22 @@
     _uploadProgress = nil;
     _resultBlock = nil;
 }
+- (BOOL)isReady {
+    return (_albumID && _audioItemURL);
+}
+- (NSString *)audioName {
+    if (_audioItemURL)
+        return [_audioItemURL lastPathComponent];
+    return @"";
+}
 
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
+   didSendBodyData:(int64_t)bytesSent
+    totalBytesSent:(int64_t)totalBytesSent
+totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+    NSLog(@"AudioUploader : %lld/%lld (%f)",totalBytesSent,totalBytesExpectedToSend,(double)totalBytesSent/(double)totalBytesExpectedToSend);
+    if (self.uploadProgress) {
+        self.uploadProgress(totalBytesSent, totalBytesExpectedToSend, @"");
+    }
+}
 @end

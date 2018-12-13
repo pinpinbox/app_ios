@@ -4060,8 +4060,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat fixedWidth = textView.frame.size.width;
     CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
     CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
+
     
     // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
     if (newSize.height > 300) {
@@ -4073,12 +4072,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     textView.frame = newFrame;
     
     CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
+    
     
     CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
     
     // ImageView Setting
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
@@ -4095,7 +4091,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     } else {
         viewHeight = 96;
     }
-    NSLog(@"demoHeight: %f", viewHeight);
     
     
     // ContentView Setting
@@ -4114,9 +4109,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
     
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
     
     return contentView;
 }

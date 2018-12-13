@@ -514,4 +514,7 @@ doneHandler fail:(void(^)(NSInteger status)) failHandler;
 + (void)getAlbumDiyWithAlbumId:(NSString *)albumid completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)setAlbumSettingsWithDictionary:(NSString *)settingString albumid:(NSString *)albumid
                        completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
+
+#pragma mark - upload album music
++ (void)uploadMusicWithAlbumSettings:(NSDictionary *)audioSetting audioUrl:(NSURL *)audioUrl sessionDelegate:(id<NSURLSessionDelegate>)sessionDelegate completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 @end

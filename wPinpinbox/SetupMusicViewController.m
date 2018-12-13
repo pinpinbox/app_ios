@@ -20,6 +20,14 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "SwitchButtonView.h"
 #import "AudioUploader.h"
+#import "MBProgressHUD.h"
+
+typedef NS_ENUM(NSInteger, SetupAudioType) {
+    None = 1,
+    Plural = 2,
+    Singular = 3,
+    Singular2 = 4
+};
 
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
@@ -33,7 +41,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     AVPlayer *player;
     AVPlayerItem *playerItem;
     
-    NSString *oldAudioMode;
+    //NSString *oldAudioMode;
     
     BOOL isAudioModeChanged;
 }
@@ -59,9 +67,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (weak, nonatomic) IBOutlet UIView *audioBrowserView;
 @property (weak, nonatomic) IBOutlet UIView *uploadMusicSelectionView;
 @property (weak, nonatomic) IBOutlet UIView *audioUploadedView;
+@property (weak, nonatomic) IBOutlet UIButton *uploadBtn;
 @property (weak, nonatomic) IBOutlet CustomTintButton *playerBtn;
 @property (nonatomic) AudioUploader *audioUploader;
 @property (weak, nonatomic) IBOutlet  UILabel *uploadAudioFileName;
+@property (nonatomic) MBProgressHUD *uploadProgress;
+@property (nonatomic) SetupAudioType audioType;
+@property (nonatomic) SetupAudioType dataAudioType; // audiotype from getalbumsettings
+
+
 
 @end
 
@@ -74,6 +88,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     // Check avPlayer is ready or not
     self.isReadyToPlay = NO;
+    
+    self.audioType = None;
     
     [self setupUI];
     [self getAlbumDataOptions];
@@ -118,6 +134,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.collectionView.showsHorizontalScrollIndicator = NO;
     
+    self.uploadBtn.enabled = NO;
     if (@available(iOS 11.0, *)) {
         self.uploadMusicSelectionView.layer.cornerRadius = 8;
         self.uploadMusicSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
@@ -126,6 +143,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self.playerBtn setImage:[UIImage imageNamed:@"button_play"] forState:UIControlStateNormal];
         [self.playerBtn setImage:[UIImage imageNamed:@"button_stop"] forState:UIControlStateSelected];
         [self.playerBtn setTintColor:[UIColor darkGrayColor]];
+        //  File picker only works on iOS 11.0 later //
+        self.uploadBtn.enabled = YES;
     } else {
         self.audioBrowserView.hidden = YES;
     }
@@ -215,7 +234,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     
                     NSString *res = (NSString *)dic[@"result"];
                     if ([res isEqualToString:@"SYSTEM_OK"]) {
-                        self.data = [dic[@"data"] mutableCopy];
+                        self.data = [[NSMutableDictionary alloc] initWithDictionary:dic[@"data"]];
                         NSLog(@"self.data: %@", self.data);
                     } else if (dic[@"message"]) {//([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -229,68 +248,133 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         });
     });
 }
-
+- (void)collectLegacyAudioSetting {
+    if (self.data[@"audio"] && ![self.data[@"audio"] isKindOfClass: [NSNull class]]) {
+        
+        if (![self.data[@"audio"] isEqualToString: @""]) {
+            [self.data setObject:self.data[@"audio"] forKey:@"audio_target"];
+            [self.data setObject:@"system" forKey:@"audio_refer"];
+            for (NSMutableDictionary *d in musicArray) {
+                if ([d[@"id"] intValue] == [self.data[@"audio_target"] intValue]) {
+                    [d setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
+                    break;
+                }
+            }
+        }
+        
+    }
+}
+- (void)setDataAudioType {
+    
+    self.dataAudioType = None;
+    
+    NSString *mode = self.data[@"audio_mode"];
+    NSString *refer = self.data[@"audio_refer"];
+    NSString *target = self.data[@"audio_target"];
+    if (mode && [mode isKindOfClass:[NSString class]]) {
+        self.audioMode = mode;
+        if ([mode isEqualToString:@"plural"])
+            self.dataAudioType = Plural;
+        else if ([mode isEqualToString:@"none"])
+            self.dataAudioType = None;
+        else if ([mode isEqualToString:@"singular"]) {
+            if ([refer isEqualToString:@"system"]) {
+                    self.dataAudioType = Singular;
+            } else if (target)
+                self.dataAudioType = Singular2;
+        }
+    }
+    self.audioType = self.dataAudioType;
+    
+}
 - (void)initialValueSetup
 {
     NSLog(@"initialValueSetup");
     
-    NSLog(@"self.audioMode: %@", self.audioMode);
+    //  check current audioType from server
+    [self setDataAudioType];
+    
+    if (self.data[@"audio_mode"] && [self.data[@"audio_mode"] isKindOfClass:[NSString class]])
+        self.audioMode = self.data[@"audio_mode"];
+    else
+        self.audioMode = @"none";
     
     isAudioModeChanged = NO;
     
-    oldAudioMode = self.audioMode;
+    //oldAudioMode = self.audioMode;
+    
+    musicArray = [NSMutableArray new];
+    for (NSMutableDictionary *d in mdata[@"audio"]) {
+        [d setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+        [musicArray addObject: d];
+    }
     
     if ([self.audioMode isEqualToString: @"none"]) {
         self.noMusicSelectionView.backgroundColor = [UIColor thirdMain];
     } else if ([self.audioMode isEqualToString: @"singular"]) {
-        self.bgMusicSelectionView.backgroundColor = [UIColor thirdMain];
+        
+        if (self.data[@"audio_refer"] && [self.data[@"audio_refer"] isEqualToString:@"file"]) {
+            self.uploadMusicSelectionView.backgroundColor = [UIColor thirdMain];
+            [self loadSingular2Settings];
+        }
+        else {
+            self.bgMusicSelectionView.backgroundColor = [UIColor thirdMain];
+            [self collectLegacyAudioSetting];
+        }
+        
     } else if ([self.audioMode isEqualToString: @"plural"]) {
         self.eachPageSelectionView.backgroundColor = [UIColor thirdMain];
     }
     
-    musicArray = [NSMutableArray new];
-    
-    if (![self.data[@"audio"] isKindOfClass: [NSNull class]]) {
-        NSLog(@"self.data audio is not kind of null calss");
-        if (![self.data[@"audio"] isEqualToString: @""]) {
-            NSLog(@"self.data audio is not equal to string empty");
-            
-            for (NSMutableDictionary *d in mdata[@"audio"]) {
-                NSLog(@"self.data audio: %@", self.data[@"audio"]);
-                NSLog(@"d id: %@", d[@"id"]);
-                
-                if ([self.data[@"audio"] isEqualToString: [d[@"id"] stringValue]]) {
-                    [d setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
-                } else {
-                    [d setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
-                }
-                [musicArray addObject: d];
-            }
-        } else {
-            NSLog(@"self.data audio is equal to string empty");
-            
-            for (NSMutableDictionary *d in mdata[@"audio"]) {
-                [d setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
-                [musicArray addObject: d];
-            }
-        }
-    } else {
-        NSLog(@"self.data audio is kind of null calss");
-        
-        for (NSMutableDictionary *d in mdata[@"audio"]) {
-            [d setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
-            [musicArray addObject: d];
-        }
-    }
-
-    
-    NSLog(@"");
-    NSLog(@"");
-    //NSLog(@"musicArray: %@", musicArray);
-    
     [self.collectionView reloadData];
 }
-
+- (void)setMusicReferByType:(int)type {
+    
+    self.audioType = type;
+    switch (type) {
+        case 1:
+            //                    self.noMusicView.backgroundColor = [UIColor thirdMain];
+            
+            self.noMusicSelectionView.backgroundColor = [UIColor thirdMain];
+            self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
+            self.bgMusicSelectionView.backgroundColor = [UIColor clearColor];
+            [self switchToUploadMusic: NO];
+            self.audioMode = @"none";
+            if (self.avPlayer)
+                [self.avPlayer pause];
+            
+            break;
+        case 2:
+            //                    self.eachPageMusicView.backgroundColor = [UIColor thirdMain];
+            
+            self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
+            self.eachPageSelectionView.backgroundColor = [UIColor thirdMain];
+            self.bgMusicSelectionView.backgroundColor = [UIColor clearColor];
+            [self switchToUploadMusic: NO];
+            
+            self.audioMode = @"plural";
+            if (self.avPlayer)
+                [self.avPlayer pause];
+            
+            break;
+        case 3:
+            //                    self.bgMusicView.backgroundColor = [UIColor thirdMain];
+            
+            self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
+            self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
+            self.bgMusicSelectionView.backgroundColor = [UIColor thirdMain];
+            [self switchToUploadMusic: NO];
+            
+            self.audioMode = @"singular";
+            
+            break;
+        case 4:
+            [self switchToUploadMusic:YES];
+            break;
+        default:
+            break;
+    }
+}
 #pragma mark - Touches Methods
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
@@ -305,45 +389,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
             NSLog(@"finally touched view: %@", view);
             NSLog(@"view.tag: %ld", (long)view.tag);
-            
-            switch (view.tag) {
-                case 1:
-//                    self.noMusicView.backgroundColor = [UIColor thirdMain];
-                    
-                    self.noMusicSelectionView.backgroundColor = [UIColor thirdMain];
-                    self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
-                    self.bgMusicSelectionView.backgroundColor = [UIColor clearColor];
-                    [self switchToUploadMusic: NO];
-                    self.audioMode = @"none";
-                    
-                    break;
-                case 2:
-//                    self.eachPageMusicView.backgroundColor = [UIColor thirdMain];
-                    
-                    self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
-                    self.eachPageSelectionView.backgroundColor = [UIColor thirdMain];
-                    self.bgMusicSelectionView.backgroundColor = [UIColor clearColor];
-                    [self switchToUploadMusic: NO];
-                    
-                    self.audioMode = @"plural";
-                    break;
-                case 3:
-//                    self.bgMusicView.backgroundColor = [UIColor thirdMain];
-                    
-                    self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
-                    self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
-                    self.bgMusicSelectionView.backgroundColor = [UIColor thirdMain];
-                    [self switchToUploadMusic: NO];
-                    
-                    self.audioMode = @"singular";
-                    
-                    break;
-                case 4:
-                    [self switchToUploadMusic:YES];
-                    break;
-                default:
-                    break;
-            }
+            [self setMusicReferByType:(int)view.tag];
         }
     }
 }
@@ -378,7 +424,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
             NSLog(@"finally touched view: %@", view);
             NSLog(@"view.tag: %ld", (long)view.tag);
-            
+            //self.audioType = None;
             switch (view.tag) {
                 case 1:
                     self.noMusicView.backgroundColor = [UIColor clearColor];
@@ -694,8 +740,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     
                     if (self.isReadyToPlay) {
                         NSLog(@"self.isReadyToPlay is set to YES");
-                        
-                        [self.avPlayer play];
+                        if (self.audioType != Singular2)
+                            [self.avPlayer play];
                         NSLog(@"self.avPlayer play");
                         // Only for iOS 10
                         //[self.avPlayer playImmediatelyAtRate: 1.0];
@@ -799,11 +845,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"");
     NSLog(@"saveBtnPress");
     
-    NSLog(@"tempAudioMode: %@", oldAudioMode);
+    //NSLog(@"tempAudioMode: %@", oldAudioMode);
     NSLog(@"self.audioMode: %@", self.audioMode);
     
-    if ([self.audioMode isEqualToString: oldAudioMode]) {
-        if ([self.audioMode isEqualToString: @"singular"]) {
+    //if ([self.audioMode isEqualToString: oldAudioMode]) {
+    if (self.dataAudioType == self.audioType) {
+    if (self.audioType > Plural) {
+        //if ([self.audioMode isEqualToString: @"singular"]) {
             BOOL hasBgMusic = NO;
             
             NSLog(@"musicArray: %@", musicArray);
@@ -816,7 +864,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             
             NSLog(@"hasBgMusic: %d", hasBgMusic);
             
-            if (hasBgMusic) {
+            if (hasBgMusic || (self.audioUploader && [self.audioUploader isReady])) {
                 [self changeAudioMode];
             } else {
                 //[self dismissViewControllerAnimated: YES completion: nil];
@@ -954,41 +1002,55 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSMutableDictionary *settingsDic = [NSMutableDictionary new];
     NSLog(@"self.audioMode: %@", self.audioMode);
     
-    [settingsDic setObject: self.audioMode forKey: @"audio_mode"];
     
-    // If Audio Mode is singular
-    if ([self.audioMode isEqualToString: @"singular"]) {
-        NSString *musicStr;
-        
-        NSLog(@"musicArray: %@", musicArray);
-        
-        // And music has selected
-        for (NSDictionary *d in musicArray) {
-            if ([d[@"selected"] boolValue]) {
-                NSLog(@"%@", d[@"id"]);
-                
-                musicStr = d[@"id"];
-                NSLog(@"musicStr: %d", [musicStr intValue]);
+    switch (self.audioType) {
+        case None:
+            [settingsDic setObject: @"none" forKey: @"audio_mode"];
+            break;
+        case Plural:
+            [settingsDic setObject: @"plural" forKey: @"audio_mode"];
+            break;
+        case Singular: {
+            [settingsDic setObject: @"singular" forKey: @"audio_mode"];
+            // And music has selected
+            for (NSDictionary *d in musicArray) {
+                if ([d[@"selected"] boolValue]) {
+                    NSLog(@"%@", d[@"id"]);
+                    [settingsDic setObject:@"system" forKey:@"audio_refer"];
+                    [settingsDic setObject: d[@"id"] forKey: @"audio_target"];
+                    break;
+                }
+            }
+            
+            if (![settingsDic objectForKey:@"audio_refer"]) {
+//                [settingsDic setObject:@"none" forKey:@"audio_refer"];
+//                [settingsDic setObject:@"0" forKey: @"audio_target"];
+                [self showCustomErrorAlert:@"尚未選定音樂"];
+                return;
             }
         }
-        NSLog(@"settingsDic setObject");
-        
-        if (musicStr == nil) {
-            NSLog(@"musicStr is kind of null class");
-        } else {
-            NSLog(@"musicStr is not kind of null class");
-            [settingsDic setObject: musicStr forKey: @"audio"];
+            break;
+        case Singular2: {
+            [settingsDic setObject: @"singular" forKey: @"audio_mode"];
+            [settingsDic setObject:@"file" forKey:@"audio_refer"];
+            //[settingsDic setObject:self.audioUploader? self.audioUploader.audioName:@"" forKey:@"audio_target"];
         }
+            break;
     }
     
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject: settingsDic
-                                                       options: 0
-                                                         error: nil];
-    NSString *jsonStr = [[NSString alloc] initWithData: jsonData
-                                              encoding: NSUTF8StringEncoding];
-    NSLog(@"jsonStr: %@", jsonStr);
-    
-    [self callAlbumSettings: jsonStr];
+    if (self.audioType < Singular2) {
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject: settingsDic
+                                                           options: 0
+                                                             error: nil];
+        NSString *jsonStr = [[NSString alloc] initWithData: jsonData
+                                                  encoding: NSUTF8StringEncoding];
+        NSLog(@"jsonStr: %@", jsonStr);
+        
+        [self callAlbumSettings: jsonStr];
+    } else {
+        [self updateMusicSettingsWithAudioUploader:settingsDic];
+        
+    }
 }
 - (void)processCallAlbumSettings:(NSDictionary *)dic {
     
@@ -996,7 +1058,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         
         
-        if ([self.audioMode isEqualToString: oldAudioMode]) {
+        if (self.audioType == self.dataAudioType) {//[self.audioMode isEqualToString: oldAudioMode]) {
             isAudioModeChanged = NO;
         } else {
             isAudioModeChanged = YES;
@@ -1035,6 +1097,47 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                         repeats: NO];
     }
 }
+//  upload audio file and updating album settings by audioUploader
+- (void)updateMusicSettingsWithAudioUploader:(NSDictionary *)settingDict {
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject: settingDict
+                                                       options: 0
+                                                         error: nil];
+    NSString *jsonStr = [[NSString alloc] initWithData: jsonData
+                                              encoding: NSUTF8StringEncoding];
+    
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param setObject:[wTools getUserID] forKey:@"user_id"];
+    [param setObject:[wTools getUserToken] forKey:@"token"];
+    [param setObject:self.albumId forKey:@"album_id"];
+    [param setObject:jsonStr forKey:@"settings"];
+    isAudioModeChanged = YES;
+    
+    if ([self.audioUploader isReady]) {
+        __block typeof(self) wself = self;
+        self.uploadProgress =  [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        self.uploadProgress.mode =  MBProgressHUDModeDeterminateHorizontalBar;
+        self.uploadProgress.label.text = @"音樂上傳中";
+        [self.audioUploader startUpload:param uploadblock:^(NSUInteger currentUploaded, NSUInteger totalSize, NSString * _Nonnull desc) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                wself.uploadProgress.progress = (float)currentUploaded/(float)totalSize;
+            });
+        } uploadResultBlock:^(NSError * _Nullable error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself.avPlayer pause];
+                [wself.uploadProgress hideAnimated:YES];
+                
+                if ([wself.delegate respondsToSelector: @selector(dismissFromSetupMusicVC:audioModeChanged:)]) {
+                    [wself.delegate dismissFromSetupMusicVC: wself audioModeChanged: wself->isAudioModeChanged];
+                    
+                }
+                [wself dismissViewControllerAnimated: YES completion: nil];
+            });
+            
+        }];
+    }
+}
+
 - (void)callAlbumSettings: (NSString *)jsonStr
 {
     NSLog(@"callAlbumSettings");
@@ -1079,8 +1182,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    if (dic)
+                        [wself processCallAlbumSettings:dic];
+                    else
+                        [wself showCustomErrorAlert:response?response:@"請稍後再試"];
                     
-                    [wself processCallAlbumSettings:dic];
                 }
             }
         });
@@ -1225,6 +1331,26 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 */
 #pragma mark - Audio upload section
+- (void)loadSingular2Settings {
+    
+    self.audioUploadedView.hidden = NO;
+    if (@available(iOS 11.0, *))
+        self.uploadBtn.enabled = YES;
+    else
+        self.uploadBtn.enabled = NO;
+    
+    NSString *path = self.data[@"audio_target"];
+    if (path && [path isKindOfClass:[NSString class]]) {
+        //self.audioUploader = [[AudioUploader alloc] initWithAudio:[NSURL URLWithString:path]  albumID:self.albumId];
+        self.uploadAudioFileName.text = [NSString stringWithFormat:@"%@", [path lastPathComponent]];
+        [self switchToUploadMusic:YES];
+        [self avPlayerSetUp:path];
+    }
+}
+- (BOOL)ifReadyForUpload {
+    return (self.audioUploader && [self.audioUploader isReady]);
+    
+}
 - (void)switchToUploadMusic:(BOOL)on {
     
     if (!on) {
@@ -1237,6 +1363,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             self.audioUploader = nil;
         }
     } else {
+        self.audioType = Singular2;
         self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
         self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
         self.bgMusicSelectionView.backgroundColor = [UIColor clearColor];
@@ -1267,6 +1394,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if (self.avPlayer)
         [self.avPlayer pause];
+    
     if (self.audioUploader) {
         [self.audioUploader cacenlCurrentWork];
         self.audioUploader = nil;

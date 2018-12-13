@@ -12,6 +12,9 @@
 #import "ReqHTTP.h"
 #import "wTools.h"
 
+#import "MultipartInputStream.h"
+#import <MobileCoreServices/MobileCoreServices.h>
+
 //#import "AFNetworking.h"
 //#import "UIKit+AFNetworking.h"
 #import "GlobalVars.h"
@@ -3492,5 +3495,117 @@ static NSString *hostURL = @"www.pinpinbox.com";
                 completionBlock(nil, [NSError errorWithDomain:@"setAlbumSettings" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
         }
     });
+}
+
+#pragma mark - upload album music
++ (void)uploadMusicWithAlbumSettings:(NSDictionary *)audioSetting audioUrl:(NSURL *)audioUrl sessionDelegate:(id<NSURLSessionDelegate>)sessionDelegate completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+    
+    NSData *vidData = [NSData dataWithContentsOfURL:audioUrl];
+    NSString *audiofile = [audioUrl lastPathComponent];
+    
+    NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
+    [_params addEntriesFromDictionary:audioSetting];
+    [_params setObject:[boxAPI signGenerator2:_params] forKey:@"sign"];
+    
+    // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
+    NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
+    
+    // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
+    NSString* FileParamConstant = @"file";
+    
+    // the server url to which the image (or the media) is uploaded. Use your server url here
+    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/updatealbumsettings",@"/2.0"]];
+    
+    // create request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval: [kTimeOutForVideo floatValue]];
+    [request setHTTPMethod:@"POST"];
+    
+    MultipartInputStream *st = [[MultipartInputStream alloc] initWithBoundary:BoundaryConstant];
+    
+    for (NSString *e in [_params allKeys]) {
+        NSString *d = _params[e];
+        [st addPartWithName:e string:d];
+    }
+    if (vidData && vidData.length > 0) {
+        
+        
+        CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[audiofile pathExtension], NULL);
+        CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
+        CFRelease(UTI);
+        NSString *type = @"application/octet-stream";
+        if (mimeType) {
+            type = (__bridge NSString *)mimeType;
+        }
+        [st addPartWithName:FileParamConstant filename:audiofile data:vidData contentType:type];
+    }
+    
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    
+    [request setValue:[NSString stringWithFormat:@"%lu",(unsigned long)st.totalLength] forHTTPHeaderField:@"Content-Length"];
+    // set HTTP_ACCEPT_LANGUAGE in HTTP Header
+    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
+    
+    [request setHTTPBodyStream:st];
+    
+    __block NSString *str;
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.timeoutIntervalForRequest = [kTimeOutForVideo floatValue];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration: config delegate:sessionDelegate delegateQueue:nil];
+    
+    //__block NSString *desc = [[NSUUID UUID] UUIDString];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //[wself.vidHud hideAnimated:YES];
+        });
+        
+        if (data) {
+            
+            str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
+            NSLog(@"str: %@", str);
+            //  time out
+            if (str && [str isEqualToString:timeOutErrorCode]) {
+                if (completionBlock)
+                    completionBlock(nil, [NSError errorWithDomain:@"" code:-1001 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Connection-Timeout", @"")}]);
+                
+            } else {
+                NSDictionary *dict = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options: NSJSONReadingMutableContainers error: nil];
+                if (dict != nil) {
+                    if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]) {
+                        if (completionBlock)
+                            completionBlock(dict,nil);
+                    } else {
+                        
+                        if (dict[@"message"] == nil) {
+                            if (completionBlock)
+                                completionBlock(nil, [NSError errorWithDomain:@"" code:-1001 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Connection-Timeout", @"")}]);
+                            
+                        } else {
+                            if (completionBlock)
+                                completionBlock(nil, [NSError errorWithDomain:@"" code:-1002 userInfo:@{NSLocalizedDescriptionKey:dict[@"message"] }]);
+                            
+                        }
+                    
+                    }
+                } else if (str != nil ) {
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"" code:-1003 userInfo:@{NSLocalizedDescriptionKey:str }]);
+                }
+            }
+        } else {
+            if (completionBlock)
+                completionBlock(nil, error);
+            
+        }
+        
+    }];
+    
+    [task resume];
 }
 @end

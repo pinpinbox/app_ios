@@ -71,10 +71,7 @@
 - (IBAction)dismissBtnPress:(id)sender {    
     [self slideOut];
 }
-- (void)processGeocodingMapItem:(MKMapItem *) item {
-    
-    MKPlacemark *mark = item.placemark;
-    CLLocationCoordinate2D result = mark.coordinate;
+- (void)processGeocodingMapItem:(CLLocationCoordinate2D) result  {
     
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(result, 1000, 1000);
     [self.mapView setRegion: [self.mapView regionThatFits: region] animated: YES];
@@ -83,10 +80,11 @@
     // Add an annotation
     MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
     point.coordinate = result;
-    point.title = item.name;
+    point.title = self.locationStr;
     
     [self.mapView addAnnotation: point];
 }
+/*
 - (void)processGeoDataResult:(NSDictionary *)locationData {
     
     if (locationData == nil) {
@@ -121,6 +119,46 @@
         }
     }
 }
+*/
+- (void)planBForGeocoding:(NSString *)location {
+    
+    NSURLSession *s = [NSURLSession sharedSession];
+    NSString *target = [MapHelper getLocationQuery:location encoding:NO];
+    NSURL *u = [NSURL URLWithString:[target stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    
+    __block typeof(self) wself = self;
+    NSURLSessionDataTask *task = [s dataTaskWithURL:u completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        
+        if (!error && data.length) {
+            NSError *err = nil;
+            
+            NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
+            
+            if (!err && result) {
+                //NSLog(@"Geocoding result : %@",result);
+                NSArray *features = result[@"features"];
+                if (features && features.count) {
+                    NSDictionary *loc = [features firstObject];
+                    NSDictionary *gl =loc[@"geometry"];
+                    NSArray *cord = gl[@"coordinates"];
+                    if (cord && cord.count == 2) {
+                        CLLocationDegrees lo = [cord[0] doubleValue];
+                        CLLocationDegrees la = [cord[1] doubleValue];
+                        //[wself moveMapWithLatitude:la Longitude:lo];
+                        [wself processGeocodingMapItem:CLLocationCoordinate2DMake(la, lo)];
+                    }
+                }
+            }
+            
+        } else {
+            NSLog(@"Geocoding Error %@",error);
+        }
+        
+    }];
+    [task resume];
+}
+
 - (void)slideIn {
     self.view.frame = [[UIScreen mainScreen] bounds];
     
@@ -177,8 +215,12 @@
         [MapHelper searchLocation:self.locationStr CompletionBlock:^(MKMapItem * _Nullable item, NSError * _Nullable error) {
             if (!error && item) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [wself processGeocodingMapItem:item];
+                    MKPlacemark *mark = item.placemark;
+                    CLLocationCoordinate2D result = mark.coordinate;
+                    [wself processGeocodingMapItem:result];
                 });
+            } else {
+                [wself planBForGeocoding:wself.locationStr];
             }
         }];
         /*
