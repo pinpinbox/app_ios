@@ -22,6 +22,7 @@
 #import "MessageboardViewController.h"
 #import "CreaterViewController.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 @interface LikeListViewController () <UITableViewDataSource, UITableViewDelegate, MessageboardViewControllerDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
@@ -160,8 +161,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getAlbum2LikesList: self.albumId
                                                   limit: limit
-                                                  token: [wTools getUserToken]
-                                                 userId: [wTools getUserID]];
+                                                  token: [UserInfo getUserToken]
+                                                 userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -414,8 +415,8 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *userIdStr = [NSString stringWithFormat: @"%ld", (long)userId];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *respnose = [boxAPI changefollowstatus: [wTools getUserID]
-                                                  token: [wTools getUserToken]
+        NSString *respnose = [boxAPI changefollowstatus: [UserInfo getUserID]
+                                                  token: [UserInfo getUserToken]
                                                authorid: userIdStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{

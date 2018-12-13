@@ -29,6 +29,7 @@
 #import "UIView+Toast.h"
 #import <SafariServices/SafariServices.h>
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 //#define kUserImageViewNumber 6
 
@@ -372,8 +373,8 @@
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getCategoryArea: self.categoryAreaId
-                                               token: [wTools getUserToken]
-                                              userId: [wTools getUserID]];
+                                               token: [UserInfo getUserToken]
+                                              userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

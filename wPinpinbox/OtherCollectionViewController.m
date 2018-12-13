@@ -19,6 +19,7 @@
 
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 @interface OtherCollectionViewController () <UITableViewDelegate, UITableViewDataSource>
 {
@@ -105,8 +106,8 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //NSArray *array = @[@"mine", @"other", @"cooperation"];
-        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
-                                             token: [wTools getUserToken]
+        NSString *response = [boxAPI getcalbumlist: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]
                                               rank: @"other"
                                              limit: limit];
         

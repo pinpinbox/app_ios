@@ -22,6 +22,7 @@
 #import <GoogleAnalytics/GAIFields.h>
 
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 static wTools *instance =nil;
 
@@ -105,32 +106,6 @@ static wTools *instance =nil;
     return app.myNav;
 }
 
-//id
-+(NSString *)getUserID{
-    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    if ([userPrefs objectForKey:@"id"]) {
-        return [userPrefs objectForKey:@"id"];
-    }
-    return @"";
-}
-//token
-+(NSString *)getUserToken{
-    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    if ([userPrefs objectForKey:@"token"]) {
-        return [userPrefs objectForKey:@"token"];
-    }
-
-    return @"";
-}
-//UUID
-+(NSString *)getUUID{
-    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    if ([userPrefs objectForKey:@"APNSID"]) {
-        return [userPrefs objectForKey:@"APNSID"];
-    }
-    
-    return nil;
-}
 
 //切換書本說明頁
 
@@ -141,8 +116,8 @@ static wTools *instance =nil;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI retrievealbump: @"qwert"
-                                                uid: [wTools getUserID]
-                                              token: [wTools getUserToken]];
+                                                uid: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -191,6 +166,15 @@ static wTools *instance =nil;
             }
         });
     });
+}
+//UUID
++(NSString *)getUUID{
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    if ([userPrefs objectForKey:@"APNSID"]) {
+        return [userPrefs objectForKey:@"APNSID"];
+    }
+    
+    return nil;
 }
 
 +(NSString *)stringisnull:(id )str{
@@ -319,8 +303,8 @@ static wTools *instance =nil;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI retrievealbump: albumId
-                                                uid: [wTools getUserID]
-                                              token: [wTools getUserToken]];
+                                                uid: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -375,7 +359,7 @@ static wTools *instance =nil;
 {
     //AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //檢查本地...
-    NSString *name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],albumid];
+    NSString *name=[NSString stringWithFormat:@"%@%@",[UserInfo getUserID],albumid];
     NSLog(@"name: %@", name);
     
     NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
@@ -401,7 +385,7 @@ static wTools *instance =nil;
               [wTools ShowMBProgressHUD];
               dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
                   
-                  NSString *respone=[boxAPI checkalbumzip:[wTools getUserID] token:[wTools getUserToken] album_id:albumid];
+                  NSString *respone=[boxAPI checkalbumzip:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:albumid];
                   
                   dispatch_async(dispatch_get_main_queue(), ^{
                       
@@ -524,7 +508,7 @@ static wTools *instance =nil;
     [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *respone=[boxAPI getalbumsettings:[wTools getUserID] token:[wTools getUserToken] album_id:albumid];
+        NSString *respone=[boxAPI getalbumsettings:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -955,7 +939,7 @@ static wTools *instance =nil;
     if (scrnName && scrnName.length > 0) {
         
         id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-        NSString *uid = [wTools getUserID];
+        NSString *uid = [UserInfo getUserID];
         [tracker set:kGAIUserId value:uid];
         [tracker set:kGAIScreenName value:scrnName];
         [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
@@ -965,7 +949,7 @@ static wTools *instance =nil;
 + (void)sendActionTrackingWithCategoryName:(NSString *)categoryName action:(NSString *)action label:(NSString *)label value:( NSNumber * _Nullable )value {
     
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-    NSString *uid = [wTools getUserID];
+    NSString *uid = [UserInfo getUserID];
     [tracker set:kGAIUserId value:uid];
     
     

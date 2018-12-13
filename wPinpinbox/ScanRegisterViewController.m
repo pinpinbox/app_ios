@@ -30,6 +30,7 @@
 
 #import "GlobalVars.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
@@ -646,8 +647,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
             NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
             NSLog(@"currentDeviceId: %@", currentDeviceId);
             
-            //awsResponse = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier:[OpenUDID value]];
-            awsResponse = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
+            //awsResponse = [boxAPI setawssns:[UserInfo getUserID] token:[UserInfo getUserToken] devicetoken:[wTools getUUID] identifier:[OpenUDID value]];
+            awsResponse = [boxAPI setawssns:[UserInfo getUserID] token:[UserInfo getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{

@@ -14,6 +14,7 @@
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
 #import  "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 @interface CooperationAddViewController () <UITextFieldDelegate, UISearchBarDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
     __weak IBOutlet UIButton *deleteBtn;
@@ -49,7 +50,7 @@
         [data setObject:wself->_albumid forKey:@"type_id"];
         [data setObject:@"album" forKey:@"type"];
         
-        NSString *respone=[boxAPI getcooperationlist:[wTools getUserID] token:[wTools getUserToken] data:data];
+        NSString *respone=[boxAPI getcooperationlist:[UserInfo getUserID] token:[UserInfo getUserToken] data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -241,9 +242,9 @@
             [data setObject:aid forKey:@"type_id"];
             
             if (add) {
-                respone=[boxAPI deletecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
+                respone=[boxAPI deletecooperation:[UserInfo getUserID] token:[UserInfo getUserToken] data:data];
             }else{
-                respone=[boxAPI addcooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
+                respone=[boxAPI addcooperation:[UserInfo getUserID] token:[UserInfo getUserToken] data:data];
             }
                                                 
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -298,11 +299,11 @@
         NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId,(int)nextId+10];
         [data setObject:limit forKey:@"limit"];
         
-        respone=[boxAPI search:[wTools getUserID] token:[wTools getUserToken] data:data];
+        respone=[boxAPI search:[UserInfo getUserID] token:[UserInfo getUserToken] data:data];
         __block typeof(self) wself = self;
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
             
-            NSString *respone=[boxAPI getrecommended:[wTools getUserID] token:[wTools getUserToken] data:data];
+            NSString *respone=[boxAPI getrecommended:[UserInfo getUserID] token:[UserInfo getUserToken] data:data];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wTools HideMBProgressHUD];
                 if (respone!=nil) {
@@ -388,7 +389,7 @@
         [data setObject: @"user" forKey:@"searchtype"];
         [data setObject: text forKey:@"searchkey"];
         [data setObject: @"0,10" forKey:@"limit"];
-        respone=[boxAPI search:[wTools getUserID] token:[wTools getUserToken] data:data];
+        respone=[boxAPI search:[UserInfo getUserID] token:[UserInfo getUserToken] data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (respone!=nil) {

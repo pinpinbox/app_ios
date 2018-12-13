@@ -26,6 +26,7 @@
 #import "UIView+Toast.h"
 #import "LabelAttributeStyle.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 @interface VotingViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate>
 {
@@ -303,8 +304,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getEventVoteList: self.eventId
                                                 limit: limit
-                                                token: [wTools getUserToken]
-                                               userId: [wTools getUserID]];
+                                                token: [UserInfo getUserToken]
+                                               userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -369,8 +370,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI vote: albumId
                                   eventId: self.eventId
-                                    token: [wTools getUserToken]
-                                   userId: [wTools getUserID]];
+                                    token: [UserInfo getUserToken]
+                                   userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

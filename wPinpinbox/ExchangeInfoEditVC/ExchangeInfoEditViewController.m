@@ -21,6 +21,8 @@
 
 #import "LabelAttributeStyle.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
+
 
 @interface ExchangeInfoEditViewController () <UITextViewDelegate, UITextFieldDelegate>
 {
@@ -699,8 +701,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI gainPhotoUseForUser: self.jsonStr
                                        photoUseForUserId: photoUseForUserIdStr
-                                                   token: [wTools getUserToken]
-                                                  userId: [wTools getUserID]];
+                                                   token: [UserInfo getUserToken]
+                                                  userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -844,8 +846,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI exchangePhotoUseFor: currentDeviceId
                                                  photoId: photoIdStr
-                                                   token: [wTools getUserToken]
-                                                  userId: [wTools getUserID]];
+                                                   token: [UserInfo getUserToken]
+                                                  userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -895,8 +897,8 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI insertBookmark: photoIdStr
-                                              token: [wTools getUserToken]
-                                             userId: [wTools getUserID]];
+                                              token: [UserInfo getUserToken]
+                                             userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -982,8 +984,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI updatePhotoUseForUser: self.jsonStr
                                          photoUseForUserId: photoUseForUserIdStr
-                                                     token: [wTools getUserToken]
-                                                    userId: [wTools getUserID]];
+                                                     token: [UserInfo getUserToken]
+                                                    userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

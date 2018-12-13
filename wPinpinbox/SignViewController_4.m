@@ -17,6 +17,7 @@
 #import "UIColor+Extensions.h"
 
 #import "MyTabBarController.h"
+#import "UserInfo.h"
 
 #define kFontSize 16
 
@@ -242,7 +243,7 @@
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         NSString *token = [userPrefs objectForKey:@"token"];
-        NSString *uid = [wTools getUserID];
+        NSString *uid = [UserInfo getUserID];
         BOOL respone = [[boxAPI updateprofilehobby:token usid:uid hobby:selecttag] boolValue];
         
         dispatch_async(dispatch_get_main_queue(), ^{

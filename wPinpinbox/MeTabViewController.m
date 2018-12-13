@@ -51,6 +51,8 @@
 #import "CropImageViewController.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "UserInfo.h"
+
 #define kStatusHeight 20;
 #define kTopGapToHeashot 44
 #define kHeadhotHeight 96
@@ -297,7 +299,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 #pragma mark - Web Service
 - (void)loadData {
     NSLog(@"loadData");
-    //NSLog(@"userId: %@", [wTools getUserID]);
+    //NSLog(@"userId: %@", [UserInfo getUserID]);
     
     // If isLoading is NO then run the following code
     if (!isLoading) {
@@ -378,11 +380,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat:@"%ld,%d", (long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
-    [data setObject: [wTools getUserID] forKey: @"authorid"];
+    [data setObject: [UserInfo getUserID] forKey: @"authorid"];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI getcreative:[wTools getUserID]
-                                           token:[wTools getUserToken]
+        NSString *response = [boxAPI getcreative:[UserInfo getUserID]
+                                           token:[UserInfo getUserToken]
                                             data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -624,10 +626,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
-        NSString *response = [boxAPI doTask1: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_edit_profile" platform: @"apple"];
+        NSString *response = [boxAPI doTask1: [UserInfo getUserID] token: [UserInfo getUserToken] task_for: @"firsttime_edit_profile" platform: @"apple"];
         
-        NSLog(@"User ID: %@", [wTools getUserID]);
-        NSLog(@"Token: %@", [wTools getUserToken]);
+        NSLog(@"User ID: %@", [UserInfo getUserID]);
+        NSLog(@"Token: %@", [UserInfo getUserToken]);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1447,7 +1449,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     self.customMessageActionSheet.topicStr = @"留言板";
     self.customMessageActionSheet.type = @"user";
-    self.customMessageActionSheet.typeId = [wTools getUserID];
+    self.customMessageActionSheet.typeId = [UserInfo getUserID];
     self.customMessageActionSheet.userName = @"";
     
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
@@ -1478,7 +1480,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 }
 
 - (IBAction)myPageBtnPressed:(id)sender {
-    NSString *pageStr = [NSString stringWithFormat: @"index/creative/content/?user_id=%@&appview=true", [wTools getUserID]];
+    NSString *pageStr = [NSString stringWithFormat: @"index/creative/content/?user_id=%@&appview=true", [UserInfo getUserID]];
     NSString *urlString = [NSString stringWithFormat: @"%@%@", pinpinbox, pageStr];
     NSURL *url = [NSURL URLWithString: urlString];
     
@@ -1501,7 +1503,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 - (IBAction)shareBtnPress:(id)sender {
     NSLog(@"shareBtnPress");
     
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects: [NSString stringWithFormat: userIdSharingLink, [wTools getUserID], autoPlayStr], nil] applicationActivities:nil];
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects: [NSString stringWithFormat: userIdSharingLink, [UserInfo getUserID], autoPlayStr], nil] applicationActivities:nil];
     
     [self presentViewController: activityVC animated: YES completion: nil];
 }
@@ -1674,8 +1676,8 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI retrievealbump: albumid
-                                               uid: [wTools getUserID]
-                                             token: [wTools getUserToken]];
+                                               uid: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

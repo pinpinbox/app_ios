@@ -36,6 +36,7 @@
 #import "UIViewController+ErrorAlert.h"
 
 #import "NotifTabViewController.h"
+#import "UserInfo.h"
 
 @interface AlbumCollectionViewController () <CAPSPageMenuDelegate, MyAlbumCollectionViewControllerDelegate, OtherCollectionViewControllerDelegate, CalbumlistViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic) CAPSPageMenu *pageMenu;
@@ -708,8 +709,8 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrievealbump: albumId
-                                                uid: [wTools getUserID]
-                                              token: [wTools getUserToken]];
+                                                uid: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

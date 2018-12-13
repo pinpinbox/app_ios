@@ -29,6 +29,7 @@
 #import "LabelAttributeStyle.h"
 #import "ChangeInterestsViewController.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 #define kWidthForUpload 720
 #define kHeightForUpload 960
@@ -887,9 +888,9 @@
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //NSString *response = [boxAPI updateprofile: [wTools getUserID] token: [wTools getUserToken] data: data];
-        NSString *response = [boxAPI updateUser: [wTools getUserID]
-                                          token: [wTools getUserToken]
+        //NSString *response = [boxAPI updateprofile: [UserInfo getUserID] token: [UserInfo getUserToken] data: data];
+        NSString *response = [boxAPI updateUser: [UserInfo getUserID]
+                                          token: [UserInfo getUserToken]
                                           param: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -988,8 +989,8 @@
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI updateProfilePic: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI updateProfilePic: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                                 image: image];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

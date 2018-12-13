@@ -26,6 +26,8 @@
 #import "MintAnnotationChatView.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "UserInfo.h"
+
 @interface MessageboardViewController () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate> {
     BOOL isTouchDown;
     UILabel *placeHolderNameLabel;
@@ -154,8 +156,8 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = @"";
-        response = [boxAPI getMessageBoardList: [wTools getUserID]
-                                         token: [wTools getUserToken]
+        response = [boxAPI getMessageBoardList: [UserInfo getUserID]
+                                         token: [UserInfo getUserToken]
                                           type: wself.type
                                         typeId: wself.typeId
                                          limit: limit];
@@ -368,8 +370,8 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
-        response = [boxAPI insertMessageBoard: [wTools getUserID]
-                                        token: [wTools getUserToken]
+        response = [boxAPI insertMessageBoard: [UserInfo getUserID]
+                                        token: [UserInfo getUserToken]
                                          type: wself.type
                                        typeId: wself.typeId
                                          text: text
@@ -440,7 +442,7 @@
         NSLog(@"userId: %@", userId);
         NSLog(@"userName: %@", userName);
 
-        if ([userId intValue] == [[wTools getUserID] intValue]) {
+        if ([userId intValue] == [[UserInfo getUserID] intValue]) {
             CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
             style.messageColor = [UIColor whiteColor];
             style.backgroundColor = [UIColor thirdPink];
@@ -1544,14 +1546,14 @@ shouldChangeTextInRange:(NSRange)range
         
         userData = [NSMutableArray arrayWithArray: dic[@"data"]];
         
-        NSLog(@"[wTools getUserID]: %@", [wTools getUserID]);
+        NSLog(@"[UserInfo getUserID]: %@", [UserInfo getUserID]);
         NSLog(@"userData: %@", userData);
         
         NSLog(@"userData.count: %lu", (unsigned long)userData.count);
         
         NSMutableArray *tempArray = [[NSMutableArray alloc] init];
         for (NSDictionary *d in userData) {
-            if ([d[@"user"][@"user_id"] intValue] == [[wTools getUserID] intValue]) {
+            if ([d[@"user"][@"user_id"] intValue] == [[UserInfo getUserID] intValue]) {
                 [tempArray addObject: d];
             }
         }
@@ -1582,8 +1584,8 @@ shouldChangeTextInRange:(NSRange)range
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,16" forKey: @"limit"];
         
-        response = [boxAPI search: [wTools getUserID]
-                            token: [wTools getUserToken]
+        response = [boxAPI search: [UserInfo getUserID]
+                            token: [UserInfo getUserToken]
                              data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{

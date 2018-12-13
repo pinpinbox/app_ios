@@ -43,6 +43,8 @@
 #import "GlobalVars.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "UserInfo.h"
+
 #define kPlzOpenLocSys @"請開啟定位:設置 > 隱私 > 位置 > 定位服務。"
 #define kTipTitle @"提示"
 
@@ -70,11 +72,11 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 //- (void)initApp {
-//    NSLog(@"User ID: %@", [wTools getUserID]);
-//    NSLog(@"User Token: %@", [wTools getUserToken]);
+//    NSLog(@"User ID: %@", [UserInfo getUserID]);
+//    NSLog(@"User Token: %@", [UserInfo getUserToken]);
 //
-//    NSString *userId = [wTools getUserID];
-//    NSString *userToken = [wTools getUserToken];
+//    NSString *userId = [UserInfo getUserID];
+//    NSString *userToken = [UserInfo getUserToken];
 //
 //    BOOL authenticatedUser = false;
 //
@@ -1299,7 +1301,7 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI retrievealbump: albumId uid: [wTools getUserID] token: [wTools getUserToken]];
+        NSString *response = [boxAPI retrievealbump: albumId uid: [UserInfo getUserID] token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

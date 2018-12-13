@@ -26,6 +26,7 @@
 #import "GlobalVars.h"
 
 #import "AppDelegate.h"
+#import "UserInfo.h"
 
 
 #import "UIViewController+ErrorAlert.h"
@@ -135,8 +136,8 @@
     __block typeof(_albumid) aid = _albumid;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
-                                             token: [wTools getUserToken]
+        NSString *response = [boxAPI getalbumofdiy: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]
                                           album_id: aid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -188,12 +189,12 @@
     
     NSMutableDictionary *data = [NSMutableDictionary new];
     [data setObject: _albumid forKey: @"type_id"];
-    [data setObject: [wTools getUserID] forKey: @"user_id"];
+    [data setObject: [UserInfo getUserID] forKey: @"user_id"];
     [data setObject: @"album" forKey: @"type"];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getcooperation: [wTools getUserID]
-                                              token: [wTools getUserToken]
+        NSString *response = [boxAPI getcooperation: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]
                                                data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1105,8 +1106,8 @@
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
-        response = [boxAPI insertphotoofdiy: [wTools getUserID]
-                                      token: [wTools getUserToken]
+        response = [boxAPI insertphotoofdiy: [UserInfo getUserID]
+                                      token: [UserInfo getUserToken]
                                    album_id: aid
                                       image: newImg
                                 compression: 0.0];

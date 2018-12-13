@@ -27,8 +27,9 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "LabelAttributeStyle.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
-static NSString *hostURL = @"www.pinpinbox.com";
+//static NSString *hostURL = @"www.pinpinbox.com";
 
 @interface SearchTabViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UITextFieldDelegate>
 {
@@ -225,8 +226,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
         [data setObject: @"user" forKey: @"type"];
         [data setObject: @"0,16" forKey: @"limit"];
 
-        response = [boxAPI getRecommendedList: [wTools getUserID]
-                                        token: [wTools getUserToken]
+        response = [boxAPI getRecommendedList: [UserInfo getUserID]
+                                        token: [UserInfo getUserToken]
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -306,8 +307,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
         [data setObject: @"album" forKey: @"type"];
         [data setObject: @"0,16" forKey: @"limit"];
 
-        response = [boxAPI getRecommendedList: [wTools getUserID]
-                                        token: [wTools getUserToken]
+        response = [boxAPI getRecommendedList: [UserInfo getUserID]
+                                        token: [UserInfo getUserToken]
                                          data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -866,8 +867,8 @@ replacementString:(NSString *)string
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,32" forKey: @"limit"];
         
-        response = [boxAPI search: [wTools getUserID]
-                            token: [wTools getUserToken]
+        response = [boxAPI search: [UserInfo getUserID]
+                            token: [UserInfo getUserToken]
                              data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (response != nil) {
@@ -962,8 +963,8 @@ replacementString:(NSString *)string
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,32" forKey: @"limit"];
         
-        response = [boxAPI search: [wTools getUserID]
-                            token: [wTools getUserToken]
+        response = [boxAPI search: [UserInfo getUserID]
+                            token: [UserInfo getUserToken]
                              data: data];
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1127,8 +1128,8 @@ replacementString:(NSString *)string
     [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI retrievealbump: albumid
-                                                uid: [wTools getUserID]
-                                              token: [wTools getUserToken]];
+                                                uid: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

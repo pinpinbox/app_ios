@@ -15,6 +15,7 @@
 #import "CustomIOSAlertView.h"
 #import "MyLinearLayout.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 #define kCellHeightForPreview 170
 #define kViewHeightForPreview 568
@@ -248,8 +249,8 @@
     }
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI albumsettings: [wTools getUserID]
-                                             token: [wTools getUserToken]
+        NSString *response = [boxAPI albumsettings: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]
                                           album_id: self.albumId
                                           settings: jsonStr];
         

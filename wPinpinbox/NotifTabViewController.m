@@ -30,6 +30,7 @@
 #import "UIViewController+ErrorAlert.h"
 #import "AlbumCreationViewController.h"
 #import "AlbumCollectionViewController.h"
+#import "UserInfo.h"
 
 @interface NotifTabViewController () <UITableViewDataSource, UITableViewDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate>
 {
@@ -163,8 +164,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
         
-        response = [boxAPI getPushQueue: [wTools getUserID]
-                                  token: [wTools getUserToken]
+        response = [boxAPI getPushQueue: [UserInfo getUserID]
+                                  token: [UserInfo getUserToken]
                                   limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -740,8 +741,8 @@ heightForHeaderInSection:(NSInteger)section {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI retrievealbump: albumid
-                                                uid: [wTools getUserID]
-                                              token: [wTools getUserToken]];
+                                                uid: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

@@ -21,6 +21,7 @@
 
 #import <SafariServices/SafariServices.h>
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 @interface MyTabBarController ()
 {
@@ -245,8 +246,8 @@ const CGFloat kBarHeight = 56;
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI checkalbumofdiy: [wTools getUserID]
-                                               token: [wTools getUserToken]];
+        NSString *response = [boxAPI checkalbumofdiy: [UserInfo getUserID]
+                                               token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -301,8 +302,8 @@ const CGFloat kBarHeight = 56;
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI updatealbumofdiy: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI updatealbumofdiy: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                              album_id: albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -346,8 +347,8 @@ const CGFloat kBarHeight = 56;
     [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
-        NSString *response = [boxAPI insertalbumofdiy: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI insertalbumofdiy: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                           template_id: @"0"];
         
         dispatch_async(dispatch_get_main_queue(), ^{

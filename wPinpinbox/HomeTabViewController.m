@@ -69,6 +69,8 @@
 #import "RecommandCollectionViewCell.h"
 #import "SwitchButtonView.h"
 
+#import "UserInfo.h"
+
 #define kAdHeight 142
 #define kBtnWidth 78
 #define kBtnGap 16
@@ -245,7 +247,7 @@
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
     
-    NSLog(@"UserId: %@", [wTools getUserID]);
+    NSLog(@"UserId: %@", [UserInfo getUserID]);
     
     isSearchTextFieldSelected = NO;
     self.albumCollectionView.hidden = YES;
@@ -353,8 +355,8 @@
             NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
             NSLog(@"currentDeviceId: %@", currentDeviceId);
             
-            //awsResponse = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier:[OpenUDID value]];
-            awsResponse = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
+            //awsResponse = [boxAPI setawssns:[UserInfo getUserID] token:[UserInfo getUserToken] devicetoken:[wTools getUUID] identifier:[OpenUDID value]];
+            awsResponse = [boxAPI setawssns:[UserInfo getUserID] token:[UserInfo getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -363,7 +365,7 @@
                 if ([awsResponse isEqualToString:timeOutErrorCode]) {
                     UIDevice *device = [UIDevice currentDevice];
                     NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
-                    NSString *result = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
+                    NSString *result = [boxAPI setawssns:[UserInfo getUserID] token:[UserInfo getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
                     [wTools processAWSResponse: result];
                 } else {
                     [wTools processAWSResponse: awsResponse];
@@ -634,8 +636,8 @@ sourceController:(UIViewController *)source
     [data setValue: limit forKey: @"limit"];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI updatelist: [wTools getUserID]
-                                          token: [wTools getUserToken]
+        NSString *response = [boxAPI updatelist: [UserInfo getUserID]
+                                          token: [UserInfo getUserToken]
                                            data: data
                                            rank: wself->rankType];
         
@@ -748,8 +750,8 @@ sourceController:(UIViewController *)source
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI getAdList: [wTools getUserID]
-                                         token: [wTools getUserToken]
+        NSString *response = [boxAPI getAdList: [UserInfo getUserID]
+                                         token: [UserInfo getUserToken]
                                      adarea_id: @"1"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -815,7 +817,7 @@ sourceController:(UIViewController *)source
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI retrievecatgeorylist: [wTools getUserID] token: [wTools getUserToken]];
+        NSString *response = [boxAPI retrievecatgeorylist: [UserInfo getUserID] token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -881,7 +883,7 @@ sourceController:(UIViewController *)source
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI getTheMeArea: [wTools getUserToken] userId: [wTools getUserID]];
+        NSString *response = [boxAPI getTheMeArea: [UserInfo getUserToken] userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -975,8 +977,8 @@ sourceController:(UIViewController *)source
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = @"";
         response = [boxAPI getNewJoinList:[NSString stringWithFormat:@"%lu, 16",(unsigned long)count]
-                                    token:[wTools getUserToken]
-                                   userId:[wTools getUserID]];
+                                    token:[UserInfo getUserToken]
+                                   userId:[UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -1029,8 +1031,8 @@ sourceController:(UIViewController *)source
         NSString *response = @"";
         
         response = [boxAPI getHotList:[NSString stringWithFormat:@"%lu, 16",(unsigned long)count]
-                                token:[wTools getUserToken]
-                               userId:[wTools getUserID]];
+                                token:[UserInfo getUserToken]
+                               userId:[UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -1103,8 +1105,8 @@ sourceController:(UIViewController *)source
         [data setObject: @"user" forKey: @"type"];
         [data setObject: [NSString stringWithFormat:@"%lu, 16",(unsigned long)count] forKey: @"limit"];
         
-        response = [boxAPI getRecommendedList: [wTools getUserID]
-                                        token: [wTools getUserToken]
+        response = [boxAPI getRecommendedList: [UserInfo getUserID]
+                                        token: [UserInfo getUserToken]
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1173,8 +1175,8 @@ sourceController:(UIViewController *)source
         [data setObject: @"album" forKey: @"type"];
         [data setObject: @"0,16" forKey: @"limit"];
         
-        response = [boxAPI getRecommendedList: [wTools getUserID]
-                                        token: [wTools getUserToken]
+        response = [boxAPI getRecommendedList: [UserInfo getUserID]
+                                        token: [UserInfo getUserToken]
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1361,8 +1363,8 @@ sourceController:(UIViewController *)source
     NSLog(@"checkPoint");
     __block typeof(self)wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI doTask1: [wTools getUserID]
-                                       token: [wTools getUserToken]
+        NSString *response = [boxAPI doTask1: [UserInfo getUserID]
+                                       token: [UserInfo getUserToken]
                                     task_for: @"firsttime_login"
                                     platform: @"apple"];
         
@@ -1556,8 +1558,8 @@ sourceController:(UIViewController *)source
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI getEvent: [wTools getUserID]
-                                        token: [wTools getUserToken]
+        NSString *response = [boxAPI getEvent: [UserInfo getUserID]
+                                        token: [UserInfo getUserToken]
                                      event_id: eventId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2791,12 +2793,12 @@ replacementString:(NSString *)string {
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,32" forKey: @"limit"];
         /*
-         response = [self search: [wTools getUserID]
-         token: [wTools getUserToken]
+         response = [self search: [UserInfo getUserID]
+         token: [UserInfo getUserToken]
          data: data];
          */
-        response = [boxAPI search: [wTools getUserID]
-                            token: [wTools getUserToken]
+        response = [boxAPI search: [UserInfo getUserID]
+                            token: [UserInfo getUserToken]
                              data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2873,8 +2875,8 @@ replacementString:(NSString *)string {
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,32" forKey: @"limit"];
         
-        response = [boxAPI search: [wTools getUserID]
-                            token: [wTools getUserToken]
+        response = [boxAPI search: [UserInfo getUserID]
+                            token: [UserInfo getUserToken]
                              data: data];
         
         
@@ -3399,8 +3401,8 @@ replacementString:(NSString *)string {
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI updateUser: [wTools getUserID]
-                                          token: [wTools getUserToken]
+        NSString *response = [boxAPI updateUser: [UserInfo getUserID]
+                                          token: [UserInfo getUserToken]
                                           param: jsonStr];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

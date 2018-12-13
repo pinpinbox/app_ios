@@ -22,6 +22,7 @@
 #import "GlobalVars.h"
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 @interface SignViewController_3 ()<UITextFieldDelegate, SelectBarDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectText;
@@ -486,8 +487,8 @@
                             
                             if ([wTools getUUID]) {
                                 
-                                NSLog(@"getUserID: %@", [wTools getUserID]);
-                                NSLog(@"getUserToken: %@", [wTools getUserToken]);
+                                NSLog(@"getUserID: %@", [UserInfo getUserID]);
+                                NSLog(@"getUserToken: %@", [UserInfo getUserToken]);
                                 NSLog(@"getUUID: %@", [wTools getUUID]);
                                 NSLog(@"identifier: %@", [OpenUDID value]);
                                 
@@ -495,8 +496,8 @@
                                 NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
                                 NSLog(@"currentDeviceId: %@", currentDeviceId);
                                 
-                                //awsResponse = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier:[OpenUDID value]];
-                                awsResponse = [boxAPI setawssns:[wTools getUserID] token:[wTools getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
+                                //awsResponse = [boxAPI setawssns:[UserInfo getUserID] token:[UserInfo getUserToken] devicetoken:[wTools getUUID] identifier:[OpenUDID value]];
+                                awsResponse = [boxAPI setawssns:[UserInfo getUserID] token:[UserInfo getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
                             }
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 

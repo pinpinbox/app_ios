@@ -14,6 +14,7 @@
 #import "GlobalVars.h"
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 #define kCellHeightForReorder 150
 #define kViewHeightForReorder 568
@@ -207,8 +208,8 @@ static NSString * const reuseIdentifier = @"Cell";
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *response = [boxAPI sortPhotoOfDiy: [wTools getUserID]
-                                              token: [wTools getUserToken]
+        NSString *response = [boxAPI sortPhotoOfDiy: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]
                                            album_id: self.albumId
                                                sort: photoIdStr];
         

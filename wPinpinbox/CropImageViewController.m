@@ -16,6 +16,7 @@
 #import "UIView+Toast.h"
 #import "CustomIOSAlertView.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 @interface CropImageViewController ()
 @property (weak, nonatomic) IBOutlet TKImageView *tkImageView;
@@ -109,7 +110,7 @@
 
 - (void)setUserCover {
     NSLog(@"setUserCover");
-    NSLog(@"UserId: %@", [wTools getUserID]);
+    NSLog(@"UserId: %@", [UserInfo getUserID]);
     
     [wTools ShowMBProgressHUD];
     
@@ -118,8 +119,8 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI setUserCover: image
-                                            token: [wTools getUserToken]
-                                           userId: [wTools getUserID]];
+                                            token: [UserInfo getUserToken]
+                                           userId: [UserInfo getUserID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             

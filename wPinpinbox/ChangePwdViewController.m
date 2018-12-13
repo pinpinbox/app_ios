@@ -17,6 +17,8 @@
 
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
+
 @interface ChangePwdViewController () <UITextFieldDelegate, UIGestureRecognizerDelegate>
 {
     UITextField *selectText;
@@ -427,8 +429,8 @@ replacementString:(NSString *)string
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI updatepwd: [wTools getUserID]
-                                         token: [wTools getUserToken]
+        NSString *response = [boxAPI updatepwd: [UserInfo getUserID]
+                                         token: [UserInfo getUserToken]
                                         oldpwd: self.currentPwdTextField.text
                                         newpwd: self.pwdTextField2.text];
                 

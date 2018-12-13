@@ -21,6 +21,7 @@
 #import "SwitchButtonView.h"
 #import "AudioUploader.h"
 #import "MBProgressHUD.h"
+#import "UserInfo.h"
 
 typedef NS_ENUM(NSInteger, SetupAudioType) {
     None = 1,
@@ -175,8 +176,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI getalbumdataoptions: [wTools getUserID]
-                                                   token: [wTools getUserToken]];
+        NSString *response = [boxAPI getalbumdataoptions: [UserInfo getUserID]
+                                                   token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -213,8 +214,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"getAlbumSettings");
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getalbumsettings: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI getalbumsettings: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                              album_id: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1119,8 +1120,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                               encoding: NSUTF8StringEncoding];
     
     NSMutableDictionary *param = [NSMutableDictionary new];
-    [param setObject:[wTools getUserID] forKey:@"user_id"];
-    [param setObject:[wTools getUserToken] forKey:@"token"];
+    [param setObject:[UserInfo getUserID] forKey:@"user_id"];
+    [param setObject:[UserInfo getUserToken] forKey:@"token"];
     [param setObject:self.albumId forKey:@"album_id"];
     [param setObject:jsonStr forKey:@"settings"];
     isAudioModeChanged = YES;
@@ -1164,8 +1165,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI albumsettings: [wTools getUserID]
-                                            token: [wTools getUserToken]
+        NSString *response = [boxAPI albumsettings: [UserInfo getUserID]
+                                            token: [UserInfo getUserToken]
                                          album_id: wself.albumId
                                          settings: jsonStr];
         

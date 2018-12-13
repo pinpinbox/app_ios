@@ -30,6 +30,7 @@
 
 #import "MultipartInputStream.h"
 #import "HudIndicatorView.h"
+#import "UserInfo.h"
 
 #define kFontSize 18
 
@@ -612,7 +613,7 @@
         NSLog(@"boxAPI insertPhotoOfDiy");
         
         NSData *imageData = UIImageJPEGRepresentation(imageForResize, 1.0);
-        [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData ];//insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];
+        [self sendWithStream:[UserInfo getUserID] token: [UserInfo getUserToken] album_id: self.albumId imageData: imageData ];//insertphotoofdiy: [UserInfo getUserID] token: [UserInfo getUserToken] album_id: self.albumId imageData: imageData];
         
         [imgArray removeObjectAtIndex:0];
             //NSLog(@"response: %@", response);

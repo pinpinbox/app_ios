@@ -15,6 +15,7 @@
 #import "boxAPI.h"
 #import "GlobalVars.h"
 #import "MultipartInputStream.h"
+#import "UserInfo.h"
 
 API_AVAILABLE(ios(11.0))
 @interface PDFUploader ()
@@ -145,7 +146,7 @@ API_AVAILABLE(ios(11.0))
         @try {
             NSData *imageData = [self.imageDataArray firstObject];
             NSString *desc = [descs objectAtIndex:i];
-            [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumID imageData: imageData taskDesc:desc];
+            [self sendWithStream:[UserInfo getUserID] token: [UserInfo getUserToken] album_id: self.albumID imageData: imageData taskDesc:desc];
             [self.imageDataArray removeObjectAtIndex:0];
             i++;
             //[descs removeObjectAtIndex:0];

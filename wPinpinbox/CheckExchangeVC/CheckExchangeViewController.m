@@ -22,6 +22,7 @@
 
 #import "LabelAttributeStyle.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 @interface CheckExchangeViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 {
@@ -105,7 +106,7 @@
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getBookmarkList: [wTools getUserToken] userId: [wTools getUserID]];
+        NSString *response = [boxAPI getBookmarkList: [UserInfo getUserToken] userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

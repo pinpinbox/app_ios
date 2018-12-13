@@ -58,6 +58,8 @@
 #import "3rdPartyVideoPlayerViewController.h"
 #import "MapHelper.h"
 
+#import "UserInfo.h"
+
 #define kTextContentHeight 155
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
@@ -886,8 +888,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrievealbump: aid//self.albumId
-                                                uid: [wTools getUserID]
-                                              token: [wTools getUserToken]];
+                                                uid: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -2021,8 +2023,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI buyalbum: [wTools getUserID]
-                                        token: [wTools getUserToken]
+        NSString *response = [boxAPI buyalbum: [UserInfo getUserID]
+                                        token: [UserInfo getUserToken]
                                       albumid: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2075,7 +2077,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI geturpoints: [wTools getUserID] token: [wTools getUserToken]];
+        NSString *response = [boxAPI geturpoints: [UserInfo getUserID] token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -2138,15 +2140,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI newBuyAlbum: [wTools getUserID]
-                                           token: [wTools getUserToken]
+        NSString *response = [boxAPI newBuyAlbum: [UserInfo getUserID]
+                                           token: [UserInfo getUserToken]
                                          albumId: self.albumId
                                         platform: @"apple"
                                            point: pointStr
                                           reward: jsonStr];
         /*
-         NSString *response = [boxAPI newBuyAlbum: [wTools getUserID]
-         token: [wTools getUserToken]
+         NSString *response = [boxAPI newBuyAlbum: [UserInfo getUserID]
+         token: [UserInfo getUserToken]
          albumId: self.albumId
          platform: @"apple"
          point: pointStr];
@@ -2253,15 +2255,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
-                                                  token: [wTools getUserToken]
+        NSString *response = [boxAPI checkTaskCompleted: [UserInfo getUserID]
+                                                  token: [UserInfo getUserToken]
                                                task_for: @"share_to_fb"
                                                platform: @"apple"
                                                    type: @"album"
                                                  typeId: self.albumId];
         
-//        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
-//                                                  token: [wTools getUserToken]
+//        NSString *response = [boxAPI checkTaskCompleted: [UserInfo getUserID]
+//                                                  token: [UserInfo getUserToken]
 //                                               task_for: @"share_to_fb"
 //                                               platform: @"apple"];
         
@@ -2334,8 +2336,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI insertAlbum2Likes: [wTools getUserID]
-                                                 token: [wTools getUserToken]
+        NSString *response = [boxAPI insertAlbum2Likes: [UserInfo getUserID]
+                                                 token: [UserInfo getUserToken]
                                                albumId: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2380,8 +2382,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI deleteAlbum2Likes: [wTools getUserID]
-                                                 token: [wTools getUserToken]
+        NSString *response = [boxAPI deleteAlbum2Likes: [UserInfo getUserID]
+                                                 token: [UserInfo getUserToken]
                                                albumId: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2525,15 +2527,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI doTask2: [wTools getUserID]
-                                       token: [wTools getUserToken]
+        NSString *response = [boxAPI doTask2: [UserInfo getUserID]
+                                       token: [UserInfo getUserToken]
                                     task_for: wself->task_for
                                     platform: @"apple"
                                         type: @"album"
                                      type_id: wself.albumId];
         
-        NSLog(@"User ID: %@", [wTools getUserID]);
-        NSLog(@"Token: %@", [wTools getUserToken]);
+        NSLog(@"User ID: %@", [UserInfo getUserID]);
+        NSLog(@"Token: %@", [UserInfo getUserToken]);
         NSLog(@"Task_For: %@", wself->task_for);
         NSLog(@"Album ID: %@", wself.albumId);
         
@@ -2883,8 +2885,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI slotPhotoUseFor: currentDeviceId
                                              photoId: photoIdStr
-                                               token: [wTools getUserToken]
-                                              userId: [wTools getUserID]];
+                                               token: [UserInfo getUserToken]
+                                              userId: [UserInfo getUserID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             
@@ -3025,8 +3027,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getPhotoUseFor: photoIdStr
-                                              token: [wTools getUserToken]
-                                             userId: [wTools getUserID]];
+                                              token: [UserInfo getUserToken]
+                                             userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -3454,8 +3456,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI insertBookmark: photoIdStr
-                                              token: [wTools getUserToken]
-                                             userId: [wTools getUserID]];
+                                              token: [UserInfo getUserToken]
+                                             userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

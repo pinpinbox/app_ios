@@ -20,6 +20,8 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "LabelAttributeStyle.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
+
 
 @interface ChooseTemplateViewController () <SFSafariViewControllerDelegate>
 {
@@ -165,8 +167,8 @@
     [data setValue: limit forKey: @"limit"];
     __block typeof (self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI gettemplatelist: [wTools getUserID]
-                                               token: [wTools getUserToken]
+        NSString *response = [boxAPI gettemplatelist: [UserInfo getUserID]
+                                               token: [UserInfo getUserToken]
                                                 data: data
                                                event: wself.event_id
                                                style: wself.style_id];
@@ -362,8 +364,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI geturpoints: [wTools getUserID]
-                                           token: [wTools getUserToken]];
+        NSString *response = [boxAPI geturpoints: [UserInfo getUserID]
+                                           token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -413,8 +415,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __block typeof(self) wself = self;
     __block typeof(templateId) tid = templateId;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI buytemplate: [wTools getUserID]
-                                           token: [wTools getUserToken]
+        NSString *response = [boxAPI buytemplate: [UserInfo getUserID]
+                                           token: [UserInfo getUserToken]
                                       templateid: tid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -469,8 +471,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI checkalbumofdiy: [wTools getUserID]
-                                               token: [wTools getUserToken]];
+        NSString *response = [boxAPI checkalbumofdiy: [UserInfo getUserID]
+                                               token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -535,8 +537,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI updatealbumofdiy: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI updatealbumofdiy: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                              album_id: albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -598,8 +600,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __block typeof(templateId) tid = templateId;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *response = [boxAPI insertalbumofdiy: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI insertalbumofdiy: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                           template_id: tid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -695,10 +697,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __block typeof(templateId) tid = templateId;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *response = [boxAPI doTask2: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_download_template" platform: @"apple" type: @"template" type_id: tid];
+        NSString *response = [boxAPI doTask2: [UserInfo getUserID] token: [UserInfo getUserToken] task_for: @"firsttime_download_template" platform: @"apple" type: @"template" type_id: tid];
         
-        NSLog(@"User ID: %@", [wTools getUserID]);
-        NSLog(@"Token: %@", [wTools getUserToken]);
+        NSLog(@"User ID: %@", [UserInfo getUserID]);
+        NSLog(@"Token: %@", [UserInfo getUserToken]);
         NSLog(@"Template ID: %@", tid);
         
         dispatch_async(dispatch_get_main_queue(), ^{

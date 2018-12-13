@@ -62,6 +62,7 @@
 #import "PhotoDescriptionAddViewController.h"
 #import "HudIndicatorView.h"
 #import "AlbumCreationIntroViewController.h"
+#import "UserInfo.h"
 
 
 #pragma mark - Photo Editor SDK
@@ -720,7 +721,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"userId is not null");
         if (![self.userIdentity isEqual: [NSNull null]]) {
             NSLog(@"self.userIdentity is not null");
-            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
+            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[UserInfo getUserID] integerValue]) {
                 [self showTextEditing];
             } else {
                 [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
@@ -737,7 +738,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"userId is not null");
         if (![self.userIdentity isEqual: [NSNull null]]) {
             NSLog(@"self.userIdentity is not null");
-            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
+            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[UserInfo getUserID] integerValue]) {
                 [self showCustomAlertForText: @"確定刪除本頁敘述"];
             } else {
                 [self showErrorToastWithMessage: @"只能操作你上傳的項目" duration:1.0];
@@ -817,8 +818,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         __strong typeof(weakSelf) stSelf = weakSelf;
         
-        NSString *response = [boxAPI albumsettings: [wTools getUserID]
-                                             token: [wTools getUserToken]
+        NSString *response = [boxAPI albumsettings: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]
                                           album_id: stSelf.albumid
                                           settings: jsonStr];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -885,8 +886,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         __strong typeof(weakSelf) stSelf = weakSelf;
         NSString *pid = [stSelf->ImageDataArr [stSelf->selectItem][@"photo_id"] stringValue];
         
-        response = [boxAPI updatephotoofdiy: [wTools getUserID]
-                                      token: [wTools getUserToken]
+        response = [boxAPI updatephotoofdiy: [UserInfo getUserID]
+                                      token: [UserInfo getUserToken]
                                    album_id: stSelf.albumid
                                    photo_id: pid
                                       image: nil
@@ -1041,7 +1042,7 @@ shouldChangeTextInRange:(NSRange)range
                 NSLog(@"userId is not null");
                 if (![self.userIdentity isEqual: [NSNull null]]) {
                     NSLog(@"self.userIdentity is not null");
-                    if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
+                    if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[UserInfo getUserID] integerValue]) {
                         [self checkAudioStatus];
                     } else {
                         [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
@@ -1056,7 +1057,7 @@ shouldChangeTextInRange:(NSRange)range
             NSLog(@"userId is not null");
             if (![self.userIdentity isEqual: [NSNull null]]) {
                 NSLog(@"self.userIdentity is not null");
-                if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
+                if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[UserInfo getUserID] integerValue]) {
                     [self checkAudioStatus];
                 } else {
                     [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
@@ -1494,7 +1495,7 @@ shouldChangeTextInRange:(NSRange)range
         NSLog(@"userId is not null");
         if (![self.userIdentity isEqual: [NSNull null]]) {
             NSLog(@"self.userIdentity is not null");
-            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
+            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[UserInfo getUserID] integerValue]) {
                 [self showCustomAlertForAudio: @"確定刪除本頁錄音檔"];
             } else {
                 [self showErrorToastWithMessage: @"只能操作你上傳的項目" duration: 1.0];
@@ -1536,8 +1537,8 @@ shouldChangeTextInRange:(NSRange)range
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         __strong typeof(weakSelf) stSelf = weakSelf;
-        NSString *response = [boxAPI updateAudioOfDiy: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI updateAudioOfDiy: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                              album_id: stSelf.albumid
                                              photo_id: pid
                                                  file: stSelf->audioData];
@@ -1638,8 +1639,8 @@ shouldChangeTextInRange:(NSRange)range
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void) {
         __strong typeof(weakSelf) stSelf = weakSelf;
-        NSString *response = [boxAPI deleteAudioOfDiy: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI deleteAudioOfDiy: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                              album_id: stSelf.albumid
                                              photo_id: pid];
         
@@ -1793,8 +1794,8 @@ shouldChangeTextInRange:(NSRange)range
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
         __strong typeof(weakSelf) stSelf = weakSelf;
-        NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
-                                             token: [wTools getUserToken]
+        NSString *response = [boxAPI getalbumofdiy: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]
                                           album_id: stSelf.albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1891,13 +1892,13 @@ shouldChangeTextInRange:(NSRange)range
     
     NSMutableDictionary *data=[NSMutableDictionary new];
     [data setObject: _albumid forKey: @"type_id"];
-    [data setObject: [wTools getUserID] forKey: @"user_id"];
+    [data setObject: [UserInfo getUserID] forKey: @"user_id"];
     [data setObject: @"album" forKey: @"type"];
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         __strong typeof(weakSelf) stSelf = weakSelf;
-        NSString *response = [boxAPI getcooperation: [wTools getUserID]
-                                              token: [wTools getUserToken]
+        NSString *response = [boxAPI getcooperation: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]
                                                data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1988,8 +1989,8 @@ shouldChangeTextInRange:(NSRange)range
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         __strong typeof(weakSelf) stSelf = weakSelf;
-        NSString *response = [boxAPI updatealbumofdiy: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI updatealbumofdiy: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                              album_id: stSelf.albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2095,14 +2096,14 @@ shouldChangeTextInRange:(NSRange)range
     NSString *userIdStr = ImageDataArr[selectItem][@"user_id"];
     
     NSLog(@"userIdStr: %@", userIdStr);
-    NSLog(@"getUserId: %@", [wTools getUserID]);
+    NSLog(@"getUserId: %@", [UserInfo getUserID]);
     NSLog(@"self.userIdentity: %@", self.userIdentity);
     
     if (![userIdStr isEqual: [NSNull null]]) {
         NSLog(@"userId is not null");
         if (![self.userIdentity isEqual: [NSNull null]]) {
             NSLog(@"self.userIdentity is not null");
-            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
+            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[UserInfo getUserID] integerValue]) {
                 __weak typeof(self) weakSelf = self;
                 dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
                     //NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:ImageDataArr[selectItem][@"video_url"]]];
@@ -2158,8 +2159,8 @@ shouldChangeTextInRange:(NSRange)range
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         __strong typeof(weakSelf) stSelf = weakSelf;
-        NSString *response = [boxAPI deletephotoofdiy: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI deletephotoofdiy: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                              album_id: stSelf.albumid
                                              photo_id: pid];
         
@@ -2228,8 +2229,8 @@ shouldChangeTextInRange:(NSRange)range
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
         __strong typeof(weakSelf) stSelf = weakSelf;
-        NSString *response = [boxAPI deleteVideoOfDiy: [wTools getUserID]
-                                                token: [wTools getUserToken]
+        NSString *response = [boxAPI deleteVideoOfDiy: [UserInfo getUserID]
+                                                token: [UserInfo getUserToken]
                                              album_id: stSelf.albumid
                                              photo_id: pid];
         
@@ -2590,8 +2591,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
      }
 
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
-    [_params setObject:[wTools getUserID] forKey:@"id"];
-    [_params setObject:[wTools getUserToken] forKey:@"token"];
+    [_params setObject:[UserInfo getUserID] forKey:@"id"];
+    [_params setObject:[UserInfo getUserToken] forKey:@"token"];
     [_params setObject:self.albumid forKey:@"album_id"];
     [_params setObject:[boxAPI signGenerator2:_params] forKey:@"sign"];
     
@@ -3249,10 +3250,10 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     if (![userIdStr isEqual: [NSNull null]]) {
         NSLog(@"userId is not null");
         if (![self.userIdentity isEqual: [NSNull null]]) {
-            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
+            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[UserInfo getUserID] integerValue]) {
                 privateImageView.hidden = YES;
                 alphaView.hidden = YES;
-            } else if ([userIdStr integerValue] != [[wTools getUserID] integerValue]) {
+            } else if ([userIdStr integerValue] != [[UserInfo getUserID] integerValue]) {
                 NSLog(@"userId != getUserId");
                 privateImageView.hidden = NO;
                 alphaView.hidden = NO;
@@ -3632,8 +3633,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         __strong typeof (weakself) stSelf = weakself;
         NSString *response = @"";
         
-        response = [boxAPI updatephotoofdiy: [wTools getUserID]
-                                      token: [wTools getUserToken]
+        response = [boxAPI updatephotoofdiy: [UserInfo getUserID]
+                                      token: [UserInfo getUserToken]
                                    album_id: stSelf.albumid
                                    photo_id: pid
                                       image: image
@@ -3826,8 +3827,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"callAlbumSettings");
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI albumsettings: [wTools getUserID]
-                                             token: [wTools getUserToken]
+        NSString *response = [boxAPI albumsettings: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]
                                           album_id: self.albumid
                                           settings: jsonStr];
         
@@ -3927,8 +3928,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI albumsettings: [wTools getUserID]
-                                             token: [wTools getUserToken]
+        NSString *response = [boxAPI albumsettings: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]
                                           album_id: self.albumid
                                           settings: jsonString];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -4958,7 +4959,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSString *pid = [ImageDataArr [selectItem][@"photo_id"] stringValue];
     __block typeof(self) wself = self;
-    [boxAPI updatephotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:self.albumid photo_id:pid key:@"location" settingStr:location  completed:^(NSDictionary *result, NSError *error) {
+    [boxAPI updatephotoofdiy:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:self.albumid photo_id:pid key:@"location" settingStr:location  completed:^(NSDictionary *result, NSError *error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -5041,7 +5042,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
 
     __block typeof(self) wself = self;
-    [boxAPI updatephotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:self.albumid photo_id:pid key:@"hyperlink" settingStr:jsonstr  completed:^(NSDictionary *result, NSError *error) {
+    [boxAPI updatephotoofdiy:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:self.albumid photo_id:pid key:@"hyperlink" settingStr:jsonstr  completed:^(NSDictionary *result, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
         });

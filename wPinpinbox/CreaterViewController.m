@@ -29,12 +29,13 @@
 #import "BuyPPointViewController.h"
 #import "MessageboardViewController.h"
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 static NSString *sharingLink = @"http://www.pinpinbox.com/index/album/content/?album_id=%@%@";
 //static NSString *userIdSharingLink = @"http://www.pinpinbox.com/index/creative/content/?user_id=%@%@";
 static NSString *autoPlayStr = @"&autoplay=1";
 
-@interface CreaterViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate, MessageboardViewControllerDelegate>
+@interface CreaterViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate, MessageboardViewControllerDelegate,SFSafariViewControllerDelegate>
 {
     NSMutableArray *pictures;
     BOOL isLoading;
@@ -243,8 +244,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [data setObject: self.userId forKey: @"authorid"];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *respnose = [boxAPI getcreative: [wTools getUserID]
-                                           token: [wTools getUserToken]
+        NSString *respnose = [boxAPI getcreative: [UserInfo getUserID]
+                                           token: [UserInfo getUserToken]
                                             data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1099,8 +1100,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *respnose = [boxAPI changefollowstatus: [wTools getUserID]
-                                                  token: [wTools getUserToken]
+        NSString *respnose = [boxAPI changefollowstatus: [UserInfo getUserID]
+                                                  token: [UserInfo getUserToken]
                                                authorid: self.userId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1177,8 +1178,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI doTask2: [wTools getUserID]
-                                       token: [wTools getUserToken]
+        NSString *response = [boxAPI doTask2: [UserInfo getUserID]
+                                       token: [UserInfo getUserToken]
                                     task_for: @"follow_user"
                                     platform: @"apple"
                                         type: @"user"
@@ -1366,8 +1367,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *respnose = [boxAPI retrievealbump: albumid
-                                               uid: [wTools getUserID]
-                                             token: [wTools getUserToken]];
+                                               uid: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

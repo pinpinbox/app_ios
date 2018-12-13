@@ -24,6 +24,7 @@
 #import "UIView+Toast.h"
 //#import "DDAUIActionSheetViewController.h"
 #import "CooperationInfoViewController.h"
+#import "UserInfo.h"
 
 @interface NewCooperationViewController () <UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CooperationInfoViewControllerDelegate>
 @property (strong, nonatomic) NSString *qrImageStr;
@@ -239,8 +240,8 @@ replacementString:(NSString *)string {
         NSMutableDictionary *data = [NSMutableDictionary new];
         [data setObject: self.albumId forKey: @"type_id"];
         [data setObject: @"album" forKey: @"type"];
-        NSString *response = [boxAPI getcooperationlist: [wTools getUserID]
-                                                  token: [wTools getUserToken]
+        NSString *response = [boxAPI getcooperationlist: [UserInfo getUserID]
+                                                  token: [UserInfo getUserToken]
                                                    data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -300,7 +301,7 @@ replacementString:(NSString *)string {
                         for (NSDictionary *d in self.cooperationData) {
                             NSInteger userIdInteger = [d[@"user"][@"user_id"] integerValue];
                             
-                            if ([[wTools getUserID] integerValue] == userIdInteger) {
+                            if ([[UserInfo getUserID] integerValue] == userIdInteger) {
                                 self.userIdentity = d[@"cooperation"][@"identity"];
                             }
                         }
@@ -329,7 +330,7 @@ replacementString:(NSString *)string {
                                                              error: nil];
         NSString *jsonStr = [[NSString alloc] initWithData: jsonData
                                                   encoding:  NSUTF8StringEncoding];
-        NSString *responseQRCode = [boxAPI getQRCode: [wTools getUserID] token: [wTools getUserToken] type: @"album" type_id: self.albumId effect: @"execute" is: jsonStr];
+        NSString *responseQRCode = [boxAPI getQRCode: [UserInfo getUserID] token: [UserInfo getUserToken] type: @"album" type_id: self.albumId effect: @"execute" is: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -383,8 +384,8 @@ replacementString:(NSString *)string {
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,32" forKey: @"limit"];
         
-        NSString *response = [boxAPI search: [wTools getUserID]
-                                      token: [wTools getUserToken]
+        NSString *response = [boxAPI search: [UserInfo getUserID]
+                                      token: [UserInfo getUserToken]
                                        data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -505,8 +506,8 @@ replacementString:(NSString *)string {
         
         //NSLog(@"data: %@", data);
         
-        NSString *response = [boxAPI updatecooperation: [wTools getUserID]
-                                                 token: [wTools getUserToken]
+        NSString *response = [boxAPI updatecooperation: [UserInfo getUserID]
+                                                 token: [UserInfo getUserToken]
                                                   data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -570,8 +571,8 @@ replacementString:(NSString *)string {
         [data setObject: albumId forKey: @"type_id"];
         [data setObject: @"album" forKey: @"type"];
         
-        NSString *response = [boxAPI deletecooperation: [wTools getUserID]
-                                                 token: [wTools getUserToken]
+        NSString *response = [boxAPI deletecooperation: [UserInfo getUserID]
+                                                 token: [UserInfo getUserToken]
                                                   data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -658,8 +659,8 @@ replacementString:(NSString *)string {
         [data setObject: userId forKey: @"user_id"];
         [data setObject: @"album" forKey: @"type"];
         [data setObject: albumId forKey: @"type_id"];
-        NSString *response = [boxAPI addcooperation: [wTools getUserID]
-                                              token: [wTools getUserToken]
+        NSString *response = [boxAPI addcooperation: [UserInfo getUserID]
+                                              token: [UserInfo getUserToken]
                                                data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{

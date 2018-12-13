@@ -23,6 +23,8 @@
 
 #import "UIViewController+ErrorAlert.h"
 #import "CustomIOSAlertView.h"
+#import "UserInfo.h"
+
 @interface SignViewController_2 ()<UITextFieldDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,PhotosViewDelegate,SelectBarDelegate>
 {
     UITextField *selectText;
@@ -339,8 +341,8 @@
                     if (tmp[@"image"]) {
                         NSLog(@"UPDATA IMAGE");
                         NSMutableDictionary *dic=[NSMutableDictionary new];
-                        [dic setObject:[wTools getUserToken] forKey:@"token"];
-                        [dic setObject:[wTools getUserID]  forKey:@"id"];
+                        [dic setObject:[UserInfo getUserToken] forKey:@"token"];
+                        [dic setObject:[UserInfo getUserID]  forKey:@"id"];
                         
                         UIImage *image=[UIImage imageWithData:tmp[@"image"]];
                         

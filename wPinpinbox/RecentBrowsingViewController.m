@@ -18,6 +18,7 @@
 #import "GlobalVars.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIViewController+ErrorAlert.h"
+#import "UserInfo.h"
 
 @interface RecentBrowsingViewController () <UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -263,8 +264,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI retrievealbump: albumid
-                                               uid: [wTools getUserID]
-                                             token: [wTools getUserToken]];
+                                               uid: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
