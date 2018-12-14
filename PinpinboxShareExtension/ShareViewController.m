@@ -15,6 +15,7 @@
 @property(weak, nonatomic) IBOutlet UITableView *albumList;
 @property(weak, nonatomic) IBOutlet UICollectionView *photoList;
 @property(weak, nonatomic) IBOutlet UITextView *textArea;
+@property(weak, nonatomic) IBOutlet UIView *notLoginCover;
 @end
 
 @implementation ShareViewController
@@ -32,6 +33,7 @@
         self.userName.text = profile.description;
     } else
         self.userName.text = [UserInfo getUserID];
+    
     NSExtensionContext *cxt = self.extensionContext;
     if (cxt) {
         NSArray *items = cxt.inputItems;

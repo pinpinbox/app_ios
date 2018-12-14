@@ -183,6 +183,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="albumList" destination="Mhz-t0-bDf" id="cYu-7Z-Eu7"/>
+                        <outlet property="notLoginCover" destination="TaU-Bb-zgc" id="FYJ-Xp-y3l"/>
                         <outlet property="photoList" destination="KeD-Ke-I2f" id="LbT-Jh-4eQ"/>
                         <outlet property="textArea" destination="xdJ-Yr-v0C" id="5sv-76-rYH"/>
                         <outlet property="userName" destination="PEi-P0-5W6" id="HeH-za-MlE"/>
