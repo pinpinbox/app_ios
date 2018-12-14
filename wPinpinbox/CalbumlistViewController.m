@@ -2090,8 +2090,12 @@ didCompleteWithResults:(NSDictionary *)results {
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
     //missionTopicLabel.text = @"收藏相本得點";
-    missionTopicLabel.text = missionTopicStr;
-    NSLog(@"Topic Label Text: %@", missionTopicStr);
+    
+    if ([wTools objectExists: missionTopicStr]) {
+        missionTopicLabel.text = missionTopicStr;
+        NSLog(@"Topic Label Text: %@", missionTopicStr);
+    }
+    
     [pointView addSubview: missionTopicLabel];
     
     if ([restriction isEqualToString: @"personal"]) {
@@ -2125,7 +2129,10 @@ didCompleteWithResults:(NSDictionary *)results {
      }
      */
     
-    messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    if ([wTools objectExists: rewardValue]) {
+        messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    }
+    
     [pointView addSubview: messageLabel];
     
     if ([eventUrl isEqual: [NSNull null]] || eventUrl == nil) {
@@ -2148,6 +2155,11 @@ didCompleteWithResults:(NSDictionary *)results {
     NSLog(@"showTheActivityPage");
     //NSString *activityLink = @"http://www.apple.com";
     NSLog(@"eventUrl: %@", eventUrl);
+    
+    if (![wTools objectExists: eventUrl]) {
+        return;
+    }
+    
     NSString *activityLink = eventUrl;
     NSURL *url = [NSURL URLWithString: activityLink];
     // Close for present safari view controller, otherwise alertView will hide the background
