@@ -87,7 +87,6 @@
     // Do any additional setup after loading the view.
     NSLog(@"PhotosViewController");
     NSLog(@"viewDidLoad");
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
@@ -118,20 +117,15 @@
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"dispatch_async");
-            
             if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
                 NSLog(@"authorized");
                 [wself processPhotoList];
-                
             } else {
                 NSLog(@"Not Authorized");
-                
                 [wself showNoAccessAlertAndCancel];
             }
         });
     }];
-    
-    
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     config.timeoutIntervalForRequest = [kTimeOutForPhoto floatValue];
     
@@ -139,7 +133,9 @@
     
     return;
 }
+
 - (void)processPhotoList {
+    NSLog(@"processPhotoList");
     // A set of options that affect the filtering, sorting, and management of results that Photos returns when you fetch asset or collection objects.
     PHFetchOptions *options = [[PHFetchOptions alloc] init];
     options.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:NO]];
@@ -151,6 +147,16 @@
     [mycov reloadData];
 }
 
+- (void)showNoAccessAlertAndCancel {
+    NSLog(@"showNoAccessAlertAndCancel");
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"沒有照片存取權" message: @"請打開照片權限設定" preferredStyle: UIAlertControllerStyleAlert];
+    [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        //[[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
+    }]];
+    [self presentViewController: alert animated: YES completion: nil];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSLog(@"viewWillAppear");
@@ -160,6 +166,8 @@
     self.assetThumbnailSize = CGSizeMake(cellSize.width * scale, cellSize.height * scale);
     NSLog(@"self.assetThumbnailSize: %@", NSStringFromCGSize(self.assetThumbnailSize));
     
+    NSLog(@"assetsFetchResults: %@", assetsFetchResults);
+    
     if (assetsFetchResults.count == 0) {
         NSLog(@"assetsFetchResults.count == 0");
     } else {
@@ -167,8 +175,8 @@
         // Only reloadData when assetsFetchResults.count is not 0
         // Otherwise, the app will crash
         [mycov reloadData];
-    }
-    [self updateCache];
+        [self updateCache];
+    }    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -242,15 +250,6 @@
 }
 
 #pragma mark -
-- (void)showNoAccessAlertAndCancel {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"沒有照片存取權" message: @"請打開照片權限設定" preferredStyle: UIAlertControllerStyleAlert];
-    [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        //[[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
-    }]];
-    [self presentViewController: alert animated: YES completion: nil];
-}
-
 - (PHAsset *)currentAssetAtIndex: (NSInteger)index {
     return assetsFetchResults[index];
 }
@@ -1159,6 +1158,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 }
 
 - (void)updateCache {
+    NSLog(@"updateCache");
     CGFloat currentFrameCenter = CGRectGetMidY(mycov.bounds);
     if (fabs(currentFrameCenter - self.lastCacheFrameCenter) < CGRectGetHeight(mycov.bounds)/3) {
         // Haven't scrolled far enough yet
