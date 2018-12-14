@@ -1127,7 +1127,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         
                         if ([d[@"followstatus" ] boolValue]) {
                             [followBtn setTitle:NSLocalizedString(@"AuthorText-inAtt", @"") forState:UIControlStateNormal];
-
                             followBtn.backgroundColor = [UIColor clearColor];
                             followBtn.layer.cornerRadius = kCornerRadius;
                             followBtn.clipsToBounds = YES;
@@ -1136,6 +1135,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                             followBtn.layer.borderWidth = 2.0;
                         } else {
                             [followBtn setTitle:NSLocalizedString(@"AuthorText-att", @"") forState:UIControlStateNormal];
+
                             followBtn.backgroundColor = [UIColor firstPink];
                             followBtn.layer.cornerRadius = kCornerRadius;
                             followBtn.clipsToBounds = YES;

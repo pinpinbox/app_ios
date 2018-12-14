@@ -19,12 +19,10 @@
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
 
-
 #import "LabelAttributeStyle.h"
 #import "UserInfo.h"
 
-@interface BuyPPointViewController () <SFSafariViewControllerDelegate, UIGestureRecognizerDelegate>
-{
+@interface BuyPPointViewController () <SFSafariViewControllerDelegate, UIGestureRecognizerDelegate> {
 
     //NSString *pointstr;
     NSDictionary *pointlist;
