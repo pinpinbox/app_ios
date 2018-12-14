@@ -113,18 +113,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+- (void)optionsTapped:(UITapGestureRecognizer *)tap {
+    if (tap.view)
+        [self setMusicReferByType:(int)tap.view.tag];
+    
+}
 - (void)setupUI {
     self.saveBtn.layer.cornerRadius = 8;
-    
+    UITapGestureRecognizer *t = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(optionsTapped:)];
+    [self.noMusicView addGestureRecognizer:t];
     self.noMusicSelectionView.layer.cornerRadius = 8;
     self.noMusicSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
     self.noMusicSelectionView.layer.borderWidth = 1.0;
     
+    UITapGestureRecognizer *t1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(optionsTapped:)];
+    [self.eachPageMusicView addGestureRecognizer:t1];
     self.eachPageSelectionView.layer.cornerRadius = 8;
     self.eachPageSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
     self.eachPageSelectionView.layer.borderWidth = 1.0;
     
+    UITapGestureRecognizer *t2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(optionsTapped:)];
+    [self.bgMusicView addGestureRecognizer:t2];
     self.bgMusicSelectionView.layer.cornerRadius = 8;
     self.bgMusicSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
     self.bgMusicSelectionView.layer.borderWidth = 1.0;
@@ -133,6 +142,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.uploadBtn.enabled = NO;
     if (@available(iOS 11.0, *)) {
+        UITapGestureRecognizer *t3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(optionsTapped:)];
+        [self.audioBrowserView addGestureRecognizer:t3];
         self.uploadMusicSelectionView.layer.cornerRadius = 8;
         self.uploadMusicSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
         self.uploadMusicSelectionView.layer.borderWidth = 1.0;
@@ -389,90 +400,90 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             break;
     }
 }
-#pragma mark - Touches Methods
-- (void)touchesBegan:(NSSet<UITouch *> *)touches
-           withEvent:(UIEvent *)event {
-    NSLog(@"touchesBegan");
-    CGPoint location = [[touches anyObject] locationInView: self.view];
-    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
-    
-    for (UIView *view in self.view.subviews) {
-        CGRect subviewFrame = view.frame;
-        
-        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
-            NSLog(@"finally touched view: %@", view);
-            NSLog(@"view.tag: %ld", (long)view.tag);
-            [self setMusicReferByType:(int)view.tag];
-        }
-    }
-}
-
-- (void)touchesMoved:(NSSet<UITouch *> *)touches
-           withEvent:(UIEvent *)event {
-    NSLog(@"touchesMoved");
-    
-    CGPoint location = [[touches anyObject] locationInView: self.view];
-    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
-    
-    for (UIView *view in self.view.subviews) {
-        CGRect subviewFrame = view.frame;
-        
-        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
-            NSLog(@"finally touched view: %@", view);
-            NSLog(@"view.tag: %ld", (long)view.tag);
-        }
-    }
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches
-           withEvent:(UIEvent *)event {
-    NSLog(@"touchesEnded");
-    
-    CGPoint location = [[touches anyObject] locationInView: self.view];
-    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
-    
-    for (UIView *view in self.view.subviews) {
-        CGRect subviewFrame = view.frame;
-        
-        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
-            NSLog(@"finally touched view: %@", view);
-            NSLog(@"view.tag: %ld", (long)view.tag);
-            //self.audioType = None;
-            switch (view.tag) {
-                case 1:
-                    self.noMusicView.backgroundColor = [UIColor clearColor];
-                    break;
-                case 2:
-                    self.eachPageMusicView.backgroundColor = [UIColor clearColor];
-                    break;
-                case 3:
-                    self.bgMusicView.backgroundColor = [UIColor clearColor];
-                    break;
-                case 4:
-                    self.audioBrowserView.backgroundColor = [UIColor clearColor];
-                default:
-                    break;
-            }
-        }
-    }
-}
-
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches
-               withEvent:(UIEvent *)event {
-    NSLog(@"touchesCancelled");
-    
-    CGPoint location = [[touches anyObject] locationInView: self.view];
-    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
-    
-    for (UIView *view in self.view.subviews) {
-        CGRect subviewFrame = view.frame;
-        
-        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
-            NSLog(@"finally touched view: %@", view);
-            NSLog(@"view.tag: %ld", (long)view.tag);
-        }
-    }
-}
+//#pragma mark - Touches Methods
+//- (void)touchesBegan:(NSSet<UITouch *> *)touches
+//           withEvent:(UIEvent *)event {
+//    NSLog(@"touchesBegan");
+//    CGPoint location = [[touches anyObject] locationInView: self.view];
+//    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
+//    
+//    for (UIView *view in self.view.subviews) {
+//        CGRect subviewFrame = view.frame;
+//        
+//        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
+//            NSLog(@"finally touched view: %@", view);
+//            NSLog(@"view.tag: %ld", (long)view.tag);
+//            
+//        }
+//    }
+//}
+//
+//- (void)touchesMoved:(NSSet<UITouch *> *)touches
+//           withEvent:(UIEvent *)event {
+//    NSLog(@"touchesMoved");
+//    
+//    CGPoint location = [[touches anyObject] locationInView: self.view];
+//    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
+//    
+//    for (UIView *view in self.view.subviews) {
+//        CGRect subviewFrame = view.frame;
+//        
+//        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
+//            NSLog(@"finally touched view: %@", view);
+//            NSLog(@"view.tag: %ld", (long)view.tag);
+//        }
+//    }
+//}
+//
+//- (void)touchesEnded:(NSSet<UITouch *> *)touches
+//           withEvent:(UIEvent *)event {
+//    NSLog(@"touchesEnded");
+//    
+//    CGPoint location = [[touches anyObject] locationInView: self.view];
+//    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
+//    
+//    for (UIView *view in self.view.subviews) {
+//        CGRect subviewFrame = view.frame;
+//        
+//        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
+//            NSLog(@"finally touched view: %@", view);
+//            NSLog(@"view.tag: %ld", (long)view.tag);
+//            //self.audioType = None;
+//            switch (view.tag) {
+//                case 1:
+//                    self.noMusicView.backgroundColor = [UIColor clearColor];
+//                    break;
+//                case 2:
+//                    self.eachPageMusicView.backgroundColor = [UIColor clearColor];
+//                    break;
+//                case 3:
+//                    self.bgMusicView.backgroundColor = [UIColor clearColor];
+//                    break;
+//                case 4:
+//                    self.audioBrowserView.backgroundColor = [UIColor clearColor];
+//                default:
+//                    break;
+//            }
+//        }
+//    }
+//}
+//
+//- (void)touchesCancelled:(NSSet<UITouch *> *)touches
+//               withEvent:(UIEvent *)event {
+//    NSLog(@"touchesCancelled");
+//    
+//    CGPoint location = [[touches anyObject] locationInView: self.view];
+//    CGRect fingerRect = CGRectMake(location.x - 5, location.y - 5, 10, 10);
+//    
+//    for (UIView *view in self.view.subviews) {
+//        CGRect subviewFrame = view.frame;
+//        
+//        if (CGRectIntersectsRect(fingerRect, subviewFrame)) {
+//            NSLog(@"finally touched view: %@", view);
+//            NSLog(@"view.tag: %ld", (long)view.tag);
+//        }
+//    }
+//}
 
 #pragma mark - UICollectionViewDataSource Methods
 - (NSInteger)collectionView:(UICollectionView *)collectionView
@@ -511,7 +522,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
-    
+    self.audioType = Singular;
     // Switch to Singluar Mode
     self.noMusicSelectionView.backgroundColor = [UIColor clearColor];
     self.eachPageSelectionView.backgroundColor = [UIColor clearColor];

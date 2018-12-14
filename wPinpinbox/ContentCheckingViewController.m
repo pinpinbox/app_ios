@@ -4105,7 +4105,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
         
         if ([description isEqualToString: @""]) {
-            self.descriptionScrollViewHeightConstraint.constant = btnHeight;
+            self.descriptionScrollViewHeightConstraint.constant = btnHeight+15;
         }
     } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
         self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;
