@@ -2949,6 +2949,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
             [stSelf refreshURLSwitch];
             [stSelf refreshLocationSwitch];
             [stSelf refreshAudioSwitch];
+            [stSelf.dataCollectionView reloadData];
         });
     });
     
