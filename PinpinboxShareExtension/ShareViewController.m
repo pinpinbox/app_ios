@@ -117,7 +117,7 @@
  getcalbumlist
  insertphotoofdiy
  insertvideoofdiy
- insert
+ updatephotoofdiy
  insertalbumofdiy
  retrievealbump
  updatealbumofdiy
