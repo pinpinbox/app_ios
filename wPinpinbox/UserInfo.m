@@ -11,7 +11,7 @@
 @implementation UserInfo
 //id
 +(NSString *)getUserID{
-    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *userPrefs = [[NSUserDefaults alloc] initWithSuiteName:@"group.pinpinbox"];//[NSUserDefaults standardUserDefaults];
     if ([userPrefs objectForKey:@"id"]) {
         return [userPrefs objectForKey:@"id"];
     }
@@ -19,7 +19,7 @@
 }
 //token
 +(NSString *)getUserToken{
-    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *userPrefs = [[NSUserDefaults alloc] initWithSuiteName:@"group.pinpinbox"];//[NSUserDefaults standardUserDefaults];
     if ([userPrefs objectForKey:@"token"]) {
         return [userPrefs objectForKey:@"token"];
     }

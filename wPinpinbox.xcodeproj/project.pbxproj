@@ -2950,7 +2950,8 @@
 					};
 					CBDA226B21C3923200706E2C = {
 						CreatedOnToolsVersion = 10.1;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = APD4588SHJ;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3663,9 +3664,9 @@
 				CODE_SIGN_ENTITLEMENTS = PinpinboxShareExtension/PinpinboxShareExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = APD4588SHJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PinpinboxShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -3692,8 +3693,8 @@
 				CODE_SIGN_ENTITLEMENTS = PinpinboxShareExtension/PinpinboxShareExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = APD4588SHJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = PinpinboxShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;

@@ -338,6 +338,12 @@
                     [userPrefs setObject:[dic[@"data"][@"id"] stringValue] forKey:@"id"];
                     [userPrefs synchronize];
                     
+                    NSUserDefaults *group = [[NSUserDefaults alloc] initWithSuiteName:@"group.pinpinbox"];
+                    
+                    [group setObject:dic[@"data"][@"token"] forKey:@"token"];
+                    [group setObject:[dic[@"data"][@"id"] stringValue] forKey:@"id"];
+                    [group synchronize];
+                    
                     if (tmp[@"image"]) {
                         NSLog(@"UPDATA IMAGE");
                         NSMutableDictionary *dic=[NSMutableDictionary new];

@@ -1063,14 +1063,22 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 #pragma mark - Saving Data to Device
 - (void)saveDataAfterLogin: (NSString *)loginType {
     NSLog(@"\nsaveDataAfterLogin");
+    NSUserDefaults *group = [[NSUserDefaults alloc] initWithSuiteName:@"group.pinpinbox"];
+    
+    
+    
+    
     if ([loginType isEqualToString: @"emailLogin"]) {
         NSLog(@"loginType: %@", loginType);
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         if ([wTools objectExists: _tokenStr]) {
             [userPrefs setObject: _tokenStr forKey:@"token"];
+            [group setObject:_tokenStr forKey:@"token"];
         }
         if ([wTools objectExists: _idStr]) {
             [userPrefs setObject: _idStr forKey:@"id"];
+            [group setObject:_idStr forKey:@"id"];
+            
         }
         if ([wTools objectExists: self.pwdTextField.text]) {
             [userPrefs setObject: self.pwdTextField.text forKey: @"pwd"];
@@ -1085,13 +1093,17 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         if ([wTools objectExists: _tokenStr]) {
             [userPrefs setObject: _tokenStr forKey: @"token"];
+            [group setObject:_tokenStr forKey:@"token"];
         }
         if ([wTools objectExists: _idStr]) {
             [userPrefs setObject: _idStr forKey: @"id"];
+            [group setObject:_idStr forKey:@"id"];
         }
         [userPrefs setObject: @"FB" forKey: @"FB"];
         [userPrefs synchronize];
     }
+    
+    [group synchronize];
 }
 
 #pragma mark - Web Service - Refresh Token
