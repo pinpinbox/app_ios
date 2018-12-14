@@ -78,6 +78,10 @@
 }
 - (IBAction)cancelAndFinish:(id)sender {
     
+    NSExtensionContext *cxt = self.extensionContext;
+    
+    [cxt completeRequestReturningItems:nil completionHandler:nil];
+    
 }
 - (void)trySendLocalNotification:(NSString *)message albumid:(NSString *)albumid {
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
