@@ -291,6 +291,12 @@
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
+    NSString *resultString = [textField.text stringByReplacingCharactersInRange: range
+                                                                     withString: string];
+    
+    NSLog(@"resultString: %@", resultString);
+    NSLog(@"textField.text: %@", textField.text);
+    
     if (phone == textField) {
         NSRange textFieldRange = NSMakeRange(0, [textField.text length]);
         
@@ -314,7 +320,7 @@ replacementString:(NSString *)string {
     }
     
     if (emaillab == textField) {
-        if ([emaillab.text isEmailValid]) {
+        if ([resultString isEmailValid]) {
             emailView.backgroundColor = [UIColor thirdGrey];
         } else {
             emailView.backgroundColor = [UIColor thirdPink];
