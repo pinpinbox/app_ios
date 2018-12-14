@@ -41,22 +41,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 @interface ViewController () <UIScrollViewDelegate, UITextFieldDelegate, UIApplicationDelegate, CLLocationManagerDelegate> {
     UIPageControl *pageControl;
-    
     UITextField *selectText;
-    
     FBBlock _alertOkHandler;
-    
-    
     BOOL isCreator;
-    
     NSString *businessUserId;
     NSString *timeStamp;
-    
     CLLocationManager *locationManager;
     CLLocation *currentLocation;
-    
     NSTimer *timer;
-    
     UIImageView *bg;
 }
 @property (weak, nonatomic) IBOutlet UIButton *termsAndConditionsBtn;
@@ -90,7 +82,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [super viewDidLoad];
     NSLog(@"");
     NSLog(@"ViewController viewDidLoad");
-    
     self.navigationController.navigationBar.hidden = YES;
     
     // Getting TimeStamp Info
@@ -106,8 +97,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     if ([CLLocationManager locationServicesEnabled] && [[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         [locationManager requestWhenInUseAuthorization];
     }
-    
-    
     self.horizontalLineView1.backgroundColor = [UIColor secondGrey];
     self.middleTextLabel.textColor = [UIColor secondGrey];
     self.horizontalLineView2.backgroundColor = [UIColor secondGrey];
@@ -117,14 +106,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     [self.termsAndConditionsBtn setTitle: NSLocalizedString(@"RegText-tipAgreementTitle", @"")
                                 forState: UIControlStateNormal];
-    
     [self scanBtnSetup];
-    
     [self emailTextFieldAndViewSetup];
     [self pwdTextFieldAndViewSetup];
     [self loginBtnSetup];
     [self aboutBtnSetup];
-    
     [self redirectionCheck];
 }
 
@@ -190,24 +176,25 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     NSLog(@"");
     NSLog(@"ViewController viewWillAppear");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
-    
     [self addKeyboardNotification];
     
     // Check if log out from SettingViewController
     // then viewDidLoad will not be called
     // So, we set up the timeStamp & LocationManager again
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSNumber *logOut = [defaults objectForKey: @"logOutFromSetting"];
+    NSNumber *logOut;
+    
+    if ([wTools objectExists: [defaults objectForKey: @"logOutFromSetting"]]) {
+        logOut = [defaults objectForKey: @"logOutFromSetting"];
+    }
     BOOL logOutFromSetting = [logOut boolValue];
     NSLog(@"logOutFromSetting: %d", logOutFromSetting);
     
     if (logOutFromSetting) {
         logOutFromSetting = NO;
-        
         [defaults setObject: [NSNumber numberWithBool: logOutFromSetting] forKey: @"logOutFromSetting"];
         [defaults synchronize];
         
@@ -258,10 +245,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - redirectionCheck
-
 -(void)redirectionCheck {
     NSLog(@"redirectionCheck");
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     app.myNav = self.navigationController;
     
@@ -295,14 +280,12 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 break;
         }
     }
-    
     bg = [[UIImageView alloc] initWithImage: image];
     bg.backgroundColor = [UIColor whiteColor];
     bg.contentMode = UIViewContentModeScaleAspectFit;
     bg.frame = self.view.bounds;
     bg.accessibilityIdentifier = @"launchImage";
     [self.view addSubview:bg];
-    
     [self checkToken];
 }
 
@@ -319,7 +302,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
             [userPrefs setObject: [[userPrefs objectForKey:@"id"] stringValue] forKey:@"id"];
             [userPrefs synchronize];
         }
-        
         NSString *uid = [userPrefs objectForKey:@"id"];
         NSString *token = [userPrefs objectForKey:@"token"];
         
@@ -422,14 +404,19 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 //    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 //    businessUserId = [defaults objectForKey: @"businessUserId"];
     
-    if (businessUserId != nil) {
-        NSLog(@"businessUserId != nil");
-        
+    if ([wTools objectExists: businessUserId]) {
         if (![businessUserId isEqualToString: @""]) {
             [timer invalidate];
             [self Facebookbtn: nil];
         }
     }
+//    if (businessUserId != nil) {
+//        NSLog(@"businessUserId != nil");
+//        if (![businessUserId isEqualToString: @""]) {
+//            [timer invalidate];
+//            [self Facebookbtn: nil];
+//        }
+//    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -496,7 +483,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                        style: style];
         return;
     }
-    
     [self loginAccount];
 }
 
@@ -506,12 +492,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         [MBProgressHUD showHUDAddedTo: self.view animated:YES];
     } @catch (NSException *exception) {
         // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
+        NSLog(@"NSException caught");
+        NSLog(@"Name: %@", exception.name);
+        NSLog(@"Reason: %@", exception.reason);
         return;
     }
-        
     NSLog(@"self.pwdTextField.text: %@", self.pwdTextField.text);
     
     NSString *emailStr = self.emailTextField.text;
@@ -522,18 +507,15 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSString *respone = [boxAPI LoginAccount: emailStr Pwd: pwdStr];
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
-            
-            
             @try {
                 [MBProgressHUD hideHUDForView: sself.view  animated:YES];
             } @catch (NSException *exception) {
                 // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
+                NSLog(@"NSException caught");
+                NSLog(@"Name: %@", exception.name);
+                NSLog(@"Reason: %@", exception.reason);
                 return;
             }
-            
             if (respone != nil) {
                 NSLog(@"response from LoginAccount");
                 NSLog(@"respone: %@", respone);
@@ -675,7 +657,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     __block typeof(self) wself = self;
     [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters: parameters]
      startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-         
          if (!error) {
              NSLog(@"fetched user: %@", result);
              [wself->locationManager stopUpdatingLocation];
@@ -711,20 +692,27 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
              NSLog(@"currentLocation: %@", wself->currentLocation);
              
              // Get Location Data
-             if (wself->currentLocation != nil) {
+             if ([wTools objectExists: wself->currentLocation]) {
                  NSString *latStr = [NSString stringWithFormat: @"%.8f", wself->currentLocation.coordinate.latitude];
                  NSString *longStr = [NSString stringWithFormat: @"%.8f", wself->currentLocation.coordinate.longitude];
-                 
                  NSString *locationStr = [NSString stringWithFormat: @"%@,%@", latStr, longStr];
                  NSLog(@"locationStr: %@", locationStr);
-                 
                  [paramDic setObject: locationStr forKey: @"coordinate"];
              }
+             
+//             if (wself->currentLocation != nil) {
+//                 NSString *latStr = [NSString stringWithFormat: @"%.8f", wself->currentLocation.coordinate.latitude];
+//                 NSString *longStr = [NSString stringWithFormat: @"%.8f", wself->currentLocation.coordinate.longitude];
+//
+//                 NSString *locationStr = [NSString stringWithFormat: @"%@,%@", latStr, longStr];
+//                 NSLog(@"locationStr: %@", locationStr);
+//
+//                 [paramDic setObject: locationStr forKey: @"coordinate"];
+//             }
              NSLog(@"paramDic: %@", paramDic);
              
              NSData *jsonData = [NSJSONSerialization dataWithJSONObject: paramDic options: 0 error: nil];
              NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
-             
              [wself buisnessSubUserFastRegister: fbId jsonStr: jsonStr];
          } else {
              NSLog(@"%@",error.localizedDescription);
@@ -740,9 +728,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     } @catch (NSException *exception) {
         // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
+        NSLog(@"NSException caught");
+        NSLog(@"Name: %@", exception.name);
+        NSLog(@"Reason: %@", exception.reason);
         return;
     }
     __block typeof(self) wself = self;
@@ -750,17 +738,15 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSString *response = [boxAPI buisnessSubUserFastRegister: wself->businessUserId fbId: fbId timeStamp: wself->timeStamp param: jsonStr];
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             @try {
                 [MBProgressHUD hideHUDForView: self.view animated:YES];
             } @catch (NSException *exception) {
                 // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
+                NSLog(@"NSException caught");
+                NSLog(@"Name: %@", exception.name);
+                NSLog(@"Reason: %@", exception.reason);
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from buisnessSubUserFastRegister: %@", response);
                 
@@ -805,7 +791,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         if ([wTools objectExists: dic[@"data"][@"token"][@"user_id"]]) {
                             sself.idStr = [dic[@"data"][@"token"][@"user_id"] stringValue];
                         }
-                        
                         NSLog(@"tokenStr: %@", sself.tokenStr);
                         NSLog(@"idStr: %@", sself.idStr);
                         
@@ -838,9 +823,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 - (void)facebookLogin:(NSString *)fbId {
-    NSLog(@"");
-    NSLog(@"facebookLogin fbID: %@", fbId);
-    
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated:YES];
     } @catch (NSException *exception) {
@@ -864,7 +846,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"get response from FacebookLoginAccount");
                 //NSLog(@"respone: %@", respone);
@@ -908,11 +889,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         //[self getProfile];
                         [sself refreshToken];
                         //[self setupPushNotification];
-                        
                     } else if([data[@"result"] intValue] == 2) {
                         NSLog(@"");
                         NSLog(@"data result intValue == 2");
-                        
                         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
                         [parameters setValue: @"id, email, birthday, gender, name" forKey: @"fields"];
                         
@@ -922,7 +901,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                              if (!error) {
                                  NSString *userName = [result valueForKey:@"name"];
                                  [self FBSign: fbId name: userName];
-                                 
                                  NSLog(@"註冊去");
                                  
                                  // Show Message to Tester
@@ -931,14 +909,13 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                                  style.backgroundColor = [UIColor thirdPink];
                                  
                                  [sself.view makeToast: @"註冊去"
-                                             duration: 2.0
-                                             position: CSToastPositionBottom
-                                                style: style];
+                                              duration: 2.0
+                                              position: CSToastPositionBottom
+                                                 style: style];
                              } else {
                                  NSLog(@"%@", error.localizedDescription);
                              }
                          }];
-                        
                     } else {
                         NSLog(@"失敗： %@", data[@"message"]);
                         if ([wTools objectExists: data[@"message"]]) {
@@ -959,10 +936,15 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     [dic setObject:@"" forKey:@"account"];
     [dic setObject:@"facebook" forKey:@"way"];
-    [dic setObject:_facebookID forKey:@"way_id"];
+    
+    if ([wTools objectExists: _facebookID]) {
+        [dic setObject:_facebookID forKey:@"way_id"];
+    }
     [dic setObject:@"" forKey:@"password"];
     
-    [dic setObject:wname forKey:@"name"];
+    if ([wTools objectExists: wname]) {
+        [dic setObject:wname forKey:@"name"];
+    }
     [dic setObject:@"" forKey:@"smspassword"];
     [dic setObject:@"" forKey:@"cellphone"];
     //  [dic setObject:app.coordinate  forKey:@"coordinate"];
@@ -1025,11 +1007,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     });
 }
 
-- (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock) successHandler
-                           declinedOrCanceledHandler:(FBBlock) declinedOrCanceledHandler
-                                        errorHandler:(void (^)(NSError *)) errorHandler {
+- (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock)successHandler
+                           declinedOrCanceledHandler:(FBBlock)declinedOrCanceledHandler
+                                        errorHandler:(void (^)(NSError *))errorHandler {
     NSLog(@"loginAndRequestPermissionsWithSuccessHandler declinedOrCanceledHandler errorHandler");
-    
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
     //public_profile
     //publish_actions
@@ -1084,24 +1065,30 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSLog(@"\nsaveDataAfterLogin");
     if ([loginType isEqualToString: @"emailLogin"]) {
         NSLog(@"loginType: %@", loginType);
-        
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-        [userPrefs setObject: _tokenStr forKey:@"token"];
-        [userPrefs setObject: _idStr forKey:@"id"];
-        [userPrefs setObject: self.pwdTextField.text forKey: @"pwd"];
-        
+        if ([wTools objectExists: _tokenStr]) {
+            [userPrefs setObject: _tokenStr forKey:@"token"];
+        }
+        if ([wTools objectExists: _idStr]) {
+            [userPrefs setObject: _idStr forKey:@"id"];
+        }
+        if ([wTools objectExists: self.pwdTextField.text]) {
+            [userPrefs setObject: self.pwdTextField.text forKey: @"pwd"];
+        }
         NSLog(@"idStr: %@", _idStr);
         NSLog(@"self.pwdTextField.text: %@", self.pwdTextField.text);
-        
         NSLog(@"userPrefs: %@", userPrefs);
         
         [userPrefs synchronize];
     } else if ([loginType isEqualToString: @"facebookLogin"]) {
         NSLog(@"loginType: %@", loginType);
-        
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-        [userPrefs setObject: _tokenStr forKey: @"token"];
-        [userPrefs setObject: _idStr forKey: @"id"];
+        if ([wTools objectExists: _tokenStr]) {
+            [userPrefs setObject: _tokenStr forKey: @"token"];
+        }
+        if ([wTools objectExists: _idStr]) {
+            [userPrefs setObject: _idStr forKey: @"id"];
+        }
         [userPrefs setObject: @"FB" forKey: @"FB"];
         [userPrefs synchronize];
     }
@@ -1110,7 +1097,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 #pragma mark - Web Service - Refresh Token
 - (void)refreshToken {
     NSLog(@"\n\nrefreshToken");
-    
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     } @catch (NSException *exception) {
@@ -1130,12 +1116,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 [MBProgressHUD hideHUDForView: self.view animated: YES];
             } @catch (NSException *exception) {
                 // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
+                NSLog(@"NSException caught");
+                NSLog(@"Name: %@", exception.name);
+                NSLog(@"Reason: %@", exception.reason);
                 return;
             }
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -1196,7 +1181,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1216,7 +1200,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             //NSLog(@"testSign: %@", testSign);
             
             if (response != nil) {
@@ -1248,22 +1231,22 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         // The method below just to check if there is a null object
                         // set it to empty string value
                         // Get all the keys
-                        for (NSString *key in [dataIc allKeys]) {
-                            //NSLog(@"key: %@", key);
-                            
-                            // Get the object related to the key
-                            id objective = [dataIc objectForKey: key];
-                            //NSLog(@"objective: %@", objective);
-                            
-                            // if the object is null, then set empty string value to it
-                            if ([objective isKindOfClass: [NSNull class]]) {
-                                [dataIc setObject: @"" forKey: key];
+                        if ([wTools objectExists: [dataIc allKeys]]) {
+                            for (NSString *key in [dataIc allKeys]) {
+                                //NSLog(@"key: %@", key);
+                                
+                                // Get the object related to the key
+                                id objective = [dataIc objectForKey: key];
+                                //NSLog(@"objective: %@", objective);
+                                
+                                // if the object is null, then set empty string value to it
+                                if ([objective isKindOfClass: [NSNull class]]) {
+                                    [dataIc setObject: @"" forKey: key];
+                                }
                             }
+                            [userPrefs setValue: dataIc forKey: @"profile"];
+                            [userPrefs synchronize];
                         }
-                        //NSLog(@"dataIc: %@", dataIc);
-                        
-                        [userPrefs setValue: dataIc forKey: @"profile"];
-                        [userPrefs synchronize];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         if ([wTools objectExists: dic[@"message"]]) {
@@ -1328,15 +1311,13 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                        NSInteger point = 0;
                         
                         if ([wTools objectExists: dic[@"data"]]) {
-                            point = [dic[@"data"] integerValue];
+                            NSInteger point = [dic[@"data"] integerValue];
+                            [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
+                            [userPrefs synchronize];
+                            //NSLog(@"point: %ld", (long)point);
                         }
-                        //NSLog(@"point: %ld", (long)point);
-                        [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
-                        [userPrefs synchronize];
-                        
                         [self toMyTabBarController];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
@@ -1355,10 +1336,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - To MyTabBarController
-- (void)toMyTabBarController
-{
+- (void)toMyTabBarController {
     MyTabBarController *myTabC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"MyTabBarController"];
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.myNav pushViewController: myTabC animated: NO];
     __block typeof(bg) wbg = bg;
@@ -1367,7 +1346,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     } completion:^(BOOL anim){
         [wbg removeFromSuperview];
     }];
-    
     [self stopLocationAndNotificationFunction];
 }
 
@@ -1375,20 +1353,19 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)toFbFindingVCAndResetData {
     FBFriendsFindingViewController *fbFindingVC = [[UIStoryboard storyboardWithName:@"FBFriendsFindingVC" bundle:nil]instantiateViewControllerWithIdentifier:@"FBFriendsFindingViewController"];
     [self.navigationController pushViewController: fbFindingVC animated:YES];
-    
     [self resetBusinessUserId];
     [self stopLocationAndNotificationFunction];
 }
 
 #pragma mark - CLLocationManagerDelegate
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
+- (void)locationManager:(CLLocationManager *)manager
+       didFailWithError:(NSError *)error {
     NSLog(@"");
     NSLog(@"didFailWithError: %@", error);
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
-{
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray<CLLocation *> *)locations {
     //SLog(@"");
     //NSLog(@"didUpdateLocations: %@", locations);
     currentLocation = [locations lastObject];
@@ -1396,37 +1373,28 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - stopLocationAndNotificationFunction
-
-- (void)stopLocationAndNotificationFunction
-{
+- (void)stopLocationAndNotificationFunction {
     NSLog(@"");
     NSLog(@"stopLocationAndNotificationFunction");
-    
     [[NSNotificationCenter defaultCenter] removeObserver: self name: UIApplicationDidBecomeActiveNotification object: nil];
-    
     [locationManager stopUpdatingLocation];
-    
     [timer invalidate];
     timer = nil;
 }
 
 #pragma mark - Reset Variable
-
-- (void)resetBusinessUserId
-{
+- (void)resetBusinessUserId {
     NSLog(@"");
     NSLog(@"resetBusinessUserId");
     businessUserId = @"";
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject: businessUserId forKey: @"businessUserId"];
     [defaults synchronize];
 }
 
 #pragma mark - UIResponder Methods
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
     [self.view endEditing: YES];
 }
 
@@ -1434,7 +1402,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)scrollViewDidScroll:(UIScrollView *)sender {
     CGFloat width = sender.frame.size.width;
     NSInteger currentPage = ((sender.contentOffset.x - width / 2) / width) + 1;
-    if (currentPage<4) {
+    if (currentPage < 4) {
         [pageControl setCurrentPage:currentPage];
     }
 }
@@ -1442,7 +1410,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)sender{
     CGFloat width = sender.frame.size.width;
     NSInteger currentPage = ((sender.contentOffset.x - width / 2) / width) + 1;
-    if (currentPage>3) {
+    if (currentPage > 3) {
         sender.hidden=YES;
         [pageControl removeFromSuperview];
     }
@@ -1452,7 +1420,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)addKeyboardNotification {
     NSLog(@"");
     NSLog(@"addKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
                                                  name:UIKeyboardDidShowNotification
@@ -1466,7 +1433,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)removeKeyboardNotification {
     NSLog(@"");
     NSLog(@"removeKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] removeObserver: self
                                                     name: UIKeyboardDidShowNotification
                                                   object: nil];
@@ -1476,10 +1442,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark -
-
 - (void)keyboardWasShown:(NSNotification*)aNotification {
     NSLog(@"keyboardWasShown");
-    
     NSDictionary* info = [aNotification userInfo];
     NSLog(@"info: %@", info);
     
@@ -1527,7 +1491,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 // Called when the UIKeyboardWillHideNotification is sent
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
     NSLog(@"keyboardWillBeHidden");
-    
     [UIView animateWithDuration:0.3 animations:^{
         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
@@ -1556,12 +1519,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSLog(@"textFieldShouldReturn");
     
     NSInteger nextTag = textField.tag + 1;
-    
     NSLog(@"nextTag: %ld", (long)nextTag);
     
     // Try to find next responder
     UIResponder *nextResponder = [textField.superview.superview viewWithTag: nextTag];
-    
     NSLog(@"nextResponder: %@", nextResponder);
     
     if (nextResponder) {
@@ -1571,99 +1532,21 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         // Not found, so remove keyboard
         [textField resignFirstResponder];
     }
-    
     [textField resignFirstResponder];
     return YES;
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg {    
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom AlertView for Yes and No
-- (void)showCustomAlertForOptions: (NSString *)msg
-{
+- (void)showCustomAlertForOptions: (NSString *)msg {
     NSLog(@"showCustomAlert: Msg: %@", msg);
-    
     CustomIOSAlertView *alertViewForOptions = [[CustomIOSAlertView alloc] init];
     //[alertViewForOptions setContainerView: [self createContainerViewForOptions: msg]];
     [alertViewForOptions setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1695,8 +1578,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [alertViewForOptions show];
 }
 
-- (UIView *)createContainerViewForOptions: (NSString *)msg
-{
+- (UIView *)createContainerViewForOptions:(NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -1795,11 +1677,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         [alertUpdateView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
         [alertUpdateView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     }
-    
     __weak CustomIOSAlertView *weakAlertUpdateView = alertUpdateView;
     [alertUpdateView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertUpdateView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertUpdateView tag]);
-        
         [weakAlertUpdateView close];
         
         if ([option isEqualToString: @"mustUpdate"]) {
@@ -1895,8 +1775,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                   protocolName: (NSString *)protocolName
                           fbId: (NSString *)fbId
                        jsonStr: (NSString *)jsonStr
-                          name: (NSString *)wname
-{
+                          name: (NSString *)wname {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1958,8 +1837,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView:(NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -2033,8 +1911,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     return contentView;
 }
 
-- (void)closeApp
-{
+- (void)closeApp {
     // home button press programmatically
     UIApplication *app = [UIApplication sharedApplication];
     [app performSelector: @selector(suspend)];
@@ -2047,8 +1924,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - StatusBar Setup
-- (BOOL)prefersStatusBarHidden
-{
+- (BOOL)prefersStatusBarHidden {
     return YES;
 }
 

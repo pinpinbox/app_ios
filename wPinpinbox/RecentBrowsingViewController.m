@@ -29,8 +29,7 @@
 
 @implementation RecentBrowsingViewController
 
-- (NSManagedObjectContext *)managedObjectContext
-{
+- (NSManagedObjectContext *)managedObjectContext {
     NSManagedObjectContext *context = nil;
     id delegate = [[UIApplication sharedApplication] delegate];
     
@@ -45,7 +44,6 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
 }
 
@@ -60,7 +58,6 @@
         UIButton *btn = (UIButton *)[v viewWithTag: 104];
         btn.hidden = YES;
     }
-    
     [self retrieveData];
 }
 
@@ -72,14 +69,12 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
 #pragma mark - IBAction Methods
-- (void)initialValueSetup
-{
+- (void)initialValueSetup {
     self.navBarView.backgroundColor = [UIColor barColor];
     self.tableView.showsVerticalScrollIndicator = NO;
 }
@@ -111,10 +106,8 @@
     }
 }
 
-- (void)retrieveData
-{
+- (void)retrieveData {
     NSLog(@"retrieveData");
-    
     // Fetch the data from persistent data store
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName: @"Browse"];
@@ -123,18 +116,20 @@
     self.browseArray = [[managedObjectContext executeFetchRequest: fetchRequest error: nil] mutableCopy];
     NSLog(@"self.browseArray.count: %lu", (unsigned long)self.browseArray.count);
     
-    for (int i = 0; i < self.browseArray.count; i++) {
-        NSManagedObject *browseData = [self.browseArray objectAtIndex: i];
-        NSLog(@"%d data", i + 1);
-        NSLog(@"albumId: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"albumId"]]);
-        NSLog(@"author: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"author"]]);
-        NSLog(@"descriptionInfo: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"descriptionInfo"]]);
-        NSLog(@"imageFolderName: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"imageFolderName"]]);
-        NSLog(@"title: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"title"]]);
-        NSLog(@"browseDate: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"browseDate"]]);
-        NSLog(@"imageUrlThumbnail: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"imageUrlThumbnail"]]);
+    if ([wTools objectExists: self.browseArray]) {
+        for (int i = 0; i < self.browseArray.count; i++) {
+            NSManagedObject *browseData = [self.browseArray objectAtIndex: i];
+            NSLog(@"%d data", i + 1);
+            NSLog(@"albumId: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"albumId"]]);
+            NSLog(@"author: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"author"]]);
+            NSLog(@"descriptionInfo: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"descriptionInfo"]]);
+            NSLog(@"imageFolderName: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"imageFolderName"]]);
+            NSLog(@"title: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"title"]]);
+            NSLog(@"browseDate: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"browseDate"]]);
+            NSLog(@"imageUrlThumbnail: %@", [NSString stringWithFormat: @"%@", [browseData valueForKey: @"imageUrlThumbnail"]]);
+        }
+        [self.tableView reloadData];
     }
-    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -142,8 +137,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)back:(id)sender
-{
+- (IBAction)back:(id)sender {
     //[self.navigationController popViewControllerAnimated: YES];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
@@ -166,9 +160,7 @@
     
     // Configure the cell...
     NSManagedObject *browseData = [self.browseArray objectAtIndex: indexPath.row];
-    
     NSString *imageUrlThumbnail = [browseData valueForKey: @"imageUrlThumbnail"];
-    
     cell.albumImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     if (![imageUrlThumbnail isKindOfClass: [NSNull class]]) {
@@ -192,7 +184,6 @@
     if (![[browseData valueForKey: @"title"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = [browseData valueForKey: @"title"];
     }
-    
     //cell.creatorNameLabel.text = @"creator";
     if (![[browseData valueForKey: @"author"] isEqual: [NSNull null]]) {
         cell.creatorNameLabel.text = [browseData valueForKey: @"author"];
@@ -203,8 +194,8 @@
 }
 
 #pragma mark - UITableViewDelegate Methods
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectRowAtIndexPath");
     NSManagedObject *browseData = [self.browseArray objectAtIndex: indexPath.row];
     
@@ -213,8 +204,8 @@
     [self ToRetrievealbumpViewControlleralbumid: [browseData valueForKey: @"albumId"]];
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
+- (UIView *)tableView:(UITableView *)tableView
+viewForHeaderInSection:(NSInteger)section {
     UIView *headerView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, tableView.bounds.size.width, 90)];
     
     UILabel *sectionHeaderTitle = [[UILabel alloc] initWithFrame: CGRectMake(16, 64, 200, 58)];
@@ -222,16 +213,14 @@
     sectionHeaderTitle.font = [UIFont boldSystemFontOfSize: 48];
     sectionHeaderTitle.textColor = [UIColor firstGrey];
     sectionHeaderTitle.backgroundColor = [UIColor clearColor];
-    
     [headerView addSubview: sectionHeaderTitle];
-    
     self.tableView.tableHeaderView = headerView;
     
     return headerView;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
+- (CGFloat)tableView:(UITableView *)tableView
+heightForHeaderInSection:(NSInteger)section {
     CGFloat height;
     /*
     if (notificationData.count == 0) {
@@ -240,7 +229,6 @@
         height = 32;
     }
     */
-    
     height = 58;
     
     return height;
@@ -248,9 +236,7 @@
 
 #pragma mark - Call Protocol
 - (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
-    
     NSLog(@"ToRetrievealbumpViewControlleralbumid");
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -260,9 +246,7 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
         NSString *response = [boxAPI retrievealbump: albumid
                                                uid: [UserInfo getUserID]
                                              token: [UserInfo getUserToken]];
@@ -277,7 +261,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-                        
             if (response != nil) {
                 NSLog(@"response from retrievealbump");
                 
@@ -295,27 +278,23 @@
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        
-                        
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
-                        
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
-                        /*
-                        TestReadBookViewController *testReadBookVC = [[UIStoryboard storyboardWithName: @"TestReadBookVC" bundle: nil] instantiateViewControllerWithIdentifier: @"TestReadBookViewController"];
-                        testReadBookVC.dic = [dic[@"data"] mutableCopy];
-                        testReadBookVC.isDownloaded = NO;
-                        testReadBookVC.albumid = albumid;
-                        */
-                        //[self.navigationController pushViewController: testReadBookVC animated: YES];
                         
-                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
-                        contentCheckingVC.albumId = albumid;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
+                        if ([wTools objectExists: albumid]) {
+                            ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                            contentCheckingVC.albumId = albumid;
+                            
+                            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                            [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -326,95 +305,18 @@
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
     
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       albumId: (NSString *)albumId
-{
+                       albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -450,8 +352,7 @@
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2EEF1CABAE6C3DE79D3DE5EE /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D332B91A317B3F95CC028A4 /* libPods-wPinpinbox.a */; };
 		540473301FB066D00075BBD8 /* PointCalculationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5404732F1FB066D00075BBD8 /* PointCalculationViewController.m */; };
 		540635BE204E7E92004C9F21 /* ExchangeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 540635BD204E7E92004C9F21 /* ExchangeListViewController.m */; };
 		540635C1204E7ED5004C9F21 /* ExchangeListVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 540635C0204E7ED5004C9F21 /* ExchangeListVC.storyboard */; };
@@ -368,9 +367,6 @@
 		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
 		CB8404DA218718DB00E1C2A7 /* InfoTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8404D9218718DB00E1C2A7 /* InfoTextView.m */; };
 		CB84C63321A68903000D348C /* MapHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB84C63221A68903000D348C /* MapHelper.m */; };
-		CB878B9C21BF8C3F00B4DA30 /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB878B9B21BF8C3F00B4DA30 /* ShareViewController.m */; };
-		CB878B9F21BF8C3F00B4DA30 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB878B9D21BF8C3F00B4DA30 /* MainInterface.storyboard */; };
-		CB878BA321BF8C3F00B4DA30 /* Pinpinbox.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CB878B9821BF8C3F00B4DA30 /* Pinpinbox.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CB878BAA21BFB25F00B4DA30 /* AudioUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB878BA921BFB25F00B4DA30 /* AudioUploader.m */; };
 		CB8FB77E21991CB700D3C23C /* PDFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8FB77D21991CB700D3C23C /* PDFUploader.m */; };
 		CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
@@ -378,10 +374,14 @@
 		CBAD7DE821AE50DD0084682B /* 3rdPartyVideoPlayerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
 		CBD977EF21A2574600F04205 /* URLAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD977EE21A2574600F04205 /* URLAddViewController.m */; };
+		CBDA227021C3923200706E2C /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDA226F21C3923200706E2C /* ShareViewController.m */; };
+		CBDA227321C3923200706E2C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBDA227121C3923200706E2C /* MainInterface.storyboard */; };
+		CBDA227721C3923200706E2C /* PinpinboxShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CBDA226C21C3923200706E2C /* PinpinboxShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CBDA227B21C3929500706E2C /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
+		CBDA227C21C3929B00706E2C /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877CF01F905B030050C077 /* GlobalVars.m */; };
+		CBDA227D21C392F700706E2C /* PinPinBoxLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DAE121BE6DBD00596E28 /* PinPinBoxLogo.png */; };
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
-		CBF138E721C24EEE0070EBB8 /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877CF01F905B030050C077 /* GlobalVars.m */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
-		CBF138EC21C250200070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
 		CBF9DAE021BE555A00596E28 /* Login.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DADF21BE555A00596E28 /* Login.xcassets */; };
 		CBF9DAE221BE6DBD00596E28 /* PinPinBoxLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DAE121BE6DBD00596E28 /* PinPinBoxLogo.png */; };
 		CBFB1AE021ABA94800813611 /* InfoBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBFB1ADE21ABA94800813611 /* InfoBubbleView.m */; };
@@ -390,17 +390,18 @@
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
 		D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78F738D1D226D8700D8A271 /* YTPlayerView.m */; };
+		EC7FF61F5D933157858A5A77 /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AEC27BCC359EA6244357C2A5 /* libPods-wPinpinbox.a */; };
 		F016647821AF9F6C006A1E79 /* DSPhotoEditorSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F016647521AF9E5D006A1E79 /* DSPhotoEditorSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F039BD192148B8C6007AEA85 /* SystemImages.xcassets */; };
 		F0AC57542142353D00F63B82 /* UIViewController+ErrorAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		CB878BA121BF8C3F00B4DA30 /* PBXContainerItemProxy */ = {
+		CBDA227521C3923200706E2C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9276DF981B72FDC000E6ACC9 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = CB878B9721BF8C3F00B4DA30;
+			remoteGlobalIDString = CBDA226B21C3923200706E2C;
 			remoteInfo = PinpinboxShareExtension;
 		};
 /* End PBXContainerItemProxy section */
@@ -412,7 +413,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				CB878BA321BF8C3F00B4DA30 /* Pinpinbox.appex in Embed App Extensions */,
+				CBDA227721C3923200706E2C /* PinpinboxShareExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -659,6 +660,7 @@
 		54FA3EF1202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewExistingAlbumCollectionViewCell.h; sourceTree = "<group>"; };
 		54FA3EF2202AAB8D0034E946 /* NewExistingAlbumCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewExistingAlbumCollectionViewCell.m; sourceTree = "<group>"; };
 		54FF9EEC21359B610098A938 /* NewMessageBoardVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NewMessageBoardVC.storyboard; sourceTree = "<group>"; };
+		5F5EDE4CD8A8F2D9EAD4E9F4 /* Pods-wPinpinbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.release.xcconfig"; sourceTree = "<group>"; };
 		6303C4C71ED32124009E6160 /* FollowListsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowListsViewController.h; sourceTree = "<group>"; };
 		6303C4C81ED32124009E6160 /* FollowListsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowListsViewController.m; sourceTree = "<group>"; };
 		630418271EF9158100132CE1 /* SetupMusicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupMusicViewController.h; sourceTree = "<group>"; };
@@ -851,8 +853,6 @@
 		63F18A6D1DE68EC1005AEB85 /* VersionUpdate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VersionUpdate.m; sourceTree = "<group>"; };
 		63F3064C1EA48104009B6BF3 /* FBFriendsFindingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBFriendsFindingViewController.h; sourceTree = "<group>"; };
 		63F3064D1EA48104009B6BF3 /* FBFriendsFindingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBFriendsFindingViewController.m; sourceTree = "<group>"; };
-		6A64645CB4ED1AAD3CA0F395 /* Pods-wPinpinbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.debug.xcconfig"; sourceTree = "<group>"; };
-		8D332B91A317B3F95CC028A4 /* libPods-wPinpinbox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wPinpinbox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		920279901C449B2900A63027 /* CooperationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CooperationViewController.h; sourceTree = "<group>"; };
 		920279911C449B2900A63027 /* CooperationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CooperationViewController.m; sourceTree = "<group>"; };
 		920279921C449B2900A63027 /* CooperationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CooperationViewController.xib; sourceTree = "<group>"; };
@@ -1019,7 +1019,7 @@
 		92F6CD011B7B5382002E547C /* O_drag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = O_drag.m; sourceTree = "<group>"; };
 		92F89B281BBE79F900565908 /* StartImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartImage.h; sourceTree = "<group>"; };
 		92F89B291BBE79F900565908 /* StartImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartImage.m; sourceTree = "<group>"; };
-		AA32F463A3D32A43BD16129F /* Pods-wPinpinbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.release.xcconfig"; sourceTree = "<group>"; };
+		AEC27BCC359EA6244357C2A5 /* libPods-wPinpinbox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wPinpinbox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB071CF0213E4754003D01D8 /* DMViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMViewController.h; sourceTree = "<group>"; };
 		CB071CF1213E4754003D01D8 /* DMVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DMVC.storyboard; sourceTree = "<group>"; };
 		CB071CF2213E4754003D01D8 /* DMViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMViewController.m; sourceTree = "<group>"; };
@@ -1045,11 +1045,6 @@
 		CB8404DB2187190D00E1C2A7 /* InfoTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InfoTextView.h; sourceTree = "<group>"; };
 		CB84C63121A68903000D348C /* MapHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapHelper.h; sourceTree = "<group>"; };
 		CB84C63221A68903000D348C /* MapHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapHelper.m; sourceTree = "<group>"; };
-		CB878B9821BF8C3F00B4DA30 /* Pinpinbox.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Pinpinbox.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		CB878B9A21BF8C3F00B4DA30 /* ShareViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareViewController.h; sourceTree = "<group>"; };
-		CB878B9B21BF8C3F00B4DA30 /* ShareViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShareViewController.m; sourceTree = "<group>"; };
-		CB878B9E21BF8C3F00B4DA30 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
-		CB878BA021BF8C3F00B4DA30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CB878BA821BFB25F00B4DA30 /* AudioUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioUploader.h; sourceTree = "<group>"; };
 		CB878BA921BFB25F00B4DA30 /* AudioUploader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioUploader.m; sourceTree = "<group>"; };
 		CB8FB77C21991CB700D3C23C /* PDFUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFUploader.h; sourceTree = "<group>"; };
@@ -1062,6 +1057,11 @@
 		CBCE8573219C074600ED185D /* LocationMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationMapViewController.m; sourceTree = "<group>"; };
 		CBD977ED21A2574600F04205 /* URLAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLAddViewController.h; sourceTree = "<group>"; };
 		CBD977EE21A2574600F04205 /* URLAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = URLAddViewController.m; sourceTree = "<group>"; };
+		CBDA226C21C3923200706E2C /* PinpinboxShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PinpinboxShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBDA226E21C3923200706E2C /* ShareViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareViewController.h; sourceTree = "<group>"; };
+		CBDA226F21C3923200706E2C /* ShareViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShareViewController.m; sourceTree = "<group>"; };
+		CBDA227221C3923200706E2C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		CBDA227421C3923200706E2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
 		CBE2773921A8045600A6E80D /* HudIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudIndicatorView.m; sourceTree = "<group>"; };
 		CBF138E921C24FD80070EBB8 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
@@ -1085,6 +1085,7 @@
 		F039BD192148B8C6007AEA85 /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SystemImages.xcassets; sourceTree = "<group>"; };
 		F0AC57522142353D00F63B82 /* UIViewController+ErrorAlert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ErrorAlert.h"; sourceTree = "<group>"; };
 		F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ErrorAlert.m"; sourceTree = "<group>"; };
+		FABBB6A0BA22798FC01804C7 /* Pods-wPinpinbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1115,11 +1116,11 @@
 				92CFB5B11BE7562B001B7B78 /* Foundation.framework in Frameworks */,
 				929ED4AE1B78A2F300D21CF0 /* CoreLocation.framework in Frameworks */,
 				929ED4AC1B78A2E200D21CF0 /* AssetsLibrary.framework in Frameworks */,
-				2EEF1CABAE6C3DE79D3DE5EE /* libPods-wPinpinbox.a in Frameworks */,
+				EC7FF61F5D933157858A5A77 /* libPods-wPinpinbox.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CB878B9521BF8C3F00B4DA30 /* Frameworks */ = {
+		CBDA226921C3923200706E2C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1684,7 +1685,7 @@
 				5484D58B1FC43B8C00177DD6 /* Security.framework */,
 				542497AB1FB336BE0021D75D /* libSDWebImage.a */,
 				549B48AB1F6EC3190012FE13 /* libicucore.tbd */,
-				8D332B91A317B3F95CC028A4 /* libPods-wPinpinbox.a */,
+				AEC27BCC359EA6244357C2A5 /* libPods-wPinpinbox.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2147,6 +2148,15 @@
 			name = "Home Data Cell";
 			sourceTree = "<group>";
 		};
+		6713B06BA5183B444C5F5B07 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FABBB6A0BA22798FC01804C7 /* Pods-wPinpinbox.debug.xcconfig */,
+				5F5EDE4CD8A8F2D9EAD4E9F4 /* Pods-wPinpinbox.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		920279971C449CAA00A63027 /* cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2321,10 +2331,10 @@
 				920A0D351BE85FAB00EC5F6E /* Framework */,
 				9276DFA21B72FDC000E6ACC9 /* wPinpinbox */,
 				9276DFBC1B72FDC000E6ACC9 /* wPinpinboxTests */,
-				CB878B9921BF8C3F00B4DA30 /* PinpinboxShareExtension */,
+				CBDA226D21C3923200706E2C /* PinpinboxShareExtension */,
 				9276DFA11B72FDC000E6ACC9 /* Products */,
 				549B48AA1F6EC3190012FE13 /* Frameworks */,
-				D79364A8A8D64422B0C9740E /* Pods */,
+				6713B06BA5183B444C5F5B07 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2332,7 +2342,7 @@
 			isa = PBXGroup;
 			children = (
 				9276DFA01B72FDC000E6ACC9 /* Pinpinbox.app */,
-				CB878B9821BF8C3F00B4DA30 /* Pinpinbox.appex */,
+				CBDA226C21C3923200706E2C /* PinpinboxShareExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2807,13 +2817,13 @@
 			path = MapHelper;
 			sourceTree = "<group>";
 		};
-		CB878B9921BF8C3F00B4DA30 /* PinpinboxShareExtension */ = {
+		CBDA226D21C3923200706E2C /* PinpinboxShareExtension */ = {
 			isa = PBXGroup;
 			children = (
-				CB878B9A21BF8C3F00B4DA30 /* ShareViewController.h */,
-				CB878B9B21BF8C3F00B4DA30 /* ShareViewController.m */,
-				CB878B9D21BF8C3F00B4DA30 /* MainInterface.storyboard */,
-				CB878BA021BF8C3F00B4DA30 /* Info.plist */,
+				CBDA226E21C3923200706E2C /* ShareViewController.h */,
+				CBDA226F21C3923200706E2C /* ShareViewController.m */,
+				CBDA227121C3923200706E2C /* MainInterface.storyboard */,
+				CBDA227421C3923200706E2C /* Info.plist */,
 			);
 			path = PinpinboxShareExtension;
 			sourceTree = "<group>";
@@ -2866,15 +2876,6 @@
 			path = "youtube-ios-player-helper";
 			sourceTree = "<group>";
 		};
-		D79364A8A8D64422B0C9740E /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				6A64645CB4ED1AAD3CA0F395 /* Pods-wPinpinbox.debug.xcconfig */,
-				AA32F463A3D32A43BD16129F /* Pods-wPinpinbox.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2882,40 +2883,39 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9276DFC31B72FDC000E6ACC9 /* Build configuration list for PBXNativeTarget "wPinpinbox" */;
 			buildPhases = (
-				9A2DCDD2C0C7A1470CFC0779 /* [CP] Check Pods Manifest.lock */,
+				2D69593F52776EBF6E483419 /* [CP] Check Pods Manifest.lock */,
 				9276DF9C1B72FDC000E6ACC9 /* Sources */,
 				9276DF9D1B72FDC000E6ACC9 /* Frameworks */,
 				9276DF9E1B72FDC000E6ACC9 /* Resources */,
-				54E232B21FA6DA9400D95FD5 /* ShellScript */,
 				F016647921AF9F6C006A1E79 /* Embed Frameworks */,
-				0B50B11780277D6F5BE3A29B /* [CP] Copy Pods Resources */,
 				CB878BA721BF8C3F00B4DA30 /* Embed App Extensions */,
+				17B90C998E04D47F4AF6AB95 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				CB878BA221BF8C3F00B4DA30 /* PBXTargetDependency */,
+				CBDA227621C3923200706E2C /* PBXTargetDependency */,
 			);
 			name = wPinpinbox;
 			productName = wPinpinbox;
 			productReference = 9276DFA01B72FDC000E6ACC9 /* Pinpinbox.app */;
 			productType = "com.apple.product-type.application";
 		};
-		CB878B9721BF8C3F00B4DA30 /* Pinpinbox */ = {
+		CBDA226B21C3923200706E2C /* PinpinboxShareExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CB878BA621BF8C3F00B4DA30 /* Build configuration list for PBXNativeTarget "Pinpinbox" */;
+			buildConfigurationList = CBDA227821C3923200706E2C /* Build configuration list for PBXNativeTarget "PinpinboxShareExtension" */;
 			buildPhases = (
-				CB878B9421BF8C3F00B4DA30 /* Sources */,
-				CB878B9521BF8C3F00B4DA30 /* Frameworks */,
-				CB878B9621BF8C3F00B4DA30 /* Resources */,
+				CBDA226821C3923200706E2C /* Sources */,
+				CBDA226921C3923200706E2C /* Frameworks */,
+				CBDA226A21C3923200706E2C /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Pinpinbox;
+			name = PinpinboxShareExtension;
 			productName = PinpinboxShareExtension;
-			productReference = CB878B9821BF8C3F00B4DA30 /* Pinpinbox.appex */;
+			productReference = CBDA226C21C3923200706E2C /* PinpinboxShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -2941,9 +2941,9 @@
 							};
 						};
 					};
-					CB878B9721BF8C3F00B4DA30 = {
+					CBDA226B21C3923200706E2C = {
 						CreatedOnToolsVersion = 10.1;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -2962,7 +2962,7 @@
 			projectRoot = "";
 			targets = (
 				9276DF9F1B72FDC000E6ACC9 /* wPinpinbox */,
-				CB878B9721BF8C3F00B4DA30 /* Pinpinbox */,
+				CBDA226B21C3923200706E2C /* PinpinboxShareExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -3092,18 +3092,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CB878B9621BF8C3F00B4DA30 /* Resources */ = {
+		CBDA226A21C3923200706E2C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB878B9F21BF8C3F00B4DA30 /* MainInterface.storyboard in Resources */,
+				CBDA227D21C392F700706E2C /* PinPinBoxLogo.png in Resources */,
+				CBDA227321C3923200706E2C /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0B50B11780277D6F5BE3A29B /* [CP] Copy Pods Resources */ = {
+		17B90C998E04D47F4AF6AB95 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3123,20 +3124,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		54E232B21FA6DA9400D95FD5 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" d1ae8885f7ffd8a5956e74686a7e720f8d853aac dad04e88c7afebbc23a06451359eaa91f3db070a6e600fdb82a478d5ac72519a\n";
-		};
-		9A2DCDD2C0C7A1470CFC0779 /* [CP] Check Pods Manifest.lock */ = {
+		2D69593F52776EBF6E483419 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3403,23 +3391,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CB878B9421BF8C3F00B4DA30 /* Sources */ = {
+		CBDA226821C3923200706E2C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBF138EC21C250200070EBB8 /* UserInfo.m in Sources */,
-				CBF138E721C24EEE0070EBB8 /* GlobalVars.m in Sources */,
-				CB878B9C21BF8C3F00B4DA30 /* ShareViewController.m in Sources */,
+				CBDA227C21C3929B00706E2C /* GlobalVars.m in Sources */,
+				CBDA227B21C3929500706E2C /* UserInfo.m in Sources */,
+				CBDA227021C3923200706E2C /* ShareViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CB878BA221BF8C3F00B4DA30 /* PBXTargetDependency */ = {
+		CBDA227621C3923200706E2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CB878B9721BF8C3F00B4DA30 /* Pinpinbox */;
-			targetProxy = CB878BA121BF8C3F00B4DA30 /* PBXContainerItemProxy */;
+			target = CBDA226B21C3923200706E2C /* PinpinboxShareExtension */;
+			targetProxy = CBDA227521C3923200706E2C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3450,10 +3438,10 @@
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
-		CB878B9D21BF8C3F00B4DA30 /* MainInterface.storyboard */ = {
+		CBDA227121C3923200706E2C /* MainInterface.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				CB878B9E21BF8C3F00B4DA30 /* Base */,
+				CBDA227221C3923200706E2C /* Base */,
 			);
 			name = MainInterface.storyboard;
 			sourceTree = "<group>";
@@ -3566,7 +3554,7 @@
 		};
 		9276DFC41B72FDC000E6ACC9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6A64645CB4ED1AAD3CA0F395 /* Pods-wPinpinbox.debug.xcconfig */;
+			baseConfigurationReference = FABBB6A0BA22798FC01804C7 /* Pods-wPinpinbox.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3610,7 +3598,7 @@
 		};
 		9276DFC51B72FDC000E6ACC9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AA32F463A3D32A43BD16129F /* Pods-wPinpinbox.release.xcconfig */;
+			baseConfigurationReference = 5F5EDE4CD8A8F2D9EAD4E9F4 /* Pods-wPinpinbox.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -3651,7 +3639,7 @@
 			};
 			name = Release;
 		};
-		CB878BA421BF8C3F00B4DA30 /* Debug */ = {
+		CBDA227921C3923200706E2C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
@@ -3662,25 +3650,24 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				HEADER_SEARCH_PATHS = "\"${PODS_ROOT}/Headers/Public\"";
 				INFOPLIST_FILE = PinpinboxShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PODS_ROOT = "${SRCROOT}/Pods";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox.PinpinboxShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		CB878BA521BF8C3F00B4DA30 /* Release */ = {
+		CBDA227A21C3923200706E2C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
@@ -3691,17 +3678,16 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				HEADER_SEARCH_PATHS = "\"${PODS_ROOT}/Headers/Public\"";
 				INFOPLIST_FILE = PinpinboxShareExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_FAST_MATH = YES;
-				PODS_ROOT = "${SRCROOT}/Pods";
 				PRODUCT_BUNDLE_IDENTIFIER = com.vmage.pinpinbox.PinpinboxShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -3728,11 +3714,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CB878BA621BF8C3F00B4DA30 /* Build configuration list for PBXNativeTarget "Pinpinbox" */ = {
+		CBDA227821C3923200706E2C /* Build configuration list for PBXNativeTarget "PinpinboxShareExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CB878BA421BF8C3F00B4DA30 /* Debug */,
-				CB878BA521BF8C3F00B4DA30 /* Release */,
+				CBDA227921C3923200706E2C /* Debug */,
+				CBDA227A21C3923200706E2C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

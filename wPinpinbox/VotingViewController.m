@@ -28,8 +28,7 @@
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
 
-@interface VotingViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate>
-{
+@interface VotingViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
     BOOL isReloading;
     NSInteger nextId;
@@ -70,7 +69,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -114,7 +112,6 @@
                   forControlEvents: UIControlEventValueChanged];
     [self.collectionView addSubview: self.refreshControl];
     self.collectionView.showsVerticalScrollIndicator = NO;
-    
     self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
 }
 
@@ -146,12 +143,10 @@
     }
 }
 
-- (void)updateRemainingVoteLabel
-{
+- (void)updateRemainingVoteLabel {
     NSLog(@"");
     NSLog(@"updateRemainingVoteLabel");
     NSLog(@"voteLeft: %ld", (long)voteLeft);
-    
     if (voteLeft >= 10000000) {
         NSLog(@"voteLeft >= 10000000");
         voteLeft = voteLeft / 1000000;
@@ -176,39 +171,33 @@
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
 
-- (void)refresh
-{
+- (void)refresh {
     NSLog(@"");
     NSLog(@"refresh");
     NSLog(@"isReloading: %d", isReloading);
-    
     if (!isReloading) {
         isReloading = YES;
         nextId = 0;
         isLoading = NO;
-        
         // Reset data before loading new data
         //voteArray = nil;
-        
         [self loadData];
     }
 }
 
-- (void)loadData
-{
+- (void)loadData {
     NSLog(@"");
     NSLog(@"loadData");
-    
     // If isLoading is NO then run the following code
     if (!isLoading) {
         if (nextId == 0) {
             NSLog(@"nextId: %ld", (long)nextId);
         }
         isLoading = YES;
-        
         [self getEventVoteList];
     }
 }
+
 - (void)processEventVoteList:(NSDictionary *)dic {
     NSString *resultStr = dic[@"result"];
     
@@ -222,13 +211,14 @@
         // s for counting how much data is loaded
         int s = 0;
         
+        if (![wTools objectExists: dic[@"data"][@"eventjoin"]]) {
+            return;
+        }
         for (NSMutableDictionary *vote in [dic objectForKey: @"data"][@"eventjoin"]) {
             s++;
             [voteArray addObject: vote];
         }
-        
         NSLog(@"voteArray.count: %lu", (unsigned long)voteArray.count);
-        
         // If data keeps loading then the nextId is accumulating
         nextId = nextId + s;
         
@@ -236,12 +226,10 @@
         if (nextId >= 0) {
             isLoading = NO;
         }
-        
         // If s is 0, that means dic data is empty
         if (s == 0) {
             isLoading = YES;
         }
-        
         [self.collectionView reloadData];
         [self.refreshControl endRefreshing];
         isReloading = NO;
@@ -258,13 +246,11 @@
     } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
         NSLog(@"resultStr isEqualToString USER_ERROR");
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: msg];
-        
         [self.refreshControl endRefreshing];
         isReloading = NO;
     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
@@ -285,11 +271,10 @@
                                         repeats: NO];
     }
 }
-- (void)getEventVoteList
-{
+
+- (void)getEventVoteList {
     NSLog(@"");
     NSLog(@"getEventVoteList");
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -317,7 +302,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from getEventVoteList");
                 
@@ -334,10 +318,7 @@
                     wself->isReloading = NO;
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    //
-                    
                     [wself processEventVoteList:dic];
                 }
             } else {
@@ -383,7 +364,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from vote");
                 
@@ -391,7 +371,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"VotingViewController");
                     NSLog(@"Vote");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"vote"
                                          albumId: albumId
@@ -399,16 +378,15 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    
-                    
                     [wself processVoteResult:dic indexPath:indexPath];
                 }
             }
         });
     });
 }
-- (void)processVoteResult:(NSDictionary *)dic indexPath:(NSIndexPath *)indexPath{
+
+- (void)processVoteResult:(NSDictionary *)dic
+                indexPath:(NSIndexPath *)indexPath{
     NSString *resultStr = dic[@"result"];
     
     if ([resultStr isEqualToString: @"SYSTEM_OK"]) {
@@ -427,12 +405,11 @@
     } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
         NSLog(@"resultStr isEqualToString USER_ERROR");
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: msg];
     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
         NSLog(@"resultStr isEqualToString TOKEN_ERROR");
         
@@ -453,83 +430,35 @@
     }
 }
 #pragma mark - UICollectionViewDataSource Methods
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
     return voteArray.count;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
            viewForSupplementaryElementOfKind:(NSString *)kind
-                                 atIndexPath:(NSIndexPath *)indexPath
-{
+                                 atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"viewForSupplementaryElementOfKind");
-    
     VotingCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
     //headerView.topicLabel.text = @"Test";
     return headerView;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForItemAtIndexPath");
-
     VotingCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"Voting" forIndexPath: indexPath];
-    
     cell.contentView.subviews[0].backgroundColor = nil;
-    
     NSDictionary *data = voteArray[indexPath.row];
     NSLog(@"voteArray: %@", voteArray);
-    //NSLog(@"data: %@", data);
-    
-//    // Check Width & Height return value is nil or not
-//    NSNumber *coverWidth = data[@"album"][@"cover_width"];
-//    NSNumber *coverHeight = data[@"album"][@"cover_height"];
-//
-//    NSLog(@"coverWidth: %@", coverWidth);
-//    NSLog(@"coverHeight: %@", coverHeight);
-//
-//    NSInteger resultWidth;
-//    NSInteger resultHeight;
-//
-//    if ([coverWidth isEqual: [NSNull null]])
-//        resultWidth = kMinWidthAndHeight;
-//    else
-//        resultWidth = [coverWidth integerValue];
-//    NSLog(@"resultWidth: %ld", (long)resultWidth);
-//
-//    if ([coverHeight isEqual: [NSNull null]])
-//        resultHeight = kMinWidthAndHeight;
-//    else
-//        resultHeight = [coverHeight integerValue];
-//    NSLog(@"resultHeight: %ld",(long)resultHeight);
-//
-//    CGFloat widthForCoverImg = (self.view.bounds.size.width - 48) / 2;
-//    CGFloat heightForCoverImg = (resultHeight * widthForCoverImg) / resultWidth;
-//
-//    NSLog(@"widthForCoverImg: %f", widthForCoverImg);
-//    NSLog(@"heightForCoverImg: %f", heightForCoverImg);
-//
-//    // CoverImageView Setting
-//    if (heightForCoverImg < kMinWidthAndHeight) {
-//        cell.coverImageView.myHeight = kMinWidthAndHeight;
-//    } else {
-//        cell.coverImageView.myHeight = heightForCoverImg;
-//    }
     
     if ([data[@"album"][@"cover"] isEqual: [NSNull null]]) {
-//        cell.coverImageView.myWidth = cell.coverImageView.myHeight = widthForCoverImg;
-//        NSLog(@"cell.coverImageView.myWidth: %f", cell.coverImageView.myWidth);
-//        NSLog(@"cell.coverImageView.myHeight: %f", cell.coverImageView.myHeight);
         cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
     } else {
-        //cell.coverImageView.imageURL = [NSURL URLWithString: data[@"album"][@"cover"]];
         [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]]];
         cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"album"][@"cover_hex"]];
     }
@@ -555,10 +484,8 @@
     
     if (gotAudio) {
         NSLog(@"gotAudio");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
-        //        cell.imgView1.image = [UIImage imageNamed: @"ic200_audio_play_dark"];
         
         CGRect rect = cell.userInfoView.frame;
         rect.size.width = 28 * 1;
@@ -567,11 +494,8 @@
         if (gotVideo) {
             NSLog(@"gotAudio");
             NSLog(@"gotVideo");
-            
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
             [cell.btn2 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
-            //            cell.imgView1.image = [UIImage imageNamed: @"ic200_video_dark"];
-            //            cell.imgView2.image = [UIImage imageNamed: @"ic200_audio_play_dark"];
             
             CGRect rect = cell.userInfoView.frame;
             rect.size.width = 28 * 2;
@@ -589,19 +513,12 @@
                 CGRect rect = cell.userInfoView.frame;
                 rect.size.width = 28 * 3;
                 cell.userInfoView.frame = rect;
-                
-                //                cell.imgView1.image = [UIImage imageNamed: @"ic200_gift_dark"];
-                //                cell.imgView2.image = [UIImage imageNamed: @"ic200_video_dark"];
-                //                cell.imgView3.image = [UIImage imageNamed: @"ic200_audio_play_dark"];
             }
         }
     } else if (gotVideo) {
         NSLog(@"gotVideo");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
-        
-        //        cell.imgView1.image = [UIImage imageNamed: @"ic200_video_dark"];
         
         CGRect rect = cell.userInfoView.frame;
         rect.size.width = 28 * 1;
@@ -613,19 +530,14 @@
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
             [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
             
-            //            cell.imgView1.image = [UIImage imageNamed: @"ic200_gift_dark"];
-            //            cell.imgView2.image = [UIImage imageNamed: @"ic200_video_dark"];
-            
             CGRect rect = cell.userInfoView.frame;
             rect.size.width = 28 * 2;
             cell.userInfoView.frame = rect;
         }
     } else if (gotExchange || gotSlot) {
         NSLog(@"gotExchange or gotSlot");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
-        //        cell.imgView1.image = [UIImage imageNamed: @"ic200_gift_dark"];
         
         CGRect rect = cell.userInfoView.frame;
         rect.size.width = 28 * 1;
@@ -677,7 +589,6 @@
     if ([data[@"user"][@"picture"] isEqual: [NSNull null]]) {
         cell.userPictureImageView.image = [UIImage imageNamed: @"member_back_head.png"];
     } else {
-        //cell.userPictureImageView.imageURL = [NSURL URLWithString: data[@"user"][@"picture"]];
         [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: data[@"user"][@"picture"]]];
     }
     
@@ -702,11 +613,13 @@
         }
     }
     [LabelAttributeStyle changeGapString: cell.votedLabel content: cell.votedLabel.text];
-    
     cell.userId = data[@"user"][@"user_id"];
     cell.albumId = data[@"album"][@"album_id"];
     
     cell.userBtnBlock = ^(BOOL selected, NSString *userId, NSString *albumId) {
+        if (![wTools objectExists: userId]) {
+            return;
+        }
         CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
         cVC.userId = userId;
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -715,13 +628,11 @@
     
     cell.voteBtnBlock = ^(BOOL selected, NSString *userId, NSString *albumId) {
         NSLog(@"albumId: %@", albumId);
-        
         NSString *msg = [NSString stringWithFormat: @"投票給[%@]?", data[@"album"][@"name"]];
         [self showCustomAlertForVote: msg
                              albumId: albumId
                            indexPath: indexPath];
     };
-    
     return cell;
 }
 
@@ -729,8 +640,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView
        willDisplayCell:(UICollectionViewCell *)cell
-    forItemAtIndexPath:(NSIndexPath *)indexPath
-{
+    forItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"willDisplayCell");
     NSLog(@"indexPath.item: %ld", (long)indexPath.item);
@@ -741,22 +651,15 @@
     }
 }
 
-//- (BOOL)collectionView:(UICollectionView *)collectionView
-//shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
-//    //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-//
-//    return YES;
-//}
-
 - (void)collectionView:(UICollectionView *)collectionView
-didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 //    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    
     NSString *albumId = [voteArray[indexPath.row][@"album"][@"album_id"] stringValue];
+    
+    if (![wTools objectExists: albumId]) {
+        return;
+    }
     
     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
     aDVC.albumId = albumId;
@@ -775,8 +678,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 //    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.subviews[0].backgroundColor = nil;
 }
@@ -784,8 +686,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
     
@@ -833,7 +734,6 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 0;
 }
 
@@ -842,14 +742,12 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumLineSpacingForSectionAtIndex");
-    
     return 24;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
-        insetForSectionAtIndex:(NSInteger)section
-{
+        insetForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(8, 8, 8, 8);
     return itemInset;
 }
@@ -857,14 +755,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - JCCollectionViewWaterfallLayoutDelegate
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(UICollectionViewLayout *)collectionViewLayout
- heightForHeaderInSection:(NSInteger)section
-{
+ heightForHeaderInSection:(NSInteger)section {
     NSLog(@"heightForHeaderInSection");
     return 78;
 }
 
 #pragma mark - UIScrollViewDelegate Methods
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (isLoading) {
         NSLog(@"isLoading: %d", isLoading);
@@ -875,10 +771,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - Custom AlertView for Yes and No
 - (void)showCustomAlertForVote: (NSString *)msg
                        albumId: (NSString *)albumId
-                     indexPath: (NSIndexPath *)indexPath
-{
+                     indexPath: (NSIndexPath *)indexPath {
     NSLog(@"showCustomAlertForYesAndNo: Msg: %@", msg);
-    
     CustomIOSAlertView *alertViewForVote = [[CustomIOSAlertView alloc] init];
     //[alertViewForVote setContainerView: [self createContainerViewForVote: msg]];
     [alertViewForVote setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -898,7 +792,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __weak typeof(self) weakSelf = self;
     [alertViewForVote setOnButtonTouchUpInside:^(CustomIOSAlertView *alertViewForVote, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForVote tag]);
-        
         [weakAlertViewForVote close];
         
         if (buttonIndex == 0) {
@@ -911,8 +804,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertViewForVote show];
 }
 
-- (UIView *)createContainerViewForVote: (NSString *)msg
-{
+- (UIView *)createContainerViewForVote: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -986,96 +878,18 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                        albumId: (NSString *)albumId
-                     indexPath: (NSIndexPath *)indexPath
-{
+                     indexPath: (NSIndexPath *)indexPath {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1096,7 +910,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {            
@@ -1112,8 +925,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

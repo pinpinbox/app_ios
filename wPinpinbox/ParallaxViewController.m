@@ -50,9 +50,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     NSLog(@"viewDidLoad ParallaxViewController");
-    
     //self.contentViewHeight.constant = self.contentViewHeight.constant +100;
-    
     UIView *view = [[[NSBundle mainBundle]loadNibNamed:@"ParallaxViewController" owner:self options:nil] objectAtIndex:0];
     view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     [self.view insertSubview:view atIndex:0];
@@ -66,7 +64,6 @@
 
     //self.topScroll.showsVerticalScrollIndicator = NO;
     self.bottomScroll.showsVerticalScrollIndicator = NO;
-    
     self.topScroll.userInteractionEnabled = YES;
     
     // Graident Effect for HeaderBgView
@@ -118,7 +115,6 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    
     CGPoint offset = self.topScroll.contentOffset;
     offset.y = - self.topScroll.contentInset.top;
     [self.topScroll setContentOffset:offset animated:YES];
@@ -173,7 +169,6 @@
     
     UITapGestureRecognizer *sponsorViewTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(sponsorViewTapped:)];
     [self.sponsorView addGestureRecognizer: sponsorViewTap];
-    
     self.sponsorView.hidden = YES;
 }
 
@@ -233,7 +228,6 @@
     NSLog(@"");
     NSLog(@"ParallaxViewController");
     NSLog(@"scrollViewDidScroll");
-    
     NSString *scrollDirection;
     
     NSLog(@"self.lastContentOffset: %f", self.lastContentOffset);
@@ -265,7 +259,6 @@
     
     CGFloat percentage = offset / self.headerImageViewHeight.constant;
     NSLog(@"self.headerImageViewHeight.constant: %f", self.headerImageViewHeight.constant);
-    
     NSLog(@"percentage: %f", percentage);
     
     CGFloat value = self.headerImageViewHeight.constant*percentage; // negative when scrolling up more than the top
@@ -302,7 +295,6 @@
         self.yoffset = self.bottomScroll.contentOffset.y * 0.3;
         NSLog(@"self.yoffset: %f", self.yoffset);
         NSLog(@"scrollView.contentOffset.x: %f", scrollView.contentOffset.x);
-        
         [self.topScroll setContentOffset:CGPointMake(scrollView.contentOffset.x,self.yoffset) animated:NO];
     }
 }

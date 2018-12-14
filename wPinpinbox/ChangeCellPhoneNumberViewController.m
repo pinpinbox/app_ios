@@ -24,18 +24,13 @@
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
 
-@interface ChangeCellPhoneNumberViewController () <SelectBarDelegate, UIGestureRecognizerDelegate>
-{
+@interface ChangeCellPhoneNumberViewController () <SelectBarDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectTextField;
-    
     NSDictionary *myData;
-    
     NSArray *country;
-    
     NSInteger timeTick;
     NSTimer *timer;
 }
-
 @property (weak, nonatomic) IBOutlet UILabel *cellPhoneNumberLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *countryCodeLabel;
@@ -161,26 +156,22 @@
     }
 }
 
-- (void)dismissKeyboard
-{
+- (void)dismissKeyboard {
     [self.view endEditing:YES];
 }
 
 #pragma mark - IBAction Methods
 - (IBAction)backBtnPress:(id)sender {
     //[self.navigationController popViewControllerAnimated: YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
 
 #pragma mark - IBAction Methods
-
 //發送驗證碼
 -(IBAction)cellapi:(id)sender{
     if ([self.cellPhoneTextField.text isEqualToString:@""]) {
         //meeage=NSLocalizedString(@"RegText-tip", @"");
-        
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];
         style.backgroundColor = [UIColor thirdPink];
@@ -191,12 +182,10 @@
                        style: style];
         
         self.cellPhoneView.backgroundColor = [UIColor thirdPink];
-        
         return;
     }
     
     NSString *countrstr = [self.countryCodeLabel.text componentsSeparatedByString:@"+"][1];
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -206,7 +195,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSString *emailStr = myData[@"email"];
     NSLog(@"response: %@", emailStr);
     __block typeof(self) wself = self;
@@ -229,7 +217,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ChangeCellPhoneNumberViewController");
                     NSLog(@"cellapi");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"requsetsmspwd2"];
                 } else {
@@ -237,12 +224,12 @@
                     NSLog(@"response: %@", response);
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     [wself processPWDRequestResult:dic];
-                    
                 }
             }
         });
     });
 }
+
 - (void)processPWDRequestResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -266,23 +253,23 @@
         timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector: @selector(tickForSMS) userInfo: nil repeats: YES];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        NSLog(@"msg: %@", msg);
-        [self showCustomErrorAlert: msg];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
-- (void)tickForSMS
-{
+
+- (void)tickForSMS {
     NSLog(@"tick");
     
     if (timeTick == 0) {
         [timer invalidate];
-        
         self.countDownLabel.hidden = YES;
         self.sendBtn.userInteractionEnabled = YES;
-        
         [self.sendBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
         self.sendBtn.backgroundColor = [UIColor firstMain];
         self.sendBtn.layer.borderWidth = 0.0f;
@@ -309,7 +296,6 @@
                        style: style];
         
         self.cellPhoneView.backgroundColor = [UIColor thirdPink];
-        
         return;
     }
     
@@ -322,11 +308,8 @@
                     duration: 2.0
                     position: CSToastPositionBottom
                        style: style];
-        
-        
         return;
     }
-    
     // Store Data & Create Key-Value Data
     NSString *countrStr = [self.countryCodeLabel.text componentsSeparatedByString: @"+"][1];
     
@@ -339,7 +322,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI updatecellphone: self.cellPhoneNumberLabel.text
                                                  new: [NSString stringWithFormat:@"%@,%@", countrStr, self.cellPhoneTextField.text]
@@ -383,7 +365,11 @@
                         [appDelegate.myNav popViewControllerAnimated: YES];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -394,7 +380,6 @@
 }
 
 #pragma mark - Show SelectBar
-
 - (void)showbar {
     NSLog(@"showbar");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
@@ -429,14 +414,13 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     NSLog(@"textFieldShouldReturn");
-    
     [textField resignFirstResponder];
-    
     return YES;
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string {
     //NSUInteger newLength = [textField.text length] + [string length] - range.length;
     NSString *resultString = [textField.text stringByReplacingCharactersInRange: range
                                                                      withString: string];
@@ -456,7 +440,6 @@
             self.smsView.backgroundColor = [UIColor thirdPink];
         }        
     }
-    
     return YES;
 }
 
@@ -464,7 +447,6 @@
 - (void)addKeyboardNotification {
     NSLog(@"");
     NSLog(@"addKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
                                                  name:UIKeyboardDidShowNotification
@@ -478,7 +460,6 @@
 - (void)removeKeyboardNotification {
     NSLog(@"");
     NSLog(@"removeKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] removeObserver: self
                                                     name: UIKeyboardDidShowNotification
                                                   object: nil];
@@ -488,10 +469,8 @@
 }
 
 #pragma mark -
-
 - (void)keyboardWasShown:(NSNotification*)aNotification {
     NSLog(@"keyboardWasShown");
-    
     NSDictionary* info = [aNotification userInfo];
     NSLog(@"info: %@", info);
     
@@ -530,7 +509,6 @@
 // Called when the UIKeyboardWillHideNotification is sent
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
     NSLog(@"keyboardWillBeHidden");
-    
     [UIView animateWithDuration:0.3 animations:^{
         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     }];
@@ -538,92 +516,16 @@
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
-    
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
     
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-{
+                  protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -644,7 +546,6 @@
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -661,8 +562,7 @@
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

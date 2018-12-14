@@ -31,18 +31,14 @@
 
 #define kFontSize 18
 
-@interface NewEventPostViewController () <DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate>
-{
+@interface NewEventPostViewController () <DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate> {
 //    Setup2ViewController *s2VC;
     ChooseTemplateViewController *chooseTemplateVC;
     CustomIOSAlertView *alertViewForButton;
     NSMutableDictionary *dict;
     BOOL checkPost;
-    
     NSMutableArray *existedAlbumArray;
-    
     NSInteger currentContributionNumber;
-    
     CGFloat imageHeight;
 }
 @property (weak, nonatomic) IBOutlet UIButton *eventPostBtn;
@@ -69,13 +65,9 @@
     NSLog(@"self.prefixText: %@", self.prefixText);
     NSLog(@"self.contributionNumber: %ld", (long)self.contributionNumber);
     NSLog(@"self.specialUrl: %@", self.specialUrl);
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     self.toolBarView.hidden = YES;
-    
-    //[self initialValueSetup];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -97,13 +89,11 @@
     } else {
         [self getExistedAlbum];
     }
-    
     [wTools sendScreenTrackingWithScreenName:@"活動頁面"];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -265,8 +255,10 @@
     topicLabel.myLeftMargin = topicLabel.myRightMargin = 16;
     topicLabel.font = [UIFont boldSystemFontOfSize: 28];
     topicLabel.textColor = [UIColor firstGrey];
-    topicLabel.text = self.name;
-    [LabelAttributeStyle changeGapString: topicLabel content: self.name];
+    if ([wTools objectExists: self.name]) {
+        topicLabel.text = self.name;
+        [LabelAttributeStyle changeGapString: topicLabel content: self.name];
+    }
     topicLabel.numberOfLines = 0;
     topicLabel.wrapContentHeight = YES;
     [self.vertLayout addSubview: topicLabel];
@@ -276,8 +268,10 @@
     contentLabel.myLeftMargin = contentLabel.myRightMargin = 16;
     contentLabel.font = [UIFont systemFontOfSize: 18];
     contentLabel.textColor = [UIColor firstGrey];
-    contentLabel.text = self.evtTitle;
-    [LabelAttributeStyle changeGapString: contentLabel content: self.evtTitle];
+    if ([wTools objectExists: self.evtTitle]) {
+        contentLabel.text = self.evtTitle;
+        [LabelAttributeStyle changeGapString: contentLabel content: self.evtTitle];
+    }
     contentLabel.numberOfLines = 0;
     contentLabel.wrapContentHeight = YES;
     [self.vertLayout addSubview: contentLabel];
@@ -309,7 +303,6 @@
 - (void)showExchangeInfoTouchUpInside:(UIButton *)sender {
     NSLog(@"showExchangeInfoTouchUpInside");
     //sender.backgroundColor = [UIColor clearColor];
-    
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: self.specialUrl] entersReaderIfAvailable: NO];
     safariVC.preferredBarTintColor = [UIColor whiteColor];
     [self presentViewController: safariVC animated: YES completion: nil];
@@ -384,7 +377,6 @@
 
 - (IBAction)backBtnPress:(id)sender {
     //[self.navigationController popViewControllerAnimated: YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
@@ -416,7 +408,6 @@
 - (void)getExistedAlbum {
     NSLog(@"getExistedAlbum");
     existedAlbumArray = [[NSMutableArray alloc] init];
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -444,7 +435,6 @@
                 NSLog( @"Reason: %@", exception.reason);
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from getcalbumlist");
                 
@@ -452,17 +442,12 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"NewEventPostViewController");
                     NSLog(@"getExistedAlbum");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getExistedAlbum"];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     NSLog(@"getcalbumlist");
-//                    
-                    
                     [wself processExistAlbums:dic];
                 }
             }
@@ -470,29 +455,31 @@
     });
 }
 - (void)processExistAlbums:(NSDictionary *)dic {
-    
     if ([dic[@"result"] intValue] == 1) {
         NSArray *array = dic[@"data"];
         NSLog(@"array: %@", array);
-        //NSLog(@"array.count: %lu", (unsigned long)array.count);
+        
+        if (![wTools objectExists: array]) {
+            return;
+        }
         
         for (int i = 0; i < array.count; i++) {
-            //NSLog(@"array template: %@", array[i][@"template"][@"template_id"]);
-            
             NSString *act = array[i][@"album"][@"act"];
-            //NSLog(@"act: %@", act);
-            
             NSInteger zipped = [array[i][@"album"][@"zipped"] intValue];
             
+            if (![wTools objectExists: act]) {
+                return;
+            }
+            
             if (([act isEqualToString: @"open"]) && (zipped == 1)) {
-                //NSLog(@"act isEqualToString open && zipped == 1");
                 NSLog(@"self.templateArray: %@", self.templateArray);
                 
                 for (int j = 0; j < self.templateArray.count; j++) {
-                    //NSLog(@"templateArray: %@", [self.templateArray[j] stringValue]);
-                    //NSLog(@"array[i] template template_id: %@", array[i][@"template"][@"template_id"]);
-                    
                     NSString *currentTemplateId = [array[i][@"template"][@"template_id"] stringValue];
+                    
+                    if (![wTools objectExists: currentTemplateId]) {
+                        return;
+                    }
                     
                     if ([currentTemplateId isEqualToString: [self.templateArray[j] stringValue]]) {
                         //NSLog(@"same template");
@@ -528,10 +515,17 @@
         
         currentContributionNumber = 0;
         
+        if (![wTools objectExists: existedAlbumArray]) {
+            return;
+        }
+        
         for (NSDictionary *d1 in existedAlbumArray) {
             NSLog(@"eventArrayData: %@", d1[@"eventArrayData"]);
-            
             NSArray *array = d1[@"eventArrayData"];
+            
+            if (![wTools objectExists: array]) {
+                return;
+            }
             
             for (NSDictionary *d2 in array) {
                 NSLog(@"self.eventId: %ld", (long)[self.eventId integerValue]);
@@ -555,24 +549,24 @@
         } else {
             [self.eventPostBtn setTitle: @"立即投稿" forState: UIControlStateNormal];
         }
-        
         NSLog(@"currentContributionNumber: %ld", (long)currentContributionNumber);
-        
         [self initialValueSetup];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 #pragma mark - CustomActionSheet
-- (void)showPostMode
-{
+- (void)showPostMode {
     NSLog(@"showPostMode");
-    
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
     [UIView animateWithDuration: 0.5 animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
@@ -585,7 +579,6 @@
     self.effectView.alpha = 0.8;
     
     [self.view addSubview: self.effectView];
-    
     [self.view addSubview: self.customPostActionSheet.view];
     [self.customPostActionSheet viewWillAppear: NO];
     
@@ -610,8 +603,7 @@
 }
 
 #pragma mark - DDAUIActionSheetViewController Method
-- (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller
-{
+- (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     NSLog(@"actionSheetViewDidSlideOut");
     //[self.fxBlurView removeFromSuperview];
     [self.effectView removeFromSuperview];
@@ -619,14 +611,12 @@
 }
 
 #pragma mark -
-
 - (void)createNewAlbum {
     [self checkPostedAlbum];
 }
 
 - (void)chooseOldAlbum {
     [alertViewForButton close];
-    
     NewExistingAlbumViewController *newExistingAlbumVC = [[UIStoryboard storyboardWithName: @"NewExistingAlbumVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewExistingAlbumViewController"];
     newExistingAlbumVC.templateArray = self.templateArray;
     newExistingAlbumVC.eventId = self.eventId;
@@ -642,8 +632,16 @@
         NSLog(@"array.count: %lu", (unsigned long)array.count);
         //NSLog(@"dic data: %@", array);
         
+        if (![wTools objectExists: array]) {
+            return;
+        }
+        
         for (int i = 0; i < array.count; i++) {
             NSString *act = array[i][@"album"][@"act"];
+            
+            if (![wTools objectExists: act]) {
+                return;
+            }
             
             if ([act isEqualToString: @"open"]) {
                 NSLog(@"array: %@", array[i]);
@@ -651,10 +649,18 @@
                 NSArray *eventArray = [[NSArray alloc] init];
                 eventArray = array[i][@"event"];
                 
+                if (![wTools objectExists: eventArray]) {
+                    return;
+                }
+                
                 for (int k = 0; k < eventArray.count; k++) {
                     BOOL contributionStatus = [array[i][@"event"][k][@"contributionstatus"] boolValue];
                     NSString *eventIdCheck = array[i][@"event"][k][@"event_id"];
                     NSLog(@"contributionStatus: %d", contributionStatus);
+                    
+                    if (![wTools objectExists: eventIdCheck]) {
+                        return;
+                    }
                     
                     if ([eventIdCheck intValue] == [_eventId intValue]) {
                         NSLog(@"match eventId");
@@ -695,11 +701,16 @@
         }
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
 - (void)checkPostedAlbum {
     NSLog(@"checkPostedAlbum");
     
@@ -731,7 +742,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from getcalbumlist");
                 
@@ -739,13 +749,11 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"NewEventPostViewController");
                     NSLog(@"checkPostedAlbum");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"checkPostedAlbum"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processCheckPosted:dic];
                 }
             }
@@ -764,8 +772,7 @@
     [appDelegate.myNav pushViewController: chooseTemplateVC animated: YES];
 }
 
-- (void)showPostedInfo
-{
+- (void)showPostedInfo {
     OldCustomAlertView *alertView = [[OldCustomAlertView alloc] init];    
     [alertView setContainerView: [self createViewForPost]];
     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
@@ -786,8 +793,7 @@
     [alertView show];
 }
 
-- (UIView *)createViewForPost
-{
+- (UIView *)createViewForPost {
     UIView *view = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 280, 220)];
     UIView *bgView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 280, 200)];
     
@@ -855,7 +861,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from switchstatusofcontribution");
                 
@@ -872,9 +877,10 @@
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"post album success");
-                        
+                        if (![wTools objectExists: dic[@"data"][@"event"][@"contributionstatus"]]) {
+                            return;
+                        }
                         int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
-                        
                         NSLog(@"contributionCheck: %d", contributionCheck);
                         
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -904,12 +910,11 @@
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [wself showCustomErrorAlert: msg];
                     } else {
                         [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -933,7 +938,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI insertalbumofdiy: [UserInfo getUserID]
                                                token: [UserInfo getUserToken]
@@ -949,7 +953,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from insertalbumofdiy");
                 
@@ -968,12 +971,13 @@
                         NSLog(@"get result value from insertalbumofdiy");
                         NSString *tempAlbumId = [dic[@"data"] stringValue];
                         
+                        if (![wTools objectExists: tempAlbumId]) {
+                            return;
+                        }
+                        if (![wTools objectExists: self.eventId]) {
+                            return;
+                        }
                         AlbumCreationViewController *albumCreationVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
-                        NSLog(@"");
-                        
-                        // Data from wTools userbook is not right
-                        //albumCreationVC.selectrow = [wTools userbook];
-                        
                         albumCreationVC.albumid = tempAlbumId;
                         albumCreationVC.templateid = @"0";
                         albumCreationVC.choice = @"Fast";
@@ -983,15 +987,13 @@
                         //[self.navigationController pushViewController: albumCreationVC animated: YES];
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav pushViewController: albumCreationVC animated: YES];
-                        
                     } else {
                         NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: msg];
                     }
                 }
             }
@@ -1011,94 +1013,16 @@
 */
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-{
+                  protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];    
     [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     
@@ -1119,7 +1043,6 @@
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -1140,8 +1063,7 @@
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

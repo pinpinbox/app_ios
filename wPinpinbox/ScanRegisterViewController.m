@@ -75,12 +75,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     if ([CLLocationManager locationServicesEnabled] &&[[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         [_locationManager requestWhenInUseAuthorization];
     }
-    
 }
 
-
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    
     if (status ==kCLAuthorizationStatusAuthorizedWhenInUse || status == kCLAuthorizationStatusAuthorizedAlways) {
         [_locationManager startUpdatingLocation];
     }
@@ -88,17 +85,16 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     [self checkCamera];
 }
+
 - (void)checkCamera {
-    
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     
     if (authStatus == AVAuthorizationStatusDenied ||
-        authStatus == AVAuthorizationStatusRestricted){ //||
+        authStatus == AVAuthorizationStatusRestricted) { //||
         [self showNoAccessAlertAndCancel: @"camera"];
-    } else if (authStatus == AVAuthorizationStatusNotDetermined ) {
+    } else if (authStatus == AVAuthorizationStatusNotDetermined) {
         __block typeof(self) wself = self;
         [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -113,33 +109,32 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         [self startReading];
     }
 }
-- (void)showNoAccessAlertAndCancel: (NSString *)option {
+
+- (void)showNoAccessAlertAndCancel:(NSString *)option {
     NSString *titleStr;
     NSString *msgStr;
     
-    if ([option isEqualToString: @"photo"]) {
-        titleStr = @"沒有照片存取權";
-        msgStr = @"請打開照片權限設定";
-    } else if ([option isEqualToString: @"audio"]) {
-        titleStr = @"沒有麥克風存取權";
-        msgStr = @"請打開麥克風權限設定";
-    } else if ([option isEqualToString: @"camera"]) {
-        titleStr = @"沒有相機存取權";
-        msgStr = @"請打開相機權限設定";
+    if ([wTools objectExists: option]) {
+        if ([option isEqualToString: @"photo"]) {
+            titleStr = @"沒有照片存取權";
+            msgStr = @"請打開照片權限設定";
+        } else if ([option isEqualToString: @"audio"]) {
+            titleStr = @"沒有麥克風存取權";
+            msgStr = @"請打開麥克風權限設定";
+        } else if ([option isEqualToString: @"camera"]) {
+            titleStr = @"沒有相機存取權";
+            msgStr = @"請打開相機權限設定";
+        }
     }
-    
     UIAlertController *alert = [UIAlertController alertControllerWithTitle: titleStr message: msgStr preferredStyle: UIAlertControllerStyleAlert];
-    
     [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         [[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
-        
     }]];
     __block typeof(self) wself = self;
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [wself backBtnPress:nil];
         });
-        
     }];
     [alert addAction:cancel];
     [self presentViewController: alert animated: YES completion: nil];
@@ -148,7 +143,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [super viewDidAppear:animated];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
-    
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
 }
 
@@ -159,7 +153,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -199,7 +192,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (IBAction)backBtnPress:(id)sender {
     [_locationManager stopUpdatingLocation];
     //[self.navigationController popViewControllerAnimated: YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
@@ -219,12 +211,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSLog(@"%@", [error localizedDescription]);
         return NO;
     }
-    
     // Initialize the captureSession object.
     _captureSession = [[AVCaptureSession alloc] init];
     // Set the input device on the capture session.
     [_captureSession addInput:input];
-    
     
     // Initialize a AVCaptureMetadataOutput object and set it as the output device to the capture session.
     AVCaptureMetadataOutput *captureMetadataOutput = [[AVCaptureMetadataOutput alloc] init];
@@ -244,7 +234,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [_videoPreviewLayer setFrame:_viewPreview.layer.bounds];
     [_viewPreview.layer addSublayer:_videoPreviewLayer];
     
-    
     // Start video capture.
     [_captureSession startRunning];
     
@@ -260,8 +249,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [_videoPreviewLayer removeFromSuperlayer];
 }
 
-- (void)loadBeepSound
-{
+- (void)loadBeepSound {
     // Get the path to the beep.mp3 file and convert it to a NSURL object.
     NSString *beepFilePath = [[NSBundle mainBundle] pathForResource: @"beep"
                                                              ofType: @"mp3"];
@@ -281,8 +269,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 #pragma mark - AVCaptureMetadataOutputObjectsDelegate method implementation
 - (void)captureOutput:(AVCaptureOutput *)captureOutput
 didOutputMetadataObjects:(NSArray *)metadataObjects
-       fromConnection:(AVCaptureConnection *)connection
-{
+       fromConnection:(AVCaptureConnection *)connection {
     NSLog(@"didOutputMetadataObjects");
     
     // Check if the metadataObjects array is not nil and it contains at least one object.
@@ -292,7 +279,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         // Get the metadata Objects.
         AVMetadataMachineReadableCodeObject *metadataObj = [metadataObjects objectAtIndex: 0];
         NSLog(@"metadataObj stringValue: %@", [metadataObj stringValue]);
-        
         [self performSelectorOnMainThread: @selector(stopReading) withObject: nil waitUntilDone: NO];
         
         // If the audio player is not nil, then play the sound effect.
@@ -305,7 +291,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         if ([[metadataObj type] isEqualToString: AVMetadataObjectTypeQRCode]) {
             NSLog(@"metadataObj type isEqualToString AVMetadataObjectTypeQRCode");
             NSLog(@"%@", [metadataObj stringValue]);
-        
             [_locationManager stopUpdatingLocation];
             [self stopReading];
             
@@ -314,7 +299,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
             NSLog(@"strArray: %@", strArray);
             __block typeof(self) wself = self;
             if (strArray.count > 1) {
-                
                 if (!([strArray[1] rangeOfString: @"businessuser_id"].location == NSNotFound)) {
                     NSLog(@"strArray[1] rangeOfString is businessuser_id");
                     strArray = [strArray[1] componentsSeparatedByString: @"businessuser_id="];
@@ -347,16 +331,13 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 //Facebook
 -(IBAction)Facebookbtn:(id)sender{
     NSLog(@"Facebookbtn Pressed");
-    
     if ([FBSDKAccessToken currentAccessToken]) {
         NSLog(@"FBSDKAccessToken currentAccessToken Exists");
         FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
         [login logOut];
-        
         [self fbLoginHandler];
     } else {
         NSLog(@"login with permissions");
-        
         [self fbLoginHandler];
     }
 }
@@ -366,10 +347,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     __block typeof(self) wself = self;
     [self loginAndRequestPermissionsWithSuccessHandler:^{
         NSLog(@"loginAndRequestPermissionsWithSuccessHandler");
-        
         NSString *fbtoken = [FBSDKAccessToken currentAccessToken].tokenString;
         NSString *fbid = [FBSDKAccessToken currentAccessToken].userID;
-        
         NSLog(@"FB ID: %@", fbid);
         NSLog(@"FB Token: %@", fbtoken);
         
@@ -378,10 +357,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         
         [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters: parameters]
          startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-             
              if (!error) {
                  NSLog(@"fetched user: %@", result);
-                 
                  [wself.locationManager stopUpdatingLocation];
                  
                  // Get FB Personal Data
@@ -421,7 +398,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     }
                              declinedOrCanceledHandler:^{
                                  NSLog(@"declinedOrCanceledHandler");
-                                 
                                  // If the user declined permissions tell them why we need permissions
                                  // and ask for permissions again if they want to grant permissions.
                                  
@@ -441,11 +417,12 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                               NSLog(@"Error: %@", error.description);
                                           }];
 }
-- (void)handleFBLoginParam:(NSMutableDictionary *)paramDic fbid:(NSString *)fbid{
-    
+- (void)handleFBLoginParam:(NSMutableDictionary *)paramDic
+                      fbid:(NSString *)fbid{
     NSLog(@"currentLocation: %@", currentLocation);
     [self stopReading];
-    if (currentLocation != nil) {
+    
+    if ([wTools objectExists: currentLocation]) {
         NSString *latStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.latitude];
         NSString *longStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.longitude];
         
@@ -454,14 +431,22 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         
         [paramDic setObject: locationStr forKey: @"coordinate"];
     }
+//    if (currentLocation != nil) {
+//        NSString *latStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.latitude];
+//        NSString *longStr = [NSString stringWithFormat: @"%.8f", currentLocation.coordinate.longitude];
+//
+//        NSString *locationStr = [NSString stringWithFormat: @"%@,%@", latStr, longStr];
+//        NSLog(@"locationStr: %@", locationStr);
+//
+//        [paramDic setObject: locationStr forKey: @"coordinate"];
+//    }
     
     NSLog(@"paramDic: %@", paramDic);
-    
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: paramDic options: 0 error: nil];
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
-
     [self buisnessSubUserFastRegister: fbid jsonStr: jsonStr];
 }
+
 - (void)buisnessSubUserFastRegister:(NSString *)fbId
                             jsonStr:(NSString *)jsonStr {
     NSLog(@"buisnessSubUserFastRegister");
@@ -490,7 +475,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-                        
             if (response != nil) {
                 NSLog(@"response from buisnessSubUserFastRegister");
                 
@@ -505,9 +489,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                          jsonStr: jsonStr];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     [wself processBusinessSubUserResult:dic];
                 }
             }
@@ -527,7 +509,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         }
         NSLog(@"tokenStr: %@", tokenStr);
         NSLog(@"idStr: %@", idStr);
-        
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         [userPrefs setObject: @"NeedToCheck" forKey: @"newsLetterCheck"];
         [userPrefs synchronize];
@@ -578,8 +559,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 - (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock) successHandler
                            declinedOrCanceledHandler:(FBBlock) declinedOrCanceledHandler
-                                        errorHandler:(void (^)(NSError *)) errorHandler
-{
+                                        errorHandler:(void (^)(NSError *)) errorHandler {
     NSLog(@"loginAndRequestPermissionsWithSuccessHandler declinedOrCanceledHandler errorHandler");
     
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
@@ -599,16 +579,13 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
              }
              return;
          }
-         
          if ([FBSDKAccessToken currentAccessToken] &&
              [[FBSDKAccessToken currentAccessToken].permissions containsObject:@"public_profile"]) {
-             
              if (successHandler) {
                  successHandler();
              }
              return;
          }
-         
          if (declinedOrCanceledHandler) {
              declinedOrCanceledHandler();
              [wself startReading];
@@ -616,6 +593,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
          }
      }];
 }
+
 - (void)alertDeclinedPublishActionsWithCompletion:(FBBlock)completion {
     /*
      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Publish Permissions"
@@ -629,20 +607,16 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 
 #pragma mark - Push Notification Setting
-- (void)setupPushNotification
-{
+- (void)setupPushNotification {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
         NSString *awsResponse;
         
         if ([wTools getUUID]) {
             NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-            
             NSLog(@"getUserID: %@", [userPrefs objectForKey: @"id"]);
             NSLog(@"getUserToken: %@", [userPrefs objectForKey: @"token"]);
             NSLog(@"getUUID: %@", [wTools getUUID]);
             NSLog(@"identifier: %@", [OpenUDID value]);
-            
             UIDevice *device = [UIDevice currentDevice];
             NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
             NSLog(@"currentDeviceId: %@", currentDeviceId);
@@ -650,9 +624,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
             //awsResponse = [boxAPI setawssns:[UserInfo getUserID] token:[UserInfo getUserToken] devicetoken:[wTools getUUID] identifier:[OpenUDID value]];
             awsResponse = [boxAPI setawssns:[UserInfo getUserID] token:[UserInfo getUserToken] devicetoken:[wTools getUUID] identifier: currentDeviceId];
         }
-        
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             if (awsResponse != nil) {
                 NSLog(@"awsResponse: %@", awsResponse);
                 [wTools processAWSResponse: awsResponse];
@@ -690,7 +662,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -704,17 +675,14 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
                     [wself processRefreshToken:dic];
-                    
                 }
             }
         });
     });
 }
+
 - (void)processRefreshToken:(NSDictionary *)dic {
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         if ([wTools objectExists: dic[@"data"][@"token"][@"token"]]) {
@@ -722,7 +690,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         }
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         [userPrefs setObject: tokenStr forKey: @"token"];
-        
         [self getProfile];
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"失敗：%@",dic[@"message"]);
@@ -793,9 +760,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                                          jsonStr: @""];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     if ([dic[@"result"] boolValue]) {
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
                         NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
@@ -873,11 +838,12 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                        NSInteger point = [dic[@"data"] integerValue];
-                        
-                        [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
-                        [userPrefs synchronize];
-                        
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            NSInteger point = [dic[@"data"] integerValue];
+                            
+                            [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
+                            [userPrefs synchronize];
+                        }
                         [self toMyTabBarController];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", dic[@"message"]);
@@ -898,7 +864,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 #pragma mark - To MyTabBarController
 - (void)toMyTabBarController {
     MyTabBarController *myTabC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"MyTabBarController"];
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [app.myNav pushViewController: myTabC animated: NO];
 }
@@ -906,8 +871,12 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 #pragma mark - Saving Data to Device
 - (void)saveDataAfterLogin {
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    [userPrefs setObject: tokenStr forKey:@"token"];
-    [userPrefs setObject: idStr forKey:@"id"];
+    if ([wTools objectExists: tokenStr]) {
+        [userPrefs setObject: tokenStr forKey:@"token"];
+    }
+    if ([wTools objectExists: idStr]) {
+        [userPrefs setObject: idStr forKey:@"id"];
+    }
     [userPrefs setObject: @"FB" forKey:@"FB"];
     [userPrefs synchronize];
 }
@@ -930,8 +899,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                           fbId: (NSString *)fbId
-                       jsonStr: (NSString *)jsonStr
-{
+                       jsonStr: (NSString *)jsonStr {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
      [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -952,7 +920,6 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {            
@@ -1047,13 +1014,13 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 
 #pragma mark - CLLocationManagerDelegate
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
+- (void)locationManager:(CLLocationManager *)manager
+       didFailWithError:(NSError *)error {
     NSLog(@"didFailWithError: %@", error);
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
-{
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray<CLLocation *> *)locations {
     //NSLog(@"didUpdateLocations: %@", locations);
     currentLocation = [locations lastObject];
     //NSLog(@"currentLocation: %@", currentLocation);

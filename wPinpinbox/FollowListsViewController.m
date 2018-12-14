@@ -21,10 +21,8 @@
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
 
-@interface FollowListsViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
-{
+@interface FollowListsViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate> {
     NSMutableArray *followListData;
-    
     BOOL isLoading;
     BOOL isReloading;
     NSInteger  nextId;
@@ -143,7 +141,6 @@
         isReloading = YES;
         nextId = 0;
         isLoading = NO;
-        
         [self loadData];
     }
 }
@@ -171,7 +168,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
@@ -195,7 +191,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"FollowListViewController");
                     NSLog(@"getFollowToList");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getFollowToList"
                                           userId: @""
@@ -205,9 +200,7 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processFollowListResult:dic];
-                    
                 }
             } else {
                 [wself.refreshControl endRefreshing];
@@ -225,33 +218,36 @@
         // s for counting how much data is loaded
         int s = 0;
         
-        for (NSMutableDictionary *followData in [dic objectForKey: @"data"]) {
-            s++;
-            [followListData addObject: followData];
+        if ([wTools objectExists: dic[@"data"]]) {
+            for (NSMutableDictionary *followData in [dic objectForKey: @"data"]) {
+                s++;
+                [followListData addObject: followData];
+            }
+            NSLog(@"followListData: %@", followListData);
+            
+            // If data keeps loading then the nextId is accumulating
+            nextId = nextId + s;
+            NSLog(@"nextId is: %ld", (long)nextId);
+            
+            // If nextId is bigger than 0, that means there are some data loaded already.
+            if (nextId >= 0)
+                isLoading = NO;
+            
+            // If s is 0, that means dic data is empty.
+            if (s == 0) {
+                isLoading = YES;
+            }
+            [self.refreshControl endRefreshing];
+            [self.collectionView reloadData];
+            isReloading = NO;
         }
-        
-        NSLog(@"followListData: %@", followListData);
-        
-        // If data keeps loading then the nextId is accumulating
-        nextId = nextId + s;
-        NSLog(@"nextId is: %ld", (long)nextId);
-        
-        // If nextId is bigger than 0, that means there are some data loaded already.
-        if (nextId >= 0)
-            isLoading = NO;
-        
-        // If s is 0, that means dic data is empty.
-        if (s == 0) {
-            isLoading = YES;
-        }
-        
-        [self.refreshControl endRefreshing];
-        [self.collectionView reloadData];
-        
-        isReloading = NO;
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
         [self.refreshControl endRefreshing];
         isReloading = NO;
     } else {
@@ -275,13 +271,10 @@
         assert(false);
         return;
     }
-    
     NSDictionary *dic = [followListData[indexPath.row] mutableCopy];
     NSString *userId = dic[@"user"][@"user_id"];
     NSString *name = dic[@"user"][@"name"];
-    
     NSString *titleStr = [NSString stringWithFormat: @"不再關注 %@?", name];
-    
     [self showCustomAlert: titleStr userId: userId name: name];
 }
 
@@ -298,7 +291,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI changefollowstatus: [UserInfo getUserID]
                                                   token: [UserInfo getUserToken]
@@ -332,13 +324,15 @@
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSDictionary *d = dic[@"data"];
-                        
                         NSLog(@"d: %@", d);
-                        
                         [self refresh];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -362,12 +356,9 @@
            viewForSupplementaryElementOfKind:(NSString *)kind
                                  atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"viewForSupplementaryElementOfKind");
-    
 //    UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerCell" forIndexPath: indexPath];
-
     FollowListsCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerCell" forIndexPath: indexPath];
     [LabelAttributeStyle changeGapString: headerView.topicLabel content: headerView.topicLabel.text];
-    
     return headerView;
 }
 
@@ -396,16 +387,16 @@
         NSLog(@"imageURL is nil");
         followImageView.image = [UIImage imageNamed: @"member_back_head.png"];
     }
-    
     followImageView.clipsToBounds = YES;
     followImageView.layer.cornerRadius = followImageView.bounds.size.height / 2;
     
     UILabel *nameLabel = (UILabel *)[cell viewWithTag: 101];
     nameLabel.textColor = [UIColor firstGrey];
     nameLabel.font = [UIFont systemFontOfSize: 16];
-    nameLabel.text = name;
-    [LabelAttributeStyle changeGapString: nameLabel content: name];
-    
+    if ([wTools objectExists: name]) {
+        nameLabel.text = name;
+        [LabelAttributeStyle changeGapString: nameLabel content: name];
+    }
     UIButton *followBtn = (UIButton *)[cell viewWithTag: 102];
     [followBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
     [followBtn setTitle:NSLocalizedString(@"AuthorText-inAtt", @"") forState:UIControlStateNormal];
@@ -427,39 +418,28 @@
 //}
 
 - (void)collectionView:(UICollectionView *)collectionView
-didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     cell.contentView.layer.cornerRadius = kCornerRadius;
     //cell.contentView.backgroundColor = [UIColor thirdMain];
-    
     NSDictionary *dic = [followListData[indexPath.row] mutableCopy];
     NSString *userId = dic[@"user"][@"user_id"];
     
-    CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-    cVC.userId = userId;
-    
-    //[self.navigationController pushViewController: cVC animated: YES];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav pushViewController: cVC animated: YES];
+    if ([wTools objectExists: userId]) {
+        CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+        cVC.userId = userId;
+        //[self.navigationController pushViewController: cVC animated: YES];
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav pushViewController: cVC animated: YES];
+    }
 }
 
-//- (void)collectionView:(UICollectionView *)collectionView
-//didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
-//    //cell.contentView.backgroundColor = nil;
-//}
-
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
-
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
-    
     CGFloat width = ([UIScreen mainScreen].bounds.size.width - 16) / 2;
     //return CGSizeMake(152, 201);
     return CGSizeMake(width, 201);
@@ -470,7 +450,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 0;
 }
 
@@ -500,7 +479,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidScroll");
-    
     // getting the scroll offset
     CGFloat bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height;
     NSLog(@"bottomEdge: %f", bottomEdge);
@@ -516,8 +494,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - Custom Alert Method
 - (void)showCustomAlert: (NSString *)msg
                  userId:(NSString *)userId
-                   name:(NSString *)name
-{
+                   name:(NSString *)name {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     //[alertView setContainerView: [self createContainerView: msg]];
     [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -536,7 +513,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __weak CustomIOSAlertView *weakAlertView = alertView;
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        
         [weakAlertView close];
         
         if (buttonIndex == 0) {
@@ -549,8 +525,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg
-{
+- (UIView *)createContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -625,96 +600,19 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
     
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                         userId: (NSString *)userId
-                          name: (NSString *)name
-{
+                          name: (NSString *)name {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -735,7 +633,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -752,8 +649,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

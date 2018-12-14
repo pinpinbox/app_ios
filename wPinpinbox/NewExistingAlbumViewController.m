@@ -26,8 +26,7 @@
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
 
-@interface NewExistingAlbumViewController ()
-{
+@interface NewExistingAlbumViewController () {
     NSMutableArray *existedAlbumArray;
     NSString *albumId;
     NSString *coverImage;
@@ -76,8 +75,7 @@
     [self getExistedAlbum];
 }
 
-- (void)initialValueSetup
-{
+- (void)initialValueSetup {
     NSLog(@"initialValueSetup");
     self.navBarView.backgroundColor = [UIColor barColor];
     
@@ -142,12 +140,66 @@
 }
 
 #pragma mark - Protocol Methods
+- (void)getExistedAlbum {
+    NSLog(@"getExistedAlbum");    
+    existedAlbumArray = [[NSMutableArray alloc] init];
+    
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI getcalbumlist: [UserInfo getUserID]
+                                             token: [UserInfo getUserToken]
+                                              rank: @"mine"
+                                             limit: limit];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                NSLog(@"response from getcalbumlist");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"NewExistingAlbumViewController");
+                    NSLog(@"getExistedAlbum");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"getcalbumlist"
+                                            cell: nil];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    [wself processExistedAlbumResult:dic];
+                }
+            }
+        });
+    });
+}
+
 - (void)processExistedAlbumResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         NSArray *array = dic[@"data"];
         NSLog(@"array: %@", array);
-        
         NSLog(@"array.count: %lu", (unsigned long)array.count);
+        
+        if (![wTools objectExists: array]) {
+            return;
+        }
         
         for (int i = 0; i < array.count; i++) {
             NSLog(@"array template: %@", array[i][@"template"][@"template_id"]);
@@ -155,16 +207,27 @@
             NSString *act = array[i][@"album"][@"act"];
             NSLog(@"act: %@", act);
             
+            if (![wTools objectExists: act]) {
+                return;
+            }
+            
             if ([act isEqualToString: @"open"]) {
+                if (![wTools objectExists: self.templateArray]) {
+                    return;
+                }
+                
                 for (int j = 0; j < self.templateArray.count; j++) {
                     NSLog(@"templateArray: %@", [self.templateArray[j] stringValue]);
                     NSLog(@"array[i] template template_id: %@", array[i][@"template"][@"template_id"]);
                     
                     NSString *currentTemplateId = [array[i][@"template"][@"template_id"] stringValue];
                     
+                    if (![wTools objectExists: currentTemplateId]) {
+                        return;
+                    }
+                    
                     if ([currentTemplateId isEqualToString: [self.templateArray[j] stringValue]]) {
                         NSLog(@"same template");
-                        
                         NSLog(@"array[i]: %@", array[i]);
                         
                         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
@@ -178,19 +241,20 @@
                         
                         NSMutableArray *eventArrayData = [[NSMutableArray alloc] init];
                         
+                        if (![wTools objectExists: eventArray]) {
+                            return;
+                        }
+                        
                         for (int k = 0; k < eventArray.count; k++) {
                             [eventArrayData addObject: array[i][@"event"][k]];
                             NSLog(@"eventArrayData: %@", eventArrayData);
                         }
-                        
                         [dict setValue: eventArrayData forKey: @"eventArrayData"];
-                        
                         [existedAlbumArray addObject: dict];
                     }
                 }
             }
         }
-        
         NSLog(@"existedAlbumArray: %@", existedAlbumArray);
         NSLog(@"existedAlbumArray.count: %lu", (unsigned long)existedAlbumArray.count);
         
@@ -199,6 +263,10 @@
         
         NSMutableArray *arrayForRemove = [[NSMutableArray alloc] init];
         
+        if (![wTools objectExists: existedAlbumArray]) {
+            return;
+        }
+        
         for (int i = 0; i < existedAlbumArray.count; i++) {
             NSDictionary *d1 = existedAlbumArray[i];
             NSLog(@"name: %@", d1[@"name"]);
@@ -206,6 +274,10 @@
             NSLog(@"array: %@", array);
             
             NSDictionary *d2;
+            
+            if (![wTools objectExists: array]) {
+                return;
+            }
             
             for (int j = 0; j < array.count; j++) {
                 d2 = array[j];
@@ -230,64 +302,14 @@
         
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
-}
-- (void)getExistedAlbum {
-    NSLog(@"getExistedAlbum");    
-    existedAlbumArray = [[NSMutableArray alloc] init];
-    
-    @try {
-        [wTools ShowMBProgressHUD];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    
-    NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
-    __block typeof(self) wself = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getcalbumlist: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]
-                                              rank: @"mine"
-                                             limit: limit];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [wTools HideMBProgressHUD];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
-            
-            if (response != nil) {
-                NSLog(@"response from getcalbumlist");
-                
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"NewExistingAlbumViewController");
-                    NSLog(@"getExistedAlbum");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getcalbumlist"
-                                            cell: nil];
-                } else {
-                    NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    [wself processExistedAlbumResult:dic];
-                }
-            }
-        });
-    });
 }
 
 - (void)postAlbum:(UICollectionViewCell *)cell {
@@ -317,7 +339,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"respons from switchstatusofcontribution");
                 
@@ -325,7 +346,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"NewExistingAlbumViewController");
                     NSLog(@"postAlbum cell");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"switchstatusofcontribution"
                                             cell: cell];
@@ -336,6 +356,9 @@
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"post album success");
                         
+                        if (![wTools objectExists: dic[@"data"][@"event"][@"contributionstatus"]]) {
+                            return;
+                        }
                         int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
                         NSLog(@"contributionCheck: %d", contributionCheck);
                         
@@ -367,13 +390,15 @@
                                         position: CSToastPositionBottom
                                            style: style];
                         }
-                        
                         wself->checkPostArray[indexPath.row] = checkPost;
-                        
                         [wself getExistedAlbum];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -383,10 +408,8 @@
     });
 }
 
-- (void)showImageOnCell: (UICollectionViewCell *)cell
-{
+- (void)showImageOnCell:(UICollectionViewCell *)cell {
     NSLog(@"showImageOnCell");
-    
     UIView *maskView = (UIView *)[cell viewWithTag: 300];
     maskView.alpha = 0.7;
     maskView.layer.masksToBounds = YES;
@@ -396,10 +419,8 @@
     label.hidden = NO;
 }
 
-- (void)hideImageOnCell: (UICollectionViewCell *)cell
-{
+- (void)hideImageOnCell: (UICollectionViewCell *)cell {
     NSLog(@"hideImageOnCell");
-    
     UIView *maskView = (UIView *)[cell viewWithTag: 300];
     maskView.alpha = 0;
     maskView.layer.masksToBounds = YES;
@@ -450,7 +471,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -489,8 +509,16 @@
                         NSArray *array = dic[@"data"];
                         NSLog(@"array.count: %lu", (unsigned long)array.count);
                         
+                        if (![wTools objectExists: array]) {
+                            return;
+                        }
+                        
                         for (int i = 0; i < array.count; i++) {
                             NSString *act = array[i][@"album"][@"act"];
+                            
+                            if (![wTools objectExists: act]) {
+                                return;
+                            }
                             
                             if ([act isEqualToString: @"open"]) {
                                 NSLog(@"array: %@", array[i]);
@@ -498,10 +526,18 @@
                                 NSArray *eventArray = [[NSArray alloc] init];
                                 eventArray = array[i][@"event"];
                                 
+                                if (![wTools objectExists: eventArray]) {
+                                    return;
+                                }
+                                
                                 for (int k = 0; k < eventArray.count; k++) {
                                     BOOL contributionStatus = [array[i][@"event"][k][@"contributionstatus"] boolValue];
                                     NSString *eventIdCheck = array[i][@"event"][k][@"event_id"];
                                     NSLog(@"contributionStatus: %d", contributionStatus);
+                                    
+                                    if (![wTools objectExists: eventIdCheck]) {
+                                        return;
+                                    }
                                     
                                     if ([eventIdCheck intValue] == [self.eventId intValue]) {
                                         NSLog(@"match eventId");
@@ -524,7 +560,6 @@
                                 }
                             }
                         }
-                        
                         NSNumber *eventTemplateId = [self.templateArray objectAtIndex: 0];
                         NSLog(@"eventTemplateId: %@", eventTemplateId);
 
@@ -536,7 +571,11 @@
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -548,7 +587,6 @@
 
 - (void)addNewFastMod {
     NSLog(@"addNewFastMod");
-    
     //新增相本id
     @try {
         [wTools ShowMBProgressHUD];
@@ -559,7 +597,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI insertalbumofdiy: [UserInfo getUserID]
                                                 token: [UserInfo getUserToken]
@@ -575,7 +612,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from insertalbumofdiy");
                 
@@ -595,6 +631,9 @@
                         NSLog(@"get result value from insertalbumofdiy");
                         NSString *tempAlbumId = [dic[@"data"] stringValue];
                         
+                        if (![wTools objectExists: tempAlbumId]) {
+                            return;
+                        }
                         AlbumCreationViewController *albumCreationVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
                                                 
                         // Data from wTools userbook is not right
@@ -615,12 +654,11 @@
                         
                     } else {
                         NSLog(@"失敗： %@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: msg];
                     }
                 }
             }
@@ -629,6 +667,9 @@
 }
 
 - (void)toChooseTempalteVC {
+    if (![wTools objectExists: self.eventId]) {
+        return;
+    }
     chooseTemplateVC = [[UIStoryboard storyboardWithName: @"ChooseTemplateVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ChooseTemplateViewController"];
     chooseTemplateVC.rank = @"hot";
     chooseTemplateVC.event_id = self.eventId;
@@ -653,7 +694,6 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForItemAtIndexPath");
-    
     NewExistingAlbumCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"Cell" forIndexPath: indexPath];
 
     NSDictionary *data = existedAlbumArray[indexPath.row];
@@ -667,46 +707,46 @@
         [cell.imageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]]];
     }
     
-    cell.textLabel.text = existedAlbumArray[indexPath.row][@"name"];
-    [LabelAttributeStyle changeGapString: cell.textLabel content: cell.textLabel.text];
-    
+    if ([wTools objectExists: existedAlbumArray[indexPath.row][@"name"]]) {
+        cell.textLabel.text = existedAlbumArray[indexPath.row][@"name"];
+        [LabelAttributeStyle changeGapString: cell.textLabel content: cell.textLabel.text];
+    }
     NSArray *eventArrayData = data[@"eventArrayData"];
     NSString *checkPost;
     
     NSLog(@"eventArrayData: %@", eventArrayData);
     
-    for (int i = 0; i < eventArrayData.count; i++) {
-        NSString *albumEventId = eventArrayData[i][@"event_id"];
-        
-        NSString *contribution = eventArrayData[i][@"contributionstatus"];
-        NSLog(@"contribution: %@", contribution);
-        NSLog(@"albumEventId: %@", albumEventId);
-        NSLog(@"eventId: %@", self.eventId);
-        
-        if ([albumEventId intValue] == [self.eventId intValue]) {
-            NSLog(@"eventId is the same");
+    if ([wTools objectExists: eventArrayData]) {
+        for (int i = 0; i < eventArrayData.count; i++) {
+            NSString *albumEventId = eventArrayData[i][@"event_id"];
+            NSString *contribution = eventArrayData[i][@"contributionstatus"];
+            NSLog(@"contribution: %@", contribution);
+            NSLog(@"albumEventId: %@", albumEventId);
+            NSLog(@"eventId: %@", self.eventId);
             
-            if ([contribution intValue] == 1) {
-                NSLog(@"contribution is 1");
-                checkPost = @"1";
-                NSLog(@"checkPost: %@", checkPost);
-            } else {
-                NSLog(@"contribution is 0");
-                checkPost = @"0";
-                NSLog(@"checkPost: %@", checkPost);
+            if ([albumEventId intValue] == [self.eventId intValue]) {
+                NSLog(@"eventId is the same");
+                
+                if ([contribution intValue] == 1) {
+                    NSLog(@"contribution is 1");
+                    checkPost = @"1";
+                    NSLog(@"checkPost: %@", checkPost);
+                } else {
+                    NSLog(@"contribution is 0");
+                    checkPost = @"0";
+                    NSLog(@"checkPost: %@", checkPost);
+                }
             }
         }
+        NSLog(@"checkPost: %@", checkPost);
+        checkPostArray[indexPath.row] = checkPost;
+        
+        if ([checkPost intValue] == 1) {
+            [self showImageOnCell: cell];
+        } else {
+            [self hideImageOnCell: cell];
+        }
     }
-    
-    NSLog(@"checkPost: %@", checkPost);
-    checkPostArray[indexPath.row] = checkPost;
-    
-    if ([checkPost intValue] == 1) {
-        [self showImageOnCell: cell];
-    } else {
-        [self hideImageOnCell: cell];
-    }
-    
     return cell;
 }
 
@@ -714,7 +754,6 @@
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
-    
     NSDictionary *data = existedAlbumArray[indexPath.row];
     NSLog(@"data: %@", data);
     
@@ -774,7 +813,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 break;
         }
     }
-    
     return CGSizeMake(itemWidth, itemHeight + labelHeight);
 }
 
@@ -783,7 +821,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 0;
 }
 
@@ -792,108 +829,28 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumLineSpacingForSectionAtIndex");
-    
     return 32;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
-        insetForSectionAtIndex:(NSInteger)section
-{
+        insetForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
     return itemInset;
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     NSLog(@"");
     NSLog(@"showCustomAlert msg: %@", msg);
-    
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 - (void)showAlertView: (NSString *)checkPost
-                 cell: (UICollectionViewCell *)cell
-{
+                 cell: (UICollectionViewCell *)cell {
     OldCustomAlertView *alertView = [[OldCustomAlertView alloc] init];
     [alertView setContainerView: [self createView: checkPost]];
     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
@@ -914,8 +871,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertView show];
 }
 
-- (UIView *)createView: (NSString *)checkPost
-{
+- (UIView *)createView: (NSString *)checkPost {
     UIView *view = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 280, 220)];
     UIView *bgView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 280, 200)];
     
@@ -965,8 +921,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                          cell: (UICollectionViewCell *)cell
-{
+                          cell: (UICollectionViewCell *)cell {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];    
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1008,8 +963,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

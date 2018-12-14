@@ -24,8 +24,7 @@
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
 
-@interface CheckExchangeViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-{
+@interface CheckExchangeViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout> {
     NSInteger columnCount;
     NSInteger miniInteriorSpacing;
 }
@@ -46,7 +45,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     NSLog(@"CheckExchangeViewController viewDidLoad");
-    
     [self initialValueSetup];
     [self getBookmarkList];
 }
@@ -102,7 +100,6 @@
 #pragma mark - Get Bookmark List
 - (void)getBookmarkList {
     NSLog(@"getBookmarkList");
-    
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -128,34 +125,32 @@
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"SYSTEM_OK");
-                        
-                        
-                        for (NSMutableDictionary *data in [dic objectForKey: @"data"]) {
-                            //NSLog(@"data: %@", data);
-                            
-                            if ([data[@"photo"][@"has_gained"] boolValue] == YES) {
-                                NSLog(@"has_gained TRUE");
-                                [self.hasExchangedData addObject: data];
-                            } else {
-                                NSLog(@"has_gained FALSE");
-                                [self.hasNotExchangedData addObject: data];
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            for (NSMutableDictionary *data in [dic objectForKey: @"data"]) {
+                                //NSLog(@"data: %@", data);
+                                if ([wTools objectExists: data[@"photo"][@"has_gained"]]) {
+                                    if ([data[@"photo"][@"has_gained"] boolValue] == YES) {
+                                        NSLog(@"has_gained TRUE");
+                                        [self.hasExchangedData addObject: data];
+                                    } else {
+                                        NSLog(@"has_gained FALSE");
+                                        [self.hasNotExchangedData addObject: data];
+                                    }
+                                }
+                                //                            [self.exchangeData addObject: data];
                             }
-//                            [self.exchangeData addObject: data];
+                            NSLog(@"self.hasExchangedData: %@", self.hasExchangedData);
+                            NSLog(@"self.hasNotExchangedData: %@", self.hasNotExchangedData);
+                            [self.collectionView reloadData];
                         }
-                        
-                        NSLog(@"self.hasExchangedData: %@", self.hasExchangedData);
-                        NSLog(@"self.hasNotExchangedData: %@", self.hasNotExchangedData);
-                        
-                        [self.collectionView reloadData];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: dic[@"message"]];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -186,49 +181,45 @@
 - (void)removeDicData:(NSMutableDictionary *)dic {
     NSLog(@"Before removing");
     NSLog(@"self.hasNotExchangedData: %@", self.hasNotExchangedData);
-    
-    
     NSMutableArray *tempArray = [NSMutableArray new];
     
-    for (NSMutableDictionary *d in self.hasNotExchangedData) {
-        NSLog(@"d: %@", d);
-        
-        if (d[@"photo"][@"photo_id"] == dic[@"photo"][@"photo_id"]) {
-            [tempArray addObject: d];
-//            [self.hasNotExchangedData removeObject: d];
+    if ([wTools objectExists: self.hasNotExchangedData]) {
+        for (NSMutableDictionary *d in self.hasNotExchangedData) {
+            NSLog(@"d: %@", d);
+            
+            if (d[@"photo"][@"photo_id"] == dic[@"photo"][@"photo_id"]) {
+                [tempArray addObject: d];
+                //            [self.hasNotExchangedData removeObject: d];
+            }
         }
+        [self.hasNotExchangedData removeObjectsInArray: tempArray];
+        [self.collectionView reloadData];
     }
-    
-    [self.hasNotExchangedData removeObjectsInArray: tempArray];
-    [self.collectionView reloadData];
 }
 
 - (void)addDicData:(NSMutableDictionary *)dic {
     NSLog(@"Before adding");
     NSLog(@"self.hasExchangedData.count: %lu", (unsigned long)self.hasExchangedData.count);
     NSLog(@"self.hasExchangedData: %@", self.hasExchangedData);
-    
-    
     BOOL isNewDic = NO;
     
-    for (NSMutableDictionary *d in self.hasExchangedData) {
-        if (d[@"photo"][@"photo_id"] == dic[@"photo"][@"photo_id"]) {
-            NSLog(@"dic data already exists");
-        } else {
-            NSLog(@"dic data didn't exist");
-            
-            isNewDic = YES;
+    if ([wTools objectExists: self.hasExchangedData]) {
+        for (NSMutableDictionary *d in self.hasExchangedData) {
+            if (d[@"photo"][@"photo_id"] == dic[@"photo"][@"photo_id"]) {
+                NSLog(@"dic data already exists");
+            } else {
+                NSLog(@"dic data didn't exist");
+                isNewDic = YES;
+            }
         }
+        if (isNewDic) {
+            [self.hasExchangedData addObject: dic];
+        }
+        NSLog(@"After adding");
+        NSLog(@"self.hasExchangedData.count: %lu", (unsigned long)self.hasExchangedData.count);
+        NSLog(@"self.hasExchangedData: %@", self.hasExchangedData);
+        [self.collectionView reloadData];
     }
-    
-    if (isNewDic) {
-        [self.hasExchangedData addObject: dic];
-    }
-    
-    NSLog(@"After adding");
-    NSLog(@"self.hasExchangedData.count: %lu", (unsigned long)self.hasExchangedData.count);
-    NSLog(@"self.hasExchangedData: %@", self.hasExchangedData);
-    [self.collectionView reloadData];
 }
 
 #pragma mark - UICollectionViewDataSource Methods
@@ -283,7 +274,6 @@
             cell.timeLabel.textColor = [UIColor secondGrey];
         }
     }
-    
     return cell;
 }
 
@@ -291,7 +281,6 @@
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
-    
     self.selectedCell = (CheckExchangeCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
 
     NSArray *array;
@@ -373,8 +362,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
@@ -404,7 +392,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {

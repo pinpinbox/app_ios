@@ -265,36 +265,42 @@ replacementString:(NSString *)string {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"Before");
                         NSLog(@"self.option: %@", self.option);
-                        self.cooperationData = [NSMutableArray arrayWithArray: dic[@"data"]];
-                        [self.identityCollectionView reloadData];
-                        
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            self.cooperationData = [NSMutableArray arrayWithArray: dic[@"data"]];
+                            [self.identityCollectionView reloadData];
+                        }
                         NSLog(@"Before Swap");
                         NSLog(@"self.cooperationData: %@", self.cooperationData);
                         // Swap Array data for change admin order to 1st one
-                        if (self.cooperationData.count > 0) {
-                            NSString *identityStr = self.cooperationData[0][@"cooperation"][@"identity"];
-                            NSLog(@"identityStr: %@", identityStr);
-                            
-                            if (![identityStr isEqualToString: @"admin"]) {
-                                NSInteger adminIndexInteger = 0;
+                        
+                        if ([wTools objectExists: self.cooperationData]) {
+                            if (self.cooperationData.count > 0) {
+                                NSString *identityStr = self.cooperationData[0][@"cooperation"][@"identity"];
+                                NSLog(@"identityStr: %@", identityStr);
                                 
-                                for (NSInteger i = 0; i < self.cooperationData.count; i++) {
-                                    NSString *identityStr = self.cooperationData[i][@"cooperation"][@"identity"];
-                                    NSLog(@"identityStr: %@", identityStr);
-                                    
-                                    if ([identityStr isEqualToString: @"admin"]) {
-                                        adminIndexInteger = i;
-                                        NSLog(@"adminIndexInteger: %ld", (long)adminIndexInteger);
+                                if ([wTools objectExists: identityStr]) {
+                                    if (![identityStr isEqualToString: @"admin"]) {
+                                        NSInteger adminIndexInteger = 0;
+                                        
+                                        for (NSInteger i = 0; i < self.cooperationData.count; i++) {
+                                            NSString *identityStr = self.cooperationData[i][@"cooperation"][@"identity"];
+                                            NSLog(@"identityStr: %@", identityStr);
+                                            
+                                            if ([identityStr isEqualToString: @"admin"]) {
+                                                adminIndexInteger = i;
+                                                NSLog(@"adminIndexInteger: %ld", (long)adminIndexInteger);
+                                            }
+                                        }
+                                        [self.cooperationData exchangeObjectAtIndex: adminIndexInteger withObjectAtIndex: 0];
+                                        NSLog(@"After Swap");
+                                        NSLog(@"self.cooperationData: %@", self.cooperationData);
                                     }
                                 }
-                                [self.cooperationData exchangeObjectAtIndex: adminIndexInteger withObjectAtIndex: 0];
-                                NSLog(@"After Swap");
-                                NSLog(@"self.cooperationData: %@", self.cooperationData);
                             }
+
                         }
                         
                         // Get User Identity
@@ -307,7 +313,11 @@ replacementString:(NSString *)string {
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -362,7 +372,11 @@ replacementString:(NSString *)string {
                         }];
                     } else if ([dicQR[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dicQR[@"message"]);
-                        [self showCustomErrorAlert: dicQR[@"message"]];
+                        if ([wTools objectExists: dicQR[@"message"]]) {
+                            [self showCustomErrorAlert: dicQR[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -375,7 +389,6 @@ replacementString:(NSString *)string {
 - (void)searchCreator:(NSString *)text {
     NSLog(@"searchCreator");
     [wTools ShowMBProgressHUD];
-    
     NSString *string = text;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -425,62 +438,31 @@ replacementString:(NSString *)string {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                        
-                        self.creatorListData = [NSMutableArray arrayWithArray: dic[@"data"]];
-                        NSLog(@"self.creatorListData: %@", self.creatorListData);
-                        NSLog(@"self.cooperationData: %@", self.cooperationData);
-                        
-                        // Method below will cause crash
-                        /*
-                        NSMutableArray *discardedItemsArray = [NSMutableArray array];
-                        
-                        // Remove those creators are already in the cooperation list
-                        for (NSInteger i = 0; i < self.creatorListData.count; i++) {
-                            NSLog(@"i: %ld", (long)i);
-                            NSDictionary *dic1 = self.creatorListData[i];
-                            NSLog(@"dic1: %@", dic1);
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            self.creatorListData = [NSMutableArray arrayWithArray: dic[@"data"]];
+                            [self.creatorListCollectionView reloadData];
                             
-                            for (NSInteger j = 0; j < self.cooperationData.count; j++) {
-                                NSDictionary *dic2 = self.cooperationData[j];
-                                NSInteger userId1 = [dic1[@"user"][@"user_id"] integerValue];
-                                NSLog(@"userId1: %ld", (long)userId1);
-                                NSInteger userId2 = [dic2[@"user"][@"user_id"] integerValue];
-                                NSLog(@"userId2: %ld", (long)userId2);
-
-                                if (userId1 == userId2) {
-                                    NSLog(@"userId1 == userId2");
-                                    [discardedItemsArray addObject: [NSNumber numberWithInteger: i]];
-                                    NSLog(@"discardedItemsArray: %@", discardedItemsArray);
-                                }
+                            if (self.creatorListData.count == 0) {
+                                self.infoLabel.text = NSLocalizedString(@"GeneralText-NoMatchCreator", @"");
+                                self.infoLabel.textAlignment = NSTextAlignmentCenter;
+                                [LabelAttributeStyle changeGapString: self.infoLabel content: self.infoLabel.text];
+                                
+                                self.creatorListCollectionView.hidden = YES;;
+                                self.infoView.hidden = NO;
+                            } else if (self.creatorListData.count > 0) {
+                                self.creatorListCollectionView.hidden = NO;
+                                self.infoView.hidden = YES;
                             }
-                        }
-                        NSLog(@"discardedItemsArray: %@", discardedItemsArray);
-                        
-                        for (NSInteger i = 0; i < discardedItemsArray.count; i++) {
-                            NSInteger index = [discardedItemsArray[i] integerValue];
-                            [self.creatorListData removeObjectAtIndex: index];
-                        }
-                        */
-                        
-                        NSLog(@"self.creatorListData: %@", self.creatorListData);
-                        [self.creatorListCollectionView reloadData];
-                        
-                        if (self.creatorListData.count == 0) {
-                            self.infoLabel.text = NSLocalizedString(@"GeneralText-NoMatchCreator", @"");
-                            self.infoLabel.textAlignment = NSTextAlignmentCenter;
-                            [LabelAttributeStyle changeGapString: self.infoLabel content: self.infoLabel.text];
-                            
-                            self.creatorListCollectionView.hidden = YES;;
-                            self.infoView.hidden = NO;
-                        } else if (self.creatorListData.count > 0) {
-                            self.creatorListCollectionView.hidden = NO;
-                            self.infoView.hidden = YES;
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         self.creatorListCollectionView.hidden = YES;;
                         self.infoView.hidden = NO;
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         self.creatorListCollectionView.hidden = YES;;
                         self.infoView.hidden = NO;
@@ -504,8 +486,6 @@ replacementString:(NSString *)string {
         [data setObject: identity forKey: @"identity"];
         [data setObject: userId forKey: @"user_id"];
         
-        //NSLog(@"data: %@", data);
-        
         NSString *response = [boxAPI updatecooperation: [UserInfo getUserID]
                                                  token: [UserInfo getUserToken]
                                                   data: data];
@@ -527,28 +507,31 @@ replacementString:(NSString *)string {
                 } else {
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    
                     if ([dic[@"result"] intValue] == 1) {
                         self.option = @"Updating";
-                        
                         NSLog(@"Before Updating");
                         NSLog(@"self.cooperationData: %@", self.cooperationData);
-                        for (NSInteger i = 0; i < self.cooperationData.count; i++) {
-                            NSMutableDictionary *d = self.cooperationData[i];
-                            NSMutableDictionary *cooperationDic = d[@"cooperation"];
-                            [cooperationDic setValue: identity forKey: @"identity"];
-                        }
-                        NSLog(@"After Updating");
-                        NSLog(@"self.cooperationData: %@", self.cooperationData);
                         
-                        [UIView performWithoutAnimation:^{
-                            [self.identityCollectionView reloadItemsAtIndexPaths: self.indexPathArray];
-                        }];                        
-//                        [self.cooperationData removeAllObjects];
-//                        [self getCooperationList];
+                        if ([wTools objectExists: self.cooperationData]) {
+                            for (NSInteger i = 0; i < self.cooperationData.count; i++) {
+                                NSMutableDictionary *d = self.cooperationData[i];
+                                NSMutableDictionary *cooperationDic = d[@"cooperation"];
+                                [cooperationDic setValue: identity forKey: @"identity"];
+                            }
+                            NSLog(@"After Updating");
+                            NSLog(@"self.cooperationData: %@", self.cooperationData);
+                            
+                            [UIView performWithoutAnimation:^{
+                                [self.identityCollectionView reloadItemsAtIndexPaths: self.indexPathArray];
+                            }];
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -591,52 +574,44 @@ replacementString:(NSString *)string {
                     } else {
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
-                        
-                        
                         if ([dic[@"result"] intValue] == 1) {
                             self.option = @"Deleting";
-                            
                             NSInteger indexInt = 0;
                             NSArray *array;
-
                             NSLog(@"self.cooperationData: %@", self.cooperationData);
                             
-                            for (NSInteger i = 0; i < self.cooperationData.count; i++) {
-                                //NSLog(@"i: %d", i);
+                            if ([wTools objectExists: self.cooperationData]) {
+                                for (NSInteger i = 0; i < self.cooperationData.count; i++) {
+                                    NSMutableDictionary *dicData = self.cooperationData[i];
+                                    NSLog(@"dicData: %@", dicData);
+                                    
+                                    if ([dicData[@"user"][@"user_id"] intValue] == [creatorDic[@"user"][@"user_id"] intValue]) {
+                                        NSLog(@"userId Match");
+                                        array = [NSArray arrayWithObject: creatorDic];
+                                        NSLog(@"array: %@", array);
+                                        indexInt = i;
+                                    }
+                                }
+                                NSLog(@"self.cooperationData removeObjectsInArray");
                                 
-                                NSMutableDictionary *dicData = self.cooperationData[i];
-                                NSLog(@"dicData: %@", dicData);
+                                [self.cooperationData removeObjectAtIndex: indexInt];
+                                NSLog(@"self.cooperationData: %@", self.cooperationData);
+                                NSLog(@"self.identityCollectionView deleteItemsAtIndexPaths");
                                 
-                                if ([dicData[@"user"][@"user_id"] intValue] == [creatorDic[@"user"][@"user_id"] intValue]) {
-                                    NSLog(@"userId Match");
-                                    array = [NSArray arrayWithObject: creatorDic];
-                                    NSLog(@"array: %@", array);
-                                    indexInt = i;
+                                [self.identityCollectionView deleteItemsAtIndexPaths: self.indexPathArray];
+                                
+                                if (self.creatorListData.count > 0) {
+                                    NSLog(@"self.creatorListCollectionView reloadItemsAtIndexPaths");
+                                    [self.creatorListCollectionView reloadItemsAtIndexPaths: self.creatorIndexPathArray];
                                 }
                             }
-//                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow: indexInt inSection: 0];
-//                            NSArray *indexPathArray = [NSArray arrayWithObject: indexPath];
-//                            [self.indexPathArray removeAllObjects];
-//                            [self.indexPathArray addObject: indexPathArray];
-//
-                            NSLog(@"self.cooperationData removeObjectsInArray");
-                            
-                            [self.cooperationData removeObjectAtIndex: indexInt];
-                            NSLog(@"self.cooperationData: %@", self.cooperationData);
-                            
-                            NSLog(@"self.identityCollectionView deleteItemsAtIndexPaths");
-//                            NSLog(@"indexPath.row: %ld", (long)indexPath.row);
-                            
-                            [self.identityCollectionView deleteItemsAtIndexPaths: self.indexPathArray];
-                            
-                            if (self.creatorListData.count > 0) {
-                                NSLog(@"self.creatorListCollectionView reloadItemsAtIndexPaths");
-                                [self.creatorListCollectionView reloadItemsAtIndexPaths: self.creatorIndexPathArray];
-                            }
-//                            [self getCooperationList];
                         } else if ([dic[@"result"] intValue] == 0) {
                             NSLog(@"失敗：%@",dic[@"message"]);
-                            [self showCustomErrorAlert: dic[@"message"]];
+                            if ([wTools objectExists: dic[@"message"]]) {
+                                [self showCustomErrorAlert: dic[@"message"]];
+                            } else {
+                                [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                            }
                         } else {
                             [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
@@ -680,25 +655,23 @@ replacementString:(NSString *)string {
                     } else {
                         NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                         
-                        
-                        
                         if ([dic[@"result"] intValue] == 1) {
                             self.option = @"Adding";
                             [self.indexPathArray removeAllObjects];
                             self.indexPathArray = [NSMutableArray arrayWithObject: [NSIndexPath indexPathForRow: 1 inSection: 0]];
                             [self.cooperationData insertObject: creatorDic atIndex: 1];
                             [self.identityCollectionView insertItemsAtIndexPaths: self.indexPathArray];
+                            
                             if (self.creatorListData.count > 0) {
                                 [self.creatorListCollectionView reloadItemsAtIndexPaths: self.creatorIndexPathArray];
                             }
-//                            if (self.creatorListData.count > 0) {
-//                                [self.creatorListCollectionView reloadData];
-//                            }
-//                            [self.cooperationData removeAllObjects];
-//                            [self getCooperationList];
                         } else if ([dic[@"result"] intValue] == 0) {
                             NSLog(@"失敗：%@",dic[@"message"]);
-                            [self showCustomErrorAlert: dic[@"message"]];
+                            if ([wTools objectExists: dic[@"message"]]) {
+                                [self showCustomErrorAlert: dic[@"message"]];
+                            } else {
+                                [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                            }
                         } else {
                             [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
@@ -749,7 +722,6 @@ replacementString:(NSString *)string {
         } else {
             cell.deleteIdentityBtn.hidden = NO;
         }
-        
         NSDictionary *userDic = self.cooperationData[indexPath.row][@"user"];
         
         if ([userDic[@"picture"] isEqual: [NSNull null]]) {
@@ -757,14 +729,14 @@ replacementString:(NSString *)string {
         } else {
             [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"picture"]] placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
         }
-        cell.userNameLabel.text = userDic[@"name"];
-        
+        if ([wTools objectExists: userDic[@"name"]]) {
+            cell.userNameLabel.text = userDic[@"name"];
+        }
         NSDictionary *cooperationDic = self.cooperationData[indexPath.row][@"cooperation"];
         
         if (![cooperationDic[@"identity"] isEqual: [NSNull null]]) {
             [self changeUserIdentityChangeBtn: cell.userIdentityChangeBtn identity: cooperationDic[@"identity"]];
         }
-        
         return cell;
     } else {
         NSDictionary *userDic = self.creatorListData[indexPath.row][@"user"];
@@ -775,7 +747,9 @@ replacementString:(NSString *)string {
         } else {
             [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"picture"]] placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
         }
-        cell.userNameLabel.text = userDic[@"name"];
+        if ([wTools objectExists: userDic[@"name"]]) {
+            cell.userNameLabel.text = userDic[@"name"];
+        }
         [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
         
         if ([self checkUsersInCooperationDataOrNot: [userDic[@"user_id"] intValue]]) {
@@ -914,23 +888,23 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [self.indexPathArray addObject: indexPath];
     
     if (indexPath.row != 0) {
-        if ([self.userIdentity isEqualToString: @"admin"]) {
-            [self showManagementActionSheet: userId];
-//            [self showActionSheet: userId];
-        } else if ([self.userIdentity isEqualToString: @"approver"]) {
-            if (![cooperationDic[@"identity"] isEqual: [NSNull null]]) {
-                if ([cooperationDic[@"identity"] isEqualToString: @"approver"]) {
-                    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                    style.messageColor = [UIColor whiteColor];
-                    style.backgroundColor = [UIColor colorFromHexString: @"9e9e9e"];
-                    [self.view makeToast: @"副管理者之間不能互相變更權限"
-                                duration: 1.0
-                                position: CSToastPositionBottom
-                                   style: style];
-                    return;
-                } else {
-                    [self showManagementActionSheet: userId];
-//                    [self showActionSheet: userId];
+        if ([wTools objectExists: self.userIdentity]) {
+            if ([self.userIdentity isEqualToString: @"admin"]) {
+                [self showManagementActionSheet: userId];
+            } else if ([self.userIdentity isEqualToString: @"approver"]) {
+                if (![cooperationDic[@"identity"] isEqual: [NSNull null]]) {
+                    if ([cooperationDic[@"identity"] isEqualToString: @"approver"]) {
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor colorFromHexString: @"9e9e9e"];
+                        [self.view makeToast: @"副管理者之間不能互相變更權限"
+                                    duration: 1.0
+                                    position: CSToastPositionBottom
+                                       style: style];
+                        return;
+                    } else {
+                        [self showManagementActionSheet: userId];
+                    }
                 }
             }
         }
@@ -959,7 +933,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         for (NSInteger i = 0; i < self.creatorListData.count; i++) {
             NSDictionary *dic = self.creatorListData[i];
             
-            
             if ([dic[@"user"][@"user_id"] intValue] == [userId intValue]) {
                 NSLog(@"found userId in self.creatorListData");
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow: i inSection: 0];
@@ -976,24 +949,26 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [self.indexPathArray addObject: indexPath];
     
     if (indexPath.row != 0) {
-        if ([self.userIdentity isEqualToString: @"admin"]) {
-            [self deleteCooperation: userId
-                            albumId: self.albumId
-                         creatorDic: [self createCreatorDic: userDic]];
-        } else if ([self.userIdentity isEqualToString: @"approver"]) {
-            if ([cooperationDic[@"identity"] isEqualToString: @"approver"]) {
-                CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                style.messageColor = [UIColor whiteColor];
-                style.backgroundColor = [UIColor colorFromHexString: @"9e9e9e"];
-                [self.view makeToast: @"副管理者之間不能互相移除"
-                            duration: 1.0
-                            position: CSToastPositionBottom
-                               style: style];
-                return;
-            } else {
+        if ([wTools objectExists: self.userIdentity]) {
+            if ([self.userIdentity isEqualToString: @"admin"]) {
                 [self deleteCooperation: userId
                                 albumId: self.albumId
                              creatorDic: [self createCreatorDic: userDic]];
+            } else if ([self.userIdentity isEqualToString: @"approver"]) {
+                if ([cooperationDic[@"identity"] isEqualToString: @"approver"]) {
+                    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                    style.messageColor = [UIColor whiteColor];
+                    style.backgroundColor = [UIColor colorFromHexString: @"9e9e9e"];
+                    [self.view makeToast: @"副管理者之間不能互相移除"
+                                duration: 1.0
+                                position: CSToastPositionBottom
+                                   style: style];
+                    return;
+                } else {
+                    [self deleteCooperation: userId
+                                    albumId: self.albumId
+                                 creatorDic: [self createCreatorDic: userDic]];
+                }
             }
         }
     }
@@ -1020,10 +995,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)showManagementActionSheet:(NSString *)userId {
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
     self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    
     self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
     self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
     self.effectView.alpha = 0.8;
     
     self.customActionSheet = [[CooperationInfoViewController alloc] init];
@@ -1129,7 +1102,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {

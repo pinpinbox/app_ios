@@ -58,7 +58,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     //[self.collectionView reloadData];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -69,7 +68,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -123,64 +121,17 @@
 #pragma mark -
 - (void)loadData{
     NSLog(@"loadData");
-    
     if (!isLoading) {
         if (nextId == 0) {
             NSLog(@"nextId: %ld", (long)nextId);
         }
         isLoading = YES;
-        
         [self retrieveHotRank];
     }
 }
-- (void)processHotRankResult:(NSDictionary *)dic {
-    if ([dic[@"result"] intValue] == 1) {
-        NSLog(@"dic data: %@", dic[@"data"]);
-        
-        NSLog(@"Before");
-        NSLog(@"nextId: %ld", (long)nextId);
-        
-        if (nextId == 0) {
-            categoryArray = [NSMutableArray new];
-        }
-        
-        // s for counting how much data is loaded
-        int s = 0;
-        
-        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
-            s++;
-            [categoryArray addObject: picture];
-        }
-        
-        NSLog(@"After");
-        NSLog(@"nextId: %ld", (long)nextId);
-        NSLog(@"s: %d", s);
-        
-        // If data keeps loading then the nextId is accumulating
-        nextId = nextId + s;
-        
-        // If nextId is bigger than 0, that means there are some data loaded already.
-        if (nextId >= 0) {
-            isLoading = NO;
-        }
-        
-        // If s is 0, that means dic data is empty.
-        if (s == 0) {
-            isLoading = YES;
-        }
-        NSLog(@"self.collectionView reloadData");
-        
-        [self.collectionView reloadData];
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-    }
-}
+
 - (void)retrieveHotRank {
     NSLog(@"retrieveHotRank");
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -190,7 +141,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
@@ -211,19 +161,16 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CategoryDetailViewController");
                     NSLog(@"retrieveHotRank");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"retrieveHotRank"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processHotRankResult:dic];
                 }
             }
@@ -231,26 +178,68 @@
     });
 }
 
+- (void)processHotRankResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"dic data: %@", dic[@"data"]);
+        NSLog(@"Before");
+        NSLog(@"nextId: %ld", (long)nextId);
+        
+        if (nextId == 0) {
+            categoryArray = [NSMutableArray new];
+        }
+        if (![wTools objectExists: dic[@"data"]]) {
+            return;
+        }
+        // s for counting how much data is loaded
+        int s = 0;
+        
+        for (NSMutableDictionary *picture in [dic objectForKey: @"data"]) {
+            s++;
+            [categoryArray addObject: picture];
+        }
+        NSLog(@"After");
+        NSLog(@"nextId: %ld", (long)nextId);
+        NSLog(@"s: %d", s);
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0) {
+            isLoading = NO;
+        }
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        NSLog(@"self.collectionView reloadData");
+        [self.collectionView reloadData];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
+
 #pragma mark - UICollectionViewDataSource Methods
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
     return categoryArray.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"cellForItemAtIndexPath");
-    
     CategoryDetailCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryDetailCell" forIndexPath: indexPath];
-    
     NSDictionary *data = categoryArray[indexPath.row];
     NSLog(@"data: %@", data);
     
@@ -262,7 +251,6 @@
         [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]]];
         cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"album"][@"cover_hex"]];
     }
-    
     // UserForView Info Setting
     BOOL gotAudio = [data[@"album"][@"usefor"][@"audio"] boolValue];
     NSLog(@"gotAudio: %d", gotAudio);
@@ -284,7 +272,6 @@
     
     if (gotAudio) {
         NSLog(@"gotAudio");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
         
@@ -295,7 +282,6 @@
         if (gotVideo) {
             NSLog(@"gotAudio");
             NSLog(@"gotVideo");
-            
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
             [cell.btn2 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
             
@@ -307,7 +293,6 @@
                 NSLog(@"gotAudio");
                 NSLog(@"gotVideo");
                 NSLog(@"gotExchange or gotSlot");
-                
                 [cell.btn1 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
                 [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
                 [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
@@ -319,7 +304,6 @@
         }
     } else if (gotVideo) {
         NSLog(@"gotVideo");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
         
@@ -339,7 +323,6 @@
         }
     } else if (gotExchange || gotSlot) {
         NSLog(@"gotExchange or gotSlot");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
         
@@ -347,46 +330,41 @@
         rect.size.width = 28 * 1;
         cell.userInfoView.frame = rect;
     }
-    
     // AlbumNameLabel Setting
     if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"album"][@"name"];
         [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"album"][@"name"]];
     }
-    
     return cell;
 }
 
 #pragma mark - UICollectionViewDelegate Methods
 
 - (BOOL)collectionView:(UICollectionView *)collectionView
-shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
-    
     //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    
     return YES;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
-    
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
     //cell.contentView.backgroundColor =
-    
     cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    
     NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
     
     NSDictionary *data = categoryArray[indexPath.row];
     NSLog(@"data: %@", data);
     
     NSString *albumId = [data[@"album"][@"album_id"] stringValue];
+    
+    if (![wTools objectExists: albumId]) {
+        return;
+    }
     
     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
     //aDVC.data = [dic[@"data"] mutableCopy];
@@ -405,8 +383,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     //UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.backgroundColor = nil;
     //cell.contentView.subviews[0].backgroundColor = nil;
@@ -415,13 +392,10 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
-    
     CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
-    
     NSDictionary *data = categoryArray[indexPath.row];
     
     // Check Width & Height return value is nil or not
@@ -436,7 +410,6 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
     } else {
         resultWidth = [coverWidth integerValue];
     }
-    
     if ([coverHeight isEqual: [NSNull null]]) {
         resultHeight = resultWidth;
     } else {
@@ -451,9 +424,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
     if (heightForCoverImg < (36 * scale)) {
         heightForCoverImg = 36 * scale;
     }
-    
     NSLog(@"itemWidth: %f", itemWidth);
-    
     CGSize finalSize = CGSizeMake(widthForCoverImg, heightForCoverImg);
     NSLog(@"widthForCoverImg: %f", widthForCoverImg);
     
@@ -463,11 +434,8 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
     if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
         albumNameStr = data[@"album"][@"name"];
     }
-    
     finalSize = CGSizeMake(finalSize.width, finalSize.height + [self calculateHeightForLbl: albumNameStr width: itemWidth - 16]);
-    
     NSLog(@"finalSize :%@",NSStringFromCGSize(finalSize));
-    
     return finalSize;
 }
 
@@ -483,7 +451,6 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
                                             context:context].size;
     
     size = CGSizeMake(ceil(boundingBox.width), ceil(boundingBox.height));
-    
     return size.height + 16;
 }
 
@@ -492,7 +459,6 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 16.0f;
 }
 
@@ -501,23 +467,19 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumLineSpacingForSectionAtIndex");
-    
     return 24.0f;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
-        insetForSectionAtIndex:(NSInteger)section
-{
+        insetForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
     return itemInset;
 }
 
 #pragma mark - UIScrollView Delegate Method
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidScroll");
-
     // getting the scroll offset
     CGFloat bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height;
     NSLog(@"bottomEdge: %f", bottomEdge);
@@ -530,7 +492,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - IBAction
-
 - (IBAction)backBtnPress:(id)sender {
     //[self.navigationController popViewControllerAnimated: YES];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -548,94 +509,16 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 */
 
 #pragma mark - Custom Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
+}
 
-}
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName                       
-{
+                  protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
@@ -657,7 +540,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {            
@@ -671,8 +553,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

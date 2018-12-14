@@ -86,7 +86,6 @@
     //NSLog(@"self.categoryName: %@", self.categoryName);
     NSLog(@"CategoryViewController");
     NSLog(@"viewDidLoad");
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
@@ -105,7 +104,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -117,7 +115,6 @@
 
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");
-    
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     NSLog(@"screenWidth: %f", screenWidth);
     bannerHeight = 211;//screenWidth * 540 / 960;
@@ -178,23 +175,17 @@
     if ([self.categoryAreaId isEqualToString: @"-1"]) {
     //    NSLog(@"self.categoryAreaId isEqualToString: -1");
     //    NSLog(@"self.dic: %@", self.dic);
-        
-        
         [self setupData];
         [self setupCategoryArea:self.dic];
-        
     } else {
         [self getCategoryArea];
     }
-    
-    
 }
+
 - (void)setupCategoryArea:(NSDictionary *)cdic {
-    
     if (![cdic[@"data"][@"categoryarea_style"] isEqual: [NSNull null]]) {
         self.categoryareaStyleArray = [NSMutableArray arrayWithArray: cdic[@"data"][@"categoryarea_style"]];
     }
-    
     if (self.categoryareaStyleArray.count > 0) {
         for (NSDictionary *styleDic1 in self.categoryareaStyleArray) {
             NSLog(@"styleDic1: %@", styleDic1);
@@ -219,10 +210,8 @@
     
     if (![cdic[@"data"][@"albumexplore"] isEqual: [NSNull null]]) {
         self.albumArray = [NSMutableArray arrayWithArray: cdic[@"data"][@"albumexplore"]];
-        
         NSLog(@"self.albumArray.count: %lu", (unsigned long)self.albumArray.count);
         NSLog(@"self.albumArray: %@", self.albumArray);
-        
         [self.albumExploreArray removeAllObjects];
         [self.horzAlbumArray removeAllObjects];
         
@@ -231,43 +220,40 @@
             [self.horzAlbumArray addObject: dic1[@"album"]];
             [self.albumExploreArray addObject: dic1[@"albumexplore"]];
         }
-        
         NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
         NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
-        
         self.tableView.hidden = NO;
     }
     [self setupTableViewHeader];
     [self.tableView reloadData];
     [self.userCollectionView reloadData];
 }
+
 - (void)setupData {
     self.categoryName = self.categoryNameStr;
     self.albumArray = [NSMutableArray arrayWithArray: self.dic[@"data"][@"albumexplore"]];
     NSLog(@"self.albumArray: %@", self.albumArray);
-    
     [self.albumExploreArray removeAllObjects];
     [self.horzAlbumArray removeAllObjects];
     
+    if (![wTools objectExists: self.albumArray]) {
+        return;
+    }
     for (NSDictionary *dic1 in self.albumArray) {
         NSLog(@"dic1 album: %@", dic1[@"album"]);
         [self.horzAlbumArray addObject: dic1[@"album"]];
         [self.albumExploreArray addObject: dic1[@"albumexplore"]];
     }
-    
     NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
     NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
-    
     [self setupTableViewHeader];
     self.tableView.hidden = NO;
     [self.tableView reloadData];
-    
     [self.userCollectionView reloadData];
 }
 
 - (void)userTapped {
     NSLog(@"userTapped");
-    
 //    CGRect rect = CGRectMake(self.userBgView.frame.origin.x, self.userBgView.frame.origin.y, self.userBgView.frame.size.width, self.userBgView.frame.size.height);
 //    NSLog(@"Before");
 //    NSLog(@"rect.origin.x: %f", rect.origin.x);
@@ -282,7 +268,6 @@
 //        self.userBgView.frame = rect;
 //        NSLog(@"After");
 //        NSLog(@"self.userBgView.frame.origin.x: %f", self.userBgView.frame.origin.x);
-        
         self.userLayout.alpha = 0;
         self.userBgViewHeight.constant = 270;
         self.creatorLabelHeight.constant = 29;
@@ -297,15 +282,12 @@
 
 #pragma mark - IBAction Methods
 - (IBAction)backBtnPressed:(id)sender {
-    //[self.navigationController popViewControllerAnimated: YES];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
 
 - (IBAction)closeUserCollectionView:(id)sender {
-    NSLog(@"closeUserCollectionView");        
-    
+    NSLog(@"closeUserCollectionView");
     [UIView animateWithDuration: 0.5 animations:^{
         self.userLayout.alpha = 1.0;
         self.userLayout.tag = 100;
@@ -361,7 +343,6 @@
 - (void)getCategoryArea {
     NSLog(@"");
     NSLog(@"getCategoryArea");
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -386,7 +367,6 @@
                 NSLog( @"Reason: %@", exception.reason);
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from getCategoryArea");
                 
@@ -394,14 +374,11 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CategoryViewController");
                     NSLog(@"getCategoryArea");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getCategoryArea"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"dic data: %@", dic[@"data"]);
@@ -411,68 +388,14 @@
                             self.categoryName = dic[@"data"][@"categoryarea"][@"name"];
                         }
                         [self setupCategoryArea:dic];
-//                        if (![dic[@"data"][@"categoryarea_style"] isEqual: [NSNull null]]) {
-//                            self.categoryareaStyleArray = [NSMutableArray arrayWithArray: dic[@"data"][@"categoryarea_style"]];
-//                        }
-//                        NSLog(@"self.categoryareaStyleArray: %@", self.categoryareaStyleArray);
-//
-//                        if (self.categoryareaStyleArray.count > 0) {
-//                            for (NSDictionary *styleDic1 in self.categoryareaStyleArray) {
-//                                NSLog(@"styleDic1: %@", styleDic1);
-//
-//                                if ([styleDic1[@"banner_type"] isEqualToString: @"creative"]) {
-//                                    NSLog(@"styleDic1 banner_type_data: %@", styleDic1[@"banner_type_data"]);
-//
-//                                    if (styleDic1[@"banner_type"] != nil) {
-//                                        self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
-//                                    }
-//                                    if (self.categoryAreaArray.count != 0) {
-//                                        self.userLayout.userInteractionEnabled = YES;
-//                                        [self addUserView];
-//                                    } else {
-//                                        self.userLayout.userInteractionEnabled = NO;
-//                                    }
-//                                } else {
-//                                    [self.bannerDataArray addObject: styleDic1];
-//                                }
-//                            }
-//                        }
-//
-//                        if (![dic[@"data"][@"albumexplore"] isEqual: [NSNull null]]) {
-//                            self.albumArray = [NSMutableArray arrayWithArray: dic[@"data"][@"albumexplore"]];
-//
-//                            NSLog(@"self.albumArray.count: %lu", (unsigned long)self.albumArray.count);
-//                            NSLog(@"self.albumArray: %@", self.albumArray);
-//
-//                            [self.albumExploreArray removeAllObjects];
-//                            [self.horzAlbumArray removeAllObjects];
-//
-//                            for (NSDictionary *dic1 in self.albumArray) {
-//                                NSLog(@"dic1 album: %@", dic1[@"album"]);
-//                                [self.horzAlbumArray addObject: dic1[@"album"]];
-//                                [self.albumExploreArray addObject: dic1[@"albumexplore"]];
-//                            }
-//
-//                            NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
-//                            NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
-//
-//                            self.tableView.hidden = NO;
-//                        }
-//                        [self setupTableViewHeader];
-//                        [self.tableView reloadData];
-//                        [self.userCollectionView reloadData];
-                        
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: dic[@"message"]];
-                        
-                        
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -557,7 +480,6 @@
 - (void)setBtnText:(NSString *)btntext infoText:(NSString *)infotext {
     infoLabel.text = @"";
     if (btntext && btntext.length > 0) {
-        
         [actionButton setTitle:btntext forState:UIControlStateNormal];
         if (infotext)
             infoLabel.text = infotext;
@@ -565,9 +487,9 @@
         actionBase.hidden = NO;
     } else {
         actionBase.hidden = YES;
-        
     }
 }
+
 - (void)handlePageControlValueChanged {
     long index = pageControl.currentPage;
     NSLog(@"self.bannerDataArray: %@", self.bannerDataArray);
@@ -584,6 +506,7 @@
         [pageControl setNeedsLayout];
     }
 }
+
 - (IBAction)handleBannerActionButtonTap:(id) sender {
     UIButton *btn = (UIButton *)sender;
     if (btn && btn.tag >= 0 && btn.tag < self.bannerDataArray.count) {
@@ -613,7 +536,6 @@
                 }
             }
         }
-        
         //  ordinary links
         if (link && link.length > 0) {
             NSURL *url = [NSURL URLWithString:link];
@@ -626,10 +548,10 @@
         }
     }
 }
+
 //  present AlbumDetailViewController by albumid
 - (void)presentAlbumDetailVC:(NSString *)albumid {
     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-    
     aDVC.albumId = albumid;//[dic[@"album"][@"album_id"] stringValue];
     aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
     
@@ -643,6 +565,7 @@
     [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
     [appDelegate.myNav pushViewController: aDVC animated: NO];
 }
+
 //  present CreaterViewController by userId
 - (void)presentUserVC:(NSString *)uid {
     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
@@ -658,6 +581,7 @@
     [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
     [appDelegate.myNav pushViewController: cVC animated: NO];
 }
+
 #pragma mark - UITableViewDatasource Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSLog(@"");
@@ -670,7 +594,6 @@
     NSLog(@"");
     NSLog(@"numberOfRowsInSection");
     NSLog(@"self.albumExploreArray.count: %lu", (unsigned long)self.albumExploreArray.count);
-    
     return self.albumExploreArray.count;
 }
 
@@ -681,10 +604,11 @@
     NSLog(@"self.albumExploreArray: %@", self.albumExploreArray);
     
     CategoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"CategoryCell" forIndexPath: indexPath];
-    cell.albumExploreLabel.text = self.albumExploreArray[indexPath.row][@"name"];
-    [LabelAttributeStyle changeGapString: cell.albumExploreLabel content: self.albumExploreArray[indexPath.row][@"name"]];
-    NSLog(@"cell.albumExploreLabel.text: %@", cell.albumExploreLabel.text);
-    
+    if ([wTools objectExists: self.albumExploreArray[indexPath.row][@"name"]]) {
+        cell.albumExploreLabel.text = self.albumExploreArray[indexPath.row][@"name"];
+        [LabelAttributeStyle changeGapString: cell.albumExploreLabel content: self.albumExploreArray[indexPath.row][@"name"]];
+        NSLog(@"cell.albumExploreLabel.text: %@", cell.albumExploreLabel.text);
+    }
     NSLog(@"indexPath.row: %ld", (long)indexPath.row);
     cell.strData = self.albumExploreArray[indexPath.row][@"url"];
     NSLog(@"cell.strData: %@", cell.strData);
@@ -696,13 +620,11 @@
         //cell.moreBtn.hidden = NO;
         [cell setMoreBtnHidden:NO];
     }
-    
     cell.customBlock = ^(NSString *strData) {
         NSLog(@"cell.customBlock");
         NSLog(@"strData: %@", strData);
         [self checkStrDataAndNavigate: strData];
     };
-    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
@@ -844,8 +766,8 @@
     safariVC.preferredBarTintColor = [UIColor whiteColor];
     [self presentViewController: safariVC animated: YES completion: nil];
 }
+
 - (void)setupTableViewHeader {
-    
     NSLog(@"");
     NSLog(@"viewForHeaderInSection");
     MyLinearLayout *bannerVertLayout = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
@@ -866,8 +788,6 @@
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         layout.itemSize = CGSizeMake(self.view.bounds.size.width, bannerHeight);
         layout.minimumLineSpacing = 0;
-        
-        
         
         collectionView = [[UICollectionView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, bannerHeight) collectionViewLayout: layout];
         collectionView.myTopMargin = 0;
@@ -919,7 +839,6 @@
         pageControl.userInteractionEnabled = NO;
         [bannerVertLayout addSubview: pageControl];
         
-        
         [self handlePageControlValueChanged];
         
     } else {
@@ -951,6 +870,7 @@
     
     self.tableView.tableHeaderView = bannerVertLayout;
 }
+
 #pragma mark - UITableViewDelegate Methods
 - (void)tableView:(UITableView *)tableView
   willDisplayCell:(CategoryTableViewCell *)cell
@@ -959,14 +879,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"willDisplayCell");
     [cell setCollectionViewDataSourceDelegate: self indexPath: indexPath];
     NSInteger index = cell.collectionView.indexPath.row;
-    
     CGFloat horizontalOffset = [self.contentOffsetDictionary[[@(index) stringValue]] floatValue];
     [cell.collectionView setContentOffset:CGPointMake(horizontalOffset, 0)];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     return 250;//280.0;
 }
 
@@ -1002,9 +920,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"self.horzAlbumArray: %@", self.horzAlbumArray);
         NSArray *collectionViewArray = self.horzAlbumArray[[(HorzAlbumCollectionView *)collectionView indexPath].row];
         NSLog(@"collectionViewArray: %@", collectionViewArray);
-        
         NSDictionary *dic = collectionViewArray[indexPath.item];
-        
         
         if ([dic[@"album"][@"cover"] isEqual: [NSNull null]]) {
             cell.albumImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
@@ -1098,11 +1014,9 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                                         placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];                
             }
         }
-
         return cell;
     } else {
         NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
-        
         UserCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"UserCell" forIndexPath: indexPath];
         NSLog(@"self.categoryAreaArray: %@", self.categoryAreaArray);
         NSDictionary *pictureDic = self.categoryAreaArray[indexPath.row];
@@ -1146,11 +1060,14 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             NSLog(@"album_id: %@", dic[@"album"][@"album_id"]);
             [self presentAlbumDetailVC:[dic[@"album"][@"album_id"] stringValue]];
         }
-        
     } else if (collectionView.tag == 3) {
         NSDictionary *bannerDic = self.bannerDataArray[indexPath.row];
         NSString *bannerType = bannerDic[@"banner_type"];
         NSString *videoUrl = bannerDic[@"banner_type_data"][@"url"];
+        
+        if (![wTools objectExists: videoUrl]) {
+            return;
+        }
         
         if ([bannerType isEqualToString: @"image"]) {
             SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: videoUrl] entersReaderIfAvailable: NO];
@@ -1160,6 +1077,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         }
     } else {
         NSDictionary *pictureDic = self.categoryAreaArray[indexPath.row];
+        
+        if (![wTools objectExists: pictureDic[@"user_id"]]) {
+            return;
+        }
         
         CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
         cVC.userId = pictureDic[@"user_id"];
@@ -1225,11 +1146,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 //                break;
         }
     }
-    
     if (scrollView.contentOffset.y != yAxis) {
         [cell.playerView stopVideo];
     }
-    
     if (scrollView == collectionView) {
         pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
     }
@@ -1249,7 +1168,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         // Check video setting
         if (![[defaults objectForKey: @"isVideoPlayedAutomatically"] boolValue]) {
             [cell.playerView stopVideo];
-            
         }
         [self handlePageControlValueChanged];
     }
@@ -1282,7 +1200,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
   didChangeToState:(YTPlayerState)state {
     NSLog(@"didChangeToState");
     NSLog(@"state: %ld", (long)state);
-    
     NSLog(@"self.tableView.contentOffset.y: %f", self.tableView.contentOffset.y);
     
 //    kYTPlayerStateUnstarted,
@@ -1329,7 +1246,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 //                    break;
             }
         }
-        
         // Meaning user scrolls down, video will be stopped
         // Video only plays when y axis is the original value
         if (self.tableView.contentOffset.y > yAxis) {
@@ -1338,103 +1254,27 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
 }
 
-- (void)playerView:(YTPlayerView *)playerView didChangeToQuality:(YTPlaybackQuality)quality {
+- (void)playerView:(YTPlayerView *)playerView
+didChangeToQuality:(YTPlaybackQuality)quality {
     NSLog(@"didChangeToQuality");
 }
 
-- (void)playerView:(YTPlayerView *)playerView receivedError:(YTPlayerError)error {
+- (void)playerView:(YTPlayerView *)playerView
+     receivedError:(YTPlayerError)error {
     NSLog(@"receivedError");
 }
 
 #pragma mark - Custom Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg  {
-    
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-{
+                  protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
@@ -1456,7 +1296,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -1470,8 +1309,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -1546,12 +1384,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches
-           withEvent:(UIEvent *)event
-{
+           withEvent:(UIEvent *)event {
     NSLog(@"");
     NSLog(@"touchesBegan");
     NSLog(@"");
-    
     UITouch *touch = [touches anyObject];
     
     NSLog(@"touch.view: %@", touch.view);

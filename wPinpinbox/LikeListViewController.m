@@ -47,7 +47,6 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
     [self loadData];
 }
@@ -60,7 +59,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -133,7 +131,6 @@
         isReloading = YES;
         nextId = 0;
         isLoading = NO;
-        
         [self loadData];
     }
 }
@@ -141,13 +138,11 @@
 #pragma mark -
 - (void)loadData {
     NSLog(@"loadData");
-    
     if (!isLoading) {
         if (nextId == 0) {
             NSLog(@"nextId: %ld", (long)nextId);
         }
         isLoading = YES;
-        
         [self getLikesList];
     }
 }
@@ -172,7 +167,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"LikeListViewController");
                     NSLog(@"getLikesList");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getLikesList"
                                           userId: 0
@@ -182,20 +176,17 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processLikeList:dic];
                 }
             }
         });
     });
 }
+
 - (void)processLikeList:(NSDictionary *)dic {
-    
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         NSLog(@"SYSTEM_OK");
-        
         NSLog(@"dic data: %@", dic[@"data"]);
-        
         NSLog(@"Before");
         NSLog(@"nextId: %ld", (long)nextId);
         
@@ -206,12 +197,15 @@
         // s for counting how much data is loaded
         int s = 0;
         
+        if (![wTools objectExists: dic[@"data"]]) {
+            return;
+        }
+        
         for (NSMutableDictionary *likesFromDic in [dic objectForKey: @"data"]) {
             NSLog(@"likesFromDic: %@", likesFromDic);
             s++;
             [likeListArray addObject: likesFromDic];
         }
-        
         NSLog(@"After");
         NSLog(@"nextId: %ld", (long)nextId);
         
@@ -236,13 +230,11 @@
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"SYSTEM_ERROR");
         NSLog(@"失敗：%@",dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: dic[@"message"]];
-        
         [self.refreshControl endRefreshing];
         isReloading = NO;
     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
@@ -266,18 +258,16 @@
         isReloading = NO;
     } else if ([dic[@"result"] isEqualToString: @"USER_ERROR"]) {
         NSLog(@"錯誤：%@",dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: dic[@"message"]];
-        
         [self.refreshControl endRefreshing];
         isReloading = NO;
     }
-    
 }
+
 - (void)logOut {
     [wTools logOut];
 }
@@ -296,20 +286,15 @@
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForRowAtIndexPath");
     NSLog(@"likeListArray: %@", likeListArray);
-    
     __weak LikeListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"Cell" forIndexPath: indexPath];
     NSDictionary *dic = [likeListArray[indexPath.row] copy];
-    
     NSString *imageUrl = dic[@"user"][@"picture"];
     NSString *name = dic[@"user"][@"name"];
     NSInteger userId = [dic[@"user"][@"user_id"] integerValue];
     
-    //    cell.headshotImageView.layer.cornerRadius = cell.headshotImageView.frame.size.height / 2;
-    
     if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
         cell.headshotImageView.image = [UIImage imageNamed: @"member_back_head.png"];
     } else {
-        //        [cell.headshotImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl]];
         [cell.headshotImageView sd_setImageWithURL: [NSURL URLWithString: imageUrl] placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
     }
     
@@ -317,18 +302,15 @@
         cell.userNameLabel.text = name;
         [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
     }
-    
     NSLog(@"user is_follow: %d", [dic[@"user"][@"is_follow"] boolValue]);
     //    cell.isFollow = [dic[@"user"][@"is_follow"] boolValue];
     
     [self updateFollowBtnStatus: cell.followBtn isFollow: [dic[@"user"][@"is_follow"] boolValue]];
-    
     __weak typeof(self) weakSelf = self;
     
     cell.customBlock = ^(BOOL selected, NSInteger tag) {
         NSLog(@"cell.customBlock");
         NSLog(@"tag: %ld", (long)tag);
-        
         if (tag == 10) {
             NSLog(@"message btn pressed");
             [weakSelf showMessageBoard: userId userName: name];
@@ -337,7 +319,6 @@
             [weakSelf followBtnPress: userId cell: cell];
         }
     };
-    
     return cell;
 }
 
@@ -345,15 +326,18 @@
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectRowAtIndexPath");
-    
     NSDictionary *dic = [likeListArray[indexPath.row] copy];
+    
+    if (![wTools objectExists: dic[@"user"][@"user_id"]]) {
+        return;
+    }
+    
     NSInteger userId = [dic[@"user"][@"user_id"] integerValue];
     
     CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
     cVC.userId = [NSString stringWithFormat: @"%ld", (long)userId];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: cVC animated: YES];
-    
     [tableView deselectRowAtIndexPath: indexPath animated: YES];
 }
 
@@ -410,7 +394,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Call Server For Follow Function
 - (void)followBtnPress:(NSInteger)userId
                   cell:(LikeListTableViewCell *)cell {
-    
     [wTools ShowMBProgressHUD];
     NSString *userIdStr = [NSString stringWithFormat: @"%ld", (long)userId];
     
@@ -429,7 +412,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (respnose != nil) {
                 NSLog(@"response from changefollowstatus");
                 
@@ -437,7 +419,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CreaterViewController");
                     NSLog(@"followBtnPress");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"followBtnPress"
                                           userId: userId
@@ -447,13 +428,19 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respnose dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         NSDictionary *d = dic[@"data"];
-                        
                         [self updateFollowBtnStatus: cell.followBtn
                                            isFollow: [d[@"followstatus" ]boolValue]];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -482,93 +469,17 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - Custom Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
-    
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
                         userId: (NSInteger)userId
-                          cell: (LikeListTableViewCell *)cell
-{
+                          cell: (LikeListTableViewCell *)cell {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
@@ -590,7 +501,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {

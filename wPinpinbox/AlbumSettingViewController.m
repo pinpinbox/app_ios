@@ -55,10 +55,8 @@
         self.imageView.backgroundColor = [UIColor clearColor];
     } else {
         self.imageView.backgroundColor = [UIColor thirdMain];
-        
     }
 }
-
 @end
 
 @interface DelTextField : UITextField<UITextFieldDelegate>
@@ -318,7 +316,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
@@ -333,15 +330,16 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    
-                    
                     if ([dic[@"result"] intValue] == 1) {
                         [wself setMData:dic];
-                        
                         [wself getAlbumSettings];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -350,12 +348,13 @@
         });
     });
 }
+
 - (void)setMData:(NSDictionary *)dic {
     mdata = [[dic objectForKey: @"data"] mutableCopy];
     NSLog(@"mdata: %@", mdata);
 }
-- (void)getAlbumSettings
-{
+
+- (void)getAlbumSettings {
     NSLog(@"getAlbumSettings");
     @try {
         [wTools ShowMBProgressHUD];
@@ -366,7 +365,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI getalbumsettings: [UserInfo getUserID]
                                                 token: [UserInfo getUserToken]
@@ -382,13 +380,11 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"AlbumSettingViewController");
                     NSLog(@"getAlbumSettings");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getalbumsettings"
                                          jsonStr: @""
@@ -396,12 +392,11 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     //if ([dic[@"result"] intValue] == 1) {
                     NSString *res = (NSString *)dic[@"result"];
+                    
                     if ([res isEqualToString:@"SYSTEM_OK"]) {
                         self.data = [dic[@"data"] mutableCopy];
-                        
                         [self initialValueSetup];
                         [self.firstCategoryCollectionView reloadData];
                         [self.secondCategoryCollectionView reloadData];
@@ -411,7 +406,11 @@
                         [self checkCreatePointTask];
                     } else if (dic[@"message"] != nil) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -420,8 +419,8 @@
         });
     });
 }
-- (void)checkCreatePointTask
-{
+
+- (void)checkCreatePointTask {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL create_free_album = [[defaults objectForKey: @"create_free_album"] boolValue];
     NSLog(@"Check whether getting Download Template point or not");
@@ -435,14 +434,11 @@
     }
 }
 
-- (void)checkPoint
-{
+- (void)checkPoint {
     NSLog(@"checkPoint");
-    
     //[wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        
         NSString *response = [boxAPI doTask2: [UserInfo getUserID]
                                        token: [UserInfo getUserToken]
                                     task_for: @"create_free_album"
@@ -456,9 +452,7 @@
         NSLog(@"Album ID: %@", self.albumId);
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             //[wTools HideMBProgressHUD];
-            
             if (response != nil) {
                 NSLog(@"response from doTask2: %@", response);
                 
@@ -466,7 +460,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"AlbumSettingViewController");
                     NSLog(@"checkPoint");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"doTask2"
                                          jsonStr: @""
@@ -475,15 +468,14 @@
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"data: %@", data);
-                    
                     [wself processCheckPoint:data];
                 }
             }
         });
     });
 }
+
 - (void)processCheckPoint:(NSDictionary *)data {
-    
     if ([data[@"result"] intValue] == 1) {
         missionTopicStr = data[@"data"][@"task"][@"name"];
         NSLog(@"name: %@", missionTopicStr);
@@ -509,13 +501,10 @@
         [self showTaskAlertView];
         [self getUrPoints];
         //[self getPointStore];
-        
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
-        
         // Save data for creating album first time
         BOOL create_free_album = YES;
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject: [NSNumber numberWithBool: create_free_album]  forKey: @"create_free_album"];
         [defaults synchronize];
@@ -570,18 +559,21 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                        NSInteger point = [dic[@"data"] integerValue];
-                        //NSLog(@"point: %ld", (long)point);
-                        
-                        [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
-                        [userPrefs synchronize];
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            NSInteger point = [dic[@"data"] integerValue];
+                            //NSLog(@"point: %ld", (long)point);
+                            [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
+                            [userPrefs synchronize];
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -592,29 +584,27 @@
 }
 
 #pragma mark - Custom AlertView for Getting Point
-- (void)showTaskAlertView
-{
+- (void)showTaskAlertView {
     NSLog(@"Show Alert View");
-    
     // Custom AlertView shows up when getting the point
     alertTaskView = [[OldCustomAlertView alloc] init];
     [alertTaskView setContainerView: [self createPointView]];
     [alertTaskView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
     [alertTaskView setUseMotionEffects: true];
-    
     [alertTaskView show];
 }
 
-- (UIView *)createPointView
-{
+- (UIView *)createPointView {
     NSLog(@"createPointView");
-    
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
     
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
     //missionTopicLabel.text = @"收藏相本得點";
-    missionTopicLabel.text = missionTopicStr;
+    
+    if ([wTools objectExists: missionTopicStr]) {
+        missionTopicLabel.text = missionTopicStr;
+    }
     
     NSLog(@"Topic Label Text: %@", missionTopicStr);
     [pointView addSubview: missionTopicLabel];
@@ -651,7 +641,10 @@
      }
      */
     
-    messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    if ([wTools objectExists: rewardValue]) {
+        messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    }
+    
     [pointView addSubview: messageLabel];
     
     if ([eventUrl isEqual: [NSNull null]] || eventUrl == nil) {
@@ -670,10 +663,11 @@
     return pointView;
 }
 
-- (void)showTheActivityPage
-{
+- (void)showTheActivityPage {
     NSLog(@"showTheActivityPage");
-    
+    if (![wTools objectExists: eventUrl]) {
+        return;
+    }
     //NSString *activityLink = @"http://www.apple.com";
     NSString *activityLink = eventUrl;
     
@@ -689,10 +683,8 @@
 }
 
 #pragma mark - SFSafariViewController delegate methods
-- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller
-{
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
     // Done button pressed
-    
     NSLog(@"show");
     [alertTaskView show];
 }
@@ -705,8 +697,7 @@
 }
 
 #pragma mark - Setup Initial Value
-- (void)initialValueSetup
-{
+- (void)initialValueSetup {
     firstCategoryArray = [NSMutableArray new];
     secondCategoryArray = [NSMutableArray new];
     weatherArray = [NSMutableArray new];
@@ -738,10 +729,8 @@
     albumEditBtnPress = NO;
 }
 
-- (void)loadUserSettingData
-{
+- (void)loadUserSettingData {
     NSLog(@"loadUserSettingData");
-    
     // First Category
     //if ([self.data[@"firstpaging"] isKindOfClass: [NSNull class]]) {
     if ([self.data[@"categoryarea_id"] isKindOfClass: [NSNull class]]) {
@@ -766,26 +755,27 @@
         NSLog(@"sfir: %@", sfir);
         NSDictionary *firdata = nil;
         
-        for (NSMutableDictionary *dic in arr) {
-            NSLog(@"d[id]: %d", [dic[@"id"] intValue]);
-            
-            int y = [dic[@"id"] intValue];
-            NSLog(@"y: %d", y);
-            
-            if (x == y) {
-                [dic setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
+        if ([wTools objectExists: arr]) {
+            for (NSMutableDictionary *dic in arr) {
+                NSLog(@"d[id]: %d", [dic[@"id"] intValue]);
                 
-                // if setting data is matching with First Category id value
-                // then set dictionary for certain second paging
-                firdata = dic;
+                int y = [dic[@"id"] intValue];
+                NSLog(@"y: %d", y);
                 
-                NSLog(@"firdata: %@", firdata);
-            } else {
-                [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+                if (x == y) {
+                    [dic setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
+                    
+                    // if setting data is matching with First Category id value
+                    // then set dictionary for certain second paging
+                    firdata = dic;
+                    
+                    NSLog(@"firdata: %@", firdata);
+                } else {
+                    [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+                }
+                [firstCategoryArray addObject: dic];
             }
-            [firstCategoryArray addObject: dic];
         }
-        
         // Second Category
         //if (![self.data[@"secondpaging"] isKindOfClass: [NSNull class]]) {
         if (![self.data[@"category_id"] isKindOfClass:[NSNull class]]) {
@@ -800,65 +790,78 @@
             ssec = [NSString stringWithFormat: @"%i", x];
             NSLog(@"ssec: %@", ssec);
             
-            for (NSMutableDictionary *dic in arr) {
-                int y = [dic[@"id"] intValue];
-                
-                if (x == y) {
-                    [dic setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
-                } else {
-                    [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+            if ([wTools objectExists: arr]) {
+                for (NSMutableDictionary *dic in arr) {
+                    int y = [dic[@"id"] intValue];
+                    
+                    if (x == y) {
+                        [dic setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
+                    } else {
+                        [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+                    }
+                    [secondCategoryArray addObject: dic];
                 }
-                [secondCategoryArray addObject: dic];
             }
-            
             
             [firstCategoryArray removeAllObjects];
             BOOL checkFirst = NO;
-            for (NSMutableDictionary *d in mdata[@"firstpaging"]) {
-                arr = d[@"secondpaging"];
-                checkFirst = NO;
-                for (NSDictionary *d1 in arr) {
-                    int y = [d1[@"id"] intValue];
-                    if (x == y) {
-                        checkFirst = YES;
-                        break;
+            
+            if ([wTools objectExists: mdata[@"firstpaging"]]) {
+                for (NSMutableDictionary *d in mdata[@"firstpaging"]) {
+                    arr = d[@"secondpaging"];
+                    checkFirst = NO;
+                    
+                    if ([wTools objectExists: arr]) {
+                        for (NSDictionary *d1 in arr) {
+                            int y = [d1[@"id"] intValue];
+                            if (x == y) {
+                                checkFirst = YES;
+                                break;
+                            }
+                        }
+                    }
+                    [d setValue: [NSNumber numberWithBool: checkFirst] forKey: @"selected"];
+                    
+                    if ([wTools objectExists: secondCategoryArray]) {
+                        if (checkFirst && secondCategoryArray.count < 1) {
+                            if ([wTools objectExists: arr]) {
+                                for (NSMutableDictionary *d1 in arr) {
+                                    int y = [d1[@"id"] intValue];
+                                    [d1 setValue: [NSNumber numberWithBool: x==y] forKey: @"selected"];
+                                    [secondCategoryArray addObject:d1];
+                                }
+                            }
+                        }
+                        [firstCategoryArray addObject: d];
                     }
                 }
-                
-                [d setValue: [NSNumber numberWithBool: checkFirst] forKey: @"selected"];
-                if (checkFirst && secondCategoryArray.count < 1) {
-                    for (NSMutableDictionary *d1 in arr) {
-                        int y = [d1[@"id"] intValue];
-                        [d1 setValue: [NSNumber numberWithBool: x==y] forKey: @"selected"];
-                        [secondCategoryArray addObject:d1];
-                    }
-                }
-                [firstCategoryArray addObject: d];
             }
         }
     }
     
-    for (NSMutableDictionary *dic in mdata[@"weather"]) {
-        if ([self.data[@"weather"] isEqualToString: dic[@"id"]]) {
-            [dic setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
-        } else{
-            [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+    if ([wTools objectExists: mdata[@"weather"]]) {
+        for (NSMutableDictionary *dic in mdata[@"weather"]) {
+            if ([self.data[@"weather"] isEqualToString: dic[@"id"]]) {
+                [dic setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
+            } else{
+                [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+            }
+            [weatherArray addObject: dic];
         }
-        [weatherArray addObject: dic];
     }
-    
-    for (NSMutableDictionary *dic in mdata[@"mood"]) {
-        if ([self.data[@"mood"] isEqualToString: dic[@"id"]]) {
-            [dic setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
-        } else{
-            [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+    if ([wTools objectExists: mdata[@"mood"]]) {
+        for (NSMutableDictionary *dic in mdata[@"mood"]) {
+            if ([self.data[@"mood"] isEqualToString: dic[@"id"]]) {
+                [dic setValue: [NSNumber numberWithBool: YES] forKey: @"selected"];
+            } else{
+                [dic setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+            }
+            [moodArray addObject: dic];
         }
-        [moodArray addObject: dic];
     }
 }
 
-- (void)setupUI1
-{
+- (void)setupUI1 {
     // Default set to YES
     self.decriptionRequiredLabel.hidden = YES;
     
@@ -925,10 +928,12 @@
         act = @"open";
     }
     
-    if ([act isEqualToString: @"close"]) {
-        isPrivate = YES;
-    } else if ([act isEqualToString: @"open"]) {
-        isPrivate = NO;
+    if ([wTools objectExists: act]) {
+        if ([act isEqualToString: @"close"]) {
+            isPrivate = YES;
+        } else if ([act isEqualToString: @"open"]) {
+            isPrivate = NO;
+        }
     }
     NSLog(@"isPrivate: %d", isPrivate);
     
@@ -952,7 +957,6 @@
         self.mainCategoryRequiredLabel.hidden = NO;
         self.subCategoryRequiredLabel.hidden = NO;
     }
-    
     NSLog(@"self.data: %@", self.data);
     
 //    if ([self.data[@"title"] isEqual: [NSNull null]]) {
@@ -966,7 +970,6 @@
     } else {
         self.nameTextField.text = self.data[@"name"];
     }
-
     oldName = self.nameTextField.text;        
     
     if ([self.data[@"description"] isEqual: [NSNull null]]) {
@@ -1011,8 +1014,7 @@
         self.pPointTextField.text = [NSString stringWithFormat: @"0"];
     } else {
         self.pPointTextField.text = [NSString stringWithFormat: @"%d", [self.data[@"point"] intValue]];
-    }    
-    
+    }
     oldPoint = self.pPointTextField.text;
     
     /*
@@ -1040,7 +1042,8 @@
 //    oldAdvancedStr = self.advancedTextField.text;
     //self.plusMemberHeight.constant = 0;
     //self.professionMemberHeight.constant = 0;
-    if (mdata[@"usergrade"] ) {
+    
+    if (mdata[@"usergrade"]) {
         NSString *user = mdata[@"usergrade"];
         if (![user isEqualToString:@"free"]) {
             BOOL n = [self isDisplayCollectNum];
@@ -1066,21 +1069,20 @@
     }
     NSLog(@"");
 }
+
 - (void)processAlbumIndexList {
     
 }
-- (void)doneNumberPad
-{
+
+- (void)doneNumberPad {
     NSLog(@"doneNumberPad");
     [self.pPointTextField resignFirstResponder];
 }
 
 #pragma mark - UICollectionViewDataSource Methods
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
     NSLog(@"numberOfItemsInSection");
-    
     NSInteger numberOfItems = 0;
     
     if (collectionView == self.firstCategoryCollectionView) {
@@ -1106,10 +1108,8 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForItemAtIndexPath");
-    
     UICollectionViewCell *cell;
     
     if (collectionView == self.firstCategoryCollectionView) {
@@ -1120,16 +1120,19 @@
         cell.layer.cornerRadius = kCornerRadius;
         
         UILabel *textLabel = (UILabel *)[cell viewWithTag: 100];
-        textLabel.text = firstCategoryArray[indexPath.row][@"name"];
-        
-        NSIndexPath *selectedIndexPath;
-        if ([firstCategoryArray[indexPath.row][@"selected"] boolValue]) {
-            selectedIndexPath = indexPath;
-            cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-        } else {
-            cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
+        if ([wTools objectExists: firstCategoryArray[indexPath.row][@"name"]]) {
+            textLabel.text = firstCategoryArray[indexPath.row][@"name"];
         }
+        NSIndexPath *selectedIndexPath;
         
+        if ([wTools objectExists: firstCategoryArray[indexPath.row][@"selected"]]) {
+            if ([firstCategoryArray[indexPath.row][@"selected"] boolValue]) {
+                selectedIndexPath = indexPath;
+                cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
+            } else {
+                cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
+            }
+        }
         //[collectionView scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionNone animated: NO];
     } else if (collectionView == self.secondCategoryCollectionView) {
         NSLog(@"");
@@ -1139,163 +1142,83 @@
         cell.layer.cornerRadius = kCornerRadius;
         
         UILabel *textLabel = (UILabel *)[cell viewWithTag: 100];
-        textLabel.text = secondCategoryArray[indexPath.row][@"name"];
-        
-        NSIndexPath *selectedIndexPath;
-        if ([secondCategoryArray[indexPath.row][@"selected"] boolValue]) {
-            selectedIndexPath = indexPath;
-            cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-        } else {
-            cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
+        if ([wTools objectExists: secondCategoryArray[indexPath.row][@"name"]]) {
+            textLabel.text = secondCategoryArray[indexPath.row][@"name"];
         }
+        NSIndexPath *selectedIndexPath;
         
-        //[collectionView scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionNone animated: NO];
+        if ([wTools objectExists: secondCategoryArray[indexPath.row][@"selected"]]) {
+            if ([secondCategoryArray[indexPath.row][@"selected"] boolValue]) {
+                selectedIndexPath = indexPath;
+                cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
+            } else {
+                cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
+            }
+        }
     }
-//    else if (collectionView == self.weatherCollectionView) {
-//        NSLog(@"");
-//        NSLog(@"collectionView == self.weatherCollectionView");
-//
-//        cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"WeatherCell" forIndexPath: indexPath];
-//        cell.layer.cornerRadius = kCornerRadius;
-//
-//        UILabel *textLabel = (UILabel *)[cell viewWithTag: 100];
-//        textLabel.text = weatherArray[indexPath.row][@"name"];
-//
-//        NSIndexPath *selectedIndexPath;
-//        if ([weatherArray[indexPath.row][@"selected"] boolValue]) {
-//            selectedIndexPath = indexPath;
-//            cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-//        } else {
-//            cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
-//        }
-//
-//        //[collectionView scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionNone animated: NO];
-//    } else if (collectionView == self.moodCollectionView) {
-//        NSLog(@"");
-//        NSLog(@"collectionView == moodCollectionView");
-//
-//        cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"MoodCell" forIndexPath: indexPath];
-//        cell.layer.cornerRadius = kCornerRadius;
-//
-//        UILabel *textLabel = (UILabel *)[cell viewWithTag: 100];
-//        textLabel.text = moodArray[indexPath.row][@"name"];
-//
-//        NSIndexPath *selectedIndexPath;
-//        if ([moodArray[indexPath.row][@"selected"] boolValue]) {
-//            selectedIndexPath = indexPath;
-//            cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-//        } else {
-//            cell.layer.backgroundColor = [UIColor thirdGrey].CGColor;
-//        }
-//        //[collectionView scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionNone animated: NO];
-//    }
-    
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
-    
     isModified = YES;
     
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     
     if (collectionView == self.firstCategoryCollectionView) {
         NSLog(@"collectionView == self.firstCategoryCollectionView");
-        
         cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
         
-        for (NSMutableDictionary *d in firstCategoryArray) {
-            if ([d[@"selected"] boolValue]) {
-                [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
+        if ([wTools objectExists: firstCategoryArray]) {
+            for (NSMutableDictionary *d in firstCategoryArray) {
+                if ([d[@"selected"] boolValue]) {
+                    [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
+                }
             }
+            firstCategoryArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
+            
+            for (NSDictionary *d in firstCategoryArray) {
+                NSLog(@"selected: %@", d[@"selected"]);
+            }
+            [self.firstCategoryCollectionView reloadData];
+            //self.secondCategoryHeight.constant = 53;
+            self.secondCategoryCollectionView.hidden = NO;
+            
+            [secondCategoryArray removeAllObjects];
+            
+            for (NSMutableDictionary *d in firstCategoryArray[indexPath.row][@"secondpaging"]) {
+                [d setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
+                [secondCategoryArray addObject: d];
+            }
+            NSLog(@"secondCategoryArray: %@", secondCategoryArray);
+            [self.secondCategoryCollectionView reloadData];
         }
-        
-        firstCategoryArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
-        
-        for (NSDictionary *d in firstCategoryArray) {
-            NSLog(@"selected: %@", d[@"selected"]);
-        }
-        
-        [self.firstCategoryCollectionView reloadData];
-        //self.secondCategoryHeight.constant = 53;
-        self.secondCategoryCollectionView.hidden = NO;
-        
-        [secondCategoryArray removeAllObjects];
-        
-        for (NSMutableDictionary *d in firstCategoryArray[indexPath.row][@"secondpaging"]) {
-            [d setValue: [NSNumber numberWithBool: NO] forKey: @"selected"];
-            [secondCategoryArray addObject: d];
-        }
-        NSLog(@"secondCategoryArray: %@", secondCategoryArray);
-        [self.secondCategoryCollectionView reloadData];
-        
     } else if (collectionView == self.secondCategoryCollectionView) {
         NSLog(@"collectionView == self.secondCategoryCollectionView");
-        
         cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
         
-        for (NSMutableDictionary *d in secondCategoryArray) {
-            if ([d[@"selected"] boolValue]) {
-                [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
+        if ([wTools objectExists: secondCategoryArray]) {
+            for (NSMutableDictionary *d in secondCategoryArray) {
+                if ([d[@"selected"] boolValue]) {
+                    [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
+                }
             }
+            secondCategoryArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
+            
+            for (NSDictionary *d in secondCategoryArray) {
+                NSLog(@"selected: %@", d[@"selected"]);
+            }
+            [self.secondCategoryCollectionView reloadData];
         }
-        
-        secondCategoryArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
-        
-        for (NSDictionary *d in secondCategoryArray) {
-            NSLog(@"selected: %@", d[@"selected"]);
-        }
-        
-        [self.secondCategoryCollectionView reloadData];
-        
     }
-//    else if (collectionView == self.weatherCollectionView) {
-//        NSLog(@"collectionView == self.weatherCollectionView");
-//
-//        cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-//
-//        for (NSMutableDictionary *d in weatherArray) {
-//            if ([d[@"selected"] boolValue]) {
-//                [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
-//            }
-//        }
-//
-//        weatherArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
-//
-//        for (NSDictionary *d in weatherArray) {
-//            NSLog(@"selected: %@", d[@"selected"]);
-//        }
-//        [self.weatherCollectionView reloadData];
-//    } else if (collectionView == self.moodCollectionView) {
-//        NSLog(@"collectionView == self.moodCollectionView");
-//
-//        cell.layer.backgroundColor = [UIColor thirdMain].CGColor;
-//
-//        for (NSMutableDictionary *d in moodArray) {
-//            if ([d[@"selected"] boolValue]) {
-//                [d setObject: [NSNumber numberWithBool: NO] forKey: @"selected"];
-//            }
-//        }
-//
-//        moodArray[indexPath.row][@"selected"] = [NSNumber numberWithBool: YES];
-//
-//        for (NSDictionary *d in moodArray) {
-//            NSLog(@"selected: %@", d[@"selected"]);
-//        }
-//        [self.moodCollectionView reloadData];
-//    }
 }
 
 #pragma mark - Touches Detection
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
     NSLog(@"");
     NSLog(@"touchesBegan");
-    
     [self.view endEditing: YES];
     
     CGPoint location = [[touches anyObject] locationInView: self.view];
@@ -1310,8 +1233,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesEnded:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
     NSLog(@"");
     NSLog(@"touchesEnded");
 }
@@ -1319,11 +1242,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - IBAction Methods
 - (IBAction)submitInsertAlbum:(id)sender {
     NSString *nid = self.advTextField.text;
+    
     if (nid && nid.length > 0) {
         [self addAlbumIndexWithAid:nid];
     }
     [self.advTextField resignFirstResponder];
 }
+
 - (IBAction)scanCodeForAdvanceSetting:(id)sender {
     NSLog(@"scanCodeForAdvanceSetting");
     
@@ -1373,14 +1298,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [defaults synchronize];
     } else {
         [self warnToastWithMessage:@"你的作品沒有內容"];
-//        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-//        style.messageColor = [UIColor whiteColor];
-//        style.backgroundColor = [UIColor thirdPink];
-//
-//        [self.view makeToast: @"你的作品沒有內容"
-//                    duration: 2.0
-//                    position: CSToastPositionBottom
-//                       style: style];
     }
 }
 
@@ -1450,8 +1367,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [appDelegate.myNav pushViewController: acVC animated: YES];
     } else if ([self.fromVC isEqualToString: @"AlbumCreationVC"]) {
         NSLog(@"self.fromVC is AlbumCreationVC");
-        //[self.navigationController popViewControllerAnimated: YES];
-        
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [appDelegate.myNav popViewControllerAnimated: YES];
     }
@@ -1460,24 +1375,24 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)saveAndExit:(id)sender {
     [self saveData];
 }
+
 - (IBAction)sponsingSettingSwitch:(id)sender{
     UIButton *btn = (UIButton *)sender;
     if (!btn.selected) {
         if (btn == self.sponsorCountON) {
             self.sponsorCountON.selected = YES;
             self.sponsorCountOFF.selected = NO;
-            
         } else {
             self.sponsorCountON.selected = NO;
             self.sponsorCountOFF.selected = YES;
         }
-        
     }
-    
 }
+
 - (IBAction)sponsingResponseSettingSwitch:(id)sender{
     NSLog(@"%@", sender);
     UIButton *btn = (UIButton *)sender;
+    
     if (!btn.selected) {
         if (btn == self.sponsorDescON) {
             if ([self getCurrentSetPPoint] < 3) {
@@ -1502,9 +1417,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
         [self.plusView setNeedsLayout];
         //btn.selected = !btn.selected;
-        
     }
 }
+
 - (void)postAlbum {
     NSLog(@"postAlbum");
     @try {
@@ -1516,7 +1431,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog( @"Reason: %@", exception.reason);
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI switchstatusofcontribution: [UserInfo getUserID]
                                                           token: [UserInfo getUserToken]
@@ -1534,7 +1448,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 //NSLog(@"%@", response);
                 
@@ -1553,24 +1466,21 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"post album success");
-                        
-                        int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
-                        NSLog(@"contributionCheck: %d", contributionCheck);
-                        
-                        [self remindToastWithMessage:@"投稿成功"];
-//                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-//                        style.messageColor = [UIColor whiteColor];
-//                        style.backgroundColor = [UIColor firstMain];
-//
-//                        [self.view makeToast:
-//                                    duration: 2.0
-//                                    position: CSToastPositionBottom
-//                                       style: style];
-//
-                        [self ToRetrievealbumpViewControlleralbumid: self.albumId];
+                        if ([wTools objectExists: dic[@"data"][@"event"][@"contributionstatus"]]) {
+                            int contributionCheck = [dic[@"data"][@"event"][@"contributionstatus"] boolValue];
+                            NSLog(@"contributionCheck: %d", contributionCheck);
+                            [self remindToastWithMessage:@"投稿成功"];
+                        }
+                        if ([wTools objectExists: self.albumId]) {
+                            [self ToRetrievealbumpViewControlleralbumid: self.albumId];
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1580,19 +1490,26 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     });
 }
 
-- (void)checkModified
-{
-    if (![oldName isEqualToString: self.nameTextField.text]) {
-        isModified = YES;
+- (void)checkModified {
+    if ([wTools objectExists: oldName]) {
+        if (![oldName isEqualToString: self.nameTextField.text]) {
+            isModified = YES;
+        }
     }
-    if (![oldDescription isEqualToString: self.descriptionTextView.text]) {
-        isModified = YES;
+    if ([wTools objectExists: oldDescription]) {
+        if (![oldDescription isEqualToString: self.descriptionTextView.text]) {
+            isModified = YES;
+        }
     }
-    if (![oldLocation isEqualToString: self.locationTextView.text]) {
-        isModified = YES;
+    if ([wTools objectExists: oldLocation]) {
+        if (![oldLocation isEqualToString: self.locationTextView.text]) {
+            isModified = YES;
+        }
     }
-    if (![oldPoint isEqualToString: self.pPointTextField.text]) {
-        isModified = YES;
+    if ([wTools objectExists: oldPoint]) {
+        if (![oldPoint isEqualToString: self.pPointTextField.text]) {
+            isModified = YES;
+        }
     }
 }
 
@@ -1602,11 +1519,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         if (anyIds == nil || anyIds.count < 1) {
             [self remindToastWithMessage:@"掃描QR code未取得結果"];
             return;
-            
         }
-        
         NSString *nid = (NSString *)[anyIds lastObject];
-        self.advTextField.text = nid;
+        if ([wTools objectExists: nid]) {
+            self.advTextField.text = nid;
+        }
     });
     
 }
@@ -1615,19 +1532,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 - (BOOL)isDisplayCollectNum {
     id d = self.data[@"display_num_of_collect"];
     if (d && [d isKindOfClass:[NSNumber class]]) {
-        
         return [d boolValue];
     }
     return NO;
 }
+
 - (BOOL)isDisplayCollectReward{
     id d = self.data[@"reward_after_collect"];
     if (d && [d isKindOfClass:[NSNumber class]]) {
-        
         return [d boolValue];
     }
     return NO;
 }
+
 - (NSString *)getRewardDesc {
     id desc = self.data[@"reward_description"];
     if (desc && [desc isKindOfClass:[NSString class]])
@@ -1640,6 +1557,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     NSString *pStr = self.pPointTextField.text;
     return [pStr intValue];
 }
+
 #pragma mark - Get Server Data
 - (void)saveData {
     NSLog(@"");
@@ -1712,8 +1630,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         sact = @"open";
     }
     NSLog(@"sact: %@", sact);
-    
-    
     //NSLog(@"self.nameTextView.text: %@", self.nameTextView.text);
     NSLog(@"self.nameTextField.text: %@", self.nameTextField.text);
     NSLog(@"self.descriptionTextView.text: %@", self.descriptionTextView.text);
@@ -1723,71 +1639,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     if ([sact isEqualToString: @"open"]) {
         if ([self.nameTextField.text isEqualToString: @""]) {
             [self warnToastWithMessage:@"名稱要記得填寫"];
-//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-//            style.messageColor = [UIColor whiteColor];
-//            style.backgroundColor = [UIColor thirdPink];
-//
-//            [self.view makeToast:
-//                        duration: 2.0
-//                        position: CSToastPositionBottom
-//                           style: style];
-            
             return;
         }
-        
-        /*
-        if ([self.nameTextView.text isEqualToString: @""]) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor thirdPink];
-            
-            [self.view makeToast: @"名稱要記得填寫"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
-            
-            return;
-        }
-         */
-        /*
-        if ([self.descriptionTextView.text isEqualToString: @""]) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor thirdPink];
-            
-            [self.view makeToast: @"介紹要記得填寫"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
-            return;
-        }
-         */
         if (firstPaging == nil) {
             [self warnToastWithMessage:@"主類別還沒選"];
-//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-//            style.messageColor = [UIColor whiteColor];
-//            style.backgroundColor = [UIColor thirdPink];
-//
-//            [self.view makeToast:
-//                        duration: 2.0
-//                        position: CSToastPositionBottom
-//                           style: style];
             return;
         }
         if (secondPaging == nil) {
             [self warnToastWithMessage:@"子類別還沒選"];
-//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-//            style.messageColor = [UIColor whiteColor];
-//            style.backgroundColor = [UIColor thirdPink];
-//
-//            [self.view makeToast:
-//                        duration: 2.0
-//                        position: CSToastPositionBottom
-//                           style: style];
             return;
         }
     }
-    
     NSLog(@"");
     NSLog(@"pStr.length: %lu", (unsigned long)pStr.length);
     
@@ -1797,47 +1659,21 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         if ([pStr hasPrefix: @"0"]) {
             NSLog(@"pStr as prefix 0");
             [self warnToastWithMessage:@"第一位數不能為0"];
-//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-//            style.messageColor = [UIColor whiteColor];
-//            style.backgroundColor = [UIColor thirdPink];
-//
-//            [self.view makeToast:
-//                        duration: 2.0
-//                        position: CSToastPositionBottom
-//                           style: style];
             return;
         }
     }
     
     if ([pStr intValue] > 0 && [pStr intValue] < 3) {
         [self warnToastWithMessage:@"至少3P點"];
-//        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-//        style.messageColor = [UIColor whiteColor];
-//        style.backgroundColor = [UIColor thirdPink];
-//
-//        [self.view makeToast:
-//                    duration: 2.0
-//                    position: CSToastPositionBottom
-//                       style: style];
         return;
     }
     
     if (self.postMode) {
         if ([sact isEqualToString: @"close"]) {
             [self warnToastWithMessage:@"隱私打開才能投稿作品"];
-//            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-//            style.messageColor = [UIColor whiteColor];
-//            style.backgroundColor = [UIColor thirdPink];
-//
-//            [self.view makeToast:
-//                        duration: 2.0
-//                        position: CSToastPositionBottom
-//                           style: style];
-//
             return;
         }
     }
-    
     // Sending Data Section
     NSMutableDictionary *settingsDic = [NSMutableDictionary new];
     [settingsDic setObject: sact forKey: @"act"];
@@ -1860,16 +1696,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         //[settingsDic setObject: [NSNumber numberWithInt: [secondPaging intValue]] forKey: @"secondpaging"];
         [settingsDic setObject: [NSNumber numberWithInt: [secondPaging intValue]] forKey: @"category_id"];
     }
-    
     [settingsDic setObject: weatherStr forKey:@"weather"];
     [settingsDic setObject: moodStr forKey:@"mood"];
     [settingsDic setObject: [NSNumber numberWithInt: [pStr intValue]] forKey: @"point"];
 
     if (![self collectNonfreeMemberOption:settingsDic]) {
-        
         return ;
     }
-    
     NSLog(@"settingsDic: %@", settingsDic);
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: settingsDic options: 0 error: nil];
@@ -1877,14 +1710,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     
     [self callAlbumSettings: jsonStr];
 }
+
 //  save settings of plus/profession member
 - (BOOL)collectNonfreeMemberOption:(NSMutableDictionary *)settings {
-    
     // check member grade //
-    if (mdata[@"usergrade"] ) {
+    if (mdata[@"usergrade"]) {
         NSString *user = mdata[@"usergrade"];
         if (![user isEqualToString:@"free"]) {
-            
             if (self.sponsorDescON.selected) {
                 NSString *desc = self.sponsorDesc.text;
                 if (!desc || desc.length < 1) {
@@ -1897,7 +1729,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 [settings setObject:[NSNumber numberWithBool:NO] forKey:@"reward_after_collect"];
                 [settings setObject:@"" forKey:@"reward_description"];
             }
-            
             [settings setObject:[NSNumber numberWithBool:self.sponsorCountON.selected] forKey:@"display_num_of_collect"];
             
             if (self.advTextField.text.length != 0 && ![self.advTextField.text isEqualToString:@" "]){
@@ -1908,10 +1739,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     }
     return YES;
 }
+
 - (void)callAlbumSettings: (NSString *)jsonStr {
     NSLog(@"callAlbumSettings");
     NSLog(@"jsonStr: %@", jsonStr);
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -1921,7 +1752,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){        
         NSLog(@"self.albumId: %@", self.albumId);
@@ -1941,7 +1771,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from albumsettings: %@", response);
                 
@@ -1949,14 +1778,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"Time Out Message Return");
                     NSLog(@"AlbumSettingViewController");
                     NSLog(@"callAlbumSettings");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"albumsettings"
                                          jsonStr: jsonStr
                                          albumId: @""];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     [wself processCallAlbumSetting:dic];
                 }
@@ -1964,6 +1791,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         });
     });
 }
+
 - (void)processCallAlbumSetting:(NSDictionary *)dic {    
     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
         NSLog(@"self.postMode: %d", self.postMode);
@@ -1999,7 +1827,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                         return;
                     }
                 }
-                
                 //AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
                 
                 AlbumCollectionViewController *albumCollectionVC = [[UIStoryboard storyboardWithName: @"AlbumCollectionVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCollectionViewController"];
@@ -2012,40 +1839,28 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         }
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: msg];
     } else if ([dic[@"result"] isEqualToString: @"USER_ERROR"]) {
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        if (msg == nil) {
-            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         }
-        [self showCustomErrorAlert: msg];
-        
     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
         [self warnToastWithMessage:@"用戶驗證異常請重新登入"];
-//        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-//        style.messageColor = [UIColor whiteColor];
-//        style.backgroundColor = [UIColor thirdPink];
-//
-//        [self.view makeToast:
-//                    duration: 2.0
-//                    position: CSToastPositionBottom
-//                       style: style];
-//
         [NSTimer scheduledTimerWithTimeInterval: 1.0
                                          target: self
                                        selector: @selector(logOut)
                                        userInfo: nil
                                         repeats: NO];
     }
-    
 }
+
 - (void)logOut {
     [wTools logOut];
 }
@@ -2053,7 +1868,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - Call Protocol
 - (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
     NSLog(@"ToRetrievealbumpViewControlleralbumid");
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -2063,7 +1877,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI retrievealbump: albumid
                                                 uid: [UserInfo getUserID]
@@ -2093,21 +1906,25 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
                                          albumId: albumid];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        
-                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
-                        contentCheckingVC.albumId = self.albumId;
-                        contentCheckingVC.postMode = self.postMode;
-                        contentCheckingVC.specialUrl = self.specialUrl;
-                        
-                        [self.navigationController pushViewController: contentCheckingVC animated: YES];
+                        if ([wTools objectExists: self.albumId]) {
+                            ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                            contentCheckingVC.albumId = self.albumId;
+                            contentCheckingVC.postMode = self.postMode;
+                            contentCheckingVC.specialUrl = self.specialUrl;
+                            
+                            [self.navigationController pushViewController: contentCheckingVC animated: YES];
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -2118,93 +1935,14 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
 
-- (void)showCustomAlertForEditing: (NSString *)msg
-{
+- (void)showCustomAlertForEditing: (NSString *)msg {
     [self.view endEditing: YES];
     
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
@@ -2238,8 +1976,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [alertView show];
 }
 
-- (UIView *)createContainerViewForEditing: (NSString *)msg
-{
+- (UIView *)createContainerViewForEditing: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -2313,8 +2050,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     return contentView;
 }
 
-- (void)showModifiedCustomAlert: (NSString *)msg
-{
+- (void)showModifiedCustomAlert: (NSString *)msg {
     [self.view endEditing: YES];
     
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
@@ -2350,8 +2086,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [alertView show];
 }
 
-- (UIView *)createModifiedContainerView: (NSString *)msg
-{
+- (UIView *)createModifiedContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -2425,8 +2160,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     return contentView;
 }
 
-- (void)showCustomAlert: (NSString *)msg
-{
+- (void)showCustomAlert: (NSString *)msg {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     //[alertView setContainerView: [self createContainerView: msg]];
     [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -2458,8 +2192,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
     [alertView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg
-{
+- (UIView *)createContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -2537,7 +2270,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - UITextViewDelegate
 - (void)textViewDidBeginEditing:(UITextView *)textView {
     selectTextView = textView;
-    
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
@@ -2571,18 +2303,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 }
 
 #pragma mark - UITextField Delegate Methods
-
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     NSLog(@"textFieldDidBeginEditing");
     NSLog(@"textField.text: %@", textField.text);
-    
     selectTextField = textField;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     NSLog(@"textFieldDidEndEditing");
     NSLog(@"textField.text: %@", textField.text);
-    
     selectTextField = nil;
 }
 
@@ -2596,21 +2325,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath
         [self.descriptionTextView performSelector: @selector(becomeFirstResponder) withObject: nil afterDelay: 0.0];
     }
     return YES;
-    
-    /*
-    NSInteger nextTag = textField.tag + 1;
-    UIResponder *nextResponder = [self.descriptionTextView viewWithTag: nextTag];
-    
-    if (nextResponder) {
-        [nextResponder becomeFirstResponder];
-    } else {
-        [textField resignFirstResponder];
-    }
-    
-    return NO;
-    */
-    //[textField resignFirstResponder];
-    //return YES;
 }
 
 - (BOOL)textField:(UITextField *)textField
@@ -2655,11 +2369,9 @@ replacementString:(NSString *)string {
                            style: style];
             textField.text = @"50000";
             //[textField resignFirstResponder];
-            
             return NO;
         }
     }
-    
     return YES;
 }
 
@@ -2668,7 +2380,6 @@ replacementString:(NSString *)string {
 - (void)addKeyboardNotification {
     NSLog(@"");
     NSLog(@"addKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
                                                  name:UIKeyboardDidShowNotification
@@ -2682,7 +2393,6 @@ replacementString:(NSString *)string {
 - (void)removeKeyboardNotification {
     NSLog(@"");
     NSLog(@"removeKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] removeObserver: self
                                                     name: UIKeyboardDidShowNotification
                                                   object: nil];
@@ -2711,7 +2421,6 @@ replacementString:(NSString *)string {
     } else if (selectTextField != nil) {
         activeField = selectTextField;
     }
-    
     NSLog(@"aRect: %@", NSStringFromCGRect(aRect));
     NSLog(@"activeField.frame.origin: %@", NSStringFromCGPoint(activeField.frame.origin));
     
@@ -2731,9 +2440,9 @@ replacementString:(NSString *)string {
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }
+
 #pragma mark - profession user related functions
 - (void) addAlbumIndexWithAid:(NSString *)aid {
-    
     NSInteger i = self.albumIndexArray.count;
     if (i >= 20) {
         [self warnToastWithMessage:@"已達上限"];
@@ -2742,7 +2451,6 @@ replacementString:(NSString *)string {
     __block typeof(self) wself = self;
     self.advTextField.text = @"";
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        
         
         NSString *response = [boxAPI insertalbumindex:[UserInfo getUserID]
                                                 token:[UserInfo getUserToken]
@@ -2763,15 +2471,18 @@ replacementString:(NSString *)string {
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     NSString *res = (NSString *)dic[@"result"];
+                    
                     if ([res isEqualToString:@"SYSTEM_OK"]) {
                         [wself.albumIndexArray addObject:aid];//addObject:@{@"album_id":aid, @"index":[NSNumber numberWithInteger:i+1]}];
-                    
                         [wself reloadAlbumIndexList];
                     } else if (dic[@"message"] != nil) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -2780,6 +2491,7 @@ replacementString:(NSString *)string {
         });
     });
 }
+
 -(void)addProfessionSubmitBtn {
     self.submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.submitBtn.backgroundColor = [UIColor firstMain];
@@ -2799,17 +2511,15 @@ replacementString:(NSString *)string {
     tleft.backgroundColor = UIColor.clearColor;
     self.advTextField.leftView = tleft;
     self.albumIndexArray = [NSMutableArray array];
-    
 }
+
 - (void)retrieveAlbumIndex {
     NSArray *alb = self.data[@"albumindex"];
     [self.albumIndexArray removeAllObjects];
-    
     [self.albumIndexArray setArray:alb];
-    
     [self reloadAlbumIndexList];
-    
 }
+
 - (void)reloadAlbumIndexList {
     if (self.albslistView.hidden)
         self.albslistView.hidden = NO;
@@ -2817,7 +2527,6 @@ replacementString:(NSString *)string {
     for ( UIView *v in self.albslistView.subviews) {
         [v removeFromSuperview];
     }
-    
     int i = 0;
     for (NSString *t in self.albumIndexArray) {
         //int i1 = [[t objectForKey:@"index"] intValue];
@@ -2836,26 +2545,21 @@ replacementString:(NSString *)string {
 //        NSLog(@"backgroundLayout height %f",self.backgroundLayout.frame.size.height);
 //    };
 }
+
 - (void)deleteAlbumIndexWithfield:(NSString  *)aid {
-    
-    //NSString *aid = field.text;
-    
-    //if (self.albumIndexArray.count >= field.listIndex)
-    //    [self.albumIndexArray removeObjectAtIndex:field.listIndex-1];
-    
-    for (NSString *a in self.albumIndexArray) {
-        if ([a isEqualToString:aid]){
-            [self.albumIndexArray removeObject:a];
-            break;
+    if ([wTools objectExists: self.albumIndexArray]) {
+        for (NSString *a in self.albumIndexArray) {
+            if ([a isEqualToString:aid]){
+                [self.albumIndexArray removeObject:a];
+                break;
+            }
         }
     }
-    
     //int index = field.listIndex; //
     __block typeof(self) wself = self;
     //__block DelTextField *wfield = field;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        
-        
+
         NSString *response = [boxAPI deletealbumindex:[UserInfo getUserID]
                                                 token:[UserInfo getUserToken]
                                              album_id:self.albumId
@@ -2875,20 +2579,26 @@ replacementString:(NSString *)string {
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     NSString *res = (NSString *)dic[@"result"];
+                    
                     if ([res isEqualToString:@"SYSTEM_OK"]) {
                         //[wfield removeFromSuperview];
-                        for (NSString *t in wself.albumIndexArray) {
-                            if ([t isEqualToString:aid]) {
-                                [wself.albumIndexArray removeObject:t];
-                                break;
+                        if ([wTools objectExists: wself.albumIndexArray]) {
+                            for (NSString *t in wself.albumIndexArray) {
+                                if ([t isEqualToString:aid]) {
+                                    [wself.albumIndexArray removeObject:t];
+                                    break;
+                                }
                             }
                         }
                         [wself reloadAlbumIndexList];
                     } else if (dic[@"message"] != nil) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -2896,30 +2606,23 @@ replacementString:(NSString *)string {
             }
         });
     });
-    
-
 }
 
 - (void)delAlbumIndexWithInfo:(DelTextField *)field {
-    
     NSString *q = [NSString stringWithFormat:@"確定刪除 %@？",field.text];
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-
     [alertView setContentViewWithMsg:q contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     alertView.arrangeStyle = @"Horizontal";
-    
     [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"刪除", nil]];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
     [alertView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     
-    
     __weak CustomIOSAlertView *weakAlertView = alertView;
     __block typeof(self) wself = self;
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        
         [weakAlertView close];
         
         if (buttonIndex == 1) {
@@ -2928,8 +2631,6 @@ replacementString:(NSString *)string {
     }];
     [alertView setUseMotionEffects: YES];
     [alertView show];
-    
-    
 }
 
 #pragma mark - toast message
@@ -2943,6 +2644,7 @@ replacementString:(NSString *)string {
                 position: CSToastPositionBottom
                    style: style];
 }
+
 - (void)warnToastWithMessage:(NSString *)message {
     CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
     style.messageColor = [UIColor whiteColor];
@@ -2953,6 +2655,7 @@ replacementString:(NSString *)string {
                 position: CSToastPositionBottom
                    style: style];
 }
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
@@ -2978,7 +2681,6 @@ replacementString:(NSString *)string {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {

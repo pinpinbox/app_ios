@@ -100,11 +100,9 @@
 - (void)checkDeviceOrientation {
     NSLog(@"----------------------");
     NSLog(@"checkDeviceOrientation");
-    
     if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
         NSLog(@"UIDeviceOrientationIsPortrait");
     }
-    
     if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
         NSLog(@"UIDeviceOrientationIsLandscape");
     }
@@ -153,7 +151,6 @@
     [self setupTagBackgroundView];
     [self setupCollectionView];
     
-    
     // 2nd BgView
 //    self.secondBgView.backgroundColor = [UIColor greenColor];
     self.secondBgView.padding = UIEdgeInsetsMake(0, 16, 0, 16);
@@ -177,12 +174,9 @@
     } else if ([profilePic isEqualToString: @""]) {
         self.userImageView.image = [UIImage imageNamed: @"member_back_head.png"];
     } else {
-//        self.userImageView.imageURL = [NSURL URLWithString: profilePic];
         [self.userImageView sd_setImageWithURL: [NSURL URLWithString: profilePic]
                               placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
     }
-    
-//    self.userImageView.imageURL = [NSURL URLWithString: dic[@"profilepic"]];
     
     // Text Input Section
     self.inputTextView.layer.cornerRadius = kCornerRadius;
@@ -246,14 +240,12 @@
     self.tagBackgroundView.myHeight = 90;
     self.tagBackgroundView.backgroundColor = [UIColor thirdGrey];
     self.tagBackgroundView.layer.cornerRadius = kCornerRadius;
-    
     NSLog(@"collectionView setting");
 }
 
 - (void)setupCollectionView {
     NSLog(@"");
     NSLog(@"setupCollectionView");
-    
     // collectionView setting
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -264,12 +256,9 @@
     [collectionView registerNib: [UINib nibWithNibName: @"TagCollectionViewCell" bundle: [NSBundle mainBundle]] forCellWithReuseIdentifier: @"Cell"];
     collectionView.backgroundColor = [UIColor clearColor];
     collectionView.showsHorizontalScrollIndicator = NO;
-    
     collectionView.myTopMargin = collectionView.myBottomMargin = 0;
     collectionView.myLeftMargin = collectionView.myRightMargin = 0;
-    
     collectionView.contentInset = UIEdgeInsetsMake(0, 8, 0, 8);
-    
     [self.tagBackgroundView addSubview: collectionView];
 }
 
@@ -296,9 +285,7 @@
         NSLog(@"");
         NSLog(@"nextId is: %ld", (long)nextId);
         NSLog(@"");
-        
         isLoading = YES;
-        
         [self getMessageBoardList];
     }
 }
@@ -313,11 +300,11 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 10];
     NSLog(@"limit: %@", limit);
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+
         NSString *response = @"";
         
         response = [boxAPI getMessageBoardList: [UserInfo getUserID]
@@ -336,7 +323,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"");
                 NSLog(@"response from getMessageBoardList");
@@ -345,7 +331,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"NewMessageBoardViewController");
                     NSLog(@"getMessageBoardList");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getMessageBoardList"
                                             text: @""];
@@ -353,15 +338,13 @@
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    
-                    
                     [wself processListResult:dic];
                 }
             }
         });
     });
 }
+
 - (void)processListResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         NSLog(@"Before");
@@ -370,17 +353,17 @@
         if (nextId == 0)
             messageArray = [NSMutableArray new];
         
-        //[messageArray removeAllObjects];
+        if (![wTools objectExists: dic[@"data"]]) {
+            return;
+        }
         
         // s for counting how much data is loaded
         int s = 0;
         
         for (NSMutableDictionary *messageData in [dic objectForKey: @"data"]) {
             s++;
-            
             [messageArray addObject: messageData];
         }
-        
         NSLog(@"After");
         NSLog(@"nextId: %ld", (long)nextId);
         NSLog(@"s: %d", s);
@@ -398,7 +381,6 @@
         if (s == 0) {
             isLoading = YES;
         }
-        
         NSLog(@"check messageArray.count");
         
         if (messageArray.count == 0) {
@@ -409,7 +391,6 @@
             self.tableView.hidden = NO;
             [self.tableView reloadData];
         }
-        
         // Set userInteractionEnabled to YES for scrolling
         self.tableView.userInteractionEnabled = YES;
         self.inputTextView.userInteractionEnabled = YES;
@@ -419,40 +400,105 @@
     } else if ([dic[@"result"] intValue] == 0) {
         self.tableView.userInteractionEnabled = YES;
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        [self showCustomErrorAlert: msg];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
 }
+
+- (void)insertMessage: (NSString *)text {
+    NSLog(@"");
+    NSLog(@"insertMessage");
+    NSLog(@"text: %@", text);
+    // Set userInteractionEnabled to NO to avoid crash when
+    // user wants to scroll tableView, but the new data hasn't received yet
+    self.tableView.userInteractionEnabled = NO;
+    
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    NSLog(@"");
+    NSLog(@"nextId: %ld", (long)nextId);
+    NSLog(@"");
+    
+    nextId = 0;
+    
+    NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 10];
+    NSLog(@"limit: %@", limit);
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSString *response = [boxAPI insertMessageBoard: [UserInfo getUserID]
+                                                  token: [UserInfo getUserToken]
+                                                   type: wself.type
+                                                 typeId: wself.typeId
+                                                   text: text
+                                                  limit: limit];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                NSLog(@"");
+                NSLog(@"response from insertMessageBoard");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"NewMessageBoardViewController");
+                    NSLog(@"insertMessage");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"insertMessageBoard"
+                                            text: text];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    [wself processInsertMessage:dic];
+                }
+            }
+        });
+    });
+}
+
 - (void)processInsertMessage:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         tempStr = @"";
-        
         NSLog(@"Before");
         NSLog(@"nextId: %ld", (long)nextId);
-        
         // If response from server is TRUE
         // then reset array
         messageArray = [NSMutableArray new];
-        //                        rowHeightArray = [NSMutableArray new];
         
         // After resetting array, tableView has to reload data to reset indexPath.row to 0
         // Otherwise, the program will crash when adding data to indexPath.row bigger than 0
         [self.tableView reloadData];
         
-        //[messageArray removeAllObjects];
-        //[rowHeightArray removeAllObjects];
-        
         // s for counting how much data is loaded
         int s = 0;
         
-        for (NSMutableDictionary *messageData in [dic objectForKey: @"data"])
-        {
+        if (![wTools objectExists: dic[@"data"]]) {
+            return;
+        }
+        
+        for (NSMutableDictionary *messageData in [dic objectForKey: @"data"]) {
             s++;
             [messageArray addObject: messageData];
         }
-        
         NSLog(@"After");
         NSLog(@"nextId: %ld", (long)nextId);
         NSLog(@"s: %d", s);
@@ -469,7 +515,6 @@
         if (s == 0) {
             isLoading = YES;
         }
-        
         NSLog(@"check messageArray.count");
         
         if (messageArray.count == 0) {
@@ -480,7 +525,6 @@
             self.tableView.hidden = NO;
             [self.tableView reloadData];
         }
-        
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];
         style.backgroundColor = [UIColor firstMain];
@@ -496,97 +540,18 @@
         
         // Set userInteractionEnabled to YES for scrolling
         self.tableView.userInteractionEnabled = YES;
-        
         [self changeTextViewLayout: self.inputTextView];
-        
-        //nextId = 0;
-        //isLoading = NO;
-        //[self getMessageBoardList];
-        
     } else if ([dic[@"result"] intValue] == 0) {
         self.tableView.userInteractionEnabled = YES;
         NSLog(@"失敗： %@", dic[@"message"]);
-        NSString *msg = dic[@"message"];
-        
-        [self showCustomErrorAlert: msg];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
     }
-}
-- (void)insertMessage: (NSString *)text {
-    NSLog(@"");
-    NSLog(@"insertMessage");
-    NSLog(@"text: %@", text);
-    
-    // Set userInteractionEnabled to NO to avoid crash when
-    // user wants to scroll tableView, but the new data hasn't received yet
-    self.tableView.userInteractionEnabled = NO;
-    
-    @try {
-        [wTools ShowMBProgressHUD];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    
-    NSLog(@"");
-    NSLog(@"nextId: %ld", (long)nextId);
-    NSLog(@"");
-    
-    nextId = 0;
-    
-    NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 10];
-    NSLog(@"limit: %@", limit);
-    __block typeof(self) wself = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = @"";
-        
-        response = [boxAPI insertMessageBoard: [UserInfo getUserID]
-                                        token: [UserInfo getUserToken]
-                                         type: wself.type
-                                       typeId: wself.typeId
-                                         text: text
-                                        limit: limit];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [wTools HideMBProgressHUD];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
-            
-            if (response != nil) {
-                NSLog(@"");
-                NSLog(@"response from insertMessageBoard");
-                
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"NewMessageBoardViewController");
-                    NSLog(@"insertMessage");
-                    
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"insertMessageBoard"
-                                            text: text];
-                } else {
-                    NSLog(@"Get Real Response");
-                    
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    
-                    
-                    
-                    [wself processInsertMessage:dic];
-                }
-            }
-        });
-    });
 }
 
 #pragma mark - UITableViewDataSource Methods
@@ -604,12 +569,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForRowAtIndexPath");
-    
     NewMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"Cell" forIndexPath: indexPath];
-    
     NSDictionary *dic = [messageArray[indexPath.row] copy];
-    
-    
     NSString *imageUrl = dic[@"user"][@"picture"];
     NSString *nameStr = dic[@"user"][@"name"];
     NSString *contentStr = dic[@"pinpinboard"][@"text"];
@@ -623,7 +584,6 @@
         NSLog(@"imageUrl is nil");
         cell.pictureImageView.image = [UIImage imageNamed: @"member_back_head.png"];
     }
-    
     if (![nameStr isEqual: [NSNull null]]) {
         cell.nameLabel.text = nameStr;
     }
@@ -661,7 +621,6 @@
   willDisplayCell:(UITableViewCell *)cell
 forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"willDisplayCell");
-    
     if (indexPath.item == (messageArray.count - 1)) {
         [self getMessage];
     }
@@ -754,7 +713,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"");
     NSLog(@"numberOfItemsInSection");
-    
     NSLog(@"userData.count: %lu", (unsigned long)userData.count);
     
     if (userData.count == 0) {
@@ -762,16 +720,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     } else {
         self.tagBackgroundView.hidden = NO;
     }
-    
     return userData.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"");
-    NSLog(@"");
     NSLog(@"cellForItemAtIndexPath");
-    
     NSDictionary *userDic = userData[indexPath.row][@"user"];
     
     TagCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"Cell" forIndexPath: indexPath];
@@ -782,13 +736,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         } else {
             [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"picture"]]];
         }
-        cell.userNameLabel.text = userDic[@"name"];
-        NSLog(@"cell.userNameLabel.text: %@", cell.userNameLabel.text);
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        if ([wTools objectExists: userDic[@"name"]]) {
+            cell.userNameLabel.text = userDic[@"name"];
+            NSLog(@"cell.userNameLabel.text: %@", cell.userNameLabel.text);
+            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        }
     } else {
         NSLog(@"userData is nil");
     }
-    
     return cell;
 }
 
@@ -797,7 +752,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *userDic = userData[indexPath.row][@"user"];
     NSLog(@"userDic: %@", userDic);
-    
     // 110 is an estimate for avoid exceeding the characters limit not for typing
     if (self.inputTextView.text.length > 110) {
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -810,7 +764,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                                  style: style];
         return;
     }
-    
     [self checkTagAndCreateTag: userDic viewType: @"collectionView"];
 }
 
@@ -826,7 +779,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     } else if (tagArray.count != 0) {
         NSLog(@"tagArray.count != 0");
         NSLog(@"tagArray: %@", tagArray);
-        
         BOOL hasTaggedAlready = NO;
         
         for (NSDictionary *dic in tagArray) {
@@ -837,7 +789,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 break;
             }
         }
-        
         if (hasTaggedAlready) {
             NSLog(@"userId is the same");
             CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -868,7 +819,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.inputTextView.text.length == 0) {
         placeHolderNameLabel.alpha = 0;
     }
-    
     NSRange tempRange = NSMakeRange(0, 0);
     
     if ([viewType isEqualToString: @"collectionView"]) {
@@ -879,19 +829,16 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"self.inputTextView.selectedRange: %@", NSStringFromRange(self.inputTextView.selectedRange));
         tempRange = self.inputTextView.selectedRange;
     }
-    
     NSLog(@"tempRange: %@", NSStringFromRange(tempRange));
-    
-    self.inputTextView.text = [self.inputTextView.text stringByReplacingCharactersInRange: tempRange withString: sendingType];
-    cursorRange = self.inputTextView.selectedRange;
-    
+    if ([wTools objectExists: [self.inputTextView.text stringByReplacingCharactersInRange: tempRange withString: sendingType]]) {
+        self.inputTextView.text = [self.inputTextView.text stringByReplacingCharactersInRange: tempRange withString: sendingType];
+        cursorRange = self.inputTextView.selectedRange;
+    }
     NSLog(@"self.inputTextView.selectedRange: %@", NSStringFromRange(self.inputTextView.selectedRange));
-    
     NSLog(@"userId.length: %lu", (unsigned long)userId.length);
     NSLog(@"userName.length: %lu", (unsigned long)userName.length);
     //    NSUInteger tagLength = userId.length + userName.length + 3;
     //    NSLog(@"tagLength: %lu", (unsigned long)tagLength);
-    
     NSLog(@"sendingType.length: %lu", (unsigned long)sendingType.length);
     
     // Record every tag info
@@ -1006,17 +953,14 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         [tagArray addObject: tagDic];
     }
-    
     NSLog(@"tagArray: %@", tagArray);
     NSLog(@"self.inputTextView.text: %@", self.inputTextView.text);
-    
     return tagArray;
 }
 
 - (NSMutableAttributedString *)setTextColor:(NSMutableArray *)tagArray {
     // Set Text Color
     NSLog(@"Set Text Color");
-    
     // Setting data for NSMutableAttributedString
     NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
     [attDic setValue: @1 forKey: NSKernAttributeName]; // 字间距
@@ -1028,18 +972,14 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     for (int i = 0; i < tagArray.count; i++) {
         NSMutableDictionary *dic = [tagArray objectAtIndex: i];
-        
         NSLog(@"");
-        
         // Get End point like
         NSInteger distanceToNewLocation = [dic[@"location"] integerValue] - oldLocation;
-        
         NSLog(@"distanceToNewLocation: %ld", (long)distanceToNewLocation);
         
         if (distanceToNewLocation < 0) {
             distanceToNewLocation = 0;
         }
-        
         NSLog(@"oldLocation: %lu", (unsigned long)oldLocation);
         NSLog(@"distanceToNewLocation: %lu", (unsigned long)distanceToNewLocation);
         
@@ -1091,7 +1031,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"sendMsgBtnPress");
     NSLog(@"self.inputTextView.text: %@", self.inputTextView.text);
     NSLog(@"tempStr: %@", tempStr);
-    
     NSUInteger length;
     length = self.inputTextView.text.length;
     
@@ -1145,14 +1084,10 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"");
     NSLog(@"textViewDidBeginEditing");
     //    selectTextView = textView;
-    
     NSLog(@"self.inputTextView.selectedRange: %@", NSStringFromRange(self.inputTextView.selectedRange));
-    
     // Reset text attributes for after lighting some texts
     textView.typingAttributes = self.textAttributes;
-    
     NSLog(@"textView.text: %@", textView.text);
-    
     oldInputText = textView.text;
 }
 
@@ -1165,12 +1100,9 @@ shouldChangeTextInRange:(NSRange)range
 - (void)textViewDidChange:(UITextView *)textView {
     NSLog(@"");
     NSLog(@"textViewDidChange");
-    
     NSLog(@"self.inputTextView.selectedRange: %@", NSStringFromRange(self.inputTextView.selectedRange));
-    
     // Reset text attributes for after lighting some texts
     textView.typingAttributes = self.textAttributes;
-    
     [self changeTextViewLayout: textView];
     
     if ([textView.text isEqualToString: @""]) {
@@ -1180,13 +1112,11 @@ shouldChangeTextInRange:(NSRange)range
         NSLog(@"textView.text is not equal to empty");
         placeHolderNameLabel.alpha = 0;
     }
-    
     isInsertBetweenTags = NO;
     
     if (tagArray.count != 0) {
         [self checkTagData: textView];
     }
-    
     oldInputText = textView.text;
     NSLog(@"oldInputText = textView.text");
     NSLog(@"oldInputText: %@", oldInputText);
@@ -1317,7 +1247,6 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"checkTagSymbolInput");
     // Check "@" input
     NSLog(@"textView.text: %@", textView.text);
-    
     [self getStringAfterSymbol: textView];
 }
 
@@ -1381,35 +1310,8 @@ shouldChangeTextInRange:(NSRange)range
     return nil;
 }
 
+
 #pragma mark - Call Server for Searching
-- (void)processFilterUserContentResult:(NSDictionary *)dic{
-    if ([dic[@"result"] intValue] == 1) {
-        NSLog(@"dic result boolValue is 1");
-        
-        userData = [NSMutableArray arrayWithArray: dic[@"data"]];
-        
-        NSLog(@"[UserInfo getUserID]: %@", [UserInfo getUserID]);
-        NSLog(@"userData: %@", userData);
-        
-        NSLog(@"userData.count: %lu", (unsigned long)userData.count);
-        
-        NSMutableArray *tempArray = [[NSMutableArray alloc] init];
-        for (NSDictionary *d in userData) {
-            if ([d[@"user"][@"user_id"] intValue] == [[UserInfo getUserID] intValue]) {
-                [tempArray addObject: d];
-            }
-        }
-        NSLog(@"tempArray: %@", tempArray);
-        
-        [userData removeObjectsInArray: tempArray];
-        [collectionView reloadData];
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-    }
-}
 - (void)filterUserContentForSearchText: (NSString *)text {
     NSLog(@"");
     NSLog(@"filterUserContentForSearchText");
@@ -1446,8 +1348,6 @@ shouldChangeTextInRange:(NSRange)range
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
-                    
-                    
                     if (![dic[@"result"] boolValue]) {
                         return ;
                     }
@@ -1459,12 +1359,47 @@ shouldChangeTextInRange:(NSRange)range
                     if (![data[@"searchtype"] isEqualToString: @"user"]) {
                         return;
                     }
-                    
                     [wself processFilterUserContentResult:dic];
                 }
             }
         });
     });
+}
+
+#pragma mark - Call Server for Searching
+- (void)processFilterUserContentResult:(NSDictionary *)dic{
+    if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"dic result boolValue is 1");
+        userData = [NSMutableArray arrayWithArray: dic[@"data"]];
+        
+        NSLog(@"[wTools getUserID]: %@", [UserInfo getUserID]);
+        NSLog(@"userData: %@", userData);
+        NSLog(@"userData.count: %lu", (unsigned long)userData.count);
+        
+        NSMutableArray *tempArray = [[NSMutableArray alloc] init];
+        
+        if (![wTools objectExists: userData]) {
+            return;
+        }
+        
+        for (NSDictionary *d in userData) {
+            if ([d[@"user"][@"user_id"] intValue] == [[UserInfo getUserID] intValue]) {
+                [tempArray addObject: d];
+            }
+        }
+        NSLog(@"tempArray: %@", tempArray);
+        [userData removeObjectsInArray: tempArray];
+        [collectionView reloadData];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
 }
 
 /*
@@ -1481,89 +1416,12 @@ shouldChangeTextInRange:(NSRange)range
 - (void)showCustomErrorAlert: (NSString *)msg {
     NSLog(@"");
     NSLog(@"showCustomAlert msg: %@", msg);
-    
-   [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
@@ -1590,7 +1448,6 @@ shouldChangeTextInRange:(NSRange)range
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -1607,8 +1464,7 @@ shouldChangeTextInRange:(NSRange)range
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;

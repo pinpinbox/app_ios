@@ -241,6 +241,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.browseArray = [[managedObjectContext executeFetchRequest: fetchRequest error: nil] mutableCopy];
     //NSLog(@"self.browseArray: %@", self.browseArray);
     
+    if (![wTools objectExists: self.browseArray]) {
+        return;
+    }
+    
     for (int i = 0; i < self.browseArray.count; i++) {
         NSManagedObject *browseData = [self.browseArray objectAtIndex: i];
         
@@ -256,15 +260,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Browsing Data
 - (void)checkBrowsingDataReachMax {
     //NSLog(@"checkBrowseDataReachMax");
-    
     // Fetch the data from persistent data store
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName: @"Browse"];
-    
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey: @"browseDate" ascending: NO];
     [fetchRequest setSortDescriptors: @[sortDescriptor]];
     
     self.browseArray = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    
+    if (![wTools objectExists: self.browseArray]) {
+        return;
+    }
     
     if (self.browseArray.count >= 20) {
         NSLog(@"browseArray.count is more than 20, so need to be removed the last object");
@@ -325,6 +331,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.slotArray = [[managedObjectContext executeFetchRequest: fetchRequest error: nil] mutableCopy];
     NSLog(@"self.slotArray: %@", self.slotArray);
     
+    if (![wTools objectExists: self.slotArray]) {
+        return;
+    }
+    
     for (int i = 0; i < self.slotArray.count; i++) {
         NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
         NSLog(@"photoId: %d", (int)[[slotData valueForKey: @"photoId"] integerValue]);
@@ -340,6 +350,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     BOOL photoIdExist = NO;
     
+    if (![wTools objectExists: self.slotArray]) {
+        return;
+    }
+    
     for (int i = 0; i < self.slotArray.count; i++) {
         NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
         NSLog(@"photoId: %d", (int)[[slotData valueForKey: @"photoId"] integerValue]);
@@ -350,8 +364,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     if (!photoIdExist) {
         NSManagedObject *newData = [NSEntityDescription insertNewObjectForEntityForName: @"Slot" inManagedObjectContext: context];
-        [newData setValue: [NSNumber numberWithInteger: photoId] forKey: @"photoId"];
-        
+        [newData setValue: [NSNumber numberWithInteger: photoId] forKey: @"photoId"];        
         NSError *error = nil;
         
         // Save the object to persistent store
@@ -388,9 +401,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"ContentCheckingViewController viewDidAppear");
     [super viewDidAppear:animated];
     [wTools sendScreenTrackingWithScreenName: @"閱讀器"];
-    
-//    [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 0.0]];
-    //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleLightContent];
     [self addKeyboardNotification];
 }
 
@@ -400,7 +410,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
     [self removeKeyboardNotification];
     
     if ([self.delegate respondsToSelector: @selector(contentCheckingViewControllerViewWillDisappear:isLikeBtnPressed:)]) {
@@ -412,9 +421,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    //NSLog(@"viewDidLayoutSubviews");
+
+    //NSLog(@"isRotated: %d", isRotated);
     
-    NSLog(@"isRotated: %d", isRotated);
     if (self.isPresentingOrPushingVC) {
         if (isRotated) {
             self.isPresentingOrPushingVC = NO;
@@ -525,7 +534,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // Grident Effect for NavBarView
     self.navBarBgView.backgroundColor = [UIColor blackColor];
     self.navBarBgView.alpha = 0.5;
-    
     self.navBarView.backgroundColor = [UIColor clearColor];
     self.navBarHorzLayout1.gravity = MyMarginGravity_Horz_Left;
     self.navBarHorzLayout2.gravity = MyMarginGravity_Horz_Right;
@@ -689,6 +697,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         self.descriptionScrollView.hidden = !self.descriptionScrollView.hidden;                
     }];
     
+    if (![wTools objectExists: useFor]) {
+        return;
+    }
+    
     if ([useFor isEqualToString: @"video"]) {
         if ((self.videoPlayer.rate != 0) && (self.videoPlayer.error == nil)) {
             NSLog(@"self.videoPlayer.rate: %f", self.videoPlayer.rate);
@@ -758,7 +770,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         } else {
             self.pageOrderLabel.text = [NSString stringWithFormat: @"%ld / %lu", (long)page, (unsigned long)self.photoArray.count - 1];
         }
-        
     }
     [LabelAttributeStyle changeGapString: self.pageOrderLabel content: self.pageOrderLabel.text];
     [self.pageOrderLabel sizeToFit];
@@ -884,7 +895,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"retrieveAlbum");
     [wTools ShowMBProgressHUD];
     __block typeof(self.albumId) aid = self.albumId;
-    
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrievealbump: aid//self.albumId
@@ -996,13 +1006,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                 NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
                                 [self checkSlotAndExchangeInfo: wself->oldCurrentPage];
                             }];
-                            
                             [self textViewContentSetup: [self getCurrentPage]];
                             [self pageCalculation: [self getCurrentPage]];
                         });
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1323,7 +1336,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)addNotification {
     NSLog(@"");
     NSLog(@"addNotification");
-    
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(playerItemDidReachEnd:)
                                                  name: AVPlayerItemDidPlayToEndTimeNotification
@@ -1331,9 +1343,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
-    //    NSLog(@"");
-    //    NSLog(@"playerItemDidReachEnd");
-    
     seekToZeroBeforePlay = YES;
     
     double delayInSeconds = 1.0;
@@ -1520,8 +1529,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 /* The user has released the movie thumb control to stop scrubbing through the movie. */
-- (IBAction)endScrubbing:(id)sender
-{
+- (IBAction)endScrubbing:(id)sender {
     NSLog(@"");
     NSLog(@"endScrubbing");
     
@@ -1639,6 +1647,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // Reset
     [self.videoPlayer pause];
     
+    if (![wTools objectExists: useFor]) {
+        return;
+    }
     if ([useFor isEqualToString: @"video"]) {
         if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
             [self playUploadedVideo: cell page: page];
@@ -1652,7 +1663,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                      page:(NSInteger)page {
     NSURL *url = [NSURL URLWithString: self.photoArray[page][@"video_target"]];
     NSLog(@"url: %@", url);
-    
     NSLog(@"scheme: %@", [url scheme]);
     NSLog(@"host: %@", [url host]);
     NSLog(@"port: %@", [url port]);
@@ -1682,31 +1692,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self presentViewController:v animated:YES completion:^{
             [v setVideoPath:path];
         }];
-//        NSLog(@"url contains vimeo");
-//        [wTools ShowMBProgressHUD];
-//
-//        [[YTVimeoExtractor sharedExtractor] fetchVideoWithVimeoURL: self.photoArray[page][@"video_target"] withReferer: nil completionHandler:^(YTVimeoVideo * _Nullable video, NSError * _Nullable error) {
-//            [wTools HideMBProgressHUD];
-//
-//            if (video) {
-//                // Get URL
-//                self.isPresentingOrPushingVC = YES;
-//                NSURL *highQualityURL = [video lowestQualityStreamURL];
-//                AVPlayer *player = [AVPlayer playerWithURL: highQualityURL];
-//                AVPlayerViewController *playerViewController = [AVPlayerViewController new];
-//                playerViewController.player = player;
-//                [player play];
-//                [self presentViewController: playerViewController animated: YES completion: nil];
-//            }
-//        }];
     } else if (!([[url host] rangeOfString: @"facebook"].location == NSNotFound)) {
-//        NSLog(@"url host contains facebook");
-//        self.fbVideoUrl = url;
-//        cell.imageView.alpha = 1;
-//        cell.alphaBgV.hidden = NO;
-//        cell.videoBtn.hidden = NO;
-//        [self checkFBSDK: cell url: url];
-        
+
         NSString *path = self.photoArray[page][@"video_target"];
         ThirdPartyVideoPlayerViewController *v =  [[UIStoryboard storyboardWithName: @"3rdPartyVideoPlayerVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ThirdPartyVideoPlayer"];
         
@@ -1725,12 +1712,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self presentViewController:v animated:YES completion:^{
             [v setVideoPath:path];
         }];
-        
-//        NSLog(@"url host contains youtube");
-//        self.isPresentingOrPushingVC = YES;
-//        NSString *urlString = self.photoArray[page][@"video_target"];
-//        [self openSafari: [NSURL URLWithString: urlString]];
-        
     }
     videoIsPlaying = YES;
     [self.avPlayer pause];
@@ -1757,8 +1738,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     NSLog(@"fbVideoLink: %@", fbVideoLink);
     NSLog(@"Before getting token");
-    
-    //    [wTools HideMBProgressHUD];
     
     if ([FBSDKAccessToken currentAccessToken]) {
         NSLog(@"");
@@ -1857,9 +1836,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }];
     }
 }
+
 - (void)setFBVidURL:(NSURL *)url {
     self.fbVideoUrl = url;//[url mutableCopy];
 }
+
 #pragma mark - FaceBook Handler Methods
 - (void)loginAndRequestPermissionsWithSuccessHandler:(FBBlock) successHandler
                            declinedOrCanceledHandler:(FBBlock) declinedOrCanceledHandler
@@ -1912,6 +1893,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     useFor = self.photoArray[page][@"usefor"];
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+    
+    if (![wTools objectExists: useFor]) {
+        return;
+    }
+    
     if ([useFor isEqualToString: @"video"]) {
         if ([refer isEqualToString: @"embed"]) {
             [self playEmbeddedVideo: cell page: page];
@@ -1937,8 +1923,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)openSafari: (NSURL *)url {
     NSLog(@"openSafari");
     NSLog(@"url: %@", url);
+
+    if (![wTools objectExists: url]) {
+        return;
+    }
+
     self.isPresentingOrPushingVC = YES;
+
     [self updatePageBeforePresentingOrPushing];
+
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
     safariVC.preferredBarTintColor = [UIColor whiteColor];
     [self presentViewController: safariVC animated: YES completion: nil];
@@ -1949,6 +1942,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                      page:(NSInteger)page {
     NSLog(@"playUploadedVideo");
     NSURL *videoUrl = [NSURL URLWithString: self.photoArray[page][@"video_target"]];
+    
+    if (![wTools objectExists: videoUrl]) {
+        return;
+    }
+    
     [self setupVideoPlayer: cell
                   videoUrl: videoUrl
                   platform: @"general"];
@@ -1958,6 +1956,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)listenAVPlayerError:(NSNotification *)n {
     NSLog(@"AVPlayerItemNewErrorLogEntryNotification \n %@ \n", n.userInfo);
 }
+
 - (void)setupVideoPlayer:(ImageCollectionViewCell *)cell
                 videoUrl:(NSURL *)videoUrl
                 platform:(NSString *)platform {
@@ -2037,7 +2036,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ContentCheckingViewController");
                     NSLog(@"buyAlbum");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"buyalbum"
                                         pointStr: @""
@@ -2062,7 +2060,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self retrieveAlbum];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -2087,7 +2089,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ContentCheckingViewController");
                     NSLog(@"getPoint pointStr");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"getPoint"
                                          pointStr: pointStr
@@ -2098,6 +2099,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         NSInteger point = [dic[@"data"] integerValue];
                         NSLog(@"point: %ld", (long)point);
                         NSLog(@"albumPoint: %ld", (long)wself->albumPoint);
@@ -2111,7 +2115,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [wself showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -2123,7 +2131,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)newBuyAlbum: (NSString *)pointStr {
     [wTools ShowMBProgressHUD];
-    
     NSMutableDictionary *rewardDic;
     NSData *jsonData;
     NSString *jsonStr;
@@ -2138,7 +2145,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     } else {
         jsonStr = nil;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI newBuyAlbum: [UserInfo getUserID]
                                            token: [UserInfo getUserToken]
@@ -2146,13 +2152,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                         platform: @"apple"
                                            point: pointStr
                                           reward: jsonStr];
-        /*
-         NSString *response = [boxAPI newBuyAlbum: [UserInfo getUserID]
-         token: [UserInfo getUserToken]
-         albumId: self.albumId
-         platform: @"apple"
-         point: pointStr];
-         */
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -2162,7 +2161,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ContentCheckingViewController");
                     NSLog(@"newBuyAlbum pointStr");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"newBuyAlbum"
                                         pointStr: pointStr
@@ -2192,10 +2190,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self retrieveAlbum];
                     } else if ([resultStr isEqualToString: @"USER_ERROR"]) {
                         NSLog(@"resultStr isEqualToString USER_ERROR");
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else if ([resultStr isEqualToString: @"USER_OWNS_THE_ALBUM"]) {
                         NSLog(@"resultStr isEqualToString USER_OWNS_THE_ALBUM");
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"resultStr isEqualToString TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -2228,6 +2234,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSString *location = self.bookdata[@"album"][@"location"];
     //NSLog(@"location: %@", location);
     
+    if (![wTools objectExists: location]) {
+        return;
+    }
+    
     if (![location isEqualToString:@""]) {
         [wTools ShowMBProgressHUD];
         __block typeof(self) wself = self;
@@ -2245,10 +2255,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
     }
 }
+
 - (void)setLocdata:(NSDictionary *)dic {
     locdata = [dic mutableCopy];
     NSLog(@"locdata: %@", locdata);
 }
+
 #pragma mark - Check Point Task
 - (void)checkTaskComplete {
     NSLog(@"checkTask");
@@ -2276,7 +2288,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ContentCheckingViewController");
                     NSLog(@"checkTaskComplete");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"checkTaskCompleted"
                                         pointStr: @""
@@ -2287,10 +2298,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if ([data[@"result"] intValue] == 1) {
-                        
                         // Task is completed, so calling the original sharing function
                         //[wTools Activitymessage:[NSString stringWithFormat: sharingLink , _album_id, autoPlayStr]];
-                        
                         NSString *message;
                         
                         if ([self.eventJoin isEqual: [NSNull null]]) {
@@ -2302,7 +2311,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self presentViewController: activityVC animated: YES completion: nil];
                         
                     } else if ([data[@"result"] intValue] == 2) {
-                        
                         // Task is not completed, so pop ups alert view
                         //[self showSharingAlertView];
                         //[self showShareActionSheet];
@@ -2344,13 +2352,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [wTools HideMBProgressHUD];
             
             if (response != nil) {
-                //NSLog(@"response: %@", response);
-                
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ContentCheckingViewController");
                     NSLog(@"insertAlbumToLikes");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"insertAlbum2Likes"
                                         pointStr: @""
@@ -2366,8 +2371,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         NSLog(@"self.isLikes: %d", self.isLikes);
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        [self showCustomErrorAlert: msg];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -2410,8 +2418,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         self.isLikes = !self.isLikes;
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@", dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        [self showCustomErrorAlert: msg];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -2426,7 +2437,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"");
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -2443,7 +2453,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ContentCheckingViewController");
                     NSLog(@"getUrPoints");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"geturpoints"
                                         pointStr: @""
@@ -2453,12 +2462,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         NSInteger point = [dic[@"data"] integerValue];
-                        //NSLog(@"point: %ld", (long)point);
-                        
                         [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
                         [userPrefs synchronize];
                         
@@ -2466,7 +2475,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self checkAlbumCollectTask];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -2478,7 +2491,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)checkAlbumCollectTask {
     NSLog(@"checkAlbumCollectTask");
-    
     if (albumPoint == 0) {
         task_for = @"collect_free_album";
     } else if (albumPoint > 0) {
@@ -2611,27 +2623,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)saveCollectInfoToDevice: (BOOL)isCollect {
     if ([task_for isEqualToString: @"collect_free_album"]) {
-        
         // Save data for first collect album
         BOOL collect_free_album = isCollect;
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject: [NSNumber numberWithBool: collect_free_album]
                      forKey: @"collect_free_album"];
         [defaults synchronize];
-        
-        //[self getPointStore];
-        
     } else if ([task_for isEqualToString: @"collect_pay_album"]) {
-        
         // Save data for first collect paid album
         BOOL collect_pay_album = isCollect;
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject: [NSNumber numberWithBool: collect_pay_album]
                      forKey: @"collect_pay_album"];
         [defaults synchronize];
-        
-        //[self getPointStore];
     }
 }
 
@@ -2711,6 +2715,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     cell.giftViewBgV.hidden = YES;
     cell.checkCollectionLayout.hidden = YES;
     
+    if (![wTools objectExists: useFor]) {
+        return;
+    }
+    
     if ([useFor isEqualToString: @"slot"]) {
         NSLog(@"");
         NSLog(@"useFor is equal to slot");
@@ -2723,6 +2731,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             
             [self checkSlotDataInDatabaseOrNot];
             BOOL slotted = NO;
+            
+            if (![wTools objectExists: self.slotArray]) {
+                return;
+            }
             
             for (int i = 0; i < self.slotArray.count; i++) {
                 NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
@@ -2826,7 +2838,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     } else {
         NSLog(@"pPoint != 0");
         NSLog(@"self.photoArray.count: %lu", (unsigned long)self.photoArray.count);
-        
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
         NSLog(@"self.imageScrollCV: %@", self.imageScrollCV);
         [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
@@ -2897,9 +2908,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ContentCheckingViewController");
                     NSLog(@"slotPhotoUseFor");
-                    
-                    //                    [self createTimeOutView: slotBtn];
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"slotPhotoUseFor"
                                         pointStr: @""
@@ -2908,15 +2916,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 } else {
                     NSLog(@"Get Real Response");
                     NSLog(@"Get response from slotPhotoUseFor");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     NSLog(@"dic message: %@", dic[@"message"]);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
                         
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         self.slotDicData = dic[@"data"];
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
@@ -2925,12 +2934,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: dic[@"message"]];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -2962,6 +2970,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
                         
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         self.slotDicData = dic[@"data"];
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
@@ -2970,6 +2981,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
                         
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
+                        
                         self.slotDicData = dic[@"data"];
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
@@ -2977,6 +2992,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_SLOTTED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
+                        
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         
                         self.slotDicData = dic[@"data"];
                         [self createGiftView: bgV
@@ -3016,7 +3035,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
           indexPathRow:(NSInteger)indexPathRow {
     NSLog(@"");
     NSLog(@"getPhotoUseFor bgV indexPathRow");
-    
     NSLog(@"bgV: %@", bgV);
     
     NSInteger photoId = [self.photoArray[indexPathRow][@"photo_id"] integerValue];
@@ -3049,12 +3067,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 } else {
                     NSLog(@"Get Real Response");
                     NSLog(@"Get response from getPhotoUseFor");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     NSLog(@"dic message: %@", dic[@"message"]);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         self.slotDicData = dic[@"data"];
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
@@ -3063,12 +3082,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: dic[@"message"]];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -3091,6 +3109,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         self.slotDicData = dic[@"data"];
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
@@ -3098,12 +3119,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
                         [self checkSlotDataInDatabaseOrNot];
-                        
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         self.slotDicData = dic[@"data"];
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_GAINED"];
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_SLOTTED"]) {
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
                         self.slotDicData = dic[@"data"];
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
@@ -3131,7 +3157,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"");
     NSLog(@"createGiftViewContent");
     NSLog(@"giftViewBgV: %@", giftViewBgV);
-    
     NSLog(@"self getCurrentPage: %ld", (long)[self getCurrentPage]);
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
@@ -3179,8 +3204,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         nameLabel.myBottomMargin = 8;
         nameLabel.numberOfLines = 0;
         nameLabel.font = [UIFont boldSystemFontOfSize: 18.0];
-        nameLabel.text = dicData[@"photousefor"][@"name"];
-        [LabelAttributeStyle changeGapString: nameLabel content: nameLabel.text];
+        if ([wTools objectExists: dicData[@"photousefor"][@"name"]]) {
+            nameLabel.text = dicData[@"photousefor"][@"name"];
+            [LabelAttributeStyle changeGapString: nameLabel content: nameLabel.text];
+        }
         nameLabel.textColor = [UIColor firstGrey];
         [nameLabel sizeToFit];
         [contentLayout addSubview: nameLabel];
@@ -3211,8 +3238,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             descriptionLabel.myLeftMargin = descriptionLabel.myRightMargin = 16;
             descriptionLabel.numberOfLines = 0;
             descriptionLabel.font = [UIFont systemFontOfSize: 14.0];
-            descriptionLabel.text = dicData[@"photousefor"][@"description"];
-            [LabelAttributeStyle changeGapString: descriptionLabel content: descriptionLabel.text];
+            if ([wTools objectExists: dicData[@"photousefor"][@"description"]]) {
+                descriptionLabel.text = dicData[@"photousefor"][@"description"];
+                [LabelAttributeStyle changeGapString: descriptionLabel content: descriptionLabel.text];
+            }
             descriptionLabel.textColor = [UIColor firstGrey];
             [descriptionLabel sizeToFit];
             [contentLayout addSubview: descriptionLabel];
@@ -3226,8 +3255,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             descriptionLabel.myLeftMargin = descriptionLabel.myRightMargin = 16;
             descriptionLabel.numberOfLines = 0;
             descriptionLabel.font = [UIFont systemFontOfSize: 14.0];
-            descriptionLabel.text = dicData[@"photousefor"][@"description"];
-            [LabelAttributeStyle changeGapString: descriptionLabel content: descriptionLabel.text];
+            if ([wTools objectExists: dicData[@"photousefor"][@"description"]]) {
+                descriptionLabel.text = dicData[@"photousefor"][@"description"];
+                [LabelAttributeStyle changeGapString: descriptionLabel content: descriptionLabel.text];
+            }
             descriptionLabel.textColor = [UIColor firstGrey];
             [descriptionLabel sizeToFit];
             [contentLayout addSubview: descriptionLabel];
@@ -3335,6 +3366,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: indexPathRow inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     cell.statusView.hidden = NO;
+    
+    if (![wTools objectExists: msg]) {
+        return;
+    }
+    
     cell.statusLabel.text = msg;
     [LabelAttributeStyle changeGapString: cell.statusLabel content: msg];
 }
@@ -3366,9 +3402,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"exchangeBtnTouchUpInside");
     if (isGiftImageLoaded) {
         [self changeOrientationToPortrait];
-        
         btn.backgroundColor = [UIColor firstMain];
-        
         NSInteger photoId = [self.photoArray[[self getCurrentPage]][@"photo_id"] integerValue];
         NSLog(@"photoId: %ld", (long)photoId);
         
@@ -3424,7 +3458,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 }
             }
         }
-        
         if ([view1.accessibilityIdentifier isEqualToString: @"exchangeBtn"]) {
             NSLog(@"view1.accessibilityIdentifier isEqualToString exchangeBtn");
             if ([view1 isKindOfClass: [UIButton class]]) {
@@ -3448,9 +3481,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)insertBookmark:(UIButton *)btn {
     NSLog(@"insertBookmark");
-    
-    //    [wTools ShowMBProgressHUD];
-    
     NSString *photoIdStr = [self.photoArray[[self getCurrentPage]][@"photo_id"] stringValue];
     NSLog(@"photoIdStr: %@", photoIdStr);
     
@@ -3469,7 +3499,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ExchangeInfoEditViewController");
                     NSLog(@"insertBookmark");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"insertBookmark"
                                         pointStr: @""
@@ -3482,8 +3511,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"SYSTEM_OK");
-                        
-                        
                         [self.slotDicData[@"bookmark"] setObject: [NSNumber numberWithBool: YES] forKey: @"is_existing"];
                         NSLog(@"self.slotDicData: %@", self.slotDicData);
                         
@@ -3494,12 +3521,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: dic[@"message"]];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -3580,6 +3606,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"refer: %@", refer);
         NSLog(@"useFor: %@", useFor);
         
+
         UIView *w = [cell.videoView viewWithTag:20002];
         if (w)
             [w removeFromSuperview];
@@ -3597,10 +3624,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
                 for (UIView *view in cell.videoView.subviews) {
                     NSLog(@"view: %@", view);
-                    //                    view.backgroundColor = [UIColor redColor];
                     view.hidden = NO;
                 }
-                //                self.videoPlayerViewController.view.hidden = NO;
             } else if ([refer isEqualToString: @"embed"]) {
                 NSLog(@"refer is equal to embed");
                 cell.alphaBgV.hidden = NO;
@@ -3608,7 +3633,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 cell.videoBtn.hidden = NO;
                 cell.videoView.hidden = YES;
                 for (UIView *view in cell.videoView.subviews) {
-                    
+
                     view.hidden = YES;
                 }
             }
@@ -3782,6 +3807,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"audioTargetStr: %@", audioTargetStr);
         NSLog(@"Before checking audioTargetStr isEqualToString empty");
         
+        if (![wTools objectExists: useFor]) {
+            useFor = @"";
+        }
+        
         if ([useFor isEqualToString: @"video"]) {
             cell.infoButton.hidden = NO;
             [cell.infoButton setImage: [UIImage imageNamed: @"ic200_video_white_1"] forState: UIControlStateNormal];
@@ -3922,7 +3951,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"self.imageScrollCV.frame.size.width: %f", self.imageScrollCV.frame.size.width);
     NSInteger page = [self getCurrentPage];
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
-    
     [self updateOldCurrentPage: page];
     //    self.videoPlayerViewController.view.hidden = NO;
     
@@ -3981,10 +4009,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     self.activeTextField = nil;
     [self.activeTextView resignFirstResponder];
     self.activeTextView = nil;
-    //    [nameTextView resignFirstResponder];
-    //    [phoneTextView resignFirstResponder];
-    //    [addressTextView resignFirstResponder];
-    //    [sponsorTextView resignFirstResponder];
 }
 
 - (void)textViewContentSetup:(NSInteger)page {
@@ -3993,7 +4017,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSString *description = self.photoArray[page][@"description"];
     
     NSAttributedString *attString = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleBody], NSKernAttributeName: @1, NSForegroundColorAttributeName: [UIColor whiteColor]}];
-    self.descriptionLabel.text = attString;
+    
+    if ([wTools objectExists: attString]) {
+        self.descriptionLabel.text = attString;
+    }
     
     CGFloat btnHeight = 0;
     NSInteger urlCount = 0;
@@ -4080,7 +4107,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
         
         if ([description isEqualToString: @""]) {
-            self.descriptionScrollViewHeightConstraint.constant = btnHeight;
+            self.descriptionScrollViewHeightConstraint.constant = btnHeight+15;
         }
     } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
         self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;
@@ -4121,9 +4148,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url {
-    [self openSafari: url];
+    if ([wTools objectExists: url]) {
+        [self openSafari: url];
+    }
 }
-
 #pragma mark - IBAction Methods
 - (IBAction)backBtnPressed:(id)sender {
     NSLog(@"backBtnPressed");
@@ -4158,7 +4186,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)showMapViewActionSheet {
     NSLog(@"");
     NSLog(@"showMapViewActionSheet");
-    
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
     
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
@@ -4229,10 +4256,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         [self dismissKeyboard];
     }
     [self showNewMessageBoardVC];
-    //    [self showCustomMessageActionSheet];
 }
 
 - (void)showNewMessageBoardVC {
+    if (![wTools objectExists: self.albumId]) {
+        return;
+    }
     NewMessageBoardViewController *nMBVC = [[UIStoryboard storyboardWithName: @"NewMessageBoardVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewMessageBoardViewController"];
     nMBVC.type = @"album";
     nMBVC.typeId = self.albumId;
@@ -4244,7 +4273,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     self.messageBtn.backgroundColor = [UIColor clearColor];
     
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
@@ -4272,21 +4300,17 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (IBAction)moreBtnPressed:(id)sender {
     NSLog(@"moreBtnPressed");
-    
     if (kbShowUp) {
         [self dismissKeyboard];
     }
-    
     [self showCustomMoreActionSheet];
 }
 
 - (void)showCustomMoreActionSheet {
     NSLog(@"");
     NSLog(@"showCustomMoreActionSheet");
-    
     // Blur View Setting
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
@@ -4329,10 +4353,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             collectStr = @"已收藏";
             btnStr = @"";
         }
-        
         [self.customMoreActionSheet addSelectItem: @"ic200_collect_dark.png" title: collectStr btnStr: btnStr tagInt: 1 identifierStr: @"collectItem" isCollected: self.isOwned];
     }
-    
     [self.customMoreActionSheet addSelectItem: @"ic200_share_dark.png" title: @"分享" btnStr: @"" tagInt: 2 identifierStr: @"shareItem"];
     [self.customMoreActionSheet addSelectItem: @"ic200_info_dark.png" title: @"作品資訊" btnStr: @"" tagInt: 3 identifierStr: @"albumInfoItem"];
     
@@ -4356,7 +4378,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         if ([identifierStr isEqualToString: @"collectItem"]) {
             NSLog(@"collectItem is pressed");
-            
             if (weakAlbumPoint == 0) {
                 [weakSelf buyAlbum];
             } else {
@@ -4366,7 +4387,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             
         } else if ([identifierStr isEqualToString: @"shareItem"]) {
             NSLog(@"shareItem is pressed");
-            
             [weakSelf checkTaskComplete];
             //[weakSelf showCustomShareActionSheet];
         } else if ([identifierStr isEqualToString: @"albumInfoItem"]) {
@@ -4408,11 +4428,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)showCustomShareActionSheet {
     // Blur View Setting
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
-    
     self.effectView.frame = self.view.frame;
     self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -4440,7 +4458,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         if ([identifierStr isEqualToString: @"fbSharing"]) {
             NSLog(@"fbSharing is pressed");
-            
             FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
             
             if ([weakSelf.eventJoin isEqual: [NSNull null]]) {
@@ -4467,9 +4484,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - FBSDKSharing Delegate Methods
-- (void)sharer:(id<FBSDKSharing>)sharer didCompleteWithResults:(NSDictionary *)results {
+- (void)sharer:(id<FBSDKSharing>)sharer
+didCompleteWithResults:(NSDictionary *)results {
     NSLog(@"Sharing Complete");
-    
     // Check whether getting Sharing Point or not
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     BOOL share_to_fb = [[defaults objectForKey: @"share_to_fb"] boolValue];
@@ -4485,7 +4502,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
 }
 
-- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error {
+- (void)sharer:(id<FBSDKSharing>)sharer
+didFailWithError:(NSError *)error {
     NSLog(@"Sharing didFailWithError");
 }
 
@@ -4521,11 +4539,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
        shouldReceiveTouch:(UITouch *)touch {
     NSLog(@"shouldReceiveTouch");
     NSLog(@"self.view.tag: %ld", (long)self.view.tag);
-    
-    //return touch.view == self.view;
-    
     NSLog(@"touch.view: %@", touch.view);
-    
     return YES;
 }
 
@@ -4542,7 +4556,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
                          option:(NSString *)option
                        pointStr:(NSString *)pointStr {
     NSLog(@"showBuyAlbumCustomAlert msg: %@ option: %@", msg, option);
-    
     CustomIOSAlertView *alertAlbumView = [[CustomIOSAlertView alloc] init];
     //[alertAlbumView setContainerView: [self createBuyAlbumContainerView: msg]];
     [alertAlbumView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -4568,7 +4581,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     __weak CustomIOSAlertView *weakAlertAlbumView = alertAlbumView;
     [alertAlbumView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertAlbumView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertAlbumView tag]);
-        
         [weakAlertAlbumView close];
         
         if (buttonIndex == 0) {
@@ -4592,8 +4604,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [alertAlbumView show];
 }
 
-- (UIView *)createBuyAlbumContainerView: (NSString *)msg
-{
+- (UIView *)createBuyAlbumContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -4754,8 +4765,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
                   protocolName: (NSString *)protocolName
                       pointStr: (NSString *)pointStr
                            btn: (UIButton *)btn
-                           bgV: (MyLinearLayout *)bgV
-{
+                           bgV: (MyLinearLayout *)bgV {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -4776,7 +4786,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -5023,6 +5032,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 #pragma mark - Custom AlertView for Getting Point
 - (void)showAlertViewForGettingPoint {
     NSLog(@"showAlertViewForGettingPoint");
+
     // Custom AlertView shows up when getting the point
     alertView = [[OldCustomAlertView alloc] init];
     [alertView setContainerView: [self createPointView]];
@@ -5038,9 +5048,11 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
     //missionTopicLabel.text = @"收藏相本得點";
-    missionTopicLabel.text = missionTopicStr;
     
-    NSLog(@"Topic Label Text: %@", missionTopicStr);
+    if ([wTools objectExists: missionTopicStr]) {
+        missionTopicLabel.text = missionTopicStr;
+        NSLog(@"Topic Label Text: %@", missionTopicStr);
+    }
     [pointView addSubview: missionTopicLabel];
     
     if ([restriction isEqualToString: @"personal"]) {
@@ -5048,7 +5060,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         restrictionLabel.textColor = [UIColor firstGrey];
         restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
         NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
-        
         [pointView addSubview: restrictionLabel];
     }
     
@@ -5076,7 +5087,10 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
      }
      */
     
-    messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    if ([wTools objectExists: rewardValue]) {
+        messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    }
+    
     [pointView addSubview: messageLabel];
     
     if ([eventUrl isEqual: [NSNull null]] || eventUrl == nil) {
@@ -5091,19 +5105,20 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
                              forState: UIControlStateNormal];
         [pointView addSubview: activityButton];
     }
-    
     return pointView;
 }
 
 - (void)showTheActivityPage {
     NSLog(@"showTheActivityPage");
-    
     //NSString *activityLink = @"http://www.apple.com";
     NSLog(@"eventUrl: %@", eventUrl);
+    
+    if (![wTools objectExists: eventUrl]) {
+        return;
+    }
+    
     NSString *activityLink = eventUrl;
-    
     NSURL *url = [NSURL URLWithString: activityLink];
-    
     // Close for present safari view controller, otherwise alertView will hide the background
     [alertView close];
     
@@ -5258,37 +5273,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     }
 }
 
-#pragma mark - YoutubePlayerViewControllerDelegate Method
-//- (void)youtubePlayerViewControllerDidDisappeared:(YoutubePlayerViewController *)controller currentPage:(NSInteger)currentPage {
-//    NSLog(@"youtubePlayerViewControllerDidDisappeared");
-//    NSLog(@"currentPage: %ld", (long)currentPage);
-//
-//    //    CGSize currentSize = self.imageScrollCV.bounds.size;
-//    //    float offset = self.currentIndex * currentSize.width;
-//    //    [self.imageScrollCV setContentOffset: CGPointMake(offset, 0)];
-//
-//    //    NSIndexPath *indexPath = [NSIndexPath indexPathForItem: currentPage inSection: 0];
-//    //    NSLog(@"self.imageScrollCV: %@", self.imageScrollCV);
-//    //    [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-//    //
-//    //    NSLog(@"self.thumbnailImageScrollCV: %@", self.thumbnailImageScrollCV);
-//    //    [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
-//}
-//
-//- (void)albumInfoViewControllerDisappear:(AlbumInfoViewController *)controller {
-//    NSLog(@"");
-//    NSLog(@"albumInfoViewControllerDisappear");
-//}
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 #pragma mark - UITextFieldDelegate Methods
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -5306,7 +5290,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
-    
     if (textField.tag == 50000) {
         NSMutableString *test = [NSMutableString stringWithString:textField.text];
         [test replaceCharactersInRange:range withString:string];
@@ -5325,7 +5308,6 @@ replacementString:(NSString *)string {
             return NO;
         }
     }
-    
     if ((textField.text.length + (string.length - range.length)) > 5) {
         return false;
     }

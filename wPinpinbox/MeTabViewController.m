@@ -133,7 +133,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"MeTabViewController viewDidLoad");
-    
     // Do any additional setup after loading the view.            
     [self initialValueSetup];
     //[self loadData];        
@@ -143,9 +142,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"");
     NSLog(@"MeTabViewController viewWillAppear");
     [super viewWillAppear:animated];
-    
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
-    
     [self.navigationController.navigationBar setShadowImage: [UIImage imageNamed:@"navigationbarshadow"]];
     
     if ([[[UIDevice currentDevice] systemVersion] compare:@"11.0" options:NSNumericSearch] == NSOrderedAscending){
@@ -291,7 +288,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         isReloading = YES;
         nextId = 0;
         isLoading = NO;
-        
         [self loadData];
     }
 }
@@ -299,8 +295,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 #pragma mark - Web Service
 - (void)loadData {
     NSLog(@"loadData");
-    //NSLog(@"userId: %@", [UserInfo getUserID]);
-    
     // If isLoading is NO then run the following code
     if (!isLoading) {
         if (nextId == 0) {
@@ -310,63 +304,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self getCreatorInfo];
     }
 }
-- (void)processCreatorInfo:(NSDictionary *)dic {
-    if ([dic[@"result"] intValue] == 1) {
-        self.identity = dic[@"data"][@"split"][@"identity"];
-        self.sum = [dic[@"data"][@"split"][@"sum"] integerValue];
-        self.sumOfSettlement = [dic[@"data"][@"split"][@"sumofsettlement"] integerValue];
-        self.sumOfUnsettlement = [dic[@"data"][@"split"][@"sumofunsettlement"] integerValue];
-        self.userDic = dic[@"data"][@"user"];
-        
-        if (nextId == 0) {
-            pictures = [NSMutableArray new];
-        }
-        
-        int s = 0;
-        
-        for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
-            s++;
-            [pictures addObject: picture];
-        }
-        NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
-        
-        nextId = nextId + s;
-        
-        NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
-        followDic = dic[@"data"][@"follow"];
-        
-        sponsorDic = dic[@"data"][@"userstatistics"];
-        
-        //                        [self.refreshControl endRefreshing];
-        [self.collectionView reloadData];
-        
-        NSLog(@"nextId: %ld", (long)nextId);
-        NSLog(@"s: %d", s);
-        
-        if (nextId >= 0)
-            isLoading = NO;
-        
-        if (s == 0) {
-            isLoading = YES;
-        }
-        NSLog(@"After getting data");
-        NSLog(@"\n\nisLoading: %d", isLoading);
-        [self layoutSetup];
-        [self getProfile];
-        
-        isReloading = NO;
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-        isReloading = NO;
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-        isReloading = NO;
-    }
-}
+
 - (void)getCreatorInfo {
     NSLog(@"getCreatorInfo");
-    
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     } @catch (NSException *exception) {
@@ -376,7 +316,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat:@"%ld,%d", (long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
@@ -404,7 +343,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Time Out Message Return");
                     NSLog(@"MeTabViewController");
                     NSLog(@"getCreatorInfo");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcreative"
                                          albumId: @""];
@@ -414,10 +352,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSLog(@"response from getCreative");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
                     [wself processCreatorInfo:dic];
-                    
                 }
             } else {
 //                [self.refreshControl endRefreshing];
@@ -428,31 +363,62 @@ static NSString *autoPlayStr = @"&autoplay=1";
         });
     });
 }
-- (void)processProfile:(NSDictionary *)dic {
+
+- (void)processCreatorInfo:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
-        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
+        self.identity = dic[@"data"][@"split"][@"identity"];
+        self.sum = [dic[@"data"][@"split"][@"sum"] integerValue];
+        self.sumOfSettlement = [dic[@"data"][@"split"][@"sumofsettlement"] integerValue];
+        self.sumOfUnsettlement = [dic[@"data"][@"split"][@"sumofunsettlement"] integerValue];
+        self.userDic = dic[@"data"][@"user"];
         
-        for (NSString *key in [dataIc allKeys]) {
-            id objective = [dataIc objectForKey: key];
-            
-            if ([objective isKindOfClass: [NSNull class]]) {
-                [dataIc setObject: @"" forKey: key];
-            }
+        if (nextId == 0) {
+            pictures = [NSMutableArray new];
         }
-        [userPrefs setValue: dataIc forKey: @"profile"];
-        [userPrefs synchronize];
+        int s = 0;
         
-        myData = [dataIc mutableCopy];
+        if (![wTools objectExists: dic[@"data"][@"album"]]) {
+            return;
+        }
+        
+        for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
+            s++;
+            [pictures addObject: picture];
+        }
+        NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
+        nextId = nextId + s;
+        NSLog(@"dic data follow: %@", dic[@"data"][@"follow"]);
+        followDic = dic[@"data"][@"follow"];
+        sponsorDic = dic[@"data"][@"userstatistics"];
+        [self.collectionView reloadData];
+        
+        NSLog(@"nextId: %ld", (long)nextId);
+        NSLog(@"s: %d", s);
+        
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        if (s == 0) {
+            isLoading = YES;
+        }
+        NSLog(@"After getting data");
+        NSLog(@"\n\nisLoading: %d", isLoading);
+        [self layoutSetup];
+        [self getProfile];
+        isReloading = NO;
     } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
-        [self.refreshControl endRefreshing];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
+        isReloading = NO;
     } else {
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-        [self.refreshControl endRefreshing];
+        isReloading = NO;
     }
 }
+
 - (void)getProfile {
     NSLog(@"getProfile");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -479,13 +445,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"MeTabViewController");
                     NSLog(@"getProfile");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getprofile"
                                          albumId: @""];
@@ -493,10 +457,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     NSLog(@"responseFromGetProfile != nil");
-                    
-                    
                     [wself processProfile:dic];
                 }
             } else {
@@ -506,12 +467,44 @@ static NSString *autoPlayStr = @"&autoplay=1";
     });
 }
 
+- (void)processProfile:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
+        
+        if (![wTools objectExists: [dataIc allKeys]]) {
+            return;
+        }
+        
+        for (NSString *key in [dataIc allKeys]) {
+            id objective = [dataIc objectForKey: key];
+            
+            if ([objective isKindOfClass: [NSNull class]]) {
+                [dataIc setObject: @"" forKey: key];
+            }
+        }
+        [userPrefs setValue: dataIc forKey: @"profile"];
+        [userPrefs synchronize];
+        
+        myData = [dataIc mutableCopy];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
+        [self.refreshControl endRefreshing];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        [self.refreshControl endRefreshing];
+    }
+}
+
 #pragma mark - JCCLayout Setup
 - (void)layoutSetup {
     NSLog(@"layoutSetup");
-    
     // ScrollView contentInset Top is navigationBar Height 64
-    
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.collectionView.collectionViewLayout;
     NSLog(@"self.jccLayout.headerHeight: %f", self.jccLayout.headerHeight);
     
@@ -521,96 +514,63 @@ static NSString *autoPlayStr = @"&autoplay=1";
     socialLinkInt = 0;
     
     if (![self.userDic[@"sociallink"] isKindOfClass: [NSNull class]]) {
-        if (![self.userDic[@"sociallink"][@"facebook"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"google"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"instagram"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"linkedin"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"pinterest"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"twitter"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"web"] isEqualToString: @""])
-            socialLinkInt++;
-        if (![self.userDic[@"sociallink"][@"youtube"] isEqualToString: @""])
-            socialLinkInt++;
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"facebook"]]) {
+            if (![self.userDic[@"sociallink"][@"facebook"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"google"]]) {
+            if (![self.userDic[@"sociallink"][@"google"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"instagram"]]) {
+            if (![self.userDic[@"sociallink"][@"instagram"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"linkedin"]]) {
+            if (![self.userDic[@"sociallink"][@"linkedin"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"pinterest"]]) {
+            if (![self.userDic[@"sociallink"][@"pinterest"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"twitter"]]) {
+            if (![self.userDic[@"sociallink"][@"twitter"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"web"]]) {
+            if (![self.userDic[@"sociallink"][@"web"] isEqualToString: @""])
+                socialLinkInt++;
+        }
+        if ([wTools objectExists: self.userDic[@"sociallink"][@"youtube"]]) {
+            if (![self.userDic[@"sociallink"][@"youtube"] isEqualToString: @""])
+                socialLinkInt++;
+        }                
     }
-    
     NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
-
     self.jccLayout.headerHeight = 300;
 }
 
 #pragma mark - Point Task
 - (void)checkFirstTimeEditing {
     NSLog(@"checkFirstTimeEditing");
-    
     // Check whether getting edit profile point or not
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *editProfile = [defaults objectForKey: @"editProfile"];
     NSLog(@"editProfile: %@", editProfile);
     
     if ([editProfile isEqualToString: @"FirstTimeModified"]) {
-        
         NSLog(@"Get the First Time Eidt Profile Point Already");
         NSLog(@"show alert point view");
         [self checkPoint];
-        
         // Save data for first edit profile
         editProfile = @"ModifiedAlready";
-        
         [defaults setObject: editProfile
                      forKey: @"editProfile"];
         [defaults synchronize];
     }
 }
 
-#pragma mark - Check Point Method
-- (void)processCheckPoint:(NSDictionary *) data{
-    if ([data[@"result"] intValue] == 1) {
-        
-        missionTopicStr = data[@"data"][@"task"][@"name"];
-        NSLog(@"name: %@", missionTopicStr);
-        
-        rewardType = data[@"data"][@"task"][@"reward"];
-        NSLog(@"reward type: %@", rewardType);
-        
-        rewardValue = data[@"data"][@"task"][@"reward_value"];
-        NSLog(@"reward value: %@", rewardValue);
-        
-        eventUrl = data[@"data"][@"event"][@"url"];
-        NSLog(@"event: %@", eventUrl);
-        
-        restriction = data[@"data"][@"task"][@"restriction"];
-        NSLog(@"restriction: %@", restriction);
-        
-        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
-        NSLog(@"restrictionValue: %@", restrictionValue);
-        
-        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
-        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
-        
-        [self showAlertView];
-        [self getUrPoints];
-    } else if ([data[@"result"] intValue] == 2) {
-        NSLog(@"message: %@", data[@"message"]);
-        
-        // Save data for first edit profile
-        BOOL firsttime_edit_profile = YES;
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject: [NSNumber numberWithBool: firsttime_edit_profile]
-                     forKey: @"firsttime_edit_profile"];
-        [defaults synchronize];
-    } else if ([data[@"result"] intValue] == 0) {
-        NSString *errorMessage = data[@"message"];
-        NSLog(@"error messsage: %@", errorMessage);
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-    }
-}
 - (void)checkPoint {
     NSLog(@"checkPoint");
     
@@ -625,6 +585,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
+
         
         NSString *response = [boxAPI doTask1: [UserInfo getUserID] token: [UserInfo getUserToken] task_for: @"firsttime_edit_profile" platform: @"apple"];
         
@@ -653,7 +614,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
                     [wself processCheckPoint:data];
                 }
             }
@@ -661,12 +621,63 @@ static NSString *autoPlayStr = @"&autoplay=1";
     });
 }
 
+#pragma mark - Check Point Method
+- (void)processCheckPoint:(NSDictionary *) data{
+    if ([data[@"result"] intValue] == 1) {
+        if ([wTools objectExists: data[@"data"][@"task"][@"name"]]) {
+            missionTopicStr = data[@"data"][@"task"][@"name"];
+            NSLog(@"name: %@", missionTopicStr);
+        }
+        if ([wTools objectExists: data[@"data"][@"task"][@"reward"]]) {
+            rewardType = data[@"data"][@"task"][@"reward"];
+            NSLog(@"reward type: %@", rewardType);
+        }
+        if ([wTools objectExists: data[@"data"][@"task"][@"reward_value"]]) {
+            rewardValue = data[@"data"][@"task"][@"reward_value"];
+            NSLog(@"reward value: %@", rewardValue);
+        }
+        if ([wTools objectExists: data[@"data"][@"event"][@"url"]]) {
+            eventUrl = data[@"data"][@"event"][@"url"];
+            NSLog(@"event: %@", eventUrl);
+        }
+        if ([wTools objectExists: data[@"data"][@"task"][@"restriction"]]) {
+            restriction = data[@"data"][@"task"][@"restriction"];
+            NSLog(@"restriction: %@", restriction);
+        }
+        if ([wTools objectExists: data[@"data"][@"task"][@"restriction_value"]]) {
+            restrictionValue = data[@"data"][@"task"][@"restriction_value"];
+            NSLog(@"restrictionValue: %@", restrictionValue);
+        }
+        if ([wTools objectExists: data[@"data"][@"task"][@"numberofcompleted"]]) {
+            numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
+            NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
+        }
+        [self showAlertView];
+        [self getUrPoints];
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+        // Save data for first edit profile
+        BOOL firsttime_edit_profile = YES;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject: [NSNumber numberWithBool: firsttime_edit_profile]
+                     forKey: @"firsttime_edit_profile"];
+        [defaults synchronize];
+    } else if ([data[@"result"] intValue] == 0) {
+        if ([wTools objectExists: data[@"message"]]) {
+            [self showCustomErrorAlert: data[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
+
 #pragma mark - Get P Point
 - (void)getUrPoints {
     NSLog(@"");
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    
     @try {
         [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     } @catch (NSException *exception) {
@@ -676,7 +687,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
                                            token: [userPrefs objectForKey:@"token"]];
@@ -691,7 +701,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from geturpoints");
                 
@@ -707,17 +716,20 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"dic result boolValue is 1");
-                        NSInteger point = [dic[@"data"] integerValue];
-                        //NSLog(@"point: %ld", (long)point);
-                        
-                        [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
-                        [userPrefs synchronize];
+                        if ([wTools objectExists: dic[@"data"]]) {
+                            NSInteger point = [dic[@"data"] integerValue];
+                            //NSLog(@"point: %ld", (long)point);
+                            [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
+                            [userPrefs synchronize];
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -734,30 +746,31 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [alertView setContainerView: [self createPointView]];
     [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
     [alertView setUseMotionEffects: true];
-    
     [alertView show];
 }
 
 - (UIView *)createPointView {
     NSLog(@"createPointView");
-    
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
-    
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
     //missionTopicLabel.text = @"收藏相本得點";
-    missionTopicLabel.text = missionTopicStr;
+    
+    if ([wTools objectExists: missionTopicStr]) {
+        missionTopicLabel.text = missionTopicStr;
+    }
     
     NSLog(@"Topic Label Text: %@", missionTopicStr);
     [pointView addSubview: missionTopicLabel];
     
-    if ([restriction isEqualToString: @"personal"]) {
-        UILabel *restrictionLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 45, 200, 10)];
-        restrictionLabel.textColor = [UIColor firstGrey];
-        restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
-        NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
-        
-        [pointView addSubview: restrictionLabel];
+    if ([wTools objectExists: restriction]) {
+        if ([restriction isEqualToString: @"personal"]) {
+            UILabel *restrictionLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 45, 200, 10)];
+            restrictionLabel.textColor = [UIColor firstGrey];
+            restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
+            NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
+            [pointView addSubview: restrictionLabel];
+        }
     }
     
     // Gift Image
@@ -783,7 +796,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
      }
      */
     
-    messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    if ([wTools objectExists: rewardValue]) {
+        messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    }
     [pointView addSubview: messageLabel];
     
     if ([eventUrl isEqual: [NSNull null]] || eventUrl == nil) {
@@ -794,26 +809,26 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [activityButton addTarget: self action: @selector(showTheActivityPage) forControlEvents: UIControlEventTouchUpInside];
         activityButton.frame = CGRectMake(150, 220, 100, 10);
         [activityButton setTitle: @"活動連結" forState: UIControlStateNormal];
-        [activityButton setTitleColor: [UIColor colorWithRed: 26.0/255.0 green: 196.0/255.0 blue: 199.0/255.0 alpha: 1.0]
+        [activityButton setTitleColor: [UIColor colorWithRed: 26.0/255.0
+                                                       green: 196.0/255.0
+                                                        blue: 199.0/255.0
+                                                       alpha: 1.0]
                              forState: UIControlStateNormal];
         [pointView addSubview: activityButton];
     }
-    
     return pointView;
 }
 
-- (void)showTheActivityPage
-{
+- (void)showTheActivityPage {
     NSLog(@"showTheActivityPage");
-    
     //NSString *activityLink = @"http://www.apple.com";
+    if (![wTools objectExists: eventUrl]) {
+        return;
+    }
     NSString *activityLink = eventUrl;
-    
     NSURL *url = [NSURL URLWithString: activityLink];
-    
     // Close for present safari view controller, otherwise alertView will hide the background
     [alertView close];
-    
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
     safariVC.delegate = self;
     safariVC.preferredBarTintColor = [UIColor whiteColor];
@@ -823,7 +838,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 #pragma mark - SFSafariViewController delegate methods
 - (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
     // Done button pressed
-    
     NSLog(@"show");
     [alertView show];
 }
@@ -889,22 +903,18 @@ static NSString *autoPlayStr = @"&autoplay=1";
     } else {
         numberStr = [NSString stringWithFormat: @"%ld", (long)number];
     }
-    
     NSLog(@"numberStr: %@", numberStr);
-    
     return numberStr;
 }
 
 #pragma mark - UICollectionViewDataSource Methods
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     NSLog(@"numberOfSectionsInCollectionView");
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
-{
+     numberOfItemsInSection:(NSInteger)section {
     NSLog(@"numberOfItemsInSection");
     NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
     return pictures.count;
@@ -915,9 +925,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                                  atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"viewForSupplementaryElementOfKind");
     NSLog(@"self.userDic: %@", self.userDic);
-    
     MeCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
-    
     [LabelAttributeStyle changeGapString: headerView.viewedLabel content: headerView.viewedLabel.text];
     [LabelAttributeStyle changeGapString: headerView.likeLabel content: headerView.likeLabel.text];
     [LabelAttributeStyle changeGapString: headerView.sponsoredLabel content: headerView.sponsoredLabel.text];
@@ -938,8 +946,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
             [appDelegate.myNav pushViewController: sponsorListVC animated: YES];
         }
     };
-    
-    [LabelAttributeStyle changeGapString: headerView.albumCollectionLabel content: headerView.albumCollectionLabel.text];
+    [LabelAttributeStyle changeGapString: headerView.albumCollectionLabel
+                                 content: headerView.albumCollectionLabel.text];
     
     // Cover Image
     if ([self.userDic[@"cover"] isEqual: [NSNull null]]) {
@@ -989,20 +997,17 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     if (profilePic != nil) {
         NSLog(@"profilePic is not NSNull class");
-        
         if (![profilePic isEqualToString: @""]) {
             [headerView.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: profilePic]];
         } else {
             headerView.userPictureImageView.image = [UIImage imageNamed: @"member_back_head.png"];
         }
     }
-    
     // User Name Label
     if (![self.userDic[@"name"] isEqual: [NSNull null]]) {
         headerView.userNameLabel.text = self.userDic[@"name"];
         [LabelAttributeStyle changeGapString: headerView.userNameLabel content: self.userDic[@"name"]];
     }
-    
     // Creative Name Label
     if (![self.userDic[@"creative_name"] isEqual: [NSNull null]]) {
         headerView.creativeNameLabel.text = self.userDic[@"creative_name"];
@@ -1049,46 +1054,61 @@ static NSString *autoPlayStr = @"&autoplay=1";
             linkLabelStr = [NSString stringWithFormat: @"連結"];//, self.userDic[@"name"]];
             headerView.linkLabel.text = linkLabelStr;
             [LabelAttributeStyle changeGapString: headerView.linkLabel content: linkLabelStr];
-            
-            if ([self.userDic[@"sociallink"][@"facebook"] isEqualToString: @""]) {
-                headerView.fbBtn.hidden = YES;
-            } else {
-                headerView.fbBtn.hidden = NO;
+            if ([wTools objectExists: self.userDic[@"sociallink"][@"facebook"]]) {
+                if ([self.userDic[@"sociallink"][@"facebook"] isEqualToString: @""]) {
+                    headerView.fbBtn.hidden = YES;
+                } else {
+                    headerView.fbBtn.hidden = NO;
+                }
             }
-            if ([self.userDic[@"sociallink"][@"google"] isEqualToString: @""]) {
-                headerView.googlePlusBtn.hidden = YES;
-            } else {
-                headerView.googlePlusBtn.hidden = NO;
+            if ([wTools objectExists: self.userDic[@"sociallink"][@"google"]]) {
+                if ([self.userDic[@"sociallink"][@"google"] isEqualToString: @""]) {
+                    headerView.googlePlusBtn.hidden = YES;
+                } else {
+                    headerView.googlePlusBtn.hidden = NO;
+                }
             }
-            if ([self.userDic[@"sociallink"][@"instagram"] isEqualToString: @""]) {
-                headerView.igBtn.hidden = YES;
-            } else {
-                headerView.igBtn.hidden = NO;
+            if ([wTools objectExists: self.userDic[@"sociallink"][@"instagram"]]) {
+                if ([self.userDic[@"sociallink"][@"instagram"] isEqualToString: @""]) {
+                    headerView.igBtn.hidden = YES;
+                } else {
+                    headerView.igBtn.hidden = NO;
+                }
             }
-            if ([self.userDic[@"sociallink"][@"linkedin"] isEqualToString: @""]) {
-                headerView.linkedInBtn.hidden = YES;
-            } else {
-                headerView.linkedInBtn.hidden = NO;
+            if ([wTools objectExists: self.userDic[@"sociallink"][@"linkedin"]]) {
+                if ([self.userDic[@"sociallink"][@"linkedin"] isEqualToString: @""]) {
+                    headerView.linkedInBtn.hidden = YES;
+                } else {
+                    headerView.linkedInBtn.hidden = NO;
+                }
             }
-            if ([self.userDic[@"sociallink"][@"pinterest"] isEqualToString: @""]) {
-                headerView.pinterestBtn.hidden = YES;
-            } else {
-                headerView.pinterestBtn.hidden = NO;
+            if ([wTools objectExists: self.userDic[@"sociallink"][@"pinterest"]]) {
+                if ([self.userDic[@"sociallink"][@"pinterest"] isEqualToString: @""]) {
+                    headerView.pinterestBtn.hidden = YES;
+                } else {
+                    headerView.pinterestBtn.hidden = NO;
+                }
             }
-            if ([self.userDic[@"sociallink"][@"twitter"] isEqualToString: @""]) {
-                headerView.twitterBtn.hidden = YES;
-            } else {
-                headerView.twitterBtn.hidden = NO;
+            if ([wTools objectExists: self.userDic[@"sociallink"][@"twitter"]]) {
+                if ([self.userDic[@"sociallink"][@"twitter"] isEqualToString: @""]) {
+                    headerView.twitterBtn.hidden = YES;
+                } else {
+                    headerView.twitterBtn.hidden = NO;
+                }
             }
-            if ([self.userDic[@"sociallink"][@"web"] isEqualToString: @""]) {
-                headerView.webBtn.hidden = YES;
-            } else {
-                headerView.webBtn.hidden = NO;
+            if ([wTools objectExists: self.userDic[@"sociallink"][@"web"]]) {
+                if ([self.userDic[@"sociallink"][@"web"] isEqualToString: @""]) {
+                    headerView.webBtn.hidden = YES;
+                } else {
+                    headerView.webBtn.hidden = NO;
+                }
             }
-            if ([self.userDic[@"sociallink"][@"youtube"] isEqualToString: @""]) {
-                headerView.youtubeBtn.hidden = YES;
-            } else {
-                headerView.youtubeBtn.hidden = NO;
+            if ([wTools objectExists: self.userDic[@"sociallink"][@"youtube"]]) {
+                if ([self.userDic[@"sociallink"][@"youtube"] isEqualToString: @""]) {
+                    headerView.youtubeBtn.hidden = YES;
+                } else {
+                    headerView.youtubeBtn.hidden = NO;
+                }
             }
         } else if (socialLinkInt == 0) {
             NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
@@ -1104,12 +1124,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
         headerView.linkBgViewHeight.constant = 0;
         headerView.linkBgViewBottomConstraint.constant = 0;
     }
-    
     linkBgViewHeight = headerView.linkBgView.frame.size.height;
-    NSLog(@"linkBgViewHeight: %f", linkBgViewHeight);        
-
+    NSLog(@"linkBgViewHeight: %f", linkBgViewHeight);
     NSLog(@"headerView.linkBgView.frame: %@", NSStringFromCGRect(headerView.linkBgView.frame));
-    
     self.jccLayout.headerHeight = [self headerHeightCalculation];
     [self.collectionView.collectionViewLayout invalidateLayout];
     
@@ -1119,20 +1136,15 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForItemAtIndexPath");
-    
     MeCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"MyInfo" forIndexPath: indexPath];
-    
     cell.contentView.subviews[0].backgroundColor = nil;
-    
     NSDictionary *data = pictures[indexPath.row];
     //NSLog(@"data: %@", data);
-    
     if ([data[@"cover"] isEqual: [NSNull null]]) {
         cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
     } else {
         [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]]];
     }
-    
     // UserForView Info Setting
     BOOL gotAudio = [data[@"usefor"][@"audio"] boolValue];
     NSLog(@"gotAudio: %d", gotAudio);
@@ -1154,7 +1166,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     if (gotAudio) {
         NSLog(@"gotAudio");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
         
@@ -1165,7 +1176,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         if (gotVideo) {
             NSLog(@"gotAudio");
             NSLog(@"gotVideo");
-            
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
             [cell.btn2 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
             
@@ -1189,7 +1199,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     } else if (gotVideo) {
         NSLog(@"gotVideo");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
         
@@ -1209,7 +1218,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     } else if (gotExchange || gotSlot) {
         NSLog(@"gotExchange or gotSlot");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
         
@@ -1223,43 +1231,33 @@ static NSString *autoPlayStr = @"&autoplay=1";
         cell.albumNameLabel.text = data[@"name"];
         [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"name"]];
     }
-    
     return cell;
 }
 
 #pragma mark - UICollectionViewDelegate Methods
 
 - (BOOL)collectionView:(UICollectionView *)collectionView
-shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
-    
 //    cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    
     return YES;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
     //cell.contentView.backgroundColor =
-    
     //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    
     NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
     NSLog(@"pictures: %@", pictures[indexPath.row]);
-    
     NSString *albumId = [pictures[indexPath.row][@"album_id"] stringValue];
-    
     [self ToRetrievealbumpViewControlleralbumid: albumId];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
-didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
+didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 //    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.backgroundColor = nil;
     //cell.contentView.subviews[0].backgroundColor = nil;
@@ -1268,19 +1266,14 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark - UICollectionViewDelegateFlowLayout Methods
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
 //    NSLog(@"");
 //    NSLog(@"sizeForItemAtIndexPath");
-    
     CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
-    
     NSDictionary *data = pictures[indexPath.row];
-    
     // Check Width & Height return value is nil or not
     NSNumber *coverWidth = data[@"cover_width"];
     NSNumber *coverHeight = data[@"cover_height"];
-    
     NSInteger resultWidth;
     NSInteger resultHeight;
     
@@ -1289,22 +1282,18 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
     } else {
         resultWidth = [coverWidth integerValue];
     }
-    
     if ([coverHeight isEqual: [NSNull null]]) {
         resultHeight = resultWidth;
     } else {
         resultHeight = [coverHeight integerValue];
     }
-    
     CGFloat scale = [UIScreen mainScreen].scale;
-    
     CGFloat widthForCoverImg = (self.view.bounds.size.width - 48) / 2;
     CGFloat heightForCoverImg = (resultHeight * widthForCoverImg) / resultWidth;
     
     if (heightForCoverImg < (36 * scale)) {
         heightForCoverImg = 36 * scale;
     }
-    
     CGSize finalSize = CGSizeMake(widthForCoverImg, heightForCoverImg);
     finalSize = CGSizeMake(itemWidth, floorf(finalSize.height * itemWidth / finalSize.width));
     NSString *albumNameStr;
@@ -1313,9 +1302,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
         albumNameStr = data[@"name"];
     }
     finalSize = CGSizeMake(finalSize.width, finalSize.height + [self calculateHeightForLbl: albumNameStr width: itemWidth - 16]);
-    
     //NSLog(@"size :%@",NSStringFromCGSize(finalSize));
-    
     return finalSize;
 }
 
@@ -1323,15 +1310,12 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
                          width:(float)width {
     CGSize constraint = CGSizeMake(width,20000.0f);
     CGSize size;
-    
     NSStringDrawingContext *context = [[NSStringDrawingContext alloc] init];
     CGSize boundingBox = [text boundingRectWithSize:constraint
                                             options:NSStringDrawingUsesLineFragmentOrigin
                                          attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]}
                                             context:context].size;
-    
     size = CGSizeMake(ceil(boundingBox.width), ceil(boundingBox.height));
-    
     return size.height + 16;
 }
 
@@ -1340,7 +1324,6 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 16.0f;
 }
 
@@ -1349,14 +1332,12 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumLineSpacingForSectionAtIndex");
-    
     return 24.0f;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
-        insetForSectionAtIndex:(NSInteger)section
-{
+        insetForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
     return itemInset;
 }
@@ -1364,8 +1345,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - JCCollectionViewWaterfallLayoutDelegate
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(UICollectionViewLayout *)collectionViewLayout
- heightForHeaderInSection:(NSInteger)section
-{
+ heightForHeaderInSection:(NSInteger)section {
     NSLog(@"heightForHeaderInSection");
     return self.jccLayout.headerHeight;
 }
@@ -1373,8 +1353,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - UIScrollViewDelegate Methods
 - (void)collectionView:(UICollectionView *)collectionView
        willDisplayCell:(UICollectionViewCell *)cell
-    forItemAtIndexPath:(NSIndexPath *)indexPath
-{
+    forItemAtIndexPath:(NSIndexPath *)indexPath {
 //    NSLog(@"willDisplayCell");
 //    NSLog(@"indexPath.item: %ld", (long)indexPath.item);
 //    NSLog(@"pictures.count: %lu", (unsigned long)pictures.count);
@@ -1453,7 +1432,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     self.customMessageActionSheet.userName = @"";
     
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
@@ -1480,13 +1458,16 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 }
 
 - (IBAction)myPageBtnPressed:(id)sender {
-    NSString *pageStr = [NSString stringWithFormat: @"index/creative/content/?user_id=%@&appview=true", [UserInfo getUserID]];
-    NSString *urlString = [NSString stringWithFormat: @"%@%@", pinpinbox, pageStr];
-    NSURL *url = [NSURL URLWithString: urlString];
-    
-    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
-    safariVC.preferredBarTintColor = [UIColor whiteColor];    
-    [self presentViewController: safariVC animated: YES completion: nil];
+
+    if ([wTools objectExists: [UserInfo getUserID]]) {
+        NSString *pageStr = [NSString stringWithFormat: @"index/creative/content/?user_id=%@&appview=true", [UserInfo getUserID]];
+        NSString *urlString = [NSString stringWithFormat: @"%@%@", pinpinbox, pageStr];
+        NSURL *url = [NSURL URLWithString: urlString];
+        
+        SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
+        safariVC.preferredBarTintColor = [UIColor whiteColor];
+        [self presentViewController: safariVC animated: YES completion: nil];
+    }
 }
 
 - (IBAction)pointCalculationBtnPressed:(id)sender {
@@ -1502,16 +1483,13 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 
 - (IBAction)shareBtnPress:(id)sender {
     NSLog(@"shareBtnPress");
-    
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects: [NSString stringWithFormat: userIdSharingLink, [UserInfo getUserID], autoPlayStr], nil] applicationActivities:nil];
-    
     [self presentViewController: activityVC animated: YES completion: nil];
 }
 
 - (IBAction)linkBtnPress:(UIButton *)sender {
     NSLog(@"linkBtnPress");
     NSLog(@"sender.tag: %ld", (long)sender.tag);
-    
     NSString *socialLink;
     
     if (sender.tag == 1)
@@ -1537,7 +1515,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
         if (![socialLink isEqualToString: @""]) {            
             if ([socialLink containsString: @"http://"] || [socialLink containsString: @"https://"]) {
                 NSURL *url = [NSURL URLWithString: socialLink];
-                
                 SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
                 safariVC.preferredBarTintColor = [UIColor whiteColor];
                 [self presentViewController: safariVC animated: YES completion: nil];
@@ -1563,16 +1540,12 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 - (IBAction)showActionSheet:(id)sender {
     NSLog(@"showActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
-    
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
-    
     self.effectView.frame = self.view.frame;
     self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
     self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
     self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
     self.effectView.alpha = 0.8;
@@ -1646,7 +1619,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     NSLog(@"actionSheetViewDidSlideOut");
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
-    
     [self.effectView removeFromSuperview];
     self.effectView = nil;        
 }
@@ -1708,7 +1680,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         
@@ -1727,8 +1698,11 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
                         [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
                         [appDelegate.myNav pushViewController: aDVC animated: NO];
                     } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1739,94 +1713,17 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       albumId: (NSString *)albumId
-{
+                       albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
@@ -1848,7 +1745,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {            
@@ -1870,8 +1766,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
