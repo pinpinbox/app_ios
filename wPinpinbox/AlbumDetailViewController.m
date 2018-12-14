@@ -962,7 +962,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
                                                   token: [wTools getUserToken]
                                                task_for: @"share_to_fb"
-                                               platform: @"apple"];
+                                               platform: @"apple"
+                                                   type: @"album"
+                                                 typeId: self.albumId];
+        
+//        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+//                                                  token: [wTools getUserToken]
+//                                               task_for: @"share_to_fb"
+//                                               platform: @"apple"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -982,7 +989,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Time Out Message Return");
                     NSLog(@"AlbumDetailViewController");
                     NSLog(@"checkTaskComplete");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"checkTaskCompleted"
                                              row: 0
@@ -991,6 +997,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"data: %@", data);
+                    NSLog(@"data message: %@", data[@"message"]);
                     
                     if ([data[@"result"] intValue] == 1) {
                         // Task is completed, so calling the original sharing function
@@ -1398,9 +1405,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
         numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
         NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
         
-        [self showAlertPointView];
+        [self showAlertViewForGettingPoint];
         [self saveCollectInfoToDevice: NO];
         [self retrieveAlbum];
+        //[self getPointStore];
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
         [self saveCollectInfoToDevice: YES];
@@ -1422,6 +1430,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [defaults setObject: [NSNumber numberWithBool: collect_free_album]
                      forKey: @"collect_free_album"];
         [defaults synchronize];
+        //[self getPointStore];
     } else if ([task_for isEqualToString: @"collect_pay_album"]) {
         // Save data for first collect paid album
         BOOL collect_pay_album = isCollect;
@@ -1429,6 +1438,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [defaults setObject: [NSNumber numberWithBool: collect_pay_album]
                      forKey: @"collect_pay_album"];
         [defaults synchronize];
+        //[self getPointStore];
     }
 }
 
@@ -2118,6 +2128,27 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [appDelegate.myNav pushViewController: aSVC animated: YES];
 }
 
+#pragma mark - insertAlbumToLikes
+- (void)processInsertAlbumLikesResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        likesInt++;
+        
+        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
+        self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
+        
+        isLikes = !isLikes;
+        NSLog(@"isLikes: %d", isLikes);
+        
+        [self retrieveAlbum];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@", dic[@"message"]);
+        NSString *msg = dic[@"message"];
+        [self showCustomErrorAlert: msg];
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
+
 - (void)insertAlbumToLikes {
     NSLog(@"insertAlbumToLikes");
     @try {
@@ -2164,29 +2195,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
             }
         });
     });
-}
-
-#pragma mark - insertAlbumToLikes
-- (void)processInsertAlbumLikesResult:(NSDictionary *)dic {
-    if ([dic[@"result"] intValue] == 1) {
-        likesInt++;
-        [self.likeBtn setImage: [UIImage imageNamed: @"ic200_ding_pink"] forState: UIControlStateNormal];
-        self.headerLikedNumberLabel.text = [NSString stringWithFormat: @"%ld", (long)likesInt];
-        
-        isLikes = !isLikes;
-        NSLog(@"isLikes: %d", isLikes);
-        
-        [self retrieveAlbum];
-    } else if ([dic[@"result"] intValue] == 0) {
-        NSLog(@"失敗：%@", dic[@"message"]);
-        if ([wTools objectExists: dic[@"message"]]) {
-            [self showCustomErrorAlert: dic[@"message"]];
-        } else {
-            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-        }
-    } else {
-        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-    }
 }
 
 - (void)deleteAlbumToLikes {
@@ -2263,7 +2271,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - FBSDKSharing Delegate Methods
-
 - (void)sharer:(id<FBSDKSharing>)sharer
 didCompleteWithResults:(NSDictionary *)results {
     NSLog(@"Sharing Complete");
@@ -2281,9 +2288,8 @@ didCompleteWithResults:(NSDictionary *)results {
         [self checkPoint];
     }
 }
-
-- (void)sharer:(id<FBSDKSharing>)sharer
-didFailWithError:(NSError *)error {
+    
+- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error {
     NSLog(@"Sharing didFailWithError");
 }
 
@@ -2292,8 +2298,8 @@ didFailWithError:(NSError *)error {
 }
 
 #pragma mark - Custom AlertView for Getting Point
-- (void)showAlertPointView {
-    NSLog(@"Show Alert View");
+- (void)showAlertViewForGettingPoint {
+    NSLog(@"showAlertViewForGettingPoint");
     // Custom AlertView shows up when getting the point
     alertGetPointView = [[OldCustomAlertView alloc] init];
     [alertGetPointView setContainerView: [self createPointView]];
@@ -2305,7 +2311,6 @@ didFailWithError:(NSError *)error {
 - (UIView *)createPointView {
     NSLog(@"createPointView");
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
-    
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
     //missionTopicLabel.text = @"收藏相本得點";
@@ -2313,6 +2318,8 @@ didFailWithError:(NSError *)error {
     if ([wTools objectExists: missionTopicStr]) {
         missionTopicLabel.text = missionTopicStr;
     }
+    missionTopicLabel.text = missionTopicStr;
+
     NSLog(@"Topic Label Text: %@", missionTopicStr);
     [pointView addSubview: missionTopicLabel];
     
@@ -2321,14 +2328,15 @@ didFailWithError:(NSError *)error {
         restrictionLabel.textColor = [UIColor firstGrey];
         restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
         NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
-        
         [pointView addSubview: restrictionLabel];
     }
-    
     // Gift Image
     UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(50, 90, 100, 100)];
     imageView.image = [UIImage imageNamed: @"icon_present"];
+    imageView.center = CGPointMake(pointView.frame.size.width / 2, pointView.frame.size.height / 2);
     [pointView addSubview: imageView];
+    
+    NSLog(@"imageView.center: %@", NSStringFromCGPoint(imageView.center));
     
     // Message Label
     UILabel *messageLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 200, 200, 10)];

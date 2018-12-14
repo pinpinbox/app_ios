@@ -17,6 +17,7 @@
 #import "GHContextMenuView.h"
 #import "CooperationViewController.h"
 #import "CustomIOSAlertView.h"
+#import "OldCustomAlertView.h"
 #import "UIColor+Extensions.h"
 #import "GlobalVars.h"
 #import <SDWebImage/UIImageView+WebCache.h>
@@ -30,6 +31,7 @@
 #import "CreaterViewController.h"
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import "NewCooperationViewController.h"
+#import <SafariServices/SafariServices.h>
 
 @interface CalbumlistCollectionViewLayout : UICollectionViewFlowLayout
 //@property (nonatomic) CGFloat itemHeight;
@@ -65,7 +67,8 @@
 @end
 
 #pragma mark
-@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, AlbumCreationViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, AlbumSettingViewControllerDelegate, FBSDKSharingDelegate, NewCooperationVCDelegate> {
+@interface CalbumlistViewController () <CalbumlistDelegate, GHContextOverlayViewDataSource, GHContextOverlayViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, AlbumCreationViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, AlbumSettingViewControllerDelegate, FBSDKSharingDelegate, NewCooperationVCDelegate, SFSafariViewControllerDelegate>
+{
     NSInteger type;
     NSMutableArray *dataarr;
     
@@ -75,6 +78,20 @@
     UIView *backview;
     
     BOOL isLoadbtn;
+    
+    NSString *task_for;
+    
+    // For Showing Message of Getting Point
+    NSString *missionTopicStr;
+    NSString *rewardType;
+    NSString *rewardValue;
+    NSString *eventUrl;
+    
+    NSString *restriction;
+    NSString *restrictionValue;
+    NSUInteger numberOfCompleted;
+    
+    OldCustomAlertView *alertView;
 }
 
 //@property (nonatomic, strong) JCCollectionViewWaterfallLayout *layout;
@@ -84,6 +101,8 @@
 //@property (nonatomic) NSInteger contextMenuIndex;
 @property (nonatomic, strong) DDAUIActionSheetViewController *customEditActionSheet;
 @property (nonatomic) UIVisualEffectView *effectView;
+
+@property (nonatomic) NSString *albumId;
 @end
 
 @implementation CalbumlistViewController
@@ -1418,134 +1437,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     });
 }
 
-#pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg {
-    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
-        [customAlertView close];
-    }];
-}
-
-#pragma mark - Custom Method for TimeOut
-- (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-                       albumId: (NSString *)albumId
-{
-    CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
-    //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
-    alertTimeOutView.arrangeStyle = @"Horizontal";
-    
-    alertTimeOutView.parentView = self.view.superview;
-    [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: NSLocalizedString(@"TimeOut-CancelBtnTitle", @""), NSLocalizedString(@"TimeOut-OKBtnTitle", @""), nil]];
-    //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor clearColor], [UIColor clearColor],nil]];
-    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
-    [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
-    //alertView.arrangeStyle = @"Vertical";
-    
-    __weak typeof(self) weakSelf = self;
-    __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
-    [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        [weakAlertTimeOutView close];
-        
-        if (buttonIndex == 0) {
-            
-        } else {                        
-            if ([protocolName isEqualToString: @"getcalbumlist"]) {
-                [weakSelf getcalbumlist];
-            } else if ([protocolName isEqualToString: @"delalbum"]) {
-                [weakSelf deletebook: albumId];
-            } else if ([protocolName isEqualToString: @"deletecooperation"]) {
-                [weakSelf deletecooperation: albumId];
-            } else if ([protocolName isEqualToString: @"hidealbumqueue"]) {
-                [weakSelf hidealbumqueue: albumId];
-            }
-        }
-    }];
-    [alertTimeOutView setUseMotionEffects: YES];
-    alertTimeOutView.parentView = nil;
-    [alertTimeOutView show];
-}
-
-- (UIView *)createTimeOutContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    //NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    //NSLog(@"");
-    
-    return contentView;
-}
-
 #pragma mark - Tap userAvatar
 - (void)showCreatorPageWithUserid:(NSString *)userid {
     if (![wTools objectExists: userid]) {
@@ -1851,6 +1742,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - opMenu share
 - (void)handleShare:(NSString *)albumId {
+    self.albumId = albumId;
+    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -1865,7 +1758,14 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
                                                   token: [wTools getUserToken]
                                                task_for: @"share_to_fb"
-                                               platform: @"apple"];
+                                               platform: @"apple"
+                                                   type: @"album"
+                                                 typeId: albumId];
+        
+//        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+//                                                  token: [wTools getUserToken]
+//                                               task_for: @"share_to_fb"
+//                                               platform: @"apple"];
         
         NSString *albumDetail = [boxAPI retrievealbump:albumId uid:[wTools getUserID] token:[wTools getUserToken]];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1886,7 +1786,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"AlbumDetailViewController");
                     NSLog(@"checkTaskComplete");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"checkTaskCompleted" albumId:albumId];
+                                     protocolName: @"checkTaskCompleted"
+                                          albumId: albumId];
                      
                 } else {
                     NSLog(@"Get Real Response");
@@ -1898,28 +1799,21 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     //NSLog(@"data: %@", data);
                     NSString *autoPlayStr = @"&autoplay=1";
                     if ([data[@"result"] intValue] == 1) {
-                        
-                        // Task is completed, so calling the original sharing function
-                        //[wTools Activitymessage:[NSString stringWithFormat: sharingLink , _album_id, autoPlayStr]];
-                        
                         NSString *message;
                         
                         if (eventjoin) {
-                            
                             message = [NSString stringWithFormat: sharingLinkWithAutoPlay, albumId, autoPlayStr];
                         } else {
                             message = [NSString stringWithFormat: sharingLinkWithoutAutoPlay, albumId];
                         }
                         UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems: [NSArray arrayWithObjects: message, nil] applicationActivities: nil];
                         [wself presentViewController: activityVC animated: YES completion: nil];
-                        
                     } else if ([data[@"result"] intValue] == 2) {
                         NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
                         // Task is not completed, so pop ups alert view
                         //[self showSharingAlertView];
                         //[self showShareActionSheet];
                         [self showCustomShareActionSheet:eventjoin albumid:albumId autoplayStr:autoPlayStr];
-                        
                     } else if ([data[@"result"] intValue] == 0) {
                         NSString *message;
                         
@@ -1937,8 +1831,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             }
         });
     });
-    
 }
+
 - (void)showCustomShareActionSheet:(NSDictionary *)eventjoin
                            albumid:(NSString *)albumid
                        autoplayStr:(NSString *)autoplayStr {
@@ -1993,20 +1887,16 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 NSLog(@"eventjoin is not null");
                 message = [NSString stringWithFormat: sharingLinkWithoutAutoPlay, albumid];
             }
-            
             NSLog(@"message: %@", message);
-            
             UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems: [NSArray arrayWithObjects: message, nil] applicationActivities: nil];
             [weakSelf presentViewController: activityVC animated: YES completion: nil];
         }
     };
-    
 }
-- (void)tryUpdateAlbumSetting:(NSUInteger) index{
-    //NSString *aid = calbum[@"album_id"];
+
+- (void)tryUpdateAlbumSetting:(NSUInteger)index {
     __block typeof(self) wself = self;
-    
-    NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)index, 1];
+    NSString *limit = [NSString stringWithFormat:@"%ld,%d",(long)index, 1];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSArray *arr = @[@"mine",@"other",@"cooperation"];
@@ -2027,7 +1917,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 }
             }
         }
-        
     });
 }
 
@@ -2069,15 +1958,342 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - FB share SDK
 - (void)sharer:(id<FBSDKSharing>)sharer
 didCompleteWithResults:(NSDictionary *)results {
+    NSLog(@"Sharing Complete");
+    // Check whether getting Sharing Point or not
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    BOOL share_to_fb = [[defaults objectForKey: @"share_to_fb"] boolValue];
+    NSLog(@"Check whether getting sharing point or not");
+    NSLog(@"share_to_fb: %d", (int)share_to_fb);
     
+    if (share_to_fb) {
+        NSLog(@"Getting Sharing Point Already");
+    } else {
+        NSLog(@"Haven't got the point of sharing yet");
+        task_for = @"share_to_fb";
+        [self checkPoint];
+    }
 }
 
-- (void)sharer:(id<FBSDKSharing>)sharer
-didFailWithError:(NSError *)error {
-    
+- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error {
+    NSLog(@"Sharing didFailWithError");
 }
 
 - (void)sharerDidCancel:(id<FBSDKSharing>)sharer {
-    
+    NSLog(@"Sharing Did Cancel");
 }
+
+- (void)checkPoint {
+    NSLog(@"checkPoint");
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSString *response = [boxAPI doTask2: [wTools getUserID]
+                                       token: [wTools getUserToken]
+                                    task_for: wself->task_for
+                                    platform: @"apple"
+                                        type: @"album"
+                                     type_id: wself.albumId];
+        
+        NSLog(@"User ID: %@", [wTools getUserID]);
+        NSLog(@"Token: %@", [wTools getUserToken]);
+        NSLog(@"Task_For: %@", wself->task_for);
+        NSLog(@"Album ID: %@", wself.albumId);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                NSLog(@"response from doTask2");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"AlbumDetailViewController");
+                    NSLog(@"checkPoint");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"doTask2"
+                                          albumId: wself.albumId];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    [wself processCheckPointResult:data];
+                }
+            }
+        });
+    });
+}
+
+- (void)processCheckPointResult:(NSDictionary *)data {
+    if ([data[@"result"] intValue] == 1) {
+        missionTopicStr = data[@"data"][@"task"][@"name"];
+        NSLog(@"name: %@", missionTopicStr);
+        
+        rewardType = data[@"data"][@"task"][@"reward"];
+        NSLog(@"reward type: %@", rewardType);
+        
+        rewardValue = data[@"data"][@"task"][@"reward_value"];
+        NSLog(@"reward value: %@", rewardValue);
+        
+        eventUrl = data[@"data"][@"event"][@"url"];
+        NSLog(@"event: %@", eventUrl);
+        
+        restriction = data[@"data"][@"task"][@"restriction"];
+        NSLog(@"restriction: %@", restriction);
+        
+        restrictionValue = data[@"data"][@"task"][@"restriction_value"];
+        NSLog(@"restrictionValue: %@", restrictionValue);
+        
+        numberOfCompleted = [data[@"data"][@"task"][@"numberofcompleted"] unsignedIntegerValue];
+        NSLog(@"numberOfCompleted: %lu", (unsigned long)numberOfCompleted);
+        
+        [self showAlertViewForGettingPoint];
+        //[self getPointStore];
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+    } else if ([data[@"result"] intValue] == 0) {
+        NSLog(@"失敗： %@", data[@"message"]);
+    } else if ([data[@"result"] intValue] == 3) {
+        NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
+
+#pragma mark - Custom AlertView for Getting Point
+- (void)showAlertViewForGettingPoint {
+    NSLog(@"showAlertViewForGettingPoint");
+    // Custom AlertView shows up when getting the point
+    alertView = [[OldCustomAlertView alloc] init];
+    [alertView setContainerView: [self createPointView]];
+    [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
+    [alertView setUseMotionEffects: true];
+    [alertView show];
+}
+
+- (UIView *)createPointView {
+    NSLog(@"createPointView"); 
+    UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
+    // Mission Topic Label
+    UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
+    //missionTopicLabel.text = @"收藏相本得點";
+    missionTopicLabel.text = missionTopicStr;
+    NSLog(@"Topic Label Text: %@", missionTopicStr);
+    [pointView addSubview: missionTopicLabel];
+    
+    if ([restriction isEqualToString: @"personal"]) {
+        UILabel *restrictionLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 45, 200, 10)];
+        restrictionLabel.textColor = [UIColor firstGrey];
+        restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
+        NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
+        [pointView addSubview: restrictionLabel];
+    }
+    // Gift Image
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(50, 90, 100, 100)];
+    imageView.image = [UIImage imageNamed: @"icon_present"];
+    imageView.center = CGPointMake(pointView.frame.size.width / 2, pointView.frame.size.height / 2);
+    [pointView addSubview: imageView];
+    
+    // Message Label
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 200, 200, 10)];
+    
+    NSString *congratulate = @"恭喜您獲得 ";
+    //NSString *number = @"1 ";
+    
+    NSLog(@"Reward Value: %@", rewardValue);
+    NSString *end = @"P!";
+    
+    /*
+     if ([rewardType isEqualToString: @"point"]) {
+     congratulate = @"恭喜您獲得 ";
+     number = @"5 ";
+     // number = rewardValue;
+     end = @"P!";
+     }
+     */
+    
+    messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    [pointView addSubview: messageLabel];
+    
+    if ([eventUrl isEqual: [NSNull null]] || eventUrl == nil) {
+        NSLog(@"eventUrl is equal to null or eventUrl is nil");
+    } else {
+        // Activity Button
+        UIButton *activityButton = [UIButton buttonWithType: UIButtonTypeCustom];
+        [activityButton addTarget: self action: @selector(showTheActivityPage) forControlEvents: UIControlEventTouchUpInside];
+        activityButton.frame = CGRectMake(150, 220, 100, 10);
+        [activityButton setTitle: @"活動連結" forState: UIControlStateNormal];
+        [activityButton setTitleColor: [UIColor colorWithRed: 26.0/255.0 green: 196.0/255.0 blue: 199.0/255.0 alpha: 1.0]
+                             forState: UIControlStateNormal];
+        [pointView addSubview: activityButton];
+    }
+    
+    return pointView;
+}
+
+- (void)showTheActivityPage {
+    NSLog(@"showTheActivityPage");
+    //NSString *activityLink = @"http://www.apple.com";
+    NSLog(@"eventUrl: %@", eventUrl);
+    NSString *activityLink = eventUrl;
+    NSURL *url = [NSURL URLWithString: activityLink];
+    // Close for present safari view controller, otherwise alertView will hide the background
+    [alertView close];
+    
+    SFSafariViewController *safariVC1 = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
+    safariVC1.delegate = self;
+    safariVC1.preferredBarTintColor = [UIColor whiteColor];
+    [self presentViewController: safariVC1 animated: YES completion: nil];
+}
+
+#pragma mark - SFSafariViewController delegate methods
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
+    // Done button pressed
+    NSLog(@"show");
+    [alertView show];
+}
+
+#pragma mark - Custom Error Alert Method
+- (void)showCustomErrorAlert: (NSString *)msg {
+    [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [customAlertView close];
+    }];
+}
+
+#pragma mark - Custom Method for TimeOut
+- (void)showCustomTimeOutAlert:(NSString *)msg
+                  protocolName:(NSString *)protocolName
+                       albumId:(NSString *)albumId {
+    CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
+    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
+    //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
+    //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
+    alertTimeOutView.arrangeStyle = @"Horizontal";
+    
+    alertTimeOutView.parentView = self.view.superview;
+    [alertTimeOutView setButtonTitles: [NSMutableArray arrayWithObjects: NSLocalizedString(@"TimeOut-CancelBtnTitle", @""), NSLocalizedString(@"TimeOut-OKBtnTitle", @""), nil]];
+    //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
+    [alertTimeOutView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor clearColor], [UIColor clearColor],nil]];
+    [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
+    [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
+    //alertView.arrangeStyle = @"Vertical";
+    
+    __weak typeof(self) weakSelf = self;
+    __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
+        
+        [weakAlertTimeOutView close];
+        
+        if (buttonIndex == 0) {
+            
+        } else {
+            if ([protocolName isEqualToString: @"getcalbumlist"]) {
+                [weakSelf getcalbumlist];
+            } else if ([protocolName isEqualToString: @"delalbum"]) {
+                [weakSelf deletebook: albumId];
+            } else if ([protocolName isEqualToString: @"deletecooperation"]) {
+                [weakSelf deletecooperation: albumId];
+            } else if ([protocolName isEqualToString: @"hidealbumqueue"]) {
+                [weakSelf hidealbumqueue: albumId];
+            } else if ([protocolName isEqualToString: @"doTask2"]) {
+                [weakSelf checkPoint];
+            }
+        }
+    }];
+    [alertTimeOutView setUseMotionEffects: YES];
+    alertTimeOutView.parentView = nil;
+    [alertTimeOutView show];
+}
+
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
+    // TextView Setting
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
+    textView.text = msg;
+    textView.backgroundColor = [UIColor clearColor];
+    textView.textColor = [UIColor whiteColor];
+    textView.font = [UIFont systemFontOfSize: 16];
+    textView.editable = NO;
+    
+    // Adjust textView frame size for the content
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGRect newFrame = textView.frame;
+    
+    NSLog(@"newSize.height: %f", newSize.height);
+    
+    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
+    if (newSize.height > 300) {
+        newSize.height = 300;
+    }
+    
+    // Adjust textView frame size when the content height reach its maximum
+    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
+    textView.frame = newFrame;
+    
+    CGFloat textViewY = textView.frame.origin.y;
+    NSLog(@"textViewY: %f", textViewY);
+    
+    CGFloat textViewHeight = textView.frame.size.height;
+    NSLog(@"textViewHeight: %f", textViewHeight);
+    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
+    
+    
+    // ImageView Setting
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
+    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
+    
+    CGFloat viewHeight;
+    
+    if ((textViewY + textViewHeight) > 96) {
+        if ((textViewY + textViewHeight) > 450) {
+            viewHeight = 450;
+        } else {
+            viewHeight = textViewY + textViewHeight;
+        }
+    } else {
+        viewHeight = 96;
+    }
+    NSLog(@"demoHeight: %f", viewHeight);
+    
+    
+    // ContentView Setting
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
+    //contentView.backgroundColor = [UIColor firstPink];
+    contentView.backgroundColor = [UIColor firstMain];
+    
+    // Set up corner radius for only upper right and upper left corner
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.view.bounds;
+    maskLayer.path  = maskPath.CGPath;
+    contentView.layer.mask = maskLayer;
+    
+    // Add imageView and textView
+    [contentView addSubview: imageView];
+    [contentView addSubview: textView];
+    
+    //NSLog(@"");
+    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
+    //NSLog(@"");
+    
+    return contentView;
+}
+
 @end
