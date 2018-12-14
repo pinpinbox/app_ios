@@ -5,9 +5,9 @@ PODS:
   - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.9.0)
-  - Crashlytics (3.11.1):
-    - Fabric (~> 1.8.1)
-  - Fabric (1.8.2)
+  - Crashlytics (3.12.0):
+    - Fabric (~> 1.9.0)
+  - Fabric (1.9.0)
   - FBSDKCoreKit (4.38.1):
     - Bolts (~> 1.9)
   - FBSDKLoginKit (4.38.1):
@@ -20,18 +20,18 @@ PODS:
   - Flurry-iOS-SDK/FlurrySDK (9.2.3)
   - GoogleAnalytics (3.17.0)
   - RMPZoomTransitionAnimator (1.0.3)
-  - SDWebImage (4.4.2):
-    - SDWebImage/Core (= 4.4.2)
-  - SDWebImage/Core (4.4.2)
+  - SDWebImage (4.4.3):
+    - SDWebImage/Core (= 4.4.3)
+  - SDWebImage/Core (4.4.3)
   - SSFadingScrollView (1.1.0)
   - TTTAttributedLabel (2.0.0)
 
 DEPENDENCIES:
   - Crashlytics
   - Fabric
-  - FBSDKCoreKit
-  - FBSDKLoginKit
-  - FBSDKShareKit
+  - FBSDKCoreKit (~> 4.38.1)
+  - FBSDKLoginKit (~> 4.38.1)
+  - FBSDKShareKit (~> 4.38.1)
   - FLAnimatedImage (~> 1.0)
   - Flurry-iOS-SDK/FlurryAds
   - Flurry-iOS-SDK/FlurrySDK
@@ -59,8 +59,8 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
-  Crashlytics: ca7ab4bc304aa216bdc2e4c1a96389ee77252203
-  Fabric: d2b22f443ba195d8a7cc204da230977c72733b40
+  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   FBSDKCoreKit: 8d47857400e2f5bdea697a80daff882e91c84ef6
   FBSDKLoginKit: 4621c690d9dd8628031a4791497062183ea34b0d
   FBSDKShareKit: 6ffe22f0a0618eb7424d4104ab0ef3ce9643d42a
@@ -68,10 +68,10 @@ SPEC CHECKSUMS:
   Flurry-iOS-SDK: 2ea1973a6c9c6b3675765d73ea290b281f8cb084
   GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
   RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
-  SDWebImage: 624d6e296c69b244bcede364c72ae0430ac14681
+  SDWebImage: c5594f1a19c48d526d321e548902b56b479cd508
   SSFadingScrollView: ac908f565594b1faa748d2d55973f2dde919f754
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 
-PODFILE CHECKSUM: be5515577b09d1930db1a7f80f9f0ef56c96d922
+PODFILE CHECKSUM: feb032ab56d22ed17212242b1f7b70fa06a0e7eb
 
 COCOAPODS: 1.5.3

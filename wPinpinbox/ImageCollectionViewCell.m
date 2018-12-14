@@ -131,13 +131,15 @@
         self.bgV1.hidden = YES;
         self.bgV2.hidden = YES;
         self.bgSV.hidden = NO;
-        [self setupBgV3: @"喜歡作品就給個鼓勵吧!"];
+//        [self setupBgV3: @"喜歡作品就給個鼓勵吧!"];
+        [self setupBgV3: @"贊助購買"];
     } else if ([conditionCheckStr isEqualToString: @"DisplayPreviewWithReward"]) {
         NSLog(@"conditionCheckStr is equal to DisplayPreviewWithReward");
         self.bgV1.hidden = YES;
         self.bgV2.hidden = YES;
         self.bgSV.hidden = NO;
-        [self setupBgV3: @"贊助P點 看全部內容"];
+//        [self setupBgV3: @"贊助P點 看全部內容"];
+        [self setupBgV3: @"贊助購買"];
     }
 }
 

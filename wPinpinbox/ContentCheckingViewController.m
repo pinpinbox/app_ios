@@ -2292,11 +2292,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"checkTask");
     [wTools ShowMBProgressHUD];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
                                                   token: [wTools getUserToken]
                                                task_for: @"share_to_fb"
-                                               platform: @"apple"];
+                                               platform: @"apple"
+                                                   type: @"album"
+                                                 typeId: self.albumId];
+        
+//        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+//                                                  token: [wTools getUserToken]
+//                                               task_for: @"share_to_fb"
+//                                               platform: @"apple"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -2626,16 +2633,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         [self showAlertViewForGettingPoint];
         [self saveCollectInfoToDevice: NO];
-        
         //[self getPointStore];
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
         [self saveCollectInfoToDevice: YES];
-        
     } else if ([data[@"result"] intValue] == 0) {
         NSLog(@"失敗： %@", data[@"message"]);
         [self saveCollectInfoToDevice: YES];
-        
     } else if ([data[@"result"] intValue] == 3) {
         NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
     } else {
@@ -5047,7 +5051,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 #pragma mark - Custom AlertView for Getting Point
 - (void)showAlertViewForGettingPoint {
-    NSLog(@"Show Alert View");
+    NSLog(@"showAlertViewForGettingPoint");
+
     // Custom AlertView shows up when getting the point
     alertView = [[OldCustomAlertView alloc] init];
     [alertView setContainerView: [self createPointView]];
@@ -5081,6 +5086,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     // Gift Image
     UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(50, 90, 100, 100)];
     imageView.image = [UIImage imageNamed: @"icon_present"];
+    imageView.center = CGPointMake(pointView.frame.size.width / 2, pointView.frame.size.height / 2);
     [pointView addSubview: imageView];
     
     // Message Label

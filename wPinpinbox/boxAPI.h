@@ -291,7 +291,18 @@ static NSString *version = @"";
 + (NSString *)doTask2: (NSString *)uid token: (NSString *)token task_for: (NSString *)task_for platform: (NSString *)platform type: (NSString *)type type_id: (NSString *)type_id;
 
 // 84 針對FB分享次數
-+ (NSString *)checkTaskCompleted: (NSString *)uid token: (NSString *)token task_for: (NSString *)task_for platform: (NSString *)platform;
++ (NSString *)checkTaskCompleted:(NSString *)uid
+                           token:(NSString *)token
+                        task_for:(NSString *)task_for
+                        platform:(NSString *)platform;
+
++ (NSString *)checkTaskCompleted:(NSString *)uid
+                           token:(NSString *)token
+                        task_for:(NSString *)task_for
+                        platform:(NSString *)platform
+                            type:(NSString *)type
+                          typeId:(NSString *)typeId;
+
 
 #pragma mark - Notification Center
 + (NSString *)getPushQueue:(NSString *)uid

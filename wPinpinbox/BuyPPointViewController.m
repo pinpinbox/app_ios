@@ -19,7 +19,12 @@
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
 
-@interface BuyPPointViewController () <SFSafariViewControllerDelegate, UIGestureRecognizerDelegate> {
+
+#import "LabelAttributeStyle.h"
+
+@interface BuyPPointViewController () <SFSafariViewControllerDelegate, UIGestureRecognizerDelegate>
+{
+
     //NSString *pointstr;
     NSDictionary *pointlist;
     NSArray *listdata;
@@ -58,6 +63,8 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *backBtn;
 @property (nonatomic,strong) NSString *orderid;
+
+@property (weak, nonatomic) IBOutlet UILabel *pPointInfoNoticeLabel;
 @end
 
 @implementation BuyPPointViewController
@@ -96,6 +103,8 @@
 #pragma mark -
 - (void)initialValueSetup {
     self.navBarView.backgroundColor = [UIColor barColor];
+    
+    [LabelAttributeStyle changeGapString: self.pPointInfoNoticeLabel content: self.pPointInfoNoticeLabel.text];
 
     self.firstBtn.layer.borderColor = [UIColor blackColor].CGColor;
     self.firstBtn.layer.borderWidth = 0;
