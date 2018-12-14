@@ -34,7 +34,7 @@ static NSString *sharingLink = @"http://www.pinpinbox.com/index/album/content/?a
 //static NSString *userIdSharingLink = @"http://www.pinpinbox.com/index/creative/content/?user_id=%@%@";
 static NSString *autoPlayStr = @"&autoplay=1";
 
-@interface CreaterViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate, MessageboardViewControllerDelegate>
+@interface CreaterViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate, MessageboardViewControllerDelegate,SFSafariViewControllerDelegate>
 {
     NSMutableArray *pictures;
     BOOL isLoading;
@@ -99,12 +99,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"CreaterViewController");
     NSLog(@"viewDidLoad");
     NSLog(@"self.userId: %@", self.userId);
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
     [self initialValueSetup];
-//    [self loadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -123,7 +121,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [super viewDidAppear:animated];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
-    
     [wTools sendScreenTrackingWithScreenName:@"用戶專區"];
 }
 
@@ -211,7 +208,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         isReloading = YES;
         nextId = 0;
         isLoading = NO;
-        
         [self loadData];
     }
 }
@@ -257,7 +253,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (respnose != nil) {
                 NSLog(@"response from getCreative is not nil");
                 
@@ -265,7 +260,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CreaterViewController");
                     NSLog(@"getCreator");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getcreative"
                                          albumId: @""];
@@ -275,7 +269,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Get Real Response");
                     NSLog(@"response from getCreative");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respnose dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
                     [wself processCreatorResult:dic];
                 }
             } else {
@@ -298,6 +291,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
 //            pictures = [NSMutableArray new];
             [pictures removeAllObjects];
         }
+        
+        if (![wTools objectExists: dic[@"data"][@"album"]]) {
+            return;
+        }
+        
         int s = 0;
         
         for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
@@ -326,7 +324,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
         isReloading = NO;
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
-        [self showCustomErrorAlert: dic[@"message"]];
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
         [self.refreshControl endRefreshing];
         isReloading = NO;
     } else {
@@ -368,7 +370,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
             socialLinkInt++;
     }
     NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
-    
     self.jccLayout.headerHeight = 300;
 }
 
@@ -427,7 +428,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     } else {
         numberStr = [NSString stringWithFormat: @"%ld", (long)number];
     }
-    
     NSLog(@"numberStr: %@", numberStr);
     
     return numberStr;
@@ -453,7 +453,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                                  atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"viewForSupplementaryElementOfKind");
-    
     NSLog(@"userDic: %@", userDic);
     NSLog(@"followDic: %@", followDic);
     
@@ -576,45 +575,61 @@ static NSString *autoPlayStr = @"&autoplay=1";
             headerView.linkLabel.text = linkLabelStr;
             [LabelAttributeStyle changeGapString: headerView.linkLabel content: linkLabelStr];
             
-            if ([userDic[@"sociallink"][@"facebook"] isEqualToString: @""]) {
-                headerView.fbBtn.hidden = YES;
-            } else {
-                headerView.fbBtn.hidden = NO;
+            if ([wTools objectExists: userDic[@"sociallink"][@"facebook"]]) {
+                if ([userDic[@"sociallink"][@"facebook"] isEqualToString: @""]) {
+                    headerView.fbBtn.hidden = YES;
+                } else {
+                    headerView.fbBtn.hidden = NO;
+                }
             }
-            if ([userDic[@"sociallink"][@"google"] isEqualToString: @""]) {
-                headerView.googlePlusBtn.hidden = YES;
-            } else {
-                headerView.googlePlusBtn.hidden = NO;
+            if ([wTools objectExists: userDic[@"sociallink"][@"google"]]) {
+                if ([userDic[@"sociallink"][@"google"] isEqualToString: @""]) {
+                    headerView.googlePlusBtn.hidden = YES;
+                } else {
+                    headerView.googlePlusBtn.hidden = NO;
+                }
             }
-            if ([userDic[@"sociallink"][@"instagram"] isEqualToString: @""]) {
-                headerView.igBtn.hidden = YES;
-            } else {
-                headerView.igBtn.hidden = NO;
+            if ([wTools objectExists: userDic[@"sociallink"][@"instagram"]]) {
+                if ([userDic[@"sociallink"][@"instagram"] isEqualToString: @""]) {
+                    headerView.igBtn.hidden = YES;
+                } else {
+                    headerView.igBtn.hidden = NO;
+                }
             }
-            if ([userDic[@"sociallink"][@"linkedin"] isEqualToString: @""]) {
-                headerView.linkedInBtn.hidden = YES;
-            } else {
-                headerView.linkedInBtn.hidden = NO;
+            if ([wTools objectExists: userDic[@"sociallink"][@"linkedin"]]) {
+                if ([userDic[@"sociallink"][@"linkedin"] isEqualToString: @""]) {
+                    headerView.linkedInBtn.hidden = YES;
+                } else {
+                    headerView.linkedInBtn.hidden = NO;
+                }
             }
-            if ([userDic[@"sociallink"][@"pinterest"] isEqualToString: @""]) {
-                headerView.pinterestBtn.hidden = YES;
-            } else {
-                headerView.pinterestBtn.hidden = NO;
+            if ([wTools objectExists: userDic[@"sociallink"][@"pinterest"]]) {
+                if ([userDic[@"sociallink"][@"pinterest"] isEqualToString: @""]) {
+                    headerView.pinterestBtn.hidden = YES;
+                } else {
+                    headerView.pinterestBtn.hidden = NO;
+                }
             }
-            if ([userDic[@"sociallink"][@"twitter"] isEqualToString: @""]) {
-                headerView.twitterBtn.hidden = YES;
-            } else {
-                headerView.twitterBtn.hidden = NO;
+            if ([wTools objectExists: userDic[@"sociallink"][@"twitter"]]) {
+                if ([userDic[@"sociallink"][@"twitter"] isEqualToString: @""]) {
+                    headerView.twitterBtn.hidden = YES;
+                } else {
+                    headerView.twitterBtn.hidden = NO;
+                }
             }
-            if ([userDic[@"sociallink"][@"web"] isEqualToString: @""]) {
-                headerView.webBtn.hidden = YES;
-            } else {
-                headerView.webBtn.hidden = NO;
+            if ([wTools objectExists: userDic[@"sociallink"][@"web"]]) {
+                if ([userDic[@"sociallink"][@"web"] isEqualToString: @""]) {
+                    headerView.webBtn.hidden = YES;
+                } else {
+                    headerView.webBtn.hidden = NO;
+                }
             }
-            if ([userDic[@"sociallink"][@"youtube"] isEqualToString: @""]) {
-                headerView.youtubeBtn.hidden = YES;
-            } else {
-                headerView.youtubeBtn.hidden = NO;
+            if ([wTools objectExists: userDic[@"sociallink"][@"youtube"]]) {
+                if ([userDic[@"sociallink"][@"youtube"] isEqualToString: @""]) {
+                    headerView.youtubeBtn.hidden = YES;
+                } else {
+                    headerView.youtubeBtn.hidden = NO;
+                }
             }
         } else if (socialLinkInt == 0) {
             NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
@@ -629,8 +644,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         headerView.linkBgView.hidden = YES;
         headerView.linkBgViewHeight.constant = 0;
         headerView.linkBgViewBottomConstraint.constant = 0;
-    }        
-    
+    }
     linkBgViewHeight = headerView.linkBgView.frame.size.height;
     NSLog(@"linkBgViewHeight: %f", linkBgViewHeight);
     
@@ -644,11 +658,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"cellForItemAtIndexPath");
-    
     CreatorCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"Creator" forIndexPath: indexPath];
     NSDictionary *data = pictures[indexPath.row];
-//    //NSLog(@"data: %@", data);
-    
     cell.contentView.subviews[0].backgroundColor = nil;
     
     if ([data[@"cover"] isEqual: [NSNull null]]) {
@@ -679,7 +690,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     if (gotAudio) {
         NSLog(@"gotAudio");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
         
@@ -690,7 +700,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         if (gotVideo) {
             NSLog(@"gotAudio");
             NSLog(@"gotVideo");
-            
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
             [cell.btn2 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
             
@@ -702,7 +711,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 NSLog(@"gotAudio");
                 NSLog(@"gotVideo");
                 NSLog(@"gotExchange or gotSlot");
-                
                 [cell.btn1 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
                 [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
                 [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
@@ -714,7 +722,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     } else if (gotVideo) {
         NSLog(@"gotVideo");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
         
@@ -734,21 +741,18 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     } else if (gotExchange || gotSlot) {
         NSLog(@"gotExchange or gotSlot");
-        
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
         
         CGRect rect = cell.userInfoView.frame;
         rect.size.width = 28 * 1;
         cell.userInfoView.frame = rect;
-    }    
-    
+    }
     // AlbumNameLabel Setting
     if (![data[@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"name"];
         [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"name"]];
     }
-    
     return cell;
 }
 
@@ -757,17 +761,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
-    
-    //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    
     NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
-    
     NSDictionary *data = pictures[indexPath.row];
-    //NSLog(@"data: %@", data);
-    
     NSString *albumId = [data[@"album_id"] stringValue];
     
-    [self ToRetrievealbumpViewControlleralbumid: albumId];
+    if ([wTools objectExists: albumId]) {
+        [self ToRetrievealbumpViewControlleralbumid: albumId];
+    }
 }
  
 - (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
@@ -814,9 +814,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"");
     NSLog(@"sizeForItemAtIndexPath");
-    
     CGFloat itemWidth = roundf((self.view.frame.size.width - (miniInteriorSpacing * (columnCount + 1))) / columnCount);
-    
     NSDictionary *data = pictures[indexPath.row];
     
     // Check Width & Height return value is nil or not
@@ -873,12 +871,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                                             context:context].size;
     
     size = CGSizeMake(ceil(boundingBox.width), ceil(boundingBox.height));
-    
     return size.height + 16;
 }
 
 #pragma mark - UIScrollViewDelegate Methods
-
 - (void)collectionView:(UICollectionView *)collectionView
        willDisplayCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -984,24 +980,24 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     NSURL *url = [NSURL URLWithString: urlString];
     
+    if (![wTools objectExists: url]) {
+        return;
+    }
+    
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
     safariVC.preferredBarTintColor = [UIColor whiteColor];
     [self presentViewController: safariVC animated: YES completion: nil];
 }
 
-- (UIButton *)changeFollowBtn: (UIButton *)followBtn
-{
+- (UIButton *)changeFollowBtn: (UIButton *)followBtn {
     NSLog(@"changeFollowBtn");
     NSLog(@"_follow: %d", _follow);
     
     if (_follow) {
         NSLog(@"if follow is true");
-        
         [followBtn setTitle: @"取消關注" forState: UIControlStateNormal];
         [followBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
-        
         followBtn.backgroundColor = [UIColor clearColor];
-        
         followBtn.layer.cornerRadius = kCornerRadius;
         followBtn.clipsToBounds = YES;
         followBtn.layer.masksToBounds = NO;
@@ -1009,18 +1005,14 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         followBtn.layer.borderWidth = 1.0;
     } else {
         NSLog(@"if follow is false");
-        
         [followBtn setTitle: @"關注" forState: UIControlStateNormal];
         [followBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
-        
         followBtn.backgroundColor = [UIColor firstPink];
-        
         followBtn.layer.cornerRadius = kCornerRadius;
         followBtn.clipsToBounds = YES;
         followBtn.layer.masksToBounds = NO;
         followBtn.layer.borderWidth = 0;
     }
-    
     return followBtn;
 }
 
@@ -1132,9 +1124,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         [self refresh];
                         NSDictionary *d = dic[@"data"];
                         
-                        if ([d[@"followstatus" ]boolValue]) {
+                        if ([d[@"followstatus" ] boolValue]) {
                             [followBtn setTitle:NSLocalizedString(@"AuthorText-inAtt", @"") forState:UIControlStateNormal];
-                            //_button.hidden=YES;
+
                             followBtn.backgroundColor = [UIColor clearColor];
                             followBtn.layer.cornerRadius = kCornerRadius;
                             followBtn.clipsToBounds = YES;
@@ -1143,7 +1135,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                             followBtn.layer.borderWidth = 2.0;
                         } else {
                             [followBtn setTitle:NSLocalizedString(@"AuthorText-att", @"") forState:UIControlStateNormal];
-                            // _button.hidden=NO;
                             followBtn.backgroundColor = [UIColor firstPink];
                             followBtn.layer.cornerRadius = kCornerRadius;
                             followBtn.clipsToBounds = YES;
@@ -1154,7 +1145,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         [self checkPoint];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1353,7 +1348,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Call Protocol
 - (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
     NSLog(@"ToRetrievealbumpViewControlleralbumid");
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -1363,7 +1357,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *respnose = [boxAPI retrievealbump: albumid
                                                uid: [wTools getUserID]
@@ -1379,7 +1372,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (respnose != nil) {
                 NSLog(@"response from retrievealbump");
                 
@@ -1387,19 +1379,25 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CreaterViewController");
                     NSLog(@"ToRetrievealbumpViewControlleralbumid");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"retrievealbump"
                                          albumId: albumid];
                 } else {
                     NSLog(@"Get Real Response");
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [respnose dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
+                        
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
+                        
+                        if (![wTools objectExists: albumid]) {
+                            return;
+                        }
                         
                         AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
                         aDVC.data = [dic[@"data"] mutableCopy];
@@ -1417,7 +1415,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         [appDelegate.myNav pushViewController: aDVC animated: NO];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -1445,8 +1447,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       albumId: (NSString *)albumId
-{
+                       albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];

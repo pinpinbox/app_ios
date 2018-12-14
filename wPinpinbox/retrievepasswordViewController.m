@@ -24,8 +24,7 @@
 #import "GlobalVars.h"
 #import "UIViewController+ErrorAlert.h"
 
-@interface retrievepasswordViewController () <UITextFieldDelegate, SelectBarDelegate, UIGestureRecognizerDelegate>
-{
+@interface retrievepasswordViewController () <UITextFieldDelegate, SelectBarDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectText;
     NSArray *country;
     __weak IBOutlet UILabel *countryLabel;
@@ -69,12 +68,14 @@
     titlelab.text=NSLocalizedString(@"ForgetPwdText-forgetPwd", @"");
     //取得檔案路徑
     NSString *path = [[NSBundle mainBundle] pathForResource:@"codebeautify" ofType:@"json"];
-    NSString *respone=[NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    country=[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil][@"item"];
+    NSString *respone = [NSString stringWithContentsOfFile: path
+                                                encoding: NSUTF8StringEncoding
+                                                   error: nil];
+    country = [NSJSONSerialization JSONObjectWithData: [respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error: nil][@"item"];
     
     //add gest.
-    UITapGestureRecognizer *doBegan=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showbar)];
-    [countryLabel addGestureRecognizer:doBegan];
+    UITapGestureRecognizer *doBegan = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showbar)];
+    [countryLabel addGestureRecognizer: doBegan];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -95,13 +96,11 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
 
-- (void)viewSetup
-{
+- (void)viewSetup {
     countryCodeView.layer.cornerRadius = kCornerRadius;
     countryCodeView.backgroundColor = [UIColor thirdGrey];
     mobilePhoneView.layer.cornerRadius = kCornerRadius;
@@ -128,28 +127,26 @@
     emaillab.textColor = [UIColor firstGrey];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
     [self.view endEditing: YES];
 }
 
 #pragma mark - Show SelectBar
-
-- (void)showbar
-{
+- (void)showbar {
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
-    SelectBarViewController *mv=[[SelectBarViewController alloc]initWithNibName:@"SelectBarViewController" bundle:nil];
-    mv.data=country;
-    mv.delegate=self;
-    mv.topViewController=self;
+    SelectBarViewController *mv = [[SelectBarViewController alloc] initWithNibName:@"SelectBarViewController" bundle:nil];
+    mv.data = country;
+    mv.delegate = self;
+    mv.topViewController = self;
     [self wpresentPopupViewController:mv animated:YES completion:nil];
 }
 
 #pragma mark - SelectBar Delegate Method
 - (void)SaveDataRow:(NSInteger)row {
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
-    countryLabel.adjustsFontSizeToFitWidth=YES;
-    countryLabel.text=country[row];
+    countryLabel.adjustsFontSizeToFitWidth = YES;
+    countryLabel.text = country[row];
 }
 
 - (void)cancelButtonPressed {
@@ -163,20 +160,16 @@
 }
 
 #pragma mark - IBAction Methods
-
 - (IBAction)back:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (IBAction)downbtn:(id)sender
-{
+- (IBAction)downbtn:(id)sender {
     [self.view endEditing: YES];
-    
     NSString *msg = @"";
     
     if ([phone.text isEqualToString:@""]) {
         NSLog(@"請填手機號碼");
-        
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];
         style.backgroundColor = [UIColor thirdPink];
@@ -191,7 +184,6 @@
     }
     if ([emaillab.text isEqualToString:@""]) {
         NSLog(@"信箱好像還沒填");
-        
         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
         style.messageColor = [UIColor whiteColor];
         style.backgroundColor = [UIColor thirdPink];
@@ -285,10 +277,10 @@
 
 #pragma mark - UITextField Delegate Methods
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
-    selectText=textField;
+    selectText = textField;
 }
 - (void)textFieldDidEndEditing:(UITextField *)textField{
-    selectText=nil;
+    selectText = nil;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
@@ -343,7 +335,6 @@ replacementString:(NSString *)string {
 - (void)addKeyboardNotification {
     NSLog(@"");
     NSLog(@"addKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
                                                  name:UIKeyboardDidShowNotification
@@ -357,7 +348,6 @@ replacementString:(NSString *)string {
 - (void)removeKeyboardNotification {
     NSLog(@"");
     NSLog(@"removeKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] removeObserver: self
                                                     name: UIKeyboardDidShowNotification
                                                   object: nil];
@@ -367,20 +357,18 @@ replacementString:(NSString *)string {
 }
 
 #pragma mark -
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
-    NSDictionary* info = [aNotification userInfo];
+- (void)keyboardWasShown:(NSNotification*)aNotification {
+    NSDictionary *info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    float textfy=[selectText superview].frame.origin.y;
-    float textfh=[selectText superview].frame.size.height;
-    float h=self.view.frame.size.height;
-    float kh=kbSize.height;
-    float height=(textfh+textfy)-(h-kh);
+    float textfy = [selectText superview].frame.origin.y;
+    float textfh = [selectText superview].frame.size.height;
+    float h = self.view.frame.size.height;
+    float kh = kbSize.height;
+    float height = (textfh + textfy) - (h - kh);
     
-    if (height>0) {
+    if (height > 0) {
         [UIView animateWithDuration:0.3 animations:^{
-            self.view.frame=CGRectMake(0, -height, self.view.frame.size.width, self.view.frame.size.height);
-            
+            self.view.frame = CGRectMake(0, -height, self.view.frame.size.width, self.view.frame.size.height);
         }];
     }
 }
@@ -388,7 +376,7 @@ replacementString:(NSString *)string {
 // Called when the UIKeyboardWillHideNotification is sent
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
     [UIView animateWithDuration:0.3 animations:^{
-        self.view.frame=CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     }];
 }
 
@@ -433,7 +421,6 @@ replacementString:(NSString *)string {
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {            

@@ -381,27 +381,24 @@
 }
 
 #pragma mark - Custom AlertView for Getting Point
-- (void)showAlertView
-{
+- (void)showAlertView {
     NSLog(@"Show Alert View");
-    
     // Custom AlertView shows up when getting the point
     alertView = [[CustomIOSAlertView alloc] init];
     [alertView setContainerView: [self createPointView]];
     [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
     [alertView setUseMotionEffects: true];
-    
     [alertView show];
 }
 
-- (UIView *)createPointView
-{
+- (UIView *)createPointView {
     UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
-    
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(5, 15, 200, 10)];
     //missionTopicLabel.text = @"修改資料得點";
-    missionTopicLabel.text = missionTopicStr;
+    if ([wTools objectExists: missionTopicStr]) {
+        missionTopicLabel.text = missionTopicStr;
+    }
     [pointView addSubview: missionTopicLabel];
     
     // Gift Image
@@ -425,7 +422,10 @@
      }
      */
     
-    messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    if ([wTools objectExists: rewardValue]) {
+        messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    }
+    
     [pointView addSubview: messageLabel];
     
     if ([eventUrl isEqual: [NSNull null]] || eventUrl == nil) {
@@ -444,15 +444,15 @@
     return pointView;
 }
 
-- (void)showTheActivityPage
-{
+- (void)showTheActivityPage {
     NSLog(@"showTheActivityPage");
-    
     //NSString *activityLink = @"http://www.apple.com";
+    
+    if (![wTools objectExists: eventUrl]) {
+        return;
+    }
     NSString *activityLink = eventUrl;
-    
     NSURL *url = [NSURL URLWithString: activityLink];
-    
     // Close for present safari view controller, otherwise alertView will hide the background
     [alertView close];
     
@@ -463,33 +463,26 @@
 }
 
 #pragma mark - SFSafariViewController delegate methods
-- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller
-{
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
     // Done button pressed
-    
     NSLog(@"show");
     [alertView show];
 }
 
 #pragma mark -
-
 - (IBAction)back:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.navigationController.navigationBarHidden = NO;
 }
 
 - (void)viewDidLoad {
-    
     NSLog(@"TaobanViewController");
     NSLog(@"viewDidLoad");
-    
-    [super viewDidLoad];        
-    
+    [super viewDidLoad];
     //self.navigationController.navigationBarHidden = YES;
     
     //mytitle.text=NSLocalizedString(@"CreateAlbumText-create", @"");

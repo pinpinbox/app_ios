@@ -414,6 +414,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D39A5688067C613442DC197 /* Pods-wPinpinbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.release.xcconfig"; sourceTree = "<group>"; };
 		5404732E1FB066D00075BBD8 /* PointCalculationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PointCalculationViewController.h; sourceTree = "<group>"; };
 		5404732F1FB066D00075BBD8 /* PointCalculationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PointCalculationViewController.m; sourceTree = "<group>"; };
 		540635BC204E7E92004C9F21 /* ExchangeListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExchangeListViewController.h; sourceTree = "<group>"; };
@@ -1002,7 +1003,6 @@
 		92F6CD011B7B5382002E547C /* O_drag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = O_drag.m; sourceTree = "<group>"; };
 		92F89B281BBE79F900565908 /* StartImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartImage.h; sourceTree = "<group>"; };
 		92F89B291BBE79F900565908 /* StartImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartImage.m; sourceTree = "<group>"; };
-		AA32F463A3D32A43BD16129F /* Pods-wPinpinbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wPinpinbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox.release.xcconfig"; sourceTree = "<group>"; };
 		CB071CF0213E4754003D01D8 /* DMViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMViewController.h; sourceTree = "<group>"; };
 		CB071CF1213E4754003D01D8 /* DMVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = DMVC.storyboard; sourceTree = "<group>"; };
 		CB071CF2213E4754003D01D8 /* DMViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMViewController.m; sourceTree = "<group>"; };
@@ -2824,7 +2824,7 @@
 			isa = PBXGroup;
 			children = (
 				6A64645CB4ED1AAD3CA0F395 /* Pods-wPinpinbox.debug.xcconfig */,
-				AA32F463A3D32A43BD16129F /* Pods-wPinpinbox.release.xcconfig */,
+				2D39A5688067C613442DC197 /* Pods-wPinpinbox.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -2840,7 +2840,6 @@
 				9276DF9C1B72FDC000E6ACC9 /* Sources */,
 				9276DF9D1B72FDC000E6ACC9 /* Frameworks */,
 				9276DF9E1B72FDC000E6ACC9 /* Resources */,
-				54E232B21FA6DA9400D95FD5 /* ShellScript */,
 				F016647921AF9F6C006A1E79 /* Embed Frameworks */,
 				0B50B11780277D6F5BE3A29B /* [CP] Copy Pods Resources */,
 				CB878BA721BF8C3F00B4DA30 /* Embed App Extensions */,
@@ -3044,20 +3043,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-wPinpinbox/Pods-wPinpinbox-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		54E232B21FA6DA9400D95FD5 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" d1ae8885f7ffd8a5956e74686a7e720f8d853aac dad04e88c7afebbc23a06451359eaa91f3db070a6e600fdb82a478d5ac72519a\n";
 		};
 		9A2DCDD2C0C7A1470CFC0779 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3506,7 +3491,7 @@
 		};
 		9276DFC51B72FDC000E6ACC9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AA32F463A3D32A43BD16129F /* Pods-wPinpinbox.release.xcconfig */;
+			baseConfigurationReference = 2D39A5688067C613442DC197 /* Pods-wPinpinbox.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

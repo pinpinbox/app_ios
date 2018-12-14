@@ -110,10 +110,10 @@
 - (void)setUserCover {
     NSLog(@"setUserCover");
     NSLog(@"UserId: %@", [wTools getUserID]);
-    
     [wTools ShowMBProgressHUD];
-    
-    UIImage *image = [self imageWithImage: [_tkImageView currentCroppedImage] scaledToSize: CGSizeMake(960.0, 450.0) compressionQuality: 0.1];
+    UIImage *image = [self imageWithImage: [_tkImageView currentCroppedImage]
+                             scaledToSize: CGSizeMake(960.0, 450.0)
+                       compressionQuality: 0.1];
     NSLog(@"image: %@", image);
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -130,29 +130,24 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CropImageViewController");
                     NSLog(@"setUserCover");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"setUserCover"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
                         [defaults setObject: [NSNumber numberWithBool: YES]
                                      forKey: @"setUserCover"];
                         [self.navigationController popViewControllerAnimated: YES];
-                        
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: dic[@"message"]];
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -171,12 +166,11 @@
                                                         repeats: NO];
                     } else if ([dic[@"result"] isEqualToString: @"USER_ERROR"]) {
                         NSLog(@"錯誤：%@",dic[@"message"]);
-                        NSString *msg = dic[@"message"];
-                        
-                        if (msg == nil) {
-                            msg = NSLocalizedString(@"Host-NotAvailable", @"");
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
-                        [self showCustomErrorAlert: dic[@"message"]];
                     }
                 }
             }
@@ -190,7 +184,6 @@
                    
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
-    
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
@@ -294,8 +287,7 @@
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
+        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {

@@ -71,19 +71,16 @@
     self.customEditActionSheet.delegate = self;
     self.customEditActionSheet.topicStr = @"你 想 做 什 麼?";
     
-    //NSLog(@"");
     NSLog(@"app.myNav");
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     for (id controller in app.myNav.viewControllers) {
         NSLog(@"controller: %@", controller);
     }
-    
     self.unselectedColor = [UIColor colorWithRed: 212.0/255.0
-                                                                 green: 212.0/255.0
-                                                                  blue: 212.0/255.0
-                                                                 alpha: 1.0];
+                                           green: 212.0/255.0
+                                            blue: 212.0/255.0
+                                           alpha: 1.0];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -91,7 +88,6 @@
     //NSLog(@"");
     NSLog(@"AlbumCollectionViewController");
     NSLog(@"viewWillAppear");
-    
     [self initialValueSetup];
     
     for (UIView *view in self.tabBarController.view.subviews) {
@@ -339,8 +335,7 @@
 }
 
 #pragma mark -- Layout Construction
--(MyFrameLayout*)createItemLayout:(NSString*)title withTag:(NSInteger)tag
-{
+-(MyFrameLayout*)createItemLayout:(NSString*)title withTag:(NSInteger)tag {
     //创建一个框架条目布局，并设置触摸处理事件
     MyFrameLayout *itemLayout = [MyFrameLayout new];
     itemLayout.tag = tag;
@@ -360,10 +355,6 @@
 - (void)handleTap:(MyBaseLayout*)sender {
     switch (sender.tag) {
         case 0:
-//            self.underLineView.leftPos.active = YES;
-//            self.underLineView.centerXPos.active = NO;
-//            self.underLineView.rightPos.active = NO;
-//
             self.leftLabel.textColor = [UIColor blackColor];
             self.centerLabel.textColor = [UIColor thirdGrey];
             self.rightLabel.textColor = [UIColor thirdGrey];
@@ -377,10 +368,6 @@
             [self.pageMenu moveToPage: 0];
             break;
         case 1:
-//            self.underLineView.leftPos.active = NO;
-//            self.underLineView.centerXPos.active = YES;
-//            self.underLineView.rightPos.active = NO;
-            
             self.leftLabel.textColor = [UIColor thirdGrey];
             self.centerLabel.textColor = [UIColor blackColor];
             self.rightLabel.textColor = [UIColor thirdGrey];
@@ -394,11 +381,6 @@
             [self.pageMenu moveToPage: 1];
             break;
         case 2:
-            
-//            self.underLineView.leftPos.active = NO;
-//            self.underLineView.centerXPos.active = NO;
-//            self.underLineView.rightPos.active = YES;
-            
             self.leftLabel.textColor = [UIColor thirdGrey];
             self.centerLabel.textColor = [UIColor thirdGrey];
             self.rightLabel.textColor = [UIColor blackColor];
@@ -408,17 +390,7 @@
                 CGPoint f = cc.collectionview.contentOffset;
                 [cc.collectionview setContentOffset:f animated:NO];
             }
-            
             [self.pageMenu moveToPage: 2];
-             
-            /*
-        {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: @"即將推出，敬請期待" preferredStyle: UIAlertControllerStyleAlert];
-            UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"確定" style: UIAlertActionStyleDefault handler: nil];
-            [alert addAction: okBtn];
-            [self presentViewController: alert animated: YES completion: nil];
-        }
-            */
             break;
         default:
             NSAssert(0, @"oops!");
@@ -432,17 +404,18 @@
         self.action(sender.tag);
 }
 
-- (void)didMoveToPage:(UIViewController *)controller index:(NSInteger)index
-{
+- (void)didMoveToPage:(UIViewController *)controller
+                index:(NSInteger)index {
     NSLog(@"didMoveToPage index: %ld", (long)index);
     [self changeViewAndLabel: index];
-    
     [wTools setStatusBarBackgroundColor: [UIColor colorWithRed: 1.0 green: 1.0 blue: 1.0 alpha: 1.0]];
     //[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault];
 }
+
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleDefault;
 }
+
 - (void)willMoveToPage:(UIViewController *)controller
                  index:(NSInteger)index {
     NSLog(@"willMoveToPage index: %ld", (long)index);
@@ -457,33 +430,20 @@
     }
 }
 
-- (void)changeViewAndLabel: (NSInteger)index
-{
+- (void)changeViewAndLabel: (NSInteger)index {
     //self.underLineView.hidden = YES;
     switch (index) {
         case 0:
-//            self.underLineView.leftPos.active = YES;
-//            self.underLineView.centerXPos.active = NO;
-//            self.underLineView.rightPos.active = NO;
-            
             self.leftLabel.textColor = [UIColor firstGrey];
             self.centerLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
             self.rightLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
             break;
         case 1:
-//            self.underLineView.leftPos.active = NO;
-//            self.underLineView.centerXPos.active = YES;
-//            self.underLineView.rightPos.active = NO;
-            
             self.leftLabel.textColor =  self.unselectedColor;//[UIColor secondGrey];
             self.centerLabel.textColor = [UIColor firstGrey];
             self.rightLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
             break;
         case 2:
-//            self.underLineView.leftPos.active = NO;
-//            self.underLineView.centerXPos.active = NO;
-//            self.underLineView.rightPos.active = YES;
-            
             self.leftLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
             self.centerLabel.textColor = self.unselectedColor;//[UIColor secondGrey];
             self.rightLabel.textColor = [UIColor firstGrey];
@@ -496,7 +456,6 @@
 - (IBAction)backBtnPress:(id)sender {
     NSLog(@"backBtnPress");
     NSLog(@"self.navigationController");
-    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (self.postMode) {
@@ -509,7 +468,6 @@
             }
         }
     }
-    
     for (id controller in app.myNav.viewControllers) {
         NSLog(@"controller: %@", controller);
         
@@ -518,7 +476,6 @@
             return;
         }
     }
-    
     for (id controller in app.myNav.viewControllers) {
         NSLog(@"controller: %@", controller);
         
@@ -527,7 +484,6 @@
             return;
         }
     }
-    
     for (id controller in app.myNav.viewControllers) {
         NSLog(@"controller: %@", controller);
         
@@ -536,16 +492,13 @@
             return;
         }
     }
-    
-    
 }
 
 #pragma mark - CustomActionSheet
 - (void)showCustomEditActionSheet: (NSString *)albumId
                        templateId: (NSString *)templateId
                   shareCollection: (BOOL)shareCollection
-                         hasImage: (BOOL)hasImage
-{
+                         hasImage: (BOOL)hasImage {
     NSLog(@"showCustomEditActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
@@ -600,13 +553,10 @@
 }
 
 #pragma mark - DDAUIActionSheetViewControllerDelegate Method
-- (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller
-{
+- (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     NSLog(@"actionSheetViewDidSlideOut");
     //[self.fxBlurView removeFromSuperview];
-    
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
-    
     [self.effectView removeFromSuperview];
     self.effectView = nil;
 }
@@ -614,63 +564,59 @@
 #pragma mark - Methods for choosing viewControllers
 - (void)toAlbumCreationViewController: (NSString *)albumId
                            templateId: (NSString *)templateId
-                      shareCollection: (BOOL)shareCollection
-{
+                      shareCollection: (BOOL)shareCollection {
     NSLog(@"toAlbumCreationViewController");
     
-    AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
-    //acVC.selectrow = [wTools userbook];
-    acVC.albumid = albumId;
-    acVC.templateid = [NSString stringWithFormat:@"%@", templateId];
-    acVC.shareCollection = shareCollection;
-    acVC.postMode = NO;
-    acVC.fromVC = @"AlbumCollectionVC";
-    acVC.isNew = NO;
-    
-    if ([templateId isEqualToString:@"0"]) {
-        acVC.booktype = 0;
-        acVC.choice = @"Fast";
-    } else {
-        acVC.booktype = 1000;
-        acVC.choice = @"Template";
+    if ([wTools objectExists: albumId]) {
+        AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
+        //acVC.selectrow = [wTools userbook];
+        acVC.albumid = albumId;
+        acVC.templateid = [NSString stringWithFormat:@"%@", templateId];
+        acVC.shareCollection = shareCollection;
+        acVC.postMode = NO;
+        acVC.fromVC = @"AlbumCollectionVC";
+        acVC.isNew = NO;
+        
+        if ([templateId isEqualToString:@"0"]) {
+            acVC.booktype = 0;
+            acVC.choice = @"Fast";
+        } else {
+            acVC.booktype = 1000;
+            acVC.choice = @"Template";
+        }
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav pushViewController: acVC animated: YES];
     }
-    
-    //[self.navigationController pushViewController: acVC animated: YES];
-    
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav pushViewController: acVC animated: YES];
 }
 
 - (void)toAlbumSettingViewController: (NSString *)albumId
                           templateId: (NSString *)templateId
                      shareCollection: (BOOL)shareCollection
-                            hasImage: (BOOL)hasImage
-{
+                            hasImage: (BOOL)hasImage {
     NSLog(@"toAlbumSettingViewController");
     
-    AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
-    aSVC.albumId = albumId;
-    aSVC.postMode = NO;
-    aSVC.templateId = [NSString stringWithFormat:@"%@", templateId];
-    aSVC.shareCollection = shareCollection;
-    aSVC.hasImage = hasImage;
-    aSVC.fromVC = @"AlbumCollectionVC";
-    //[self.navigationController pushViewController: aSVC animated: YES];
-    
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav pushViewController: aSVC animated: YES];
+    if ([wTools objectExists: albumId]) {
+        AlbumSettingViewController *aSVC = [[UIStoryboard storyboardWithName: @"Main" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumSettingViewController"];
+        aSVC.albumId = albumId;
+        aSVC.postMode = NO;
+        aSVC.templateId = [NSString stringWithFormat:@"%@", templateId];
+        aSVC.shareCollection = shareCollection;
+        aSVC.hasImage = hasImage;
+        aSVC.fromVC = @"AlbumCollectionVC";
+        
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav pushViewController: aSVC animated: YES];
+    }
 }
 
 #pragma mark - CalbumlistViewControllerDelegate
 - (void)editPhoto:(NSString *)albumId
        templateId:(NSString *)templateId
   shareCollection:(BOOL)shareCollection
-         hasImage:(BOOL)hasImage
-{
+         hasImage:(BOOL)hasImage {
     NSLog(@"editPhoto Delegate Method");
     NSLog(@"albumId: %@", albumId);
     NSLog(@"templateId: %@", templateId);
-    
     [self showCustomEditActionSheet: albumId
                          templateId: templateId
                     shareCollection: shareCollection
@@ -678,18 +624,15 @@
 }
 
 - (void)shareLink:(NSString *)sharingStr
-          albumId:(NSString *)albumId
-{
+          albumId:(NSString *)albumId {
     NSLog(@"sharingStr: %@", sharingStr);
     NSLog(@"albumId: %@", albumId);
-    
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems: [NSArray arrayWithObjects: sharingStr, nil] applicationActivities: nil];
     [self presentViewController: activityVC animated: YES completion: nil];
 }
 
 #pragma mark - Delegate Methods
-- (void)toReadBookController:(NSString *)albumId
-{
+- (void)toReadBookController:(NSString *)albumId {
     NSLog(@"toReadBookController albumId: %@", albumId);
     [self retrieveAlbum: albumId];
 }
@@ -705,7 +648,6 @@
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrievealbump: albumId
                                                 uid: [wTools getUserID]
@@ -721,7 +663,6 @@
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response: %@", response);
                 
@@ -738,19 +679,23 @@
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
-                        
-                        
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         
-                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
-                        contentCheckingVC.albumId = albumId;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
+                        if ([wTools objectExists: albumId]) {
+                            ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                            contentCheckingVC.albumId = albumId;
+                            
+                            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                            [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
+                        }
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
                     } else {
                         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                     }
@@ -761,95 +706,17 @@
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
-    
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    //NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    //NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName
-                       albumId: (NSString *)albumId
-{
+                       albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -870,7 +737,6 @@
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {
@@ -885,8 +751,7 @@
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
@@ -959,7 +824,6 @@
     
     return contentView;
 }
-
 
 /*
 #pragma mark - Navigation

@@ -1228,7 +1228,6 @@ sourceController:(UIViewController *)source
     [alertView setContainerView: [self createPointView]];
     [alertView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
     [alertView setUseMotionEffects: true];
-    
     [alertView show];
 }
 
@@ -1240,8 +1239,10 @@ sourceController:(UIViewController *)source
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
     //missionTopicLabel.text = @"收藏相本得點";
-    missionTopicLabel.text = missionTopicStr;
     
+    if ([wTools objectExists: missionTopicStr]) {
+        missionTopicLabel.text = missionTopicStr;
+    }
     //NSLog(@"Topic Label Text: %@", missionTopicStr);
     [pointView addSubview: missionTopicLabel];
     
@@ -1250,7 +1251,6 @@ sourceController:(UIViewController *)source
         restrictionLabel.textColor = [UIColor firstGrey];
         restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
         //NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
-        
         [pointView addSubview: restrictionLabel];
     }
     
@@ -1277,7 +1277,10 @@ sourceController:(UIViewController *)source
      }
      */
     
-    messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    if ([wTools objectExists: rewardValue]) {
+        messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    }
+    
     [pointView addSubview: messageLabel];
     
     if ([eventUrl isEqual: [NSNull null]] || eventUrl == nil) {
@@ -1298,11 +1301,14 @@ sourceController:(UIViewController *)source
 
 - (void)showTheActivityPage {
     NSLog(@"showTheActivityPage");
-    
     //NSString *activityLink = @"http://www.apple.com";
+    
+    if (![wTools objectExists: eventUrl]) {
+        return;
+    }
+    
     NSString *activityLink = eventUrl;
     //NSLog(@"activityLink: %@", activityLink);
-    
     NSURL *url = [NSURL URLWithString: activityLink];
     
     // Close for present safari view controller, otherwise alertView will hide the background
@@ -1317,7 +1323,6 @@ sourceController:(UIViewController *)source
 #pragma mark - SFSafariViewController delegate methods
 - (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
     // Done button pressed
-    
     NSLog(@"show");
     [alertView show];
 }

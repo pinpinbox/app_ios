@@ -17,8 +17,7 @@
 
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
-@interface ChangePwdViewController () <UITextFieldDelegate, UIGestureRecognizerDelegate>
-{
+@interface ChangePwdViewController () <UITextFieldDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectText;
 }
 
@@ -155,9 +154,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     NSLog(@"textFieldShouldReturn");
-    
     NSInteger nextTag = textField.tag + 1;
-    
     // Try to find next responder
     UIResponder *nextResponder = [textField.superview.superview viewWithTag: nextTag];
     
@@ -168,21 +165,17 @@
         // Not found, so remove keyboard
         [textField resignFirstResponder];
     }
-    
     [textField resignFirstResponder];
     return YES;
 }
 
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
-replacementString:(NSString *)string
-{
+replacementString:(NSString *)string {
     NSLog(@"shouldChangeCharactersInRange");
-    
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
     NSString *resultString = [textField.text stringByReplacingCharactersInRange: range
                                                                      withString: string];
-    
     //NSString *regExPattern = @"[a-zA-Z0-8]*";
     NSString *regExPattern = @"^[a-zA-Z0-9]{8,24}$";
     BOOL bIsInputValid = [[NSPredicate predicateWithFormat:@"SELF MATCHES %@", regExPattern]
@@ -192,20 +185,16 @@ replacementString:(NSString *)string
 
     if (self.currentPwdTextField == textField) {
         NSLog(@"self.currentPwdTextField.text: %@", self.currentPwdTextField.text);
-        
         NSRange textFieldRange = NSMakeRange(0, [textField.text length]);
         
         if (NSEqualRanges(range, textFieldRange) && [string length] == 0) {
             NSLog(@"no text");
-            
             self.currentPwdView.backgroundColor = [UIColor thirdPink];
         } else {
             NSLog(@"has text");
-            
             self.currentPwdView.backgroundColor = [UIColor thirdGrey];
         }
     }
-    
     if (self.pwdTextField1 == textField) {
         NSLog(@"self.pwdTextField1.text: %@", self.pwdTextField1);
         
@@ -240,7 +229,6 @@ replacementString:(NSString *)string
             self.pwdCheckLabel2.hidden = YES;
         }
     }
-    
     return YES;
 }
 
@@ -248,7 +236,6 @@ replacementString:(NSString *)string
 - (void)addKeyboardNotification {
     NSLog(@"");
     NSLog(@"addKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWasShown:)
                                                  name:UIKeyboardDidShowNotification
@@ -262,7 +249,6 @@ replacementString:(NSString *)string
 - (void)removeKeyboardNotification {
     NSLog(@"");
     NSLog(@"removeKeyboardNotification");
-    
     [[NSNotificationCenter defaultCenter] removeObserver: self
                                                     name: UIKeyboardDidShowNotification
                                                   object: nil];
@@ -275,7 +261,6 @@ replacementString:(NSString *)string
 
 - (void)keyboardWasShown:(NSNotification*)aNotification {
     NSLog(@"keyboardWasShown");
-    
     NSDictionary* info = [aNotification userInfo];
     NSLog(@"info: %@", info);
     
@@ -412,10 +397,8 @@ replacementString:(NSString *)string
     if (![self.currentPwdTextField.text isEqualToString: userPwd]) {
         NSLog(@"用戶的密碼錯誤");
         [self showCustomErrorAlert: @"用戶的密碼錯誤"];
-        
         return;
     }
-    
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -425,7 +408,6 @@ replacementString:(NSString *)string
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI updatepwd: [wTools getUserID]
                                          token: [wTools getUserToken]
@@ -442,7 +424,6 @@ replacementString:(NSString *)string
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
                 NSLog(@"response from updatepwd: %@", response);
                 
@@ -450,38 +431,41 @@ replacementString:(NSString *)string
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ChangePwdViewController");
                     NSLog(@"sendBtnPress");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"updatepwd"];
                 } else {
                     NSLog(@"Get Real Response");
                 }
-                
                 NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
                 
                 if ([dic[@"result"] intValue] == 1) {
                     NSLog(@"更新成功");
-                    
-                    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-                    [userPrefs setObject: self.pwdTextField2.text forKey: @"pwd"];
-                    [userPrefs synchronize];
-                    
-                    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-                    style.messageColor = [UIColor whiteColor];
-                    style.backgroundColor = [UIColor secondMain];
-                    
-                    [self.view makeToast: @"密碼更新成功"
-                                duration: 2.0
-                                position: CSToastPositionBottom
-                                   style: style];
-                    
-                    //[self.navigationController popViewControllerAnimated:YES];
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [appDelegate.myNav popViewControllerAnimated: YES];
+                    if ([wTools objectExists: self.pwdTextField2.text]) {
+                        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+                        [userPrefs setObject: self.pwdTextField2.text forKey: @"pwd"];
+                        [userPrefs synchronize];
+                        
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor secondMain];
+                        
+                        [self.view makeToast: @"密碼更新成功"
+                                    duration: 2.0
+                                    position: CSToastPositionBottom
+                                       style: style];
+                        
+                        //[self.navigationController popViewControllerAnimated:YES];
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav popViewControllerAnimated: YES];
+                    }
                 } else if ([dic[@"result"] intValue] == 0) {
                     NSLog(@"失敗：%@",dic[@"message"]);
-                    [self showCustomErrorAlert: dic[@"message"]];
+                    if ([wTools objectExists: dic[@"message"]]) {
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
                 } else {
                     [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                 }
@@ -491,94 +475,17 @@ replacementString:(NSString *)string
 }
 
 #pragma mark - Custom Error Alert Method
-- (void)showCustomErrorAlert: (NSString *)msg
-{
+- (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
     }];
     
 }
-/*
-- (UIView *)createErrorContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    //textView.text = @"帳號已經存在，請使用另一個";
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_error"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    contentView.backgroundColor = [UIColor firstPink];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-*/
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert: (NSString *)msg
-                  protocolName: (NSString *)protocolName
-{
+                  protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -599,7 +506,6 @@ replacementString:(NSString *)string
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
-        
         [weakAlertTimeOutView close];
         
         if (buttonIndex == 0) {            
@@ -613,8 +519,7 @@ replacementString:(NSString *)string
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
+- (UIView *)createTimeOutContainerView: (NSString *)msg {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
     textView.text = msg;
