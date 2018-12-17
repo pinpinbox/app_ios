@@ -517,4 +517,10 @@ doneHandler fail:(void(^)(NSInteger status)) failHandler;
 
 #pragma mark - upload album music
 + (void)uploadMusicWithAlbumSettings:(NSDictionary *)audioSetting audioUrl:(NSURL *)audioUrl sessionDelegate:(id<NSURLSessionDelegate>)sessionDelegate completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
+
+
+
+#pragma mark - for Share extension
++ (void)userProfileWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
+
 @end

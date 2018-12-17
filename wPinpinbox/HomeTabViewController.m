@@ -893,6 +893,7 @@ sourceController:(UIViewController *)source
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSLog(@"Standard:%@,%@\n\n USerInfo: %@,%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"token"],[[NSUserDefaults standardUserDefaults] objectForKey:@"id"],[UserInfo getUserToken] ,[UserInfo getUserID]);
         NSString *response = [boxAPI getTheMeArea: [UserInfo getUserToken] userId: [UserInfo getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{

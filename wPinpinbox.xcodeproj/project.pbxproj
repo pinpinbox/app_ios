@@ -380,6 +380,13 @@
 		CBDA227B21C3929500706E2C /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
 		CBDA227C21C3929B00706E2C /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877CF01F905B030050C077 /* GlobalVars.m */; };
 		CBDA227D21C392F700706E2C /* PinPinBoxLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DAE121BE6DBD00596E28 /* PinPinBoxLogo.png */; };
+		CBDA228321C3B39E00706E2C /* UserAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDA228221C3B39E00706E2C /* UserAPI.m */; };
+		CBDA228421C3B4BA00706E2C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 9299FFC31BCB6A1100BB9D84 /* NSString+MD5.m */; };
+		CBE104B821C7490A00E185D3 /* videobase.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CBE104B721C7490A00E185D3 /* videobase.jpg */; };
+		CBE104B921C74C1200E185D3 /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
+		CBE104BC21C7596600E185D3 /* ic200_act_open_white.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE104BA21C7596600E185D3 /* ic200_act_open_white.png */; };
+		CBE104BD21C7596600E185D3 /* ic200_act_close_white.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE104BB21C7596600E185D3 /* ic200_act_close_white.png */; };
+		CBE104BE21C75A4600E185D3 /* UIColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A7DDD31E9223CE003D6A6E /* UIColor+Extensions.m */; };
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
 		CBF9DAE021BE555A00596E28 /* Login.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DADF21BE555A00596E28 /* Login.xcassets */; };
@@ -1064,6 +1071,11 @@
 		CBDA227221C3923200706E2C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		CBDA227421C3923200706E2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CBDA227E21C39BA500706E2C /* PinpinboxShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PinpinboxShareExtension.entitlements; sourceTree = "<group>"; };
+		CBDA228121C3B39E00706E2C /* UserAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserAPI.h; sourceTree = "<group>"; };
+		CBDA228221C3B39E00706E2C /* UserAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserAPI.m; sourceTree = "<group>"; };
+		CBE104B721C7490A00E185D3 /* videobase.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = videobase.jpg; sourceTree = "<group>"; };
+		CBE104BA21C7596600E185D3 /* ic200_act_open_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic200_act_open_white.png; sourceTree = "<group>"; };
+		CBE104BB21C7596600E185D3 /* ic200_act_close_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic200_act_close_white.png; sourceTree = "<group>"; };
 		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
 		CBE2773921A8045600A6E80D /* HudIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudIndicatorView.m; sourceTree = "<group>"; };
 		CBF138E921C24FD80070EBB8 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
@@ -2823,13 +2835,27 @@
 		CBDA226D21C3923200706E2C /* PinpinboxShareExtension */ = {
 			isa = PBXGroup;
 			children = (
+				CBE104B621C7490A00E185D3 /* Images */,
 				CBDA227E21C39BA500706E2C /* PinpinboxShareExtension.entitlements */,
 				CBDA226E21C3923200706E2C /* ShareViewController.h */,
 				CBDA226F21C3923200706E2C /* ShareViewController.m */,
 				CBDA227121C3923200706E2C /* MainInterface.storyboard */,
 				CBDA227421C3923200706E2C /* Info.plist */,
+				CBDA228121C3B39E00706E2C /* UserAPI.h */,
+				CBDA228221C3B39E00706E2C /* UserAPI.m */,
 			);
 			path = PinpinboxShareExtension;
+			sourceTree = "<group>";
+		};
+		CBE104B621C7490A00E185D3 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				CBE104BB21C7596600E185D3 /* ic200_act_close_white.png */,
+				CBE104BA21C7596600E185D3 /* ic200_act_open_white.png */,
+				CBE104B721C7490A00E185D3 /* videobase.jpg */,
+			);
+			name = Images;
+			path = Base.lproj/Images;
 			sourceTree = "<group>";
 		};
 		CBE2773721A8045600A6E80D /* HudIndicatorView */ = {
@@ -3110,6 +3136,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CBDA227D21C392F700706E2C /* PinPinBoxLogo.png in Resources */,
+				CBE104BC21C7596600E185D3 /* ic200_act_open_white.png in Resources */,
+				CBE104BD21C7596600E185D3 /* ic200_act_close_white.png in Resources */,
+				CBE104B821C7490A00E185D3 /* videobase.jpg in Resources */,
 				CBDA227321C3923200706E2C /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3408,6 +3437,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBE104BE21C75A4600E185D3 /* UIColor+Extensions.m in Sources */,
+				CBE104B921C74C1200E185D3 /* MultipartInputStream.m in Sources */,
+				CBDA228421C3B4BA00706E2C /* NSString+MD5.m in Sources */,
+				CBDA228321C3B39E00706E2C /* UserAPI.m in Sources */,
 				CBDA227C21C3929B00706E2C /* GlobalVars.m in Sources */,
 				CBDA227B21C3929500706E2C /* UserInfo.m in Sources */,
 				CBDA227021C3923200706E2C /* ShareViewController.m in Sources */,

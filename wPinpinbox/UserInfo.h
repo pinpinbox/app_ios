@@ -12,8 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UserInfo : NSObject
 //userInfo
-+(NSString *)getUserID;
-+(NSString *)getUserToken;
++ (NSString *)getUserID;
++ (NSString *)getUserToken;
++ (void)setUserInfo:(NSString *)uid token:(NSString *)token;
++ (void)resetUserInfo;
 
 @end
 

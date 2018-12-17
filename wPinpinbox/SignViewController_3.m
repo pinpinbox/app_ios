@@ -476,11 +476,7 @@
                         [userPrefs setObject:[data[@"data"][@"id"] stringValue] forKey:@"id"];
                         [userPrefs synchronize];
                         
-                        NSUserDefaults *group = [[NSUserDefaults alloc] initWithSuiteName:@"group.pinpinbox"];
-                        
-                        [group setObject:data[@"data"][@"token"] forKey:@"token"];
-                        [group setObject:[data[@"data"][@"id"] stringValue] forKey:@"id"];
-                        [group synchronize];
+                        [UserInfo setUserInfo:[data[@"data"][@"id"] stringValue] token:data[@"data"][@"token"] ];
                         
                         FBFriendsFindingViewController *fbFindingVC = [[UIStoryboard storyboardWithName:@"FBFriendsFindingVC" bundle:nil]instantiateViewControllerWithIdentifier:@"FBFriendsFindingViewController"];
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
