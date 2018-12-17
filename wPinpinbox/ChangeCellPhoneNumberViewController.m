@@ -97,7 +97,7 @@
  
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     myData = [userPrefs objectForKey: @"profile"];
-    
+    NSLog(@"myData: %@", myData);
     self.cellPhoneNumberLabel.text = myData[@"cellphone"];
     
     self.countryCodeView.layer.cornerRadius = kCornerRadius;
@@ -342,15 +342,17 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ChangeCellPhoneNumberViewController");
                     NSLog(@"downBtn");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"updatecellphone"];
                 } else {
                     NSLog(@"Get Real Response");
                     NSLog(@"response: %@", response);
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+                    NSLog(@"dic: %@", dic);
                     
                     if ([dic[@"result"] intValue] == 1) {
+                        self.cellPhoneNumberLabel.text = [NSString stringWithFormat:@"%@,%@", countrStr, self.cellPhoneTextField.text];
+                        
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
                         style.backgroundColor = [UIColor secondMain];
@@ -360,9 +362,11 @@
                                     position: CSToastPositionBottom
                                        style: style];
                         
+                        [self getProfile];
+                        
                         //[self.navigationController popViewControllerAnimated:YES];
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav popViewControllerAnimated: YES];
+//                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//                        [appDelegate.myNav popViewControllerAnimated: YES];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         if ([wTools objectExists: dic[@"message"]]) {
@@ -377,6 +381,85 @@
             }            
         });
     });
+}
+
+- (void)getProfile {
+    NSLog(@"getProfile");
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = [boxAPI getprofile: [userPrefs objectForKey: @"id"] token: [userPrefs objectForKey: @"token"]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"MeTabViewController");
+                    NSLog(@"getProfile");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"getprofile"];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSLog(@"responseFromGetProfile != nil");
+                    [wself processProfile:dic];
+                }
+            }
+        });
+    });
+}
+
+- (void)processProfile:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+        NSMutableDictionary *dataIc = [[NSMutableDictionary alloc] initWithDictionary: dic[@"data"] copyItems: YES];
+        
+        if (![wTools objectExists: [dataIc allKeys]]) {
+            return;
+        }
+        
+        for (NSString *key in [dataIc allKeys]) {
+            id objective = [dataIc objectForKey: key];
+            
+            if ([objective isKindOfClass: [NSNull class]]) {
+                [dataIc setObject: @"" forKey: key];
+            }
+        }
+        [userPrefs setValue: dataIc forKey: @"profile"];
+        [userPrefs synchronize];
+        
+        myData = [dataIc mutableCopy];
+        
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav popViewControllerAnimated: YES];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
 }
 
 #pragma mark - Show SelectBar
@@ -555,6 +638,8 @@ replacementString:(NSString *)string {
                 [weakSelf cellapi: nil];
             } else if ([protocolName isEqualToString: @"updatecellphone"]) {
                 [weakSelf downbtn: nil];
+            } else if ([protocolName isEqualToString: @"getprofile"]) {
+                [weakSelf getProfile];
             }
         }
     }];
