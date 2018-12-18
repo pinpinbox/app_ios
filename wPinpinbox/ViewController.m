@@ -34,6 +34,7 @@
 #import "UIColor+HexString.h"
 #import "UIViewController+ErrorAlert.h"
 #import <SafariServices/SafariServices.h>
+#import "UserInfo.h"
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
@@ -1092,6 +1093,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         [userPrefs setObject: @"FB" forKey: @"FB"];
         [userPrefs synchronize];
     }
+    // for share extension //
+    if ([wTools objectExists:_tokenStr] && [wTools objectExists:_idStr])
+        [UserInfo setUserInfo:_idStr token:_tokenStr];
+    
 }
 
 #pragma mark - Web Service - Refresh Token
@@ -1143,7 +1148,10 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                         }
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
                         [userPrefs setObject: wself.tokenStr forKey: @"token"];
+                        // for share extension //
+                        [UserInfo setUserInfo:wself.idStr token:wself.tokenStr];
                         [wself getProfile];
+                        
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"失敗： %@", dic[@"message"]);
                         if ([wTools objectExists: dic[@"message"]]) {

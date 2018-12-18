@@ -23,6 +23,8 @@
 
 #import "UIViewController+ErrorAlert.h"
 
+#import "UserInfo.h"
+
 static wTools *instance =nil;
 
 @implementation wTools
@@ -644,7 +646,7 @@ static wTools *instance =nil;
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             [defaults setObject: [NSNumber numberWithBool: YES] forKey: @"logOutFromSetting"];
             [defaults synchronize];
-            
+            [UserInfo resetUserInfo];
             break;
         }
     }

@@ -385,6 +385,7 @@
 		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
 		D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78F738D1D226D8700D8A271 /* YTPlayerView.m */; };
 		F016647821AF9F6C006A1E79 /* DSPhotoEditorSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F016647521AF9E5D006A1E79 /* DSPhotoEditorSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F01CFF0521C890B200A328B9 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F01CFF0421C890B200A328B9 /* UserInfo.m */; };
 		F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F039BD192148B8C6007AEA85 /* SystemImages.xcassets */; };
 		F0AC57542142353D00F63B82 /* UIViewController+ErrorAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */; };
 /* End PBXBuildFile section */
@@ -1059,6 +1060,8 @@
 		D78F738C1D226D8700D8A271 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
 		D78F738D1D226D8700D8A271 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
 		F016647521AF9E5D006A1E79 /* DSPhotoEditorSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DSPhotoEditorSDK.framework; path = wPinpinbox/Lib/DSPhotoEditor/DSPhotoEditorSDK.framework; sourceTree = "<group>"; };
+		F01CFF0321C890B200A328B9 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
+		F01CFF0421C890B200A328B9 /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
 		F039BD192148B8C6007AEA85 /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SystemImages.xcassets; sourceTree = "<group>"; };
 		F0AC57522142353D00F63B82 /* UIViewController+ErrorAlert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ErrorAlert.h"; sourceTree = "<group>"; };
 		F0AC57532142353D00F63B82 /* UIViewController+ErrorAlert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+ErrorAlert.m"; sourceTree = "<group>"; };
@@ -2336,6 +2339,8 @@
 				638F88B91E02458500316123 /* Image Resources */,
 				9276DFB21B72FDC000E6ACC9 /* LaunchScreen.xib */,
 				9276DFA31B72FDC000E6ACC9 /* Supporting Files */,
+				F01CFF0321C890B200A328B9 /* UserInfo.h */,
+				F01CFF0421C890B200A328B9 /* UserInfo.m */,
 			);
 			path = wPinpinbox;
 			sourceTree = "<group>";
@@ -2870,6 +2875,9 @@
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
@@ -3085,6 +3093,7 @@
 				54E6EA7F20A050CB00DA7D99 /* FollowFromListTableViewCell.m in Sources */,
 				6319A36E1DABB60C001CB8BD /* JCViewController.m in Sources */,
 				922557421BDF594E00CD4E9B /* CalbumlistCollectionViewCell.m in Sources */,
+				F01CFF0521C890B200A328B9 /* UserInfo.m in Sources */,
 				54A32A081F5EAD8900CECE58 /* BFPaperButton.m in Sources */,
 				54A857552008BC3500D87843 /* LabelAttributeStyle.m in Sources */,
 				92D525FF1BCF9E41002C157B /* UIViewController+CWPopup.m in Sources */,

@@ -23,6 +23,8 @@
 
 #import "UIViewController+ErrorAlert.h"
 #import "CustomIOSAlertView.h"
+
+#import "UserInfo.h"
 @interface SignViewController_2 ()<UITextFieldDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,PhotosViewDelegate,SelectBarDelegate>
 {
     UITextField *selectText;
@@ -335,6 +337,10 @@
                     [userPrefs setObject:dic[@"data"][@"token"] forKey:@"token"];
                     [userPrefs setObject:[dic[@"data"][@"id"] stringValue] forKey:@"id"];
                     [userPrefs synchronize];
+                    
+                    // for share extension //
+                    [UserInfo setUserInfo:[dic[@"data"][@"id"] stringValue] token:dic[@"data"][@"token"]];
+                    
                     
                     if (tmp[@"image"]) {
                         NSLog(@"UPDATA IMAGE");

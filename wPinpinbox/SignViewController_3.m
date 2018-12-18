@@ -23,6 +23,8 @@
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "UserInfo.h"
+
 @interface SignViewController_3 ()<UITextFieldDelegate, SelectBarDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectText;
     __weak IBOutlet UITextField *keylab;
@@ -474,6 +476,10 @@
                         [userPrefs setObject:data[@"data"][@"token"] forKey:@"token"];
                         [userPrefs setObject:[data[@"data"][@"id"] stringValue] forKey:@"id"];
                         [userPrefs synchronize];
+                        
+                        // for share extension //
+                        [UserInfo setUserInfo:[data[@"data"][@"id"] stringValue] token:data[@"data"][@"token"]];
+                        
                         
                         FBFriendsFindingViewController *fbFindingVC = [[UIStoryboard storyboardWithName:@"FBFriendsFindingVC" bundle:nil]instantiateViewControllerWithIdentifier:@"FBFriendsFindingViewController"];
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
