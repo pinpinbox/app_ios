@@ -5030,7 +5030,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 #pragma mark - Custom AlertView for Getting Point
 - (void)showAlertViewForGettingPoint {
     NSLog(@"showAlertViewForGettingPoint");
-
     // Custom AlertView shows up when getting the point
     alertView = [[OldCustomAlertView alloc] init];
     [alertView setContainerView: [self createPointView]];

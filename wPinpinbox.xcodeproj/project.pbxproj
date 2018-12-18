@@ -481,6 +481,7 @@
 		543B11A920561ACA00111102 /* ExchangeStuff.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExchangeStuff.m; sourceTree = "<group>"; };
 		543FC4F720EB24320090DF43 /* MoreTabViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MoreTabViewController.h; sourceTree = "<group>"; };
 		543FC4F820EB24320090DF43 /* MoreTabViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoreTabViewController.m; sourceTree = "<group>"; };
+		5442384821C36A2700B2B04A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../NullObjectCheck/app_ios/wPinpinbox/Info.plist; sourceTree = "<group>"; };
 		544DA7C11F4B271C00E80C45 /* MapShowingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapShowingViewController.h; sourceTree = "<group>"; };
 		544DA7C21F4B271C00E80C45 /* MapShowingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapShowingViewController.m; sourceTree = "<group>"; };
 		544DA7C31F4B271C00E80C45 /* MapShowingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapShowingViewController.xib; sourceTree = "<group>"; };
@@ -2343,6 +2344,7 @@
 			isa = PBXGroup;
 			children = (
 				63090CFC1DCC858400D8BF20 /* wPinpinbox-Bridging-Header.h */,
+				5442384821C36A2700B2B04A /* Info.plist */,
 				925119EC1CF57E99002D4678 /* Hobby_lang.plist */,
 				9276DFA51B72FDC000E6ACC9 /* main.m */,
 				929ED49A1B7849DE00D21CF0 /* wPinpinbox-Prefix.pch */,

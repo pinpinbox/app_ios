@@ -989,7 +989,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
                     NSLog(@"Time Out Message Return");
                     NSLog(@"AlbumDetailViewController");
                     NSLog(@"checkTaskComplete");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"checkTaskCompleted"
                                              row: 0
@@ -1409,7 +1408,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self showAlertViewForGettingPoint];
         [self saveCollectInfoToDevice: NO];
         [self retrieveAlbum];
-
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
         [self saveCollectInfoToDevice: YES];
@@ -1431,7 +1429,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [defaults setObject: [NSNumber numberWithBool: collect_free_album]
                      forKey: @"collect_free_album"];
         [defaults synchronize];
-
     } else if ([task_for isEqualToString: @"collect_pay_album"]) {
         // Save data for first collect paid album
         BOOL collect_pay_album = isCollect;
@@ -1439,7 +1436,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [defaults setObject: [NSNumber numberWithBool: collect_pay_album]
                      forKey: @"collect_pay_album"];
         [defaults synchronize];
-
     }
 }
 
@@ -2150,7 +2146,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
 }
 
-
 - (void)insertAlbumToLikes {
     NSLog(@"insertAlbumToLikes");
     @try {
@@ -2274,7 +2269,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - FBSDKSharing Delegate Methods
-
 - (void)sharer:(id<FBSDKSharing>)sharer
 didCompleteWithResults:(NSDictionary *)results {
     NSLog(@"Sharing Complete");
@@ -2293,9 +2287,8 @@ didCompleteWithResults:(NSDictionary *)results {
     }
 }
 
+- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error {
 
-- (void)sharer:(id<FBSDKSharing>)sharer
-didFailWithError:(NSError *)error {
     NSLog(@"Sharing didFailWithError");
 }
 
@@ -2306,7 +2299,6 @@ didFailWithError:(NSError *)error {
 #pragma mark - Custom AlertView for Getting Point
 - (void)showAlertViewForGettingPoint {
     NSLog(@"showAlertViewForGettingPoint");
-
     // Custom AlertView shows up when getting the point
     alertGetPointView = [[OldCustomAlertView alloc] init];
     [alertGetPointView setContainerView: [self createPointView]];
@@ -2321,7 +2313,6 @@ didFailWithError:(NSError *)error {
     // Mission Topic Label
     UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
     //missionTopicLabel.text = @"收藏相本得點";
-
     
     if ([wTools objectExists: missionTopicStr]) {
         missionTopicLabel.text = missionTopicStr;

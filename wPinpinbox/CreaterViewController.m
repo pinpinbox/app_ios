@@ -1135,6 +1135,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                             followBtn.layer.borderWidth = 2.0;
                         } else {
                             [followBtn setTitle:NSLocalizedString(@"AuthorText-att", @"") forState:UIControlStateNormal];
+
                             followBtn.backgroundColor = [UIColor firstPink];
                             followBtn.layer.cornerRadius = kCornerRadius;
                             followBtn.clipsToBounds = YES;
