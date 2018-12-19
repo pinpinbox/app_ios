@@ -396,10 +396,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     //NSLog(@"_data: %@", _data);
     
     if ([self.data[@"photo"] isEqual: [NSNull null]]) {
-        self.headerImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        self.headerImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
     } else {
         if ([_data[@"photo"][0][@"image_url"] isEqual: [NSNull null]]) {
-            self.headerImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+            self.headerImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             imageUrl = _data[@"photo"][0][@"image_url"];
             self.headerImageView.image = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString: imageUrl]]];

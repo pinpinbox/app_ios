@@ -1693,7 +1693,7 @@ sourceController:(UIViewController *)source
         cell.contentView.subviews[0].backgroundColor = nil;
         
         if ([data[@"album"][@"cover"] isEqual: [NSNull null]]) {
-            cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+            cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]] placeholderImage: [UIImage imageNamed:@"placeholder.png"]];
             
@@ -1777,7 +1777,7 @@ sourceController:(UIViewController *)source
         cell.bannerImageView.image = nil;
         
         if ([adData[@"ad"][@"image"] isEqual: [NSNull null]]) {
-            cell.bannerImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+            cell.bannerImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             NSString *urlString = adData[@"ad"][@"image"];
             
@@ -1822,7 +1822,7 @@ sourceController:(UIViewController *)source
         
         if (![dic[@"image_360x360"] isEqual: [NSNull null]]) {
             [cell.categoryImageView sd_setImageWithURL: [NSURL URLWithString: dic[@"image_360x360"]]
-                                      placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+                                      placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"]];
         }
         
         if (![dic[@"name"] isEqual:[NSNull null]]) {
@@ -1861,7 +1861,7 @@ sourceController:(UIViewController *)source
         //NSLog(@"albumDic: %@", albumDic);
         
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
-            cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+            cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]];
         }
@@ -1962,7 +1962,7 @@ sourceController:(UIViewController *)source
         //NSLog(@"albumDic: %@", albumDic);
         
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
-            cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+            cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]];
         }
@@ -2085,13 +2085,13 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
-    
     if (collectionView.tag == 1) {
         UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
         NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
         
         //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
         NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
+        NSLog(@"pictures: %@", pictures[indexPath.row]);
         
         NSDictionary *data = pictures[indexPath.row];
         NSString *albumId = [data[@"album"][@"album_id"] stringValue];
@@ -2099,23 +2099,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSNumber *coverWidth = data[@"album"][@"cover_width"];
         NSNumber *coverHeight = data[@"album"][@"cover_height"];
         
-        NSInteger tempWidth = [coverWidth integerValue];
-        NSInteger tempHeight = [coverHeight integerValue];
-        
-        CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
-        NSLog(@"screenWidth: %f", screenWidth);
-        CGFloat headerImageHeight = 0;
-        
-        if (tempWidth > tempHeight) {
-            headerImageHeight = (2 * screenWidth) / 3;
-        } else if (tempWidth < tempHeight) {
-            headerImageHeight = (4 * screenWidth) / 3;
-        } else if (tempWidth == tempHeight) {
-            headerImageHeight = screenWidth;
+        if ([wTools objectExists: coverWidth] || [wTools objectExists: coverHeight]) {
+            NSInteger tempWidth = [coverWidth integerValue];
+            NSInteger tempHeight = [coverHeight integerValue];
+            
+            CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+            NSLog(@"screenWidth: %f", screenWidth);
+            CGFloat headerImageHeight = 0;
+            
+            if (tempWidth > tempHeight) {
+                headerImageHeight = (2 * screenWidth) / 3;
+            } else if (tempWidth < tempHeight) {
+                headerImageHeight = (4 * screenWidth) / 3;
+            } else if (tempWidth == tempHeight) {
+                headerImageHeight = screenWidth;
+            }
+            NSLog(@"headerImageHeight: %f", headerImageHeight);
         }
-        NSLog(@"headerImageHeight: %f", headerImageHeight);
-        
-        //[self ToRetrievealbumpViewControlleralbumid: albumId];
         
         [self toAlbumDetailVC: albumId];
     } else if (collectionView.tag == 2) {
@@ -2146,10 +2146,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)toAlbumDetailVC:(NSString *)albumId {
+    NSLog(@"toAlbumDetailVC");
     if (![wTools objectExists: albumId]) {
         return;
     }
-    
+    NSLog(@"After objectExists check");
     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
     aDVC.albumId = albumId;
     aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
@@ -2162,6 +2163,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+    NSLog(@"Before PushViewController");
     [appDelegate.myNav pushViewController: aDVC animated: NO];
 }
 
