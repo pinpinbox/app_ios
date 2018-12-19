@@ -28,9 +28,7 @@
     NSInteger  nextId;
     
     UIView *noInfoView;
-    BOOL isNoInfoViewCreate;
-    
-    CGFloat lastContentOffset;
+    BOOL isNoInfoViewCreate;    
 }
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
@@ -310,6 +308,7 @@
     frameLayout.myCenterXOffset = 0;
     frameLayout.myCenterYOffset = 0;
     frameLayout.padding = UIEdgeInsetsMake(32, 32, 32, 32);
+    
     return frameLayout;
 }
 
@@ -325,7 +324,8 @@
     label.textColor = [UIColor firstGrey];
     [label sizeToFit];
 //    label.myCenterXOffset = 0;
-//    label.myCenterYOffset = 0;    
+//    label.myCenterYOffset = 0;
+    
     return label;
 }
 
