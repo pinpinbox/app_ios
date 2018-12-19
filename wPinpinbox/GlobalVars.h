@@ -12,6 +12,7 @@
 #define fileDest [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches/data/Download"]
 #define filepinpinboxDest [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches/data/pinpinbox"]
 #define DownloadCompletedNotif @"DownloadCompletedNotif"
+#define AppGroup @"group.pinpinbox"
 
 extern NSString *timeOutErrorCode;
 extern NSString *timeOutErrorCode1;

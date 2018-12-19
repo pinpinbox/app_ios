@@ -181,7 +181,17 @@
 }
 
 
-
++ (NSString *)refreshToken:(NSString *)userId
+{
+    NSString *returnStr = @"";
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    
+    [dic setObject: userId forKey: @"user_id"];
+    
+    returnStr = [self userAPI:dic URL: @"/refreshtoken/2.0"];
+    
+    return returnStr;
+}
 
 +(NSString *)getprofile:(NSString *)uid token:(NSString *)token {
     NSLog(@"");
@@ -212,8 +222,82 @@
     
     return returnstr;
 }
-
-
++(NSString *)getalbumofdiy:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id{
+    NSLog(@"");
+    NSLog(@"getalbumofdiy");
+    
+    NSString *returnstr=@"";
+    NSMutableDictionary *dic=[NSMutableDictionary new];
+    [dic setObject:uid forKey:@"id"];
+    [dic setObject:token forKey:@"token"];
+    [dic setObject:album_id forKey:@"album_id"];
+    
+    returnstr=[self userAPI:dic URL:@"/getalbumofdiy/1.1"];
+    
+    return returnstr;
+}
++ (void)postPreCheck:(NSString *)album_id completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [UserAPI getalbumofdiy:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:album_id];
+        
+        if (response != nil) {
+            if ([response isEqualToString: @"-1001"]) {
+                if (completionBlock)
+                    completionBlock(nil, [NSError errorWithDomain:@"postPreCheck" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
+            } else {
+                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                
+                int res = [dic[@"result"] intValue];
+                if (res == 1) {
+                    if (completionBlock)
+                        completionBlock(dic[@"data"], nil);
+                } else {
+                    
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"postPreCheck" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
+                    
+                }
+                
+            }
+            
+        } else {
+            if (completionBlock)
+                completionBlock(nil, [NSError errorWithDomain:@"postPreCheck" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+        }
+    });
+}
++ (void)refreshTokenWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [UserAPI refreshToken:[UserInfo getUserID]];
+        
+        if (response != nil) {
+            if ([response isEqualToString: @"-1001"]) {
+                if (completionBlock)
+                    completionBlock(nil, [NSError errorWithDomain:@"refreshToken" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
+            } else {
+                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                
+                NSString *res = dic[@"result"];
+                if ([res isEqualToString:@"SYSTEM_OK"]) {
+                        if (completionBlock)
+                            completionBlock(dic[@"data"][@"token"],nil);
+                } else {
+                    
+                        if (completionBlock)
+                            completionBlock(nil, [NSError errorWithDomain:@"refreshToken" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
+                    
+                }
+                
+            }
+            
+        } else {
+            if (completionBlock)
+                completionBlock(nil, [NSError errorWithDomain:@"refreshToken" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+        }
+    });
+}
 + (void)userProfileWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -286,9 +370,17 @@
         }
     });
 }
-+ (void)insertPhotoWithAlbum_id:(NSString *)album_id imageData:(NSData *)imageData urlPath:(NSString *)urlPath {
++ (NSString *)insertVideoWithAlbum_id:(NSString *)album_id videopath:(NSString *)videopath completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
     
-    if (!imageData || imageData.length < 1) return;
+    NSString *uuid = [[NSUUID UUID] UUIDString];
+    
+    return uuid;
+}
++ (NSString *)insertPhotoWithAlbum_id:(NSString *)album_id
+                      imageData:(NSData *)imageData
+                completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
+    
+    if (!imageData || imageData.length < 1) return nil;
     // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
 
@@ -335,103 +427,47 @@
     [request setHTTPBodyStream:st];
     
     //__block NSString *str;
-    
-    __block typeof(self) wself = self;
+
     NSURLSession *session = [NSURLSession sharedSession];
+    
+    NSString *uuid = [[NSUUID UUID] UUIDString];
     
     NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
         
-        //if (wself.uploadProgressBlock)
-        //    wself.uploadProgressBlock((int)wself.pageFinished, (int)wself.totalPages,desc);
-        
-        __strong typeof(wself) sself = wself;
-        if (error) {
-            NSLog(@"dataTaskWithRequest error: %@", error);
-            
-        }
         if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
             NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
             
             if (statusCode != 200) {
-                NSLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
-          
+                if (completionBlock)
+                    completionBlock(nil, uuid, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"HTTP response is 200"}]);
+                
+                return;
             }
         }
         if (!error && data) {
             
             NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: nil];
             
-            
-            
             if ([dic[@"result"] boolValue]) {
-                
-                NSArray *photo = dic[@"photo"];
-                if (photo && photo.count) {
-                    NSDictionary *p = photo.firstObject;
-                    if (p[@"photo_id"] && [p[@"photo_id"] isKindOfClass:[NSString class]]) {
-                        NSString *photo_id = p[@"photo_id"];
-                        [UserAPI updatePhotoMetaWithVideoUrlPath:photo_id album_id:album_id path:urlPath];
-                    }
-                }
+                  if (completionBlock)
+                      completionBlock(dic[@"data"], uuid, nil);
                 
             } else {
                 NSLog(@"Error Message: %@", dic[@"message"]);
-                
-                //[sself increaseFailed];
+                if (completionBlock)
+                    completionBlock(nil, uuid, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]);
             }
             
         } else {
-            // [sself increaseFailed];
+            if (completionBlock)
+                completionBlock(nil, uuid, error);
         }
-        //[sself increaseFinished];
-        //[sself removeDataTask:desc];
-        //if (sself.uploadProgressBlock)
-        //    sself.uploadProgressBlock((int)sself.pageFinished, (int)sself.totalPages);
-        
-        
     }];
-    
+    task.taskDescription = uuid;
     [task resume];
+    
+    return uuid;
 }
-+ (void)updatePhotoMetaWithVideoUrlPath:(NSString *)photo_id album_id:(NSString *)album_id path:(NSString *)path {
-    
-    NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
-    
-    [_params setObject:[UserInfo getUserID] forKey:@"id"];
-    [_params setObject:[UserInfo getUserToken] forKey:@"token"];
-    [_params setObject:album_id forKey:@"album_id"];
-    [_params setObject:photo_id forKey:@"photo_id"];
-    [_params setObject:@{@"video_refer":@"embed", @"video_target":path} forKey:@"settings"];
-    [_params setObject:[self signGenerator2:_params] forKey:@"sign"];
-    
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI userAPI:_params URL:@"updatephotoofdiy/1.2"];
-        
-        if (response != nil) {
-            if ([response isEqualToString: @"-1001"]) {
-//                if (completionBlock)
-//                    completionBlock(nil, [NSError errorWithDomain:@"getprofile" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
-            } else {
-                NSLog(@"Get Real Response");
-                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                
-                int res = [dic[@"result"] intValue];
-                
-                switch (res) {
-                    case 0: {
-                        
-                    }
-                        break;
-                    case 1: {
-                        
-                    }
-                        break;
-                }
-            }
-        }
-    });
-    
-}
+
 @end

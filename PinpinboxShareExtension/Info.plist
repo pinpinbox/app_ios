@@ -25,16 +25,26 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
-			<dict>
-				<key>NSExtensionActivationSupportsImageWithMaxCount</key>
-				<integer>3</integer>
-				<key>NSExtensionActivationSupportsMovieWithMaxCount</key>
-				<integer>1</integer>
-				<key>NSExtensionActivationSupportsText</key>
-				<true/>
-				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
-				<integer>1</integer>
-			</dict>
+			<string> SUBQUERY (
+    extensionItems,
+    $extensionItem,
+    SUBQUERY (
+        $extensionItem.attachments,
+        $attachment,
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.image" ||
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.movie" ||    
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "com.adobe.pdf" ||
+        SUBQUERY(
+        	extensionItems, 
+        	$extensionItem, 
+        	SUBQUERY(
+        		$extensionItem.attachments, 
+        		$attachment, 
+        		SUBQUERY($attachment.registeredTypeIdentifiers, 
+        		$uti, $uti UTI-CONFORMS-TO "public.file-url").@count == 0).@count &gt;= 1).@count &gt;= 1
+    ).@count &gt;= 1).@count &gt;= 1
+	
+		</string>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
 		<string>MainInterface</string>

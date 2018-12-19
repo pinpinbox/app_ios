@@ -4958,7 +4958,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSError *er = nil;
         NSData *data = nil;
         @try {
-            data = [NSJSONSerialization dataWithJSONObject:ar options:NSJSONWritingPrettyPrinted error:&er];
+            data = [NSJSONSerialization dataWithJSONObject:ar options:0 error:&er];
             if (!er) {
                 string = [NSString stringWithCString:[data bytes] encoding:NSUTF8StringEncoding];
                 if (string == nil) {

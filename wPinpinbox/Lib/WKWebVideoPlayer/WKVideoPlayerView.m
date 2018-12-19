@@ -7,31 +7,7 @@
 //
 
 #import "WKVideoPlayerView.h"
-
-
-#pragma mark - Utility classe extensions -
-@interface NSURL (queryParams)
-- (NSString *)queryParam:(NSString *)param;
-@end
-
-@implementation NSURL (quertParams)
-- (NSString *)queryParam:(NSString *)param; {
-    NSURLComponents *u = [NSURLComponents componentsWithString:self.absoluteString];
-    if (u == nil) return @"";
-    NSMutableString *result = [NSMutableString stringWithString:@""];
-    [u.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj.name isEqualToString:param]) {
-            [result setString: obj.value];
-            *stop = YES;
-        }
-    }];
-    
-    return result;
-    
-}
-@end
-
-
+#import "NSURL+Param.h"
 
 @implementation NSString (extractURLs)
 - (NSArray *)findURLs {

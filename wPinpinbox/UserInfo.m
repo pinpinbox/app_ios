@@ -7,6 +7,7 @@
 //
 
 #import "UserInfo.h"
+#import "GlobalVars.h"
 
 @implementation UserInfo
 
@@ -15,7 +16,7 @@
     static NSUserDefaults *userPrefs = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        userPrefs = [[NSUserDefaults alloc] initWithSuiteName:@"group.pinpinbox"];
+        userPrefs = [[NSUserDefaults alloc] initWithSuiteName:AppGroup];
     });
     return userPrefs;
 }
