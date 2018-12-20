@@ -128,14 +128,14 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WC6-qX-9S5">
-                                            <rect key="frame" x="154" y="30.5" width="205" height="0.5"/>
+                                            <rect key="frame" x="154" y="30.5" width="150" height="0.5"/>
                                             <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="dKa-SJ-GBl"/>
                                             </constraints>
                                         </view>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="7" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TVd-TR-Wse">
-                                            <rect key="frame" x="0.0" y="53" width="375" height="140"/>
+                                            <rect key="frame" x="0.0" y="53" width="320" height="140"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="140" id="KOa-hQ-dc8"/>
@@ -194,7 +194,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NUH-T0-xl6">
-                                            <rect key="frame" x="129.5" y="229.5" width="229.5" height="0.5"/>
+                                            <rect key="frame" x="129.5" y="229.5" width="174.5" height="0.5"/>
                                             <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="dQP-AZ-ZCJ"/>
@@ -314,10 +314,10 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KwN-LV-pzo">
-                                            <rect key="frame" x="16" y="10" width="343" height="167"/>
+                                            <rect key="frame" x="16" y="10" width="288" height="167"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9Xm-C5-vR8">
-                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="167"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="288" height="167"/>
                                                 </imageView>
                                             </subviews>
                                             <color key="backgroundColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
@@ -450,7 +450,7 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="sFr-hA-Hzy">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="237"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="237"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="237" id="6E4-bK-zYH"/>
@@ -515,14 +515,14 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UAG-eH-B9y">
-                                            <rect key="frame" x="105" y="775.5" width="254" height="0.5"/>
+                                            <rect key="frame" x="105" y="775.5" width="199" height="0.5"/>
                                             <color key="backgroundColor" red="0.90980392156862744" green="0.90980392156862744" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="eI6-XP-S34"/>
                                             </constraints>
                                         </view>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="4" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Rhx-rG-vXu">
-                                            <rect key="frame" x="0.0" y="801" width="375" height="137"/>
+                                            <rect key="frame" x="0.0" y="801" width="320" height="137"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="137" id="Rt3-Gu-mfo"/>
@@ -584,33 +584,33 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LGU-KF-4WE">
-                                            <rect key="frame" x="130" y="280.5" width="221" height="0.5"/>
+                                            <rect key="frame" x="130" y="280.5" width="166" height="0.5"/>
                                             <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="zeB-Hb-ODO"/>
                                             </constraints>
                                         </view>
                                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="184" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aqm-s2-S1v">
-                                            <rect key="frame" x="0.0" y="308.5" width="375" height="422"/>
+                                            <rect key="frame" x="0.0" y="308.5" width="320" height="422"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="422" id="7tk-0L-b6Q"/>
                                             </constraints>
                                             <prototypes>
                                                 <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ListViewCell" rowHeight="184" id="ugx-Az-tTw" customClass="RecommandListViewCell">
-                                                    <rect key="frame" x="0.0" y="28" width="375" height="184"/>
+                                                    <rect key="frame" x="0.0" y="28" width="320" height="184"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ugx-Az-tTw" id="3YD-eY-pR3">
-                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="184"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="320" height="184"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <collectionView multipleTouchEnabled="YES" tag="5" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CC7-hW-YWg">
-                                                                <rect key="frame" x="0.0" y="0.0" width="375" height="184"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="320" height="184"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="184" id="3EF-cf-jc6"/>
                                                                 </constraints>
-                                                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="16" id="Ejy-Pm-bnw" customClass="RecommandCollectionViewFlowLayout">
+                                                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="16" id="Ejy-Pm-bnw">
                                                                     <size key="itemSize" width="273" height="168"/>
                                                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -707,7 +707,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IYe-Sd-oUI">
-                                            <rect key="frame" x="130" y="984" width="229" height="0.5"/>
+                                            <rect key="frame" x="130" y="984" width="174" height="0.5"/>
                                             <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="4Ib-QJ-jig"/>
