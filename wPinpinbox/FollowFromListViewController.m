@@ -226,7 +226,7 @@
         
         if (followFromListArray.count == 0) {
             if (!isNoInfoViewCreate) {
-                [self addNoInfoViewOnCollectionView: @"沒有作品展示"];
+                [self addNoInfoViewOnCollectionView: @"還沒有人關注"];
             }
             noInfoView.hidden = NO;
             self.tableView.hidden = YES;
@@ -283,10 +283,8 @@
     NSLog(@"addNoInfoViewOnCollectionView");
     if (!isNoInfoViewCreate) {
         noInfoView = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
-//        noInfoView.myTopMargin = 528;
-//        noInfoView.myLeftMargin = noInfoView.myRightMargin = 64;
-        CGRect screenBounds = [UIScreen mainScreen].bounds;
-        noInfoView.center = CGPointMake(screenBounds.size.width / 2, screenBounds.size.height / 2);
+        noInfoView.myTopMargin = 300;
+        noInfoView.myLeftMargin = noInfoView.myRightMargin = 64;        
         noInfoView.backgroundColor = [UIColor thirdGrey];
         noInfoView.layer.cornerRadius = 16;
         noInfoView.clipsToBounds = YES;

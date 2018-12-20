@@ -234,7 +234,7 @@
         
         if (sponsorArray.count == 0) {
             if (!isNoInfoViewCreate) {
-                [self addNoInfoViewOnCollectionView: @"沒有作品展示"];
+                [self addNoInfoViewOnCollectionView: @"還沒有人贊助"];
             }
             noInfoView.hidden = NO;
             self.tableView.hidden = YES;
