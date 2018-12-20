@@ -311,20 +311,7 @@
 
 - (IBAction)cameraBtnPress:(id)sender {
     NSLog(@"cameraBtnPress");
-    __block typeof(self) wself = self;
-    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"dispatch_async");
-            if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
-                NSLog(@"authorized");
-                [wself checkCameraPermission];
-//                [wself processPhotoList];
-            } else {
-                NSLog(@"Not Authorized");
-                [wself showNoAccessAlertAndCancel];
-            }
-        });
-    }];
+    [self checkCameraPermission];        
 }
 
 - (IBAction)compressionBtnPress:(id)sender {
