@@ -392,6 +392,7 @@
 		CBE104C121C78ACF00E185D3 /* ShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE104C021C78ACF00E185D3 /* ShareItem.m */; };
 		CBE104C521C792C200E185D3 /* NSURL+Param.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE104C421C792C200E185D3 /* NSURL+Param.m */; };
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
+		CBE2AFA621CB437C0032290C /* notavailable.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE2AFA521CB437C0032290C /* notavailable.png */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
 		CBF9DAE021BE555A00596E28 /* Login.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DADF21BE555A00596E28 /* Login.xcassets */; };
 		CBF9DAE221BE6DBD00596E28 /* PinPinBoxLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DAE121BE6DBD00596E28 /* PinPinBoxLogo.png */; };
@@ -1087,6 +1088,7 @@
 		CBE104C421C792C200E185D3 /* NSURL+Param.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+Param.m"; sourceTree = "<group>"; };
 		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
 		CBE2773921A8045600A6E80D /* HudIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudIndicatorView.m; sourceTree = "<group>"; };
+		CBE2AFA521CB437C0032290C /* notavailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notavailable.png; sourceTree = "<group>"; };
 		CBF138E921C24FD80070EBB8 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
 		CBF138EA21C24FD80070EBB8 /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
 		CBF9DADF21BE555A00596E28 /* Login.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Login.xcassets; path = "Image Resources/Login.xcassets"; sourceTree = "<group>"; };
@@ -2863,6 +2865,7 @@
 		CBE104B621C7490A00E185D3 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				CBE2AFA521CB437C0032290C /* notavailable.png */,
 				CBA29A1221C8A988000A37F4 /* ic200_videomake_white.png */,
 				CBE104BB21C7596600E185D3 /* ic200_act_close_white.png */,
 				CBE104BA21C7596600E185D3 /* ic200_act_open_white.png */,
@@ -3153,6 +3156,7 @@
 				CBE104B821C7490A00E185D3 /* videobase.jpg in Resources */,
 				CBA29A1321C8A989000A37F4 /* ic200_videomake_white.png in Resources */,
 				CBDA227321C3923200706E2C /* MainInterface.storyboard in Resources */,
+				CBE2AFA621CB437C0032290C /* notavailable.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

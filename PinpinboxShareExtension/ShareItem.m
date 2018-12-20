@@ -20,6 +20,7 @@
         self.vidDuration = 0;
         self.objType = type;
         self.shareItem = item;
+        [self postLoadShareItem];
     }
     return self;
 }
@@ -104,7 +105,7 @@
             if (!error && item) {
                 [wself setThumbnail:(UIImage *)item];
             } else {
-                [wself setThumbnail:[UIImage imageNamed:@"videobase.jpg"]];
+                //[wself setThumbnail:[UIImage imageNamed:@"videobase.jpg"]];
             }
         }];
     } else if ([_objType isEqualToString:(__bridge NSString *)kUTTypeImage]) {
@@ -119,11 +120,20 @@
         AVURLAsset *sourceAsset = [AVURLAsset URLAssetWithURL:url options:nil];
         CMTime duration = sourceAsset.duration;
         _vidDuration = CMTimeGetSeconds(duration);
+        
+        AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:sourceAsset];
+        NSError *err = nil;
+        
+        CGImageRef c = [generator copyCGImageAtTime:CMTimeMake(1.0, 1000) actualTime:nil error:&err];
+        if (!err && c) {
+            self.thumbnail = [UIImage imageWithCGImage:c];
+            [self inspectThumbnailTone:self.thumbnail];
+        }
+        
     }
 }
 - (void)setThumbnail:(UIImage *)thumbnail  {
     _thumbnail = thumbnail;
-    
     [self inspectThumbnailTone:thumbnail];
 }
 - (void)inspectThumbnailTone:(UIImage *)thumbnail {

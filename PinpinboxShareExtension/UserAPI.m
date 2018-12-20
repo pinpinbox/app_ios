@@ -150,26 +150,14 @@
         if ([wData[kye] isKindOfClass:[NSString class]]) {
             [dic setObject:wData[kye] forKey:kye];
             
-            /*
-             NSLog(@"isKindOfClass: [NSString class]");
-             NSLog(@"kye: %@", kye);
-             NSLog(@"wData[kye]: %@", wData[kye]);
-             
-             */
         } else {
             [dic setObject:[wData[kye] stringValue] forKey:kye];
             
-            /*
-             NSLog(@"is not KindOfClass: [NSString class]");
-             NSLog(@"kye: %@", kye);
-             NSLog(@"wData[kye]: %@", wData[kye]);
-             
-             */
         }
     }
     
     // Get the value of key "sign"
-    [dic setObject: [self signGenerator2:dic] forKey: @"sign"];
+    [dic setObject: [UserAPI signGenerator2:dic] forKey: @"sign"];
     
     //NSLog(@"sign: %@", [self signGenerator2:dic]);
     //
@@ -374,6 +362,99 @@
     
     NSString *uuid = [[NSUUID UUID] UUIDString];
     
+    NSData *vidData = [NSData dataWithContentsOfFile:videopath];
+    if (!vidData) {
+        completionBlock(nil,nil, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to load video data."}]);
+        return nil;
+    }
+    
+    NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
+    [_params setObject:[UserInfo getUserID] forKey:@"id"];
+    [_params setObject:[UserInfo getUserToken] forKey:@"token"];
+    [_params setObject:album_id forKey:@"album_id"];
+    [_params setObject:[UserAPI signGenerator2:_params] forKey:@"sign"];
+    
+    // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
+    NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
+    
+    // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
+    NSString* FileParamConstant = @"file";
+    
+    // the server url to which the image (or the media) is uploaded. Use your server url here
+    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/insertvideoofdiy",@"/1.2"]];
+    
+    // create request
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval: [kTimeOutForVideo floatValue]];
+    [request setHTTPMethod:@"POST"];
+    
+    MultipartInputStream *st = [[MultipartInputStream alloc] initWithBoundary:BoundaryConstant];
+    
+    for (NSString *e in [_params allKeys]) {
+        NSString *d = _params[e];
+        [st addPartWithName:e string:d];
+    }
+    if (vidData && vidData.length > 0) {
+        
+        [st addPartWithName:FileParamConstant filename:@"uploadVideo.mov" data:vidData contentType:@"video/mov"];
+    }
+    
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+    
+    
+    [request setValue:[NSString stringWithFormat:@"%lu",(unsigned long)st.totalLength] forHTTPHeaderField:@"Content-Length"];
+    // set HTTP_ACCEPT_LANGUAGE in HTTP Header
+    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
+    
+    [request setHTTPBodyStream:st];
+    
+    __block NSString *str;
+    
+    //__block typeof(self) wself = self;
+    
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.timeoutIntervalForRequest = [kTimeOutForVideo floatValue];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration: config delegate:nil delegateQueue:nil];
+    
+    //__block NSString *desc = [[NSUUID UUID] UUIDString];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+            if (data) {
+            
+                str = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
+                
+                //  time out
+                if (str && [str isEqualToString:timeOutErrorCode]) {
+                    completionBlock(nil,uuid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Request timed out"}]);
+                } else {
+                    //__strong typeof(wself) stSelf = wself;
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options: NSJSONReadingMutableContainers error: nil];
+                
+                    if ([dic[@"result"] intValue] == 1) {
+                        if (completionBlock)
+                            completionBlock(dic[@"data"], uuid, nil);
+                    } else if ([dic[@"result"] intValue] == 0) {
+                    
+                        if (dic[@"message"] == nil) {
+                            completionBlock(nil,uuid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to upload video"}]);
+                        
+                        } else {
+                            completionBlock(nil,uuid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]);
+                        }
+                    } else {
+                    
+                    }
+                }
+            } else {
+                completionBlock(nil,uuid, error? error : [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to upload video"}]);
+            }
+    }];
+    task.taskDescription = uuid;
+    [task resume];
+    
     return uuid;
 }
 + (NSString *)insertPhotoWithAlbum_id:(NSString *)album_id
@@ -387,7 +468,7 @@
     [_params setObject:[UserInfo getUserID] forKey:@"id"];
     [_params setObject:[UserInfo getUserToken] forKey:@"token"];
     [_params setObject:album_id forKey:@"album_id"];
-    [_params setObject:[self signGenerator2:_params] forKey:@"sign"];
+    [_params setObject:[UserAPI signGenerator2:_params] forKey:@"sign"];
     
     // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
     NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
@@ -440,7 +521,7 @@
             
             if (statusCode != 200) {
                 if (completionBlock)
-                    completionBlock(nil, uuid, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"HTTP response is 200"}]);
+                    completionBlock(nil, uuid, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"HTTP response is not 200"}]);
                 
                 return;
             }
@@ -449,7 +530,7 @@
             
             NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: nil];
             
-            if ([dic[@"result"] boolValue]) {
+            if ([dic[@"result"] intValue] == 1) {
                   if (completionBlock)
                       completionBlock(dic[@"data"], uuid, nil);
                 

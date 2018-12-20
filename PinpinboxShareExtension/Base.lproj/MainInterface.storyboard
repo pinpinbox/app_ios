@@ -321,6 +321,7 @@
                         <outlet property="notLoginCover" destination="TaU-Bb-zgc" id="FYJ-Xp-y3l"/>
                         <outlet property="photoList" destination="KeD-Ke-I2f" id="LbT-Jh-4eQ"/>
                         <outlet property="postProgress" destination="DbT-oZ-2ca" id="EiX-iP-s6h"/>
+                        <outlet property="postProgressStatus" destination="uNt-5Z-r3W" id="LNv-S2-rx3"/>
                         <outlet property="progressView" destination="IxG-Gm-Uca" id="XSX-3S-i9z"/>
                         <outlet property="userName" destination="PEi-P0-5W6" id="HeH-za-MlE"/>
                     </connections>

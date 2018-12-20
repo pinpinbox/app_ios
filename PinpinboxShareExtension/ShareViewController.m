@@ -46,7 +46,10 @@
 @property(nonatomic, strong) NSMutableArray *postRequestList;
 @property(nonatomic) IBOutlet UIView *progressView;
 @property(nonatomic) IBOutlet UIProgressView *postProgress;
+@property(nonatomic) IBOutlet UITextView *postProgressStatus;
 @property(nonatomic) BOOL isLoading;
+@property(nonatomic) NSInteger successCount;
+@property(nonatomic) NSInteger failCount;
 @end
 
 
@@ -119,6 +122,9 @@
     
     self.albumlist = [NSMutableArray array];
     self.postRequestList = [NSMutableArray array];
+    self.failCount = 0;
+    self.successCount = 0;
+    
     if ([UserInfo getUserID].length < 1 ) {
         self.notLoginCover.hidden = NO;
         return;
@@ -132,6 +138,7 @@
                 });
             } else {
                 NSString *tok = result[@"token"];
+                
                 [UserInfo setUserInfo:[UserInfo getUserID] token:tok];
                 [UserAPI userProfileWithCompletionBlock:^(NSDictionary *result, NSError *error) {
                     if (result) {
@@ -164,14 +171,14 @@
         for (NSExtensionItem *item in items) {
             NSArray *attachments = item.attachments;
             for (NSItemProvider *p in attachments) {
-                if ([p hasItemConformingToTypeIdentifier:(__bridge NSString *)kUTTypeURL]) {
-                    [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypeURL];
+                if ([p hasItemConformingToTypeIdentifier:(__bridge NSString *)kUTTypeImage]) {
+                    [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypeImage];
                 } else if ([p hasItemConformingToTypeIdentifier:(__bridge NSString *)kUTTypeText]) {
                     [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypeText];
                 } else if ([p hasItemConformingToTypeIdentifier:(__bridge NSString *)kUTTypeMovie]) {
                     [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypeMovie];
-                } else if ([p hasItemConformingToTypeIdentifier:(__bridge NSString *)kUTTypeImage]) {
-                    [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypeImage];
+                } else if ([p hasItemConformingToTypeIdentifier:(__bridge NSString *)kUTTypeURL]) {
+                    [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypeURL];
                 }
                 
             }
@@ -189,6 +196,7 @@
 - (void)addShareItemWithItemProvider:(NSItemProvider *)p  type:(NSString *)type{
     if ([self checkItemProvider:p type:type]) {
         ShareItem *i = [[ShareItem alloc] initWithItemProvider:p type:type];
+        
         [self.shareItems addObject:i];
     }
     
@@ -200,7 +208,7 @@
     });
 }
 #pragma mark - post
-- (void)processFinishedTask:(NSString *)taskId {
+- (void)processFinishedTask:(NSString *)taskId success:(BOOL)success {
     
     NSUInteger i = [self.postRequestList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString *s = (NSString *)obj;
@@ -211,7 +219,11 @@
         
         return NO;
     }];
-    
+    if (success)
+        self.successCount++;
+    else
+        self.failCount++;
+    self.postProgressStatus.text = [NSString stringWithFormat:@"上傳完成：%d，上傳失敗：%d",(int)self.successCount, (int)self.failCount];
     [self.postRequestList removeObjectAtIndex:i];
     [self updateProgress];
 }
@@ -226,7 +238,7 @@
             }
             NSString *uuid = [UserAPI insertPhotoWithAlbum_id:_selectedAlbum imageData:imgdata  completionBlock:^(NSDictionary * _Nonnull result, NSString *taskId, NSError * _Nonnull error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [wself processFinishedTask:taskId];
+                    [wself processFinishedTask:taskId success:(error == nil)];
                 });
             }];
             
@@ -234,10 +246,10 @@
                 [self.postRequestList addObject:uuid];
             
         } else if ([item.objType isEqualToString:(__bridge NSString *) kUTTypeMovie]) {
-            if (item.vidDuration <= 30 && item.url) {
+            if (item.vidDuration <= 31 && item.url) {
                 NSString *uuid = [UserAPI insertVideoWithAlbum_id:_selectedAlbum videopath:[item.url path]  completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [wself processFinishedTask:taskId];
+                            [wself processFinishedTask:taskId success:(error == nil)];
                         });
                 }];
                 
@@ -256,7 +268,7 @@
             NSString *uuid = [UserAPI insertPhotoWithAlbum_id:_selectedAlbum imageData:imgdata completionBlock:^(NSDictionary * _Nonnull result, NSString *taskId, NSError * _Nonnull error) {
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [wself processFinishedTask:taskId];
+                    [wself processFinishedTask:taskId success:(error == nil)];
                 });
                 
             }];
@@ -379,7 +391,20 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 NSArray *list = [result objectForKey:@"data"];
-                [wself.albumlist addObjectsFromArray:list];
+                int itemcount = (int)self.shareItems.count;
+                NSMutableArray *filtered = [NSMutableArray array];
+                [list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    NSDictionary *data = (NSDictionary *)obj;
+                    NSDictionary *album = data[@"album"];
+                    int count = [album[@"count_photo"] intValue];
+                    NSDictionary *user = data[@"usergrade"];
+                    int limit = [user[@"photo_limit_of_album"] intValue];
+                    if (itemcount + count <= limit)
+                        [filtered addObject:obj];
+                    
+                }];
+                [wself.albumlist addObjectsFromArray:filtered];
+                
                 [wself.albumList reloadData];
                 wself.isLoading = NO;
                 
@@ -395,10 +420,12 @@
     
     self.postProgress.progress = (float)(self.shareItems.count-self.postRequestList.count)/(float)(self.shareItems.count);
     if (self.postRequestList.count <= 0) {
-        
-        [self trySendLocalNotification:@"" albumid:_albumNames? _albumNames : @""];
-        [self cancelAndFinish:nil];
+        [self performSelector:@selector(postFinished) withObject:nil afterDelay:1];
     }
+}
+- (void)postFinished {
+    [self trySendLocalNotification:@"" albumid:_albumNames? _albumNames : @""];
+    [self cancelAndFinish:nil];
 }
 #pragma mark -
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -412,6 +439,7 @@
     if (indexPath.row < self.albumlist.count) {
         NSDictionary *data = self.albumlist[indexPath.row];
         NSDictionary *album = data[@"album"];
+        
         _selectedAlbum = [album[@"album_id"] stringValue];
         _albumNames = album[@"name"];
     }
@@ -488,7 +516,7 @@
  
  ISSUE:
  How to deal com.adobe.pdf
- local movie longer than 30 seconds...
+ *local movie longer than 30 seconds...
  */
 #pragma mark -
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
@@ -503,7 +531,11 @@
         ShareItem *t = [self.shareItems objectAtIndex:indexPath.item];
         [t loadThumbnailWithPostload:cell];
         cell.typeView.hidden = ![t.objType isEqualToString:(__bridge NSString *)kUTTypeMovie];
-        
+        if (t.vidDuration > 31) {
+            cell.typeView.image = [UIImage imageNamed:@"notavailable.png"];
+        } else {
+            cell.typeView.image = [UIImage imageNamed:@"ic200_videomake_white.png"];
+        }
     }
     return cell;
 }
