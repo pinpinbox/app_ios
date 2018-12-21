@@ -1205,9 +1205,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSDictionary *data = pictures[indexPath.row];
     //NSLog(@"data: %@", data);
     if ([data[@"cover"] isEqual: [NSNull null]]) {
-        cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
     } else {
-        [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]]];
+        [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]];
     }
     // UserForView Info Setting
     BOOL gotAudio = [data[@"usefor"][@"audio"] boolValue];
