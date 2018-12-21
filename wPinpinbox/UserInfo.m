@@ -14,7 +14,7 @@
     static NSUserDefaults *userPrefs = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        userPrefs = [[NSUserDefaults alloc] initWithSuiteName:AppGroupID];
+        userPrefs = [[NSUserDefaults alloc] initWithSuiteName:AppGroup];
     });
     
     return userPrefs;
