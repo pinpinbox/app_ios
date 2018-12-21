@@ -24,9 +24,6 @@
     
     self.bannerImageView.image = nil;
     
-//    if (![data[@"event"] isKindOfClass:[NSNull class]] && data[@"event"] != nil) {
-//        self.bannerTitle.text = data[@"event"];
-//    }
     if (data[@"ad"][@"name"] && ![data[@"ad"][@"name"] isEqual:[NSNull null]]) {
         self.bannerTitle.text = data[@"ad"][@"name"];
     }

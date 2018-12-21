@@ -398,13 +398,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
     //NSLog(@"_data: %@", _data);
     
     if ([self.data[@"photo"] isEqual: [NSNull null]]) {
-        self.headerImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        self.headerImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
     } else {
         if ([_data[@"photo"][0][@"image_url"] isEqual: [NSNull null]]) {
-            self.headerImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+            self.headerImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             imageUrl = _data[@"photo"][0][@"image_url"];
-            self.headerImageView.image = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString: imageUrl]]];
+            //self.headerImageView.image = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString: imageUrl]]];
+            [self.headerImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"] options:0];
         }
     }
     NSLog(@"userId: %@", self.data[@"user"][@"user_id"]);
@@ -1410,7 +1411,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self showAlertViewForGettingPoint];
         [self saveCollectInfoToDevice: NO];
         [self retrieveAlbum];
-
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
         [self saveCollectInfoToDevice: YES];
@@ -1432,7 +1432,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [defaults setObject: [NSNumber numberWithBool: collect_free_album]
                      forKey: @"collect_free_album"];
         [defaults synchronize];
-
     } else if ([task_for isEqualToString: @"collect_pay_album"]) {
         // Save data for first collect paid album
         BOOL collect_pay_album = isCollect;
@@ -2198,7 +2197,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     });
 }
 
-
 #pragma mark - insertAlbumToLikes
 - (void)deleteAlbumToLikes {
     NSLog(@"deleteAlbumToLikes");
@@ -2292,7 +2290,6 @@ didCompleteWithResults:(NSDictionary *)results {
     }
 }
 - (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error {
-
     NSLog(@"Sharing didFailWithError");
 }
 

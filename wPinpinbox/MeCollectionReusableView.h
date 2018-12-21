@@ -33,7 +33,9 @@ typedef void(^StackViewTouch)(BOOL selected, NSInteger tag);
 @property (weak, nonatomic) IBOutlet UILabel *sponsoredLabel;
 
 @property (weak, nonatomic) IBOutlet UIStackView *followStackView;
+@property (weak, nonatomic) IBOutlet UIView *followBgView;
 @property (weak, nonatomic) IBOutlet UIStackView *sponsorStackView;
+@property (weak, nonatomic) IBOutlet UIView *sponsorBgView;
 @property (copy, nonatomic) StackViewTouch customBlock;
 
 @property (weak, nonatomic) IBOutlet UILabel *linkLabel;

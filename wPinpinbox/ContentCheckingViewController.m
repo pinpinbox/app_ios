@@ -3554,6 +3554,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
      numberOfItemsInSection:(NSInteger)section {
     NSLog(@"numberOfItemsInSection");
     NSLog(@"self.photoArray.count: %lu", (unsigned long)self.photoArray.count);
+    NSLog(@"self.photoArray: %@", self.photoArray);
     return self.photoArray.count;
 }
 
@@ -3561,6 +3562,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForItemAtIndexPath");
     NSDictionary *data = self.photoArray[indexPath.row];
+    NSLog(@"data: %@", data);
     useFor = self.photoArray[indexPath.row][@"usefor"];
     
     if (collectionView.tag == 100) {
@@ -3569,14 +3571,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"cell: %@", cell);
         NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
         
-        if (data[@"image_url"] == nil) {
-            if (data[@"image"] == nil) {
-                cell.imageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
-            } else {
-                cell.imageView.image = [UIImage imageNamed: data[@"image"]];
-            }
+        if ([wTools objectExists: data[@"image_url"]]) {
+            NSString *i = data[@"image_url"];
+            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"] options:0]; //data[@"image_url"]];
         } else {
-            [cell.imageView sd_setImageWithURL: data[@"image_url"]];
+            if ([wTools objectExists: data[@"image"]]) {
+                cell.imageView.image = [UIImage imageNamed: data[@"image"]];
+            } else {
+                cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
+            }
         }
         albumPoint = [self.bookdata[@"album"][@"point"] intValue];
         userPoint = [[userPrefs objectForKey: @"pPoint"] integerValue];
@@ -3787,14 +3790,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"collectionView.tag == 200");
         ThumbnailImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"ThumbnailImageCell" forIndexPath: indexPath];
         
-        if (data[@"image_url_thumbnail"] == nil) {
-            if (data[@"imageThumbnail"] == nil) {
-                cell.thumbnailImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
-            } else {
-                cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
-            }
+        if ([wTools objectExists: data[@"image_url_thumbnail"]]) {
+            NSString *i = data[@"image_url_thumbnail"];
+            [cell.thumbnailImageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]]; //.image = [UIImage imageNamed: data[@"image_url_thumbnail"]];
         } else {
-            [cell.thumbnailImageView sd_setImageWithURL: data[@"image_url_thumbnail"]];
+            if ([wTools objectExists: data[@"imageThumbnail"]]) {
+                cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
+            } else {
+                cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
+            }
         }
         NSString *audioTargetStr = self.photoArray[indexPath.row][@"audio_target"];
         // Check audioTarget

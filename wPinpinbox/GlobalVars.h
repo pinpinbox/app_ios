@@ -14,6 +14,8 @@
 #define DownloadCompletedNotif @"DownloadCompletedNotif"
 #define AppGroup @"group.pinpinbox"
 
+#define AppGroupID @"group.pinpinbox"
+
 extern NSString *timeOutErrorCode;
 extern NSString *timeOutErrorCode1;
 

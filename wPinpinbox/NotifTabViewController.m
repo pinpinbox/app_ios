@@ -32,12 +32,17 @@
 #import "AlbumCollectionViewController.h"
 #import "UserInfo.h"
 
+#import "MyLayout.h"
+
 @interface NotifTabViewController () <UITableViewDataSource, UITableViewDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate> {
     NSMutableArray *notificationData;
     BOOL isLoading;
     BOOL isReloading;
     NSInteger nextId;
     UIView *view;
+    
+    UIView *noInfoView;
+    BOOL isNoInfoViewCreate;
 }
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
@@ -110,6 +115,10 @@
     [self.tableView addSubview: self.refreshControl];
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.separatorColor = [UIColor thirdGrey];
+    
+    noInfoView.hidden = YES;
+    isNoInfoViewCreate = NO;
+    self.tableView.hidden = YES;
 }
 
 #pragma mark -
@@ -222,14 +231,19 @@
             isLoading = YES;
         }
         
-        if (notificationData.count == 0) {
-            [self addNoInfoView];
-        } else if (notificationData.count > 0) {
-            [view removeFromSuperview];
-        }
-        
         [self.refreshControl endRefreshing];
         [self.tableView reloadData];
+        
+        if (notificationData.count == 0) {
+            if (!isNoInfoViewCreate) {
+                [self addNoInfoViewOnCollectionView: @"目前沒有收到任何人通知"];
+            }
+            noInfoView.hidden = NO;
+            self.tableView.hidden = YES;
+        } else if (notificationData.count > 0) {
+            noInfoView.hidden = YES;
+            self.tableView.hidden = NO;
+        }
         
         isReloading = NO;
         
@@ -268,21 +282,50 @@
     }
 }
 
-- (void)addNoInfoView {
-    UILabel *label;
-    view = [[UIView alloc] initWithFrame: CGRectMake(16, 192, self.view.bounds.size.width - 32, 120)];
-    view.backgroundColor = [UIColor secondGrey];
-    view.layer.cornerRadius = 32;
-    view.clipsToBounds = YES;
-    
-    label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, view.bounds.size.width - 64, view.bounds.size.height - 64)];
-    label.center = CGPointMake(view.bounds.size.width / 2, view.bounds.size.height / 2);
-    label.text = @"目前沒有收到任何通知";
-    label.textColor = [UIColor whiteColor];
-    label.font = [UIFont systemFontOfSize: 20];
-    
-    [view addSubview: label];
-    [self.view addSubview: view];
+- (void)addNoInfoViewOnCollectionView:(NSString *)msg {
+    NSLog(@"addNoInfoViewOnCollectionView");
+    if (!isNoInfoViewCreate) {
+        noInfoView = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
+        noInfoView.myTopMargin = 300;
+        noInfoView.myLeftMargin = noInfoView.myRightMargin = 32;
+        noInfoView.backgroundColor = [UIColor thirdGrey];
+        noInfoView.layer.cornerRadius = 16;
+        noInfoView.clipsToBounds = YES;
+        [self.view addSubview: noInfoView];
+        
+        MyFrameLayout *frameLayout = [self createFrameLayout];
+        [noInfoView addSubview: frameLayout];
+        
+        UILabel *label = [self createLabel: msg];
+        [frameLayout addSubview: label];
+    }
+    isNoInfoViewCreate = YES;
+}
+
+- (MyFrameLayout *)createFrameLayout {
+    MyFrameLayout *frameLayout = [MyFrameLayout new];
+    frameLayout.wrapContentHeight = YES;
+    frameLayout.myMargin = 0;
+    frameLayout.myCenterXOffset = 0;
+    frameLayout.myCenterYOffset = 0;
+    frameLayout.padding = UIEdgeInsetsMake(32, 32, 32, 32);
+    return frameLayout;
+}
+
+- (UILabel *)createLabel: (NSString *)title {
+    UILabel *label = [UILabel new];
+    label.wrapContentHeight = YES;
+    label.myLeftMargin = label.myRightMargin = 8;
+    label.numberOfLines = 0;
+    label.text = title;
+    [LabelAttributeStyle changeGapString: label content: label.text];
+    label.font = [UIFont systemFontOfSize: 17];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor firstGrey];
+    [label sizeToFit];
+    //    label.myCenterXOffset = 0;
+    //    label.myCenterYOffset = 0;
+    return label;
 }
 
 #pragma mark - UITableViewDataSource Methods

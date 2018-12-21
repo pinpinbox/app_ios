@@ -45,9 +45,11 @@
     
     UITapGestureRecognizer *followTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleTapFromStackView:)];
     [self.followStackView addGestureRecognizer: followTap];
+    [self.followBgView addGestureRecognizer: followTap];
     
     UITapGestureRecognizer *sponsorTap = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleTapFromStackView:)];
     [self.sponsorStackView addGestureRecognizer: sponsorTap];
+    [self.sponsorBgView addGestureRecognizer: sponsorTap];
     
     self.linkLabel.font = [UIFont systemFontOfSize: 14];
     self.linkLabel.textColor = [UIColor secondGrey];

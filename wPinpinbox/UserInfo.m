@@ -2,7 +2,7 @@
 //  UserInfo.m
 //  wPinpinbox
 //
-//  Created by Antelis on 2018/12/13.
+//  Created by appbuilder on 2018/12/18.
 //  Copyright © 2018 Angus. All rights reserved.
 //
 
@@ -10,7 +10,6 @@
 #import "GlobalVars.h"
 
 @implementation UserInfo
-
 +(NSUserDefaults *)userPrefs{
     
     static NSUserDefaults *userPrefs = nil;
@@ -44,13 +43,5 @@
     [u setObject:token forKey:@"token"];
     
     [u synchronize];
-    
-}
-+ (void)resetUserInfo {
-    NSUserDefaults *u = [UserInfo userPrefs];
-    [u removeObjectForKey:@"id"];
-    [u removeObjectForKey:@"token"];
-    [u synchronize];
-    
 }
 @end

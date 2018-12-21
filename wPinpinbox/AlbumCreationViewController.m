@@ -3363,13 +3363,34 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"identifierStr: %@", identifierStr);
         
         if ([identifierStr isEqualToString: @"photo"]) {
-            [weakSelf addimagedata];
+            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"dispatch_async");
+                    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+                        NSLog(@"authorized");
+                        [weakSelf addimagedata];
+                    } else {
+                        NSLog(@"Not Authorized");
+                        [weakSelf showNoAccessAlertAndCancel];
+                    }
+                });
+            }];
         } else if ([identifierStr isEqualToString: @"video"]) {
             [weakSelf showVideoMode];
         } else if ([identifierStr isEqualToString:@"pdf"]) {
             [weakSelf showPDFPicker];
         }
     };
+}
+
+- (void)showNoAccessAlertAndCancel {
+    NSLog(@"showNoAccessAlertAndCancel");
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"沒有照片存取權" message: @"請打開照片權限設定" preferredStyle: UIAlertControllerStyleAlert];
+    [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        //[[UIApplication sharedApplication] openURL: [NSURL URLWithString: UIApplicationOpenSettingsURLString]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString: UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
+    }]];
+    [self presentViewController: alert animated: YES completion: nil];
 }
 
 - (void)showVideoMode {

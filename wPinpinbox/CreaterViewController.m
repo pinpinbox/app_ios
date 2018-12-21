@@ -74,6 +74,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     OldCustomAlertView *alertView;
 
+    UIView *noInfoView;
+    BOOL isNoInfoViewCreate;
 }
 
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -199,6 +201,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     self.customMessageActionSheet = [[MessageboardViewController alloc] init];
     self.customMessageActionSheet.delegate = self;
+    
+    noInfoView.hidden = YES;
+    isNoInfoViewCreate = NO;
 }
  
 - (void)refresh {
@@ -293,9 +298,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
             [pictures removeAllObjects];
         }
         
-        if (![wTools objectExists: dic[@"data"][@"album"]]) {
-            return;
-        }
+//        if (![wTools objectExists: dic[@"data"][@"album"]]) {
+//            return;
+//        }
         
         int s = 0;
         
@@ -322,6 +327,16 @@ static NSString *autoPlayStr = @"&autoplay=1";
             isLoading = YES;
         }
         [self layoutSetup];
+        
+        if (pictures.count == 0) {
+            if (!isNoInfoViewCreate) {
+                [self addNoInfoViewOnCollectionView: @"沒有作品展示"];
+            }
+            noInfoView.hidden = NO;
+        } else if (pictures.count > 0) {
+            noInfoView.hidden = YES;
+        }
+        
         isReloading = NO;
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
@@ -337,6 +352,53 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self.refreshControl endRefreshing];
         isReloading = NO;
     }
+}
+
+- (void)addNoInfoViewOnCollectionView:(NSString *)msg {
+    NSLog(@"addNoInfoViewOnCollectionView");
+    if (!isNoInfoViewCreate) {
+        noInfoView = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
+        noInfoView.myTopMargin = 520;
+        noInfoView.myLeftMargin = noInfoView.myRightMargin = 64;
+        noInfoView.backgroundColor = [UIColor thirdGrey];
+        noInfoView.layer.cornerRadius = 16;
+        noInfoView.clipsToBounds = YES;
+        [self.collectionView addSubview: noInfoView];
+        
+        MyFrameLayout *frameLayout = [self createFrameLayout];
+        [noInfoView addSubview: frameLayout];
+        
+        UILabel *label = [self createLabel: msg];
+        [frameLayout addSubview: label];
+    }
+    isNoInfoViewCreate = YES;
+}
+
+- (MyFrameLayout *)createFrameLayout {
+    MyFrameLayout *frameLayout = [MyFrameLayout new];
+    frameLayout.wrapContentHeight = YES;
+    frameLayout.myMargin = 0;
+    frameLayout.myCenterXOffset = 0;
+    frameLayout.myCenterYOffset = 0;
+    frameLayout.padding = UIEdgeInsetsMake(32, 32, 32, 32);
+    return frameLayout;
+}
+
+- (UILabel *)createLabel: (NSString *)title {
+    UILabel *label = [UILabel new];
+    label.wrapContentHeight = YES;
+    label.myLeftMargin = label.myRightMargin = 8;
+    label.numberOfLines = 0;
+    label.text = title;
+    [LabelAttributeStyle changeGapString: label content: label.text];
+    label.font = [UIFont systemFontOfSize: 17];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor firstGrey];
+    [label sizeToFit];
+    //    label.myCenterXOffset = 0;
+    //    label.myCenterYOffset = 0;
+    
+    return label;
 }
 
 #pragma mark - JCCLayout Setup

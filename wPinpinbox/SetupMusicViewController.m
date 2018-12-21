@@ -141,21 +141,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.collectionView.showsHorizontalScrollIndicator = NO;
     
-    self.uploadBtn.enabled = NO;
+    self.uploadMusicSelectionView.layer.cornerRadius = 8;
+    self.uploadMusicSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
+    self.uploadMusicSelectionView.layer.borderWidth = 1.0;
+    
+    [self.playerBtn setImage:[UIImage imageNamed:@"button_play"] forState:UIControlStateNormal];
+    [self.playerBtn setImage:[UIImage imageNamed:@"button_stop"] forState:UIControlStateSelected];
+    [self.playerBtn setTintColor:[UIColor darkGrayColor]];
+
     if (@available(iOS 11.0, *)) {
         UITapGestureRecognizer *t3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(optionsTapped:)];
         [self.audioBrowserView addGestureRecognizer:t3];
-        self.uploadMusicSelectionView.layer.cornerRadius = 8;
-        self.uploadMusicSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
-        self.uploadMusicSelectionView.layer.borderWidth = 1.0;
         
-        [self.playerBtn setImage:[UIImage imageNamed:@"button_play"] forState:UIControlStateNormal];
-        [self.playerBtn setImage:[UIImage imageNamed:@"button_stop"] forState:UIControlStateSelected];
-        [self.playerBtn setTintColor:[UIColor darkGrayColor]];
         //  File picker only works on iOS 11.0 later //
         self.uploadBtn.enabled = YES;
     } else {
-        self.audioBrowserView.hidden = YES;
+        //self.audioBrowserView.hidden = ;
+        self.uploadBtn.hidden = YES;
+        self.uploadBtn.enabled = NO;
     }
 }
 
@@ -863,7 +866,8 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
         [self.delegate dismissFromSetupMusicVC: self audioModeChanged: NO];
     }
     //[self dismissViewControllerAnimated: YES completion: nil];
-    
+    [self  removeObserverForAVPlayerItem];
+    [self.avPlayer removeObserver:self forKeyPath:@"timeControlStatus"];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav dismissViewControllerAnimated: YES completion: nil];
 }
@@ -896,12 +900,15 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
                 [self changeAudioMode];
             } else {
                 //[self dismissViewControllerAnimated: YES completion: nil];
-                
+                [self  removeObserverForAVPlayerItem];
+                [self.avPlayer removeObserver:self forKeyPath:@"timeControlStatus"];
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [appDelegate.myNav dismissViewControllerAnimated: YES completion: nil];
             }
         } else {
             //[self dismissViewControllerAnimated: YES completion: nil];
+            [self  removeObserverForAVPlayerItem];
+            [self.avPlayer removeObserver:self forKeyPath:@"timeControlStatus"];
             
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [appDelegate.myNav dismissViewControllerAnimated: YES completion: nil];
@@ -1092,8 +1099,12 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
         if ([self.delegate respondsToSelector: @selector(dismissFromSetupMusicVC:audioModeChanged:)]) {
             [self.delegate dismissFromSetupMusicVC: self audioModeChanged: isAudioModeChanged];
         }
+        [self  removeObserverForAVPlayerItem];
+        [self.avPlayer removeObserver:self forKeyPath:@"timeControlStatus"];
+        //[self dismissViewControllerAnimated: YES completion: nil];
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav dismissViewControllerAnimated: YES completion: nil];
         
-        [self dismissViewControllerAnimated: YES completion: nil];
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"失敗： %@", dic[@"message"]);
         if ([wTools objectExists: dic[@"message"]]) {
@@ -1154,7 +1165,12 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
                     [wself.delegate dismissFromSetupMusicVC: wself audioModeChanged: wself->isAudioModeChanged];
                     
                 }
-                [wself dismissViewControllerAnimated: YES completion: nil];
+                //[wself  removeObserverForAVPlayerItem];
+                //[wself.avPlayer removeObserver:wself forKeyPath:@"timeControlStatus"];
+                
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                [appDelegate.myNav dismissViewControllerAnimated: YES completion: nil];
+                //[wself dismissViewControllerAnimated: YES completion: nil];
             });
             
         }];
@@ -1386,7 +1402,7 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
         self.eachPageSelectionView.backgroundColor = [UIColor clearColor];
         self.bgMusicSelectionView.backgroundColor = [UIColor clearColor];
         self.uploadMusicSelectionView.backgroundColor = [UIColor thirdMain];
-        
+        self.audioUploadedView.hidden = NO;
         self.audioMode = @"singular";
     }
 }

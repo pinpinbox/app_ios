@@ -1811,7 +1811,7 @@ sourceController:(UIViewController *)source
         cell.contentView.subviews[0].backgroundColor = nil;
         
         if ([data[@"album"][@"cover"] isEqual: [NSNull null]]) {
-            cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+            cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]] placeholderImage: [UIImage imageNamed:@"placeholder.png"]];
             
@@ -1901,6 +1901,7 @@ sourceController:(UIViewController *)source
         NSLog(@"collectionView.tag == 3");
         HomeCategoryCollectionViewCell *cell = nil;        
         cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
+
         if (indexPath.row + 1 < categoryArray.count) {
             
             NSDictionary *dic = categoryArray[indexPath.row+1][@"categoryarea"];
@@ -1917,8 +1918,6 @@ sourceController:(UIViewController *)source
                 cell.categoryNameLabel.text = dic[@"name"];
                 //[LabelAttributeStyle changeGapString: cell.categoryNameLabel content: dic[@"name"]];
             }
-            
-            
         }
         return cell;
     } else if (collectionView.tag == 4) {
@@ -1942,6 +1941,7 @@ sourceController:(UIViewController *)source
         return cell;
     } else if (collectionView.tag == 5) {
         NSLog(@"collectionView.tag == 5");
+
         RecommandCollectionViewCell *cell =  [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath: indexPath];
         cell.albumImageView.backgroundColor = UIColor.purpleColor;
         cell.albumDesc.text = [NSString stringWithFormat:@"%ld -- %ld\n\n=======",(long)indexPath.section, (long)indexPath.row];
@@ -1970,10 +1970,10 @@ sourceController:(UIViewController *)source
         //NSLog(@"albumDic: %@", albumDic);
         
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
-            cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+            cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
         } else {
             [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]
-                                   placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+                                   placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image"]];
         }
         
         // UserForView Info Setting
@@ -2070,7 +2070,7 @@ sourceController:(UIViewController *)source
             [c.personnelView sd_setImageWithURL:[NSURL URLWithString:user[@"picture"]]
                                placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
         } else {
-            c.personnelView.image = nil;
+            c.personnelView.image = [UIImage imageNamed:@"member_back_head"];
             c.personnelView.backgroundColor = [UIColor secondGrey];
         }
         
@@ -2127,17 +2127,16 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
-    
     if (collectionView.tag == 1) {
         UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
         NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
         
         //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
         NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
+        NSLog(@"pictures: %@", pictures[indexPath.row]);
         
         NSDictionary *data = pictures[indexPath.row];
         NSString *albumId = [data[@"album"][@"album_id"] stringValue];
-        
         [self toAlbumDetailVC: albumId];
     } else if (collectionView.tag == 2) {
         [self tapDetectedForURL: indexPath.row];
@@ -2173,10 +2172,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)toAlbumDetailVC:(NSString *)albumId {
+    NSLog(@"toAlbumDetailVC");
     if (![wTools objectExists: albumId]) {
         return;
     }
-    
+    NSLog(@"After objectExists check");
     AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
     aDVC.albumId = albumId;
     aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
@@ -2189,6 +2189,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+    NSLog(@"Before PushViewController");
     [appDelegate.myNav pushViewController: aDVC animated: NO];
 }
 

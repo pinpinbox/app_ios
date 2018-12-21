@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -51,7 +51,7 @@
                                                         <rect key="frame" x="16" y="0.0" width="90" height="90"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <subviews>
-                                                            <imageView userInteractionEnabled="NO" alpha="0.10000000149011612" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="05" translatesAutoresizingMaskIntoConstraints="NO" id="9Oo-aw-4J2" customClass="AsyncImageView">
+                                                            <imageView userInteractionEnabled="NO" alpha="0.10000000149011612" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="member_back_head" translatesAutoresizingMaskIntoConstraints="NO" id="9Oo-aw-4J2" customClass="AsyncImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             </imageView>
@@ -1696,7 +1696,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="05" width="1920" height="862"/>
         <image name="ic200_arrow_left_dark" width="72" height="72"/>
         <image name="ic200_camera_dark" width="144" height="144"/>
         <image name="icon_2_0_0_link_facebook" width="120" height="120"/>
@@ -1707,5 +1706,6 @@
         <image name="icon_2_0_0_link_pintrest" width="120" height="120"/>
         <image name="icon_2_0_0_link_twitter" width="120" height="120"/>
         <image name="icon_2_0_0_link_youtube" width="120" height="120"/>
+        <image name="member_back_head" width="160" height="160"/>
     </resources>
 </document>

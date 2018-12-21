@@ -471,7 +471,7 @@
     if (![data[@"cover"] isKindOfClass:[NSNull class]]) {
         //[[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: img];
         //img.imageURL = [NSURL URLWithString:data[@"cover"]];
-        [img sd_setImageWithURL: [NSURL URLWithString:data[@"cover"]]];
+        [img sd_setImageWithURL: [NSURL URLWithString:data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"]];
     } else {
         img.contentMode = UIViewContentModeScaleAspectFit;
         img.imageURL = nil;
@@ -1960,7 +1960,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - FB share SDK
 - (void)sharer:(id<FBSDKSharing>)sharer
 didCompleteWithResults:(NSDictionary *)results {
-
     NSLog(@"Sharing Complete");
     // Check whether getting Sharing Point or not
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

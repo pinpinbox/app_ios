@@ -24,6 +24,8 @@
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
 
+#import "UserInfo.h"
+
 static wTools *instance =nil;
 
 @implementation wTools

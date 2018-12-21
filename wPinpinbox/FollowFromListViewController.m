@@ -29,6 +29,9 @@
     BOOL isReloading;
     NSInteger nextId;
     NSMutableArray *followFromListArray;
+    
+    UIView *noInfoView;
+    BOOL isNoInfoViewCreate;
 }
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -121,6 +124,10 @@
     
     self.customMessageActionSheet = [[MessageboardViewController alloc] init];
     self.customMessageActionSheet.delegate = self;
+    
+    noInfoView.hidden = YES;
+    isNoInfoViewCreate = NO;
+    self.tableView.hidden = YES;
 }
 
 #pragma mark -
@@ -166,7 +173,6 @@
                     NSLog(@"Time Out Message Return");
                     NSLog(@"FollowFromListViewController");
                     NSLog(@"getFollowFromList");
-                    
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getFollowFromList"
                                           userId: 0
@@ -196,28 +202,38 @@
         // s for counting how much data is loaded
         int s = 0;
         
-        if ([wTools objectExists: dic[@"data"]]) {
-            for (NSMutableDictionary *followFromDic in [dic objectForKey: @"data"]) {
-                NSLog(@"followFromDic: %@", followFromDic);
-                s++;
-                [followFromListArray addObject: followFromDic];
+        for (NSMutableDictionary *followFromDic in [dic objectForKey: @"data"]) {
+            NSLog(@"followFromDic: %@", followFromDic);
+            s++;
+            [followFromListArray addObject: followFromDic];
+        }
+        NSLog(@"After");
+        NSLog(@"nextId: %ld", (long)nextId);
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0) {
+            isLoading = NO;
+        }
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        
+        NSLog(@"self.tableView reloadData");
+        [self.refreshControl endRefreshing];
+        isReloading = NO;
+        [self.tableView reloadData];
+        
+        if (followFromListArray.count == 0) {
+            if (!isNoInfoViewCreate) {
+                [self addNoInfoViewOnCollectionView: @"還沒有人關注"];
             }
-            NSLog(@"After");
-            NSLog(@"nextId: %ld", (long)nextId);
-            // If data keeps loading then the nextId is accumulating
-            nextId = nextId + s;
-            // If nextId is bigger than 0, that means there are some data loaded already.
-            if (nextId >= 0) {
-                isLoading = NO;
-            }
-            // If s is 0, that means dic data is empty.
-            if (s == 0) {
-                isLoading = YES;
-            }
-            NSLog(@"self.tableView reloadData");
-            [self.refreshControl endRefreshing];
-            isReloading = NO;
-            [self.tableView reloadData];
+            noInfoView.hidden = NO;
+            self.tableView.hidden = YES;
+        } else if (followFromListArray.count > 0) {
+            noInfoView.hidden = YES;
+            self.tableView.hidden = NO;
         }
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"SYSTEM_ERROR");
@@ -262,6 +278,55 @@
 
 - (void)logOut {
     [wTools logOut];
+}
+
+- (void)addNoInfoViewOnCollectionView:(NSString *)msg {
+    NSLog(@"addNoInfoViewOnCollectionView");
+    if (!isNoInfoViewCreate) {
+        noInfoView = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
+        noInfoView.myTopMargin = 300;
+        noInfoView.myLeftMargin = noInfoView.myRightMargin = 64;        
+        noInfoView.backgroundColor = [UIColor thirdGrey];
+        noInfoView.layer.cornerRadius = 16;
+        noInfoView.clipsToBounds = YES;
+        [self.view addSubview: noInfoView];
+        
+        MyFrameLayout *frameLayout = [self createFrameLayout];
+        [noInfoView addSubview: frameLayout];
+        
+        UILabel *label = [self createLabel: msg];
+        [frameLayout addSubview: label];
+    }
+    isNoInfoViewCreate = YES;
+}
+
+- (MyFrameLayout *)createFrameLayout {
+    MyFrameLayout *frameLayout = [MyFrameLayout new];
+    frameLayout.wrapContentHeight = YES;
+    frameLayout.wrapContentWidth = YES;
+    frameLayout.myMargin = 0;
+    frameLayout.myCenterXOffset = 0;
+    frameLayout.myCenterYOffset = 0;
+    frameLayout.padding = UIEdgeInsetsMake(32, 32, 32, 32);
+    return frameLayout;
+}
+
+- (UILabel *)createLabel: (NSString *)title {
+    UILabel *label = [UILabel new];
+    label.wrapContentHeight = YES;
+    label.wrapContentWidth = YES;
+    label.myLeftMargin = label.myRightMargin = 8;
+    label.numberOfLines = 0;
+    label.text = title;
+    [LabelAttributeStyle changeGapString: label content: label.text];
+    label.font = [UIFont systemFontOfSize: 17];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor firstGrey];
+    [label sizeToFit];
+    //    label.myCenterXOffset = 0;
+    //    label.myCenterYOffset = 0;
+    
+    return label;
 }
 
 #pragma mark - UITableViewDataSource Methods
