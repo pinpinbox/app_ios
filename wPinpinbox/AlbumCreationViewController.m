@@ -100,16 +100,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 #endif
 {
-    __weak IBOutlet UIButton *refreshBtn;
-    __weak IBOutlet UIButton *conbtn;
-    __weak IBOutlet UIButton *settingBtn;
-    __weak IBOutlet UIButton *nextBtn;
-    
-    __weak IBOutlet UIView *textBgView;
-    __weak IBOutlet UIButton *addTextBtn;
-    __weak IBOutlet UIButton *deleteTextBtn;
-    
-    __weak IBOutlet UIView *audioBgView;
     
     NSMutableArray *ImageDataArr;
     NSInteger selectItem;
@@ -218,6 +208,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) PhotoDescriptionAddViewController *descAddActionSheet;
 
 @property (nonatomic) IBOutlet UIButton *deleteImageBtn;
+@property (weak, nonatomic) IBOutlet UIButton *descButton;
+
+@property (weak, nonatomic)  IBOutlet UIButton *refreshBtn;
+@property (weak, nonatomic)  IBOutlet UIButton *conbtn;
+@property (weak, nonatomic)  IBOutlet UIButton *settingBtn;
+@property (weak, nonatomic)  IBOutlet UIButton *nextBtn;
+
+@property (weak, nonatomic)  IBOutlet UIView *textBgView;
+@property (weak, nonatomic)  IBOutlet UIButton *addTextBtn;
+@property (weak, nonatomic)  IBOutlet UIButton *deleteTextBtn;
+
+@property (weak, nonatomic)  IBOutlet UIView *audioBgView;
+
 @end
 
 @implementation AlbumCreationViewController
@@ -290,11 +293,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [wTools sendScreenTrackingWithScreenName:@"編輯器"];
     viewHeightForPreview = [UIScreen mainScreen].bounds.size.height;
     
-    textBgView.backgroundColor = [UIColor whiteColor];
-    textBgView.layer.cornerRadius = 16;
+    _textBgView.backgroundColor = [UIColor whiteColor];
+    _textBgView.layer.cornerRadius = 16;
     
-    audioBgView.backgroundColor = [UIColor whiteColor];
-    audioBgView.layer.cornerRadius = 16;
+    _audioBgView.backgroundColor = [UIColor whiteColor];
+    _audioBgView.layer.cornerRadius = 16;
     
     self.modal.view.backgroundColor = [UIColor whiteColor];
     
@@ -312,12 +315,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //    conbtn.hidden = YES;
 //    refreshBtn.hidden = YES;
     
-    nextBtn.layer.cornerRadius = kCornerRadius;
+    _nextBtn.layer.cornerRadius = kCornerRadius;
     //    adobeEidt.layer.cornerRadius = adobeEidt.bounds.size.width / 2;
     //    adobeEidt.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     
-    addTextBtn.layer.cornerRadius = addTextBtn.bounds.size.width / 2;
-    addTextBtn.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
+    _addTextBtn.layer.cornerRadius = _addTextBtn.bounds.size.width / 2;
+    _addTextBtn.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
     
 
     self.deleteImageBtn.layer.cornerRadius = self.deleteImageBtn.bounds.size.width / 2;
@@ -328,18 +331,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"self.shareCollection: %d", self.shareCollection);
     
     if (self.shareCollection) {
-        [nextBtn setTitle: @"完成" forState: UIControlStateNormal];
+        [_nextBtn setTitle: @"完成" forState: UIControlStateNormal];
         //[self.nextBtn addTarget: self action: @selector(back:) forControlEvents: UIControlEventTouchUpInside];
-        [nextBtn addTarget: self action: @selector(backBtnPress:) forControlEvents: UIControlEventTouchUpInside];
+        [_nextBtn addTarget: self action: @selector(backBtnPress:) forControlEvents: UIControlEventTouchUpInside];
     } else {
-        [nextBtn setTitle: @"下一步" forState: UIControlStateNormal];
-        [nextBtn addTarget: self action: @selector(save:) forControlEvents: UIControlEventTouchUpInside];
+        [_nextBtn setTitle: @"下一步" forState: UIControlStateNormal];
+        [_nextBtn addTarget: self action: @selector(save:) forControlEvents: UIControlEventTouchUpInside];
     }
     if ([wTools objectExists: self.userIdentity]) {
         if ([self.userIdentity isEqualToString:@"editor"] || [self.userIdentity isEqualToString: @"approver"]) {
-            [nextBtn setTitle: @"完成" forState: UIControlStateNormal];
+            [_nextBtn setTitle: @"完成" forState: UIControlStateNormal];
         } else {
-            [nextBtn setTitle: @"下一步" forState: UIControlStateNormal];
+            [_nextBtn setTitle: @"下一步" forState: UIControlStateNormal];
         }
     }
     //[[_ShowView layer] setMasksToBounds:YES];
@@ -347,8 +350,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (_imagedata == nil) {
         ImageDataArr=[NSMutableArray new];
         
-        textBgView.hidden = YES;
-        deleteTextBtn.hidden = YES;
+        _textBgView.hidden = YES;
+        _deleteTextBtn.hidden = YES;
     }
     
     [self audioSetUp];
@@ -550,8 +553,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.customSettingActionSheet addSelectItem: @"" title: @"排序作品" btnStr: @"" tagInt: 1 identifierStr: @"reorder"];
     [self.customSettingActionSheet addSelectItem: @"" title: @"設定音樂" btnStr: @"" tagInt: 2 identifierStr: @"setupMusic"];
     [self.customSettingActionSheet addSelectItemForPreviewPage: @"" title: @"設定預覽頁" horzLine: YES btnStr: @"保存" tagInt: 999 identifierStr: @"setupPreview"];
-    NSLog(@"ImageDataArr.count: %ld", ImageDataArr.count);
-    NSLog(@"previewPageNum: %ld", previewPageNum);
+    NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
+    NSLog(@"previewPageNum: %ld", (long)previewPageNum);
     
     BOOL previewPageSelected = NO;
     BOOL allPageSelected = NO;
@@ -925,13 +928,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         stSelf->textForDescription = stSelf->ImageDataArr[stSelf->selectItem][@"description"];
                         
                         if ([stSelf->textForDescription isEqualToString: @""]) {
-                            stSelf->textBgView.hidden = YES;
-                            stSelf->deleteTextBtn.hidden = YES;
+                            stSelf.textBgView.hidden = YES;
+                            stSelf.deleteTextBtn.hidden = YES;
                             
                             [self removeTextDescriptionView];
                         } else {
-                            stSelf->textBgView.hidden = NO;
-                            stSelf->deleteTextBtn.hidden = NO;
+                            stSelf.textBgView.hidden = NO;
+                            stSelf.deleteTextBtn.hidden = NO;
                             
                             [stSelf removeTextDescriptionView];
                             [stSelf addTextDescriptionView];
@@ -1779,6 +1782,7 @@ shouldChangeTextInRange:(NSRange)range
         NSLog( @"Reason: %@", exception.reason );
         return;
     }
+    self.descButton.hidden = YES;
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
@@ -1818,6 +1822,7 @@ shouldChangeTextInRange:(NSRange)range
                     
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"call getalbumofdiy success");
+                        
                         stSelf.selectrow = [dic[@"data"][@"usergrade"][@"photo_limit_of_album"] intValue];
                         NSLog(@"self.selectrow: %ld", (long)stSelf.selectrow);
                         stSelf.audioMode = dic[@"data"][@"album"][@"audio_mode"];
@@ -1825,8 +1830,8 @@ shouldChangeTextInRange:(NSRange)range
                         stSelf->ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
                         stSelf->previewPageNum = [dic[@"data"][@"album"][@"preview_page_num"] intValue];
-                        NSLog(@"previewPageNum: %ld", stSelf->previewPageNum);
-                        
+                        //NSLog(@"previewPageNum: %ld", stSelf->previewPageNum);
+                        stSelf.descButton.hidden = (stSelf->ImageDataArr.count == 0);
                         if (stSelf->ImageDataArr.count == 0) {
                             [stSelf hideAllFunctions];                        
                             [stSelf.dataCollectionView reloadData];
@@ -2791,15 +2796,17 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         NSLog(@"v: %@", v);
         [v removeFromSuperview];
     }
+    self.descButton.hidden = (ImageDataArr.count == 0);
     if (ImageDataArr.count == 0) {
+        
         NSLog(@"ImageDataArr.count == 0");
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
         [self hideAllFunctions];
         
-        textBgView.hidden = YES;
-        addTextBtn.hidden = YES;
-        deleteTextBtn.hidden = YES;
+        _textBgView.hidden = YES;
+        _addTextBtn.hidden = YES;
+        _deleteTextBtn.hidden = YES;
         
         [self.dataCollectionView reloadData];
         
@@ -2810,7 +2817,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
         
         //        adobeEidt.hidden = NO;
-        addTextBtn.hidden = NO;
+        _addTextBtn.hidden = NO;
         [self enableRecordAndPlayBtn];
         [self.audioSwitchView setHidden:NO];//.hidden = NO;
         self.deleteImageBtn.hidden = NO;
@@ -2935,13 +2942,13 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
             NSLog(@"textForDescription: %@", stSelf->textForDescription);
             
             if (![stSelf->textForDescription isEqualToString: @""]) {
-                stSelf->textBgView.hidden = NO;
-                stSelf->deleteTextBtn.hidden = NO;
+                stSelf.textBgView.hidden = NO;
+                stSelf.deleteTextBtn.hidden = NO;
                 
                 [stSelf addTextDescriptionView];
             } else {
-                stSelf->textBgView.hidden = YES;
-                stSelf->deleteTextBtn.hidden = YES;
+                stSelf.textBgView.hidden = YES;
+                stSelf.deleteTextBtn.hidden = YES;
                 
                 [stSelf removeTextDescriptionView];
             }
@@ -3060,15 +3067,15 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 }
 
 - (void)enableButton {
-    refreshBtn.userInteractionEnabled = YES;
-    conbtn.userInteractionEnabled = YES;
-    settingBtn.userInteractionEnabled = YES;
-    nextBtn.userInteractionEnabled = YES;
+    _refreshBtn.userInteractionEnabled = YES;
+    _conbtn.userInteractionEnabled = YES;
+    _settingBtn.userInteractionEnabled = YES;
+    _nextBtn.userInteractionEnabled = YES;
     
     //    adobeEidt.userInteractionEnabled = YES;
     
-    addTextBtn.userInteractionEnabled = YES;
-    deleteTextBtn.userInteractionEnabled = YES;
+    _addTextBtn.userInteractionEnabled = YES;
+    _deleteTextBtn.userInteractionEnabled = YES;
     
 //    _deleteAudioBtn.userInteractionEnabled = YES;
     self.deleteImageBtn.userInteractionEnabled = YES;
@@ -3076,15 +3083,15 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
 
 - (void)disableButton {
     NSLog(@"disableButton");
-    refreshBtn.userInteractionEnabled = NO;
-    conbtn.userInteractionEnabled = NO;
-    settingBtn.userInteractionEnabled = NO;
-    nextBtn.userInteractionEnabled = NO;
+    _refreshBtn.userInteractionEnabled = NO;
+    _conbtn.userInteractionEnabled = NO;
+    _settingBtn.userInteractionEnabled = NO;
+    _nextBtn.userInteractionEnabled = NO;
     
     //    adobeEidt.userInteractionEnabled = NO;
     
-    addTextBtn.userInteractionEnabled = NO;
-    deleteTextBtn.userInteractionEnabled = NO;
+    _addTextBtn.userInteractionEnabled = NO;
+    _deleteTextBtn.userInteractionEnabled = NO;
     
 //    _deleteAudioBtn.userInteractionEnabled = NO;
     self.deleteImageBtn.userInteractionEnabled = NO;
@@ -5179,8 +5186,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     //[v setStep1Rect:rect1 step2Rect:rect2 step3Rect:rect3];
     __block typeof(self) wself = self;
     [self presentViewController:v animated:YES completion:^{
-        CGRect rect3 = [wself.view convertRect:wself->conbtn.frame fromView:wself->conbtn.superview];
-        CGRect rect2 = [wself.view convertRect:wself->settingBtn.frame fromView:wself->settingBtn.superview];
+        CGRect rect3 = [wself.view convertRect:wself.conbtn.frame fromView:wself.conbtn.superview];
+        CGRect rect2 = [wself.view convertRect:wself.settingBtn.frame fromView:wself.settingBtn.superview];
         CGRect r0 = wself.dataCollectionView.frame;
         CGRect rect1 = CGRectMake(r0.origin.x+8, r0.origin.y+24, r0.size.height-16, r0.size.height-16);//
         [v setStep1Rect:rect1 step2Rect:rect2 step3Rect:rect3];

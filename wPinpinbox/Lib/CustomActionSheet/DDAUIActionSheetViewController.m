@@ -264,7 +264,7 @@
         inputTextView.layer.cornerRadius = kCornerRadius;
         inputTextView.textContainerInset = UIEdgeInsetsMake(4, 4, 4, 4);
         inputTextView.font = [UIFont systemFontOfSize: 18];
-        inputTextView.text = [NSString stringWithFormat: @"%ld", previewPageNum];
+        inputTextView.text = [NSString stringWithFormat: @"%ld", (long)previewPageNum];
 //        inputTextView.text = @"";
         [horzLayout addSubview: inputTextView];
     }
@@ -291,14 +291,14 @@
     if ([identifierStr isEqualToString: @"setupPages"]) {
         setupPagesViewSelected = gridViewSelected;
         if (setupPagesViewSelected) {
-            previewPageStr = [NSString stringWithFormat: @"%ld", previewPageNum];
+            previewPageStr = [NSString stringWithFormat: @"%ld", (long)previewPageNum];
         }
     }
     if ([identifierStr isEqualToString: @"setupAllPages"]) {
         setupAllPagesViewSelected = gridViewSelected;
         
         if (setupAllPagesViewSelected) {
-            previewPageStr = [NSString stringWithFormat: @"%ld", self.allPageNum];
+            previewPageStr = [NSString stringWithFormat: @"%ld", (long)self.allPageNum];
             NSLog(@"previewPageStr: %@", previewPageStr);
         }
     }
@@ -847,8 +847,8 @@
             return;
         } else if ([identifierStr isEqualToString: @"setupAllPages"]) {
             touch.view.backgroundColor = [UIColor clearColor];
-            NSLog(@"self.allPageNum: %ld", self.allPageNum);
-            previewPageStr = [NSString stringWithFormat: @"%ld", self.allPageNum];
+            NSLog(@"self.allPageNum: %ld", (long)self.allPageNum);
+            previewPageStr = [NSString stringWithFormat: @"%ld", (long)self.allPageNum];
             NSLog(@"previewPageStr: %@", previewPageStr);
             [self changePreviewPageSetupViews: touch.view];
             return;
@@ -861,8 +861,8 @@
                 [self changePreviewPageSetupViews: touch.view.superview];
                 return;
             } else if ([identifierStr1 isEqualToString: @"setupAllPages"]) {
-                NSLog(@"self.allPageNum: %ld", self.allPageNum);
-                previewPageStr = [NSString stringWithFormat: @"%ld", self.allPageNum];
+                NSLog(@"self.allPageNum: %ld", (long)self.allPageNum);
+                previewPageStr = [NSString stringWithFormat: @"%ld", (long)self.allPageNum];
                 NSLog(@"previewPageStr: %@", previewPageStr);
                 [self changePreviewPageSetupViews: touch.view.superview];
                 return;
@@ -1056,8 +1056,8 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"shouldChangeTextInRange");
     NSLog(@"DDAUIActionSheetViewController");
     NSLog(@"textView.text.length: %lu", (unsigned long)textView.text.length);
-    NSLog(@"range.length: %lu", range.length);
-    NSLog(@"text.length: %lu", text.length);
+    NSLog(@"range.length: %lu", (unsigned long)range.length);
+    NSLog(@"text.length: %lu", (unsigned long)text.length);
     if ((textView.text.length + (text.length - range.length)) > 3) {
         return NO;
     }

@@ -3928,7 +3928,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - UIScrollViewDelegate Methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
-    NSLog(@" [UIApplication sharedApplication].keyWindow.tag %ld",[UIApplication sharedApplication].keyWindow.tag);
+    NSLog(@" [UIApplication sharedApplication].keyWindow.tag %d",[UIApplication sharedApplication].keyWindow.tag);
     
     if ([UIApplication sharedApplication].keyWindow.tag != 10001 ) return;
 
@@ -3944,7 +3944,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 
-    NSLog(@" [UIApplication sharedApplication].keyWindow.tag %ld",[UIApplication sharedApplication].keyWindow.tag);
+    NSLog(@" [UIApplication sharedApplication].keyWindow.tag %d",[UIApplication sharedApplication].keyWindow.tag);
 
     if ([UIApplication sharedApplication].keyWindow.tag != 10001 ) return;
     

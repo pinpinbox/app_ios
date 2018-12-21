@@ -201,7 +201,7 @@
                                     <constraint firstAttribute="trailing" secondItem="0eE-qQ-MhU" secondAttribute="trailing" constant="16" id="mwO-Pf-472"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="orm-Co-MdZ">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="orm-Co-MdZ">
                                 <rect key="frame" x="16" y="548" width="343" height="30"/>
                                 <color key="backgroundColor" red="0.61960784313725492" green="0.61960784313725492" blue="0.61960784313725492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -345,6 +345,7 @@
                         <outlet property="conbtn" destination="0ju-l5-i4K" id="sOx-Vr-USM"/>
                         <outlet property="dataCollectionView" destination="2IG-uS-S58" id="2m4-jr-ckk"/>
                         <outlet property="deleteImageBtn" destination="ZxS-QF-hp3" id="Vj7-9n-T2p"/>
+                        <outlet property="descButton" destination="orm-Co-MdZ" id="jpu-Tt-RJG"/>
                         <outlet property="locationSwitchView" destination="LJk-JI-TQ8" id="Eve-rf-JFw"/>
                         <outlet property="navBarHeight" destination="Lul-ei-u88" id="Fek-T3-lvI"/>
                         <outlet property="navBarView" destination="MdE-zC-psy" id="lMi-sg-ipd"/>

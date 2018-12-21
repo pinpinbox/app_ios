@@ -77,7 +77,7 @@
 - (void)setExchangeNumber:(NSInteger)exchangeNumber {
     NSLog(@"setExchangeNumber");
     NSLog(@"setExchangeNumber: %ld", (long)exchangeNumber);
-    self.sponsoredNumberLabel.text = [NSString stringWithFormat: @"已被贊助%ld次", exchangeNumber];
+    self.sponsoredNumberLabel.text = [NSString stringWithFormat: @"已被贊助%ld次", (long)exchangeNumber];
 }
 
 - (void)setupFinalPage {
