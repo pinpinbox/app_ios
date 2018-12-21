@@ -100,6 +100,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     CGFloat coverImageHeight;
     CGFloat creativeNameLabelHeight;
     CGFloat linkBgViewHeight;
+    
+    UIView *noInfoView;
+    BOOL isNoInfoViewCreate;
 }
 
 @property (strong, nonatomic) NSDictionary *userDic;
@@ -276,6 +279,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     self.customMessageActionSheet = [[MessageboardViewController alloc] init];
     self.customMessageActionSheet.delegate = self;
+    
+    noInfoView.hidden = YES;
+    isNoInfoViewCreate = NO;
 }
 
 #pragma mark -
@@ -375,9 +381,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
         int s = 0;
         
-        if (![wTools objectExists: dic[@"data"][@"album"]]) {
-            return;
-        }
+//        if (![wTools objectExists: dic[@"data"][@"album"]]) {
+//            return;
+//        }
         
         for (NSMutableDictionary *picture in [dic objectForKey:@"data"][@"album"]) {
             s++;
@@ -401,8 +407,20 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
         NSLog(@"After getting data");
         NSLog(@"\n\nisLoading: %d", isLoading);
+        
         [self layoutSetup];
+        
+        if (pictures.count == 0) {
+            if (!isNoInfoViewCreate) {
+                [self addNoInfoViewOnCollectionView: @"沒有作品展示"];
+            }
+            noInfoView.hidden = NO;
+        } else if (pictures.count > 0) {
+            noInfoView.hidden = YES;
+        }
+        
         [self getProfile];
+        
         isReloading = NO;
     } else if ([dic[@"result"] intValue] == 0) {
         if ([wTools objectExists: dic[@"message"]]) {
@@ -415,6 +433,53 @@ static NSString *autoPlayStr = @"&autoplay=1";
         [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
         isReloading = NO;
     }
+}
+
+- (void)addNoInfoViewOnCollectionView:(NSString *)msg {
+    NSLog(@"addNoInfoViewOnCollectionView");
+    if (!isNoInfoViewCreate) {
+        noInfoView = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
+        noInfoView.myTopMargin = 528;
+        noInfoView.myLeftMargin = noInfoView.myRightMargin = 64;
+        noInfoView.backgroundColor = [UIColor thirdGrey];
+        noInfoView.layer.cornerRadius = 16;
+        noInfoView.clipsToBounds = YES;
+        [self.collectionView addSubview: noInfoView];
+        
+        MyFrameLayout *frameLayout = [self createFrameLayout];
+        [noInfoView addSubview: frameLayout];
+        
+        UILabel *label = [self createLabel: msg];
+        [frameLayout addSubview: label];
+    }
+    isNoInfoViewCreate = YES;
+}
+
+- (MyFrameLayout *)createFrameLayout {
+    MyFrameLayout *frameLayout = [MyFrameLayout new];
+    frameLayout.wrapContentHeight = YES;
+    frameLayout.myMargin = 0;
+    frameLayout.myCenterXOffset = 0;
+    frameLayout.myCenterYOffset = 0;
+    frameLayout.padding = UIEdgeInsetsMake(32, 32, 32, 32);
+    return frameLayout;
+}
+
+- (UILabel *)createLabel: (NSString *)title {
+    UILabel *label = [UILabel new];
+    label.wrapContentHeight = YES;    
+    label.myLeftMargin = label.myRightMargin = 8;
+    label.numberOfLines = 0;
+    label.text = title;
+    [LabelAttributeStyle changeGapString: label content: label.text];
+    label.font = [UIFont systemFontOfSize: 17];
+        label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor firstGrey];
+    [label sizeToFit];
+    //    label.myCenterXOffset = 0;
+    //    label.myCenterYOffset = 0;
+    
+    return label;
 }
 
 - (void)getProfile {
@@ -964,7 +1029,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
             [layer removeFromSuperlayer];
         }
     }
-    
     // Graident Effect for Gradient View
     CAGradientLayer *gradientLayer;
     gradientLayer = [CAGradientLayer layer];
@@ -1122,7 +1186,12 @@ static NSString *autoPlayStr = @"&autoplay=1";
     linkBgViewHeight = headerView.linkBgView.frame.size.height;
     NSLog(@"linkBgViewHeight: %f", linkBgViewHeight);
     NSLog(@"headerView.linkBgView.frame: %@", NSStringFromCGRect(headerView.linkBgView.frame));
-    self.jccLayout.headerHeight = [self headerHeightCalculation];
+    
+    if ([wTools objectExists: self.userDic]) {
+        NSLog(@"self.userDic object exists");
+        self.jccLayout.headerHeight = [self headerHeightCalculation];
+        NSLog(@"self.jccLayout.headerHeight: %f", self.jccLayout.headerHeight);
+    }
     [self.collectionView.collectionViewLayout invalidateLayout];
     
     return headerView;
@@ -1342,6 +1411,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                    layout:(UICollectionViewLayout *)collectionViewLayout
  heightForHeaderInSection:(NSInteger)section {
     NSLog(@"heightForHeaderInSection");
+    NSLog(@"self.jccLayout.headerHeight: %f", self.jccLayout.headerHeight);
     return self.jccLayout.headerHeight;
 }
 

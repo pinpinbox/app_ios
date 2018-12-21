@@ -258,7 +258,6 @@
 
 - (void)checkCameraPermission {
     NSLog(@"checkCameraPermission");
-    
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     
     if (authStatus == AVAuthorizationStatusDenied ||
@@ -273,18 +272,15 @@
                 } else {
                     [wself showCameraAlert];
                 }
-                
             });
         }];
     } else {
         [self activateCamera];
     }
-    
 }
     
-- (void) showCameraAlert{
+- (void)showCameraAlert{
     dispatch_async(dispatch_get_main_queue(), ^{
-
         //无权限
         UIAlertController *alert = [UIAlertController alertControllerWithTitle: NSLocalizedString(@"PicText-tipAccessPrivacy", @"") message: @"" preferredStyle: UIAlertControllerStyleAlert];
         [alert addAction: [UIAlertAction actionWithTitle: @"設定" style: UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -301,7 +297,6 @@
 }
 - (void)activateCamera {
     dispatch_async(dispatch_get_main_queue(), ^{
-
         //拍照
         // 先檢查裝置是否配備相機
         if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
@@ -313,18 +308,16 @@
             //開起相機拍照界面
             [self presentViewController:imagePicker animated:YES completion:nil];
         }
-        
     });
 }
 
 - (IBAction)cameraBtnPress:(id)sender {
     NSLog(@"cameraBtnPress");
-    [self checkCameraPermission];
+    [self checkCameraPermission];        
 }
 
 - (IBAction)compressionBtnPress:(id)sender {
     NSLog(@"compressionBtnPress");
-    
     if (self.shouldResize) {
         // If shouldResize is TRUE then change to FALSE
         self.shouldResize = !self.shouldResize;
@@ -338,7 +331,6 @@
         [self.compressionBtn setImage: [UIImage imageNamed: @"ic200_photosize_light"] forState: UIControlStateNormal];
         [self showToastMsg: @"已取消原始尺寸" color: [UIColor hintGrey] duration: 0.5];
     }
-    
     /*
      if (self.compressionData == 1.0) {
      self.compressionData = 0.5;
@@ -356,7 +348,6 @@
 - (IBAction)back:(id)sender {
     NSLog(@"back");
     NSLog(@"self.fromVC: %@", self.fromVC);
-    
     if ([self.fromVC isEqualToString: @"InfoEditViewController"]) {
         [self dismissViewControllerAnimated: YES completion: nil];
     } else if ([self.fromVC isEqualToString: @"AlbumCreationViewController"]) {
@@ -411,7 +402,6 @@
 - (void)addnewimage:(int)se {
     NSLog(@"-----------");
     NSLog(@"addnewimage");
-    
     PHAsset *asset = imageArray[se];
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
     options.networkAccessAllowed = YES;
@@ -432,7 +422,6 @@
     __block typeof(self) wself = self;
     CGSize res = [self imageResizedResult:CGSizeMake(asset.pixelWidth, asset.pixelHeight)];
     [self.imageManager requestImageForAsset:asset targetSize:res contentMode:PHImageContentModeAspectFill/*PHImageContentModeDefault*/ options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-
         if (![info[PHImageResultIsDegradedKey] boolValue]) {
 
             //img = [UIImage imageWithData:imageData];
@@ -628,15 +617,14 @@
 //        [self.queue addOperation: operation];
     }
 }
+
 - (CGSize)imageResizedResult:(CGSize)size {
-    
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     
     CGFloat heightRatio = 0;
     CGFloat widthRatio = 0;
     
     CGFloat screenScale = [[UIScreen mainScreen] scale];
-    
     
     // The format of Screen Bounds is in pixel
     CGSize screenSize = CGSizeMake(screenBounds.size.width * screenScale, screenBounds.size.height * screenScale);
@@ -648,16 +636,14 @@
         widthRatio = size.width / screenSize.width;
         //NSLog(@"widthRatio: %lu", (unsigned long)widthRatio);
     }
-    
     CGFloat ratio = heightRatio < widthRatio ? heightRatio : widthRatio;
     
     if (ratio == 0) {
         ratio = 1;
     }
-    
     return CGSizeMake(size.width / ratio, size.height / ratio);
-
 }
+
 - (UIImage *)imageRatioCalculation:(UIImage *)img {
     NSLog(@"");
     NSLog(@"imageRatioCalculationAndResize");
@@ -770,8 +756,6 @@
 }
  */
 - (void)postProcessUploadFinished {
-    
-    
     __block typeof(self) wself = self;
     
     //hud.progress = 0;
@@ -791,12 +775,9 @@
                 if ([self.delegate respondsToSelector: @selector(afterSendingImages:)]) {
                     [self.delegate afterSendingImages: self];
                 }
-                
                 [self.navigationController popViewControllerAnimated: YES];
-                
             }];
         }
-        
     } else {
 //        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
 //            thehud.detailsLabel.text =  [NSString stringWithFormat: @"完成：%ld；失敗：%ld",wself.photoFinished, wself.photoFailed];
@@ -837,20 +818,18 @@
 }
 
 #pragma mark - UICollectionViewDataSource
--(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    NSLog(@"numberOfSectionsInCollectionView");
     if ([_phototype isEqualToString:@"1"]) {
         NSString *str = [NSString stringWithFormat:@" %@（ %lu / %ld ）",NSLocalizedString(@"PicText-confirm", @""),(unsigned long)[imageArray count] + _selectedImgAmount,(long)_selectrow];
         
         [okbtn setTitle:str forState:UIControlStateNormal];
     }
-    
     return 1;
 }
 
--(NSInteger)collectionView:(UICollectionView *)collectionView
-    numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+    numberOfItemsInSection:(NSInteger)section {
     NSLog(@"assetsFetchResults.count: %lu", (unsigned long)assetsFetchResults.count);
     return assetsFetchResults.count;
 }
@@ -859,19 +838,16 @@
            viewForSupplementaryElementOfKind:(NSString *)kind
                                  atIndexPath:(NSIndexPath *)indexPath {
     UICollectionReusableView *reusableview = nil;
-    
     //photocell
     UICollectionReusableView *footerview = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"photocell" forIndexPath:indexPath];
-    
     reusableview = footerview;
-    
     //        return myCell;
-    
     return reusableview;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"cellForItemAtIndexPath");
     PhotoCollectionViewCell *myCell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CollerctionCell" forIndexPath:indexPath];
     
     NSInteger currentTag = myCell.tag;
@@ -952,14 +928,10 @@
         // For Choosing 1 image
         //myCell.titel.hidden = YES;
     }
-    
     return myCell;
 }
 
 #pragma mark - UICollectionViewFlowLayoutDelegate
-//- (void)collectionView:(UICollectionView *)collectionView
-//didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
@@ -1040,9 +1012,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
 -(CGSize)collectionView:(UICollectionView *)collectionView
                  layout:(UICollectionViewLayout *)collectionViewLayout
- sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    
+ sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake(77, 77);
     return cellSize(collectionView);
     
@@ -1095,10 +1065,8 @@ CGSize cellSize(UICollectionView *collectionView) {
 }
 
 #pragma mark - ScrollView Delegate Methods
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidScroll");
-    
     dispatch_async(self.cacheQueue, ^{
         //[self updateCache];
     });
@@ -1106,19 +1074,16 @@ CGSize cellSize(UICollectionView *collectionView) {
 
 #pragma mark - RSKImageCropViewControllerDelegate
 
-- (void)imageCropViewControllerDidCancelCrop:(RSKImageCropViewController *)controller
-{
+- (void)imageCropViewControllerDidCancelCrop:(RSKImageCropViewController *)controller {
     [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)imageCropViewController:(RSKImageCropViewController *)controller
                    didCropImage:(UIImage *)croppedImage
-                  usingCropRect:(CGRect)cropRect
-{
+                  usingCropRect:(CGRect)cropRect {
     NSLog(@"");
     NSLog(@"didCropImage");
     NSLog(@"");
-    
     //myphoto.image=croppedImage;
     [controller dismissViewControllerAnimated:YES completion:nil];
     
@@ -1142,11 +1107,10 @@ CGSize cellSize(UICollectionView *collectionView) {
     assetsFetchResults = [PHAsset fetchAssetsWithOptions:options];
     NSLog(@"assetsFetchResults.count: %lu", (unsigned long)assetsFetchResults.count);
     NSLog(@"mycov reloadData");
-    
     [imageArray addObject: assetsFetchResults[0]];
-    
     [mycov reloadData];
 }
+
 -(void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info {
     // 取得使用者拍攝的照片
@@ -1233,7 +1197,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                                         targetSize:self.assetThumbnailSize
                                        contentMode:PHImageContentModeAspectFill
                                            options:nil];
-    
 }
 
 - (NSArray *)assetsAtIndexPaths:(NSArray *)indexPaths {
@@ -1247,12 +1210,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         PHAsset *asset = [self currentAssetAtIndex:indexPath.item];
         [assets addObject:asset];
     }
-    
     return assets;
 }
 
 #pragma mark - NSURLSessionDataTask Related Functions
-
 - (void)URLSession:(NSURLSession *)session
               task:(nonnull NSURLSessionTask *)task
    didSendBodyData:(int64_t)bytesSent
@@ -1293,7 +1254,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
                 album_id:(NSString *)album_id
                imageData:(NSData *)imageData
                          //image:(UIImage *)image
-
 {
     // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
@@ -1590,4 +1550,3 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     }];
 }
 @end
-

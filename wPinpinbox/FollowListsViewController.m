@@ -19,12 +19,16 @@
 #import "LabelAttributeStyle.h"
 #import "FollowListsCollectionReusableView.h"
 #import "UIViewController+ErrorAlert.h"
+#import "MyLayout.h"
 
 @interface FollowListsViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate> {
     NSMutableArray *followListData;
     BOOL isLoading;
     BOOL isReloading;
     NSInteger  nextId;
+    
+    UIView *noInfoView;
+    BOOL isNoInfoViewCreate;    
 }
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
@@ -123,15 +127,18 @@
     isReloading = NO;
     
     followListData = [NSMutableArray new];
+    self.navBarView.backgroundColor = [UIColor barColor];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget: self
                             action: @selector(refresh)
                   forControlEvents: UIControlEventValueChanged];
     [self.collectionView addSubview: self.refreshControl];
-    
-    self.navBarView.backgroundColor = [UIColor barColor];
     self.collectionView.showsVerticalScrollIndicator = NO;
+    self.collectionView.hidden = YES;
+    
+    noInfoView.hidden = YES;
+    isNoInfoViewCreate = NO;
 }
 
 #pragma mark - Web Service
@@ -209,37 +216,51 @@
     });
 }
 
-- (void)processFollowListResult:(NSDictionary *) dic{
+- (void)processFollowListResult:(NSDictionary *)dic{
     if ([dic[@"result"] intValue] == 1) {
+        NSLog(@"nextId: %ld", (long)nextId);        
         if (nextId == 0)
             [followListData removeAllObjects];
         
         // s for counting how much data is loaded
         int s = 0;
         
-        if ([wTools objectExists: dic[@"data"]]) {
-            for (NSMutableDictionary *followData in [dic objectForKey: @"data"]) {
-                s++;
-                [followListData addObject: followData];
-            }
-            NSLog(@"followListData: %@", followListData);
-            
-            // If data keeps loading then the nextId is accumulating
-            nextId = nextId + s;
-            NSLog(@"nextId is: %ld", (long)nextId);
-            
-            // If nextId is bigger than 0, that means there are some data loaded already.
-            if (nextId >= 0)
-                isLoading = NO;
-            
-            // If s is 0, that means dic data is empty.
-            if (s == 0) {
-                isLoading = YES;
-            }
-            [self.refreshControl endRefreshing];
-            [self.collectionView reloadData];
-            isReloading = NO;
+//        if (![wTools objectExists: dic[@"data"]]) {
+//            return;
+//        }
+        
+        for (NSMutableDictionary *followData in [dic objectForKey: @"data"]) {
+            s++;
+            [followListData addObject: followData];
         }
+//        NSLog(@"followListData: %@", followListData);
+        
+        // If data keeps loading then the nextId is accumulating
+        nextId = nextId + s;
+        NSLog(@"nextId is: %ld", (long)nextId);
+        
+        // If nextId is bigger than 0, that means there are some data loaded already.
+        if (nextId >= 0)
+            isLoading = NO;
+        
+        // If s is 0, that means dic data is empty.
+        if (s == 0) {
+            isLoading = YES;
+        }
+        
+        if (followListData.count == 0) {
+            if (!isNoInfoViewCreate) {
+                [self addNoInfoViewOnCollectionView: @"目前沒有關注的人，可返回首頁利用搜尋功能"];
+            }
+            noInfoView.hidden = NO;
+            self.collectionView.hidden = YES;
+        } else if (followListData.count > 0) {
+            noInfoView.hidden = YES;
+            self.collectionView.hidden = NO;
+        }
+        [self.refreshControl endRefreshing];
+        [self.collectionView reloadData];
+        isReloading = NO;
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
         if ([wTools objectExists: dic[@"message"]]) {
@@ -254,6 +275,58 @@
         [self.refreshControl endRefreshing];
         isReloading = NO;
     }
+}
+
+- (void)addNoInfoViewOnCollectionView:(NSString *)msg {
+    NSLog(@"addNoInfoViewOnCollectionView");
+    if (!isNoInfoViewCreate) {
+        noInfoView = [MyLinearLayout linearLayoutWithOrientation: MyLayoutViewOrientation_Vert];
+        noInfoView.myTopMargin = 200;
+        noInfoView.myLeftMargin = noInfoView.myRightMargin = 32;
+        noInfoView.backgroundColor = [UIColor thirdGrey];
+        noInfoView.layer.cornerRadius = 16;
+        noInfoView.clipsToBounds = YES;
+        
+//        [self.collectionView addSubview: noInfoView];
+//        [self.collectionView bringSubviewToFront: noInfoView];
+        
+        [self.view addSubview: noInfoView];
+        
+        MyFrameLayout *frameLayout = [self createFrameLayout];
+        [noInfoView addSubview: frameLayout];
+        
+        UILabel *label = [self createLabel: msg];
+        [frameLayout addSubview: label];
+    }
+    isNoInfoViewCreate = YES;
+}
+
+- (MyFrameLayout *)createFrameLayout {
+    MyFrameLayout *frameLayout = [MyFrameLayout new];
+    frameLayout.wrapContentHeight = YES;
+    frameLayout.myMargin = 0;
+    frameLayout.myCenterXOffset = 0;
+    frameLayout.myCenterYOffset = 0;
+    frameLayout.padding = UIEdgeInsetsMake(32, 32, 32, 32);
+    
+    return frameLayout;
+}
+
+- (UILabel *)createLabel: (NSString *)title {
+    UILabel *label = [UILabel new];
+    label.wrapContentHeight = YES;
+    label.myLeftMargin = label.myRightMargin = 8;
+    label.numberOfLines = 0;
+    label.text = title;
+    [LabelAttributeStyle changeGapString: label content: label.text];
+    label.font = [UIFont systemFontOfSize: 17];
+//    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor firstGrey];
+    [label sizeToFit];
+//    label.myCenterXOffset = 0;
+//    label.myCenterYOffset = 0;
+    
+    return label;
 }
 
 #pragma mark - IBAction Methods
@@ -470,8 +543,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)collectionView:(UICollectionView *)collectionView
        willDisplayCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"willDisplayCell");
+    
     if (indexPath.item == (followListData.count - 1)) {
-        NSLog(@"indexPath.item == (followListData.count - 1)");
+        NSLog(@"indexPath.item == (pictures.count - 1)");
         [self loadData];
     }
 }
@@ -491,7 +566,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomAlert: (NSString *)msg
+- (void)showCustomAlert:(NSString *)msg
                  userId:(NSString *)userId
                    name:(NSString *)name {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
