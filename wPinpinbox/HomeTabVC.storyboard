@@ -636,7 +636,7 @@
                                                                                         </userDefinedRuntimeAttribute>
                                                                                     </userDefinedRuntimeAttributes>
                                                                                 </imageView>
-                                                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" translatesAutoresizingMaskIntoConstraints="NO" id="3P6-BR-IJX">
+                                                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="499" verticalCompressionResistancePriority="499" image="member_back_head" translatesAutoresizingMaskIntoConstraints="NO" id="3P6-BR-IJX">
                                                                                     <rect key="frame" x="0.0" y="132" width="32" height="32"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="width" constant="32" id="9gj-Cb-shk"/>
@@ -888,5 +888,6 @@
         <image name="ic200_category_dark" width="144" height="144"/>
         <image name="ic200_scancamera_dark" width="44" height="44"/>
         <image name="ic200_search_dark" width="144" height="144"/>
+        <image name="member_back_head" width="160" height="160"/>
     </resources>
 </document>

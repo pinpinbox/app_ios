@@ -2067,7 +2067,7 @@ sourceController:(UIViewController *)source
             [c.personnelView sd_setImageWithURL:[NSURL URLWithString:user[@"picture"]]
                                placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
         } else {
-            c.personnelView.image = nil;
+            c.personnelView.image = [UIImage imageNamed:@"member_back_head"];
             c.personnelView.backgroundColor = [UIColor secondGrey];
         }
         
