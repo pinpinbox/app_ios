@@ -342,8 +342,8 @@
                     if (tmp[@"image"]) {
                         NSLog(@"UPDATA IMAGE");
                         NSMutableDictionary *dic=[NSMutableDictionary new];
-                        [dic setObject:[UserInfo getUserToken] forKey:@"token"];
-                        [dic setObject:[UserInfo getUserID]  forKey:@"id"];
+                        [dic setObject:[wTools getUserToken] forKey:@"token"];
+                        [dic setObject:[wTools getUserID]  forKey:@"id"];
                         
                         UIImage *image=[UIImage imageWithData:tmp[@"image"]];
                         

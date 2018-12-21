@@ -156,8 +156,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getAlbum2LikesList: self.albumId
                                                   limit: limit
-                                                  token: [UserInfo getUserToken]
-                                                 userId: [UserInfo getUserID]];
+                                                  token: [wTools getUserToken]
+                                                 userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -398,8 +398,8 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *userIdStr = [NSString stringWithFormat: @"%ld", (long)userId];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *respnose = [boxAPI changefollowstatus: [UserInfo getUserID]
-                                                  token: [UserInfo getUserToken]
+        NSString *respnose = [boxAPI changefollowstatus: [wTools getUserID]
+                                                  token: [wTools getUserToken]
                                                authorid: userIdStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{

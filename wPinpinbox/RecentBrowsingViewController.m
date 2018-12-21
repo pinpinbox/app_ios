@@ -248,8 +248,8 @@ heightForHeaderInSection:(NSInteger)section {
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI retrievealbump: albumid
-                                               uid: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]];
+                                               uid: [wTools getUserID]
+                                             token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

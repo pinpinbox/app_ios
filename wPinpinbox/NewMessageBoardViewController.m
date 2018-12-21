@@ -307,8 +307,8 @@
 
         NSString *response = @"";
         
-        response = [boxAPI getMessageBoardList: [UserInfo getUserID]
-                                         token: [UserInfo getUserToken]
+        response = [boxAPI getMessageBoardList: [wTools getUserID]
+                                         token: [wTools getUserToken]
                                           type: wself.type
                                         typeId: wself.typeId
                                          limit: limit];
@@ -437,8 +437,8 @@
     NSLog(@"limit: %@", limit);
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI insertMessageBoard: [UserInfo getUserID]
-                                                  token: [UserInfo getUserToken]
+        NSString *response = [boxAPI insertMessageBoard: [wTools getUserID]
+                                                  token: [wTools getUserToken]
                                                    type: wself.type
                                                  typeId: wself.typeId
                                                    text: text
@@ -1327,8 +1327,8 @@ shouldChangeTextInRange:(NSRange)range
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,16" forKey: @"limit"];
         
-        response = [boxAPI search: [UserInfo getUserID]
-                            token: [UserInfo getUserToken]
+        response = [boxAPI search: [wTools getUserID]
+                            token: [wTools getUserToken]
                              data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1372,7 +1372,7 @@ shouldChangeTextInRange:(NSRange)range
         NSLog(@"dic result boolValue is 1");
         userData = [NSMutableArray arrayWithArray: dic[@"data"]];
         
-        NSLog(@"[wTools getUserID]: %@", [UserInfo getUserID]);
+        NSLog(@"[wTools getUserID]: %@", [wTools getUserID]);
         NSLog(@"userData: %@", userData);
         NSLog(@"userData.count: %lu", (unsigned long)userData.count);
         
@@ -1383,7 +1383,7 @@ shouldChangeTextInRange:(NSRange)range
         }
         
         for (NSDictionary *d in userData) {
-            if ([d[@"user"][@"user_id"] intValue] == [[UserInfo getUserID] intValue]) {
+            if ([d[@"user"][@"user_id"] intValue] == [[wTools getUserID] intValue]) {
                 [tempArray addObject: d];
             }
         }

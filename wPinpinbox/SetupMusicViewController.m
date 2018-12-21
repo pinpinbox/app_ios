@@ -192,8 +192,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI getalbumdataoptions: [UserInfo getUserID]
-                                                   token: [UserInfo getUserToken]];
+        NSString *response = [boxAPI getalbumdataoptions: [wTools getUserID]
+                                                   token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -227,8 +227,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)getAlbumSettings {
     NSLog(@"getAlbumSettings");
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getalbumsettings: [UserInfo getUserID]
-                                                token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getalbumsettings: [wTools getUserID]
+                                                token: [wTools getUserToken]
                                              album_id: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1141,8 +1141,8 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
                                               encoding: NSUTF8StringEncoding];
     
     NSMutableDictionary *param = [NSMutableDictionary new];
-    [param setObject:[UserInfo getUserID] forKey:@"user_id"];
-    [param setObject:[UserInfo getUserToken] forKey:@"token"];
+    [param setObject:[wTools getUserID] forKey:@"user_id"];
+    [param setObject:[wTools getUserToken] forKey:@"token"];
     [param setObject:self.albumId forKey:@"album_id"];
     [param setObject:jsonStr forKey:@"settings"];
     isAudioModeChanged = YES;
@@ -1190,8 +1190,8 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI albumsettings: [UserInfo getUserID]
-                                            token: [UserInfo getUserToken]
+        NSString *response = [boxAPI albumsettings: [wTools getUserID]
+                                            token: [wTools getUserToken]
                                          album_id: wself.albumId
                                          settings: jsonStr];
         

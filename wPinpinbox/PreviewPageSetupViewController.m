@@ -249,8 +249,8 @@
     }
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI albumsettings: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]
+        NSString *response = [boxAPI albumsettings: [wTools getUserID]
+                                             token: [wTools getUserToken]
                                           album_id: self.albumId
                                           settings: jsonStr];
         

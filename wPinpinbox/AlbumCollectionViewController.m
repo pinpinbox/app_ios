@@ -651,8 +651,8 @@
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI retrievealbump: albumId
-                                                uid: [UserInfo getUserID]
-                                              token: [UserInfo getUserToken]];
+                                                uid: [wTools getUserID]
+                                              token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

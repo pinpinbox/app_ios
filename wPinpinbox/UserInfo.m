@@ -21,7 +21,7 @@
 }
 
 //id
-+(NSString *)getUserID{
++(NSString *)getUserId{
     NSUserDefaults *u = [UserInfo userPrefs];
     if ([u objectForKey:@"id"]) {
         return [u objectForKey:@"id"];
@@ -41,6 +41,14 @@
     NSUserDefaults *u = [UserInfo userPrefs];
     [u setObject:uid forKey:@"id"];
     [u setObject:token forKey:@"token"];
+    
+    [u synchronize];
+}
+
++ (void)resetUserInfo {
+    NSUserDefaults *u = [UserInfo userPrefs];
+    [u removeObjectForKey:@"id"];
+    [u removeObjectForKey:@"token"];
     
     [u synchronize];
 }

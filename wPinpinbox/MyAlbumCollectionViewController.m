@@ -104,8 +104,8 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //NSArray *array = @[@"mine", @"other", @"cooperation"];
-        NSString *response = [boxAPI getcalbumlist: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                             token: [wTools getUserToken]
                                               rank: @"mine"
                                              limit: limit];
         

@@ -123,7 +123,7 @@
     self.failCount = 0;
     self.successCount = 0;
     
-    if ([UserInfo getUserID].length < 1 ) {
+    if ([UserInfo getUserId].length < 1 ) {
         self.notLoginCover.hidden = NO;
         return;
     } else {
@@ -137,7 +137,7 @@
             } else {
                 NSString *tok = result[@"token"];
                 
-                [UserInfo setUserInfo:[UserInfo getUserID] token:tok];
+                [UserInfo setUserInfo:[UserInfo getUserId] token:tok];
                 [UserAPI userProfileWithCompletionBlock:^(NSDictionary *result, NSError *error) {
                     if (result) {
                         dispatch_async(dispatch_get_main_queue(), ^{
@@ -335,7 +335,7 @@
 }
 - (void)sendLocalNotification:(NSString *)message albumid:(NSString *)albumid {
     
-    if ([UserInfo getUserID].length < 1 ) {
+    if ([UserInfo getUserId].length < 1 ) {
         NSExtensionContext *cxt = self.extensionContext;
         [cxt completeRequestReturningItems:nil completionHandler:nil];
         return;

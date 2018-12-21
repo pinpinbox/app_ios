@@ -411,8 +411,8 @@ replacementString:(NSString *)string {
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI updatepwd: [UserInfo getUserID]
-                                         token: [UserInfo getUserToken]
+        NSString *response = [boxAPI updatepwd: [wTools getUserID]
+                                         token: [wTools getUserToken]
                                         oldpwd: self.currentPwdTextField.text
                                         newpwd: self.pwdTextField2.text];
                 

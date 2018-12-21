@@ -225,8 +225,8 @@
         [data setObject: @"user" forKey: @"type"];
         [data setObject: @"0,16" forKey: @"limit"];
 
-        response = [boxAPI getRecommendedList: [UserInfo getUserID]
-                                        token: [UserInfo getUserToken]
+        response = [boxAPI getRecommendedList: [wTools getUserID]
+                                        token: [wTools getUserToken]
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -306,8 +306,8 @@
         [data setObject: @"album" forKey: @"type"];
         [data setObject: @"0,16" forKey: @"limit"];
 
-        response = [boxAPI getRecommendedList: [UserInfo getUserID]
-                                        token: [UserInfo getUserToken]
+        response = [boxAPI getRecommendedList: [wTools getUserID]
+                                        token: [wTools getUserToken]
                                          data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -863,8 +863,8 @@ replacementString:(NSString *)string {
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,32" forKey: @"limit"];
         
-        response = [boxAPI search: [UserInfo getUserID]
-                            token: [UserInfo getUserToken]
+        response = [boxAPI search: [wTools getUserID]
+                            token: [wTools getUserToken]
                              data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (response != nil) {
@@ -954,8 +954,8 @@ replacementString:(NSString *)string {
         [data setObject: string forKey: @"searchkey"];
         [data setObject: @"0,32" forKey: @"limit"];
         
-        response = [boxAPI search: [UserInfo getUserID]
-                            token: [UserInfo getUserToken]
+        response = [boxAPI search: [wTools getUserID]
+                            token: [wTools getUserToken]
                              data: data];
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1113,8 +1113,8 @@ replacementString:(NSString *)string {
     [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI retrievealbump: albumid
-                                                uid: [UserInfo getUserID]
-                                              token: [UserInfo getUserToken]];
+                                                uid: [wTools getUserID]
+                                              token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

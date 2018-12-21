@@ -72,11 +72,11 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 //- (void)initApp {
-//    NSLog(@"User ID: %@", [UserInfo getUserID]);
-//    NSLog(@"User Token: %@", [UserInfo getUserToken]);
+//    NSLog(@"User ID: %@", [wTools getUserID]);
+//    NSLog(@"User Token: %@", [wTools getUserToken]);
 //
-//    NSString *userId = [UserInfo getUserID];
-//    NSString *userToken = [UserInfo getUserToken];
+//    NSString *userId = [wTools getUserID];
+//    NSString *userToken = [wTools getUserToken];
 //
 //    BOOL authenticatedUser = false;
 //
@@ -1301,7 +1301,7 @@ willChangeStatusBarFrame:(CGRect)newStatusBarFrame {
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI retrievealbump: albumId uid: [UserInfo getUserID] token: [UserInfo getUserToken]];
+        NSString *response = [boxAPI retrievealbump: albumId uid: [wTools getUserID] token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

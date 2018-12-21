@@ -424,8 +424,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI retrievealbump: albumId
-                                                uid: [UserInfo getUserID]
-                                              token: [UserInfo getUserToken]];
+                                                uid: [wTools getUserID]
+                                              token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideHUDForView: self.view animated: YES];
@@ -478,8 +478,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI retrievealbumpbypn: pn
-                                                   uid: [UserInfo getUserID]
-                                                 token: [UserInfo getUserToken]];
+                                                   uid: [wTools getUserID]
+                                                 token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideHUDForView: wself.view animated: YES];
@@ -528,15 +528,15 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     __block typeof(self) wself = self;
     NSMutableDictionary *data = [NSMutableDictionary new];
     
-    [data setObject: [UserInfo getUserID] forKey: @"user_id"];
+    [data setObject: [wTools getUserID] forKey: @"user_id"];
     [data setObject: @"album" forKey: @"type"];
     [data setObject: self.albumId forKey: @"type_id"];
     
     NSLog(@"albumId: %@", self.albumId);
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI addcooperation: [UserInfo getUserID]
-                                              token: [UserInfo getUserToken]
+        NSString *response = [boxAPI addcooperation: [wTools getUserID]
+                                              token: [wTools getUserToken]
                                                data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -593,8 +593,8 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     __block NSString *aid = self.albumId;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI getcalbumlist: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                             token: [wTools getUserToken]
                                               rank: @"cooperation"
                                              limit: @"0,1000"];
         

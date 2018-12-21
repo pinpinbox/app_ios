@@ -244,7 +244,7 @@
 //    Cell.mytitle.text=data[@"name"];
     
     //取得資料ID
-//    NSString * name=[NSString stringWithFormat:@"%@%@",[UserInfo getUserID],[data[@"album_id"] stringValue]];
+//    NSString * name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],[data[@"album_id"] stringValue]];
 //    NSString *doc DirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
 //    NSFileManager *fileManager = [NSFileManager defaultManager];
 //    //檢查資料夾是否存在

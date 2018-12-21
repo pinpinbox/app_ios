@@ -197,7 +197,7 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI changefollowstatus: [UserInfo getUserID] token: [UserInfo getUserToken] authorid: userId];
+        NSString *response = [boxAPI changefollowstatus: [wTools getUserID] token: [wTools getUserToken] authorid: userId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

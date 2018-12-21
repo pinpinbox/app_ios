@@ -289,8 +289,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getEventVoteList: self.eventId
                                                 limit: limit
-                                                token: [UserInfo getUserToken]
-                                               userId: [UserInfo getUserID]];
+                                                token: [wTools getUserToken]
+                                               userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -351,8 +351,8 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI vote: albumId
                                   eventId: self.eventId
-                                    token: [UserInfo getUserToken]
-                                   userId: [UserInfo getUserID]];
+                                    token: [wTools getUserToken]
+                                   userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

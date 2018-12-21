@@ -319,8 +319,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         }
         __block typeof(self) wself = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-            NSString *response = [boxAPI getrecommended: [UserInfo getUserID]
-                                                  token: [UserInfo getUserToken]
+            NSString *response = [boxAPI getrecommended: [wTools getUserID]
+                                                  token: [wTools getUserToken]
                                                    data: data];
             
             dispatch_async(dispatch_get_main_queue(), ^{

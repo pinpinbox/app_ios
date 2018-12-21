@@ -601,7 +601,7 @@
         NSLog(@"boxAPI insertPhotoOfDiy");
         
         NSData *imageData = UIImageJPEGRepresentation(imageForResize, 1.0);
-        [self sendWithStream:[UserInfo getUserID] token: [UserInfo getUserToken] album_id: self.albumId imageData: imageData ];//insertphotoofdiy: [UserInfo getUserID] token: [UserInfo getUserToken] album_id: self.albumId imageData: imageData];
+        [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData ];//insertphotoofdiy: [wTools getUserID] token: [wTools getUserToken] album_id: self.albumId imageData: imageData];
         
         [imgArray removeObjectAtIndex:0];
             //NSLog(@"response: %@", response);

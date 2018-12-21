@@ -180,8 +180,8 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
-        response = [boxAPI getFollowToList: [UserInfo getUserID]
-                                     token: [UserInfo getUserToken]
+        response = [boxAPI getFollowToList: [wTools getUserID]
+                                     token: [wTools getUserToken]
                                      limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -366,8 +366,8 @@
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI changefollowstatus: [UserInfo getUserID]
-                                                  token: [UserInfo getUserToken]
+        NSString *response = [boxAPI changefollowstatus: [wTools getUserID]
+                                                  token: [wTools getUserToken]
                                                authorid: userId];
         
         dispatch_async(dispatch_get_main_queue(), ^{

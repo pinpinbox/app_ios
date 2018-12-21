@@ -685,8 +685,8 @@
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){        
-        NSString *response = [boxAPI getpayload: [UserInfo getUserID]
-                                          token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getpayload: [wTools getUserID]
+                                          token: [wTools getUserToken]
                                       productid: wself->selectproductid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -812,8 +812,8 @@
     NSLog(@"after wTools ShowMBProgressHUD");
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI finishpurchased: [UserInfo getUserID]
-                                               token: [UserInfo getUserToken]
+        NSString *response = [boxAPI finishpurchased: [wTools getUserID]
+                                               token: [wTools getUserToken]
                                              orderid: wself->_orderid
                                        dataSignature: str];
         
@@ -913,13 +913,13 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *response = [boxAPI doTask1: [UserInfo getUserID]
-                                       token: [UserInfo getUserToken]
+        NSString *response = [boxAPI doTask1: [wTools getUserID]
+                                       token: [wTools getUserToken]
                                     task_for: @"firsttime_buy_point"
                                     platform: @"apple"];
         
-        NSLog(@"User ID: %@", [UserInfo getUserID]);
-        NSLog(@"Token: %@", [UserInfo getUserToken]);
+        NSLog(@"User ID: %@", [wTools getUserID]);
+        NSLog(@"Token: %@", [wTools getUserToken]);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

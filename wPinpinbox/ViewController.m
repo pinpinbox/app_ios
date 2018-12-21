@@ -302,6 +302,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         if ([[userPrefs objectForKey:@"id"] isKindOfClass: [NSNumber class]]) {
             [userPrefs setObject: [[userPrefs objectForKey:@"id"] stringValue] forKey:@"id"];
             [userPrefs synchronize];
+            
+            [UserInfo setUserInfo: [userPrefs objectForKey:@"id"] token:[userPrefs objectForKey:@"token"]];
         }
         NSString *uid = [userPrefs objectForKey:@"id"];
         NSString *token = [userPrefs objectForKey:@"token"];

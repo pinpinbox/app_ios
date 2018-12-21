@@ -257,7 +257,7 @@
 + (void)postPreCheck:(NSString *)album_id completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI getalbumofdiy:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:album_id];
+        NSString *response = [UserAPI getalbumofdiy:[UserInfo getUserId] token:[UserInfo getUserToken] album_id:album_id];
         
         if (response != nil) {
             if ([response isEqualToString: @"-1001"]) {
@@ -288,7 +288,7 @@
 + (void)refreshTokenWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI refreshToken:[UserInfo getUserID]];
+        NSString *response = [UserAPI refreshToken:[UserInfo getUserId]];
         
         if (response != nil) {
             if ([response isEqualToString: @"-1001"]) {
@@ -319,7 +319,7 @@
 + (void)userProfileWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI getprofile:[UserInfo getUserID] token:[UserInfo getUserToken]];
+        NSString *response = [UserAPI getprofile:[UserInfo getUserId] token:[UserInfo getUserToken]];
         
         if (response != nil) {
             if ([response isEqualToString: @"-1001"]) {
@@ -355,7 +355,7 @@
 + (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount  completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     NSString *limit = [NSString stringWithFormat:@"%ld,20",(long)curCount];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI getcalbumlist:[UserInfo getUserID] token:[UserInfo getUserToken] rank:@"mine" limit:limit];
+        NSString *response = [UserAPI getcalbumlist:[UserInfo getUserId] token:[UserInfo getUserToken] rank:@"mine" limit:limit];
         
         if (response != nil) {
             if ([response isEqualToString: @"-1001"]) {
@@ -399,7 +399,7 @@
     }
     
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
-    [_params setObject:[UserInfo getUserID] forKey:@"id"];
+    [_params setObject:[UserInfo getUserId] forKey:@"id"];
     [_params setObject:[UserInfo getUserToken] forKey:@"token"];
     [_params setObject:album_id forKey:@"album_id"];
     [_params setObject:[UserAPI signGenerator2:_params] forKey:@"sign"];
@@ -493,7 +493,7 @@
     // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
 
-    [_params setObject:[UserInfo getUserID] forKey:@"id"];
+    [_params setObject:[UserInfo getUserId] forKey:@"id"];
     [_params setObject:[UserInfo getUserToken] forKey:@"token"];
     [_params setObject:album_id forKey:@"album_id"];
     [_params setObject:[UserAPI signGenerator2:_params] forKey:@"sign"];

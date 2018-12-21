@@ -354,8 +354,8 @@
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getCategoryArea: self.categoryAreaId
-                                               token: [UserInfo getUserToken]
-                                              userId: [UserInfo getUserID]];
+                                               token: [wTools getUserToken]
+                                              userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

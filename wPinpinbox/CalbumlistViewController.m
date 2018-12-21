@@ -223,8 +223,8 @@
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSArray *arr = @[@"mine",@"other",@"cooperation"];
-        NSString *response = [boxAPI getcalbumlist: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                             token: [wTools getUserToken]
                                               rank: arr[wself->type]//type]
                                              limit: limit];
         
@@ -570,7 +570,7 @@
 //    }
     
     //取得資料ID
-//    NSString *name=[NSString stringWithFormat:@"%@%@",[UserInfo getUserID],[data[@"album_id"] stringValue]];
+//    NSString *name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],[data[@"album_id"] stringValue]];
 //    NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
 //    NSFileManager *fileManager = [NSFileManager defaultManager];
 //
@@ -635,7 +635,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
             return;
         }
-        if ([[(id)userId stringValue] isEqualToString:[UserInfo getUserID]]) {
+        if ([[(id)userId stringValue] isEqualToString:[wTools getUserID]]) {
             [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
         } else {
             [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
@@ -865,15 +865,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [wTools ShowMBProgressHUD];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI getalbumofdiy: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken] album_id:albumId];
+        NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
+                                             token: [wTools getUserToken] album_id:albumId];
         
         NSMutableDictionary *data = [NSMutableDictionary new];
         [data setObject: albumId forKey: @"type_id"];
-        [data setObject: [UserInfo getUserID] forKey: @"user_id"];
+        [data setObject: [wTools getUserID] forKey: @"user_id"];
         [data setObject: @"album" forKey: @"type"];
         
-        NSString *coopid = [boxAPI getcooperation: [UserInfo getUserID] token: [UserInfo getUserToken] data: data];
+        NSString *coopid = [boxAPI getcooperation: [wTools getUserID] token: [wTools getUserToken] data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -921,7 +921,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     NSString *albumId = [data[@"album_id"] stringValue];
     
     //取得資料ID
-    NSString *name = [NSString stringWithFormat: @"%@%@", [UserInfo getUserID], albumId];
+    NSString *name = [NSString stringWithFormat: @"%@%@", [wTools getUserID], albumId];
     NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent: name];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
@@ -952,8 +952,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI delalbum: [UserInfo getUserID]
-                                        token: [UserInfo getUserToken]
+        NSString *response = [boxAPI delalbum: [wTools getUserID]
+                                        token: [wTools getUserToken]
                                       albumid: albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1326,8 +1326,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = @"";
-        response = [boxAPI hidealbumqueue: [UserInfo getUserID]
-                                    token: [UserInfo getUserToken]
+        response = [boxAPI hidealbumqueue: [wTools getUserID]
+                                    token: [wTools getUserToken]
                                   albumid: albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1401,12 +1401,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
         NSMutableDictionary *data = [NSMutableDictionary new];
-        [data setObject: [UserInfo getUserID] forKey: @"user_id"];
+        [data setObject: [wTools getUserID] forKey: @"user_id"];
         [data setObject: @"album" forKey: @"type"];
         [data setObject: albumid forKey: @"type_id"];
         
-        response = [boxAPI deletecooperation: [UserInfo getUserID]
-                                       token: [UserInfo getUserToken]
+        response = [boxAPI deletecooperation: [wTools getUserID]
+                                       token: [wTools getUserToken]
                                         data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1558,7 +1558,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 
                 NSDictionary *co = dataarr[index][@"cooperation"];
                 NSDictionary *user = dataarr[index][@"user"];
-                BOOL isSelfWork = [[user[@"user_id"] stringValue] isEqualToString:[UserInfo getUserID]];
+                BOOL isSelfWork = [[user[@"user_id"] stringValue] isEqualToString:[wTools getUserID]];
                 
                 if (![data[@"album_id"] isEqual: [NSNull null]] && co && co[@"identity"]) {
                     NSString *i = co[@"identity"];
@@ -1603,7 +1603,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 
                 NSDictionary *co = dataarr[index][@"cooperation"];
                 NSDictionary *user = dataarr[index][@"user"];
-                BOOL isSelfWork = [[user[@"user_id"] stringValue] isEqualToString:[UserInfo getUserID]];
+                BOOL isSelfWork = [[user[@"user_id"] stringValue] isEqualToString:[wTools getUserID]];
                 if (![data[@"album_id"] isEqual: [NSNull null]] && co && co[@"identity"]) {
                     NSString *i = co[@"identity"];
                     if (isSelfWork || ![co[@"identity"] isKindOfClass:[NSNull class]]) {
@@ -1757,19 +1757,19 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI checkTaskCompleted: [UserInfo getUserID]
-                                                  token: [UserInfo getUserToken]
+        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+                                                  token: [wTools getUserToken]
                                                task_for: @"share_to_fb"
                                                platform: @"apple"
                                                    type: @"album"
                                                  typeId: albumId];
         
-//        NSString *response = [boxAPI checkTaskCompleted: [UserInfo getUserID]
-//                                                  token: [UserInfo getUserToken]
+//        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+//                                                  token: [wTools getUserToken]
 //                                               task_for: @"share_to_fb"
 //                                               platform: @"apple"];
         
-        NSString *albumDetail = [boxAPI retrievealbump:albumId uid:[UserInfo getUserID] token:[UserInfo getUserToken]];
+        NSString *albumDetail = [boxAPI retrievealbump:albumId uid:[wTools getUserID] token:[wTools getUserToken]];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
                 [wTools HideMBProgressHUD];
@@ -1902,8 +1902,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSArray *arr = @[@"mine",@"other",@"cooperation"];
-        NSString *response = [boxAPI getcalbumlist: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                             token: [wTools getUserToken]
                                               rank: arr[wself->type]//type]
                                              limit: limit];
         NSLog(@"%@",response);
@@ -1997,15 +1997,15 @@ didCompleteWithResults:(NSDictionary *)results {
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI doTask2: [UserInfo getUserID]
-                                       token: [UserInfo getUserToken]
+        NSString *response = [boxAPI doTask2: [wTools getUserID]
+                                       token: [wTools getUserToken]
                                     task_for: wself->task_for
                                     platform: @"apple"
                                         type: @"album"
                                      type_id: wself.albumId];
         
-        NSLog(@"User ID: %@", [UserInfo getUserID]);
-        NSLog(@"Token: %@", [UserInfo getUserToken]);
+        NSLog(@"User ID: %@", [wTools getUserID]);
+        NSLog(@"Token: %@", [wTools getUserToken]);
         NSLog(@"Task_For: %@", wself->task_for);
         NSLog(@"Album ID: %@", wself.albumId);
         

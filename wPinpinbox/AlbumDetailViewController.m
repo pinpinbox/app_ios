@@ -410,7 +410,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     NSLog(@"userId: %@", self.data[@"user"][@"user_id"]);
     NSInteger albumUserId = [self.data[@"user"][@"user_id"] integerValue];
-    NSInteger systemUserId = [[UserInfo getUserID] integerValue];
+    NSInteger systemUserId = [[wTools getUserID] integerValue];
     
     if (albumUserId == systemUserId) {
         self.sponsorView.hidden = NO;
@@ -871,8 +871,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI getEvent: [UserInfo getUserID]
-                                        token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getEvent: [wTools getUserID]
+                                        token: [wTools getUserToken]
                                      event_id: eventId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -962,15 +962,15 @@ static NSString *autoPlayStr = @"&autoplay=1";
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI checkTaskCompleted: [UserInfo getUserID]
-                                                  token: [UserInfo getUserToken]
+        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+                                                  token: [wTools getUserToken]
                                                task_for: @"share_to_fb"
                                                platform: @"apple"
                                                    type: @"album"
                                                  typeId: self.albumId];
         
-//        NSString *response = [boxAPI checkTaskCompleted: [UserInfo getUserID]
-//                                                  token: [UserInfo getUserToken]
+//        NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
+//                                                  token: [wTools getUserToken]
 //                                               task_for: @"share_to_fb"
 //                                               platform: @"apple"];
         
@@ -1159,8 +1159,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI geturpoints: [UserInfo getUserID]
-                                           token: [UserInfo getUserToken]];
+        NSString *response = [boxAPI geturpoints: [wTools getUserID]
+                                           token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1231,8 +1231,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI buyalbum: [UserInfo getUserID]
-                                        token: [UserInfo getUserToken]
+        NSString *response = [boxAPI buyalbum: [wTools getUserID]
+                                        token: [wTools getUserToken]
                                       albumid: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1342,15 +1342,15 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI doTask2: [UserInfo getUserID]
-                                       token: [UserInfo getUserToken]
+        NSString *response = [boxAPI doTask2: [wTools getUserID]
+                                       token: [wTools getUserToken]
                                     task_for: wself->task_for
                                     platform: @"apple"
                                         type: @"album"
                                      type_id: wself.albumId];
         
-        NSLog(@"User ID: %@", [UserInfo getUserID]);
-        NSLog(@"Token: %@", [UserInfo getUserToken]);
+        NSLog(@"User ID: %@", [wTools getUserID]);
+        NSLog(@"Token: %@", [wTools getUserToken]);
         NSLog(@"Task_For: %@", wself->task_for);
         NSLog(@"Album ID: %@", wself.albumId);
         
@@ -1456,8 +1456,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getreportintentlist: [UserInfo getUserID]
-                                                   token: [UserInfo getUserToken]];
+        NSString *response = [boxAPI getreportintentlist: [wTools getUserID]
+                                                   token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1526,8 +1526,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI insertreport: [UserInfo getUserID]
-                                            token: [UserInfo getUserToken]
+        NSString *response = [boxAPI insertreport: [wTools getUserID]
+                                            token: [wTools getUserToken]
                                               rid: rid
                                              type: @"album"
                                            typeid: self.albumId];
@@ -1638,8 +1638,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog(@"isViewed: %d", isv);
         NSString *viewedString = [NSString stringWithFormat: @"%d", isv];
         NSString *response = [boxAPI retrievealbump: aid
-                                                uid: [UserInfo getUserID]
-                                              token: [UserInfo getUserToken]
+                                                uid: [wTools getUserID]
+                                              token: [wTools getUserToken]
                                              viewed: viewedString];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2099,7 +2099,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     acVC.isNew = NO;
     
     NSString * u = [NSString stringWithFormat:@"%lu", [self.data[@"user"][@"user_id"] longValue] ];
-    if ([u isEqualToString: [UserInfo getUserID]])
+    if ([u isEqualToString: [wTools getUserID]])
         acVC.userIdentity = @"admin";
     
     if ([templateId isEqualToString:@"0"]) {
@@ -2162,8 +2162,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI insertAlbum2Likes: [UserInfo getUserID]
-                                                 token: [UserInfo getUserToken]
+        NSString *response = [boxAPI insertAlbum2Likes: [wTools getUserID]
+                                                 token: [wTools getUserToken]
                                                albumId: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2211,7 +2211,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI deleteAlbum2Likes: [UserInfo getUserID] token: [UserInfo getUserToken] albumId: wself.albumId];
+        NSString *response = [boxAPI deleteAlbum2Likes: [wTools getUserID] token: [wTools getUserToken] albumId: wself.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

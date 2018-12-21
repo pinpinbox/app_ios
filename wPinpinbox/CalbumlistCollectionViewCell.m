@@ -138,7 +138,7 @@
     //             return;
     //         }
     //
-    //         if ([[(id)_userid stringValue] isEqualToString:[UserInfo getUserID]]) {
+    //         if ([[(id)_userid stringValue] isEqualToString:[wTools getUserID]]) {
     //             //[wTools ReadBookalbumid:_albumid userbook:@"Y"];
     //             //[wTools ReadBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: nil fromEventPostVC: nil];
     //             [wTools ReadTestBookalbumid: _albumid userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: nil];
@@ -206,7 +206,7 @@
 -(void)deletebook  {
     //AppDelegate *app= (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //取得資料ID
-    NSString * name=[NSString stringWithFormat:@"%@%@",[UserInfo getUserID],_albumid ];
+    NSString * name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],_albumid ];
     NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     //檢查資料夾是否存在
@@ -262,7 +262,7 @@
     [wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *respone = [boxAPI delalbum:[UserInfo getUserID] token:[UserInfo getUserToken] albumid:albumid];
+        NSString *respone = [boxAPI delalbum:[wTools getUserID] token:[wTools getUserToken] albumid:albumid];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             
@@ -307,7 +307,7 @@
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *respone=@"";
-        respone=[boxAPI hidealbumqueue:[UserInfo getUserID] token:[UserInfo getUserToken] albumid:albumid];
+        respone=[boxAPI hidealbumqueue:[wTools getUserID] token:[wTools getUserToken] albumid:albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -385,10 +385,10 @@
         
         NSString *response=@"";
         NSMutableDictionary *data=[NSMutableDictionary new];
-        [data setObject:[UserInfo getUserID] forKey:@"user_id"];
+        [data setObject:[wTools getUserID] forKey:@"user_id"];
         [data setObject:@"album" forKey:@"type"];
         [data setObject:walbumid forKey:@"type_id"];
-        response=[boxAPI deletecooperation:[UserInfo getUserID] token:[UserInfo getUserToken] data:data];
+        response=[boxAPI deletecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];

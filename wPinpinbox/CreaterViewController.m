@@ -245,8 +245,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [data setObject: self.userId forKey: @"authorid"];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *respnose = [boxAPI getcreative: [UserInfo getUserID]
-                                           token: [UserInfo getUserToken]
+        NSString *respnose = [boxAPI getcreative: [wTools getUserID]
+                                           token: [wTools getUserToken]
                                             data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1154,8 +1154,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *respnose = [boxAPI changefollowstatus: [UserInfo getUserID]
-                                                  token: [UserInfo getUserToken]
+        NSString *respnose = [boxAPI changefollowstatus: [wTools getUserID]
+                                                  token: [wTools getUserToken]
                                                authorid: self.userId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1235,8 +1235,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI doTask2: [UserInfo getUserID]
-                                       token: [UserInfo getUserToken]
+        NSString *response = [boxAPI doTask2: [wTools getUserID]
+                                       token: [wTools getUserToken]
                                     task_for: @"follow_user"
                                     platform: @"apple"
                                         type: @"user"
@@ -1422,8 +1422,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *respnose = [boxAPI retrievealbump: albumid
-                                               uid: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]];
+                                               uid: [wTools getUserID]
+                                             token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

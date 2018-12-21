@@ -118,8 +118,8 @@ static wTools *instance =nil;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = [boxAPI retrievealbump: @"qwert"
-                                                uid: [UserInfo getUserID]
-                                              token: [UserInfo getUserToken]];
+                                                uid: [wTools getUserID]
+                                              token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -169,6 +169,20 @@ static wTools *instance =nil;
         });
     });
 }
+//id
++(NSString *)getUserID {
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    if ([userPrefs objectForKey:@"id"])
+        return [userPrefs objectForKey:@"id"];
+    return @"";
+}
++(NSString *)getUserToken {
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    if ([userPrefs objectForKey:@"token"])
+        return [userPrefs objectForKey:@"token"];
+    return @"";
+}
+//token
 //UUID
 +(NSString *)getUUID{
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
@@ -305,8 +319,8 @@ static wTools *instance =nil;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI retrievealbump: albumId
-                                                uid: [UserInfo getUserID]
-                                              token: [UserInfo getUserToken]];
+                                                uid: [wTools getUserID]
+                                              token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -361,7 +375,7 @@ static wTools *instance =nil;
 {
     //AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //檢查本地...
-    NSString *name=[NSString stringWithFormat:@"%@%@",[UserInfo getUserID],albumid];
+    NSString *name=[NSString stringWithFormat:@"%@%@",[wTools getUserID],albumid];
     NSLog(@"name: %@", name);
     
     NSString *docDirectoryPath = [filepinpinboxDest stringByAppendingPathComponent:name];
@@ -387,7 +401,7 @@ static wTools *instance =nil;
               [wTools ShowMBProgressHUD];
               dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
                   
-                  NSString *respone=[boxAPI checkalbumzip:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:albumid];
+                  NSString *respone=[boxAPI checkalbumzip:[wTools getUserID] token:[wTools getUserToken] album_id:albumid];
                   
                   dispatch_async(dispatch_get_main_queue(), ^{
                       
@@ -510,7 +524,7 @@ static wTools *instance =nil;
     [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *respone=[boxAPI getalbumsettings:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:albumid];
+        NSString *respone=[boxAPI getalbumsettings:[wTools getUserID] token:[wTools getUserToken] album_id:albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -941,7 +955,7 @@ static wTools *instance =nil;
     if (scrnName && scrnName.length > 0) {
         
         id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-        NSString *uid = [UserInfo getUserID];
+        NSString *uid = [wTools getUserID];
         [tracker set:kGAIUserId value:uid];
         [tracker set:kGAIScreenName value:scrnName];
         [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
@@ -951,7 +965,7 @@ static wTools *instance =nil;
 + (void)sendActionTrackingWithCategoryName:(NSString *)categoryName action:(NSString *)action label:(NSString *)label value:( NSNumber * _Nullable )value {
     
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-    NSString *uid = [UserInfo getUserID];
+    NSString *uid = [wTools getUserID];
     [tracker set:kGAIUserId value:uid];
     
     

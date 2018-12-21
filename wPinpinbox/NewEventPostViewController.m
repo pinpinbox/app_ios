@@ -420,8 +420,8 @@
     NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getcalbumlist: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                             token: [wTools getUserToken]
                                               rank: @"mine"
                                              limit: limit];
         
@@ -727,8 +727,8 @@
     NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getcalbumlist: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                             token: [wTools getUserToken]
                                               rank: @"mine"
                                              limit: limit];
         
@@ -846,8 +846,8 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *aid = [wself->dict valueForKey: @"albumId"];
-        NSString *response = [boxAPI switchstatusofcontribution: [UserInfo getUserID]
-                                                          token: [UserInfo getUserToken]
+        NSString *response = [boxAPI switchstatusofcontribution: [wTools getUserID]
+                                                          token: [wTools getUserToken]
                                                        event_id: wself->_eventId
                                                        album_id: aid];
         
@@ -939,8 +939,8 @@
         return;
     }
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI insertalbumofdiy: [UserInfo getUserID]
-                                               token: [UserInfo getUserToken]
+        NSString *response = [boxAPI insertalbumofdiy: [wTools getUserID]
+                                               token: [wTools getUserToken]
                                          template_id: @"0"];
         
         dispatch_async(dispatch_get_main_queue(), ^{

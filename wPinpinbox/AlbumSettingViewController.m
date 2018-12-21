@@ -303,8 +303,8 @@
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI getalbumdataoptions: [UserInfo getUserID]
-                                                   token: [UserInfo getUserToken]];
+        NSString *response = [boxAPI getalbumdataoptions: [wTools getUserID]
+                                                   token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -366,8 +366,8 @@
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getalbumsettings: [UserInfo getUserID]
-                                                token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getalbumsettings: [wTools getUserID]
+                                                token: [wTools getUserToken]
                                              album_id: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -439,15 +439,15 @@
     //[wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI doTask2: [UserInfo getUserID]
-                                       token: [UserInfo getUserToken]
+        NSString *response = [boxAPI doTask2: [wTools getUserID]
+                                       token: [wTools getUserToken]
                                     task_for: @"create_free_album"
                                     platform: @"apple"
                                         type: @"album"
                                      type_id: self.albumId];
         
-        NSLog(@"User ID: %@", [UserInfo getUserID]);
-        NSLog(@"Token: %@", [UserInfo getUserToken]);
+        NSLog(@"User ID: %@", [wTools getUserID]);
+        NSLog(@"Token: %@", [wTools getUserToken]);
         NSLog(@"Task_For: %@", @"collect_free_album");
         NSLog(@"Album ID: %@", self.albumId);
         
@@ -1432,8 +1432,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI switchstatusofcontribution: [UserInfo getUserID]
-                                                          token: [UserInfo getUserToken]
+        NSString *response = [boxAPI switchstatusofcontribution: [wTools getUserID]
+                                                          token: [wTools getUserToken]
                                                        event_id: self.eventId
                                                        album_id: self.albumId];
         
@@ -1756,8 +1756,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){        
         NSLog(@"self.albumId: %@", self.albumId);
         
-        NSString *response = [boxAPI albumsettings: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]
+        NSString *response = [boxAPI albumsettings: [wTools getUserID]
+                                             token: [wTools getUserToken]
                                           album_id: wself.albumId
                                           settings: jsonStr];
         
@@ -1879,8 +1879,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI retrievealbump: albumid
-                                                uid: [UserInfo getUserID]
-                                              token: [UserInfo getUserToken]];
+                                                uid: [wTools getUserID]
+                                              token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -2452,8 +2452,8 @@ replacementString:(NSString *)string {
     self.advTextField.text = @"";
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
-        NSString *response = [boxAPI insertalbumindex:[UserInfo getUserID]
-                                                token:[UserInfo getUserToken]
+        NSString *response = [boxAPI insertalbumindex:[wTools getUserID]
+                                                token:[wTools getUserToken]
                                              album_id:self.albumId
                                                 index:aid];
         
@@ -2560,8 +2560,8 @@ replacementString:(NSString *)string {
     //__block DelTextField *wfield = field;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
 
-        NSString *response = [boxAPI deletealbumindex:[UserInfo getUserID]
-                                                token:[UserInfo getUserToken]
+        NSString *response = [boxAPI deletealbumindex:[wTools getUserID]
+                                                token:[wTools getUserToken]
                                              album_id:self.albumId
                                                 index:aid];
         

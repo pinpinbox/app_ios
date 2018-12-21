@@ -146,8 +146,8 @@
     [data setValue: limit forKey: @"limit"];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI retrieveHotRank: [UserInfo getUserID]
-                                               token: [UserInfo getUserToken]
+        NSString *response = [boxAPI retrieveHotRank: [wTools getUserID]
+                                               token: [wTools getUserToken]
                                       categoryAreaId: wself.categoryAreaId
                                                 data: data];
         

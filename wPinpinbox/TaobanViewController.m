@@ -90,7 +90,7 @@
         __block int point = [apidata[@"template"][@"point"]intValue];
         __block typeof(self) wself = self;
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-            NSString * Pointstr=[boxAPI geturpoints:[UserInfo getUserID] token:[UserInfo getUserToken]];
+            NSString * Pointstr=[boxAPI geturpoints:[wTools getUserID] token:[wTools getUserToken]];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wTools HideMBProgressHUD];
@@ -156,7 +156,7 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString * Pointstr=[boxAPI buytemplate:[UserInfo getUserID] token:[UserInfo getUserToken] templateid:wself->_temolateid];
+        NSString * Pointstr=[boxAPI buytemplate:[wTools getUserID] token:[wTools getUserToken] templateid:wself->_temolateid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
     
@@ -188,7 +188,7 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *respone=[boxAPI checkalbumofdiy:[UserInfo getUserID] token:[UserInfo getUserToken]];
+        NSString *respone=[boxAPI checkalbumofdiy:[wTools getUserID] token:[wTools getUserToken]];
         [wTools HideMBProgressHUD];
         
         if (respone!=nil) {
@@ -196,7 +196,7 @@
             NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
             
             if ([dic[@"result"] intValue] == 1) {
-                [boxAPI updatealbumofdiy:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:[dic[@"data"][@"album"][@"album_id"] stringValue]];
+                [boxAPI updatealbumofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:[dic[@"data"][@"album"][@"album_id"] stringValue]];
             } else if ([dic[@"result"] intValue] == 0) {
                 NSLog(@"失敗：%@",dic[@"message"]);
                 [wself showCustomErrorAlert: dic[@"message"]];
@@ -222,7 +222,7 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
-        NSString *respone=[boxAPI insertalbumofdiy:[UserInfo getUserID] token:[UserInfo getUserToken] template_id:wself->_temolateid];
+        NSString *respone=[boxAPI insertalbumofdiy:[wTools getUserID] token:[wTools getUserToken] template_id:wself->_temolateid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -292,10 +292,10 @@
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
                 
-        NSString *response = [boxAPI doTask2: [UserInfo getUserID] token: [UserInfo getUserToken] task_for: @"firsttime_download_template" platform: @"apple" type: @"template" type_id: wself.temolateid];
+        NSString *response = [boxAPI doTask2: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_download_template" platform: @"apple" type: @"template" type_id: wself.temolateid];
         
-        NSLog(@"User ID: %@", [UserInfo getUserID]);
-        NSLog(@"Token: %@", [UserInfo getUserToken]);
+        NSLog(@"User ID: %@", [wTools getUserID]);
+        NSLog(@"Token: %@", [wTools getUserToken]);
         NSLog(@"Template ID: %@", wself.temolateid);
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -498,7 +498,7 @@
         
         NSLog(@"calling getTemplate protocol");
         
-        NSString *respone=[boxAPI gettemplate:[UserInfo getUserID] token:[UserInfo getUserToken] templateid:wself.temolateid];
+        NSString *respone=[boxAPI gettemplate:[wTools getUserID] token:[wTools getUserToken] templateid:wself.temolateid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -815,7 +815,7 @@
     [wTools ShowMBProgressHUD];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString * Pointstr=[boxAPI getreportintentlist:[UserInfo getUserID] token:[UserInfo getUserToken]];
+        NSString * Pointstr=[boxAPI getreportintentlist:[wTools getUserID] token:[wTools getUserToken]];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             
@@ -836,7 +836,7 @@
     __block typeof(self) wself = self;
     //__block typeof(self.view) sv = self.view;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString * Pointstr=[boxAPI insertreport:[UserInfo getUserID] token:[UserInfo getUserToken] rid:rid type:@"template" typeid:wself->_temolateid];
+        NSString * Pointstr=[boxAPI insertreport:[wTools getUserID] token:[wTools getUserToken] rid:rid type:@"template" typeid:wself->_temolateid];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             

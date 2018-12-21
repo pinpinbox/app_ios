@@ -177,8 +177,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
     
     NSString *returnstr=@"";
     NSMutableDictionary *dic=[NSMutableDictionary new];
-    [dic setObject:[UserInfo getUserID] forKey:@"id"];
-    [dic setObject:[UserInfo getUserToken] forKey:@"token"];
+    [dic setObject:[wTools getUserID] forKey:@"id"];
+    [dic setObject:[wTools getUserToken] forKey:@"token"];
     [dic setObject:oldphone forKey:@"oldcellphone"];
     [dic setObject:newphone forKey:@"newcellphone"];
     [dic setObject:smspass forKey:@"smspassword"];
@@ -3400,8 +3400,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
 + (void)getAlbumDiyWithAlbumId:(NSString *)albumid completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock{
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getalbumofdiy: [UserInfo getUserID]
-                                                token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
+                                                token: [wTools getUserToken]
                                              album_id: albumid];
         if (response != nil) {
             if ([response isEqualToString: timeOutErrorCode]) {
@@ -3433,8 +3433,8 @@ static NSString *hostURL = @"www.pinpinbox.com";
 + (void)getAlbumSettingsWithAlbumId:(NSString *)albumid completionBlock:(void(^)(NSDictionary *settings, NSError *error))completionBlock  {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getalbumsettings: [UserInfo getUserID]
-                                                token: [UserInfo getUserToken]
+        NSString *response = [boxAPI getalbumsettings: [wTools getUserID]
+                                                token: [wTools getUserToken]
                                              album_id: albumid];
         if (response != nil) {
             if ([response isEqualToString: timeOutErrorCode]) {
@@ -3468,7 +3468,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
                        completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI albumsettings:[UserInfo getUserID] token:[UserInfo getUserToken] album_id:albumid settings:settingString];
+        NSString *response = [boxAPI albumsettings:[wTools getUserID] token:[wTools getUserToken] album_id:albumid settings:settingString];
         
         if (response != nil) {
             if ([response isEqualToString: timeOutErrorCode]) {

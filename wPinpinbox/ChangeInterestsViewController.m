@@ -113,7 +113,7 @@
     }
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = [boxAPI getHobbyList: [UserInfo getUserID] token: [UserInfo getUserToken]];
+        NSString *response = [boxAPI getHobbyList: [wTools getUserID] token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -356,7 +356,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
         NSString *token = [userPrefs objectForKey: @"token"];
-        NSString *uid = [UserInfo getUserID];
+        NSString *uid = [wTools getUserID];
         NSString *response = [boxAPI updateprofilehobby: token usid: uid hobby: selectTag];
         
         dispatch_async(dispatch_get_main_queue(), ^{

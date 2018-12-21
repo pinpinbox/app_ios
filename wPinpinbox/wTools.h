@@ -21,7 +21,10 @@
 +(void)HideMBProgressHUD;
 +(void)myMenu;
 +(UINavigationController *)myNavigationController;
-//UUID
+
+//userInfo
++(NSString *)getUserID;
++(NSString *)getUserToken;
 +(NSString *)getUUID;
 +(NSString *)stringisnull:(NSString *)str;
 + (BOOL)objectExists:(id)object;

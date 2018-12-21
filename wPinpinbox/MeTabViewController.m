@@ -325,11 +325,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat:@"%ld,%d", (long)nextId, 16];
     [data setValue: limit forKey: @"limit"];
-    [data setObject: [UserInfo getUserID] forKey: @"authorid"];
+    [data setObject: [wTools getUserID] forKey: @"authorid"];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-        NSString *response = [boxAPI getcreative:[UserInfo getUserID]
-                                           token:[UserInfo getUserToken]
+        NSString *response = [boxAPI getcreative:[wTools getUserID]
+                                           token:[wTools getUserToken]
                                             data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -652,10 +652,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
 
         
-        NSString *response = [boxAPI doTask1: [UserInfo getUserID] token: [UserInfo getUserToken] task_for: @"firsttime_edit_profile" platform: @"apple"];
+        NSString *response = [boxAPI doTask1: [wTools getUserID] token: [wTools getUserToken] task_for: @"firsttime_edit_profile" platform: @"apple"];
         
-        NSLog(@"User ID: %@", [UserInfo getUserID]);
-        NSLog(@"Token: %@", [UserInfo getUserToken]);
+        NSLog(@"User ID: %@", [wTools getUserID]);
+        NSLog(@"Token: %@", [wTools getUserToken]);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -1498,7 +1498,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     self.customMessageActionSheet.topicStr = @"留言板";
     self.customMessageActionSheet.type = @"user";
-    self.customMessageActionSheet.typeId = [UserInfo getUserID];
+    self.customMessageActionSheet.typeId = [wTools getUserID];
     self.customMessageActionSheet.userName = @"";
     
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
@@ -1529,8 +1529,8 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 
 - (IBAction)myPageBtnPressed:(id)sender {
 
-    if ([wTools objectExists: [UserInfo getUserID]]) {
-        NSString *pageStr = [NSString stringWithFormat: @"index/creative/content/?user_id=%@&appview=true", [UserInfo getUserID]];
+    if ([wTools objectExists: [wTools getUserID]]) {
+        NSString *pageStr = [NSString stringWithFormat: @"index/creative/content/?user_id=%@&appview=true", [wTools getUserID]];
         NSString *urlString = [NSString stringWithFormat: @"%@%@", pinpinbox, pageStr];
         NSURL *url = [NSURL URLWithString: urlString];
         
@@ -1553,7 +1553,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 
 - (IBAction)shareBtnPress:(id)sender {
     NSLog(@"shareBtnPress");
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects: [NSString stringWithFormat: userIdSharingLink, [UserInfo getUserID], autoPlayStr], nil] applicationActivities:nil];
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects: [NSString stringWithFormat: userIdSharingLink, [wTools getUserID], autoPlayStr], nil] applicationActivities:nil];
     [self presentViewController: activityVC animated: YES completion: nil];
 }
 
@@ -1718,8 +1718,8 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI retrievealbump: albumid
-                                               uid: [UserInfo getUserID]
-                                             token: [UserInfo getUserToken]];
+                                               uid: [wTools getUserID]
+                                             token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {

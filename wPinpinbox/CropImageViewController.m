@@ -111,7 +111,7 @@
 - (void)setUserCover {
     NSLog(@"setUserCover");
 
-    NSLog(@"UserId: %@", [UserInfo getUserID]);
+    NSLog(@"UserId: %@", [wTools getUserID]);
     [wTools ShowMBProgressHUD];
     UIImage *image = [self imageWithImage: [_tkImageView currentCroppedImage]
                              scaledToSize: CGSizeMake(960.0, 450.0)
@@ -120,8 +120,8 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI setUserCover: image
-                                            token: [UserInfo getUserToken]
-                                           userId: [UserInfo getUserID]];
+                                            token: [wTools getUserToken]
+                                           userId: [wTools getUserID]];
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
             
