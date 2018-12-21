@@ -87,7 +87,8 @@ API_AVAILABLE(ios(11.0))
                 CGSize ssize = frame.size;
                 
                 UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc]initWithSize:ssize];
-                NSData *imageData = [renderer JPEGDataWithCompressionQuality:1 actions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+                NSData *imageData = [renderer PNGDataWithActions:^(UIGraphicsImageRendererContext *rendererContext) {
+                /*[renderer JPEGDataWithCompressionQuality:1 actions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {*/
                     [[UIColor whiteColor] setFill];
                     
                     [rendererContext fillRect:CGRectMake(0, 0, ssize.width, ssize.height)];

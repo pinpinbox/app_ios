@@ -13,10 +13,40 @@
 #import "GlobalVars.h"
 #import "MultipartInputStream.h"
 
+@interface UserAPI()<NSURLSessionTaskDelegate, NSURLSessionDelegate>
+@property(nonatomic) NSURLSession *urlSession;
+@end
+
 @implementation UserAPI
 
 #pragma mark - for Share extension
 #pragma mark  調用所有API
+
++(instancetype)sharedUserAPI{
+    
+    static UserAPI *sharedAPI = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedAPI = [[self alloc] init];
+    });
+    return sharedAPI;
+}
++ (NSURLSession *)session {
+    return [UserAPI sharedUserAPI].urlSession;
+}
+
+- (instancetype)init {
+    
+    self = [super init];
+    
+    if (self) {
+        NSURLSessionConfiguration *c = [NSURLSessionConfiguration defaultSessionConfiguration];
+        _urlSession = [NSURLSession sessionWithConfiguration:c delegate:self delegateQueue:nil];
+        
+    }
+    return self;
+}
+
 +(BOOL)hostAvailable:(NSString *)theHost
 {
     NSLog(@"");
@@ -104,10 +134,10 @@
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSString *str;
 
-    NSURLSession *session = [NSURLSession sharedSession];
+    
     NSLog(@"dataTaskWithRequest");
     
-    NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSessionDataTask *task = [[UserAPI session] dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         if (error == nil) {
             str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
@@ -415,12 +445,10 @@
     
     //__block typeof(self) wself = self;
     
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    config.timeoutIntervalForRequest = [kTimeOutForVideo floatValue];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration: config delegate:nil delegateQueue:nil];
     
-    //__block NSString *desc = [[NSUUID UUID] UUIDString];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    request.timeoutInterval = [kTimeOutForVideo intValue];
+    
+    NSURLSessionDataTask *task = [[UserAPI session] dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
             if (data) {
             
@@ -508,12 +536,10 @@
     [request setHTTPBodyStream:st];
     
     //__block NSString *str;
-
-    NSURLSession *session = [NSURLSession sharedSession];
     
     NSString *uuid = [[NSUUID UUID] UUIDString];
     
-    NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    NSURLSessionDataTask *task = [[UserAPI session] dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
         
         if ([response isKindOfClass: [NSHTTPURLResponse class]]) {
@@ -550,5 +576,56 @@
     
     return uuid;
 }
++ (void)loadImageWithURL:(NSURL *)url completionBlock:(void(^)(UIImage * _Nullable image))completionBlock {
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:NO];
+    [request setTimeoutInterval: [kTimeOutForPhoto floatValue]];
+    
+    //__block NSString *ext = [[url lastPathComponent] pathExtension];
+    NSURLSessionDataTask *task = [[UserAPI session] dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (data && data.length) {
+            UIImage *image = [UIImage imageWithData:data];
+            completionBlock(image);
+        } else {
+            NSLog(@"loadImageWithURL %@",error);
+            completionBlock(nil);
+        }
+    }];
+ 
+    [task resume];
+}
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler {
+    // Identify the operation that runs this task and pass it the delegate method
+    if (completionHandler) {
+            completionHandler(request);
+        
+    }
+}
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
+    
+    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+    __block NSURLCredential *credential = nil;
+    
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        
+            credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+            disposition = NSURLSessionAuthChallengeUseCredential;
+        
+    } else {
+        if (challenge.previousFailureCount == 0) {
+            
+            disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+            
+        } else {
+            disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+        }
+    }
+    
+    if (completionHandler) {
+        completionHandler(disposition, credential);
+    }
 
+}
 @end

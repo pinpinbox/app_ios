@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)postPreCheck:(NSString *)album_id completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (NSString *)insertPhotoWithAlbum_id:(NSString *)album_id imageData:(NSData *)imageData completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
 + (NSString *)insertVideoWithAlbum_id:(NSString *)album_id videopath:(NSString *)videopath completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
-
++ (void)loadImageWithURL:(NSURL *)url completionBlock:(void(^)( UIImage * _Nullable image ))completionBlock;
 @end
 
 NS_ASSUME_NONNULL_END

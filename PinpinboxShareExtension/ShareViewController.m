@@ -98,18 +98,16 @@
         if (album[@"cover"] && ![album[@"cover"] isKindOfClass:[NSNull class]]) {
             NSString *c = album[@"cover"];
             __block typeof(self) wself = self;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                NSData *dt = [NSData dataWithContentsOfURL:[NSURL URLWithString:c]];
-                if (dt) {
-                    UIImage *cover = [UIImage imageWithData:dt];
-                    if (cover) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            
-                            wself.album.image = cover;
-                        });
-                    }
+            NSURL *u = [NSURL URLWithString:c];
+            
+            [UserAPI loadImageWithURL:u completionBlock:^(UIImage * _Nullable image) {
+                if (image) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        wself.album.image = image;
+                    });
                 }
-            });
+            }];
+            
         }
     }
 }
@@ -371,48 +369,52 @@
 }
 #pragma mark -
 - (void)loadAlbumList {
-    __block typeof(self) wself = self;
-    self.isLoading = (self.albumlist.count > 0);
-    [UserAPI loadAlbumListWithCompletionBlock:self.albumlist.count completionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            UIActivityIndicatorView *v = (UIActivityIndicatorView *)[wself.albumList viewWithTag:54321];
-            
-            if (v) {
-                [v stopAnimating];
-                [wself.albumList setContentInset:UIEdgeInsetsZero];
-                [v removeFromSuperview];
-                wself.albumList.bounces = YES;
-            }
-        });
-        
-        if (result) {
+    if (!self.isLoading) {
+        __block typeof(self) wself = self;
+        self.isLoading = (self.albumlist.count > 0);
+        [UserAPI loadAlbumListWithCompletionBlock:self.albumlist.count completionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
+                UIActivityIndicatorView *v = (UIActivityIndicatorView *)[wself.albumList viewWithTag:54321];
                 
-                NSArray *list = [result objectForKey:@"data"];
-                int itemcount = (int)self.shareItems.count;
-                NSMutableArray *filtered = [NSMutableArray array];
-                [list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    NSDictionary *data = (NSDictionary *)obj;
-                    NSDictionary *album = data[@"album"];
-                    int count = [album[@"count_photo"] intValue];
-                    NSDictionary *user = data[@"usergrade"];
-                    int limit = [user[@"photo_limit_of_album"] intValue];
-                    if (itemcount + count <= limit)
-                        [filtered addObject:obj];
-                    
-                }];
-                [wself.albumlist addObjectsFromArray:filtered];
-                
-                [wself.albumList reloadData];
-                wself.isLoading = NO;
-                
-                //[self displayExtensionContext];
+                if (v) {
+                    [v stopAnimating];
+                    [v removeFromSuperview];
+                    [wself.albumList setContentInset:UIEdgeInsetsZero];
+                    wself.albumList.bounces = YES;
+                }
                 
             });
-        }
-    }];
+            
+            if (result) {
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    NSArray *list = [result objectForKey:@"data"];
+                    int itemcount = (int)self.shareItems.count;
+                    NSMutableArray *filtered = [NSMutableArray array];
+                    [list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        NSDictionary *data = (NSDictionary *)obj;
+                        NSDictionary *album = data[@"album"];
+                        int count = [album[@"count_photo"] intValue];
+                        NSDictionary *user = data[@"usergrade"];
+                        int limit = [user[@"photo_limit_of_album"] intValue];
+                        if (itemcount + count <= limit)
+                            [filtered addObject:obj];
+                        
+                    }];
+                    [wself.albumlist addObjectsFromArray:filtered];
+                    if (filtered.count) {
+                        [wself.albumList reloadData];
+                    }
+                    wself.isLoading = NO;
+                    
+                    //[self displayExtensionContext];
+                    
+                });
+            }
+        }];
+    }
     self.navigationController.title = @"Pinpinbox";
 }
 - (void)updateProgress {
@@ -467,10 +469,10 @@
     if (!self.progressView.hidden) return;
     
     if ( (indexPath.row == self.albumlist.count-1) && !self.isLoading) {
-    CGFloat contentHeight = tableView.contentSize.height;
-    CGFloat listHeight = tableView.frame.size.height ;//- scrollView.contentInset.top - scrollView.contentInset.bottom;
-    BOOL canLoad = contentHeight > listHeight;
-        if (canLoad ){
+        CGFloat contentHeight = tableView.contentSize.height;
+        CGFloat listHeight = tableView.frame.size.height ;
+        BOOL canLoad = contentHeight > listHeight;
+        if (canLoad && (contentHeight-tableView.contentOffset.y-96 <= (listHeight))){
             UIView *v = [tableView viewWithTag:54321];
             if (!self.isLoading && (v == nil)) {
                 UIEdgeInsets u = tableView.contentInset;
