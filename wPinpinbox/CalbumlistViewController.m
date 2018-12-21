@@ -469,7 +469,7 @@
     if (![data[@"cover"] isKindOfClass:[NSNull class]]) {
         //[[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: img];
         //img.imageURL = [NSURL URLWithString:data[@"cover"]];
-        [img sd_setImageWithURL: [NSURL URLWithString:data[@"cover"]]];
+        [img sd_setImageWithURL: [NSURL URLWithString:data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"]];
     } else {
         img.contentMode = UIViewContentModeScaleAspectFit;
         img.imageURL = nil;

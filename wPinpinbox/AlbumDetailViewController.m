@@ -402,7 +402,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
             self.headerImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             imageUrl = _data[@"photo"][0][@"image_url"];
-            self.headerImageView.image = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString: imageUrl]]];
+            //self.headerImageView.image = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString: imageUrl]]];
+            [self.headerImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"] options:0];
         }
     }
     NSLog(@"userId: %@", self.data[@"user"][@"user_id"]);

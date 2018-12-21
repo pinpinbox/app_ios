@@ -1967,10 +1967,10 @@ sourceController:(UIViewController *)source
         //NSLog(@"albumDic: %@", albumDic);
         
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
-            cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
+            cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
         } else {
             [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]
-                                   placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+                                   placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image"]];
         }
         
         // UserForView Info Setting
