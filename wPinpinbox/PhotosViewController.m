@@ -94,7 +94,8 @@
     
     // Default Value set to 1.0 for original
     //self.compressionData = 1.0;
-    self.shouldResize = YES;
+    [self.compressionBtn setImage: [UIImage imageNamed: @"ic200_photosize_dark"] forState: UIControlStateNormal];
+    self.shouldResize = NO;
     
     dataTaskArray = [NSMutableArray new];
     

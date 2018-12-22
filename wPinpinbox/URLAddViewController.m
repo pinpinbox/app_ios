@@ -47,7 +47,7 @@
             self.desc2.text = d2[@"text"]? d2[@"text"]: @"";
         }
     }
-    
+    [self.desc1 becomeFirstResponder];
 }
 - (IBAction)submitURLs:(id)sender {
     __block NSArray *urls = [self getURLArray];
@@ -110,8 +110,38 @@
     }
     return nil;
 }
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    if ([textField isEqual:self.desc2] || [textField isEqual:self.url2]) {
+        [self processKeyboardShown];
+    }
+}
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    if (self.desc1.isFirstResponder) {
+        [self.url1 becomeFirstResponder];
+    } else if (self.url1.isFirstResponder) {
+        [self.desc2 becomeFirstResponder];
+        [self processKeyboardShown];
+    } else if (self.desc2.isFirstResponder) {
+        [self.url2 becomeFirstResponder];
+    } else {
+        [self.url2 resignFirstResponder];
+    }
+    
     return YES;
     
 }
+- (void)keyboardWasShown:(NSNotification*)aNotification {
+    [self processKeyboardShown];
+}
+- (void)processKeyboardShown {
+    if (self.url2.isFirstResponder || self.desc2.isFirstResponder) {
+        CGFloat y = self.desc2.frame.origin.y-40;
+        self.baseView.transform = CGAffineTransformMakeTranslation(0, -y);
+    }
+}
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
+    self.baseView.transform = CGAffineTransformIdentity;
+}
+
 @end

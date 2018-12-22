@@ -7,6 +7,7 @@
 //
 
 #import "SwitchButtonView.h"
+#import "UIColor+HexString.h"
 @interface SwitchButtonView()
 @property (nonatomic) CALayer *connectorLayer;
 @property (nonatomic) NSLayoutConstraint *heightConstraint;
@@ -205,5 +206,14 @@
     UIImage *aimage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];        
     [super setImage:aimage forState:state];
     //}
+}
+@end
+
+@implementation CustomTintBarItem
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor colorFromHexString:@"#D4d4d4"]} forState:UIControlStateNormal];
+    [self setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor colorFromHexString:@"#4d4d4d"]} forState:UIControlStateSelected];
+    [self setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor colorFromHexString:@"#4d4d4d"]} forState:UIControlStateHighlighted];
 }
 @end

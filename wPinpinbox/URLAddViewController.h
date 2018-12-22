@@ -14,8 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol URLSAddDelegate
 - (void)didSetURLs:(NSArray * _Nullable )url;
 @end
+
 @interface URLAddViewController : LocationMapViewController
 @property (nonatomic) id<URLSAddDelegate> urlDelegate;
+
 - (void)loadURLs:(NSArray *)urls ;
 @end
 

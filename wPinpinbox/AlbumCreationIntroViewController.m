@@ -170,7 +170,7 @@
 }
 - (void)animSequenceFinished {
     
-    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
+    [UIView animateWithDuration:1.0 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
         self.step3Intro.hidden = YES;
         self.proceedBtn.hidden = NO;
         self.view.layer.mask = nil;
@@ -186,7 +186,7 @@
     //
 }
 - (void)animSequence2 {
-    [UIView animateWithDuration:0.75 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
+    [UIView animateWithDuration:1.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
         self.step1Intro.hidden = YES;
         [self setItemMask:self.step2Rect bubbleView:self.step2Intro];
     } completion:^(BOOL finished) {
@@ -196,7 +196,7 @@
 }
 - (void)startAnimationSequence {
     
-    [UIView animateWithDuration:0.75 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
+    [UIView animateWithDuration:1.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
         [self setItemMask:self.step1Rect bubbleView:self.step1Intro];
         
     } completion:^(BOOL finished) {

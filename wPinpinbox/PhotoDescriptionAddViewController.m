@@ -16,7 +16,20 @@
 
 @implementation PhotoDescriptionAddViewController
 
-
+- (id)init {
+    self = [super init];
+    self.modalPresentationStyle = UIModalPresentationCustom;
+    self.transitioningDelegate = self;
+    self.modalPresentationCapturesStatusBarAppearance = YES;
+    return self;
+}
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    self.modalPresentationStyle = UIModalPresentationCustom;
+    self.transitioningDelegate = self;
+    self.modalPresentationCapturesStatusBarAppearance = YES;
+    return self;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -37,6 +50,20 @@
             wself.submitBlock(desc);
         }
     }];
+}
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+- (void)keyboardWasShown:(NSNotification*)aNotification {
+    NSDictionary* info = [aNotification userInfo];
+    CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+    self.view.transform = CGAffineTransformMakeTranslation(0, -kbSize.height);
+    
+}
+
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification {
+    self.view.transform = CGAffineTransformIdentity;
 }
 
 @end
