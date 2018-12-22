@@ -726,6 +726,24 @@ static wTools *instance =nil;
     return dateContent;        
 }
 
++ (NSInteger)remainingTimeCalculationOnlyMinute:(NSString *)timeStr {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
+    
+    NSDate *endDate = [dateFormatter dateFromString: timeStr];
+    NSLog(@"endDate: %@", endDate);
+    
+    NSDate *currentDate = [NSDate date];
+    NSLog(@"currentDate: %@", currentDate);
+    
+    NSTimeInterval time = [endDate timeIntervalSinceDate: currentDate];
+    NSLog(@"time: %f", time);
+    
+    NSInteger minutes = ((int)time) % (3600 * 24) % 3600 / 60;
+    
+    return minutes;
+}
+
 + (UIImage *)normalSnapshotImage:(UIView *)view {
     UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
