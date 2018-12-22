@@ -2945,6 +2945,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSLog(@"Get response from slotPhotoUseFor");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSLog(@"dic: %@", dic);
                     NSLog(@"dic message: %@", dic[@"message"]);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
@@ -2989,11 +2990,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self checkSlotDataInDatabaseOrNot];
                         
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                        
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow: indexPathRow inSection: 0];
+                        ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+                        cell.giftImageBtn.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
                         
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                        
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow: indexPathRow inSection: 0];
+                        ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
+                        cell.giftImageBtn.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
@@ -3096,6 +3105,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSLog(@"Get response from getPhotoUseFor");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSLog(@"dic: %@", dic);
                     NSLog(@"dic message: %@", dic[@"message"]);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
@@ -3602,12 +3612,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if ([wTools objectExists: data[@"image_url"]]) {
             [cell.imageView sd_setImageWithURL: data[@"image_url"]];
         } else {
-            cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
-        }
-        if ([wTools objectExists: data[@"image"]]) {
-            cell.imageView.image = [UIImage imageNamed: data[@"image"]];
-        } else {
-            cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
+            if ([wTools objectExists: data[@"image"]]) {
+                cell.imageView.image = [UIImage imageNamed: data[@"image"]];
+            } else {
+                cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
+            }
         }
         albumPoint = [self.bookdata[@"album"][@"point"] intValue];
         userPoint = [[userPrefs objectForKey: @"pPoint"] integerValue];
@@ -3818,14 +3827,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         ThumbnailImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"ThumbnailImageCell" forIndexPath: indexPath];
         
         if ([wTools objectExists: data[@"image_url_thumbnail"]]) {
-            cell.thumbnailImageView.image = [UIImage imageNamed: data[@"image_url_thumbnail"]];
+//            cell.thumbnailImageView.image = [UIImage imageNamed: data[@"image_url_thumbnail"]];
+            [cell.thumbnailImageView sd_setImageWithURL: data[@"image_url_thumbnail"]];
         } else {
-            cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
-        }
-        if ([wTools objectExists: data[@"imageThumbnail"]]) {
-            cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
-        } else {
-            cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
+            if ([wTools objectExists: data[@"imageThumbnail"]]) {
+                cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
+            } else {
+                cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
+            }
         }
         NSString *audioTargetStr = self.photoArray[indexPath.row][@"audio_target"];
         // Check audioTarget
