@@ -15,6 +15,7 @@
 
 @interface UserAPI()<NSURLSessionTaskDelegate, NSURLSessionDelegate>
 @property(nonatomic) NSURLSession *urlSession;
+@property(nonatomic) id<UploadProgressDelegate> progressDelegate;
 @end
 
 @implementation UserAPI
@@ -388,7 +389,10 @@
         }
     });
 }
-+ (NSString *)insertVideoWithAlbum_id:(NSString *)album_id videopath:(NSString *)videopath completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
++ (NSString *)insertVideoWithAlbum_id:(NSString *)album_id
+                            videopath:(NSString *)videopath
+                     progressDelegate:(id<UploadProgressDelegate>)progressDelegate
+                      completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
     
     NSString *uuid = [[NSUUID UUID] UUIDString];
     
@@ -397,6 +401,8 @@
         completionBlock(nil,nil, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to load video data."}]);
         return nil;
     }
+    
+    [UserAPI sharedUserAPI].progressDelegate = progressDelegate;
     
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
     [_params setObject:[UserInfo getUserId] forKey:@"id"];
@@ -486,11 +492,17 @@
     return uuid;
 }
 + (NSString *)insertPhotoWithAlbum_id:(NSString *)album_id
-                      imageData:(NSData *)imageData
-                completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
+                            imageData:(NSData *)imageData
+                     progressDelegate:(id<UploadProgressDelegate>)progressDelegate
+                      completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
     
-    if (!imageData || imageData.length < 1) return nil;
-    // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
+    if (!imageData || imageData.length < 1) {
+        completionBlock(nil,nil, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to load image data."}]);
+        return nil;
+    }
+    
+    [UserAPI sharedUserAPI].progressDelegate = progressDelegate;
+    
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
 
     [_params setObject:[UserInfo getUserId] forKey:@"id"];
@@ -596,36 +608,15 @@
  
     [task resume];
 }
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler {
-    // Identify the operation that runs this task and pass it the delegate method
-    if (completionHandler) {
-            completionHandler(request);
-        
-    }
-}
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
+- (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
-    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    __block NSURLCredential *credential = nil;
-    
-    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        
-            credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-            disposition = NSURLSessionAuthChallengeUseCredential;
-        
-    } else {
-        if (challenge.previousFailureCount == 0) {
-            
-            disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
-            
-        } else {
-            disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+    if (task.taskDescription) {
+        NSLog(@"didSendBodyData %@: %ld/%ld",task.description, (unsigned long)totalBytesSent, (unsigned long)totalBytesExpectedToSend );
+        if ([UserAPI sharedUserAPI].progressDelegate) {
+            double p = (double) totalBytesSent/(double)totalBytesExpectedToSend;
+            [[UserAPI sharedUserAPI].progressDelegate uploadProgress:task.taskDescription progress: (CGFloat)p];
         }
     }
-    
-    if (completionHandler) {
-        completionHandler(disposition, credential);
-    }
-
 }
+
 @end

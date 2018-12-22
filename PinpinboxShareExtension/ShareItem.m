@@ -130,6 +130,11 @@
             [self inspectThumbnailTone:self.thumbnail];
         }
         
+    }else if ([[_url pathExtension] isEqualToString:@"pdf"]) {
+        AVAsset *asset = [AVAsset assetWithURL:url];
+        if (asset) {
+            
+        }
     }
 }
 - (void)setThumbnail:(UIImage *)thumbnail  {

@@ -2552,7 +2552,21 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
     return itemInset;
 }
-
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    if (scrollView == self.bannerCollectionView) {
+        *targetContentOffset = scrollView.contentOffset; // set acceleration to 0.0
+        float pageWidth = (float)self.bannerCollectionView.bounds.size.width;
+        int minSpace = 16;
+        
+        int cellToSwipe = (scrollView.contentOffset.x)/(pageWidth + minSpace) + 0.5; // cell width + min spacing for lines
+        if (cellToSwipe < 0) {
+            cellToSwipe = 0;
+        } else if (cellToSwipe >= adArray.count) {
+            cellToSwipe = (int)adArray.count - 1;
+        }
+        [self.bannerCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:cellToSwipe inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    }
+}
 #pragma mark - JCCollectionViewWaterfallLayoutDelegate
 - (CGFloat)collectionView:(UICollectionView *)collectionView
                    layout:(UICollectionViewLayout *)collectionViewLayout

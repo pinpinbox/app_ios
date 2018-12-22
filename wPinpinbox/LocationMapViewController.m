@@ -326,7 +326,7 @@
     CGPoint p = [tap locationInView:self.map];
     CLLocationCoordinate2D coord = [self.map convertPoint:p toCoordinateFromView:self.map];
     
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(coord,200,200);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(coord,1000,1000);
     [self.map setRegion: [self.map regionThatFits: region] animated: YES];
     __block typeof(self) wself = self;
     
@@ -414,18 +414,22 @@
 
 - (void)moveMapWithLatitude:(CLLocationDegrees)la Longitude:(CLLocationDegrees)lo {
     
-    NSArray *ans = [NSArray arrayWithArray:self.map.annotations];
-    [self.map removeAnnotations:ans];
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSArray *ans = [NSArray arrayWithArray:self.map.annotations];
+        [wself.map removeAnnotations:ans];
+        
+        CLLocationCoordinate2D l = CLLocationCoordinate2DMake(la, lo);
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(l,1000,1000);
+        [wself.map setRegion: [self.map regionThatFits: region] animated: YES];
+        wself.userTapAnnotation = [[MKPointAnnotation alloc] init];
+        wself.userTapAnnotation.coordinate = l;
+        wself.userTapAnnotation.title = @"";
+        
+        
+        [wself.map addAnnotation: self.userTapAnnotation];
+    });
     
-    CLLocationCoordinate2D l = CLLocationCoordinate2DMake(la, lo);
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(l,200,200);
-    [self.map setRegion: [self.map regionThatFits: region] animated: YES];
-    self.userTapAnnotation = [[MKPointAnnotation alloc] init];
-    self.userTapAnnotation.coordinate = l;
-    self.userTapAnnotation.title = @"";
-    
-    
-    [self.map addAnnotation: self.userTapAnnotation];
     
 //
 //    dispatch_async(dispatch_get_main_queue(), ^{
@@ -498,7 +502,7 @@
     NSArray *ans = [NSArray arrayWithArray:self.map.annotations];
     [self.map removeAnnotations:ans];
     
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(mark.coordinate,300,300);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(mark.coordinate,1000,1000);
     [self.map setRegion: [self.map regionThatFits: region] animated: YES];
     
     self.userTapAnnotation = [[MKPointAnnotation alloc] init];
@@ -514,7 +518,7 @@
     NSArray *ans = [NSArray arrayWithArray:self.map.annotations];
     [self.map removeAnnotations:ans];
     
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(mark.location.coordinate,300,300);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(mark.location.coordinate,1000,1000);
     [self.map setRegion: [self.map regionThatFits: region] animated: YES];
     
     self.userTapAnnotation = [[MKPointAnnotation alloc] init];
@@ -530,7 +534,7 @@
      didUpdateLocations:(NSArray<CLLocation *> *)locations {
     if (locations.count > 0) {
         CLLocation *l = [locations firstObject];
-        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(l.coordinate,200,200);
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(l.coordinate,00,1000);
         [self.map setRegion: [self.map regionThatFits: region] animated: YES];
         MKPointAnnotation *point = [[MKPointAnnotation alloc] init];
         point.coordinate = l.coordinate;

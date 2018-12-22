@@ -1145,6 +1145,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         NSLog(@"result SYSTEM_OK");
                         if ([wTools objectExists: dic[@"data"][@"token"][@"token"]]) {
+                            wself.idStr = [userPrefs objectForKey: @"id"];
                             wself.tokenStr = dic[@"data"][@"token"][@"token"];
                         }
                         NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];

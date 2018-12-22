@@ -70,6 +70,10 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xHE-Hn-P7Y">
+                                                    <rect key="frame" x="0.0" y="0.0" width="256" height="144"/>
+                                                    <color key="backgroundColor" white="0.20446203859060402" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </view>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="B0R-yK-TAZ">
                                                     <rect key="frame" x="118" y="62" width="20" height="20"/>
                                                 </activityIndicatorView>
@@ -80,9 +84,13 @@
                                             <constraint firstItem="tL9-7V-oiK" firstAttribute="top" secondItem="XUG-CK-EA6" secondAttribute="top" id="7O5-Vh-Sj7"/>
                                             <constraint firstItem="pzC-Pd-XxJ" firstAttribute="trailing" secondItem="tL9-7V-oiK" secondAttribute="trailing" constant="-8" id="8vl-PD-k8s"/>
                                             <constraint firstItem="pzC-Pd-XxJ" firstAttribute="leading" secondItem="tL9-7V-oiK" secondAttribute="leading" constant="8" id="8zo-jX-VwK"/>
+                                            <constraint firstAttribute="bottom" secondItem="xHE-Hn-P7Y" secondAttribute="bottom" id="A2w-qg-ao3"/>
                                             <constraint firstItem="Uwq-bi-bre" firstAttribute="centerX" secondItem="tL9-7V-oiK" secondAttribute="centerX" id="FAW-Vb-k3z"/>
+                                            <constraint firstItem="xHE-Hn-P7Y" firstAttribute="top" secondItem="XUG-CK-EA6" secondAttribute="top" id="FIc-hJ-54m"/>
                                             <constraint firstItem="Uwq-bi-bre" firstAttribute="centerY" secondItem="tL9-7V-oiK" secondAttribute="centerY" id="IAP-LN-dBw"/>
+                                            <constraint firstItem="xHE-Hn-P7Y" firstAttribute="leading" secondItem="XUG-CK-EA6" secondAttribute="leading" id="OYa-pF-4OR"/>
                                             <constraint firstItem="B0R-yK-TAZ" firstAttribute="centerX" secondItem="XUG-CK-EA6" secondAttribute="centerX" id="Xan-3V-uyu"/>
+                                            <constraint firstAttribute="trailing" secondItem="xHE-Hn-P7Y" secondAttribute="trailing" id="iaL-hi-ANs"/>
                                             <constraint firstItem="tL9-7V-oiK" firstAttribute="leading" secondItem="XUG-CK-EA6" secondAttribute="leading" id="nw2-rN-TIH"/>
                                             <constraint firstItem="B0R-yK-TAZ" firstAttribute="centerY" secondItem="XUG-CK-EA6" secondAttribute="centerY" id="ofM-Bc-cFt"/>
                                             <constraint firstAttribute="trailing" secondItem="tL9-7V-oiK" secondAttribute="trailing" id="pFM-m4-Jhr"/>
@@ -95,6 +103,7 @@
                                         <connections>
                                             <outlet property="comment" destination="pzC-Pd-XxJ" id="drJ-jS-v4G"/>
                                             <outlet property="loading" destination="B0R-yK-TAZ" id="o5t-Ha-W2c"/>
+                                            <outlet property="progressMask" destination="xHE-Hn-P7Y" id="gkI-K9-BZj"/>
                                             <outlet property="thumbnailView" destination="tL9-7V-oiK" id="nX4-vW-Rsk"/>
                                             <outlet property="typeView" destination="Uwq-bi-bre" id="FW4-rn-27K"/>
                                         </connections>
@@ -219,7 +228,7 @@
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TaU-Bb-zgc">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PinPinBoxLogo" translatesAutoresizingMaskIntoConstraints="NO" id="qYj-Uj-SY5">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="qYj-Uj-SY5">
                                         <rect key="frame" x="158.5" y="211.5" width="58" height="58"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="58" id="6Mk-ap-LdW"/>
@@ -249,7 +258,7 @@
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IxG-Gm-Uca">
                                 <rect key="frame" x="0.0" y="32" width="375" height="635"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PinPinBoxLogo" translatesAutoresizingMaskIntoConstraints="NO" id="z6O-Us-SxA">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="z6O-Us-SxA">
                                         <rect key="frame" x="158.5" y="227.5" width="58" height="58"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="58" id="QEu-KJ-LuL"/>
@@ -365,7 +374,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="PinPinBoxLogo" width="58" height="58"/>
+        <image name="Icon.png" width="180" height="180"/>
         <image name="ic200_videomake_white" width="144" height="144"/>
     </resources>
 </document>

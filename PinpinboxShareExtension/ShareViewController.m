@@ -20,6 +20,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *typeView;
 @property (weak, nonatomic) IBOutlet UITextView *comment;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loading;
+@property (weak, nonatomic) IBOutlet UIView *progressMask;
+@property (nonatomic) CGFloat taskProgress;
+
 @end
 
 @interface AlbumCellView : UITableViewCell
@@ -31,7 +34,9 @@
 @end
 
 
-@interface ShareViewController ()<UITableViewDelegate, UITableViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDataSource>
+@interface ShareViewController ()<UITableViewDelegate, UITableViewDataSource,
+                                  UICollectionViewDelegateFlowLayout,UICollectionViewDataSource,
+                                  UploadProgressDelegate>
 @property(weak, nonatomic) IBOutlet UILabel *userName;
 @property(weak, nonatomic) IBOutlet UITableView *albumList;
 @property(weak, nonatomic) IBOutlet UICollectionView *photoList;
@@ -58,6 +63,26 @@
 @implementation ThumbnailCollectionViewCell
 - (void)awakeFromNib {
     [super awakeFromNib];
+    self.taskProgress = 0;
+}
+- (void)setTaskProgress:(CGFloat)taskProgress {
+    _taskProgress = taskProgress;
+    [self updateProgress];
+}
+- (void)updateProgress {
+    self.progressMask.hidden = NO;
+    
+    CAShapeLayer *progressLayer = [[CAShapeLayer alloc] init];
+    CGFloat w = self.frame.size.width;
+    CGFloat h = self.frame.size.height;
+    progressLayer.frame = CGRectMake(0, 0, w, h);
+    CGFloat rads = self.taskProgress * (M_PI*2)-M_PI*0.5;
+    
+    UIBezierPath *p = [UIBezierPath bezierPathWithArcCenter:CGPointMake(w/2, h/2) radius:(w*1.25)/2 startAngle:M_PI*1.5 endAngle:rads clockwise:YES];
+    [p addLineToPoint:CGPointMake(w/2, h/2)];
+    [progressLayer setFillColor:[UIColor blackColor].CGColor];
+    [progressLayer setPath:p.CGPath];
+    self.progressMask.layer.mask = progressLayer;
 }
 - (void)loadCompleted:(UIImage *)thumbnail type:(NSString *)type hasVideo:(BOOL)hasVideo isDark:(BOOL)isDark {
     self.thumbnailView.image = thumbnail;
@@ -66,12 +91,15 @@
         [type isEqualToString:(__bridge NSString *)kUTTypeText] ||
         [type isEqualToString:(__bridge NSString *)kUTTypeMovie] ) {
         self.comment.text = hasVideo? @"影片": @"其他";
+        
     } else if ([type isEqualToString:(__bridge NSString *)kUTTypeImage]){
         self.comment.text = @"圖片";
     }
     self.comment.textColor = isDark? [UIColor whiteColor]:[UIColor darkGrayColor];
     [self.loading stopAnimating];
+    
 }
+
 @end
 
 #pragma mark - Cell for album list
@@ -234,7 +262,7 @@
             if (item.thumbnail) {
                 imgdata = UIImageJPEGRepresentation(item.thumbnail, 1.0);
             }
-            NSString *uuid = [UserAPI insertPhotoWithAlbum_id:_selectedAlbum imageData:imgdata  completionBlock:^(NSDictionary * _Nonnull result, NSString *taskId, NSError * _Nonnull error) {
+            NSString *uuid = [UserAPI insertPhotoWithAlbum_id:_selectedAlbum imageData:imgdata progressDelegate:self  completionBlock:^(NSDictionary * _Nonnull result, NSString *taskId, NSError * _Nonnull error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [wself processFinishedTask:taskId success:(error == nil)];
                 });
@@ -245,7 +273,7 @@
             
         } else if ([item.objType isEqualToString:(__bridge NSString *) kUTTypeMovie]) {
             if (item.vidDuration <= 31 && item.url) {
-                NSString *uuid = [UserAPI insertVideoWithAlbum_id:_selectedAlbum videopath:[item.url path]  completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
+                NSString *uuid = [UserAPI insertVideoWithAlbum_id:_selectedAlbum videopath:[item.url path] progressDelegate:self  completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [wself processFinishedTask:taskId success:(error == nil)];
                         });
@@ -263,7 +291,7 @@
         if (item.url) {
             imgdata = [NSData dataWithContentsOfURL:item.url];
         
-            NSString *uuid = [UserAPI insertPhotoWithAlbum_id:_selectedAlbum imageData:imgdata completionBlock:^(NSDictionary * _Nonnull result, NSString *taskId, NSError * _Nonnull error) {
+            NSString *uuid = [UserAPI insertPhotoWithAlbum_id:_selectedAlbum imageData:imgdata progressDelegate:self  completionBlock:^(NSDictionary * _Nonnull result, NSString *taskId, NSError * _Nonnull error) {
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [wself processFinishedTask:taskId success:(error == nil)];
@@ -288,19 +316,7 @@
                 [self postItem:i];
             }
             
-            self.progressView.hidden = NO;
-//            [UserAPI postPreCheck:_selectedAlbum completionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
-//                if (error) {
-//
-//                } else {
-//                    NSArray *ps = result[@"photo"];
-//                    NSInteger cur = ps.count;
-//                    if (cur + self.shareItems.count > 22) {
-//
-//                    }
-//                }
-//            }];
-            
+//            self.progressView.hidden = NO;
         }
         
         
@@ -308,6 +324,7 @@
 }
 #pragma mark -
 - (void)showErrorMessage:(NSString *)message {
+    
     self.coverNotice.text = message;
     self.notLoginCover.hidden = NO;
     [self.shareItems removeAllObjects];
@@ -418,9 +435,10 @@
     self.navigationController.title = @"Pinpinbox";
 }
 - (void)updateProgress {
-    self.progressView.hidden = NO;
     
-    self.postProgress.progress = (float)(self.shareItems.count-self.postRequestList.count)/(float)(self.shareItems.count);
+    //self.progressView.hidden = NO;
+    
+    //self.postProgress.progress = (float)(self.shareItems.count-self.postRequestList.count)/(float)(self.shareItems.count);
     if (self.postRequestList.count <= 0) {
         [self performSelector:@selector(postFinished) withObject:nil afterDelay:1];
     }
@@ -428,6 +446,17 @@
 - (void)postFinished {
     [self trySendLocalNotification:@"" albumid:_albumNames? _albumNames : @""];
     [self cancelAndFinish:nil];
+}
+- (void)tryRefreshThumbnailProgress:(NSInteger)idx progress:(CGFloat)progress {
+    __block typeof(self.photoList) list = self.photoList;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ThumbnailCollectionViewCell *cell = (ThumbnailCollectionViewCell *)[list cellForItemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]];
+        if (cell)
+            cell.taskProgress = progress;
+        else
+            NSLog(@"cell not found %ld",(long)idx);
+    });
+    
 }
 #pragma mark -
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -522,7 +551,7 @@
  */
 #pragma mark -
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    NSLog(@"indexpath %@", indexPath);
+    //NSLog(@"indexpath %@", indexPath);
     ThumbnailCollectionViewCell *cell = (ThumbnailCollectionViewCell *) [collectionView dequeueReusableCellWithReuseIdentifier:@"ThumbnailCell" forIndexPath:indexPath];
     cell.thumbnailView.image = [UIImage imageNamed:@"videobase.jpg"];
     
@@ -557,6 +586,21 @@
     }
     
     return UIEdgeInsetsMake(10, 10, 10, 10);
+}
+
+- (void)uploadProgress:(nonnull NSString *)taskUUID progress:(CGFloat)progress {
+    __block typeof( self) wself = self;
+    [self.postRequestList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *s = (NSString *)obj;
+        if ([s isEqualToString:taskUUID]) {
+            [wself tryRefreshThumbnailProgress:idx progress:progress];
+            *stop = YES;
+            return YES;
+        }
+        
+        return NO;
+    }];
+    
 }
 
 @end

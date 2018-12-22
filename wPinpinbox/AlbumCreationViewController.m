@@ -242,7 +242,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.recordPausePlayBtn.frame = CGRectMake(0, 0, 35, 35);
     [self.recordPausePlayBtn setImage:[UIImage imageNamed:@"ic200_micro_white"] forState:UIControlStateNormal];
     self.recordPausePlayBtn.layer.cornerRadius = self.recordPausePlayBtn.bounds.size.width / 2;
-    self.recordPausePlayBtn.imageEdgeInsets = UIEdgeInsetsMake(6, 6, 6, 6);
+    self.recordPausePlayBtn.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
     self.recordPausePlayBtn.myWidth = 35;
     self.recordPausePlayBtn.myHeight = 35;
     self.recordPausePlayBtn.backgroundColor = [UIColor hintGrey];
@@ -259,7 +259,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     UIButton *loc = [UIButton buttonWithType:UIButtonTypeCustom];
     [loc setImage:[UIImage imageNamed:@"ic200_location_white"] forState:UIControlStateNormal];
-    loc.imageEdgeInsets = UIEdgeInsetsMake(6, 6, 6, 6);
+    loc.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
     loc.backgroundColor = [UIColor hintGrey];
     [self.locationSwitchView setSwitchButtons:loc switchBtn:nil];
     [self.locationSwitchView addTarget:self mainSelector:@selector(showLocationMap:) switchSelector:@selector(deleteLocationData:)];
@@ -267,7 +267,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     UIButton *url = [UIButton buttonWithType:UIButtonTypeCustom];
     [url setImage:[UIImage imageNamed:@"ic200_link_white"] forState:UIControlStateNormal];
-    url.imageEdgeInsets = UIEdgeInsetsMake(6, 6, 6, 6);
+    url.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
     url.backgroundColor = [UIColor hintGrey];
     [self.urlSwitchView setSwitchButtons:url switchBtn:nil];
     [self.urlSwitchView addTarget:self mainSelector:@selector(showURLEditor:) switchSelector:@selector(deleteURLData:)];
@@ -322,7 +322,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
 
     self.deleteImageBtn.layer.cornerRadius = self.deleteImageBtn.bounds.size.width / 2;
-    self.deleteImageBtn.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+    self.deleteImageBtn.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
     
     [self setupSwitchButtonViews];
     
@@ -3226,11 +3226,11 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     // Set up the Selected Cell
     if (indexPath.item == selectItem + 1) {
-        myCell.layer.borderWidth = 3;
-        myCell.layer.borderColor = [[UIColor colorWithRed: 233.0/255.0 green: 30.0/255.0 blue: 99.0/255.0 alpha: 1.0] CGColor];
+        imagev.layer.borderWidth = 3;
+        imagev.layer.borderColor = [[UIColor colorWithRed: 233.0/255.0 green: 30.0/255.0 blue: 99.0/255.0 alpha: 1.0] CGColor];
     } else {
-        myCell.layer.borderWidth = 0;
-        myCell.layer.borderColor = [UIColor clearColor].CGColor;
+        imagev.layer.borderWidth = 0;
+        imagev.layer.borderColor = [UIColor clearColor].CGColor;
     }
     
     NSLog(@"");
