@@ -23,6 +23,8 @@
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
 
+#import "UIColor+HexString.h"
+
 @interface MyTabBarController ()
 {
     UIButton *centerButton;
@@ -110,6 +112,11 @@ const CGFloat kBarHeight = 56;
     NSLog(@"self.tabBar.frame.size.height: %f", self.tabBar.frame.size.height);
     */
     
+    for (UITabBarItem *item in self.tabBar.items) {
+        [item setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor colorFromHexString:@"#D4d4d4"]} forState:UIControlStateNormal];
+        [item setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor colorFromHexString:@"#4d4d4d"]} forState:UIControlStateSelected];
+        [item setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor colorFromHexString:@"#4d4d4d"]} forState:UIControlStateHighlighted];
+    }
     [self createCenterButton];
 }
 

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="a7l-EA-aN9">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -639,7 +638,7 @@
         <scene sceneID="eFY-i0-rYx">
             <objects>
                 <navigationController extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="a7l-EA-aN9" customClass="NavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="個人專區" image="MeTab" selectedImage="MeSelectedTab" id="Riu-ay-L8L">
+                    <tabBarItem key="tabBarItem" title="個人專區" image="MeTab" selectedImage="MeSelectedTab" id="Riu-ay-L8L" customClass="CustomTintBarItem">
                         <inset key="imageInsets" minX="0.0" minY="-5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>

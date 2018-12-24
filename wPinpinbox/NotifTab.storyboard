@@ -126,7 +126,7 @@
         <scene sceneID="Kcf-Za-nQJ">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="lqx-km-tXh" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="通知" image="NotifTab" selectedImage="NotifSelectedTab" id="Ozx-ee-18h">
+                    <tabBarItem key="tabBarItem" title="通知" image="NotifTab" selectedImage="NotifSelectedTab" id="Ozx-ee-18h" customClass="CustomTintBarItem">
                         <inset key="imageInsets" minX="0.0" minY="-5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
                     <toolbarItems/>

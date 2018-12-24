@@ -72,12 +72,12 @@
     self.dimmyView.frame = self.containerView.frame;
     [self.containerView addSubview:self.dimmyView];
     
-   UIViewController *p = self.presentedViewController;
+    UIViewController *p = self.presentedViewController;
     [p.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-
+        
         self.dimmyView.alpha = 0.75;
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-
+        
     }];
 }
 - (void)dismissalTransitionWillBegin {
@@ -117,12 +117,21 @@
     to.view.layer.shadowOpacity = 0.3;
     
     [to setNeedsStatusBarAppearanceUpdate];
+    
+    CGFloat destinedHeight = 0;
+    if (@available(iOS 11.0, *)) {
+        destinedHeight = to.view.safeAreaLayoutGuide.layoutFrame.size.height;
+    }
+    if (destinedHeight <= 0 )
+        destinedHeight = [UIScreen mainScreen].bounds.size.height;
+    
     __block BOOL ispresent = self.isPresenting;
     if (!ispresent) {
         to = (LocationMapViewController *) [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
         to.view.transform = CGAffineTransformIdentity;
     } else {
-        to.view.transform = CGAffineTransformMakeTranslation(0, 325);
+        
+        to.view.transform = CGAffineTransformMakeTranslation(0, destinedHeight);//);
         [transitionContext.containerView addSubview:to.view];
     }
     
@@ -131,15 +140,15 @@
          usingSpringWithDamping:1.0
           initialSpringVelocity:0.0
                         options:UIViewAnimationOptionCurveLinear animations:^{
-        
-        if (ispresent)
-            to.view.transform = CGAffineTransformIdentity;
-        else
-            to.view.transform = CGAffineTransformMakeTranslation(0, 325);
-
-    } completion:^(BOOL finished) {
-        [transitionContext completeTransition:finished];
-    }];
+                            
+                            if (ispresent)
+                                to.view.transform = CGAffineTransformIdentity;
+                            else
+                                to.view.transform = CGAffineTransformMakeTranslation(0, destinedHeight);
+                            
+                        } completion:^(BOOL finished) {
+                            [transitionContext completeTransition:finished];
+                        }];
     
     
 }
@@ -165,8 +174,7 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-
+    
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     
@@ -176,10 +184,7 @@
     
     [self addKeyboardNotification];
     [self addMapTap];
-    [self addDismissTap];
-}
-- (BOOL)prefersStatusBarHidden {
-    return YES;
+    //[self addDismissTap];
 }
 
 - (void)addKeyboardNotification {
@@ -209,12 +214,12 @@
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     
-    self.view.transform = CGAffineTransformMakeTranslation(0, -kbSize.height);
+    self.baseView.transform = CGAffineTransformMakeTranslation(0, -kbSize.height);
     
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    self.view.transform = CGAffineTransformIdentity;
+    self.baseView.transform = CGAffineTransformIdentity;
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self.locationName resignFirstResponder];
@@ -299,9 +304,6 @@
     }];
     [task resume];
 }
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return UIStatusBarStyleLightContent;
-}
 - (IBAction)cancelAndDismiss:(id)sender {
     [self cancelAndDismiss];
 }
@@ -337,7 +339,7 @@
     
     NSURL *u = [NSURL URLWithString:[target stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
     
-
+    
     NSURLSessionDataTask *task = [s dataTaskWithURL:u completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
@@ -357,6 +359,12 @@
                     if (place && place.length) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             wself.locationName.text = place;
+                            //MKPlacemark *p = [[MKPlacemark alloc] initWithCoordinate:coord];
+                            [wself.map removeAnnotation:wself.userTapAnnotation];
+                            wself.userTapAnnotation = [[MKPointAnnotation alloc]init];
+                            wself.userTapAnnotation.title = place;
+                            wself.userTapAnnotation.coordinate = coord;
+                            [wself.map addAnnotation:wself.userTapAnnotation];
                         });
                         
                         return;
@@ -369,51 +377,53 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             wself.locationName.text = [NSString stringWithFormat:@"%.3f,%.3f",coord.longitude, coord.latitude];
-            
+            [wself.locationName becomeFirstResponder];
         });
     }];
     
     [task resume];
     
-//    MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
-//    //request.naturalLanguageQuery = @"location address";
-//    request.region = MKCoordinateRegionMakeWithDistance(coord,50,50);
-//    MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
-//    [search startWithCompletionHandler:^(MKLocalSearchResponse * _Nullable response, NSError * _Nullable error) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [wTools HideMBProgressHUD];
-//        });
-//        if (!error && response) {
-//            NSArray *res = response.mapItems;
-//            MKMapItem *first = [res firstObject];
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [wself loadMapItem:first];
-//                wself.locationName.text = first.name;
-//            });
-//        } else {
-//            NSLog(@"MKLocalSearch Error %@",error);
-//
-//        }
-//    }];
+    //    MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
+    //    //request.naturalLanguageQuery = @"location address";
+    //    request.region = MKCoordinateRegionMakeWithDistance(coord,50,50);
+    //    MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
+    //    [search startWithCompletionHandler:^(MKLocalSearchResponse * _Nullable response, NSError * _Nullable error) {
+    //        dispatch_async(dispatch_get_main_queue(), ^{
+    //            [wTools HideMBProgressHUD];
+    //        });
+    //        if (!error && response) {
+    //            NSArray *res = response.mapItems;
+    //            MKMapItem *first = [res firstObject];
+    //            dispatch_async(dispatch_get_main_queue(), ^{
+    //                [wself loadMapItem:first];
+    //                wself.locationName.text = first.name;
+    //            });
+    //        } else {
+    //            NSLog(@"MKLocalSearch Error %@",error);
+    //
+    //        }
+    //    }];
 }
 - (void)handleDismissTap:(UITapGestureRecognizer *)tap {
     
     CGPoint p = [tap locationInView:self.view];
     CGSize s = UIScreen.mainScreen.bounds.size;
-    if (p.y > 0 && p.y < s.height - 325) {
-        [self cancelAndDismiss];
-    }
+    //if (p.y > 0 && p.y < s.height - 325) {
+    //    [self cancelAndDismiss];
+    //}
     
 }
 - (void)loadLocation:(NSString *)l {
     if (l && l.length > 0) {
         self.locationName.text = l;
         [self searchViaGeocoder:self.locSearch];
+        [self.locationName becomeFirstResponder];
     }
 }
 
 - (void)moveMapWithLatitude:(CLLocationDegrees)la Longitude:(CLLocationDegrees)lo {
     
+
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         NSArray *ans = [NSArray arrayWithArray:self.map.annotations];
@@ -430,71 +440,7 @@
         [wself.map addAnnotation: self.userTapAnnotation];
     });
     
-    
-//
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:la longitude:lo
-//                                                                    zoom:15];
-//        [self.glMap clear];
-//        [self.glMap animateToCameraPosition:camera];
-//
-//        self.locSearch.enabled = YES;
-//
-//        self.curMarker = [[GMSMarker alloc] init];
-//        self.curMarker.position = CLLocationCoordinate2DMake(la,lo);
-//        self.curMarker.title = @"";
-//        self.curMarker.map = self.glMap;
-//    });
 }
-/*
-#pragma mark - GMSMapViewDelegate
-- (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate {
-    
-    NSURLSession *s = [NSURLSession sharedSession];
-    NSString *ss = @"https://api.mapbox.com/geocoding/v5/mapbox.places/%f,%f.json?access_token=%@&reverseMode=score";
-    
-    NSString *target = [NSString stringWithFormat:ss,coordinate.latitude,coordinate.longitude,mapboxkey];
-    
-    NSURL *u = [NSURL URLWithString:[target stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-    
-    __block typeof(self) wself = self;
-    NSURLSessionDataTask *task = [s dataTaskWithURL:u completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        if (!error && data.length) {
-            NSError *err = nil;
-            
-            NSDictionary *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&err];
-            
-            if (!err && result) {
-                //NSLog(@"Geocoding result : %@",result);
-                NSArray *features = result[@"features"];
-                if (features && features.count) {
-                    NSDictionary *loc = [features firstObject];
-                    NSString *place = loc[@"place_name"];
-                    
-                    if (place && place.length) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            wself.locationName.text = place;
-                        });
-                        
-                        return;
-                    }
-                }
-            }
-            
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            wself.locationName.text = [NSString stringWithFormat:@"%.3f,%.3f",coordinate.latitude, coordinate.longitude];
-            
-        });
-    }];
-    
-    [task resume];
-    
-    
-}
-*/
 #pragma mark - Add the poi to map
 - (void)loadMapItem:(MKMapItem *)item {
     MKPlacemark *mark = item.placemark;

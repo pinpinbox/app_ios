@@ -41,4 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@interface CustomTintBarItem : UITabBarItem
+@end
+
 NS_ASSUME_NONNULL_END

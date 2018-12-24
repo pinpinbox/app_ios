@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 @interface LocationMapViewController : UIViewController<UIViewControllerTransitioningDelegate>
 @property (nonatomic) id<AddLocationDelegate> locationDelegate;
+@property (nonatomic) IBOutlet UIView *baseView;
 - (void)loadLocation:(NSString *)l;
 - (IBAction)cancelAndDismiss:(id)sender;
 - (void)cancelAndDismiss;
