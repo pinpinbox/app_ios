@@ -722,6 +722,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.mScrubber.hidden = YES;
     [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle"] forState: UIControlStateNormal];
     [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle-highlighted"] forState: UIControlStateHighlighted];
+    
+    self.mScrubber.thumbTintColor = [UIColor secondMain];
+    self.mScrubber.tintColor = [UIColor secondMain];
+    self.mScrubber.maximumTrackTintColor = [UIColor clearColor];
 }
 
 - (void)pageCalculation:(NSInteger)page {
