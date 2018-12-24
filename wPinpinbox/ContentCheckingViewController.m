@@ -3882,7 +3882,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 [self checkVideo: indexPath.row];
                 [self checkSlotAndExchangeInfo: indexPath.row];
             });
+            
             [self updateOldCurrentPage: indexPath.row];
+            [self pageCalculation:indexPath.row];
             [self textViewContentSetup: indexPath.row];
             [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
             [self.thumbnailImageScrollCV reloadData];
@@ -3945,7 +3947,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - UIScrollViewDelegate Methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
-    NSLog(@" [UIApplication sharedApplication].keyWindow.tag %d",[UIApplication sharedApplication].keyWindow.tag);
+    //NSLog(@" [UIApplication sharedApplication].keyWindow.tag %d",[UIApplication sharedApplication].keyWindow.tag);
     
     if ([UIApplication sharedApplication].keyWindow.tag != 10001 ) return;
 
@@ -4126,7 +4128,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
         
         if ([description isEqualToString: @""]) {
-            self.descriptionScrollViewHeightConstraint.constant = btnHeight+15;
+            self.descriptionScrollViewHeightConstraint.constant = (btnHeight>0)?btnHeight+15:btnHeight;
         }
     } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
         self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;
