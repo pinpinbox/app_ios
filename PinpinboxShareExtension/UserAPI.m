@@ -408,6 +408,7 @@
     [_params setObject:[UserInfo getUserId] forKey:@"id"];
     [_params setObject:[UserInfo getUserToken] forKey:@"token"];
     [_params setObject:album_id forKey:@"album_id"];
+    [_params setObject:@"file" forKey:@"video_refer"];
     [_params setObject:[UserAPI signGenerator2:_params] forKey:@"sign"];
     
     // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
@@ -417,7 +418,7 @@
     NSString* FileParamConstant = @"file";
     
     // the server url to which the image (or the media) is uploaded. Use your server url here
-    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/insertvideoofdiy",@"/1.2"]];
+    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/insertvideoofdiy",@"/2.0"]];
     
     // create request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
@@ -491,6 +492,56 @@
     
     return uuid;
 }
++ (NSString *)insertVideoWithAlbum_id:(NSString *)album_id
+                            videoURLPath:(NSString *)videopath
+                     progressDelegate:(id<UploadProgressDelegate>)progressDelegate
+                      completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
+    
+    NSString *uuid = [[NSUUID UUID] UUIDString];
+    
+    [UserAPI sharedUserAPI].progressDelegate = progressDelegate;
+    
+    NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
+    [_params setObject:[UserInfo getUserId] forKey:@"user_id"];
+    [_params setObject:[UserInfo getUserToken] forKey:@"token"];
+    [_params setObject:album_id forKey:@"album_id"];
+    [_params setObject:@"embed" forKey:@"video_refer"];
+    [_params setObject:videopath forKey:@"video_target"];
+    
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [UserAPI userAPI:_params URL:@"/insertvideoofdiy/2.0"];
+        
+        if (response != nil) {
+            if ([response isEqualToString: @"-1001"]) {
+                if (completionBlock)
+                    completionBlock(nil, uuid,[NSError errorWithDomain:@"insertVideoWithAlbum_idEmbed" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
+            } else {
+                NSLog(@"Get Real Response");
+                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                
+                NSString *res = dic[@"result"];
+                
+                if ([res isEqualToString:@"SYSTEM_OK"]) {
+                    if (completionBlock)
+                        completionBlock(dic[@"data"],uuid,nil);
+                } else if (dic[@"message"]) {
+                    if (completionBlock)
+                    completionBlock(nil, uuid,[NSError errorWithDomain:@"insertVideoWithAlbum_idEmbed" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
+    
+                }
+                
+            }
+            
+        } else {
+            if (completionBlock)
+                completionBlock(nil, uuid,[NSError errorWithDomain:@"insertVideoWithAlbum_idEmbed" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+        }
+    });
+
+    return uuid;
+}
+
 + (NSString *)insertPhotoWithAlbum_id:(NSString *)album_id
                             imageData:(NSData *)imageData
                      progressDelegate:(id<UploadProgressDelegate>)progressDelegate
@@ -611,7 +662,7 @@
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     if (task.taskDescription) {
-        NSLog(@"didSendBodyData %@: %ld/%ld",task.description, (unsigned long)totalBytesSent, (unsigned long)totalBytesExpectedToSend );
+        //NSLog(@"didSendBodyData %@: %ld/%ld",task.description, (unsigned long)totalBytesSent, (unsigned long)totalBytesExpectedToSend );
         if ([UserAPI sharedUserAPI].progressDelegate) {
             double p = (double) totalBytesSent/(double)totalBytesExpectedToSend;
             [[UserAPI sharedUserAPI].progressDelegate uploadProgress:task.taskDescription progress: (CGFloat)p];

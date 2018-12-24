@@ -23,6 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)postPreCheck:(NSString *)album_id completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (NSString *)insertPhotoWithAlbum_id:(NSString *)album_id imageData:(NSData *)imageData progressDelegate:(id<UploadProgressDelegate>)progressDelegate completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
 + (NSString *)insertVideoWithAlbum_id:(NSString *)album_id videopath:(NSString *)videopath progressDelegate:(id<UploadProgressDelegate>)progressDelegate completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
++ (NSString *)insertVideoWithAlbum_id:(NSString *)album_id
+                         videoURLPath:(NSString *)videopath
+                     progressDelegate:(id<UploadProgressDelegate>)progressDelegate
+                      completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
+
 + (void)loadImageWithURL:(NSURL *)url completionBlock:(void(^)( UIImage * _Nullable image ))completionBlock;
 @end
 

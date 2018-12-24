@@ -406,11 +406,6 @@
 }
 - (void)handleDismissTap:(UITapGestureRecognizer *)tap {
     
-    CGPoint p = [tap locationInView:self.view];
-    CGSize s = UIScreen.mainScreen.bounds.size;
-    //if (p.y > 0 && p.y < s.height - 325) {
-    //    [self cancelAndDismiss];
-    //}
     
 }
 - (void)loadLocation:(NSString *)l {

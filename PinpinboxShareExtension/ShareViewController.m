@@ -94,6 +94,8 @@
         
     } else if ([type isEqualToString:(__bridge NSString *)kUTTypeImage]){
         self.comment.text = @"圖片";
+    } else if ([type isEqualToString:(__bridge NSString *)kUTTypePDF]){
+        self.comment.text = @"PDF";
     }
     self.comment.textColor = isDark? [UIColor whiteColor]:[UIColor darkGrayColor];
     [self.loading stopAnimating];
@@ -204,7 +206,10 @@
                 } else if ([p hasItemConformingToTypeIdentifier:(__bridge NSString *)kUTTypeMovie]) {
                     [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypeMovie];
                 } else if ([p hasItemConformingToTypeIdentifier:(__bridge NSString *)kUTTypeURL]) {
-                    [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypeURL];
+                    if ([p hasItemConformingToTypeIdentifier:(__bridge NSString *)kUTTypePDF])
+                        [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypePDF];
+                    else
+                        [self addShareItemWithItemProvider:p type:(__bridge NSString *)kUTTypeURL];
                 }
                 
             }
@@ -215,7 +220,8 @@
 }
 - (BOOL)checkItemProvider:(NSItemProvider *)p  type:(NSString *)type {
     if ([type isEqualToString:(__bridge NSString *)kUTTypeURL]) {
-        return  [p.registeredTypeIdentifiers containsObject:(__bridge NSString *)kUTTypePDF];
+        return  ([p.registeredTypeIdentifiers containsObject:(__bridge NSString *)kUTTypeURL] && ![p.registeredTypeIdentifiers containsObject:(__bridge NSString *)kUTTypeFileURL]) ||
+                [p.registeredTypeIdentifiers containsObject:(__bridge NSString *)kUTTypePDF];
     }
     return YES;
 }
@@ -258,16 +264,11 @@
     if (item.hasVideo) {
         if ([item.objType isEqualToString:(__bridge NSString *) kUTTypeURL] ||
             [item.objType isEqualToString:(__bridge NSString *) kUTTypeText]) {
-            NSData *imgdata = nil;
-            if (item.thumbnail) {
-                imgdata = UIImageJPEGRepresentation(item.thumbnail, 1.0);
-            }
-            NSString *uuid = [UserAPI insertPhotoWithAlbum_id:_selectedAlbum imageData:imgdata progressDelegate:self  completionBlock:^(NSDictionary * _Nonnull result, NSString *taskId, NSError * _Nonnull error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [wself processFinishedTask:taskId success:(error == nil)];
-                });
+            NSString *uuid = [UserAPI insertVideoWithAlbum_id:_selectedAlbum videoURLPath:[item.url absoluteString] progressDelegate:self completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself processFinishedTask:taskId success:(error == nil)];
+                    });
             }];
-            
             if (uuid)
                 [self.postRequestList addObject:uuid];
             
@@ -303,8 +304,8 @@
                 [self.postRequestList addObject:uuid];
         }
         
-    } else if ([item.objType isEqualToString:(__bridge NSString *) kUTTypeURL]) {
-        
+    } else if ([item.objType isEqualToString:(__bridge NSString *) kUTTypePDF]) {
+        //  possibly PDF...
     }
 }
 - (IBAction)postShareItem:(id)sender {

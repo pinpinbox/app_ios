@@ -65,23 +65,35 @@
             } else if ([_url.host containsString:@"youtu.be"]) {
                 videoID = [_url lastPathComponent];
             }
-            NSString *th = [NSString stringWithFormat:@"http://img.youtube.com/vi/%@/1.jpg",videoID];
+            NSString *th = [NSString stringWithFormat:@"http://img.youtube.com/vi/%@/hqdefault.jpg",videoID];
             self.thumbURL = [NSURL URLWithString:th];
             self.hasVideo = YES;
-        } else if ([_url.absoluteString containsString:@"vimeo.com"]) {
+        } else if ([_url.absoluteString containsString:@"vimeo"]) {
+            self.hasVideo = YES;
             NSString *videoPath = _url.lastPathComponent;
             NSString *realLink = [NSString stringWithFormat:@"https://vimeo.com/api/oembed.json?url=https://vimeo.com/%@&width=960",videoPath];
-            NSURL *u = [NSURL URLWithString:[realLink stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            if (u) {
-                self.thumbURL = u;
+            NSURL *url = [NSURL URLWithString:[realLink stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            NSData *data = [NSData dataWithContentsOfURL:url];
+            if (url  && data) {
+                NSError *e1 = nil;
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&e1];
+                if (!e1 && dict ) {
+                    NSString *tpath = dict[@"thumbnail_url"];
+                    if (tpath) {
+                        self.thumbURL = [NSURL URLWithString:tpath];
+                        return;
+                    }
+                    
+                }
                 
             }
-            self.hasVideo = YES;
+            //  nothing found
+            self.thumbnail = [UIImage imageNamed:@"videobase.jpg"];
+            
         } else if ([_url.absoluteString containsString:@"facebook"]) {
             self.thumbnail = [UIImage imageNamed:@"videobase.jpg"];
             self.hasVideo = YES;
         } else {
-            
             self.hasVideo = NO;
             if ([self.shareItem hasItemConformingToTypeIdentifier:@"public.file-url"] && [self.shareItem hasItemConformingToTypeIdentifier:@"public.image"]) {
                 self.objType = (__bridge NSString *)kUTTypeImage;
@@ -89,14 +101,7 @@
                 
             } else {
                 //  other ordinary URL or text
-            
-                [self.shareItem loadPreviewImageWithOptions:nil completionHandler:^(id<NSSecureCoding>  _Nullable item, NSError * _Null_unspecified error) {
-                    if (!error && item) {
-                        [wself setThumbnail:(UIImage *)item];
-                    } else {
-                        [wself setThumbnail:[UIImage imageNamed:@"videobase.jpg"]];
-                    }
-                }];
+                [self loadThumbnailOtherway];
             }
         }
     } else if ([_objType isEqualToString:(__bridge NSString *)kUTTypeMovie]){
@@ -111,7 +116,42 @@
     } else if ([_objType isEqualToString:(__bridge NSString *)kUTTypeImage]) {
         self.hasVideo = NO;
         self.thumbnail = [UIImage imageWithContentsOfFile:[self.url path]];
+    } else if ([_objType isEqualToString:(__bridge NSString *)kUTTypePDF]) {
+        self.hasVideo = NO;
+        [self loadThumbnailOtherway];
     }
+}
+- (void)loadThumbnailOtherway {
+    __block typeof(self) wself = self;
+    [self.shareItem loadPreviewImageWithOptions:nil completionHandler:^(id<NSSecureCoding>  _Nullable item, NSError * _Null_unspecified error) {
+        if (!error && item) {
+            [wself setThumbnail:(UIImage *)item];
+        } else {
+            
+            [wself.url startAccessingSecurityScopedResource];
+            
+            NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] init];
+            __block NSError *error;
+            [coordinator coordinateReadingItemAtURL:self.url options:0 error:&error byAccessor:^(NSURL *newURL) {
+                NSDictionary *thumbs = nil;
+                thumbs = [newURL resourceValuesForKeys:@[NSURLThumbnailDictionaryKey] error:&error]; //getResourceValue:&thumbs forKey:NSURLThumbnailDictionaryKey error:&error];
+                if (thumbs && thumbs[NSURLThumbnailDictionaryKey]) {
+                    NSLog(@"%@",thumbs);
+                    NSDictionary *t =  thumbs[NSURLThumbnailDictionaryKey];
+                    UIImage *tt = t[NSThumbnail1024x1024SizeKey];
+                    if (tt)
+                        [wself setThumbnail:tt];
+                    else
+                        [wself setThumbnail:[UIImage imageNamed:@"videobase.jpg"]];
+                } else
+                    [wself setThumbnail:[UIImage imageNamed:@"videobase.jpg"]];
+            }];
+            
+            [wself.url stopAccessingSecurityScopedResource];
+            
+            
+        }
+    }];
 }
 - (void)setUrl:(NSURL *)url {
     _url = url;
@@ -130,11 +170,6 @@
             [self inspectThumbnailTone:self.thumbnail];
         }
         
-    }else if ([[_url pathExtension] isEqualToString:@"pdf"]) {
-        AVAsset *asset = [AVAsset assetWithURL:url];
-        if (asset) {
-            
-        }
     }
 }
 - (void)setThumbnail:(UIImage *)thumbnail  {
@@ -142,6 +177,7 @@
     [self inspectThumbnailTone:thumbnail];
 }
 - (void)inspectThumbnailTone:(UIImage *)thumbnail {
+    if (!thumbnail) return;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         CGDataProviderRef provider = CGImageGetDataProvider(thumbnail.CGImage);
@@ -204,3 +240,8 @@
     }
 }
 @end
+
+// 1. Vimeo has redirect URL in app ?? found no other cases
+// XXX 2. https://vimeo.com/api/oembed.json?url=[URL]&width=960 seemed returned JSON!
+// 3. YT live test is necessary
+// 4. PDF upload process
