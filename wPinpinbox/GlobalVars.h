@@ -24,6 +24,7 @@ extern NSString *kTimeOutForVideo;
 extern NSString *kTimeOutForPhoto;
 extern NSInteger kMinWidthAndHeight;
 extern NSTimeInterval kAnimateActionSheet;
+extern NSTimeInterval kHUDGraceTime;
 extern CGFloat kMessageBarDuration;
 extern CGFloat kCornerRadius;
 

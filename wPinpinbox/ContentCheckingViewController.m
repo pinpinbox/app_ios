@@ -54,11 +54,14 @@
 #import "UIViewController+ErrorAlert.h"
 
 
+
 #import "WKVideoPlayerView.h"
 #import "3rdPartyVideoPlayerViewController.h"
 #import "MapHelper.h"
 
-#import "UserInfo.h"
+#import "MBProgressHUD.h"
+
+
 
 #define kTextContentHeight 155
 
@@ -722,40 +725,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.soundBtn.hidden = YES;
     self.mScrubber.hidden = YES;
-    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(14, 14)];
-    UIImage *thumbImage = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
-        [[UIColor darkMain] setFill];
-        UIBezierPath *p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(1, 1, 13, 13)];
-        [p fill];
-        
-        [[UIColor whiteColor] setFill];
-        UIBezierPath *p1 = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(1, 1, 12, 12)];
-        [p1 fill];
-    }];
+    [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle"] forState: UIControlStateNormal];
+    [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle-highlighted"] forState: UIControlStateHighlighted];
     
-    
-    
-    [self.mScrubber setThumbImage: thumbImage/*[UIImage imageNamed: @"slider-metal-handle"]*/ forState: UIControlStateNormal];
-    //[self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle-highlighted"] forState: UIControlStateHighlighted];
-    UIGraphicsImageRenderer *renderer2 = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(10, 30)];
-    UIImage *slider0 = [renderer2 imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
-        
-        UIColor *c0 = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:0.5];
-        [c0 setFill];
-        UIBezierPath *p0 = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(1, 14, 8, 4)];
-        [p0 fill];
-        
-        UIColor *c = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5];
-        [c setFill];
-        UIBezierPath *p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(1, 13, 8, 4)];
-        [p fill];
-        
-        
-    }];
-    
-    UIImage *slider = [slider0 stretchableImageWithLeftCapWidth:4 topCapHeight:0];
-    [self.mScrubber setMinimumTrackImage:slider forState:UIControlStateNormal];
-    [self.mScrubber setMaximumTrackImage:slider forState:UIControlStateNormal];
+    self.mScrubber.thumbTintColor = [UIColor secondMain];
+    self.mScrubber.tintColor = [UIColor secondMain];
+    self.mScrubber.maximumTrackTintColor = [UIColor clearColor];
+
 }
 
 - (void)pageCalculation:(NSInteger)page {
@@ -2726,30 +2702,37 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         if (self.isOwned) {
             NSLog(@"Owned this album");
-            cell.giftImageBtn.hidden = NO;
             cell.checkCollectionLayout.hidden = YES;
-            
             [self checkSlotDataInDatabaseOrNot];
+            
             BOOL slotted = NO;
             
             if (![wTools objectExists: self.slotArray]) {
                 return;
             }
-            
             for (int i = 0; i < self.slotArray.count; i++) {
                 NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
                 NSLog(@"photoId: %ld", (long)[[slotData valueForKey: @"photoId"] integerValue]);
+                
+                NSLog(@"slotData photoId: %ld", [[slotData valueForKey: @"photoId"] integerValue]);
+                NSLog(@"self.photoArray page photo_id: %ld", [self.photoArray[page][@"photo_id"] integerValue]);
                 
                 if ([[slotData valueForKey: @"photoId"] integerValue] == [self.photoArray[page][@"photo_id"] integerValue]) {
                     slotted = YES;
                 }
             }
+            NSLog(@"slotted: %d", slotted);
             if (slotted) {
-                [self slotPhotoUseFor: cell.giftViewBgV indexPathRow: page];
+//                [self slotPhotoUseFor: cell.giftViewBgV indexPathRow: page];
+                [self slotPhotoUseFor: cell.giftViewBgV
+                                 cell: cell
+                         indexPathRow: page];
+            } else {
+                cell.giftImageBtn.hidden = NO;
             }
         } else {
             NSLog(@"Does not own this album");
-            cell.giftImageBtn.hidden = YES;
+//            cell.giftImageBtn.hidden = YES;
             cell.checkCollectionLayout.hidden = NO;
             [self createViewForCollectionCheck: page];
         }
@@ -2850,6 +2833,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Gift Image Button Action
 - (void)showSlot:(UIButton *)slotBtn
      giftViewBgV:(MyLinearLayout *)giftViewBgV
+            cell:(ImageCollectionViewCell *)cell
     indexPathRow:(NSInteger)indexPathRow {
     slotBtn.hidden = YES;
     
@@ -2877,10 +2861,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     [animateImageView removeFromSuperview];
     
-    [self slotPhotoUseFor: giftViewBgV indexPathRow: indexPathRow];
+//    [self slotPhotoUseFor: giftViewBgV indexPathRow: indexPathRow];
+    [self slotPhotoUseFor: giftViewBgV
+                     cell: cell
+             indexPathRow: indexPathRow];
 }
 
 - (void)slotPhotoUseFor:(MyLinearLayout *)bgV
+                   cell:(ImageCollectionViewCell *)cell
            indexPathRow:(NSInteger)indexPathRow {
     NSLog(@"slotPhotoUseFor");
     
@@ -2891,7 +2879,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UIDevice *device = [UIDevice currentDevice];
     NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
     
-    [wTools ShowMBProgressHUD];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
+    hud.graceTime = kHUDGraceTime;
+    [app.window addSubview: hud];
+    [hud showAnimated: YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI slotPhotoUseFor: currentDeviceId
@@ -2899,7 +2891,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                token: [wTools getUserToken]
                                               userId: [wTools getUserID]];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [hud hideAnimated: YES];
+            [hud removeFromSuperview];
             
             if (response != nil) {
                 NSLog(@"response from slotPhotoUseFor");
@@ -2917,6 +2910,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSLog(@"Get response from slotPhotoUseFor");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSLog(@"dic: %@", dic);
                     NSLog(@"dic message: %@", dic[@"message"]);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
@@ -2930,7 +2924,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"SYSTEM_OK"];
-                        
+                        cell.giftImageBtn.hidden = NO;
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -2939,6 +2933,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         } else {
                             [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
+                        cell.giftImageBtn.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -2955,17 +2950,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                        selector: @selector(logOut)
                                                        userInfo: nil
                                                         repeats: NO];
-                        
+                        cell.giftImageBtn.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_EXPIRED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
                         
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                        cell.giftImageBtn.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
                         
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                        cell.giftImageBtn.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
@@ -2977,6 +2974,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"];
+                        cell.giftImageBtn.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
@@ -2989,6 +2987,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_GAINED"];
+                        cell.giftImageBtn.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_SLOTTED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
@@ -3001,6 +3000,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_SLOTTED"];
+                        cell.giftImageBtn.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_NOT_YET_STARTED"]) {
                         for (UIView *view in bgV.subviews) {
                             NSLog(@"view.accessibilityIdentifier: %@", view.accessibilityIdentifier);
@@ -3024,6 +3024,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                               duration: 2.0
                                               position: CSToastPositionBottom
                                                  style: style];
+                        cell.giftImageBtn.hidden = YES;
                     }
                 }
             }
@@ -3041,7 +3042,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"photoId: %ld", (long)photoId);
     NSString *photoIdStr = [self.photoArray[indexPathRow][@"photo_id"] stringValue];
     
-    [wTools ShowMBProgressHUD];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
+    hud.graceTime = kHUDGraceTime;
+    [app.window addSubview: hud];
+    [hud showAnimated: YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getPhotoUseFor: photoIdStr
@@ -3049,7 +3054,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                              userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [hud hideAnimated: YES];
+            [hud removeFromSuperview];
             
             if (response != nil) {
                 NSLog(@"response from getPhotoUseFor");
@@ -3068,6 +3074,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSLog(@"Get Real Response");
                     NSLog(@"Get response from getPhotoUseFor");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSLog(@"dic: %@", dic);
                     NSLog(@"dic message: %@", dic[@"message"]);
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
@@ -3554,7 +3561,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
      numberOfItemsInSection:(NSInteger)section {
     NSLog(@"numberOfItemsInSection");
     NSLog(@"self.photoArray.count: %lu", (unsigned long)self.photoArray.count);
-    NSLog(@"self.photoArray: %@", self.photoArray);
+//    NSLog(@"self.photoArray: %@", self.photoArray);
     return self.photoArray.count;
 }
 
@@ -3562,7 +3569,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"cellForItemAtIndexPath");
     NSDictionary *data = self.photoArray[indexPath.row];
-    NSLog(@"data: %@", data);
     useFor = self.photoArray[indexPath.row][@"usefor"];
     
     if (collectionView.tag == 100) {
@@ -3578,7 +3584,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if ([wTools objectExists: data[@"image"]]) {
                 cell.imageView.image = [UIImage imageNamed: data[@"image"]];
             } else {
+
                 cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
+
             }
         }
         albumPoint = [self.bookdata[@"album"][@"point"] intValue];
@@ -3645,10 +3653,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             cell.alphaBgV.hidden = NO;
             
             if (self.isOwned) {
-                cell.giftImageBtn.hidden = NO;
+//                cell.giftImageBtn.hidden = NO;
                 cell.checkCollectionLayout.hidden = YES;
             } else {
-                cell.giftImageBtn.hidden = YES;
+//                cell.giftImageBtn.hidden = YES;
                 cell.checkCollectionLayout.hidden = NO;
             }
         }
@@ -3748,6 +3756,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         __block typeof(phoneTextView) phoneInput = phoneTextView;
         __block typeof(addressTextView) addressInput = addressTextView;
         __block typeof(self) wself = self;
+        __block typeof(cell) wcell = cell;
         
         cell.sponsorBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
             if ([nameInput.text isEqualToString: @""]) {
@@ -3782,8 +3791,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             }
         };
         __weak MyLinearLayout *weakGiftViewBgV = cell.giftViewBgV;
+        
         cell.giftImageBlock = ^(BOOL selected, NSInteger tag, UIButton *btn) {
-            [wself showSlot: btn giftViewBgV: weakGiftViewBgV indexPathRow: indexPath.row];
+//            [wself showSlot: btn giftViewBgV: weakGiftViewBgV indexPathRow: indexPath.row];
+            [wself showSlot: btn
+                giftViewBgV: weakGiftViewBgV
+                       cell: wcell
+               indexPathRow: indexPath.row];
         };
         return cell;
     } else {
@@ -3791,12 +3805,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         ThumbnailImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"ThumbnailImageCell" forIndexPath: indexPath];
         
         if ([wTools objectExists: data[@"image_url_thumbnail"]]) {
+
             NSString *i = data[@"image_url_thumbnail"];
             [cell.thumbnailImageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]]; //.image = [UIImage imageNamed: data[@"image_url_thumbnail"]];
         } else {
             if ([wTools objectExists: data[@"imageThumbnail"]]) {
                 cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
             } else {
+
                 cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
             }
         }
@@ -3867,7 +3883,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 [self checkVideo: indexPath.row];
                 [self checkSlotAndExchangeInfo: indexPath.row];
             });
+            
             [self updateOldCurrentPage: indexPath.row];
+            [self pageCalculation:indexPath.row];
             [self textViewContentSetup: indexPath.row];
             [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
             [self.thumbnailImageScrollCV reloadData];
@@ -3930,7 +3948,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - UIScrollViewDelegate Methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
-    NSLog(@" [UIApplication sharedApplication].keyWindow.tag %d",[UIApplication sharedApplication].keyWindow.tag);
+    //NSLog(@" [UIApplication sharedApplication].keyWindow.tag %d",[UIApplication sharedApplication].keyWindow.tag);
     
     if ([UIApplication sharedApplication].keyWindow.tag != 10001 ) return;
 
@@ -4111,7 +4129,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
         
         if ([description isEqualToString: @""]) {
-            self.descriptionScrollViewHeightConstraint.constant = btnHeight+15;
+            self.descriptionScrollViewHeightConstraint.constant = (btnHeight>0)?btnHeight+15:btnHeight;
         }
     } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
         self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;

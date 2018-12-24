@@ -383,26 +383,6 @@
     
     [task resume];
     
-    //    MKLocalSearchRequest *request = [[MKLocalSearchRequest alloc] init];
-    //    //request.naturalLanguageQuery = @"location address";
-    //    request.region = MKCoordinateRegionMakeWithDistance(coord,50,50);
-    //    MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
-    //    [search startWithCompletionHandler:^(MKLocalSearchResponse * _Nullable response, NSError * _Nullable error) {
-    //        dispatch_async(dispatch_get_main_queue(), ^{
-    //            [wTools HideMBProgressHUD];
-    //        });
-    //        if (!error && response) {
-    //            NSArray *res = response.mapItems;
-    //            MKMapItem *first = [res firstObject];
-    //            dispatch_async(dispatch_get_main_queue(), ^{
-    //                [wself loadMapItem:first];
-    //                wself.locationName.text = first.name;
-    //            });
-    //        } else {
-    //            NSLog(@"MKLocalSearch Error %@",error);
-    //
-    //        }
-    //    }];
 }
 - (void)handleDismissTap:(UITapGestureRecognizer *)tap {
     

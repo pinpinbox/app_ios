@@ -17,6 +17,7 @@ NSString *kTimeOutForVideo = @"1200";
 NSString *kTimeOutForPhoto = @"1200";
 NSInteger kMinWidthAndHeight = 72;
 NSTimeInterval kAnimateActionSheet = 0.2;
+NSTimeInterval kHUDGraceTime = 1.0;
 CGFloat kMessageBarDuration = 2.0;
 CGFloat kCornerRadius = 6.0;
 
