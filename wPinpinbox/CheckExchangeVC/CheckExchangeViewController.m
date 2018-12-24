@@ -252,9 +252,9 @@
     //NSLog(@"data: %@", data);
     
     if ([data[@"photousefor"][@"image"] isEqual: [NSNull null]]) {
-        cell.imageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
     } else {
-        [cell.imageView sd_setImageWithURL: [NSURL URLWithString: data[@"photousefor"][@"image"]] placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+        [cell.imageView sd_setImageWithURL: [NSURL URLWithString: data[@"photousefor"][@"image"]] placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"]];
     }
     
     if (![data[@"photousefor"][@"name"] isEqual: [NSNull null]]) {
@@ -265,7 +265,11 @@
         cell.timeLabel.hidden = YES;
     } else {
         if (![data[@"photousefor"][@"endtime"] isEqual: [NSNull null]]) {
-            cell.timeLabel.text = [wTools remainingTimeCalculation: data[@"photousefor"][@"endtime"]];
+            if ([wTools remainingTimeCalculationOnlyMinute: data[@"photousefor"][@"endtime"]] < 0) {
+                cell.timeLabel.text = @"過期";
+            } else {
+                cell.timeLabel.text = [wTools remainingTimeCalculation: data[@"photousefor"][@"endtime"]];
+            }            
             cell.timeLabel.textColor = [UIColor firstPink];
         } else {
             cell.timeLabel.text = @"無期限";

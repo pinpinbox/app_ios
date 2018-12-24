@@ -168,7 +168,7 @@
     if (![self.exchangeDic[@"photousefor"][@"image"] isEqual: [NSNull null]]) {
         self.imageView = [[UIImageView alloc] init];
         [self.imageView sd_setImageWithURL: [NSURL URLWithString: self.exchangeDic[@"photousefor"][@"image"]]
-                          placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+                          placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"]];
         self.imageView.myTopMargin = 0;
         self.imageView.myLeftMargin = self.imageView.myRightMargin = 0;
         self.imageView.layer.cornerRadius = kCornerRadius;
@@ -442,7 +442,11 @@
             timeLabel.text = @"無期限";
             timeLabel.textColor = [UIColor secondGrey];
         } else {
-            timeLabel.text = [wTools remainingTimeCalculation: self.exchangeDic[@"photousefor"][@"endtime"]];
+            if ([wTools remainingTimeCalculationOnlyMinute: self.exchangeDic[@"photousefor"][@"endtime"]] < 0) {
+                timeLabel.text = @"過期";
+            } else {
+                timeLabel.text = [wTools remainingTimeCalculation: self.exchangeDic[@"photousefor"][@"endtime"]];
+            }
             timeLabel.textColor = [UIColor firstPink];
         }
         [LabelAttributeStyle changeGapString: timeLabel content: timeLabel.text];
@@ -493,23 +497,24 @@
     bottomBarView.myLeftMargin = bottomBarView.myRightMargin = 0;
     bottomBarView.backgroundColor = [UIColor barColor];
     
-    UIButton *sendBtn = [UIButton buttonWithType: UIButtonTypeCustom];
-    [sendBtn addTarget: self action: @selector(sendBtnPressed) forControlEvents: UIControlEventTouchUpInside];
-    
-    if (self.hasExchanged) {
-        [sendBtn setTitle: @"送出" forState: UIControlStateNormal];
-    } else {
-        [sendBtn setTitle: @"立即兌換" forState: UIControlStateNormal];
-    }    
-    
-    sendBtn.frame = CGRectMake(0.0, 0.0, 112.0, 48.0);
-    sendBtn.backgroundColor = [UIColor firstMain];
-    sendBtn.myCenterOffset = CGPointZero;
-    sendBtn.layer.cornerRadius = kCornerRadius;
-    
-    [bottomBarView addSubview: sendBtn];
-    
-    [self.view addSubview: bottomBarView];
+    if ([wTools remainingTimeCalculationOnlyMinute: self.exchangeDic[@"photousefor"][@"endtime"]] >= 0) {
+        UIButton *sendBtn = [UIButton buttonWithType: UIButtonTypeCustom];
+        [sendBtn addTarget: self action: @selector(sendBtnPressed) forControlEvents: UIControlEventTouchUpInside];
+        
+        if (self.hasExchanged) {
+            [sendBtn setTitle: @"送出" forState: UIControlStateNormal];
+        } else {
+            [sendBtn setTitle: @"立即兌換" forState: UIControlStateNormal];
+        }
+        sendBtn.frame = CGRectMake(0.0, 0.0, 112.0, 48.0);
+        sendBtn.backgroundColor = [UIColor firstMain];
+        sendBtn.myCenterOffset = CGPointZero;
+        sendBtn.layer.cornerRadius = kCornerRadius;
+        
+        [bottomBarView addSubview: sendBtn];
+        
+        [self.view addSubview: bottomBarView];
+    }
 }
 
 - (void)sendBtnPressed {

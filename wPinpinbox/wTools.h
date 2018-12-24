@@ -77,7 +77,9 @@
 + (void)setStatusBarBackgroundColor:(UIColor *)color;
 
 // Remaining Time Calculation
-+ (NSString *)remainingTimeCalculation:(NSMutableDictionary *)dic;
+//+ (NSString *)remainingTimeCalculation:(NSMutableDictionary *)dic;
++ (NSString *)remainingTimeCalculation:(NSString *)timeStr;
++ (NSInteger)remainingTimeCalculationOnlyMinute:(NSString *)timeStr;
 
 // Get Snapshot Image
 + (UIImage *)normalSnapshotImage:(UIView *)view;
