@@ -2568,10 +2568,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         // cell width + min spacing for lines
         if (cellToSwipe < 0) {
             cellToSwipe = 0;
+            [self.bannerCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:cellToSwipe inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
         } else if (cellToSwipe >= adArray.count) {
             cellToSwipe = (int)adArray.count - 1;
+            [self.bannerCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:cellToSwipe inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+        } else {
+        
+            [self.bannerCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:cellToSwipe inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
         }
-        [self.bannerCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:cellToSwipe inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
     
     }
 }
