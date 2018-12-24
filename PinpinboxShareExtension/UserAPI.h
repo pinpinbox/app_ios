@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
                       completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
 
 + (void)loadImageWithURL:(NSURL *)url completionBlock:(void(^)( UIImage * _Nullable image ))completionBlock;
++ (NSString *)signGenerator2:(NSDictionary *)parameters;
 @end
 
 NS_ASSUME_NONNULL_END

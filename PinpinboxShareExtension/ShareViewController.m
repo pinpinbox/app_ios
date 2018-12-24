@@ -10,6 +10,7 @@
 #import "UserInfo.h"
 #import "UserAPI.h"
 #import "ShareItem.h"
+#import "PDFUploader.h"
 
 #import "UIColor+Extensions.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -266,7 +267,24 @@
             [item.objType isEqualToString:(__bridge NSString *) kUTTypeText]) {
             NSString *uuid = [UserAPI insertVideoWithAlbum_id:_selectedAlbum videoURLPath:[item.url absoluteString] progressDelegate:self completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [wself processFinishedTask:taskId success:(error == nil)];
+                        
+                        for (int i = 0; i< self.postRequestList.count; i++){
+                            NSString *uid = [self.postRequestList objectAtIndex:i];
+                            if ([taskId isEqualToString:uid]) {
+                                [UIView animateKeyframesWithDuration:2.0 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
+                                    
+                                    [wself tryRefreshThumbnailProgress:i progress:0.9];
+                                    
+                                } completion:^(BOOL finished) {
+                                    
+                                    //[wself processFinishedTask:taskId success:(error == nil)];
+                                }];
+                                
+                                break;
+                                
+                            }
+                        }
+                        
                     });
             }];
             if (uuid)
@@ -602,6 +620,13 @@
         return NO;
     }];
     
+}
+#pragma mark - PDFUploaderDelegate
+- (NSDictionary *)userInfo {
+    return @{@"id":[UserInfo getUserId],@"token":[UserInfo getUserToken]};
+}
+- (NSString *)retrieveSign:(NSDictionary *)param {
+    return [UserAPI signGenerator2:param];
 }
 
 @end

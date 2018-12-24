@@ -11,14 +11,12 @@
 
 #import "PDFUploader.h"
 #import <PDFKit/PDFKit.h>
-#import "wTools.h"
-#import "boxAPI.h"
 #import "GlobalVars.h"
 #import "MultipartInputStream.h"
-#import "UserInfo.h"
 
 API_AVAILABLE(ios(11.0))
 @interface PDFUploader ()
+@property (nonatomic) id<PDFUploaderDelegate>infoDelegate;
 @property (nonatomic,strong) PDFDocument *curPDFDocument;
 @property (nonatomic) NSString *albumID;
 @property (nonatomic) PDFReadProgressBlock progressblock;
@@ -38,6 +36,7 @@ API_AVAILABLE(ios(11.0))
 @implementation PDFUploader
 - (id) initWithAlbumID:(NSString *)albumID
         availablePages:(int)availablePages
+          infoDelegate:(id<PDFUploaderDelegate>)infoDelegate
          progressblock:(PDFReadProgressBlock)progressblock
    exportFinishedblock:(PDFReadExportFinishedBlock)finishedblock
    uploadProgressBlock:(PDFUploaderProgressBlock)uploadblock
@@ -45,6 +44,7 @@ API_AVAILABLE(ios(11.0))
     
     self = [super init];
     if (self) {
+        self.infoDelegate = infoDelegate;
         self.availablePages = availablePages;
         self.albumID = albumID;
         self.progressblock = progressblock;
@@ -147,7 +147,7 @@ API_AVAILABLE(ios(11.0))
         @try {
             NSData *imageData = [self.imageDataArray firstObject];
             NSString *desc = [descs objectAtIndex:i];
-            [self sendWithStream:[wTools getUserID] token: [wTools getUserToken] album_id: self.albumID imageData: imageData taskDesc:desc];
+            [self sendWithStream:[self.infoDelegate userInfo] album_id: self.albumID imageData: imageData taskDesc:desc];
             [self.imageDataArray removeObjectAtIndex:0];
             i++;
             //[descs removeObjectAtIndex:0];
@@ -163,15 +163,15 @@ API_AVAILABLE(ios(11.0))
         
     }
 }
-- (void)sendWithStream:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id imageData:(NSData *)imageData taskDesc:(NSString *) taskDesc {
+- (void)sendWithStream:(NSDictionary *)userInfo album_id:(NSString *)album_id imageData:(NSData *)imageData taskDesc:(NSString *) taskDesc {
     
     if (!imageData || imageData.length < 1) return;
     // Dictionary that holds post parameters. You can set your post parameters that your server accepts or programmed to accept.
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
-    [_params setObject:uid forKey:@"id"];
-    [_params setObject:token forKey:@"token"];
+    [_params setObject:userInfo[@"id"] forKey:@"id"];
+    [_params setObject:userInfo[@"token"] forKey:@"token"];
     [_params setObject:album_id forKey:@"album_id"];
-    [_params setObject:[boxAPI signGenerator2:_params] forKey:@"sign"];
+    [_params setObject:[self.infoDelegate retrieveSign:_params] forKey:@"sign"];
     
     // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
     NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";

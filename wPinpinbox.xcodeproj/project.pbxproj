@@ -395,6 +395,8 @@
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBE2AFA621CB437C0032290C /* notavailable.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE2AFA521CB437C0032290C /* notavailable.png */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
+		CBF7F42A21D0E18000951608 /* PDFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8FB77D21991CB700D3C23C /* PDFUploader.m */; };
+		CBF7F42B21D0E19600951608 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
 		CBF9DAE021BE555A00596E28 /* Login.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DADF21BE555A00596E28 /* Login.xcassets */; };
 		CBF9DAE221BE6DBD00596E28 /* PinPinBoxLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DAE121BE6DBD00596E28 /* PinPinBoxLogo.png */; };
 		CBFB1AE021ABA94800813611 /* InfoBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBFB1ADE21ABA94800813611 /* InfoBubbleView.m */; };
@@ -1151,6 +1153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBF7F42B21D0E19600951608 /* PDFKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2979,9 +2982,8 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = APD4588SHJ;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3460,6 +3462,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBF7F42A21D0E18000951608 /* PDFUploader.m in Sources */,
 				CB9B297F21C7B31200D87505 /* NSURL+Param.m in Sources */,
 				CBE104C121C78ACF00E185D3 /* ShareItem.m in Sources */,
 				CBE104BE21C75A4600E185D3 /* UIColor+Extensions.m in Sources */,
@@ -3635,8 +3638,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3679,8 +3682,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

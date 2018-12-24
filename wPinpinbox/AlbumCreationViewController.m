@@ -93,10 +93,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 
 #if TARGET_OS_SIMULATOR
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate>
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate,PDFUploaderDelegate>
 
 #else
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate,
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate,PDFUploaderDelegate
 DSPhotoEditorViewControllerDelegate>
 
 #endif
@@ -3446,7 +3446,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
             [self showErrorToastWithMessage:@"頁數已滿，無法再上傳" duration:1.0];
             return ;
         }
-        self.pdfUploader = [[PDFUploader alloc] initWithAlbumID: self.albumid availablePages:count progressblock:^(int currentPage, int totalPage) {
+        self.pdfUploader = [[PDFUploader alloc] initWithAlbumID: self.albumid availablePages:count infoDelegate:self progressblock:^(int currentPage, int totalPage) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (currentPage == 0) {
@@ -5260,5 +5260,12 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         return YES;
     
     return NO;
+}
+#pragma mark - PDFUploaderDelegate
+- (NSDictionary *)userInfo {
+    return @{@"id":[wTools getUserID],@"token":[wTools getUserToken]};
+}
+- (NSString *)retrieveSign:(NSDictionary *)param {
+    return [boxAPI signGenerator2:param];
 }
 @end

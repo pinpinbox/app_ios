@@ -245,3 +245,5 @@
 // XXX 2. https://vimeo.com/api/oembed.json?url=[URL]&width=960 seemed returned JSON!
 // 3. YT live test is necessary
 // 4. PDF upload process
+// slide net ??? https://www.slideshare.net/developers
+
