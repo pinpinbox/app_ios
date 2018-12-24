@@ -497,7 +497,7 @@
     bottomBarView.myLeftMargin = bottomBarView.myRightMargin = 0;
     bottomBarView.backgroundColor = [UIColor barColor];
     
-    if ([wTools remainingTimeCalculationOnlyMinute: self.exchangeDic[@"photousefor"][@"endtime"]] > 0) {
+    if ([wTools remainingTimeCalculationOnlyMinute: self.exchangeDic[@"photousefor"][@"endtime"]] >= 0) {
         UIButton *sendBtn = [UIButton buttonWithType: UIButtonTypeCustom];
         [sendBtn addTarget: self action: @selector(sendBtnPressed) forControlEvents: UIControlEventTouchUpInside];
         

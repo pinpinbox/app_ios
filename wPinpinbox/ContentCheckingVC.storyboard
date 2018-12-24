@@ -121,7 +121,7 @@
                                                                     <textInputTraits key="textInputTraits"/>
                                                                 </textField>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="P" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rO6-Jl-dy5">
-                                                                    <rect key="frame" x="298" y="123.66666666666669" width="15" height="20"/>
+                                                                    <rect key="frame" x="250" y="123.66666666666669" width="15" height="20"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="15" id="lxv-LR-GD4"/>
                                                                     </constraints>
@@ -369,7 +369,7 @@
                                                         <action selector="videoBtnPressed:" destination="ZUu-YK-KeO" eventType="touchUpInside" id="ebc-tn-O1S"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dA7-cb-8GI">
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dA7-cb-8GI">
                                                     <rect key="frame" x="117" y="258" width="180" height="200"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="200" id="adj-5y-qIq"/>
