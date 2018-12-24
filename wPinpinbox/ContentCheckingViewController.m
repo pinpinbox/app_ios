@@ -720,40 +720,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.soundBtn.hidden = YES;
     self.mScrubber.hidden = YES;
-    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(14, 14)];
-    UIImage *thumbImage = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
-        [[UIColor darkMain] setFill];
-        UIBezierPath *p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(1, 1, 13, 13)];
-        [p fill];
-        
-        [[UIColor whiteColor] setFill];
-        UIBezierPath *p1 = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(1, 1, 12, 12)];
-        [p1 fill];
-    }];
+    [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle"] forState: UIControlStateNormal];
+    [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle-highlighted"] forState: UIControlStateHighlighted];
     
-    
-    
-    [self.mScrubber setThumbImage: thumbImage/*[UIImage imageNamed: @"slider-metal-handle"]*/ forState: UIControlStateNormal];
-    //[self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle-highlighted"] forState: UIControlStateHighlighted];
-    UIGraphicsImageRenderer *renderer2 = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(10, 30)];
-    UIImage *slider0 = [renderer2 imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
-        
-        UIColor *c0 = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:0.5];
-        [c0 setFill];
-        UIBezierPath *p0 = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(1, 14, 8, 4)];
-        [p0 fill];
-        
-        UIColor *c = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.5];
-        [c setFill];
-        UIBezierPath *p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(1, 13, 8, 4)];
-        [p fill];
-        
-        
-    }];
-    
-    UIImage *slider = [slider0 stretchableImageWithLeftCapWidth:4 topCapHeight:0];
-    [self.mScrubber setMinimumTrackImage:slider forState:UIControlStateNormal];
-    [self.mScrubber setMaximumTrackImage:slider forState:UIControlStateNormal];
+    self.mScrubber.thumbTintColor = [UIColor secondMain];
+    self.mScrubber.tintColor = [UIColor secondMain];
+    self.mScrubber.maximumTrackTintColor = [UIColor clearColor];
+
 }
 
 - (void)pageCalculation:(NSInteger)page {
