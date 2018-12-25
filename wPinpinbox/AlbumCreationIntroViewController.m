@@ -106,8 +106,14 @@
     return UIStatusBarStyleLightContent;
 }
 - (void)tapToDismiss:(UITapGestureRecognizer *)tap {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [[NSUserDefaults standardUserDefaults] setObject:@"finished" forKey:@"editorIntro"];
+    if (!self.step1Intro.hidden) {
+        [self animSequence2];
+    } else if (!self.step2Intro.hidden) {
+        [self animSequence3];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [[NSUserDefaults standardUserDefaults] setObject:@"finished" forKey:@"editorIntro"];
+    }
 }
 
 - (void)updateInfoBubble:(InfoBubbleView *)bubble withRect:(CGRect)rect {
@@ -168,8 +174,7 @@
     
 }
 - (void)animSequenceFinished {
-    UITapGestureRecognizer *t = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)];
-    [self.view addGestureRecognizer:t];
+    
     [UIView animateWithDuration:1.0 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
         self.step3Intro.hidden = YES;
         self.proceedBtn.hidden = NO;
@@ -177,20 +182,26 @@
     } completion:nil];
 }
 - (void)animSequence3 {
+    _proceedBtn.hidden = YES;
+    [_proceedBtn setTitle:@"開始編輯" forState:UIControlStateNormal];
+    self.step2Intro.hidden = YES;
     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
-        self.step2Intro.hidden = YES;
+    
         [self setItemMask:self.step3Rect bubbleView:self.step3Intro];
     } completion:^(BOOL finished) {
-      [self performSelector:@selector(animSequenceFinished) withObject:nil afterDelay:0.5];
+        self.proceedBtn.hidden = NO;
+      //[self performSelector:@selector(animSequenceFinished) withObject:nil afterDelay:0.5];
     }];
     //
 }
 - (void)animSequence2 {
+    _proceedBtn.hidden = YES;
     [UIView animateWithDuration:1.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
         self.step1Intro.hidden = YES;
         [self setItemMask:self.step2Rect bubbleView:self.step2Intro];
     } completion:^(BOOL finished) {
-        [self performSelector:@selector(animSequence3) withObject:nil afterDelay:0.5];
+        //[self performSelector:@selector(animSequence3) withObject:nil afterDelay:0.5];
+        self.proceedBtn.hidden = NO;
     }];
 
 }
@@ -200,7 +211,10 @@
         [self setItemMask:self.step1Rect bubbleView:self.step1Intro];
         
     } completion:^(BOOL finished) {
-        [self performSelector:@selector(animSequence2) withObject:nil afterDelay:0.7];
+    //    [self performSelector:@selector(animSequence2) withObject:nil afterDelay:0.7];
+        UITapGestureRecognizer *t = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)];
+        [self.view addGestureRecognizer:t];
+        self.proceedBtn.hidden = NO;
     }];
 //    [UIView animateKeyframesWithDuration:5 delay:0.2 options:UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
 //
