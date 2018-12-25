@@ -1805,7 +1805,7 @@
     //NSLog(@"collectionView.tag: %ld", (long)collectionView.tag);
     
     if (collectionView.tag == 1) {
-        NSLog(@"collectionView.tag == 1");
+       // NSLog(@"collectionView.tag == 1");
         HomeDataCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"HomeDataCell" forIndexPath: indexPath];
         NSDictionary *data = pictures[indexPath.row];
         
@@ -1814,7 +1814,14 @@
         if ([data[@"album"][@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
-            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]] placeholderImage: [UIImage imageNamed:@"placeholder.png"]];
+            
+            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                if (error) {
+                    cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
+                } else
+                    cell.coverImageView.image = image;
+                
+            }];
             
             if ([data[@"album"][@"cover_hex"] isKindOfClass: [NSNull class]]) {
                 cell.coverImageView.backgroundColor = [UIColor clearColor];
@@ -1889,7 +1896,7 @@
         
         return cell;
     } else if (collectionView.tag == 2) {
-        NSLog(@"collectionView.tag == 2");
+        //NSLog(@"collectionView.tag == 2");
         HomeBannerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"HomeBannerCell" forIndexPath: indexPath];
         //NSLog(@"adArray: %@", adArray);
         NSDictionary *adData = adArray[indexPath.row];
@@ -1899,7 +1906,7 @@
         }];
         return cell;
     } else if (collectionView.tag == 3) {
-        NSLog(@"collectionView.tag == 3");
+        //NSLog(@"collectionView.tag == 3");
         HomeCategoryCollectionViewCell *cell = nil;
         cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
         
@@ -1922,7 +1929,7 @@
         }
         return cell;
     } else if (collectionView.tag == 4) {
-        NSLog(@"collectionView.tag == 4");
+        //NSLog(@"collectionView.tag == 4");
         NSDictionary *userDic = self.justJoinedListArray[indexPath.row][@"user"];
         
         SearchTabHorizontalCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"horizontalCell" forIndexPath: indexPath];
@@ -1941,7 +1948,7 @@
         }
         return cell;
     } else if (collectionView.tag == 5) {
-        NSLog(@"collectionView.tag == 5");
+        //NSLog(@"collectionView.tag == 5");
         
         RecommandCollectionViewCell *cell =  [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath: indexPath];
         cell.albumImageView.backgroundColor = UIColor.purpleColor;
@@ -1950,7 +1957,7 @@
         
         return cell;
     } else if (collectionView.tag == 6) {
-        NSLog(@"collectionView.tag == 6");
+        //NSLog(@"collectionView.tag == 6");
         //        NSLog(@"isSearching: %d", isSearching);
         albumRecommendationLabel.text = @"找到的作品";
         [LabelAttributeStyle changeGapString: albumRecommendationLabel content: albumRecommendationLabel.text];
@@ -1973,8 +1980,16 @@
         if ([albumDic[@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
         } else {
-            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]
-                                   placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image"]];
+            //[cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]
+            //                       placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image"]];
+            
+            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                if (error) {
+                    cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
+                } else
+                    cell.coverImageView.image = image;
+                
+            }];
         }
         
         // UserForView Info Setting
@@ -2085,7 +2100,7 @@
         
         return c;
     } else {
-        NSLog(@"collectionView.tag == 7");
+        //NSLog(@"collectionView.tag == 7");
         userRecommendationLabel.text = @"找到的創作人";
         [LabelAttributeStyle changeGapString: userRecommendationLabel content: userRecommendationLabel.text];
         

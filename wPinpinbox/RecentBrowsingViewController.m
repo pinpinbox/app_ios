@@ -165,7 +165,15 @@
     if (![imageUrlThumbnail isKindOfClass: [NSNull class]]) {
         if (![imageUrlThumbnail isEqualToString: @""]) {
             //cell.albumImageView.imageURL = [NSURL URLWithString: imageUrlThumbnail];
-            [cell.albumImageView sd_setImageWithURL: [NSURL URLWithString: imageUrlThumbnail]];
+            //[cell.albumImageView sd_setImageWithURL: [NSURL URLWithString: imageUrlThumbnail]];
+            cell.albumImageView.contentMode = UIViewContentModeScaleAspectFill;
+            [cell.albumImageView sd_setImageWithURL:[NSURL URLWithString: imageUrlThumbnail] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                if (error) {
+                    cell.albumImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
+                } else
+                    cell.albumImageView.image = image;
+                
+            }];
         } else {
             NSLog(@"imageUrlThumbnail: %@", imageUrlThumbnail);
             cell.albumImageView.image = [UIImage imageNamed: @"origin.jpg"];

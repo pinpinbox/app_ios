@@ -87,8 +87,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UITapGestureRecognizer *t = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)];
-    [self.view addGestureRecognizer:t];
+
     self.proceedBtn.layer.borderColor = [UIColor lightTextColor].CGColor;
     CGRect t1 = CGRectMake(0.5, 1, self.proceedBtn.frame.size.width, self.proceedBtn.frame.size.height);//CGRectOffset(self.proceedBtn.frame,0.5,1);
     UIView *base = [[UIView alloc] initWithFrame:t1];
@@ -169,7 +168,8 @@
     
 }
 - (void)animSequenceFinished {
-    
+    UITapGestureRecognizer *t = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToDismiss:)];
+    [self.view addGestureRecognizer:t];
     [UIView animateWithDuration:1.0 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
         self.step3Intro.hidden = YES;
         self.proceedBtn.hidden = NO;

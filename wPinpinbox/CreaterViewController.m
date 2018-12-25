@@ -725,9 +725,16 @@ static NSString *autoPlayStr = @"&autoplay=1";
     cell.contentView.subviews[0].backgroundColor = nil;
     
     if ([data[@"cover"] isEqual: [NSNull null]]) {
-        cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
+        //cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
     } else {
-        [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]]];
+        [cell.coverImageView sd_setImageWithURL:[NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        if (error) {
+            cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
+        } else
+            cell.coverImageView.image = image;
+        
+        }];
         cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"cover_hex"]];
     }
     

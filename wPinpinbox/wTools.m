@@ -729,6 +729,9 @@ static wTools *instance =nil;
 }
 
 + (NSInteger)remainingTimeCalculationOnlyMinute:(NSString *)timeStr {
+    //  parameter is not NSString or nil  //
+    if ([timeStr isKindOfClass:[NSNull class]] || !timeStr ) return 0;
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
     
