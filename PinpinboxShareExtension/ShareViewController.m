@@ -16,7 +16,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <UserNotifications/UserNotifications.h>
 
-@interface  ThumbnailCollectionViewCell : UICollectionViewCell<ItemPostLoadDelegate>
+@interface  ThumbnailCollectionViewCell : UICollectionViewCell<ItemPostLoadDelegate,CAAnimationDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *thumbnailView;
 @property (weak, nonatomic) IBOutlet UIImageView *typeView;
 @property (weak, nonatomic) IBOutlet UITextView *comment;
@@ -69,6 +69,49 @@
 - (void)setTaskProgress:(CGFloat)taskProgress {
     _taskProgress = taskProgress;
     [self updateProgress];
+}
+- (void)animationDidStart:(CAAnimation *)anim {
+    NSLog(@"animationDidStart %@",anim);
+}
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    NSLog(@"animationFinished %@",anim);
+}
+- (void)animatePieEffectWithInterval:(CGFloat) interval {
+    self.progressMask.hidden = YES;
+    self.progressMask.layer.mask = nil;
+    self.progressMask.hidden = NO;
+    self.progressMask.backgroundColor = [UIColor clearColor];
+    
+    CAShapeLayer *progressLayer = [[CAShapeLayer alloc] init];
+    [progressLayer setFillColor:[UIColor grayColor].CGColor];
+    
+    CGFloat w = self.progressMask.frame.size.width;
+    CGFloat h = self.progressMask.frame.size.height;
+    progressLayer.frame = CGRectMake(0, 0, w, h);//self.progressMask.layer.frame;
+    CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"path"];
+    anim.duration = interval;
+    anim.autoreverses = NO;
+    anim.removedOnCompletion = YES;
+    anim.speed = 1;
+    NSMutableArray *vals = [NSMutableArray array];
+    CGFloat u = 1.0/30.0;
+    
+    for (int i = 0; i< 30 ;i++) {
+        CGFloat rads =  (u*i)* (M_PI*2)-M_PI*0.5;
+        
+        UIBezierPath *p = [UIBezierPath bezierPathWithArcCenter:CGPointMake(w/2, h/2) radius:(w*1.25)/2 startAngle:-M_PI*0.5 endAngle:rads clockwise:YES];
+        [p addLineToPoint:CGPointMake(w/2, h/2)];
+        [vals addObject:(__bridge id)p.CGPath];
+    }
+    anim.values  = vals;
+    anim.delegate = self;
+    
+    [self.progressMask.layer addSublayer:progressLayer];
+    progressLayer.opacity = 0.35;
+    progressLayer.masksToBounds = YES;
+    
+    [progressLayer addAnimation:anim forKey:@"pieAnim"];
+    
 }
 - (void)updateProgress {
     self.progressMask.hidden = NO;
@@ -271,14 +314,10 @@
                         for (int i = 0; i< self.postRequestList.count; i++){
                             NSString *uid = [self.postRequestList objectAtIndex:i];
                             if ([taskId isEqualToString:uid]) {
-                                [UIView animateKeyframesWithDuration:2.0 delay:0 options:UIViewKeyframeAnimationOptionBeginFromCurrentState animations:^{
-                                    
-                                    [wself tryRefreshThumbnailProgress:i progress:0.9];
-                                    
-                                } completion:^(BOOL finished) {
-                                    
-                                    //[wself processFinishedTask:taskId success:(error == nil)];
-                                }];
+                                [wself finishEffect:i];
+                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                    [wself processFinishedTask:taskId success:(error == nil)];
+                                });
                                 
                                 break;
                                 
@@ -465,6 +504,16 @@
 - (void)postFinished {
     [self trySendLocalNotification:@"" albumid:_albumNames? _albumNames : @""];
     [self cancelAndFinish:nil];
+}
+- (void)finishEffect:(NSInteger)idx {
+    __block typeof(self.photoList) list = self.photoList;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ThumbnailCollectionViewCell *cell = (ThumbnailCollectionViewCell *)[list cellForItemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]];
+    if (cell) {
+        
+        [cell animatePieEffectWithInterval:1.0];
+    }
+    });
 }
 - (void)tryRefreshThumbnailProgress:(NSInteger)idx progress:(CGFloat)progress {
     __block typeof(self.photoList) list = self.photoList;
