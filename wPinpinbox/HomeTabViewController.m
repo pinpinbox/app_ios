@@ -2623,12 +2623,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [selectTextField resignFirstResponder];
+    
+    if (scrollView.hidden) return;
     //NSLog(@"scrollViewDidScroll");
     
-    if (scrollView == self.bannerCollectionView) {
-        //NSLog(@"scrollView == self.bannerCollectionView");
-        self.pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
-    }
+//    if (scrollView == self.bannerCollectionView) {
+//        //NSLog(@"scrollView == self.bannerCollectionView");
+//        self.pageControl.currentPage = scrollView.contentOffset.x / scrollView.frame.size.width;
+//    }
     
     if (scrollView == self.homeCollectionView) {
         NSLog(@"scrollView == self.homeCollectionView");
@@ -2653,11 +2655,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         }
     }
     
+    
+    
     self.lastContentOffset = scrollView.contentOffset.y;
     if (self.lastContentOffset < 0) {
         self.lastContentOffset = 0;
     }
     
+
     if (isLoading) {
         //NSLog(@"isLoading: %d", isLoading);
         return;
@@ -3590,6 +3595,13 @@ replacementString:(NSString *)string {
         [self onSwitchCategoryViewHidden:YES];
     } else {
         [self onSwitchCategoryViewHidden:NO];
+        if (self.navBarView.hidden) {
+            self.lastContentOffset = 0;
+            [UIView animateWithDuration: 0.5 animations:^{
+                self.navBarView.hidden = NO;
+                [self.navBarView layoutIfNeeded];
+            }];
+        }
         if (isSearchTextFieldSelected) {
             [self.scanBtn setImage: [UIImage imageNamed: @"ic200_scancamera_dark"] forState: UIControlStateNormal];
             [self dismissKeyboard];
