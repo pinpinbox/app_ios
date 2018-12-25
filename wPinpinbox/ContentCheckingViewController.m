@@ -3579,7 +3579,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         if ([wTools objectExists: data[@"image_url"]]) {
             NSString *i = data[@"image_url"];
-            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"] options:0]; //data[@"image_url"]];
+            //[cell.imageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"] options:0];
+            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                if (error) {
+                    cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
+                } else
+                    cell.imageView.image = image;
+                
+            }];
         } else {
             if ([wTools objectExists: data[@"image"]]) {
                 cell.imageView.image = [UIImage imageNamed: data[@"image"]];
@@ -3807,7 +3814,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if ([wTools objectExists: data[@"image_url_thumbnail"]]) {
 
             NSString *i = data[@"image_url_thumbnail"];
-            [cell.thumbnailImageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]]; //.image = [UIImage imageNamed: data[@"image_url_thumbnail"]];
+            //[cell.thumbnailImageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]]; //.image = [UIImage imageNamed: data[@"image_url_thumbnail"]];
+            [cell.thumbnailImageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                if (error) {
+                    cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
+                } else
+                    cell.thumbnailImageView.image = image;
+                
+            }];
         } else {
             if ([wTools objectExists: data[@"imageThumbnail"]]) {
                 cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
