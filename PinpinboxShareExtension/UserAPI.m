@@ -405,10 +405,11 @@
     [UserAPI sharedUserAPI].progressDelegate = progressDelegate;
     
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
-    [_params setObject:[UserInfo getUserId] forKey:@"id"];
+    [_params setObject:[UserInfo getUserId] forKey:@"user_id"];
     [_params setObject:[UserInfo getUserToken] forKey:@"token"];
     [_params setObject:album_id forKey:@"album_id"];
     [_params setObject:@"file" forKey:@"video_refer"];
+    [_params setObject:@"<null>" forKey:@"video_target"];
     [_params setObject:[UserAPI signGenerator2:_params] forKey:@"sign"];
     
     // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
@@ -468,10 +469,12 @@
                     //__strong typeof(wself) stSelf = wself;
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options: NSJSONReadingMutableContainers error: nil];
                 
-                    if ([dic[@"result"] intValue] == 1) {
+                    NSString *res = dic[@"result"];
+                    
+                    if ([res isEqualToString:@"SYSTEM_OK"]) {
                         if (completionBlock)
                             completionBlock(dic[@"data"], uuid, nil);
-                    } else if ([dic[@"result"] intValue] == 0) {
+                    } else {
                     
                         if (dic[@"message"] == nil) {
                             completionBlock(nil,uuid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to upload video"}]);
@@ -479,8 +482,6 @@
                         } else {
                             completionBlock(nil,uuid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]);
                         }
-                    } else {
-                    
                     }
                 }
             } else {
@@ -661,13 +662,13 @@
 }
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
-    if (task.taskDescription) {
-        //NSLog(@"didSendBodyData %@: %ld/%ld",task.description, (unsigned long)totalBytesSent, (unsigned long)totalBytesExpectedToSend );
-        if ([UserAPI sharedUserAPI].progressDelegate) {
-            double p = (double) totalBytesSent/(double)totalBytesExpectedToSend;
-            [[UserAPI sharedUserAPI].progressDelegate uploadProgress:task.taskDescription progress: (CGFloat)p];
-        }
-    }
+//    if (task.taskDescription) {
+//        //NSLog(@"didSendBodyData %@: %ld/%ld",task.description, (unsigned long)totalBytesSent, (unsigned long)totalBytesExpectedToSend );
+//        if ([UserAPI sharedUserAPI].progressDelegate) {
+//            double p = (double) totalBytesSent/(double)totalBytesExpectedToSend;
+//            [[UserAPI sharedUserAPI].progressDelegate uploadProgress:task.taskDescription progress: (CGFloat)p];
+//        }
+//    }
 }
 
 @end

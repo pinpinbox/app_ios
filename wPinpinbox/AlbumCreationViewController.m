@@ -5268,4 +5268,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (NSString *)retrieveSign:(NSDictionary *)param {
     return [boxAPI signGenerator2:param];
 }
+- (BOOL)isExporter {
+    return YES;
+}
 @end

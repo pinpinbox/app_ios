@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol PDFUploaderDelegate
 - (NSDictionary *)userInfo;
 - (NSString *)retrieveSign:(NSDictionary *)param;
+- (BOOL)isExporter;
 @end
 
 typedef void(^PDFReadProgressBlock)(int currentPage, int totalPage);
@@ -21,6 +22,7 @@ typedef void(^PDFUploaderResultBlock)(NSError * _Nullable error);
 
 
 @interface PDFUploader : NSObject<UIDocumentPickerDelegate>
+@property (nonatomic, readonly) NSString *taskId;
 - (id) initWithAlbumID:(NSString *)albumID
         availablePages:(int)availablePages
           infoDelegate:(id<PDFUploaderDelegate>)infoDelegate
@@ -30,6 +32,7 @@ typedef void(^PDFUploaderResultBlock)(NSError * _Nullable error);
      uploadResultBlock:(PDFUploaderResultBlock)resultblock;
 
 - (void)cacenlCurrentWork;
+- (void)exportPagesToImages:(NSURL *)pdfURL;
 @end
 
 NS_ASSUME_NONNULL_END

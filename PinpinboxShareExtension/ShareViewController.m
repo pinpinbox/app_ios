@@ -37,7 +37,7 @@
 
 @interface ShareViewController ()<UITableViewDelegate, UITableViewDataSource,
                                   UICollectionViewDelegateFlowLayout,UICollectionViewDataSource,
-                                  UploadProgressDelegate>
+                                  UploadProgressDelegate,PDFUploaderDelegate>
 @property(weak, nonatomic) IBOutlet UILabel *userName;
 @property(weak, nonatomic) IBOutlet UITableView *albumList;
 @property(weak, nonatomic) IBOutlet UICollectionView *photoList;
@@ -56,6 +56,8 @@
 @property(nonatomic) BOOL isLoading;
 @property(nonatomic) NSInteger successCount;
 @property(nonatomic) NSInteger failCount;
+
+//@property(nonatomic) PDFUploader *pdfUploader;
 @end
 
 
@@ -197,6 +199,10 @@
     self.failCount = 0;
     self.successCount = 0;
     
+    UIView *view = [self.view viewWithTag:1010];
+    view.layer.borderColor = [UIColor colorWithRed:0.75 green:0.75 blue:0.75 alpha:0.5].CGColor;
+    view.layer.borderWidth = 0.5;
+    
     if ([UserInfo getUserId].length < 1 ) {
         self.notLoginCover.hidden = NO;
         return;
@@ -283,25 +289,66 @@
         wself.textArea.text = [NSString stringWithFormat:@"TYPE: %@\n\nPATH: %@",type, text];
     });
 }
+#pragma mark -
+- (BOOL)ifAvailableToAppend:(int)pages {
+    if (_selectedAlbum) {
+        for (NSDictionary *data in self.albumlist) {
+            NSDictionary *a = data[@"album"];
+            NSDictionary *user = data[@"usergrade"];
+            if ([a[@"album_id"] isEqualToString:_selectedAlbum]) {
+                int count = [a[@"count_photo"] intValue];
+                int limit = [user[@"photo_limit_of_album"] intValue];
+                return (count+pages) <= limit;
+            }
+        }
+    }
+    return YES;
+}
+- (int)availablePages {
+    if (_selectedAlbum) {
+        for (NSDictionary *data in self.albumlist) {
+            NSDictionary *a = data[@"album"];
+            NSDictionary *user = data[@"usergrade"];
+            NSString *aa = [a[@"album_id"] stringValue];
+            if ([aa isEqualToString:_selectedAlbum]) {
+                int count = [a[@"count_photo"] intValue];
+                int limit = [user[@"photo_limit_of_album"] intValue];
+                return limit - count;
+            }
+        }
+    }
+    
+    return 0;
+}
 #pragma mark - post
 - (void)processFinishedTask:(NSString *)taskId success:(BOOL)success {
     
     NSUInteger i = [self.postRequestList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSString *s = (NSString *)obj;
-        if ([s isEqualToString:taskId]) {
-            *stop = YES;
-            return YES;
+        if ([obj isKindOfClass:[PDFUploader class]]) {
+            PDFUploader *p = (PDFUploader *)obj;
+            if (p.taskId && [p.taskId isEqualToString:taskId]) {
+                *stop = YES;
+                return YES;
+            }
+        } else if ([obj isKindOfClass:[NSString class]]) {
+            NSString *s = (NSString *)obj;
+            if ([s isEqualToString:taskId]) {
+                *stop = YES;
+                return YES;
+            }
         }
         
         return NO;
     }];
-    if (success)
-        self.successCount++;
-    else
-        self.failCount++;
-    self.postProgressStatus.text = [NSString stringWithFormat:@"上傳完成：%d，上傳失敗：%d",(int)self.successCount, (int)self.failCount];
-    [self.postRequestList removeObjectAtIndex:i];
-    [self updateProgress];
+    if (i >= 0 && i < self.postRequestList.count ) {
+        if (success)
+            self.successCount++;
+        else
+            self.failCount++;
+        self.postProgressStatus.text = [NSString stringWithFormat:@"預定上傳：%d\r\n上傳完成：%d，上傳失敗：%d ",(int)self.shareItems.count,(int)self.successCount, (int)self.failCount];
+        [self.postRequestList removeObjectAtIndex:i];
+        [self updateProgress];
+    }
 }
 - (void)postItem:(ShareItem *)item {
     __block typeof(self) wself = self;
@@ -310,19 +357,19 @@
             [item.objType isEqualToString:(__bridge NSString *) kUTTypeText]) {
             NSString *uuid = [UserAPI insertVideoWithAlbum_id:_selectedAlbum videoURLPath:[item.url absoluteString] progressDelegate:self completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        
-                        for (int i = 0; i< self.postRequestList.count; i++){
-                            NSString *uid = [self.postRequestList objectAtIndex:i];
-                            if ([taskId isEqualToString:uid]) {
-                                [wself finishEffect:i];
-                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                    [wself processFinishedTask:taskId success:(error == nil)];
-                                });
-                                
-                                break;
-                                
-                            }
-                        }
+                        [wself processFinishedTask:taskId success:(error == nil)];
+//                        for (int i = 0; i< self.postRequestList.count; i++){
+//                            NSString *uid = [self.postRequestList objectAtIndex:i];
+//                            if ([taskId isEqualToString:uid]) {
+//                                //[wself finishEffect:i];
+//                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                                    [wself processFinishedTask:taskId success:(error == nil)];
+//                                });
+//
+//                                break;
+//
+//                            }
+//                        }
                         
                     });
             }];
@@ -362,19 +409,42 @@
         }
         
     } else if ([item.objType isEqualToString:(__bridge NSString *) kUTTypePDF]) {
-        //  possibly PDF...
+        //if (!_pdfUploader) {
+            
+            __block PDFUploader *pdfuploader = [[PDFUploader alloc] initWithAlbumID:_selectedAlbum availablePages:[self availablePages] infoDelegate:self progressblock:^(int currentPage, int totalPage) {
+                
+            } exportFinishedblock:^(NSError * _Nullable error, NSArray * _Nullable icons, NSArray * _Nullable ids) {
+                if (error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself processFinishedTask:pdfuploader.taskId success:NO];
+                    });
+                }
+                
+            } uploadProgressBlock:^(int currentPage, int totalPage, NSString * _Nonnull desc) {
+                
+            } uploadResultBlock:^(NSError * _Nullable error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    [wself processFinishedTask:pdfuploader.taskId success:(error == nil)];
+                });
+            }];
+            [self.postRequestList addObject:pdfuploader];
+            [pdfuploader exportPagesToImages:item.url];
+        //}
     }
 }
 - (IBAction)postShareItem:(id)sender {
-    
+    [self.shareItems filterUsingPredicate:[NSPredicate predicateWithFormat:@"vidDuration < 31"]];
+    //[self.shareItems filterUsingPredicate:[NSPredicate predicateWithFormat:@"objType ==  'public.text'"]];
     self.postProgress.progress = 0;
     if (self.extensionContext) {
+        
         if (_selectedAlbum) {
+            self.progressView.hidden = NO;
             for (ShareItem *i in self.shareItems) {
                 [self postItem:i];
             }
             
-//            self.progressView.hidden = NO;
         }
         
         
@@ -390,6 +460,15 @@
 }
 #pragma mark -
 - (IBAction)cancelAndFinish:(id)sender {
+    
+    for (int i = 0 ; i< self.postRequestList.count;i++) {
+        
+        if ([[self.postRequestList objectAtIndex:i] isKindOfClass:[PDFUploader class]]) {
+            PDFUploader *p = [self.postRequestList objectAtIndex:i];
+            [p cacenlCurrentWork];
+        }
+        
+    }
     
     [self.shareItems removeAllObjects];
     [self.albumlist removeAllObjects];
@@ -494,11 +573,14 @@
 }
 - (void)updateProgress {
     
-    //self.progressView.hidden = NO;
+    self.progressView.hidden = NO;
     
-    //self.postProgress.progress = (float)(self.shareItems.count-self.postRequestList.count)/(float)(self.shareItems.count);
-    if (self.postRequestList.count <= 0) {
-        [self performSelector:@selector(postFinished) withObject:nil afterDelay:1];
+    self.postProgress.progress = (float)(self.successCount+self.failCount)/(float)(self.shareItems.count);
+    if (self.shareItems.count <= (self.successCount+self.failCount)) {
+        UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
+        if (post)
+            post.enabled = NO;
+        [self performSelector:@selector(postFinished) withObject:nil afterDelay:3];
     }
 }
 - (void)postFinished {
@@ -528,26 +610,34 @@
 }
 #pragma mark -
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
-    if (post)
-        post.enabled = YES;
-    
-    _selectedAlbum = nil;
-    _albumNames = nil;
-    
-    if (indexPath.row < self.albumlist.count) {
-        NSDictionary *data = self.albumlist[indexPath.row];
-        NSDictionary *album = data[@"album"];
+    if (indexPath.section == 1) {
+        UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
+        if (post)
+            post.enabled = YES;
         
-        _selectedAlbum = [album[@"album_id"] stringValue];
-        _albumNames = album[@"name"];
+        _selectedAlbum = nil;
+        _albumNames = nil;
+        
+        if (indexPath.row < self.albumlist.count) {
+            NSDictionary *data = self.albumlist[indexPath.row];
+            NSDictionary *album = data[@"album"];
+            
+            _selectedAlbum = [album[@"album_id"] stringValue];
+            _albumNames = album[@"name"];
+        }
     }
 }
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    switch (indexPath.section) {
+        case 0: {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddAlbumCell"];
+            //cell.textLabel.text = @"新增相本";
+            return cell;
+        }
+            break;
+    }
     
+            
     AlbumCellView *cell = [tableView dequeueReusableCellWithIdentifier:@"AlbumCell"];
     if (!cell)
         cell = [[AlbumCellView alloc] init];
@@ -556,67 +646,77 @@
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    switch (section) {
+        case 0:
+            return 1;
+            break;
+    }
+            
     return self.albumlist.count;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 112;
+    return 80;
 }
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (!self.progressView.hidden) return;
-    
-    if ( (indexPath.row == self.albumlist.count-1) && !self.isLoading) {
-        CGFloat contentHeight = tableView.contentSize.height;
-        CGFloat listHeight = tableView.frame.size.height ;
-        BOOL canLoad = contentHeight > listHeight;
-        if (canLoad && (contentHeight-tableView.contentOffset.y-96 <= (listHeight))){
-            UIView *v = [tableView viewWithTag:54321];
-            if (!self.isLoading && (v == nil)) {
-                UIEdgeInsets u = tableView.contentInset;
-                [tableView setContentInset:UIEdgeInsetsMake(0, u.left, 96, u.right)];
-                
-                UIActivityIndicatorView *indicator =
-                indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-                [indicator setColor:[UIColor darkGrayColor]];
-                indicator.center = CGPointMake(tableView.center.x, tableView.contentSize.height+48);
-                indicator.tag = 54321;
-                [tableView addSubview:indicator];
-                indicator.hidesWhenStopped = YES;
-                [indicator startAnimating];
-                
-                dispatch_time_t after = dispatch_time(DISPATCH_TIME_NOW, 2.5 * NSEC_PER_SEC);
-                dispatch_after(after, dispatch_get_main_queue(), ^{
-                    [self loadAlbumList];
-                    self.isLoading = NO;
-                });
-            }
-        }
-    }
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
 }
 /*
- *insertphotoofdiy
- *insertvideoofdiy
- *updatephotoofdiy
- *insertalbumofdiy
- retrievealbump
- *updatealbumofdiy
- 
- 
- Upload binary not thumb
- Movie
- Image
- ---------
- Upload Thumbnail, URL
- URL hasVideo
- Text hasVideo
- ---------
- Upload Thumbnail
- Other
- 
- ISSUE:
- How to deal com.adobe.pdf
- *local movie longer than 30 seconds...
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    switch (section) {
+        case 0:
+            return 1;
+            break;
+    }
+    return 28;
+}
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    switch (section) {
+        case 0:
+            return @"";
+            break;
+        
+    }
+    return @"我的作品";
+}
  */
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (!self.progressView.hidden) return;
+    switch (indexPath.section) {
+        case 0:
+            break;
+        default:{
+    
+            if ( (indexPath.row == self.albumlist.count-1) && !self.isLoading) {
+                CGFloat contentHeight = tableView.contentSize.height;
+                CGFloat listHeight = tableView.frame.size.height ;
+                BOOL canLoad = contentHeight > listHeight;
+                if (canLoad && (contentHeight-tableView.contentOffset.y-96 <= (listHeight))){
+                    UIView *v = [tableView viewWithTag:54321];
+                    if (!self.isLoading && (v == nil)) {
+                        UIEdgeInsets u = tableView.contentInset;
+                        [tableView setContentInset:UIEdgeInsetsMake(0, u.left, 96, u.right)];
+                        
+                        UIActivityIndicatorView *indicator =
+                        indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+                        [indicator setColor:[UIColor darkGrayColor]];
+                        indicator.center = CGPointMake(tableView.center.x, tableView.contentSize.height+48);
+                        indicator.tag = 54321;
+                        [tableView addSubview:indicator];
+                        indicator.hidesWhenStopped = YES;
+                        [indicator startAnimating];
+                        
+                        dispatch_time_t after = dispatch_time(DISPATCH_TIME_NOW, 2.5 * NSEC_PER_SEC);
+                        dispatch_after(after, dispatch_get_main_queue(), ^{
+                            [self loadAlbumList];
+                            self.isLoading = NO;
+                        });
+                    }
+                }
+            }
+        }
+            
+    }
+}
 #pragma mark -
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
     //NSLog(@"indexpath %@", indexPath);
@@ -676,6 +776,9 @@
 }
 - (NSString *)retrieveSign:(NSDictionary *)param {
     return [UserAPI signGenerator2:param];
+}
+- (BOOL)isExporter {
+    return NO;
 }
 
 @end

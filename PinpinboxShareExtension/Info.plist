@@ -36,9 +36,9 @@
     SUBQUERY (
         $extensionItem.attachments,
         $attachment,
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.image" ||
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.movie" ||    
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "com.adobe.pdf" ||
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.image&quot; ||
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.movie&quot; ||    
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;com.adobe.pdf&quot; ||
         SUBQUERY(
         	extensionItems, 
         	$extensionItem, 
@@ -46,7 +46,7 @@
         		$extensionItem.attachments, 
         		$attachment, 
         		SUBQUERY($attachment.registeredTypeIdentifiers, 
-        		$uti, $uti UTI-CONFORMS-TO "public.file-url").@count == 0).@count &gt;= 1).@count &gt;= 1
+        		$uti, $uti UTI-CONFORMS-TO &quot;public.file-url&quot;).@count == 0).@count &gt;= 1).@count &gt;= 1
     ).@count &gt;= 1).@count &gt;= 1
 	
 		</string>

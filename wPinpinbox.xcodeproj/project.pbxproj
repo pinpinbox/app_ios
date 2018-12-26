@@ -394,6 +394,7 @@
 		CBE104C521C792C200E185D3 /* NSURL+Param.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE104C421C792C200E185D3 /* NSURL+Param.m */; };
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBE2AFA621CB437C0032290C /* notavailable.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE2AFA521CB437C0032290C /* notavailable.png */; };
+		CBEB727821D32DB800B22B1C /* addIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = CBEB727721D32DB700B22B1C /* addIcon.png */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
 		CBF7F42A21D0E18000951608 /* PDFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8FB77D21991CB700D3C23C /* PDFUploader.m */; };
 		CBF7F42B21D0E19600951608 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
@@ -1093,6 +1094,7 @@
 		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
 		CBE2773921A8045600A6E80D /* HudIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudIndicatorView.m; sourceTree = "<group>"; };
 		CBE2AFA521CB437C0032290C /* notavailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notavailable.png; sourceTree = "<group>"; };
+		CBEB727721D32DB700B22B1C /* addIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addIcon.png; sourceTree = "<group>"; };
 		CBF138E921C24FD80070EBB8 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
 		CBF138EA21C24FD80070EBB8 /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
 		CBF9DADF21BE555A00596E28 /* Login.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Login.xcassets; path = "Image Resources/Login.xcassets"; sourceTree = "<group>"; };
@@ -2870,6 +2872,7 @@
 		CBE104B621C7490A00E185D3 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				CBEB727721D32DB700B22B1C /* addIcon.png */,
 				CB20EB2121CCDA9B0084E640 /* Icon.png */,
 				CBE2AFA521CB437C0032290C /* notavailable.png */,
 				CBA29A1221C8A988000A37F4 /* ic200_videomake_white.png */,
@@ -3164,6 +3167,7 @@
 				CB20EB2221CCDA9B0084E640 /* Icon.png in Resources */,
 				CBA29A1321C8A989000A37F4 /* ic200_videomake_white.png in Resources */,
 				CBDA227321C3923200706E2C /* MainInterface.storyboard in Resources */,
+				CBEB727821D32DB800B22B1C /* addIcon.png in Resources */,
 				CBE2AFA621CB437C0032290C /* notavailable.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

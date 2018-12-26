@@ -30,6 +30,7 @@ API_AVAILABLE(ios(11.0))
 @property (nonatomic) NSInteger pageFinished;
 @property (nonatomic) NSInteger pageFailed;
 @property (nonatomic) NSInteger totalPages;
+@property (nonatomic) NSString *uuid;
 @end
 
 
@@ -44,6 +45,7 @@ API_AVAILABLE(ios(11.0))
     
     self = [super init];
     if (self) {
+        self.uuid = [[NSUUID UUID] UUIDString];
         self.infoDelegate = infoDelegate;
         self.availablePages = availablePages;
         self.albumID = albumID;
@@ -63,9 +65,7 @@ API_AVAILABLE(ios(11.0))
         self.totalPages = (NSInteger)self.curPDFDocument.pageCount;
         __block typeof(self) wself = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            
-            
-            
+                                    
             //  number of pdf page is more than upload limit
             if (wself.totalPages > wself.availablePages) {
                 if (wself.exportFinishedblock)
@@ -123,7 +123,11 @@ API_AVAILABLE(ios(11.0))
 - (void)cleanUp {
     
     // if pdf exists, delete the imported file...
-    if (self.curPDFDocument.documentURL &&
+    BOOL delete = YES;
+    if (self.infoDelegate) {
+        delete = [self.infoDelegate isExporter];
+    }
+    if (delete && self.curPDFDocument.documentURL &&
         [[NSFileManager defaultManager] fileExistsAtPath:self.curPDFDocument.documentURL.path]) {
         
         [[NSFileManager defaultManager] removeItemAtURL:self.curPDFDocument.documentURL error:nil];
@@ -317,7 +321,9 @@ API_AVAILABLE(ios(11.0))
     
 }
 
-
+- (NSString *)taskId {
+    return self.uuid;
+}
 #pragma mark -
 - (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
     

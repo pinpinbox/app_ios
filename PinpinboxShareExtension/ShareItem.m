@@ -29,10 +29,14 @@
     [self.shareItem loadItemForTypeIdentifier:self.objType options:nil completionHandler:^(id<NSSecureCoding>  _Nullable item, NSError * _Null_unspecified error) {
         if (!error) {
             if ([wself.objType isEqualToString:(__bridge  NSString *)kUTTypeText]) {
-                NSString *text = (NSString *)item;
+
                 @try {
-                    NSURL *url = [NSURL URLWithString:text];
-                    [wself setUrl:url];
+                    
+                    NSString *text = (NSString *)item;
+                    if (![text hasPrefix:@"file://"]) {
+                        NSURL *url = [NSURL URLWithString:text];
+                        [wself setUrl:url];
+                    }
                     
                 } @catch (NSException *exception) {
                     NSLog(@"Failed to retrieve URL %@",[exception description]);
@@ -246,4 +250,5 @@
 // 3. YT live test is necessary
 // 4. PDF upload process
 // slide net ??? https://www.slideshare.net/developers
+//  new album
 
