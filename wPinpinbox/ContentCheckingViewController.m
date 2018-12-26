@@ -3576,24 +3576,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"cell: %@", cell);
         NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
         
-        if ([wTools objectExists: data[@"image_url"]]) {
-            NSString *i = data[@"image_url"];
-            //[cell.imageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"] options:0];
-            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                if (error) {
-                    cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
-                } else
-                    cell.imageView.image = image;
-                
-            }];
-        } else {
-            if ([wTools objectExists: data[@"image"]]) {
-                cell.imageView.image = [UIImage imageNamed: data[@"image"]];
-            } else {
-
+        if (![wTools objectExists: data[@"image_url"]]) {
+            if (![wTools objectExists: data[@"image"]]) {
                 cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
-
+            } else {
+                cell.imageView.image = [UIImage imageNamed: data[@"image"]];
             }
+        } else {
+            [cell.imageView sd_setImageWithURL: [NSURL URLWithString: data[@"image_url"]]];
         }
         albumPoint = [self.bookdata[@"album"][@"point"] intValue];
         userPoint = [[userPrefs objectForKey: @"pPoint"] integerValue];
@@ -3809,26 +3799,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     } else {
         NSLog(@"collectionView.tag == 200");
         ThumbnailImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"ThumbnailImageCell" forIndexPath: indexPath];
-        
-        if ([wTools objectExists: data[@"image_url_thumbnail"]]) {
-
-            NSString *i = data[@"image_url_thumbnail"];
-            //[cell.thumbnailImageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]]; //.image = [UIImage imageNamed: data[@"image_url_thumbnail"]];
-            [cell.thumbnailImageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                if (error) {
-                    cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
-                } else
-                    cell.thumbnailImageView.image = image;
-                
-            }];
-        } else {
-            if ([wTools objectExists: data[@"imageThumbnail"]]) {
-                cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
+        if (![wTools objectExists: data[@"image_url_thumbnail"]]) {
+            if (![wTools objectExists: data[@"imageThumbnail"]]) {
+                cell.thumbnailImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
             } else {
-
-                cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
+                cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
             }
+        } else {
+            [cell.thumbnailImageView sd_setImageWithURL: data[@"image_url_thumbnail"]];
         }
+        
         NSString *audioTargetStr = self.photoArray[indexPath.row][@"audio_target"];
         // Check audioTarget
         if (audioTargetStr == nil) {
