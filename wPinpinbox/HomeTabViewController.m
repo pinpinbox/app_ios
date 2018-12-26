@@ -1815,7 +1815,7 @@
             cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             
-            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                 if (error) {
                     cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
                 } else
@@ -1983,7 +1983,7 @@
             //[cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]]
             //                       placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image"]];
             
-            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: albumDic[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                 if (error) {
                     cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
                 } else
@@ -2074,17 +2074,17 @@
             data = self.hotListArray[indexPath.row];
         
         NSDictionary *user = data[@"user"];
-        c.albumImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+        c.albumImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
         if ([user[@"cover"] isEqual: [NSNull null]]) {
-            c.albumImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
+            c.albumImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
         } else {
             [c.albumImageView sd_setImageWithURL: [NSURL URLWithString: user[@"cover"]]
-                                placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+                                placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image"]];
         }
         
         if (user[@"picture"] && ![user[@"picture"] isEqual: [NSNull null]]) {
             [c.personnelView sd_setImageWithURL:[NSURL URLWithString:user[@"picture"]]
-                               placeholderImage: [UIImage imageNamed: @"bg200_no_image.jpg"]];
+                               placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image"]];
         } else {
             c.personnelView.image = [UIImage imageNamed:@"member_back_head"];
             c.personnelView.backgroundColor = [UIColor secondGrey];

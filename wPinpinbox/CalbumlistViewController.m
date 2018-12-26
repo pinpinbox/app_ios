@@ -468,12 +468,11 @@
     img.layer.borderWidth = 0;
     if (![data[@"cover"] isKindOfClass:[NSNull class]]) {
         
-        [img sd_setImageWithURL:[NSURL URLWithString:data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        [img sd_setImageWithURL:[NSURL URLWithString:data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if (error) {
                 img.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
             } else
                 img.image = image;
-            
         }];
     } else {
         img.contentMode = UIViewContentModeScaleAspectFit;

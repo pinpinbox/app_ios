@@ -858,6 +858,13 @@
             NSString *identifierStr1 = touch.view.superview.accessibilityIdentifier;
             if ([identifierStr1 isEqualToString: @"setupPages"]) {
                 touch.view.backgroundColor = [UIColor clearColor];
+                
+                for (UITextView *textView in touch.view.superview.subviews) {
+                    if ([textView.accessibilityIdentifier isEqualToString: @"inputTextView"]) {
+                        NSLog(@"textView.text: %@", textView.text);
+                        previewPageStr = textView.text;
+                    }
+                }
                 [self changePreviewPageSetupViews: touch.view.superview];
                 return;
             } else if ([identifierStr1 isEqualToString: @"setupAllPages"]) {
