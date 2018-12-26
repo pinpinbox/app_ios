@@ -255,7 +255,7 @@
         inputTextView.keyboardType = UIKeyboardTypeNumberPad;
         
         if (gridViewSelected) {
-            inputTextView.backgroundColor = [UIColor secondGrey];
+            inputTextView.backgroundColor = [UIColor thirdGrey];
             inputTextView.textColor = [UIColor firstGrey];
         } else {
             inputTextView.backgroundColor = [UIColor clearColor];
@@ -993,7 +993,7 @@
         if ([v.accessibilityIdentifier isEqualToString: @"inputTextView"]) {
             UITextView *inputTextView = (UITextView *)v;
             if (setupPagesViewSelected) {
-                inputTextView.backgroundColor = [UIColor secondGrey];
+                inputTextView.backgroundColor = [UIColor thirdGrey];
                 inputTextView.textColor = [UIColor firstGrey];
             } else {
                 inputTextView.backgroundColor = [UIColor clearColor];
