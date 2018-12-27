@@ -4964,10 +4964,11 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     }];
 }
 - (void)didSetURLs:(NSArray * _Nullable )url {
-    NSArray *ar = [NSArray arrayWithArray:url];
+    
+    NSArray *ar = (url != nil)? [NSArray arrayWithArray:url] : [NSArray array];
     NSString *string = @"[]";
     
-    if (url && url.count ) {
+    if (url && url.count >= 0) {
         NSError *er = nil;
         NSData *data = nil;
         @try {
