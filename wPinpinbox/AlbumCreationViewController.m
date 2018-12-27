@@ -5120,9 +5120,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     self.urlAddingActionSheet.modalPresentationCapturesStatusBarAppearance = YES;
     [self presentViewController:self.urlAddingActionSheet animated:YES completion:^{
         
-        if(urls && urls.count > 0) {
-            [wself.urlAddingActionSheet loadURLs:urls];
-        }
+        //if(urls && urls.count > 0) {
+        [wself.urlAddingActionSheet loadURLs:urls];
+        //}
     }];
     
 }
