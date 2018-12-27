@@ -1398,7 +1398,7 @@
             <objects>
                 <viewController id="iXx-xm-GyH" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="OPp-9A-gca">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="awe-FP-i0H"/>
@@ -1767,40 +1767,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mpb-NL-gGa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-5019.375" y="-2503.5211267605632"/>
-        </scene>
-        <!--Show Image View Controller-->
-        <scene sceneID="MoK-60-XHP">
-            <objects>
-                <viewController id="bio-kE-nxQ" customClass="ShowImageViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="arv-OK-Kah">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bOu-X8-NFt">
-                                <rect key="frame" x="20" y="49" width="334" height="501"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3tk-YH-4Bl">
-                                <rect key="frame" x="164" y="609" width="30" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="返回">
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="back:" destination="bio-kE-nxQ" eventType="touchUpInside" id="X80-LK-RdO"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <viewLayoutGuide key="safeArea" id="Bwx-X2-Yte"/>
-                    </view>
-                    <connections>
-                        <outlet property="myimageview" destination="bOu-X8-NFt" id="926-qZ-17D"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="8lN-68-L9w" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-5825.625" y="-2503.5211267605632"/>
         </scene>
         <!--Choose Video View Controller-->
         <scene sceneID="UET-ki-Twc">

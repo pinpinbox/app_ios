@@ -181,7 +181,7 @@
     //[GMSServices provideAPIKey:MAPAPIKEY];
     
     //self.placeClient = [[GMSPlacesClient alloc] init];
-    
+    [self addTextViewAccessoryView:_locationName];
     [self addKeyboardNotification];
     [self addMapTap];
     //[self addDismissTap];
@@ -198,7 +198,22 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
 }
-
+- (void)dismissCurKeyboard {
+    
+    if (_locationName.isFirstResponder)
+        [_locationName resignFirstResponder];
+}
+- (void)addTextViewAccessoryView:(UITextField *)textfield {
+    UIToolbar *keybardBar = [[UIToolbar alloc] init];
+    [keybardBar sizeToFit];
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *dimiss = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissCurKeyboard)];
+    
+    keybardBar.items = @[space, dimiss];
+    
+    textfield.inputAccessoryView = keybardBar;
+    
+}
 - (void)removeKeyboardNotification {
     NSLog(@"");
     NSLog(@"removeKeyboardNotification");
@@ -214,7 +229,7 @@
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     
-    self.baseView.transform = CGAffineTransformMakeTranslation(0, -kbSize.height);
+    self.baseView.transform = CGAffineTransformMakeTranslation(0, -kbSize.height*0.5);
     
 }
 

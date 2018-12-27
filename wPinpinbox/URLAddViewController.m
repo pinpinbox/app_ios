@@ -11,43 +11,66 @@
 #import "UIView+Toast.h"
 #import "UIColor+Extensions.h"
 
-@interface URLAddViewController ()<UITextFieldDelegate>
-@property (nonatomic) IBOutlet LeftPaddingTextfield *desc1;
-@property (nonatomic) IBOutlet LeftPaddingTextfield *url1;
-@property (nonatomic) IBOutlet LeftPaddingTextfield *desc2;
-@property (nonatomic) IBOutlet LeftPaddingTextfield *url2;
+@interface  URLDataCell : UITableViewCell
+@property (nonatomic) IBOutlet LeftPaddingTextfield *descTextField;
+@property (nonatomic) IBOutlet LeftPaddingTextfield *urlTextField;
+@end
 
+@implementation URLDataCell
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self addTextViewAccessoryView:_descTextField];
+    [self addTextViewAccessoryView:_urlTextField];
+}
+- (void)dismissCurKeyboard {
+    if (_descTextField.isFirstResponder)
+        [_descTextField resignFirstResponder];
+    else if (_urlTextField.isFirstResponder)
+        [_urlTextField resignFirstResponder];
+    
+}
+- (void)addTextViewAccessoryView:(UITextField *)textfield {
+    UIToolbar *keybardBar = [[UIToolbar alloc] init];
+    [keybardBar sizeToFit];
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *dimiss = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissCurKeyboard)];
+    
+    keybardBar.items = @[space, dimiss];
+    
+    textfield.inputAccessoryView = keybardBar;
+    
+}
+@end
+
+
+@interface URLAddViewController ()<UITextFieldDelegate, UITableViewDelegate,UITableViewDataSource>
+@property (nonatomic) IBOutlet UITableView *urlList;
+@property (nonatomic) NSMutableArray *urldata;
 
 @end
+
+
 
 @implementation URLAddViewController
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    self.url1.delegate = self;
-    self.url2.delegate = self;
-    self.desc1.delegate = self;
-    self.desc2.delegate = self;
+    self.urldata = [NSMutableArray array];
     
 }
+
 - (void)loadURLs:(NSArray *)urls {
     
-    NSDictionary *d1 = [urls firstObject];
-    if(d1) {
-        self.url1.text = d1[@"url"]? d1[@"url"] :@"";
-        self.desc1.text = d1[@"text"]? d1[@"text"]: @"";
+    [self.urldata setArray:urls];
+    if (!urls || [urls count] < 2) {
+        for (int i = (int)urls.count; i < 2; i++) {
+            [self.urldata addObject:[NSMutableDictionary dictionary]];
+        }
+        
     }
     
-    if (urls.count > 1) {
-        NSDictionary *d2 = [urls objectAtIndex:1];
-        if (d2) {
-            self.url2.text = d2[@"url"]? d2[@"url"] :@"";
-            self.desc2.text = d2[@"text"]? d2[@"text"]: @"";
-        }
-    }
-    [self.desc1 becomeFirstResponder];
+    [self.urlList reloadData];
 }
 - (IBAction)submitURLs:(id)sender {
     __block NSArray *urls = [self getURLArray];
@@ -92,56 +115,86 @@
     return nil;
 }
 - (NSArray *)getURLArray {
-    NSString *u1 = self.url1.text;
-    
-    NSString *u2 = self.url2.text;
-    NSString *d1 = self.desc1.text;
-    NSString *d2 = self.desc2.text;
+
     NSMutableArray *ar = [NSMutableArray array];
-    if (u1 || u2) {
-        NSDictionary *de1 = [self getURLParam:u1 desc:d1];
+    for (NSDictionary *data in self.urldata) {
+        NSDictionary *de1 = [self getURLParam:data[@"url"] desc:data[@"text"]];
         if (de1)
             [ar addObject:de1];
-        NSDictionary *de2 = [self getURLParam:u2 desc:d2];
-        if (de2)
-            [ar addObject:de2];
-        
-        return ar;
     }
+    if (ar.count)
+        return ar;
     return nil;
 }
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
-    if ([textField isEqual:self.desc2] || [textField isEqual:self.url2]) {
-        [self processKeyboardShown];
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+
+    if (textField.superview && textField.tag >= 100) {
+        NSInteger index = textField.tag%10;
+        URLDataCell *c =  (URLDataCell *)[self.urlList cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index  inSection:0]];
+        if (c) {
+            [self.urlList setContentOffset:c.frame.origin];
+        }
     }
-}
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    
-    if (self.desc1.isFirstResponder) {
-        [self.url1 becomeFirstResponder];
-    } else if (self.url1.isFirstResponder) {
-        [self.desc2 becomeFirstResponder];
-        [self processKeyboardShown];
-    } else if (self.desc2.isFirstResponder) {
-        [self.url2 becomeFirstResponder];
-    } else {
-        [self.url2 resignFirstResponder];
-    }
-    
     return YES;
-    
 }
 - (void)keyboardWasShown:(NSNotification*)aNotification {
-    [self processKeyboardShown];
+    
 }
-- (void)processKeyboardShown {
-    if (self.url2.isFirstResponder || self.desc2.isFirstResponder) {
-        CGFloat y = self.desc2.frame.origin.y-40;
-        self.baseView.transform = CGAffineTransformMakeTranslation(0, -y);
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (textField.superview && textField.tag >= 100) {
+        NSInteger index = textField.tag%10;
+        BOOL isd = textField.tag >= 110;
+        
+        NSString *result = [textField.text stringByReplacingCharactersInRange:range withString:string];
+        NSMutableDictionary *changed = [NSMutableDictionary dictionaryWithDictionary:[self.urldata objectAtIndex:index]];
+        if (isd) {
+            [changed setObject:result forKey:@"text"];
+        } else {
+            [changed setObject:result forKey:@"url"];
+        }
+        [self.urldata removeObjectAtIndex:index];
+        [self.urldata insertObject:changed atIndex:index];
+        
+        //[self.urlList reloadData];
     }
+    return YES;
 }
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    self.baseView.transform = CGAffineTransformIdentity;
+    
+    self.urlList.contentOffset = CGPointZero;
 }
 
+#pragma mark -
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 226;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.urldata.count;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    URLDataCell *c = (URLDataCell *) [tableView dequeueReusableCellWithIdentifier:@"URLDataCell"];
+    NSDictionary *d = [self.urldata objectAtIndex:indexPath.row];
+    if ([d objectForKey:@"url"]) {
+        NSObject *u = [d objectForKey:@"url"];
+        if ([u isKindOfClass:[NSString class]]) {
+            c.urlTextField.text = (NSString *)u;
+        }
+    } else {
+        c.urlTextField.text = @"";
+    }
+    if ([d objectForKey:@"text"]) {
+        NSObject *u = [d objectForKey:@"text"];
+        if ([u isKindOfClass:[NSString class]]) {
+            c.descTextField.text = (NSString *)u;
+        }
+    } else {
+        c.descTextField.text = @"";
+    }
+    c.descTextField.delegate = self;
+    c.urlTextField.tag = indexPath.row+100;
+    c.urlTextField.delegate = self;
+    c.descTextField.tag = indexPath.row+110;
+    return c;
+}
 @end

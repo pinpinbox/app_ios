@@ -2745,13 +2745,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         if (self.isOwned) {
             NSLog(@"Owned this album");
-            cell.giftViewBgV.hidden = NO;
+//            cell.giftViewBgV.hidden = NO;
             cell.checkCollectionLayout.hidden = YES;
             [self checkSlotDataInDatabaseOrNot];
-            [self getPhotoUseFor: cell.giftViewBgV indexPathRow: page];
+//            [self getPhotoUseFor: cell.giftViewBgV indexPathRow: page];
+            [self getPhotoUseFor: cell.giftViewBgV
+                            cell: cell
+                    indexPathRow: page];
         } else {
             NSLog(@"Does not own this album");
-            cell.giftViewBgV.hidden = YES;
+//            cell.giftViewBgV.hidden = YES;
             cell.checkCollectionLayout.hidden = NO;
             [self createViewForCollectionCheck: page];
         }
@@ -3033,6 +3036,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (void)getPhotoUseFor:(MyLinearLayout *)bgV
+                  cell:(ImageCollectionViewCell *)cell
           indexPathRow:(NSInteger)indexPathRow {
     NSLog(@"");
     NSLog(@"getPhotoUseFor bgV indexPathRow");
@@ -3063,7 +3067,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"ContentCheckingViewController");
-                    NSLog(@"slotPhotoUseFor");
+                    NSLog(@"getPhotoUseFor");
                     
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"getPhotoUseFor"
@@ -3086,6 +3090,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                      dicData: self.slotDicData
                                   returnType: @"SYSTEM_OK"];
                         
+                        cell.giftViewBgV.hidden = NO;
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -3111,10 +3116,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                        userInfo: nil
                                                         repeats: NO];
                         
+                        cell.giftViewBgV.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_EXPIRED"]) {
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                        cell.giftViewBgV.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
+                        cell.giftViewBgV.hidden = YES;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
                         if (![wTools objectExists: dic[@"data"]]) {
                             return;
@@ -3123,7 +3131,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"];
-                        
+                        cell.giftViewBgV.hidden = NO;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
                         [self checkSlotDataInDatabaseOrNot];
                         if (![wTools objectExists: dic[@"data"]]) {
@@ -3133,6 +3141,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_GAINED"];
+                        cell.giftViewBgV.hidden = NO;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_SLOTTED"]) {
                         if (![wTools objectExists: dic[@"data"]]) {
                             return;
@@ -3141,6 +3150,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_SLOTTED"];
+                        cell.giftViewBgV.hidden = NO;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_NOT_YET_STARTED"]) {
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
@@ -3151,6 +3161,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                               duration: 2.0
                                               position: CSToastPositionBottom
                                                  style: style];
+                        
+                        cell.giftViewBgV.hidden = NO;
                     }
                 }
             }
@@ -3577,24 +3589,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"cell: %@", cell);
         NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
         
-        if ([wTools objectExists: data[@"image_url"]]) {
-            NSString *i = data[@"image_url"];
-            //[cell.imageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"] options:0];
-            [cell.imageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                if (error) {
-                    cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
-                } else
-                    cell.imageView.image = image;
-                
-            }];
-        } else {
-            if ([wTools objectExists: data[@"image"]]) {
-                cell.imageView.image = [UIImage imageNamed: data[@"image"]];
-            } else {
-
+        if (![wTools objectExists: data[@"image_url"]]) {
+            if (![wTools objectExists: data[@"image"]]) {
                 cell.imageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
-
+            } else {
+                cell.imageView.image = [UIImage imageNamed: data[@"image"]];
             }
+        } else {
+            [cell.imageView sd_setImageWithURL: [NSURL URLWithString: data[@"image_url"]]];
         }
         albumPoint = [self.bookdata[@"album"][@"point"] intValue];
         userPoint = [[userPrefs objectForKey: @"pPoint"] integerValue];
@@ -3671,10 +3673,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             cell.alphaBgV.hidden = NO;
             
             if (self.isOwned) {
-                cell.giftViewBgV.hidden = NO;
+//                cell.giftViewBgV.hidden = NO;
                 cell.checkCollectionLayout.hidden = YES;
             } else {
-                cell.giftViewBgV.hidden = YES;
+//                cell.giftViewBgV.hidden = YES;
                 cell.checkCollectionLayout.hidden = NO;
             }
         }
@@ -3810,26 +3812,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     } else {
         NSLog(@"collectionView.tag == 200");
         ThumbnailImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"ThumbnailImageCell" forIndexPath: indexPath];
-        
-        if ([wTools objectExists: data[@"image_url_thumbnail"]]) {
-
-            NSString *i = data[@"image_url_thumbnail"];
-            //[cell.thumbnailImageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]]; //.image = [UIImage imageNamed: data[@"image_url_thumbnail"]];
-            [cell.thumbnailImageView sd_setImageWithURL:[NSURL URLWithString:i] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                if (error) {
-                    cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
-                } else
-                    cell.thumbnailImageView.image = image;
-                
-            }];
-        } else {
-            if ([wTools objectExists: data[@"imageThumbnail"]]) {
-                cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
+        if (![wTools objectExists: data[@"image_url_thumbnail"]]) {
+            if (![wTools objectExists: data[@"imageThumbnail"]]) {
+                cell.thumbnailImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
             } else {
-
-                cell.thumbnailImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
+                cell.thumbnailImageView.image = [UIImage imageNamed: data[@"imageThumbnail"]];
             }
+        } else {
+            [cell.thumbnailImageView sd_setImageWithURL: data[@"image_url_thumbnail"]];
         }
+        
         NSString *audioTargetStr = self.photoArray[indexPath.row][@"audio_target"];
         // Check audioTarget
         if (audioTargetStr == nil) {
@@ -3977,9 +3969,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-
-    //NSLog(@" [UIApplication sharedApplication].keyWindow.tag %d",[UIApplication sharedApplication].keyWindow.tag);
-
     if ([UIApplication sharedApplication].keyWindow.tag != 10001 ) return;
     
     NSLog(@"scrollViewDidEndDecelerating");
@@ -4851,7 +4840,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             } else if ([protocolName isEqualToString: @"slotPhotoUseFor"]) {
                 [weakSelf checkSlotAndExchangeInfo: [self getCurrentPage]];
             } else if ([protocolName isEqualToString: @"getPhotoUseFor"]) {
-                [weakSelf getPhotoUseFor: bgV indexPathRow: [self getCurrentPage]];
+//                [weakSelf getPhotoUseFor: bgV indexPathRow: [self getCurrentPage]];
+                [weakSelf checkSlotAndExchangeInfo: [self getCurrentPage]];
             } else if ([protocolName isEqualToString: @"insertBookmark"]) {
                 [weakSelf insertBookmark: btn];
             }

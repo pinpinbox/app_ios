@@ -101,7 +101,6 @@ DSPhotoEditorViewControllerDelegate>
 
 #endif
 {
-    
     NSMutableArray *ImageDataArr;
     NSInteger selectItem;
     
@@ -142,8 +141,6 @@ DSPhotoEditorViewControllerDelegate>
     
     // For Observing NSOperationQueue
     NSString *responseImageStr;
-    
-    
     
     ReorderViewController *reorderVC;
     PreviewPageSetupViewController *previewPageVC;
@@ -241,7 +238,6 @@ DSPhotoEditorViewControllerDelegate>
 
 // set up all switch buttons at right (record, location, url...)
 - (void)setupSwitchButtonViews {
-    
     self.recordPausePlayBtn = [[BFPaperButton alloc] initWithRaised:NO];
     self.recordPausePlayBtn.frame = CGRectMake(0, 0, 35, 35);
     [self.recordPausePlayBtn setImage:[UIImage imageNamed:@"ic200_micro_white"] forState:UIControlStateNormal];
@@ -288,8 +284,7 @@ DSPhotoEditorViewControllerDelegate>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
+    // Do any additional setup after loading the view.    
     isPreviewPageModified = NO;
     
     [wTools sendScreenTrackingWithScreenName:@"編輯器"];
@@ -527,13 +522,11 @@ DSPhotoEditorViewControllerDelegate>
 }
 
 - (IBAction)settingBtnPress:(id)sender {
-    
     if ([wTools objectExists: self.userIdentity]) {
         if (![self.userIdentity isEqualToString: @"admin"]) {
             [self showErrorToastWithMessage:@"權限不足" duration:1.0];
             return;
         }
-        
     }
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
@@ -588,12 +581,7 @@ DSPhotoEditorViewControllerDelegate>
     
     [self.customSettingActionSheet addSelectItemForPreviewPage: previewPageSelected hasTextView: YES firstLabelText: @"開放前" secondLabelText: @"頁" previewPageNum: previewPageNum allPageNum: ImageDataArr.count tagInt: 998 identifierStr: @"setupPages"];
     [self.customSettingActionSheet addSelectItemForPreviewPage: allPageSelected hasTextView: NO firstLabelText: @"全部" secondLabelText: @"" previewPageNum: 0 allPageNum: ImageDataArr.count tagInt: 997 identifierStr: @"setupAllPages"];
-    
-    //    [self.customSettingActionSheet addSelectItemForPreviewPage: previewPageSelected hasTextView: YES firstLabelText: @"開放前" secondLabelText: @"頁" previewPageNum: previewPageNum tagInt: 998 identifierStr: @"setupPages"];
-    //    [self.customSettingActionSheet addSelectItemForPreviewPage: allPageSelected hasTextView: NO firstLabelText: @"全部" secondLabelText: @"" previewPageNum: 0 tagInt: 997 identifierStr: @"setupAllPages"];
     [self.customSettingActionSheet addSafeArea];
-    
-    //    [self.customSettingActionSheet addSelectItem: @"" title: @"設定預覽頁" btnStr: @"保存" tagInt: 2 identifierStr: @"choosePreview"];
     
     __weak typeof(self) weakSelf = self;
     self.customSettingActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
@@ -608,7 +596,6 @@ DSPhotoEditorViewControllerDelegate>
                 [stSelf showReorderVC];
             } else if (stSelf->ImageDataArr.count == 0) {
                 [weakSelf showErrorToastWithMessage:@"作品數量多於1項才可編排順序" duration:2.0];
-                
             }
         } else if ([identifierStr isEqualToString: @"setupMusic"]) {
             SetupMusicViewController *setupMusicVC = [[UIStoryboard storyboardWithName: @"SetupMusicVC" bundle: nil] instantiateViewControllerWithIdentifier: @"SetupMusicViewController"];
@@ -842,11 +829,10 @@ DSPhotoEditorViewControllerDelegate>
                     NSLog(@"Time Out Message Return");
                     NSLog(@"AlbumCreationViewController");
                     NSLog(@"callAlbumSettingsForPreviewPage");
-                    
                     [stSelf showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"") protocolName: @"albumSettingsForPreviewPage" textStr: @"" data: nil image: nil jsonStr: jsonStr audioMode: @"" option: @""];
                 } else {
                     NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error: nil];
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error: nil];                                        
                     
                     if ([dic[@"result"] isEqualToString: @"SYSTEM_OK"]) {
                         stSelf->isPreviewPageModified = YES;
@@ -3331,7 +3317,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)showPhotoAndVideoActionSheet {
-    
     NSLog(@"showPhotoAndVideoActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
@@ -5135,9 +5120,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     self.urlAddingActionSheet.modalPresentationCapturesStatusBarAppearance = YES;
     [self presentViewController:self.urlAddingActionSheet animated:YES completion:^{
         
-        if(urls && urls.count > 0) {
-            [wself.urlAddingActionSheet loadURLs:urls];
-        }
+        //if(urls && urls.count > 0) {
+        [wself.urlAddingActionSheet loadURLs:urls];
+        //}
     }];
     
 }
