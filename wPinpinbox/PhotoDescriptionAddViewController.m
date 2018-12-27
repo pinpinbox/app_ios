@@ -95,7 +95,7 @@
         dh += (self.itemDesc.frame.origin.y+self.baseView.frame.origin.y-8);
     }
     
-    self.itemDesc.scrollEnabled = YES;//(self > dh);
+    self.itemDesc.scrollEnabled = YES;
     self.textViewHeight.constant = (th < dh)? th: dh;
 }
 
@@ -115,17 +115,22 @@
     if (textView.text.length) {
         
         CGFloat dh = [self fullTextViewHeight];
+        //  calculate availble size of textview
         CGSize d = [textView sizeThatFits:CGSizeMake(self.baseView.frame.size.width - 32, dh)];
         
-        
+        // if keybaord is shown
         if (_keyboardOrigin > 0 ) {
+            // check if textview is covered by keyboard
             BOOL crossed = (self.baseView.frame.origin.y+self.itemDesc.frame.origin.y+d.height) > _keyboardOrigin;
+            //  max height minus keybard
             if (crossed) {
                 dh -= _keyboardOrigin;
                 dh += (self.itemDesc.frame.origin.y+self.baseView.frame.origin.y-8);
             }
         }
+        //  enable scrolling
         textView.scrollEnabled = (d.height > dh);
+        //  set textview height
         self.textViewHeight.constant = (d.height < dh)? d.height: dh;
     } else {
         self.textViewHeight.constant = 40;
@@ -133,6 +138,7 @@
     }
 }
 - (CGFloat)fullTextViewHeight {
+    //  max valid height of ItemDesc
     return self.baseView.frame.size.height-8-self.itemDesc.frame.origin.y;
 }
 @end
