@@ -46,7 +46,7 @@
 @interface URLAddViewController ()<UITextFieldDelegate, UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic) IBOutlet UITableView *urlList;
 @property (nonatomic) NSMutableArray *urldata;
-
+@property (nonatomic) BOOL hasPreviousData;
 @end
 
 
@@ -56,13 +56,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.hasPreviousData = NO;
     self.urldata = [NSMutableArray array];
     
 }
 
 - (void)loadURLs:(NSArray *)urls {
     
-    [self.urldata setArray:urls];
+    if (urls && urls.count) {
+        [self.urldata setArray:urls];
+        self.hasPreviousData = YES;
+    }
     if (!urls || [urls count] < 2) {
         for (int i = (int)urls.count; i < 2; i++) {
             [self.urldata addObject:[NSMutableDictionary dictionary]];
@@ -74,15 +78,23 @@
 }
 - (IBAction)submitURLs:(id)sender {
     __block NSArray *urls = [self getURLArray];
-    if (self.urlDelegate && urls && urls.count > 0) {
+    if (self.urlDelegate && urls && urls.count >= 0) {
         __block typeof(self) wself = self;
         [self removeKeyboardNotification];
         [self dismissViewControllerAnimated:YES completion:^{
            [wself.urlDelegate didSetURLs:urls];
         }];
         
-    } else if (!urls || urls.count < 1){
-        [self showErrorToastWithMessage:@"請至少填上一組連結"];
+    } else if (!urls){
+        if (self.hasPreviousData ) {
+            __block typeof(self) wself = self;
+            [self removeKeyboardNotification];
+            [self dismissViewControllerAnimated:YES completion:^{
+                [wself.urlDelegate didSetURLs:nil];
+            }];
+        } else {
+            [self showErrorToastWithMessage:@"請至少填上一組連結"];
+        }
     } else {
         [self cancelAndDismiss];
     }
