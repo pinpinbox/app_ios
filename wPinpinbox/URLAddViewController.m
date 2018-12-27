@@ -27,9 +27,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.url1.delegate = self;
+    [self addTextViewAccessoryView:_url1];
     self.url2.delegate = self;
+    [self addTextViewAccessoryView:_url2];
     self.desc1.delegate = self;
+    [self addTextViewAccessoryView:_desc1];
     self.desc2.delegate = self;
+    [self addTextViewAccessoryView:_desc2];
     
 }
 - (void)loadURLs:(NSArray *)urls {
@@ -114,6 +118,27 @@
     if ([textField isEqual:self.desc2] || [textField isEqual:self.url2]) {
         [self processKeyboardShown];
     }
+}
+- (void)dismissCurKeyboard {
+    if (_url1.isFirstResponder)
+        [_url1 resignFirstResponder];
+    else if (_url2.isFirstResponder)
+        [_url2 resignFirstResponder];
+    else if (_desc1.isFirstResponder)
+        [_desc1 resignFirstResponder];
+    else if (_desc2.isFirstResponder)
+        [_desc2 resignFirstResponder];
+}
+- (void)addTextViewAccessoryView:(UITextField *)textfield {
+    UIToolbar *keybardBar = [[UIToolbar alloc] init];
+    [keybardBar sizeToFit];
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *dimiss = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissCurKeyboard)];
+    
+    keybardBar.items = @[space, dimiss];
+    
+    textfield.inputAccessoryView = keybardBar;
+    
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     
