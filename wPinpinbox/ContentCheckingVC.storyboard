@@ -354,7 +354,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
-                                                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Veg-ON-Ql9">
+                                                <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Veg-ON-Ql9">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
@@ -377,7 +377,7 @@
                                                     </constraints>
                                                     <state key="normal" title="Button" image="GiftImages1"/>
                                                 </button>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T3j-vs-oDi" customClass="MyLinearLayout">
+                                                <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T3j-vs-oDi" customClass="MyLinearLayout">
                                                     <rect key="frame" x="87" y="294" width="240" height="128"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="240" id="GOk-0g-dyR"/>

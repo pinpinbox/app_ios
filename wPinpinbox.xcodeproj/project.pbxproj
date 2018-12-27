@@ -1511,8 +1511,8 @@
 				CB071CF1213E4754003D01D8 /* DMVC.storyboard */,
 				54B8CF3A2119E69A006DFE06 /* AlbumInfoVC */,
 				CBAD7DE421AE50090084682B /* 3rdPartyVideoPlayerViewController.h */,
-				CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */,
 				CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */,
+				CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */,
 			);
 			name = ContentCheckingVC;
 			sourceTree = "<group>";
