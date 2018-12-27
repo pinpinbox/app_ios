@@ -67,6 +67,10 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.taskProgress = 0;
+    self.layer.shadowOpacity = 0.2f;
+    self.layer.shadowRadius = 3;
+    self.layer.shadowOffset = CGSizeMake(2,3);
+    self.layer.shadowColor = [UIColor grayColor].CGColor;
 }
 - (void)setTaskProgress:(CGFloat)taskProgress {
     _taskProgress = taskProgress;
@@ -198,6 +202,8 @@
     self.postRequestList = [NSMutableArray array];
     self.failCount = 0;
     self.successCount = 0;
+    
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     
     UIView *view = [self.view viewWithTag:1010];
     view.layer.borderColor = [UIColor colorWithRed:0.75 green:0.75 blue:0.75 alpha:0.5].CGColor;
