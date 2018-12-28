@@ -316,8 +316,8 @@ DSPhotoEditorViewControllerDelegate>
     //    adobeEidt.layer.cornerRadius = adobeEidt.bounds.size.width / 2;
     //    adobeEidt.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     
-    _addTextBtn.layer.cornerRadius = _addTextBtn.bounds.size.width / 2;
-    _addTextBtn.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
+    //_addTextBtn.layer.cornerRadius = _addTextBtn.bounds.size.width / 2;
+    //_addTextBtn.imageEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
     
     
     self.deleteImageBtn.layer.cornerRadius = self.deleteImageBtn.bounds.size.width / 2;

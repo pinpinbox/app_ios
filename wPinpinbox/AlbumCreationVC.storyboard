@@ -201,7 +201,7 @@
                                     <constraint firstItem="XZr-ef-acy" firstAttribute="top" secondItem="twK-0x-5FJ" secondAttribute="top" constant="8" id="nAh-ES-8Ze"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="orm-Co-MdZ">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="orm-Co-MdZ">
                                 <rect key="frame" x="16" y="545" width="343" height="30"/>
                                 <color key="backgroundColor" red="0.61960784313725492" green="0.61960784313725492" blue="0.61960784313725492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -384,6 +384,7 @@
                     </view>
                     <connections>
                         <outlet property="ShowView" destination="XZr-ef-acy" id="PGs-Yg-ygm"/>
+                        <outlet property="addTextBtn" destination="orm-Co-MdZ" id="9ZQ-f7-UEV"/>
                         <outlet property="audioSwitchView" destination="xZs-a2-tBO" id="QdQ-Oe-XkY"/>
                         <outlet property="conbtn" destination="0ju-l5-i4K" id="sOx-Vr-USM"/>
                         <outlet property="dataCollectionView" destination="2IG-uS-S58" id="2m4-jr-ckk"/>
