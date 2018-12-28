@@ -440,8 +440,14 @@
     }
 }
 - (IBAction)postShareItem:(id)sender {
+    
     [self.shareItems filterUsingPredicate:[NSPredicate predicateWithFormat:@"vidDuration < 31"]];
-    //[self.shareItems filterUsingPredicate:[NSPredicate predicateWithFormat:@"objType ==  'public.text'"]];
+    if (self.shareItems.count < 1) return;
+    
+    UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
+    if (post)
+        post.enabled = NO;
+    
     self.postProgress.progress = 0;
     if (self.extensionContext) {
         
