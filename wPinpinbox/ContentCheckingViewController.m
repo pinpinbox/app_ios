@@ -730,8 +730,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.mScrubber.thumbTintColor = [UIColor secondMain];
     self.mScrubber.tintColor = [UIColor secondMain];
-    self.mScrubber.maximumTrackTintColor = [UIColor clearColor];
-
+    self.mScrubber.maximumTrackTintColor = [UIColor firstGrey];
+    
+    NSLog(@"self.mScrubber.frame: %@", NSStringFromCGRect(self.mScrubber.frame));
+    
+    self.mScrubber.transform = CGAffineTransformMakeScale(0.9, 0.9);
+    NSLog(@"self.mScrubber.frame: %@", NSStringFromCGRect(self.mScrubber.frame));
 }
 
 - (void)pageCalculation:(NSInteger)page {
@@ -2685,10 +2689,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     useFor = self.photoArray[page][@"usefor"];
     NSLog(@"useFor: %@", useFor);
     NSLog(@"cell.giftViewBgV: %@", cell.giftViewBgV);
-    
-    cell.giftImageBtn.hidden = YES;
-    //    cell.alphaBgV.hidden = YES;
-    cell.giftViewBgV.hidden = YES;
+    cell.alphaBgV.hidden = YES;
+        
+//    cell.giftImageBtn.hidden = YES;
+//    cell.giftViewBgV.hidden = YES;
+//    cell.giftViewBgV.alpha = 0;
     cell.checkCollectionLayout.hidden = YES;
     
     if (![wTools objectExists: useFor]) {
@@ -2960,12 +2965,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
                         cell.giftImageBtn.hidden = YES;
+                        cell.giftViewBgV.alpha = 0;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
                         
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
                         cell.giftImageBtn.hidden = YES;
+                        cell.giftViewBgV.alpha = 0;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
                         [self saveSlotData: photoId];
                         [self checkSlotDataInDatabaseOrNot];
@@ -3090,7 +3097,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                      dicData: self.slotDicData
                                   returnType: @"SYSTEM_OK"];
                         
-                        cell.giftViewBgV.hidden = NO;
+                        cell.giftViewBgV.alpha = 1;
+//                        [self animateGiftViewBgV: cell];
                     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
                         NSLog(@"SYSTEM_ERROR");
                         NSLog(@"失敗：%@",dic[@"message"]);
@@ -3099,6 +3107,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         } else {
                             [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
                         }
+                        
+                        cell.giftViewBgV.alpha = 0;
                     } else if ([dic[@"result"] isEqualToString: @"TOKEN_ERROR"]) {
                         NSLog(@"TOKEN_ERROR");
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
@@ -3116,13 +3126,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                        userInfo: nil
                                                         repeats: NO];
                         
-                        cell.giftViewBgV.hidden = YES;
+//                        cell.giftViewBgV.hidden = YES;
+                        cell.giftViewBgV.alpha = 0;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_EXPIRED"]) {
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
-                        cell.giftViewBgV.hidden = YES;
+//                        cell.giftViewBgV.hidden = YES;
+                        cell.giftViewBgV.alpha = 0;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_HAS_SENT_FINISHED"]) {
                         [self createViewForStatus: @"兌換已結束" indexPathRow: indexPathRow];
-                        cell.giftViewBgV.hidden = YES;
+//                        cell.giftViewBgV.hidden = YES;
+                        cell.giftViewBgV.alpha = 0;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"]) {
                         if (![wTools objectExists: dic[@"data"]]) {
                             return;
@@ -3131,7 +3144,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_EXCHANGED"];
-                        cell.giftViewBgV.hidden = NO;
+//                        cell.giftViewBgV.hidden = NO;
+//                        [self animateGiftViewBgV: cell];
+                        
+                        cell.giftViewBgV.alpha = 1;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_GAINED"]) {
                         [self checkSlotDataInDatabaseOrNot];
                         if (![wTools objectExists: dic[@"data"]]) {
@@ -3141,7 +3157,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_GAINED"];
-                        cell.giftViewBgV.hidden = NO;
+//                        cell.giftViewBgV.hidden = NO;
+//                        [self animateGiftViewBgV: cell];
+                        
+                        cell.giftViewBgV.alpha = 1;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_USER_HAS_SLOTTED"]) {
                         if (![wTools objectExists: dic[@"data"]]) {
                             return;
@@ -3150,7 +3169,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self createGiftView: bgV
                                      dicData: self.slotDicData
                                   returnType: @"PHOTOUSEFOR_USER_HAS_SLOTTED"];
-                        cell.giftViewBgV.hidden = NO;
+//                        cell.giftViewBgV.hidden = NO;
+//                        [self animateGiftViewBgV: cell];
+                        cell.giftViewBgV.alpha = 1;
                     } else if ([dic[@"result"] isEqualToString: @"PHOTOUSEFOR_NOT_YET_STARTED"]) {
                         CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
                         style.messageColor = [UIColor whiteColor];
@@ -3162,12 +3183,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                               position: CSToastPositionBottom
                                                  style: style];
                         
-                        cell.giftViewBgV.hidden = NO;
+//                        cell.giftViewBgV.hidden = NO;
+//                        [self animateGiftViewBgV: cell];
+                        cell.giftViewBgV.alpha = 1;
                     }
                 }
             }
         });
     });
+}
+
+- (void)animateGiftViewBgV:(ImageCollectionViewCell *)cell {
+    [UIView animateWithDuration: 0.3 animations:^{
+        cell.giftViewBgV.alpha = 0;
+        cell.giftViewBgV.alpha = 1;
+    }];
 }
 
 - (void)createGiftView:(MyLinearLayout *)giftViewBgV
@@ -3180,10 +3210,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: [self getCurrentPage] inSection: 0];
     ImageCollectionViewCell *cell = (ImageCollectionViewCell *)[self.imageScrollCV cellForItemAtIndexPath: indexPath];
     
-    for (UIView *view in giftViewBgV.subviews) {
+    for (UIView *view in cell.giftViewBgV.subviews) {
         [view removeFromSuperview];
     }
-    cell.giftViewBgV.hidden = NO;
+//    cell.giftViewBgV.hidden = NO;
     
     // GiftView
     MyFrameLayout *giftView = [MyFrameLayout new];
@@ -3238,7 +3268,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (![dicData[@"photousefor"][@"image"] isEqual: [NSNull null]]) {
         __block UIImageView *imageView = [[UIImageView alloc] init];
         __block typeof(self) wself = self;
-        [imageView sd_setImageWithURL: [NSURL URLWithString: dicData[@"photousefor"][@"image"]] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        [imageView sd_setImageWithURL: [NSURL URLWithString: dicData[@"photousefor"][@"image"]] placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             wself->isGiftImageLoaded = YES;
             
             imageView = [wself calculateImageViewSize: cell.giftViewBgV imgV: imageView];
@@ -3359,6 +3389,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"giftViewBgV.hidden: %d", cell.giftViewBgV.hidden);
     NSLog(@"giftViewBgV: %@", cell.giftViewBgV);
     NSLog(@"giftViewBgV.subviews: %@", cell.giftViewBgV.subviews);
+    
+//    [self animateGiftViewBgV: cell];
+    cell.giftViewBgV.alpha = 1;
 }
 
 - (UIImageView *)calculateImageViewSize:(UIView *)bV
@@ -3613,12 +3646,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         cell.giftViewHeightConstraint.constant = giftViewHeight - 10;
         
         // Hide view for default
-        cell.finalPageView.hidden = YES;
         cell.videoView.hidden = YES;
-        cell.alphaBgV.hidden = YES;
         cell.videoBtn.hidden = YES;
+        cell.finalPageView.hidden = YES;
+        cell.alphaBgV.hidden = YES;
         cell.giftImageBtn.hidden = YES;
-        cell.giftViewBgV.hidden = YES;
+        cell.giftViewBgV.alpha = 0;
         cell.statusView.hidden = YES;
         cell.checkCollectionLayout.hidden = YES;
         
@@ -3626,11 +3659,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"refer: %@", refer);
         NSLog(@"useFor: %@", useFor);
         
-
         UIView *w = [cell.videoView viewWithTag:20002];
         if (w)
             [w removeFromSuperview];
-        
         
         if ([useFor isEqualToString: @"video"]) {
             NSLog(@"useFor is equal to video");
@@ -3649,11 +3680,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             } else if ([refer isEqualToString: @"embed"]) {
                 NSLog(@"refer is equal to embed");
                 cell.alphaBgV.hidden = NO;
-                
                 cell.videoBtn.hidden = NO;
                 cell.videoView.hidden = YES;
                 for (UIView *view in cell.videoView.subviews) {
-
                     view.hidden = YES;
                 }
             }
