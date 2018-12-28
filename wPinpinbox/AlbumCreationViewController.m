@@ -548,8 +548,8 @@ DSPhotoEditorViewControllerDelegate>
     [self.customSettingActionSheet addSelectItem: @"" title: @"排序作品" btnStr: @"" tagInt: 1 identifierStr: @"reorder"];
     [self.customSettingActionSheet addSelectItem: @"" title: @"設定音樂" btnStr: @"" tagInt: 2 identifierStr: @"setupMusic"];
     [self.customSettingActionSheet addSelectItemForPreviewPage: @"" title: @"設定預覽頁" horzLine: YES btnStr: @"保存" tagInt: 999 identifierStr: @"setupPreview"];
-    NSLog(@"ImageDataArr.count: %ld", ImageDataArr.count);
-    NSLog(@"previewPageNum: %ld", previewPageNum);
+    NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
+    NSLog(@"previewPageNum: %ld", (long)previewPageNum);
     
     BOOL previewPageSelected = NO;
     BOOL allPageSelected = NO;
@@ -1816,7 +1816,7 @@ shouldChangeTextInRange:(NSRange)range
                         stSelf->ImageDataArr = [NSMutableArray arrayWithArray:dic[@"data"][@"photo"]];
                         NSLog(@"ImageDataArr.count: %lu", (unsigned long)stSelf->ImageDataArr.count);
                         stSelf->previewPageNum = [dic[@"data"][@"album"][@"preview_page_num"] intValue];
-                        NSLog(@"previewPageNum: %ld", stSelf->previewPageNum);
+                        NSLog(@"previewPageNum: %ld", (long)stSelf->previewPageNum);
                         
                         if (stSelf->ImageDataArr.count == 0) {
                             [stSelf hideAllFunctions];
