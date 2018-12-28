@@ -2736,8 +2736,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 NSManagedObject *slotData = [self.slotArray objectAtIndex: i];
                 NSLog(@"photoId: %ld", (long)[[slotData valueForKey: @"photoId"] integerValue]);
                 
-                NSLog(@"slotData photoId: %ld", [[slotData valueForKey: @"photoId"] integerValue]);
-                NSLog(@"self.photoArray page photo_id: %ld", [self.photoArray[page][@"photo_id"] integerValue]);
+                NSLog(@"slotData photoId: %d", [[slotData valueForKey: @"photoId"] intValue]);
+                NSLog(@"self.photoArray page photo_id: %d", [self.photoArray[page][@"photo_id"] intValue]);
                 
                 if ([[slotData valueForKey: @"photoId"] integerValue] == [self.photoArray[page][@"photo_id"] integerValue]) {
                     slotted = YES;
