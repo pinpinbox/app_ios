@@ -724,12 +724,42 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     self.soundBtn.hidden = YES;
     self.mScrubber.hidden = YES;
-    [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle"] forState: UIControlStateNormal];
-    [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle-highlighted"] forState: UIControlStateHighlighted];
+//    [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle"] forState: UIControlStateNormal];
+//    [self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle-highlighted"] forState: UIControlStateHighlighted];
+//
+//    self.mScrubber.thumbTintColor = [UIColor secondMain];
+//    self.mScrubber.tintColor = [UIColor secondMain];
+//    self.mScrubber.maximumTrackTintColor = [UIColor firstGrey];
     
-    self.mScrubber.thumbTintColor = [UIColor secondMain];
-    self.mScrubber.tintColor = [UIColor secondMain];
-    self.mScrubber.maximumTrackTintColor = [UIColor firstGrey];
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(16, 16)];
+    UIImage *thumbImage = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
+        [[UIColor firstMain] setFill];
+        UIBezierPath *p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 15, 15)];
+        [p fill];
+        
+    }];
+    
+    
+    
+    [self.mScrubber setThumbImage: thumbImage/*[UIImage imageNamed: @"slider-metal-handle"]*/ forState: UIControlStateNormal];
+    //[self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle-highlighted"] forState: UIControlStateHighlighted];
+    UIGraphicsImageRenderer *renderer2 = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(10, 30)];
+    UIImage *slider0 = [renderer2 imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
+        
+        [[UIColor firstGrey] setFill];
+        UIBezierPath *p0 = [UIBezierPath bezierPathWithRect:CGRectMake(0, 14, 8, 2)];
+        [p0 fill];
+        
+    }];
+    UIImage *slider1 = [renderer2 imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
+        [[UIColor firstMain] setFill];
+        UIBezierPath *p = [UIBezierPath bezierPathWithRect:CGRectMake(0, 14, 8, 2)];
+        [p fill];
+    }];
+    UIImage *slider = [slider0 stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+    UIImage *slider11 = [slider1 stretchableImageWithLeftCapWidth:4 topCapHeight:0];
+    [self.mScrubber setMinimumTrackImage:slider11 forState:UIControlStateNormal];
+    [self.mScrubber setMaximumTrackImage:slider forState:UIControlStateNormal];
     
     NSLog(@"self.mScrubber.frame: %@", NSStringFromCGRect(self.mScrubber.frame));
     
