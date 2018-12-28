@@ -731,10 +731,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //    self.mScrubber.tintColor = [UIColor secondMain];
 //    self.mScrubber.maximumTrackTintColor = [UIColor firstGrey];
     
-    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(16, 16)];
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(18, 18)];
     UIImage *thumbImage = [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
         [[UIColor firstMain] setFill];
-        UIBezierPath *p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 15, 15)];
+        UIBezierPath *p = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(1, 1, 16, 16)];
         [p fill];
         
     }];
@@ -743,17 +743,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [self.mScrubber setThumbImage: thumbImage/*[UIImage imageNamed: @"slider-metal-handle"]*/ forState: UIControlStateNormal];
     //[self.mScrubber setThumbImage: [UIImage imageNamed: @"slider-metal-handle-highlighted"] forState: UIControlStateHighlighted];
-    UIGraphicsImageRenderer *renderer2 = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(10, 30)];
+    UIGraphicsImageRenderer *renderer2 = [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(10, 18)];
     UIImage *slider0 = [renderer2 imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
         
         [[UIColor firstGrey] setFill];
-        UIBezierPath *p0 = [UIBezierPath bezierPathWithRect:CGRectMake(0, 14, 8, 2)];
+        UIBezierPath *p0 = [UIBezierPath bezierPathWithRect:CGRectMake(0, 8, 8, 2)];
         [p0 fill];
         
     }];
     UIImage *slider1 = [renderer2 imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull context) {
         [[UIColor firstMain] setFill];
-        UIBezierPath *p = [UIBezierPath bezierPathWithRect:CGRectMake(0, 14, 8, 2)];
+        UIBezierPath *p = [UIBezierPath bezierPathWithRect:CGRectMake(0, 8, 8, 2)];
         [p fill];
     }];
     UIImage *slider = [slider0 stretchableImageWithLeftCapWidth:4 topCapHeight:0];
@@ -761,10 +761,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.mScrubber setMinimumTrackImage:slider11 forState:UIControlStateNormal];
     [self.mScrubber setMaximumTrackImage:slider forState:UIControlStateNormal];
     
-    NSLog(@"self.mScrubber.frame: %@", NSStringFromCGRect(self.mScrubber.frame));
+    //NSLog(@"self.mScrubber.frame: %@", NSStringFromCGRect(self.mScrubber.frame));
     
-    self.mScrubber.transform = CGAffineTransformMakeScale(0.9, 0.9);
-    NSLog(@"self.mScrubber.frame: %@", NSStringFromCGRect(self.mScrubber.frame));
+    //self.mScrubber.transform = CGAffineTransformMakeScale(0.9, 0.9);
+    //NSLog(@"self.mScrubber.frame: %@", NSStringFromCGRect(self.mScrubber.frame));
 }
 
 - (void)pageCalculation:(NSInteger)page {
