@@ -10,6 +10,7 @@
 #import "MapHelper.h"
 #import "wTools.h"
 
+
 #if(DEBUG)
 #define MAPAPIKEY @"AIzaSyBKCVhRB6zjhZ0d0gcXALT8Ts4s8AfxMBk"
 #else
@@ -46,20 +47,6 @@
 @end
 
 
-@implementation LeftPaddingTextfield
-- (id) initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self ) {
-        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8, 16)];
-        view.backgroundColor = UIColor.clearColor;
-        view.userInteractionEnabled = NO;
-        self.leftView = view;
-        self.leftViewMode = UITextFieldViewModeAlways;
-    }
-    
-    return self;
-}
-@end
 
 #pragma mark - Present VC with ActionSheet-like style -
 @implementation MapPresentationController

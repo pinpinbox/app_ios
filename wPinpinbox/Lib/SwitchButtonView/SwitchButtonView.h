@@ -44,4 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CustomTintBarItem : UITabBarItem
 @end
 
+
+@interface LeftPaddingTextfield : UITextField
+@end
+
 NS_ASSUME_NONNULL_END

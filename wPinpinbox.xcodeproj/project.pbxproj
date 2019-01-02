@@ -396,6 +396,7 @@
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBE2AFA621CB437C0032290C /* notavailable.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE2AFA521CB437C0032290C /* notavailable.png */; };
 		CBEB727821D32DB800B22B1C /* addIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = CBEB727721D32DB700B22B1C /* addIcon.png */; };
+		CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
 		CBF7F42A21D0E18000951608 /* PDFUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8FB77D21991CB700D3C23C /* PDFUploader.m */; };
 		CBF7F42B21D0E19600951608 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
@@ -3469,6 +3470,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */,
 				CBF7F42A21D0E18000951608 /* PDFUploader.m in Sources */,
 				CB9B297F21C7B31200D87505 /* NSURL+Param.m in Sources */,
 				CBE104C121C78ACF00E185D3 /* ShareItem.m in Sources */,

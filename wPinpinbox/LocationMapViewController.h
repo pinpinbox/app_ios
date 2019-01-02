@@ -7,14 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SwitchButtonView.h"
+
 @import MapKit;
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol AddLocationDelegate
 - (void)didSelectLocation:(NSString *)location;
-@end
-
-@interface LeftPaddingTextfield : UITextField
 @end
 
 @interface MapPresentationController : UIPresentationController

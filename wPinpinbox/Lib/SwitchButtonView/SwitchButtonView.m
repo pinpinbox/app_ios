@@ -217,3 +217,19 @@
     [self setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor colorFromHexString:@"#4d4d4d"]} forState:UIControlStateHighlighted];
 }
 @end
+
+
+@implementation LeftPaddingTextfield
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self ) {
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8, 16)];
+        view.backgroundColor = UIColor.clearColor;
+        view.userInteractionEnabled = NO;
+        self.leftView = view;
+        self.leftViewMode = UITextFieldViewModeAlways;
+    }
+    
+    return self;
+}
+@end

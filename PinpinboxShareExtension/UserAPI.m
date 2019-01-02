@@ -178,6 +178,38 @@
     return uuid;
     
 }
++ (void)updateAlbumSettingWithAlbumID:(NSNumber *)aid settings:(NSDictionary *)settings CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+    
+}
++ (void)inserNewAlbumWithSettings:(NSDictionary *)settings CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+    //  insertalbumofdiy
+    //  updatealbumsettings
+    
+    NSMutableDictionary *dic=[NSMutableDictionary new];
+    [dic setObject:[UserInfo getUserId] forKey:@"id"];
+    [dic setObject:[UserInfo getUserToken] forKey:@"token"];
+    [dic setObject:@"0" forKey:@"template_id"];
+    
+    [self userAPI:dic URL:@"/insertalbumofdiy/1.1" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+        if (!error) {
+            int res = [result[@"result"] intValue];
+            if (res == 1) {
+                if (completionBlock){
+                    NSNumber *aid = (NSNumber *)result[@"data"];
+                    [UserAPI updateAlbumSettingWithAlbumID:aid settings:settings CompletionBlock:completionBlock];
+                }
+            } else {
+                completionBlock(nil, [NSError errorWithDomain:@"albumSetting" code:9000 userInfo:@{NSLocalizedDescriptionKey:result[@"message"]?result[@"message"]:timeOutErrorCode}]) ;
+            }
+            
+        } else {
+            completionBlock(nil, error);
+        }
+    }];
+    
+    
+}
+
 + (void)getAlbumSettingOptionsWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
     NSMutableDictionary *dic=[NSMutableDictionary new];
@@ -186,6 +218,17 @@
     
     [self userAPI:dic URL:@"/getalbumdataoptions/1.0" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
         
+        if (!error) {
+            int res = [result[@"result"] intValue];
+            if (res == 1) {
+                if (completionBlock)
+                    completionBlock(result[@"data"], nil);
+            } else {
+                completionBlock(nil, [NSError errorWithDomain:@"albumSetting" code:9000 userInfo:@{NSLocalizedDescriptionKey:result[@"message"]?result[@"message"]:timeOutErrorCode}]) ;
+            }
+        } else {
+            completionBlock(nil, error);
+        }
     }];
     
 }
