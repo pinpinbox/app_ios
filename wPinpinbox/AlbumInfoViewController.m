@@ -12,7 +12,7 @@
 #import <MapKit/MapKit.h>
 #import "AppDelegate.h"
 #import "GlobalVars.h"
-
+#import "wTools.h"
 #import "MapHelper.h"
 
 @interface AlbumInfoViewController () {
