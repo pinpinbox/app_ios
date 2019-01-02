@@ -117,64 +117,11 @@
     NSString *string = [parameterArray componentsJoinedByString:@"&"];
     return [string dataUsingEncoding:NSUTF8StringEncoding];
 }
-+(NSString *)api_Wine:(NSString *)url dic:(NSMutableDictionary *)dic{
-    NSLog(@"api_wine url dic");
-    
-    if (![self hostAvailable:@"www.pinpinbox.com"]) {//hostURL]) {
-        
-        return nil;
-    }
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", ServerURL, url]]];
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:[self httpBodyForParamsDictionary:dic]];
-    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
-    [request setTimeoutInterval: [kTimeOut floatValue]];
-    NSLog(@"request.timeoutInterval: %f", request.timeoutInterval);
-    
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    __block NSString *str;
 
++(NSString *)userAPI:(NSDictionary *)wData URL:(NSString *)url withCompletionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
     
-    NSLog(@"dataTaskWithRequest");
-    
-    NSURLSessionDataTask *task = [[UserAPI session] dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        if (error == nil) {
-            str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-            
-            NSLog(@"");
-            //NSLog(@"str = %@", str);
-            
-            //[[NSURLSession sharedSession] finishTasksAndInvalidate];
-        } else {
-            str = [NSString stringWithFormat: @"%ld", (long)error.code];
-            
-            NSLog(@"");
-            NSLog(@"error: %@", error);
-            NSLog(@"error.userInfo: %@", error.userInfo);
-            NSLog(@"error.localizedDescription: %@", error.localizedDescription);
-            NSLog(@"error code: %@", [NSString stringWithFormat: @"%ld", (long)error.code]);
-            
-            // [[NSURLSession sharedSession] invalidateAndCancel];
-        }
-        dispatch_semaphore_signal(semaphore);
-    }];
-    [task resume];
-    NSLog(@"task resume");
-    
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    NSLog(@"After dispatch_semaphore_wait");
-    
-    return str;
-}
-
-+(NSString *)userAPI:(NSDictionary *)wData URL:(NSString *)url {
     NSLog(@"userAPI wData URL");
     
-    //NSLog(@"wData: %@", wData);
-    
-    NSString *returnstr = @"";
     NSMutableDictionary *dic = [NSMutableDictionary new];
     
     for (NSString *kye in wData.allKeys) {
@@ -190,204 +137,144 @@
     // Get the value of key "sign"
     [dic setObject: [UserAPI signGenerator2:dic] forKey: @"sign"];
     
-    //NSLog(@"sign: %@", [self signGenerator2:dic]);
-    //
+    if (![self hostAvailable:@"www.pinpinbox.com"]) {//hostURL]) {
+        
+        completionBlock(nil, nil, [NSError errorWithDomain:@"pinpinbox.share" code:-1 userInfo:@{NSLocalizedDescriptionKey:@"Host not reachable"}]);
+    }
     
-    // Create NSMutableURLRequest, post data to server for getting response
-    returnstr = [self api_Wine: url dic: dic];
-    
-    return returnstr;
-}
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", ServerURL, url]]];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[self httpBodyForParamsDictionary:dic]];
+    [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
+    [request setTimeoutInterval: [kTimeOut floatValue]];
+    //NSLog(@"request.timeoutInterval: %f", request.timeoutInterval);
 
-
-+ (NSString *)refreshToken:(NSString *)userId
-{
-    NSString *returnStr = @"";
-    NSMutableDictionary *dic = [NSMutableDictionary new];
+    __block NSString *uuid = [[NSUUID UUID] UUIDString];
     
-    [dic setObject: userId forKey: @"user_id"];
+    NSURLSessionDataTask *task = [[UserAPI session] dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        
+        if (error == nil) {
+            NSString *str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+            if ([str isEqualToString:@"-1001"]) {
+                completionBlock(nil,uuid, [NSError errorWithDomain:@"pinpinbox.share" code:-1001 userInfo:@{NSLocalizedDescriptionKey:@"Request timed-out"}]);
+            } else {
+                NSError *jer = nil;
+                NSDictionary *dict = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [str dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: &jer];
+                if (!jer && [dict isKindOfClass:[NSDictionary class]]) {
+                    completionBlock(dict, uuid, nil);
+                } else {
+                    completionBlock(nil, uuid, jer);
+                }
+            }
+            
+        } else {
+            completionBlock(nil,uuid, error);
+        }
+        
+    }];
+    task.taskDescription = uuid;
+    [task resume];
     
-    returnStr = [self userAPI:dic URL: @"/refreshtoken/2.0"];
+    return uuid;
     
-    return returnStr;
 }
-
-+(NSString *)getprofile:(NSString *)uid token:(NSString *)token {
-    NSLog(@"");
-    NSLog(@"getprofile");
++ (void)getAlbumSettingOptionsWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
-    NSString *returnstr=@"";
     NSMutableDictionary *dic=[NSMutableDictionary new];
-    [dic setObject:uid forKey:@"id"];
-    [dic setObject:token forKey:@"token"];
+    [dic setObject:[UserInfo getUserId] forKey:@"id"];
+    [dic setObject:[UserInfo getUserToken] forKey:@"token"];
     
-    returnstr=[self userAPI:dic URL:@"/getprofile/1.1"];
+    [self userAPI:dic URL:@"/getalbumdataoptions/1.0" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+        
+    }];
     
-    return returnstr;
-}
-+(NSString *)getcalbumlist:(NSString *)uid token:(NSString *)token rank:(NSString *)rank limit:(NSString *)limit{
-    NSLog(@"");
-    NSLog(@"getcalbumlist");
-    
-    NSString *returnstr=@"";
-    NSMutableDictionary *dic=[NSMutableDictionary new];
-    
-    [dic setObject:rank forKey:@"rank"];
-    [dic setObject:uid forKey:@"id"];
-    [dic setObject:token forKey:@"token"];
-    [dic setObject:limit forKey:@"limit"];
-    
-    returnstr=[self userAPI:dic URL:@"/getcalbumlist/1.3"];
-    
-    return returnstr;
-}
-+(NSString *)getalbumofdiy:(NSString *)uid token:(NSString *)token album_id:(NSString *)album_id{
-    NSLog(@"");
-    NSLog(@"getalbumofdiy");
-    
-    NSString *returnstr=@"";
-    NSMutableDictionary *dic=[NSMutableDictionary new];
-    [dic setObject:uid forKey:@"id"];
-    [dic setObject:token forKey:@"token"];
-    [dic setObject:album_id forKey:@"album_id"];
-    
-    returnstr=[self userAPI:dic URL:@"/getalbumofdiy/1.1"];
-    
-    return returnstr;
 }
 + (void)postPreCheck:(NSString *)album_id completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI getalbumofdiy:[UserInfo getUserId] token:[UserInfo getUserToken] album_id:album_id];
-        
-        if (response != nil) {
-            if ([response isEqualToString: @"-1001"]) {
-                if (completionBlock)
-                    completionBlock(nil, [NSError errorWithDomain:@"postPreCheck" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
-            } else {
-                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                
-                int res = [dic[@"result"] intValue];
-                if (res == 1) {
-                    if (completionBlock)
-                        completionBlock(dic[@"data"], nil);
-                } else {
-                    
-                    if (completionBlock)
-                        completionBlock(nil, [NSError errorWithDomain:@"postPreCheck" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
-                    
-                }
-                
-            }
-            
-        } else {
-            if (completionBlock)
-                completionBlock(nil, [NSError errorWithDomain:@"postPreCheck" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
-        }
-    });
-}
-+ (void)refreshTokenWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+    NSMutableDictionary *dic=[NSMutableDictionary new];
+    [dic setObject:[UserInfo getUserId] forKey:@"id"];
+    [dic setObject:[UserInfo getUserToken] forKey:@"token"];
+    [dic setObject:album_id forKey:@"album_id"];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI refreshToken:[UserInfo getUserId]];
-        
-        if (response != nil) {
-            if ([response isEqualToString: @"-1001"]) {
+    [self userAPI:dic URL:@"/getalbumofdiy/1.1" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+        if (!error) {
+            int res = [result[@"result"] intValue];
+            if (res == 1) {
                 if (completionBlock)
-                    completionBlock(nil, [NSError errorWithDomain:@"refreshToken" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
+                    completionBlock(result[@"data"], nil);
             } else {
-                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                 
-                NSString *res = dic[@"result"];
-                if ([res isEqualToString:@"SYSTEM_OK"]) {
-                        if (completionBlock)
-                            completionBlock(dic[@"data"][@"token"],nil);
-                } else {
-                    
-                        if (completionBlock)
-                            completionBlock(nil, [NSError errorWithDomain:@"refreshToken" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
-                    
-                }
+                if (completionBlock)
+                    completionBlock(nil, [NSError errorWithDomain:@"postPreCheck" code:9000 userInfo:@{NSLocalizedDescriptionKey:result[@"message"]?result[@"message"]:timeOutErrorCode}]) ;
                 
             }
-            
         } else {
-            if (completionBlock)
-                completionBlock(nil, [NSError errorWithDomain:@"refreshToken" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+            completionBlock(nil, error);
         }
-    });
+    }];
 }
 + (void)userProfileWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+
+    NSMutableDictionary *dic=[NSMutableDictionary new];
+    [dic setObject:[UserInfo getUserId] forKey:@"id"];
+    [dic setObject:[UserInfo getUserToken] forKey:@"token"];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI getprofile:[UserInfo getUserId] token:[UserInfo getUserToken]];
+    [self userAPI:dic URL:@"/getprofile/1.1" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
         
-        if (response != nil) {
-            if ([response isEqualToString: @"-1001"]) {
-                if (completionBlock)
-                    completionBlock(nil, [NSError errorWithDomain:@"getprofile" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
-            } else {
-                NSLog(@"Get Real Response");
-                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                
-                int res = [dic[@"result"] intValue];
-                
-                switch (res) {
-                    case 1: {
-                        if (completionBlock)
-                            completionBlock(dic[@"data"],nil);
-                    } break;
-                    case 0: {
-                        
-                        if (completionBlock)
-                            completionBlock(nil, [NSError errorWithDomain:@"getprofile" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
-                    }
-                        break;
-                }
-                
-            }
+        if (!error) {
+            int res = [result[@"result"] intValue];
             
+            switch (res) {
+                case 1: {
+                    if (completionBlock)
+                        completionBlock(result[@"data"],nil);
+                } break;
+                case 0: {
+                    
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"getprofile" code:9000 userInfo:@{NSLocalizedDescriptionKey:result[@"message"]}]) ;
+                }
+                    break;
+            }
         } else {
-            if (completionBlock)
-                completionBlock(nil, [NSError errorWithDomain:@"getprofile" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+            completionBlock(nil, error);
         }
-    });
+        
+    }];
+
 }
 + (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount  completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     NSString *limit = [NSString stringWithFormat:@"%ld,20",(long)curCount];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI getcalbumlist:[UserInfo getUserId] token:[UserInfo getUserToken] rank:@"mine" limit:limit];
-        
-        if (response != nil) {
-            if ([response isEqualToString: @"-1001"]) {
-                if (completionBlock)
-                    completionBlock(nil, [NSError errorWithDomain:@"getcalbumlist" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
-            } else {
-                
-                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                
-                int res = [dic[@"result"] intValue];
-                
-                switch (res) {
-                    case 1: {
-                        if (completionBlock)
-                            completionBlock(dic,nil);
-                    } break;
-                    case 0: {
-                        
-                        if (completionBlock)
-                            completionBlock(nil, [NSError errorWithDomain:@"getcalbumlist" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
-                    }
-                        break;
-                }
-                
-            }
+    
+    
+    NSMutableDictionary *dic=[NSMutableDictionary new];
+    
+    [dic setObject:@"mine" forKey:@"rank"];
+    [dic setObject:[UserInfo getUserId]  forKey:@"id"];
+    [dic setObject:[UserInfo getUserToken]  forKey:@"token"];
+    [dic setObject:limit forKey:@"limit"];
+    
+    [self userAPI:dic URL:@"/getcalbumlist/1.3" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+        if (!error) {
+            int res = [result[@"result"] intValue];
             
+            switch (res) {
+                case 1: {
+                    if (completionBlock)
+                        completionBlock(result,nil);
+                } break;
+                case 0: {
+                    
+                    if (completionBlock)
+                        completionBlock(nil, [NSError errorWithDomain:@"getcalbumlist" code:9000 userInfo:@{NSLocalizedDescriptionKey:result[@"message"]}]) ;
+                }
+                    break;
+            }
         } else {
-            if (completionBlock)
-                completionBlock(nil, [NSError errorWithDomain:@"getcalbumlist" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+            completionBlock(result, error);
         }
-    });
+    }];
+    
 }
 + (NSString *)insertVideoWithAlbum_id:(NSString *)album_id
                             videopath:(NSString *)videopath
@@ -498,8 +385,6 @@
                      progressDelegate:(id<UploadProgressDelegate>)progressDelegate
                       completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
     
-    NSString *uuid = [[NSUUID UUID] UUIDString];
-    
     [UserAPI sharedUserAPI].progressDelegate = progressDelegate;
     
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
@@ -510,36 +395,24 @@
     [_params setObject:videopath forKey:@"video_target"];
     
 
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [UserAPI userAPI:_params URL:@"/insertvideoofdiy/2.0"];
-        
-        if (response != nil) {
-            if ([response isEqualToString: @"-1001"]) {
-                if (completionBlock)
-                    completionBlock(nil, uuid,[NSError errorWithDomain:@"insertVideoWithAlbum_idEmbed" code:9000 userInfo:@{NSLocalizedDescriptionKey:response}]) ;
-            } else {
-                NSLog(@"Get Real Response");
-                NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                
-                NSString *res = dic[@"result"];
-                
-                if ([res isEqualToString:@"SYSTEM_OK"]) {
-                    if (completionBlock)
-                        completionBlock(dic[@"data"],uuid,nil);
-                } else if (dic[@"message"]) {
-                    if (completionBlock)
-                    completionBlock(nil, uuid,[NSError errorWithDomain:@"insertVideoWithAlbum_idEmbed" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]) ;
-    
-                }
-                
-            }
+    NSString *uuid = [UserAPI userAPI:_params URL:@"/insertvideoofdiy/2.0" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+        if (!error) {
+            NSString *res = result[@"result"];
             
+            if ([res isEqualToString:@"SYSTEM_OK"]) {
+                if (completionBlock)
+                    completionBlock(result[@"data"],taskId,nil);
+            } else if (result[@"message"]) {
+                if (completionBlock)
+                    completionBlock(nil, taskId,[NSError errorWithDomain:@"insertVideoWithAlbum_idEmbed" code:9000 userInfo:@{NSLocalizedDescriptionKey:result[@"message"]}]) ;
+            } else {
+                completionBlock(nil, taskId,[NSError errorWithDomain:@"insertVideoWithAlbum_idEmbed" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+            }
         } else {
-            if (completionBlock)
-                completionBlock(nil, uuid,[NSError errorWithDomain:@"insertVideoWithAlbum_idEmbed" code:9000 userInfo:@{NSLocalizedDescriptionKey:timeOutErrorCode}]) ;
+            completionBlock(nil, taskId, error);
         }
-    });
-
+    }];
+    
     return uuid;
 }
 
@@ -671,4 +544,7 @@
 //    }
 }
 
+/*
+ @"/getalbumdataoptions/1.0"
+ */
 @end

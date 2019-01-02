@@ -16,7 +16,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <UserNotifications/UserNotifications.h>
 
-@interface  ThumbnailCollectionViewCell : UICollectionViewCell<ItemPostLoadDelegate,CAAnimationDelegate>
+@interface  ThumbnailCollectionViewCell : UICollectionViewCell<CAAnimationDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *thumbnailView;
 @property (weak, nonatomic) IBOutlet UIImageView *typeView;
 @property (weak, nonatomic) IBOutlet UITextView *comment;
@@ -37,7 +37,7 @@
 
 @interface ShareViewController ()<UITableViewDelegate, UITableViewDataSource,
                                   UICollectionViewDelegateFlowLayout,UICollectionViewDataSource,
-                                  UploadProgressDelegate,PDFUploaderDelegate>
+                                  UploadProgressDelegate,PDFUploaderDelegate,ItemContentDelegate>
 @property(weak, nonatomic) IBOutlet UILabel *userName;
 @property(weak, nonatomic) IBOutlet UITableView *albumList;
 @property(weak, nonatomic) IBOutlet UICollectionView *photoList;
@@ -203,46 +203,41 @@
     self.failCount = 0;
     self.successCount = 0;
     
+    UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
+    if (post)
+        post.enabled = NO;
+    
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     
     UIView *view = [self.view viewWithTag:1010];
     view.layer.borderColor = [UIColor colorWithRed:0.75 green:0.75 blue:0.75 alpha:0.5].CGColor;
     view.layer.borderWidth = 0.5;
     
+    
     if ([UserInfo getUserId].length < 1 ) {
         self.notLoginCover.hidden = NO;
         return;
-    } else {
-        [self displayExtensionContext];
-        __block typeof(self) wself = self;
-        [UserAPI refreshTokenWithCompletionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
-            if (error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [wself showErrorMessage:@"無法取得用戶資料，請稍後再試"];
-                });
-            } else {
-                NSString *tok = result[@"token"];
-                
-                [UserInfo setUserInfo:[UserInfo getUserId] token:tok];
-                [UserAPI userProfileWithCompletionBlock:^(NSDictionary *result, NSError *error) {
-                    if (result) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            wself.userName.text = result[@"nickname"];
-                            [wself loadAlbumList];
-                            
-                        });
-                        
-                    } else {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [wself showErrorMessage:@"無法取得用戶資料，請稍後再試"];
-                        });
-                    }
-                    
-                }];
-            }
-        }];
-        
     }
+    
+    [self displayExtensionContext];
+    
+    __block typeof(self) wself = self;
+    [UserAPI userProfileWithCompletionBlock:^(NSDictionary *result, NSError *error) {
+        if (result) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                wself.userName.text = result[@"nickname"];
+                [wself loadAlbumList];
+                
+            });
+            
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself showErrorMessage:@"無法取得用戶資料，請稍後再試"];
+            });
+        }
+        
+    }];
+    
 }
 
 - (void)displayExtensionContext {
@@ -283,7 +278,7 @@
 }
 - (void)addShareItemWithItemProvider:(NSItemProvider *)p  type:(NSString *)type{
     if ([self checkItemProvider:p type:type]) {
-        ShareItem *i = [[ShareItem alloc] initWithItemProvider:p type:type];
+        ShareItem *i = [[ShareItem alloc] initWithItemProvider:p type:type itemDelegate:self];
         
         [self.shareItems addObject:i];
     }
@@ -364,19 +359,6 @@
             NSString *uuid = [UserAPI insertVideoWithAlbum_id:_selectedAlbum videoURLPath:[item.url absoluteString] progressDelegate:self completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [wself processFinishedTask:taskId success:(error == nil)];
-//                        for (int i = 0; i< self.postRequestList.count; i++){
-//                            NSString *uid = [self.postRequestList objectAtIndex:i];
-//                            if ([taskId isEqualToString:uid]) {
-//                                //[wself finishEffect:i];
-//                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                                    [wself processFinishedTask:taskId success:(error == nil)];
-//                                });
-//
-//                                break;
-//
-//                            }
-//                        }
-                        
                     });
             }];
             if (uuid)
@@ -637,6 +619,8 @@
             _selectedAlbum = [album[@"album_id"] stringValue];
             _albumNames = album[@"name"];
         }
+    } else {
+        [self.navigationController performSegueWithIdentifier:@"showAddNew" sender:self];
     }
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -792,5 +776,18 @@
 - (BOOL)isExporter {
     return NO;
 }
-
+#pragma mark - ItemContentDelegate
+- (void)processInvalidItem:(ShareItem *)item {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        
+        if ([self.shareItems containsObject:item]) {
+            [self.shareItems removeObject:item];
+            if (self.shareItems.count < 1) {
+                [self showErrorMessage:@"並無可發佈的內容(30秒影片、影片連結或圖片)，請重新選擇。"];
+            } else
+                [self.photoList reloadData];
+        }
+    });
+}
 @end

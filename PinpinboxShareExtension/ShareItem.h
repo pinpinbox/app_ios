@@ -12,8 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class ShareItem;
 @protocol ItemPostLoadDelegate <NSObject>
 - (void)loadCompleted:(UIImage *)thumbnail type:(NSString *)type hasVideo:(BOOL)hasVideo isDark:(BOOL)isDark;
+@end
+
+@protocol ItemContentDelegate <NSObject>
+- (void)processInvalidItem:(ShareItem *)item;
 @end
 
 @interface ShareItem : NSObject
@@ -25,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL hasVideo;
 @property (nonatomic) BOOL thumbIsDark;
 @property (nonatomic) Float64 vidDuration;
-- (id)initWithItemProvider:(NSItemProvider *)item type:(NSString *)type;
+- (id)initWithItemProvider:(NSItemProvider *)item type:(NSString *)type itemDelegate:(id<ItemContentDelegate>)itemDelegate;
 - (void)loadThumbnailWithPostload:(id<ItemPostLoadDelegate>) postload;
 @end
 

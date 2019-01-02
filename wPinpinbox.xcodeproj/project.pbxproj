@@ -376,6 +376,7 @@
 		CBAD7DE621AE50090084682B /* 3rdPartyVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */; };
 		CBAD7DE821AE50DD0084682B /* 3rdPartyVideoPlayerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
+		CBD90A8721D6218C000F66B9 /* EditNewAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD90A8621D6218C000F66B9 /* EditNewAlbumViewController.m */; };
 		CBD977EF21A2574600F04205 /* URLAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD977EE21A2574600F04205 /* URLAddViewController.m */; };
 		CBDA227021C3923200706E2C /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDA226F21C3923200706E2C /* ShareViewController.m */; };
 		CBDA227321C3923200706E2C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBDA227121C3923200706E2C /* MainInterface.storyboard */; };
@@ -1074,6 +1075,8 @@
 		CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = 3rdPartyVideoPlayerVC.storyboard; sourceTree = "<group>"; };
 		CBCE8572219C074600ED185D /* LocationMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationMapViewController.h; sourceTree = "<group>"; };
 		CBCE8573219C074600ED185D /* LocationMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationMapViewController.m; sourceTree = "<group>"; };
+		CBD90A8521D6218C000F66B9 /* EditNewAlbumViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditNewAlbumViewController.h; sourceTree = "<group>"; };
+		CBD90A8621D6218C000F66B9 /* EditNewAlbumViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditNewAlbumViewController.m; sourceTree = "<group>"; };
 		CBD977ED21A2574600F04205 /* URLAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLAddViewController.h; sourceTree = "<group>"; };
 		CBD977EE21A2574600F04205 /* URLAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = URLAddViewController.m; sourceTree = "<group>"; };
 		CBDA226C21C3923200706E2C /* PinpinboxShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PinpinboxShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2865,6 +2868,8 @@
 				CBDA228221C3B39E00706E2C /* UserAPI.m */,
 				CBE104BF21C78ACF00E185D3 /* ShareItem.h */,
 				CBE104C021C78ACF00E185D3 /* ShareItem.m */,
+				CBD90A8521D6218C000F66B9 /* EditNewAlbumViewController.h */,
+				CBD90A8621D6218C000F66B9 /* EditNewAlbumViewController.m */,
 			);
 			path = PinpinboxShareExtension;
 			sourceTree = "<group>";
@@ -2985,9 +2990,8 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = APD4588SHJ;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3473,6 +3477,7 @@
 				CBDA228421C3B4BA00706E2C /* NSString+MD5.m in Sources */,
 				CBDA228321C3B39E00706E2C /* UserAPI.m in Sources */,
 				CBDA227C21C3929B00706E2C /* GlobalVars.m in Sources */,
+				CBD90A8721D6218C000F66B9 /* EditNewAlbumViewController.m in Sources */,
 				CBDA227B21C3929500706E2C /* UserInfo.m in Sources */,
 				CBDA227021C3923200706E2C /* ShareViewController.m in Sources */,
 			);
@@ -3641,8 +3646,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3685,8 +3690,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

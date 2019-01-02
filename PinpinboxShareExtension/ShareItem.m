@@ -11,15 +11,21 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AVFoundation/AVFoundation.h>
 
+@interface ShareItem()
+@property (nonatomic) id<ItemContentDelegate> itemDelegate;
+@end
+
 @implementation ShareItem
-- (id)initWithItemProvider:(NSItemProvider *)item type:(NSString *)type {
+- (id)initWithItemProvider:(NSItemProvider *)item type:(NSString *)type itemDelegate:(id<ItemContentDelegate>)itemDelegate{
     self = [super init];
     if (self) {
+        self.itemDelegate = itemDelegate;
         self.hasVideo = NO;
         self.thumbIsDark = NO;
         self.vidDuration = 0;
         self.objType = type;
         self.shareItem = item;
+        
         [self postLoadShareItem];
     }
     return self;
@@ -104,8 +110,10 @@
                 [self setThumbnail:[UIImage imageWithContentsOfFile:[self.url path]]];
                 
             } else {
-                //  other ordinary URL or text
-                [self loadThumbnailOtherway];
+                //  other invalid format : ordinary URL, pure text, or text file
+               // [self loadThumbnailOtherway];
+                if (self.itemDelegate)
+                    [self.itemDelegate processInvalidItem:self];
             }
         }
     } else if ([_objType isEqualToString:(__bridge NSString *)kUTTypeMovie]){
@@ -164,7 +172,11 @@
         AVURLAsset *sourceAsset = [AVURLAsset URLAssetWithURL:url options:nil];
         CMTime duration = sourceAsset.duration;
         _vidDuration = CMTimeGetSeconds(duration);
-        
+        if (_vidDuration >= 31.0) {
+            if (self.itemDelegate)
+                [self.itemDelegate processInvalidItem:self];
+            return;
+        }
         AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:sourceAsset];
         NSError *err = nil;
         
