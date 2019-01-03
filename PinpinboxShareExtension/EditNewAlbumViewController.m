@@ -9,6 +9,8 @@
 #import "EditNewAlbumViewController.h"
 #import "SwitchButtonView.h"
 #import "UserAPI.h"
+#import "UIColor+Extensions.h"
+#import "UIView+Toast.h"
 
 #pragma mark -
 @interface CategoryCell : UICollectionViewCell
@@ -97,7 +99,7 @@
 @end
 
 #pragma mark -
-@interface EditNewAlbumViewController ()<UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate>
+@interface EditNewAlbumViewController ()<UICollectionViewDataSource, UICollectionViewDelegate>
 @property (nonatomic) IBOutlet UICollectionView *mainCate;
 @property (nonatomic) IBOutlet UICollectionView *subCate;
 @property (nonatomic) IBOutlet UISwitch *visSwitch;
@@ -118,14 +120,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self loadMetadata];
-}- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardShown:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardDismissed:) name:UIKeyboardWillHideNotification object:nil];
     
-    return YES;
+    [self loadMetadata];
+}
+- (void)handleKeyboardShown:(NSNotification *)notification {
+    
+    NSDictionary* info = [notification userInfo];
+    CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+    self.view.transform = CGAffineTransformMakeTranslation(0, -kbSize.height);//-self.albumPoint.frame.origin.y);
+    
+}
+- (void)handleKeyboardDismissed:(NSNotification *)notification {
+    self.view.transform = CGAffineTransformIdentity;
+}
+- (void)removeKeyboardNotifications {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
 }
 - (IBAction)cancelAndDismiss:(id)sender {
     //[self.navigationController pop ]
+    [self removeKeyboardNotifications];
     [self.navigationController popViewControllerAnimated:YES];
+    
 }
 - (void)loadMetaDataWithResult : (NSDictionary *)data {
     
@@ -167,7 +186,12 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wself loadMetaDataWithResult:result];
             });
-        } 
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself showErrorToast:@"無法取得類別資料，請重試"];
+                [wself.navigationController popViewControllerAnimated:YES];
+            });
+        }
     }];
 }
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
@@ -256,6 +280,7 @@
     if (self.visSwitch.on) {
         
         if (self.albumName.text.length < 1 || self.subpicked < 0 || self.picked < 0) {
+            [self showErrorToast:@"標題或類別不可為空值"];
             return;
         }
     }
@@ -264,10 +289,16 @@
     [UserAPI insertNewAlbumWithSettings:setting CompletionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
         if (!error) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                [wself removeKeyboardNotifications];
+                [wself showInfoToast:@"已建立新相本"];
                 [wself didInsertAlbum];
             });
         } else {
-            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSString *s = [error localizedDescription];
+                [wself removeKeyboardNotifications];
+                [wself showErrorToast:s?s:@"無法建立相本"];
+            });
         }
     }];
 }
@@ -276,4 +307,28 @@
         [self.settingDelegate reloadAlbumList];
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+- (void)showInfoToast:(NSString *)msg {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor firstMain];
+    
+    [self.view makeToast: msg
+                  duration: 2.0
+                  position: CSToastPositionCenter
+                     style: style];
+    
+}
+- (void)showErrorToast:(NSString *)msg {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor thirdPink];
+    
+    [self.view makeToast: msg
+                duration: 2.0
+                position: CSToastPositionCenter
+                   style: style];
+    
+}
+
 @end

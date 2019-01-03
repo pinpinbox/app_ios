@@ -228,8 +228,26 @@
         view.userInteractionEnabled = NO;
         self.leftView = view;
         self.leftViewMode = UITextFieldViewModeAlways;
+        [self addTextViewAccessoryView];
     }
     
     return self;
 }
+- (void)dismissCurKeyboard {
+    if (self.isFirstResponder)
+        [self resignFirstResponder];
+
+}
+- (void)addTextViewAccessoryView {
+    UIToolbar *keybardBar = [[UIToolbar alloc] init];
+    [keybardBar sizeToFit];
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *dimiss = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissCurKeyboard)];
+
+    keybardBar.items = @[space, dimiss];
+
+    self.inputAccessoryView = keybardBar;
+
+}
+
 @end

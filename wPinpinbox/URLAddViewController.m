@@ -17,29 +17,6 @@
 @end
 
 @implementation URLDataCell
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self addTextViewAccessoryView:_descTextField];
-    [self addTextViewAccessoryView:_urlTextField];
-}
-- (void)dismissCurKeyboard {
-    if (_descTextField.isFirstResponder)
-        [_descTextField resignFirstResponder];
-    else if (_urlTextField.isFirstResponder)
-        [_urlTextField resignFirstResponder];
-    
-}
-- (void)addTextViewAccessoryView:(UITextField *)textfield {
-    UIToolbar *keybardBar = [[UIToolbar alloc] init];
-    [keybardBar sizeToFit];
-    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *dimiss = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissCurKeyboard)];
-    
-    keybardBar.items = @[space, dimiss];
-    
-    textfield.inputAccessoryView = keybardBar;
-    
-}
 @end
 
 

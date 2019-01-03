@@ -390,6 +390,7 @@
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBE2AFA621CB437C0032290C /* notavailable.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE2AFA521CB437C0032290C /* notavailable.png */; };
 		CBE785B121DDF52600107146 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE785AE21DDF52500107146 /* YTPlayerView.m */; };
+		CBE785B321DDF7E800107146 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 630544091E5FE5E200B0CB6D /* UIView+Toast.m */; };
 		CBEB727821D32DB800B22B1C /* addIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = CBEB727721D32DB700B22B1C /* addIcon.png */; };
 		CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
@@ -3418,6 +3419,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBE785B321DDF7E800107146 /* UIView+Toast.m in Sources */,
 				CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */,
 				CBF7F42A21D0E18000951608 /* PDFUploader.m in Sources */,
 				CB9B297F21C7B31200D87505 /* NSURL+Param.m in Sources */,

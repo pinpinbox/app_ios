@@ -168,7 +168,6 @@
     //[GMSServices provideAPIKey:MAPAPIKEY];
     
     //self.placeClient = [[GMSPlacesClient alloc] init];
-    [self addTextViewAccessoryView:_locationName];
     [self addKeyboardNotification];
     [self addMapTap];
     //[self addDismissTap];
@@ -184,22 +183,6 @@
                                              selector:@selector(keyboardWillBeHidden:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-}
-- (void)dismissCurKeyboard {
-    
-    if (_locationName.isFirstResponder)
-        [_locationName resignFirstResponder];
-}
-- (void)addTextViewAccessoryView:(UITextField *)textfield {
-    UIToolbar *keybardBar = [[UIToolbar alloc] init];
-    [keybardBar sizeToFit];
-    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *dimiss = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissCurKeyboard)];
-    
-    keybardBar.items = @[space, dimiss];
-    
-    textfield.inputAccessoryView = keybardBar;
-    
 }
 - (void)removeKeyboardNotification {
     NSLog(@"");
