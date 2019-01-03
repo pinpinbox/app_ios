@@ -200,12 +200,6 @@
 		630B877E1EF67F1600DC0A88 /* MyAlbumCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630B877D1EF67F1600DC0A88 /* MyAlbumCollectionViewController.m */; };
 		630B8F931EDD0F16009D72FB /* CategoryDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 630B8F921EDD0F16009D72FB /* CategoryDetailViewController.m */; };
 		630B8F961EDD1AA0009D72FB /* CategoryDetailCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630B8F951EDD1AA0009D72FB /* CategoryDetailCollectionViewCell.m */; };
-		630BE4741E8A8D2A007C4810 /* Info-iOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = 630BE4671E8A8D2A007C4810 /* Info-iOS.plist */; };
-		630BE4751E8A8D2A007C4810 /* Info-tvOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = 630BE4681E8A8D2A007C4810 /* Info-tvOS.plist */; };
-		630BE4771E8A8D2A007C4810 /* YTVimeoExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 630BE46C1E8A8D2A007C4810 /* YTVimeoExtractor.m */; };
-		630BE4781E8A8D2A007C4810 /* YTVimeoExtractorOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 630BE46E1E8A8D2A007C4810 /* YTVimeoExtractorOperation.m */; };
-		630BE4791E8A8D2A007C4810 /* YTVimeoURLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 630BE4701E8A8D2A007C4810 /* YTVimeoURLParser.m */; };
-		630BE47A1E8A8D2A007C4810 /* YTVimeoVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 630BE4731E8A8D2A007C4810 /* YTVimeoVideo.m */; };
 		630C8BDF1EEB04E600EC5784 /* NewMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630C8BDE1EEB04E600EC5784 /* NewMessageTableViewCell.m */; };
 		630D31E21E531BC9001506EE /* NSArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 630D31E11E531BC9001506EE /* NSArray+Reverse.m */; };
 		630D31E51E531C42001506EE /* NSMutableArray+Reverse.m in Sources */ = {isa = PBXBuildFile; fileRef = 630D31E41E531C42001506EE /* NSMutableArray+Reverse.m */; };
@@ -395,6 +389,7 @@
 		CBE104C521C792C200E185D3 /* NSURL+Param.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE104C421C792C200E185D3 /* NSURL+Param.m */; };
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBE2AFA621CB437C0032290C /* notavailable.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE2AFA521CB437C0032290C /* notavailable.png */; };
+		CBE785B121DDF52600107146 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE785AE21DDF52500107146 /* YTPlayerView.m */; };
 		CBEB727821D32DB800B22B1C /* addIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = CBEB727721D32DB700B22B1C /* addIcon.png */; };
 		CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
@@ -406,8 +401,6 @@
 		CBFB1AE321ABAE7500813611 /* AlbumCreationIntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBFB1AE221ABAE7500813611 /* AlbumCreationIntroViewController.m */; };
 		D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */; };
 		D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */; };
-		D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D78F73871D226C8700D8A271 /* Assets.bundle */; };
-		D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D78F738D1D226D8700D8A271 /* YTPlayerView.m */; };
 		EC7FF61F5D933157858A5A77 /* libPods-wPinpinbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AEC27BCC359EA6244357C2A5 /* libPods-wPinpinbox.a */; };
 		F016647821AF9F6C006A1E79 /* DSPhotoEditorSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F016647521AF9E5D006A1E79 /* DSPhotoEditorSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F039BD192148B8C6007AEA85 /* SystemImages.xcassets */; };
@@ -767,19 +760,6 @@
 		630B8F921EDD0F16009D72FB /* CategoryDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryDetailViewController.m; sourceTree = "<group>"; };
 		630B8F941EDD1AA0009D72FB /* CategoryDetailCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryDetailCollectionViewCell.h; sourceTree = "<group>"; };
 		630B8F951EDD1AA0009D72FB /* CategoryDetailCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryDetailCollectionViewCell.m; sourceTree = "<group>"; };
-		630BE4671E8A8D2A007C4810 /* Info-iOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
-		630BE4681E8A8D2A007C4810 /* Info-tvOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-tvOS.plist"; sourceTree = "<group>"; };
-		630BE4691E8A8D2A007C4810 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		630BE46A1E8A8D2A007C4810 /* YTVimeoError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoError.h; sourceTree = "<group>"; };
-		630BE46B1E8A8D2A007C4810 /* YTVimeoExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoExtractor.h; sourceTree = "<group>"; };
-		630BE46C1E8A8D2A007C4810 /* YTVimeoExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTVimeoExtractor.m; sourceTree = "<group>"; };
-		630BE46D1E8A8D2A007C4810 /* YTVimeoExtractorOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoExtractorOperation.h; sourceTree = "<group>"; };
-		630BE46E1E8A8D2A007C4810 /* YTVimeoExtractorOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTVimeoExtractorOperation.m; sourceTree = "<group>"; };
-		630BE46F1E8A8D2A007C4810 /* YTVimeoURLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoURLParser.h; sourceTree = "<group>"; };
-		630BE4701E8A8D2A007C4810 /* YTVimeoURLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTVimeoURLParser.m; sourceTree = "<group>"; };
-		630BE4711E8A8D2A007C4810 /* YTVimeoVideo+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YTVimeoVideo+Private.h"; sourceTree = "<group>"; };
-		630BE4721E8A8D2A007C4810 /* YTVimeoVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoVideo.h; sourceTree = "<group>"; };
-		630BE4731E8A8D2A007C4810 /* YTVimeoVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTVimeoVideo.m; sourceTree = "<group>"; };
 		630C8BDD1EEB04E600EC5784 /* NewMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewMessageTableViewCell.h; sourceTree = "<group>"; };
 		630C8BDE1EEB04E600EC5784 /* NewMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewMessageTableViewCell.m; sourceTree = "<group>"; };
 		630D31E01E531BC9001506EE /* NSArray+Reverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Reverse.h"; sourceTree = "<group>"; };
@@ -1098,6 +1078,9 @@
 		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
 		CBE2773921A8045600A6E80D /* HudIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudIndicatorView.m; sourceTree = "<group>"; };
 		CBE2AFA521CB437C0032290C /* notavailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notavailable.png; sourceTree = "<group>"; };
+		CBE785AB21DDF52500107146 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
+		CBE785AC21DDF52500107146 /* YouTubeiOSPlayerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeiOSPlayerHelper.h; sourceTree = "<group>"; };
+		CBE785AE21DDF52500107146 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
 		CBEB727721D32DB700B22B1C /* addIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addIcon.png; sourceTree = "<group>"; };
 		CBF138E921C24FD80070EBB8 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
 		CBF138EA21C24FD80070EBB8 /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
@@ -1111,11 +1094,6 @@
 		D70144FE1D1A49DA005D8CDE /* NSString+emailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+emailValidation.m"; sourceTree = "<group>"; };
 		D70145051D1A9135005D8CDE /* NSString+passwordValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+passwordValidation.h"; sourceTree = "<group>"; };
 		D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+passwordValidation.m"; sourceTree = "<group>"; };
-		D78F73871D226C8700D8A271 /* Assets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Assets.bundle; sourceTree = "<group>"; };
-		D78F73881D226C8700D8A271 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D78F73891D226C8700D8A271 /* YouTubeiOSPlayerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeiOSPlayerHelper.h; sourceTree = "<group>"; };
-		D78F738C1D226D8700D8A271 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
-		D78F738D1D226D8700D8A271 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
 		F016647521AF9E5D006A1E79 /* DSPhotoEditorSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DSPhotoEditorSDK.framework; path = wPinpinbox/Lib/DSPhotoEditor/DSPhotoEditorSDK.framework; sourceTree = "<group>"; };
 		F039BD192148B8C6007AEA85 /* SystemImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SystemImages.xcassets; sourceTree = "<group>"; };
 		F0AC57522142353D00F63B82 /* UIViewController+ErrorAlert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+ErrorAlert.h"; sourceTree = "<group>"; };
@@ -1998,26 +1976,6 @@
 			path = MyLayoutLib;
 			sourceTree = "<group>";
 		};
-		630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */ = {
-			isa = PBXGroup;
-			children = (
-				630BE4671E8A8D2A007C4810 /* Info-iOS.plist */,
-				630BE4681E8A8D2A007C4810 /* Info-tvOS.plist */,
-				630BE4691E8A8D2A007C4810 /* Info.plist */,
-				630BE46A1E8A8D2A007C4810 /* YTVimeoError.h */,
-				630BE46B1E8A8D2A007C4810 /* YTVimeoExtractor.h */,
-				630BE46C1E8A8D2A007C4810 /* YTVimeoExtractor.m */,
-				630BE46D1E8A8D2A007C4810 /* YTVimeoExtractorOperation.h */,
-				630BE46E1E8A8D2A007C4810 /* YTVimeoExtractorOperation.m */,
-				630BE46F1E8A8D2A007C4810 /* YTVimeoURLParser.h */,
-				630BE4701E8A8D2A007C4810 /* YTVimeoURLParser.m */,
-				630BE4711E8A8D2A007C4810 /* YTVimeoVideo+Private.h */,
-				630BE4721E8A8D2A007C4810 /* YTVimeoVideo.h */,
-				630BE4731E8A8D2A007C4810 /* YTVimeoVideo.m */,
-			);
-			path = YTVimeoExtractor;
-			sourceTree = "<group>";
-		};
 		630E1A5D1EC00F14003FE76A /* Me Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2498,6 +2456,7 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CBE785AA21DDF52500107146 /* youtube-ios-player-helper */,
 				CBFB1ADD21ABA94800813611 /* InfoBubbleView */,
 				CBE2773721A8045600A6E80D /* HudIndicatorView */,
 				CB84C63021A68903000D348C /* MapHelper */,
@@ -2506,8 +2465,6 @@
 				CB1B38FB21991956003C8B3F /* WKWebVideoPlayer */,
 				CB7F2E3F216C972200A3E1AD /* MultipartInputStream */,
 				CB071CF5213E476A003D01D8 /* dailymotion-player-objc */,
-				630BE4661E8A8D2A007C4810 /* YTVimeoExtractor */,
-				D78F73861D226C8700D8A271 /* youtube-ios-player-helper */,
 				9295A3B51C22521300317FEA /* 圖片放大預覽器 */,
 				92B8CB141C1A856400035F06 /* 內購相關 */,
 				9222B2181BEC78A900DF2CAD /* bookLib */,
@@ -2899,6 +2856,16 @@
 			path = HudIndicatorView;
 			sourceTree = "<group>";
 		};
+		CBE785AA21DDF52500107146 /* youtube-ios-player-helper */ = {
+			isa = PBXGroup;
+			children = (
+				CBE785AB21DDF52500107146 /* YTPlayerView.h */,
+				CBE785AC21DDF52500107146 /* YouTubeiOSPlayerHelper.h */,
+				CBE785AE21DDF52500107146 /* YTPlayerView.m */,
+			);
+			path = "youtube-ios-player-helper";
+			sourceTree = "<group>";
+		};
 		CBFB1ADD21ABA94800813611 /* InfoBubbleView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2924,18 +2891,6 @@
 				D70145061D1A9135005D8CDE /* NSString+passwordValidation.m */,
 			);
 			name = "Password 驗證";
-			sourceTree = "<group>";
-		};
-		D78F73861D226C8700D8A271 /* youtube-ios-player-helper */ = {
-			isa = PBXGroup;
-			children = (
-				D78F73871D226C8700D8A271 /* Assets.bundle */,
-				D78F738C1D226D8700D8A271 /* YTPlayerView.h */,
-				D78F738D1D226D8700D8A271 /* YTPlayerView.m */,
-				D78F73881D226C8700D8A271 /* Info.plist */,
-				D78F73891D226C8700D8A271 /* YouTubeiOSPlayerHelper.h */,
-			);
-			path = "youtube-ios-player-helper";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3045,7 +3000,6 @@
 				CB0C0DB6214653BA00FAF438 /* Images.xcassets in Resources */,
 				54AE99692016522C0003D060 /* ChooseHobbyVC.storyboard in Resources */,
 				54F777E820ABE50200A6E195 /* NotifTab.xcassets in Resources */,
-				630BE4751E8A8D2A007C4810 /* Info-tvOS.plist in Resources */,
 				54AB12CD20AD3EA900C7CC1A /* AlbumCreation.xcassets in Resources */,
 				CBAD7DE821AE50DD0084682B /* 3rdPartyVideoPlayerVC.storyboard in Resources */,
 				54AB12CF20AD77EC00C7CC1A /* MapShowing.xcassets in Resources */,
@@ -3065,7 +3019,6 @@
 				92A155981C3389CC00E83EC5 /* Taoban1TableViewCell.xib in Resources */,
 				54E0ED5720182069002A8D41 /* AlbumCreationVC.storyboard in Resources */,
 				925119701CEEFFF2002D4678 /* CalbumV1.xib in Resources */,
-				630BE4741E8A8D2A007C4810 /* Info-iOS.plist in Resources */,
 				CB0C0DB42146509F00FAF438 /* image00.xcassets in Resources */,
 				54331A9A1FE4ED90005E6ACE /* NotifTab.storyboard in Resources */,
 				92A155A01C33A81700E83EC5 /* TaobantextTableViewCell.xib in Resources */,
@@ -3134,7 +3087,6 @@
 				540635C1204E7ED5004C9F21 /* ExchangeListVC.storyboard in Resources */,
 				633BC3911EE0F96F006FB6F8 /* ParallaxViewController.xib in Resources */,
 				54FF9EED21359B610098A938 /* NewMessageBoardVC.storyboard in Resources */,
-				D78F738A1D226C8700D8A271 /* Assets.bundle in Resources */,
 				54B9F4981FE6C27300A694E4 /* InfoEditVC.storyboard in Resources */,
 				54A2645C20187B230066DD09 /* PreviewPageSetupVC.storyboard in Resources */,
 				F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */,
@@ -3230,7 +3182,6 @@
 				54231DC91FBAE973001B8D9E /* MBProgressHUD.m in Sources */,
 				92A1559F1C33A81700E83EC5 /* TaobantextTableViewCell.m in Sources */,
 				920279A71C449F7400A63027 /* CopperatiocTableViewCell.m in Sources */,
-				630BE4771E8A8D2A007C4810 /* YTVimeoExtractor.m in Sources */,
 				630A83DC1EB1D07300AC8479 /* MyBaseLayout.m in Sources */,
 				92F6CCEC1B79FA45002E547C /* NewAlbumsViewController.m in Sources */,
 				632082251EC2F59C003CE1CE /* NotifTabTableViewCell.m in Sources */,
@@ -3309,7 +3260,6 @@
 				54877CF11F905B030050C077 /* GlobalVars.m in Sources */,
 				54BCDC201FAB2787000356F0 /* NotifTabViewController.m in Sources */,
 				63A7DDD41E9223CE003D6A6E /* UIColor+Extensions.m in Sources */,
-				630BE4781E8A8D2A007C4810 /* YTVimeoExtractorOperation.m in Sources */,
 				540635BE204E7E92004C9F21 /* ExchangeListViewController.m in Sources */,
 				6306F34A1E78165F00C5C9CB /* UIImage+Extras.m in Sources */,
 				D70144FF1D1A49DA005D8CDE /* NSString+emailValidation.m in Sources */,
@@ -3349,7 +3299,6 @@
 				630418291EF9158100132CE1 /* SetupMusicViewController.m in Sources */,
 				63F3064E1EA48104009B6BF3 /* FBFriendsFindingViewController.m in Sources */,
 				540DE2AE20283A8E0090F584 /* ChangeInterestsCollectionViewCell.m in Sources */,
-				630BE47A1E8A8D2A007C4810 /* YTVimeoVideo.m in Sources */,
 				92F6CCE51B79BAD8002E547C /* PhotosViewController.m in Sources */,
 				63B340E51EC98DF000AEC4E9 /* ChooseHobbyViewController.m in Sources */,
 				924A92BA1BD48EA400E3D610 /* UICustomLineLabel.m in Sources */,
@@ -3398,7 +3347,6 @@
 				92F6CCDE1B79AB9F002E547C /* RSKImageCropViewController.m in Sources */,
 				5430446D20B8129600018AF4 /* CropResultViewController.m in Sources */,
 				6308C4331EAB4AE700F99AC0 /* HomeTabViewController.m in Sources */,
-				630BE4791E8A8D2A007C4810 /* YTVimeoURLParser.m in Sources */,
 				544DA7C41F4B271C00E80C45 /* MapShowingViewController.m in Sources */,
 				549EC78D1F7B466600260EB0 /* ChooseTemplateViewController.m in Sources */,
 				63C8DA631E30CB7E00AFBC2B /* DataModel.xcdatamodeld in Sources */,
@@ -3416,7 +3364,6 @@
 				5412B5E61FD92D50007F460A /* ActivityWebViewController.m in Sources */,
 				5451457B200EE2DB00332E9A /* CategoryCollectionViewCell.m in Sources */,
 				540DE2C3202846CC0090F584 /* ChangeInterestsCollectionReusableView.m in Sources */,
-				D78F738E1D226D8700D8A271 /* YTPlayerView.m in Sources */,
 				CB878BAA21BFB25F00B4DA30 /* AudioUploader.m in Sources */,
 				6308C45F1EACD1AA00F99AC0 /* CreaterViewController.m in Sources */,
 				63E634B21EB88DF600A938CF /* HomeDataCollectionReusableView.m in Sources */,
@@ -3438,6 +3385,7 @@
 				6381289B1DFFCEAF00605466 /* MKDropdownMenu.m in Sources */,
 				634B60411F3484AD00C776E0 /* FXBlurView.m in Sources */,
 				5430446420B8121900018AF4 /* TKImageView.m in Sources */,
+				CBE785B121DDF52600107146 /* YTPlayerView.m in Sources */,
 				543FC4F920EB24320090DF43 /* MoreTabViewController.m in Sources */,
 				540D749B2161DE1F0061E463 /* NewCooperationViewController.m in Sources */,
 				635775DA1ED3ECFB00637914 /* RecentBrowsingViewController.m in Sources */,

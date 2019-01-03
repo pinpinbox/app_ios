@@ -42,7 +42,7 @@
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-#import "YTVimeoExtractor.h"
+//#import "YTVimeoExtractor.h"
 #import "ExchangeInfoEditViewController.h"
 
 #import "ZOZolaZoomTransition.h"

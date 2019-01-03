@@ -11,6 +11,7 @@
 #import "UserAPI.h"
 #import "ShareItem.h"
 #import "PDFUploader.h"
+#import "EditNewAlbumViewController.h"
 
 #import "UIColor+Extensions.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -37,7 +38,7 @@
 
 @interface ShareViewController ()<UITableViewDelegate, UITableViewDataSource,
                                   UICollectionViewDelegateFlowLayout,UICollectionViewDataSource,
-                                  UploadProgressDelegate,PDFUploaderDelegate,ItemContentDelegate>
+                                  UploadProgressDelegate,PDFUploaderDelegate,ItemContentDelegate,AlbumSettingsDelegate>
 @property(weak, nonatomic) IBOutlet UILabel *userName;
 @property(weak, nonatomic) IBOutlet UITableView *albumList;
 @property(weak, nonatomic) IBOutlet UICollectionView *photoList;
@@ -238,6 +239,8 @@
         
     }];
     
+    
+    self.navigationController.delegate = self;
 }
 
 - (void)displayExtensionContext {
@@ -574,6 +577,9 @@
         UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
         if (post)
             post.enabled = NO;
+        [UserAPI updateAlbumContentWithAlbumId:_selectedAlbum CompletionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
+            NSLog(@"updateAlbumContentWithAlbumId %@ (%@)", result, error);
+        }];
         [self performSelector:@selector(postFinished) withObject:nil afterDelay:3];
     }
 }
@@ -623,6 +629,7 @@
         [self.navigationController performSegueWithIdentifier:@"showAddNew" sender:self];
     }
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     switch (indexPath.section) {
         case 0: {
@@ -766,6 +773,21 @@
     }];
     
 }
+#pragma mark -
+- (void)reloadAlbumList {
+    [self.albumlist removeAllObjects];
+    [self loadAlbumList];
+}
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    
+    if ([viewController isKindOfClass:[EditNewAlbumViewController class]]) {
+        EditNewAlbumViewController *vc = (EditNewAlbumViewController *)viewController;
+        vc.settingDelegate = self;
+    }
+    
+    NSLog(@"willShowViewController  %@", viewController);
+    
+}
 #pragma mark - PDFUploaderDelegate
 - (NSDictionary *)userInfo {
     return @{@"id":[UserInfo getUserId],@"token":[UserInfo getUserToken]};
@@ -784,7 +806,7 @@
         if ([self.shareItems containsObject:item]) {
             [self.shareItems removeObject:item];
             if (self.shareItems.count < 1) {
-                [self showErrorMessage:@"並無可發佈的內容(30秒影片、影片連結或圖片)，請重新選擇。"];
+                [self showErrorMessage:@"沒有可分享的內容(30秒影片、影片連結或圖片)，請重新選擇。"];
             } else
                 [self.photoList reloadData];
         }

@@ -180,8 +180,37 @@
 }
 + (void)updateAlbumSettingWithAlbumID:(NSNumber *)aid settings:(NSDictionary *)settings CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject: settings options: 0 error: nil];
+    NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
+    
+    NSDictionary *param = @{@"user_id":[UserInfo getUserId], @"token":[UserInfo getUserToken], @"album_id":aid, @"settings":jsonStr};
+    [self userAPI:param URL:@"/updatealbumsettings/2.0" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+        if (!error) {
+            NSString *res = result[@"result"];
+            if ([res isEqualToString:@"SYSTEM_OK"]) {
+                completionBlock(@{}, nil);
+            } else {
+                completionBlock(nil, [NSError errorWithDomain:@"albumSetting" code:9000 userInfo:@{NSLocalizedDescriptionKey:result[@"message"]?result[@"message"]:timeOutErrorCode}]) ;
+            }
+        } else {
+            completionBlock(nil, error);
+        }
+    }];
 }
-+ (void)inserNewAlbumWithSettings:(NSDictionary *)settings CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+//  final step for adding item to album
++ (void)updateAlbumContentWithAlbumId:(NSString *)albumid CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
+    
+    NSMutableDictionary *dic=[NSMutableDictionary new];
+    [dic setObject:[UserInfo getUserId] forKey:@"id"];
+    [dic setObject:[UserInfo getUserToken] forKey:@"token"];
+    [dic setObject:albumid forKey:@"album_id"];
+    
+    [self userAPI:dic URL:@"/updatealbumofdiy/1.1" withCompletionBlock:^(NSDictionary *result,NSString *taskId, NSError *error) {
+        
+    }];
+    
+}
++ (void)insertNewAlbumWithSettings:(NSDictionary *)settings CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     //  insertalbumofdiy
     //  updatealbumsettings
     

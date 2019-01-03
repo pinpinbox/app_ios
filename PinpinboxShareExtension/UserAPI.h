@@ -17,7 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UserAPI : NSObject
 #pragma mark - for Share extension
-+ (void)inserNewAlbumWithSettings:(NSDictionary *)settings CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
++ (void)updateAlbumContentWithAlbumId:(NSString *)albumid CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
++ (void)insertNewAlbumWithSettings:(NSDictionary *)settings CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)getAlbumSettingOptionsWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)userProfileWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount  completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;

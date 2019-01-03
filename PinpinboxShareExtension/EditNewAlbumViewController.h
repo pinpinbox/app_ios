@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+@protocol  AlbumSettingsDelegate<NSObject>
+@optional
+- (void)reloadAlbumList;
+@end
 @interface EditNewAlbumViewController : UIViewController
-
+@property (nonatomic) id<AlbumSettingsDelegate> settingDelegate;
 @end
 
 NS_ASSUME_NONNULL_END

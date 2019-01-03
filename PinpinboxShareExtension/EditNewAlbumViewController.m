@@ -97,13 +97,20 @@
 @end
 
 #pragma mark -
-@interface EditNewAlbumViewController ()<UICollectionViewDataSource, UICollectionViewDelegate>
+@interface EditNewAlbumViewController ()<UICollectionViewDataSource, UICollectionViewDelegate, UITextFieldDelegate>
 @property (nonatomic) IBOutlet UICollectionView *mainCate;
 @property (nonatomic) IBOutlet UICollectionView *subCate;
+@property (nonatomic) IBOutlet UISwitch *visSwitch;
 @property (nonatomic) NSMutableDictionary *categoryData;
 @property (nonatomic) NSMutableDictionary *metaData;
 @property (nonatomic) NSMutableArray *mainCategory;
+
 @property (nonatomic) NSInteger picked;
+@property (nonatomic) NSInteger subpicked;
+
+@property (nonatomic) IBOutlet UITextField *albumName;
+@property (nonatomic) IBOutlet UITextField *albumDesc;
+@property (nonatomic) IBOutlet UITextField *albumPoint;
 @end
 
 @implementation EditNewAlbumViewController
@@ -112,6 +119,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self loadMetadata];
+}- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
+    return YES;
 }
 - (IBAction)cancelAndDismiss:(id)sender {
     //[self.navigationController pop ]
@@ -140,13 +150,17 @@
     
     [self.mainCate reloadData];
     [self.subCate reloadData];
-
+    
+    self.visSwitch.on = YES;
+    [self visibilitySwitch:self.visSwitch];
 }
 
 - (void)loadMetadata {
+    [self visibilitySwitch:self.visSwitch];
     self.categoryData = [NSMutableDictionary dictionary];
     self.mainCategory = [NSMutableArray array];
     self.picked = 0;
+    self.subpicked = -1;
     __block typeof(self) wself = self;
     [UserAPI getAlbumSettingOptionsWithCompletionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
         if (!error) {
@@ -195,6 +209,8 @@
     if (collectionView == self.mainCate) {
         self.picked = indexPath.item;
         [self.subCate reloadData];
+    } else {
+        self.subpicked = indexPath.item;
     }
 }
 - (IBAction)visibilitySwitch:(id)sender {
@@ -209,7 +225,55 @@
         }];
     }
 }
-- (IBAction)submitInsertNewAlbum:(id)sender {
+- (NSDictionary *)getAlbumSettings {
+    NSMutableDictionary *setting = [NSMutableDictionary dictionary];
+    NSString *n = self.albumName.text;
+    NSString *d = self.albumDesc.text;
+    NSString *p = self.albumPoint.text;
     
+    if ([p intValue] > 3) {
+        [setting setObject:[NSNumber numberWithInt:[p intValue]] forKey:@"point"];
+    }
+    [setting setObject:n forKey:@"name"];
+    if (d.length > 0)
+        [setting setObject:d forKey:@"description"];
+    
+    NSDictionary *data = self.categoryData[self.mainCategory[_picked]];
+    NSArray *items = data[@"secondpaging"];
+    if (_subpicked < items.count)
+        [setting setObject:items[_subpicked][@"id"] forKey:@"category_id"];
+    else
+        [setting setObject:items[0][@"id"] forKey:@"category_id"];
+    
+    [setting setObject:data[@"id"] forKey:@"categoryarea_id"];
+    
+    [setting setObject:((self.visSwitch.on)?@"open":@"close") forKey:@"act"];
+
+    return setting;
+}
+- (IBAction)submitInsertNewAlbum:(id)sender {
+    //  validation
+    if (self.visSwitch.on) {
+        
+        if (self.albumName.text.length < 1 || self.subpicked < 0 || self.picked < 0) {
+            return;
+        }
+    }
+    NSDictionary *setting = [self getAlbumSettings];
+    __block typeof(self) wself = self;
+    [UserAPI insertNewAlbumWithSettings:setting CompletionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
+        if (!error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself didInsertAlbum];
+            });
+        } else {
+            
+        }
+    }];
+}
+- (void)didInsertAlbum {
+    if (self.settingDelegate)
+        [self.settingDelegate reloadAlbumList];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 @end
