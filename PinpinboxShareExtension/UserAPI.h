@@ -23,10 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)userProfileWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount  completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)postPreCheck:(NSString *)album_id completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
-+ (NSString *)insertPhotoWithAlbum_id:(NSString *)album_id imageData:(NSData *)imageData progressDelegate:(id<UploadProgressDelegate>)progressDelegate completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
-+ (NSString *)insertVideoWithAlbum_id:(NSString *)album_id videopath:(NSString *)videopath progressDelegate:(id<UploadProgressDelegate>)progressDelegate completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
-+ (NSString *)insertVideoWithAlbum_id:(NSString *)album_id
-                         videoURLPath:(NSString *)videopath
++ (void)insertPhotoWithAlbum_id:(NSString *)album_id taskId:(NSString *)taskId imageData:(NSData *)imageData progressDelegate:(id<UploadProgressDelegate>)progressDelegate completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
++ (void)insertVideoWithAlbum_id:(NSString *)album_id taskId:(NSString *)taskId videopath:(NSString *)videopath progressDelegate:(id<UploadProgressDelegate>)progressDelegate completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
++ (void)insertVideoWithAlbum_id:(NSString *)album_id
+                         taskId:(NSString *)taskId
+                         videoURLPath:(NSString *)videoURLpath
                      progressDelegate:(id<UploadProgressDelegate>)progressDelegate
                       completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
 

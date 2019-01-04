@@ -113,6 +113,7 @@
 @property (nonatomic) IBOutlet UITextField *albumName;
 @property (nonatomic) IBOutlet UITextField *albumDesc;
 @property (nonatomic) IBOutlet UITextField *albumPoint;
+@property (nonatomic) IBOutlet UIView *processcover;
 @end
 
 @implementation EditNewAlbumViewController
@@ -276,6 +277,7 @@
     return setting;
 }
 - (IBAction)submitInsertNewAlbum:(id)sender {
+    
     //  validation
     if (self.visSwitch.on) {
         
@@ -285,16 +287,19 @@
         }
     }
     NSDictionary *setting = [self getAlbumSettings];
+    self.processcover.hidden = NO;
     __block typeof(self) wself = self;
     [UserAPI insertNewAlbumWithSettings:setting CompletionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
         if (!error) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                
                 [wself removeKeyboardNotifications];
                 [wself showInfoToast:@"已建立新相本"];
-                [wself didInsertAlbum];
+                [wself performSelector:@selector(didInsertAlbum) withObject:nil afterDelay:2];
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
+                wself.processcover.hidden = YES;
                 NSString *s = [error localizedDescription];
                 [wself removeKeyboardNotifications];
                 [wself showErrorToast:s?s:@"無法建立相本"];
@@ -305,7 +310,9 @@
 - (void)didInsertAlbum {
     if (self.settingDelegate)
         [self.settingDelegate reloadAlbumList];
-    [self.navigationController popViewControllerAnimated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.navigationController popViewControllerAnimated:YES];
+    });
 }
 
 - (void)showInfoToast:(NSString *)msg {

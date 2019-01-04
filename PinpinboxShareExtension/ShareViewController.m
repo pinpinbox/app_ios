@@ -50,7 +50,6 @@
 @property(nonatomic, strong) NSString *selectedAlbum;
 @property(nonatomic, strong) NSString *albumNames;
 
-@property(nonatomic, strong) NSMutableArray *postRequestList;
 @property(nonatomic) IBOutlet UIView *progressView;
 @property(nonatomic) IBOutlet UIProgressView *postProgress;
 @property(nonatomic) IBOutlet UITextView *postProgressStatus;
@@ -58,7 +57,7 @@
 @property(nonatomic) NSInteger successCount;
 @property(nonatomic) NSInteger failCount;
 
-//@property(nonatomic) PDFUploader *pdfUploader;
+@property(nonatomic) IBOutlet UIButton *retryBtn;
 @end
 
 
@@ -200,10 +199,9 @@
 - (void)viewDidLoad {
     
     self.albumlist = [NSMutableArray array];
-    self.postRequestList = [NSMutableArray array];
     self.failCount = 0;
     self.successCount = 0;
-    
+    self.albumList.tableFooterView = [self getWaitingView];
     UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
     if (post)
         post.enabled = NO;
@@ -272,6 +270,19 @@
         [self.photoList reloadData];
     }
 }
+- (UIView *)getWaitingView {
+    UIView *vi = [[UIView alloc] initWithFrame:CGRectMake(0, 0,self.view.frame.size.width , 80)];
+    vi.backgroundColor = UIColor.clearColor;
+    UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    loading.tag = 1111;
+    [loading setColor:[UIColor darkGrayColor]];
+    [vi addSubview:loading];
+    loading.center = vi.center;
+    loading.hidesWhenStopped = YES;
+    [loading startAnimating];
+    
+    return vi;
+}
 - (BOOL)checkItemProvider:(NSItemProvider *)p  type:(NSString *)type {
     if ([type isEqualToString:(__bridge NSString *)kUTTypeURL]) {
         return  ([p.registeredTypeIdentifiers containsObject:(__bridge NSString *)kUTTypeURL] && ![p.registeredTypeIdentifiers containsObject:(__bridge NSString *)kUTTypeFileURL]) ||
@@ -327,30 +338,31 @@
 #pragma mark - post
 - (void)processFinishedTask:(NSString *)taskId success:(BOOL)success {
     
-    NSUInteger i = [self.postRequestList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[PDFUploader class]]) {
-            PDFUploader *p = (PDFUploader *)obj;
-            if (p.taskId && [p.taskId isEqualToString:taskId]) {
-                *stop = YES;
-                return YES;
-            }
-        } else if ([obj isKindOfClass:[NSString class]]) {
-            NSString *s = (NSString *)obj;
-            if ([s isEqualToString:taskId]) {
-                *stop = YES;
-                return YES;
-            }
-        }
-        
-        return NO;
-    }];
-    if (i >= 0 && i < self.postRequestList.count ) {
+//    NSUInteger i = [self.postRequestList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        if ([obj isKindOfClass:[PDFUploader class]]) {
+//            PDFUploader *p = (PDFUploader *)obj;
+//            if (p.taskId && [p.taskId isEqualToString:taskId]) {
+//                *stop = YES;
+//                return YES;
+//            }
+//        } else if ([obj isKindOfClass:[NSString class]]) {
+//            NSString *s = (NSString *)obj;
+//            if ([s isEqualToString:taskId]) {
+//                *stop = YES;
+//                return YES;
+//            }
+//        }
+//
+//        return NO;
+//    }];
+//    if (i >= 0 && i < self.postRequestList.count )
+    {
         if (success)
             self.successCount++;
         else
             self.failCount++;
         self.postProgressStatus.text = [NSString stringWithFormat:@"預定上傳：%d\r\n上傳完成：%d，上傳失敗：%d ",(int)self.shareItems.count,(int)self.successCount, (int)self.failCount];
-        [self.postRequestList removeObjectAtIndex:i];
+        //[self.postRequestList removeObjectAtIndex:i];
         [self updateProgress];
     }
 }
@@ -359,24 +371,20 @@
     if (item.hasVideo) {
         if ([item.objType isEqualToString:(__bridge NSString *) kUTTypeURL] ||
             [item.objType isEqualToString:(__bridge NSString *) kUTTypeText]) {
-            NSString *uuid = [UserAPI insertVideoWithAlbum_id:_selectedAlbum videoURLPath:[item.url absoluteString] progressDelegate:self completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
+            [UserAPI insertVideoWithAlbum_id:_selectedAlbum taskId:item.taskId videoURLPath:[item.url absoluteString] progressDelegate:self completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [wself processFinishedTask:taskId success:(error == nil)];
                     });
             }];
-            if (uuid)
-                [self.postRequestList addObject:uuid];
             
         } else if ([item.objType isEqualToString:(__bridge NSString *) kUTTypeMovie]) {
             if (item.vidDuration <= 31 && item.url) {
-                NSString *uuid = [UserAPI insertVideoWithAlbum_id:_selectedAlbum videopath:[item.url path] progressDelegate:self  completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
+                [UserAPI insertVideoWithAlbum_id:_selectedAlbum  taskId:item.taskId videopath:[item.url path] progressDelegate:self  completionBlock:^(NSDictionary * _Nonnull result, NSString * _Nonnull taskId, NSError * _Nonnull error) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [wself processFinishedTask:taskId success:(error == nil)];
                         });
                 }];
                 
-                if (uuid)
-                    [self.postRequestList addObject:uuid];
             }
         }
         
@@ -387,7 +395,7 @@
         if (item.url) {
             imgdata = [NSData dataWithContentsOfURL:item.url];
         
-            NSString *uuid = [UserAPI insertPhotoWithAlbum_id:_selectedAlbum imageData:imgdata progressDelegate:self  completionBlock:^(NSDictionary * _Nonnull result, NSString *taskId, NSError * _Nonnull error) {
+            [UserAPI insertPhotoWithAlbum_id:_selectedAlbum  taskId:item.taskId imageData:imgdata progressDelegate:self  completionBlock:^(NSDictionary * _Nonnull result, NSString *taskId, NSError * _Nonnull error) {
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [wself processFinishedTask:taskId success:(error == nil)];
@@ -395,8 +403,6 @@
                 
             }];
             
-            if (uuid)
-                [self.postRequestList addObject:uuid];
         }
         
     } else if ([item.objType isEqualToString:(__bridge NSString *) kUTTypePDF]) {
@@ -412,6 +418,12 @@
                 }
                 
             } uploadProgressBlock:^(int currentPage, int totalPage, NSString * _Nonnull desc) {
+                CGFloat dp = (CGFloat)currentPage/(CGFloat)totalPage;
+                dp /= (CGFloat)wself.shareItems.count;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    CGFloat p = wself.postProgress.progress;
+                    wself.postProgress.progress = p+dp;
+                });
                 
             } uploadResultBlock:^(NSError * _Nullable error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -419,7 +431,7 @@
                     [wself processFinishedTask:pdfuploader.taskId success:(error == nil)];
                 });
             }];
-            [self.postRequestList addObject:pdfuploader];
+            //[self.postRequestList addObject:pdfuploader];
             [pdfuploader exportPagesToImages:item.url];
         //}
     }
@@ -429,13 +441,14 @@
     [self.shareItems filterUsingPredicate:[NSPredicate predicateWithFormat:@"vidDuration < 31"]];
     if (self.shareItems.count < 1) return;
     
+    
     UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
     if (post)
         post.enabled = NO;
     
     self.postProgress.progress = 0;
     if (self.extensionContext) {
-        
+        self.postProgressStatus.text = [NSString stringWithFormat:@"預定上傳：%d\r\n處理中... ",(int)self.shareItems.count];
         if (_selectedAlbum) {
             self.progressView.hidden = NO;
             for (ShareItem *i in self.shareItems) {
@@ -458,14 +471,14 @@
 #pragma mark -
 - (IBAction)cancelAndFinish:(id)sender {
     
-    for (int i = 0 ; i< self.postRequestList.count;i++) {
-        
-        if ([[self.postRequestList objectAtIndex:i] isKindOfClass:[PDFUploader class]]) {
-            PDFUploader *p = [self.postRequestList objectAtIndex:i];
-            [p cacenlCurrentWork];
-        }
-        
-    }
+//    for (int i = 0 ; i< self.postRequestList.count;i++) {
+//
+//        if ([[self.postRequestList objectAtIndex:i] isKindOfClass:[PDFUploader class]]) {
+//            PDFUploader *p = [self.postRequestList objectAtIndex:i];
+//            [p cacenlCurrentWork];
+//        }
+//
+//    }
     
     [self.shareItems removeAllObjects];
     [self.albumlist removeAllObjects];
@@ -527,7 +540,7 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIActivityIndicatorView *v = (UIActivityIndicatorView *)[wself.albumList viewWithTag:54321];
-                
+                self.albumList.tableFooterView = nil;
                 if (v) {
                     [v stopAnimating];
                     [v removeFromSuperview];
@@ -577,15 +590,19 @@
         UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
         if (post)
             post.enabled = NO;
+        __block typeof(self) wself = self;
         [UserAPI updateAlbumContentWithAlbumId:_selectedAlbum CompletionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
             NSLog(@"updateAlbumContentWithAlbumId %@ (%@)", result, error);
+            [wself postFinished];
         }];
-        [self performSelector:@selector(postFinished) withObject:nil afterDelay:3];
+        
     }
 }
 - (void)postFinished {
-    [self trySendLocalNotification:@"" albumid:_albumNames? _albumNames : @""];
-    [self cancelAndFinish:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self trySendLocalNotification:@"" albumid:self.albumNames? self.albumNames : @""];
+        [self cancelAndFinish:nil];
+    });
 }
 - (void)finishEffect:(NSInteger)idx {
     __block typeof(self.photoList) list = self.photoList;
@@ -598,14 +615,14 @@
     });
 }
 - (void)tryRefreshThumbnailProgress:(NSInteger)idx progress:(CGFloat)progress {
-    __block typeof(self.photoList) list = self.photoList;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        ThumbnailCollectionViewCell *cell = (ThumbnailCollectionViewCell *)[list cellForItemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]];
-        if (cell)
-            cell.taskProgress = progress;
-        else
-            NSLog(@"cell not found %ld",(long)idx);
-    });
+//    __block typeof(self.photoList) list = self.photoList;
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        ThumbnailCollectionViewCell *cell = (ThumbnailCollectionViewCell *)[list cellForItemAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:0]];
+//        if (cell)
+//            cell.taskProgress = progress;
+//        else
+//            NSLog(@"cell not found %ld",(long)idx);
+//    });
     
 }
 #pragma mark -
@@ -663,25 +680,6 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
 }
-/*
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    switch (section) {
-        case 0:
-            return 1;
-            break;
-    }
-    return 28;
-}
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    switch (section) {
-        case 0:
-            return @"";
-            break;
-        
-    }
-    return @"我的作品";
-}
- */
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!self.progressView.hidden) return;
     switch (indexPath.section) {
@@ -760,17 +758,14 @@
 }
 
 - (void)uploadProgress:(nonnull NSString *)taskUUID progress:(CGFloat)progress {
-    __block typeof( self) wself = self;
-    [self.postRequestList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSString *s = (NSString *)obj;
-        if ([s isEqualToString:taskUUID]) {
-            [wself tryRefreshThumbnailProgress:idx progress:progress];
-            *stop = YES;
-            return YES;
-        }
+    __block typeof(self) wself = self;
+    __block typeof(progress) p = progress;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        p /= wself.shareItems.count;
+        CGFloat dp = wself.postProgress.progress;
+        wself.postProgress.progress = p+dp;
         
-        return NO;
-    }];
+    });
     
 }
 #pragma mark -

@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL hasVideo;
 @property (nonatomic) BOOL thumbIsDark;
 @property (nonatomic) Float64 vidDuration;
+@property (nonatomic) NSString *taskId;
 - (id)initWithItemProvider:(NSItemProvider *)item type:(NSString *)type itemDelegate:(id<ItemContentDelegate>)itemDelegate;
 - (void)loadThumbnailWithPostload:(id<ItemPostLoadDelegate>) postload;
 @end

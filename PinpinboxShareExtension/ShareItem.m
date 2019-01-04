@@ -25,7 +25,7 @@
         self.vidDuration = 0;
         self.objType = type;
         self.shareItem = item;
-        
+        self.taskId = [[NSUUID UUID] UUIDString];
         [self postLoadShareItem];
     }
     return self;

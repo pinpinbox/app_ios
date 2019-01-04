@@ -118,7 +118,7 @@
     return [string dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-+(NSString *)userAPI:(NSDictionary *)wData URL:(NSString *)url withCompletionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
++(void)userAPI:(NSDictionary *)wData URL:(NSString *)url withCompletionBlock:(void(^)(NSDictionary *result,NSError *error))completionBlock {
     
     NSLog(@"userAPI wData URL");
     
@@ -139,7 +139,7 @@
     
     if (![self hostAvailable:@"www.pinpinbox.com"]) {//hostURL]) {
         
-        completionBlock(nil, nil, [NSError errorWithDomain:@"pinpinbox.share" code:-1 userInfo:@{NSLocalizedDescriptionKey:@"Host not reachable"}]);
+        completionBlock(nil, [NSError errorWithDomain:@"pinpinbox.share" code:-1 userInfo:@{NSLocalizedDescriptionKey:@"Host not reachable"}]);
     }
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", ServerURL, url]]];
@@ -148,34 +148,30 @@
     [request setValue: @"zh-TW,zh" forHTTPHeaderField: @"HTTP_ACCEPT_LANGUAGE"];
     [request setTimeoutInterval: [kTimeOut floatValue]];
     //NSLog(@"request.timeoutInterval: %f", request.timeoutInterval);
-
-    __block NSString *uuid = [[NSUUID UUID] UUIDString];
     
     NSURLSessionDataTask *task = [[UserAPI session] dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         if (error == nil) {
             NSString *str = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
             if ([str isEqualToString:@"-1001"]) {
-                completionBlock(nil,uuid, [NSError errorWithDomain:@"pinpinbox.share" code:-1001 userInfo:@{NSLocalizedDescriptionKey:@"Request timed-out"}]);
+                completionBlock(nil, [NSError errorWithDomain:@"pinpinbox.share" code:-1001 userInfo:@{NSLocalizedDescriptionKey:@"Request timed-out"}]);
             } else {
                 NSError *jer = nil;
                 NSDictionary *dict = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [str dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: &jer];
                 if (!jer && [dict isKindOfClass:[NSDictionary class]]) {
-                    completionBlock(dict, uuid, nil);
+                    completionBlock(dict, nil);
                 } else {
-                    completionBlock(nil, uuid, jer);
+                    completionBlock(nil, jer);
                 }
             }
             
         } else {
-            completionBlock(nil,uuid, error);
+            completionBlock(nil, error);
         }
         
     }];
-    task.taskDescription = uuid;
-    [task resume];
     
-    return uuid;
+    [task resume];
     
 }
 + (void)updateAlbumSettingWithAlbumID:(NSNumber *)aid settings:(NSDictionary *)settings CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
@@ -184,7 +180,7 @@
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
     
     NSDictionary *param = @{@"user_id":[UserInfo getUserId], @"token":[UserInfo getUserToken], @"album_id":aid, @"settings":jsonStr};
-    [self userAPI:param URL:@"/updatealbumsettings/2.0" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+    [self userAPI:param URL:@"/updatealbumsettings/2.0" withCompletionBlock:^(NSDictionary *result, NSError *error) {
         if (!error) {
             NSString *res = result[@"result"];
             if ([res isEqualToString:@"SYSTEM_OK"]) {
@@ -205,8 +201,8 @@
     [dic setObject:[UserInfo getUserToken] forKey:@"token"];
     [dic setObject:albumid forKey:@"album_id"];
     
-    [self userAPI:dic URL:@"/updatealbumofdiy/1.1" withCompletionBlock:^(NSDictionary *result,NSString *taskId, NSError *error) {
-        
+    [self userAPI:dic URL:@"/updatealbumofdiy/1.1" withCompletionBlock:^(NSDictionary *result, NSError *error) {
+        completionBlock(result, error);
     }];
     
 }
@@ -219,7 +215,7 @@
     [dic setObject:[UserInfo getUserToken] forKey:@"token"];
     [dic setObject:@"0" forKey:@"template_id"];
     
-    [self userAPI:dic URL:@"/insertalbumofdiy/1.1" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+    [self userAPI:dic URL:@"/insertalbumofdiy/1.1" withCompletionBlock:^(NSDictionary *result, NSError *error) {
         if (!error) {
             int res = [result[@"result"] intValue];
             if (res == 1) {
@@ -245,7 +241,7 @@
     [dic setObject:[UserInfo getUserId] forKey:@"id"];
     [dic setObject:[UserInfo getUserToken] forKey:@"token"];
     
-    [self userAPI:dic URL:@"/getalbumdataoptions/1.0" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+    [self userAPI:dic URL:@"/getalbumdataoptions/1.0" withCompletionBlock:^(NSDictionary *result, NSError *error) {
         
         if (!error) {
             int res = [result[@"result"] intValue];
@@ -268,7 +264,7 @@
     [dic setObject:[UserInfo getUserToken] forKey:@"token"];
     [dic setObject:album_id forKey:@"album_id"];
     
-    [self userAPI:dic URL:@"/getalbumofdiy/1.1" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+    [self userAPI:dic URL:@"/getalbumofdiy/1.1" withCompletionBlock:^(NSDictionary *result, NSError *error) {
         if (!error) {
             int res = [result[@"result"] intValue];
             if (res == 1) {
@@ -291,7 +287,7 @@
     [dic setObject:[UserInfo getUserId] forKey:@"id"];
     [dic setObject:[UserInfo getUserToken] forKey:@"token"];
     
-    [self userAPI:dic URL:@"/getprofile/1.1" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+    [self userAPI:dic URL:@"/getprofile/1.1" withCompletionBlock:^(NSDictionary *result,  NSError *error) {
         
         if (!error) {
             int res = [result[@"result"] intValue];
@@ -316,7 +312,7 @@
 
 }
 + (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount  completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
-    NSString *limit = [NSString stringWithFormat:@"%ld,20",(long)curCount];
+    NSString *limit = [NSString stringWithFormat:@"%ld,20",(long)((curCount==0)? curCount: curCount+1)];
     
     
     NSMutableDictionary *dic=[NSMutableDictionary new];
@@ -326,7 +322,7 @@
     [dic setObject:[UserInfo getUserToken]  forKey:@"token"];
     [dic setObject:limit forKey:@"limit"];
     
-    [self userAPI:dic URL:@"/getcalbumlist/1.3" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+    [self userAPI:dic URL:@"/getcalbumlist/1.2" withCompletionBlock:^(NSDictionary *result,  NSError *error) {
         if (!error) {
             int res = [result[@"result"] intValue];
             
@@ -348,17 +344,17 @@
     }];
     
 }
-+ (NSString *)insertVideoWithAlbum_id:(NSString *)album_id
++ (void)insertVideoWithAlbum_id:(NSString *)album_id
+                               taskId:(NSString *)taskId
                             videopath:(NSString *)videopath
                      progressDelegate:(id<UploadProgressDelegate>)progressDelegate
                       completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
     
-    NSString *uuid = [[NSUUID UUID] UUIDString];
     
     NSData *vidData = [NSData dataWithContentsOfFile:videopath];
     if (!vidData) {
-        completionBlock(nil,nil, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to load video data."}]);
-        return nil;
+        completionBlock(nil,taskId, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to load video data."}]);
+        return;
     }
     
     [UserAPI sharedUserAPI].progressDelegate = progressDelegate;
@@ -414,7 +410,7 @@
     
     
     request.timeoutInterval = [kTimeOutForVideo intValue];
-    
+    __block typeof(taskId) tid = taskId;
     NSURLSessionDataTask *task = [[UserAPI session] dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
             if (data) {
@@ -423,7 +419,7 @@
                 
                 //  time out
                 if (str && [str isEqualToString:timeOutErrorCode]) {
-                    completionBlock(nil,uuid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Request timed out"}]);
+                    completionBlock(nil, tid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Request timed out"}]);
                 } else {
                     //__strong typeof(wself) stSelf = wself;
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options: NSJSONReadingMutableContainers error: nil];
@@ -432,28 +428,28 @@
                     
                     if ([res isEqualToString:@"SYSTEM_OK"]) {
                         if (completionBlock)
-                            completionBlock(dic[@"data"], uuid, nil);
+                            completionBlock(dic[@"data"], tid, nil);
                     } else {
                     
                         if (dic[@"message"] == nil) {
-                            completionBlock(nil,uuid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to upload video"}]);
+                            completionBlock(nil, tid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to upload video"}]);
                         
                         } else {
-                            completionBlock(nil,uuid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]);
+                            completionBlock(nil,tid, [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]);
                         }
                     }
                 }
             } else {
-                completionBlock(nil,uuid, error? error : [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to upload video"}]);
+                completionBlock(nil,tid, error? error : [NSError errorWithDomain:@"insertVideoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to upload video"}]);
             }
     }];
-    task.taskDescription = uuid;
+    task.taskDescription = taskId;
     [task resume];
     
-    return uuid;
 }
-+ (NSString *)insertVideoWithAlbum_id:(NSString *)album_id
-                            videoURLPath:(NSString *)videopath
++ (void)insertVideoWithAlbum_id:(NSString *)album_id
+                               taskId:(NSString *)taskId
+                            videoURLPath:(NSString *)videoURLpath
                      progressDelegate:(id<UploadProgressDelegate>)progressDelegate
                       completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
     
@@ -464,10 +460,10 @@
     [_params setObject:[UserInfo getUserToken] forKey:@"token"];
     [_params setObject:album_id forKey:@"album_id"];
     [_params setObject:@"embed" forKey:@"video_refer"];
-    [_params setObject:videopath forKey:@"video_target"];
+    [_params setObject:videoURLpath forKey:@"video_target"];
     
 
-    NSString *uuid = [UserAPI userAPI:_params URL:@"/insertvideoofdiy/2.0" withCompletionBlock:^(NSDictionary *result, NSString *taskId, NSError *error) {
+    [UserAPI userAPI:_params URL:@"/insertvideoofdiy/2.0" withCompletionBlock:^(NSDictionary *result,  NSError *error) {
         if (!error) {
             NSString *res = result[@"result"];
             
@@ -485,17 +481,18 @@
         }
     }];
     
-    return uuid;
+    
 }
 
-+ (NSString *)insertPhotoWithAlbum_id:(NSString *)album_id
++ (void)insertPhotoWithAlbum_id:(NSString *)album_id
+                               taskId:(NSString *)taskId
                             imageData:(NSData *)imageData
                      progressDelegate:(id<UploadProgressDelegate>)progressDelegate
                       completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock {
     
     if (!imageData || imageData.length < 1) {
-        completionBlock(nil,nil, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to load image data."}]);
-        return nil;
+        completionBlock(nil,taskId, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"Failed to load image data."}]);
+        return ;
     }
     
     [UserAPI sharedUserAPI].progressDelegate = progressDelegate;
@@ -544,10 +541,8 @@
     
     [request setHTTPBodyStream:st];
     
-    //__block NSString *str;
     
-    NSString *uuid = [[NSUUID UUID] UUIDString];
-    
+    __block typeof(taskId) tid = taskId;
     NSURLSessionDataTask *task = [[UserAPI session] dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"insertphotoofdiy");
         
@@ -556,7 +551,7 @@
             
             if (statusCode != 200) {
                 if (completionBlock)
-                    completionBlock(nil, uuid, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"HTTP response is not 200"}]);
+                    completionBlock(nil, tid, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:@"HTTP response is not 200"}]);
                 
                 return;
             }
@@ -567,23 +562,21 @@
             
             if ([dic[@"result"] intValue] == 1) {
                   if (completionBlock)
-                      completionBlock(dic[@"data"], uuid, nil);
+                      completionBlock(dic[@"data"], tid, nil);
                 
             } else {
                 NSLog(@"Error Message: %@", dic[@"message"]);
                 if (completionBlock)
-                    completionBlock(nil, uuid, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]);
+                    completionBlock(nil, tid, [NSError errorWithDomain:@"insertPhotoWithAlbum_id" code:9000 userInfo:@{NSLocalizedDescriptionKey:dic[@"message"]}]);
             }
             
         } else {
             if (completionBlock)
-                completionBlock(nil, uuid, error);
+                completionBlock(nil, tid, error);
         }
     }];
-    task.taskDescription = uuid;
+    task.taskDescription = taskId;
     [task resume];
-    
-    return uuid;
 }
 + (void)loadImageWithURL:(NSURL *)url completionBlock:(void(^)(UIImage * _Nullable image))completionBlock {
     
@@ -607,13 +600,14 @@
 }
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
-//    if (task.taskDescription) {
+    if (task.taskDescription != nil && task.taskDescription.length > 0) {
 //        //NSLog(@"didSendBodyData %@: %ld/%ld",task.description, (unsigned long)totalBytesSent, (unsigned long)totalBytesExpectedToSend );
-//        if ([UserAPI sharedUserAPI].progressDelegate) {
-//            double p = (double) totalBytesSent/(double)totalBytesExpectedToSend;
-//            [[UserAPI sharedUserAPI].progressDelegate uploadProgress:task.taskDescription progress: (CGFloat)p];
-//        }
-//    }
+        if ([UserAPI sharedUserAPI].progressDelegate) {
+            double p = (double) totalBytesSent/(double)totalBytesExpectedToSend;
+            NSLog(@"didSendBodyData (%@)%f",task.originalRequest.URL,p);
+            [[UserAPI sharedUserAPI].progressDelegate uploadProgress:task.taskDescription progress: (CGFloat)p];
+        }
+    }
 }
 
 /*
