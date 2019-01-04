@@ -4087,11 +4087,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"page: %ld", (long)page);
     NSString *description = self.photoArray[page][@"description"];
     
-    NSAttributedString *attString = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleBody], NSKernAttributeName: @1, NSForegroundColorAttributeName: [UIColor whiteColor]}];
-    
-    if ([wTools objectExists: attString]) {
-        self.descriptionLabel.text = attString;
-    }
+    if ([wTools objectExists: description]) {
+        NSAttributedString *attString = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleBody], NSKernAttributeName: @1, NSForegroundColorAttributeName: [UIColor whiteColor]}];
+        if ([wTools objectExists: attString]) {
+            self.descriptionLabel.text = attString;
+        }
+    }    
     
     CGFloat btnHeight = 0;
     NSInteger urlCount = 0;
@@ -4156,13 +4157,18 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         btnHeight = 30;
     }
     NSLog(@"btnHeight: %f", btnHeight);
-    [self setupContentSizeHeight: description btnHeight: btnHeight];
+//    [self setupContentSizeHeight: description btnHeight: btnHeight];
     [self.descriptionScrollView setContentOffset: CGPointZero];
 }
 
 - (void)setupContentSizeHeight:(NSString *)description
                      btnHeight:(CGFloat)btnHeight {
     NSLog(@"setupContentSizeHeight");
+    
+    if (![wTools objectExists: description]) {
+        return;
+    }
+    
     NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     style.lineBreakMode = NSLineBreakByWordWrapping;
     style.alignment = NSTextAlignmentLeft;

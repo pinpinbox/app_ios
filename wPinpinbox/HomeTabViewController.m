@@ -1606,55 +1606,27 @@
                 if (![wself checkTimedOut:response api:@"getEvent" eventId:eventId text:@""]) {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
-                    //NSLog(@"data: %@", data);
+                    NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 1) {
                         NSLog(@"result is 1");
                         NSLog(@"GetEvent Success");
-                        
                         if (![wTools objectExists: data[@"data"][@"event"]]) {
                             return;
                         }
-                        
-                        NewEventPostViewController *newEventPostVC = [[UIStoryboard storyboardWithName: @"NewEventPostVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewEventPostViewController"];
-                        newEventPostVC.name = data[@"data"][@"event"][@"name"];
-                        newEventPostVC.title = data[@"data"][@"event"][@"title"];
-                        newEventPostVC.imageUrl = data[@"data"][@"event"][@"image"];
-                        newEventPostVC.urlString = data[@"data"][@"event"][@"url"];
-                        newEventPostVC.templateArray =  data[@"data"][@"event_templatejoin"];
-                        newEventPostVC.eventId = eventId;
-                        newEventPostVC.contributionNumber = [data[@"data"][@"event"][@"contribution"] integerValue];
-                        newEventPostVC.popularityNumber = [data[@"data"][@"event"][@"popularity"] integerValue];
-                        newEventPostVC.prefixText = data[@"data"][@"event"][@"prefix_text"];
-                        newEventPostVC.specialUrl = data[@"data"][@"special"][@"url"];
-                        newEventPostVC.eventFinished = NO;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: newEventPostVC animated: YES];
-                        
+                        [self toNewEventPostVC: data
+                                       eventId: eventId
+                                 eventFinished: NO];
                     } else if ([data[@"result"] intValue] == 2) {
                         NSLog(@"result is 2");
                         NSLog(@"event_templatejoin: %@", data[@"data"][@"event_templatejoin"]);
-                        
                         if (![wTools objectExists: data[@"data"][@"event"]]) {
                             return;
                         }
                         
-                        NewEventPostViewController *newEventPostVC = [[UIStoryboard storyboardWithName: @"NewEventPostVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewEventPostViewController"];
-                        newEventPostVC.name = data[@"data"][@"event"][@"name"];
-                        newEventPostVC.title = data[@"data"][@"event"][@"title"];
-                        newEventPostVC.imageUrl = data[@"data"][@"event"][@"image"];
-                        newEventPostVC.urlString = data[@"data"][@"event"][@"url"];
-                        newEventPostVC.templateArray = data[@"data"][@"event_templatejoin"];
-                        newEventPostVC.eventId = eventId;
-                        newEventPostVC.contributionNumber = [data[@"data"][@"event"][@"contribution"] integerValue];
-                        newEventPostVC.popularityNumber = [data[@"data"][@"event"][@"popularity"] integerValue];
-                        newEventPostVC.prefixText = data[@"data"][@"event"][@"prefix_text"];
-                        newEventPostVC.specialUrl = data[@"data"][@"special"][@"url"];
-                        newEventPostVC.eventFinished = YES;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: newEventPostVC animated: YES];
+                        [self toNewEventPostVC: data
+                                       eventId: eventId
+                                 eventFinished: YES];
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
                         if ([wTools objectExists: data[@"message"]]) {
@@ -1671,11 +1643,34 @@
     });
 }
 
+- (void)toNewEventPostVC:(NSDictionary *)data
+                 eventId:(NSString *)eventId
+           eventFinished:(BOOL)eventFinished {
+    NewEventPostViewController *newEventPostVC = [[UIStoryboard storyboardWithName: @"NewEventPostVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewEventPostViewController"];
+    newEventPostVC.name = data[@"data"][@"event"][@"name"];
+    newEventPostVC.eventTitle = data[@"data"][@"event"][@"title"];
+    newEventPostVC.imageUrl = data[@"data"][@"event"][@"image"];
+    newEventPostVC.urlString = data[@"data"][@"event"][@"url"];
+    newEventPostVC.templateArray = data[@"data"][@"event_templatejoin"];
+    newEventPostVC.eventId = eventId;
+    newEventPostVC.contributionNumber = [data[@"data"][@"event"][@"contribution"] integerValue];
+    newEventPostVC.popularityNumber = [data[@"data"][@"event"][@"popularity"] integerValue];
+    newEventPostVC.prefixText = data[@"data"][@"event"][@"prefix_text"];
+    newEventPostVC.specialUrl = data[@"data"][@"special"][@"url"];
+    newEventPostVC.contributeStartTime = data[@"data"][@"event"][@"contribute_starttime"];
+    newEventPostVC.contributeEndTime = data[@"data"][@"event"][@"contribute_endtime"];
+    newEventPostVC.voteStartTime = data[@"data"][@"event"][@"vote_starttime"];
+    newEventPostVC.voteEndtime = data[@"data"][@"event"][@"vote_endtime"];
+    newEventPostVC.eventFinished = eventFinished;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: newEventPostVC animated: YES];
+}
+
 #pragma mark - UICollectionViewDataSource Methods
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
-
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section {
