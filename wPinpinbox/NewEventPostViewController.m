@@ -131,7 +131,7 @@
 - (void)goVotingNormal: (UIButton *)sender {
     NSLog(@"goVotingNormal");
     //self.goVotingView.backgroundColor = [UIColor clearColor];
-    [self checkGoVotingView: @"showToastMsg"];
+//    [self checkGoVotingView: @"showToastMsg"];
 }
 
 - (void)initialValueSetup {
@@ -294,8 +294,8 @@
     
     NSLog(@"self.scrollView.contentSize: %@", NSStringFromCGSize(self.scrollView.contentSize));
  
-    [self checkEventPostBtn: @"checkVisible"];
-    [self checkGoVotingView: @"checkVisible"];
+//    [self checkEventPostBtn: @"checkVisible"];
+//    [self checkGoVotingView: @"checkVisible"];
 }
 
 - (void)checkEventPostBtn:(NSString *)option {
@@ -451,7 +451,7 @@
     NSLog(@"eventPostBtnPress");
     NSLog(@"self.eventFinished: %d", self.eventFinished);
     
-    [self checkEventPostBtn: @"showToastMsg"];
+//    [self checkEventPostBtn: @"showToastMsg"];
     
     if (!self.eventFinished) {
         //[self getExistedAlbum];
