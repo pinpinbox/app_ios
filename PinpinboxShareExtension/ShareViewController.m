@@ -158,7 +158,7 @@
 @implementation AlbumCellView
 - (void)loadAlbum:(NSDictionary *)data {
     NSDictionary *album = data[@"album"];
-    
+    self.album.image = nil;
     if (![album isKindOfClass:[NSNull class]]) {
         self.albumName.text = album[@"name"];
         self.albumDate.text = album[@"insertdate"];
@@ -177,6 +177,7 @@
         
         if (album[@"cover"] && ![album[@"cover"] isKindOfClass:[NSNull class]]) {
             NSString *c = album[@"cover"];
+            self.album.alpha = 1.0;
             __block typeof(self) wself = self;
             NSURL *u = [NSURL URLWithString:c];
             
@@ -188,6 +189,9 @@
                 }
             }];
             
+        } else {
+            self.album.image = [UIImage imageNamed:@"Icon.png"];
+            self.album.alpha = 0.5;
         }
     }
 }
@@ -214,7 +218,8 @@
     
     
     if ([UserInfo getUserId].length < 1 ) {
-        self.notLoginCover.hidden = NO;
+        //self.notLoginCover.hidden = NO;
+        [self showErrorMessage:@"請先登入Pinpinbox app，再使用分享功能。"];
         return;
     }
     
@@ -418,7 +423,7 @@
                 }
                 
             } uploadProgressBlock:^(int currentPage, int totalPage, NSString * _Nonnull desc) {
-                CGFloat dp = (CGFloat)currentPage/(CGFloat)totalPage;
+                CGFloat dp = (CGFloat)1/(CGFloat)totalPage;
                 dp /= (CGFloat)wself.shareItems.count;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     CGFloat p = wself.postProgress.progress;
@@ -464,9 +469,16 @@
 - (void)showErrorMessage:(NSString *)message {
     
     self.coverNotice.text = message;
+    self.notLoginCover.alpha = 0;
     self.notLoginCover.hidden = NO;
     [self.shareItems removeAllObjects];
     [self.albumlist removeAllObjects];
+    [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.notLoginCover.alpha = 1;
+    } completion:^(BOOL finished) {
+        
+    }];
+    
 }
 #pragma mark -
 - (IBAction)cancelAndFinish:(id)sender {
@@ -584,8 +596,10 @@
 - (void)updateProgress {
     
     self.progressView.hidden = NO;
+    float p = (float)(self.successCount+self.failCount)/(float)(self.shareItems.count);
+    if (self.postProgress.progress < p)
+        self.postProgress.progress = p;
     
-    self.postProgress.progress = (float)(self.successCount+self.failCount)/(float)(self.shareItems.count);
     if (self.shareItems.count <= (self.successCount+self.failCount)) {
         UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
         if (post)
@@ -758,14 +772,13 @@
 }
 
 - (void)uploadProgress:(nonnull NSString *)taskUUID progress:(CGFloat)progress {
-    __block typeof(self) wself = self;
-    __block typeof(progress) p = progress;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        p /= wself.shareItems.count;
-        CGFloat dp = wself.postProgress.progress;
-        wself.postProgress.progress = p+dp;
-        
-    });
+    //__block typeof(self) wself = self;
+    //__block typeof(progress) p = progress;
+    
+    CGFloat p = progress / (CGFloat)self.shareItems.count;    
+    CGFloat dp = self.postProgress.progress;
+    NSLog(@"uploadProgress %f, (%f), %f",p, progress,dp);
+    self.postProgress.progress = p+dp;
     
 }
 #pragma mark -

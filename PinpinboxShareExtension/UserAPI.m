@@ -322,7 +322,7 @@
     [dic setObject:[UserInfo getUserToken]  forKey:@"token"];
     [dic setObject:limit forKey:@"limit"];
     
-    [self userAPI:dic URL:@"/getcalbumlist/1.2" withCompletionBlock:^(NSDictionary *result,  NSError *error) {
+    [self userAPI:dic URL:@"/getcalbumlist/1.3" withCompletionBlock:^(NSDictionary *result,  NSError *error) {
         if (!error) {
             int res = [result[@"result"] intValue];
             
@@ -603,9 +603,11 @@
     if (task.taskDescription != nil && task.taskDescription.length > 0) {
 //        //NSLog(@"didSendBodyData %@: %ld/%ld",task.description, (unsigned long)totalBytesSent, (unsigned long)totalBytesExpectedToSend );
         if ([UserAPI sharedUserAPI].progressDelegate) {
-            double p = (double) totalBytesSent/(double)totalBytesExpectedToSend;
-            NSLog(@"didSendBodyData (%@)%f",task.originalRequest.URL,p);
-            [[UserAPI sharedUserAPI].progressDelegate uploadProgress:task.taskDescription progress: (CGFloat)p];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                double p = (double) bytesSent/(double)totalBytesExpectedToSend;
+                //NSLog(@"didSendBodyData (%@)%f",task.originalRequest.URL,p);
+                [[UserAPI sharedUserAPI].progressDelegate uploadProgress:task.taskDescription progress: (CGFloat)p];
+            });
         }
     }
 }

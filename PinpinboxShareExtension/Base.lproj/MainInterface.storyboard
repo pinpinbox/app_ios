@@ -238,9 +238,8 @@
                                                         <constraint firstAttribute="height" constant="20" id="lso-FR-JM4"/>
                                                     </constraints>
                                                 </imageView>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0GA-nA-tSk">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="0GA-nA-tSk">
                                                     <rect key="frame" x="16" y="8" width="64" height="64"/>
-                                                    <color key="backgroundColor" name="systemPurpleColor" catalog="System" colorSpace="catalog"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="64" id="SyV-mp-zGo"/>
                                                         <constraint firstAttribute="height" constant="64" id="oFg-qr-rZu"/>
