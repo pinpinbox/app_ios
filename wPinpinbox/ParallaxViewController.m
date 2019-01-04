@@ -58,9 +58,10 @@
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
     self.bottomScroll.delegate = self;
-    self.headerImageViewHeight.constant = HEADER_IMAGE_HEIGHT;
-    self.bottomViewTopConstraint.constant = self.headerImageViewHeight.constant;
-    self.contentViewHeight.constant = [UIScreen mainScreen].bounds.size.height - HEADER_IMAGE_HEIGHT;
+    
+    
+    //self.bottomViewTopConstraint.constant = self.headerImageViewHeight.constant;
+    //self.contentViewHeight.constant = [UIScreen mainScreen].bounds.size.height - HEADER_IMAGE_HEIGHT;
 
     //self.topScroll.showsVerticalScrollIndicator = NO;
     self.bottomScroll.showsVerticalScrollIndicator = NO;
@@ -193,8 +194,8 @@
 }
 
 - (void)adjustContentViewHeight{
-    self.bottomViewTopConstraint.constant = self.headerImageViewHeight.constant;
-    self.contentViewHeight.constant = [UIScreen mainScreen].bounds.size.height -  self.headerImageViewHeight.constant;
+//    self.bottomViewTopConstraint.constant = self.headerImageViewHeight.constant;
+//    self.contentViewHeight.constant = [UIScreen mainScreen].bounds.size.height -  self.headerImageViewHeight.constant;
 }
 
 - (IBAction)headerImgBtnPress:(id)sender {
