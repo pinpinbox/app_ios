@@ -103,10 +103,16 @@
 }
 
 - (IBAction)goVotingBtnPress:(id)sender {
-    VotingViewController *votingVC = [[UIStoryboard storyboardWithName: @"VotingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"VotingViewController"];
-    votingVC.eventId = self.eventId;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate.myNav pushViewController: votingVC animated: YES];
+    NSLog(@"goVotingBtnPress");
+    if ([wTools timeCalculation: self.contributeStartTime] <= 0 && [wTools timeCalculation: self.contributeEndTime] >= 0) {
+        NSLog(@"latter than start time and earlier than end time");
+        VotingViewController *votingVC = [[UIStoryboard storyboardWithName: @"VotingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"VotingViewController"];
+        votingVC.eventId = self.eventId;
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [appDelegate.myNav pushViewController: votingVC animated: YES];
+    } else {
+        [self warnToastWithMessage: @"投票已結束"];
+    }
     
     /*
     if (!self.eventFinished) {
@@ -131,7 +137,6 @@
 - (void)goVotingNormal: (UIButton *)sender {
     NSLog(@"goVotingNormal");
     //self.goVotingView.backgroundColor = [UIColor clearColor];
-//    [self checkGoVotingView: @"showToastMsg"];
 }
 
 - (void)initialValueSetup {
@@ -294,65 +299,44 @@
     
     NSLog(@"self.scrollView.contentSize: %@", NSStringFromCGSize(self.scrollView.contentSize));
  
-//    [self checkEventPostBtn: @"checkVisible"];
-//    [self checkGoVotingView: @"checkVisible"];
+    [self checkEventPostBtn];
+    [self checkGoVotingView];
 }
 
-- (void)checkEventPostBtn:(NSString *)option {
+- (void)checkEventPostBtn {
     NSLog(@"checkEventPostBtn");
     NSLog(@"self.contributeStartTime: %@", self.contributeStartTime);
     NSLog(@"self.contributeEndTime: %@", self.contributeEndTime);
     
-    if ([wTools remainingTimeCalculationOnlyMinute: self.contributeStartTime] == 0 || [wTools remainingTimeCalculationOnlyMinute: self.contributeEndTime] == 0) {
+    NSLog(@"time calculation self.contributeStartTime: %ld", [wTools timeCalculation: self.contributeStartTime]);
+    NSLog(@"time calculation self.contributeEndTime: %ld", [wTools timeCalculation: self.contributeEndTime]);
+    
+    if ([wTools timeCalculation: self.contributeStartTime] == 0 || [wTools timeCalculation: self.contributeEndTime] == 0) {
         NSLog(@"start or end time == 0");
-        if ([option isEqualToString: @"checkVisible"]) {
-            self.eventPostBtn.hidden = YES;
-        } else if ([option isEqualToString: @"showToastMsg"]) {
-            [self warnToastWithMessage: @"投稿已結束"];
-            return;
-        }
-    } else if ([wTools remainingTimeCalculationOnlyMinute: self.contributeStartTime] > 0 || [wTools remainingTimeCalculationOnlyMinute: self.contributeEndTime] < 0) {
+        self.eventPostBtn.hidden = YES;
+    } else if ([wTools timeCalculation: self.contributeStartTime] > 0 || [wTools timeCalculation: self.contributeEndTime] < 0) {
         NSLog(@"earlier than start time latter than end time");
-        if ([option isEqualToString: @"checkVisible"]) {
-            self.eventPostBtn.hidden = YES;
-        } else if ([option isEqualToString: @"showToastMsg"]) {
-            [self warnToastWithMessage: @"投稿已結束"];
-            return;
-        }
-    } else if ([wTools remainingTimeCalculationOnlyMinute: self.contributeStartTime] <= 0 && [wTools remainingTimeCalculationOnlyMinute: self.contributeEndTime] >= 0) {
+        self.eventPostBtn.hidden = YES;
+    } else if ([wTools timeCalculation: self.contributeStartTime] <= 0 && [wTools timeCalculation: self.contributeEndTime] >= 0) {
         NSLog(@"latter than start time and earlier than end time");
-        if ([option isEqualToString: @"checkVisible"]) {
-            self.eventPostBtn.hidden = NO;
-        }
+        self.eventPostBtn.hidden = NO;
     }
 }
 
-- (void)checkGoVotingView:(NSString *)option {
+- (void)checkGoVotingView {
     NSLog(@"checkGoVotingView");
     NSLog(@"self.voteStartTime: %@", self.voteStartTime);
     NSLog(@"self.voteEndtime: %@", self.voteEndtime);
     
-    if ([wTools remainingTimeCalculationOnlyMinute: self.voteStartTime] == 0 || [wTools remainingTimeCalculationOnlyMinute: self.voteEndtime] == 0) {
+    if ([wTools timeCalculation: self.voteStartTime] == 0 || [wTools timeCalculation: self.voteEndtime] == 0) {
         NSLog(@"start or end time == 0");
-        if ([option isEqualToString: @"checkVisible"]) {
-            self.goVotingView.hidden = YES;
-        } else if ([option isEqualToString: @"showToastMsg"]) {
-            [self warnToastWithMessage: @"投票已結束"];
-            return;
-        }
-    } else if ([wTools remainingTimeCalculationOnlyMinute: self.voteStartTime] > 0 || [wTools remainingTimeCalculationOnlyMinute: self.voteEndtime] < 0) {
+        self.goVotingView.hidden = YES;
+    } else if ([wTools timeCalculation: self.voteStartTime] > 0 || [wTools timeCalculation: self.voteEndtime] < 0) {
         NSLog(@"earlier than start time latter than end time");
-        if ([option isEqualToString: @"checkVisible"]) {
-            self.goVotingView.hidden = YES;
-        } else if ([option isEqualToString: @"showToastMsg"]) {
-            [self warnToastWithMessage: @"投票已結束"];
-            return;
-        }
-    } else if ([wTools remainingTimeCalculationOnlyMinute: self.voteStartTime] <= 0 && [wTools remainingTimeCalculationOnlyMinute: self.voteEndtime] >= 0) {
+        self.goVotingView.hidden = YES;
+    } else if ([wTools timeCalculation: self.voteStartTime] <= 0 && [wTools timeCalculation: self.voteEndtime] >= 0) {
         NSLog(@"latter than start time and earlier than end time");
-        if ([option isEqualToString: @"checkVisible"]) {
-            self.goVotingView.hidden = NO;
-        }
+        self.goVotingView.hidden = NO;
     }
 }
 
@@ -439,7 +423,6 @@
 }
 
 #pragma mark - IBAction Methods
-
 - (IBAction)backBtnPress:(id)sender {
     //[self.navigationController popViewControllerAnimated: YES];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -451,24 +434,27 @@
     NSLog(@"eventPostBtnPress");
     NSLog(@"self.eventFinished: %d", self.eventFinished);
     
-//    [self checkEventPostBtn: @"showToastMsg"];
-    
-    if (!self.eventFinished) {
-        //[self getExistedAlbum];
-        NewExistingAlbumViewController *newExistingAlbumVC = [[UIStoryboard storyboardWithName: @"NewExistingAlbumVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewExistingAlbumViewController"];
-        newExistingAlbumVC.templateArray = self.templateArray;
-        newExistingAlbumVC.eventId = self.eventId;
-        newExistingAlbumVC.contributionNumber = self.contributionNumber;
-        newExistingAlbumVC.prefixText = self.prefixText;
-        newExistingAlbumVC.specialUrl = self.specialUrl;
-        
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav pushViewController: newExistingAlbumVC animated: YES];
+    if ([wTools timeCalculation: self.contributeStartTime] <= 0 && [wTools timeCalculation: self.contributeEndTime] >= 0) {
+        NSLog(@"latter than start time and earlier than end time");
+        if (!self.eventFinished) {
+            //[self getExistedAlbum];
+            NewExistingAlbumViewController *newExistingAlbumVC = [[UIStoryboard storyboardWithName: @"NewExistingAlbumVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewExistingAlbumViewController"];
+            newExistingAlbumVC.templateArray = self.templateArray;
+            newExistingAlbumVC.eventId = self.eventId;
+            newExistingAlbumVC.contributionNumber = self.contributionNumber;
+            newExistingAlbumVC.prefixText = self.prefixText;
+            newExistingAlbumVC.specialUrl = self.specialUrl;
+            
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav pushViewController: newExistingAlbumVC animated: YES];
+        } else {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: @"活動結束" preferredStyle: UIAlertControllerStyleAlert];
+            UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"OK" style: UIAlertActionStyleDefault handler: nil];
+            [alert addAction: okBtn];
+            [self presentViewController: alert animated: YES completion: nil];
+        }
     } else {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: @"活動結束" preferredStyle: UIAlertControllerStyleAlert];
-        UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"OK" style: UIAlertActionStyleDefault handler: nil];
-        [alert addAction: okBtn];
-        [self presentViewController: alert animated: YES completion: nil];
+        [self warnToastWithMessage: @"投稿已結束"];
     }
 }
 

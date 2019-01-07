@@ -729,6 +729,7 @@ static wTools *instance =nil;
 }
 
 + (NSInteger)remainingTimeCalculationOnlyMinute:(NSString *)timeStr {
+    NSLog(@"remainingTimeCalculationOnlyMinute");
     //  parameter is not NSString or nil  //
     if ([timeStr isKindOfClass:[NSNull class]] || !timeStr ) return 0;
     
@@ -745,8 +746,30 @@ static wTools *instance =nil;
     NSLog(@"time: %f", time);
     
     NSInteger minutes = ((int)time) % (3600 * 24) % 3600 / 60;
+    NSLog(@"minutes: %ld", minutes);
     
     return minutes;
+}
+
++ (NSInteger)timeCalculation:(NSString *)timeStr {
+    NSLog(@"timeCalculation");
+    if ([timeStr isKindOfClass:[NSNull class]] || !timeStr ) return 0;
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
+    
+    NSDate *endDate = [dateFormatter dateFromString: timeStr];
+    NSLog(@"endDate: %@", endDate);
+    
+    NSDate *currentDate = [NSDate date];
+    NSLog(@"currentDate: %@", currentDate);
+    
+    NSTimeInterval time = [endDate timeIntervalSinceDate: currentDate];
+    NSLog(@"time: %f", time);
+    
+    NSInteger timeInt = (int)time;
+    
+    return timeInt;
 }
 
 + (UIImage *)normalSnapshotImage:(UIView *)view {
