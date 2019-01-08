@@ -1170,7 +1170,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
            forControlEvents:UIControlEventTouchUpInside];
     [clearDataBtn setTitle:@"清除" forState:UIControlStateNormal];
     [clearDataBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
-    clearDataBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    clearDataBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
     clearDataBtn.frame = CGRectMake(0.0, 0.0, 90.0, 36.0);
     clearDataBtn.layer.cornerRadius = kCornerRadius;
     clearDataBtn.backgroundColor = [UIColor thirdGrey];
@@ -1184,7 +1184,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
              forControlEvents:UIControlEventTouchUpInside];
     [sendDataButton setTitle:@"送出" forState:UIControlStateNormal];
     [sendDataButton setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
-    sendDataButton.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    sendDataButton.titleLabel.font = [UIFont systemFontOfSize: 18.0];
     sendDataButton.frame = CGRectMake(0.0, 0.0, 90.0, 36.0);
     sendDataButton.layer.cornerRadius = kCornerRadius;
     sendDataButton.backgroundColor = [UIColor firstMain];
