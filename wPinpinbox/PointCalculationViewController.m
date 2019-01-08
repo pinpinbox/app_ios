@@ -110,6 +110,10 @@
     }
     self.navBarView.backgroundColor = [UIColor barColor];
     
+    self.totalPointTitleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    self.monthPointTitleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    self.exchangeTitleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+        
     // Total Point
     [self.totalPointTitleLabel sizeToFit];
     
