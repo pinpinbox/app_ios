@@ -148,7 +148,7 @@
     audioPlayLabel.text = @"自動播放音效 (作品)";
     [LabelAttributeStyle changeGapString: audioPlayLabel content: audioPlayLabel.text];
     audioPlayLabel.textColor = [UIColor firstGrey];
-    audioPlayLabel.font = [UIFont boldSystemFontOfSize: 17];
+    audioPlayLabel.font = [UIFont systemFontOfSize: 17];
     [audioPlayLabel sizeToFit];
     audioPlayLabel.myCenterYOffset = 0;
     
@@ -201,7 +201,7 @@
     videoPlayLabel.text = @"自動播放影片 (分類輪播)";
     [LabelAttributeStyle changeGapString: videoPlayLabel content: videoPlayLabel.text];
     videoPlayLabel.textColor = [UIColor firstGrey];
-    videoPlayLabel.font = [UIFont boldSystemFontOfSize: 17];
+    videoPlayLabel.font = [UIFont systemFontOfSize: 17];
     [videoPlayLabel sizeToFit];
     videoPlayLabel.myCenterYOffset = 0;
     [videoPlayLayout addSubview: videoPlayLabel];
@@ -261,7 +261,7 @@
     platformRuleLabel.text = @"平台規範";
     [LabelAttributeStyle changeGapString: platformRuleLabel content: platformRuleLabel.text];
     platformRuleLabel.textColor = [UIColor firstGrey];
-    platformRuleLabel.font = [UIFont boldSystemFontOfSize: 17];
+    platformRuleLabel.font = [UIFont systemFontOfSize: 17];
     [platformRuleLabel sizeToFit];
     platformRuleLabel.myCenterYOffset = 0;
     
@@ -298,7 +298,7 @@
     aboutLabel.text = @"關於pinpinbox";
     [LabelAttributeStyle changeGapString: aboutLabel content: aboutLabel.text];
     aboutLabel.textColor = [UIColor firstGrey];
-    aboutLabel.font = [UIFont boldSystemFontOfSize: 17];
+    aboutLabel.font = [UIFont systemFontOfSize: 17];
     [aboutLabel sizeToFit];
     aboutLabel.myCenterYOffset = 0;
     [aboutLayout addSubview: aboutLabel];
@@ -337,7 +337,7 @@
     logOutLabel.text = @"登出";
     [LabelAttributeStyle changeGapString: logOutLabel content: logOutLabel.text];
     logOutLabel.textColor = [UIColor firstPink];
-    logOutLabel.font = [UIFont boldSystemFontOfSize: 17];
+    logOutLabel.font = [UIFont systemFontOfSize: 17];
     [logOutLabel sizeToFit];
     logOutLabel.myCenterYOffset = 0;
     [logOutLayout addSubview: logOutLabel];
