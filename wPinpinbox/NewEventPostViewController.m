@@ -104,7 +104,7 @@
 
 - (IBAction)goVotingBtnPress:(id)sender {
     NSLog(@"goVotingBtnPress");
-    if ([wTools timeCalculation: self.contributeStartTime] <= 0 && [wTools timeCalculation: self.contributeEndTime] >= 0) {
+    if ([wTools timeCalculation: self.voteStartTime] <= 0 && [wTools timeCalculation: self.voteEndtime] >= 0) {
         NSLog(@"latter than start time and earlier than end time");
         VotingViewController *votingVC = [[UIStoryboard storyboardWithName: @"VotingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"VotingViewController"];
         votingVC.eventId = self.eventId;
@@ -287,7 +287,7 @@
     activityLabel.text = @"活動詳情";
     [LabelAttributeStyle changeGapString: activityLabel content: @"活動詳情"];
     activityLabel.textColor = [UIColor firstMain];
-    activityLabel.font = [UIFont boldSystemFontOfSize: 18];
+    activityLabel.font = [UIFont systemFontOfSize: 18];
     [activityLabel sizeToFit];
     [self.vertLayout addSubview: activityLabel];
     

@@ -14,7 +14,7 @@
     [super awakeFromNib];
     self.albumImageView.layer.cornerRadius = kCornerRadius;
     self.albumImageView.layer.masksToBounds = YES;    
-    self.albumNameLabel.font = [UIFont boldSystemFontOfSize: 12];
+    self.albumNameLabel.font = [UIFont systemFontOfSize: 12];
     
     // UserInfoView Setting
     self.userInfoView.wrapContentWidth = YES;

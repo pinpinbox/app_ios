@@ -21,6 +21,8 @@
 @property (weak, nonatomic) IBOutlet TouchDetectedScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet MyLinearLayout *vertLayout;
 
+@property (weak, nonatomic) IBOutlet UILabel *pointCalculationTitleLabel;
+
 @property (weak, nonatomic) IBOutlet UILabel *totalPointTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalPointNumberLabel;
 
@@ -109,6 +111,15 @@
         }
     }
     self.navBarView.backgroundColor = [UIColor barColor];
+    
+    self.pointCalculationTitleLabel.font = [UIFont boldSystemFontOfSize: 48.0];
+    self.pointCalculationTitleLabel.textColor = [UIColor firstGrey];
+    self.totalPointTitleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    self.totalPointTitleLabel.textColor = [UIColor firstGrey];
+    self.monthPointTitleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    self.monthPointTitleLabel.textColor = [UIColor firstGrey];
+    self.exchangeTitleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+    self.exchangeTitleLabel.textColor = [UIColor firstGrey];
     
     // Total Point
     [self.totalPointTitleLabel sizeToFit];
