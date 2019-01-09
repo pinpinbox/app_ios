@@ -664,7 +664,7 @@
     self.topicLabel.text = self.topicStr;
     //[LabelAttributeStyle changeGapString: self.topicLabel content: self.topicStr];
     self.topicLabel.textColor = [UIColor whiteColor];
-    self.topicLabel.font = [UIFont systemFontOfSize: 24];
+    self.topicLabel.font = [UIFont boldSystemFontOfSize: 24];
     [self.topicLabel sizeToFit];        
     
     // ContentLayout Setting
