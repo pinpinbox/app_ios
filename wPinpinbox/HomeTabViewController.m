@@ -69,6 +69,8 @@
 #import "RecommandCollectionViewCell.h"
 #import "SwitchButtonView.h"
 
+#import "YAlbumDetailContainerViewController.h"
+
 #import "UserInfo.h"
 
 #define kAdHeight 142
@@ -2141,7 +2143,7 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
     if (collectionView.tag == 1) {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+        HomeDataCollectionViewCell *cell = (HomeDataCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
         NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
         
         //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
@@ -2150,7 +2152,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         NSDictionary *data = pictures[indexPath.row];
         NSString *albumId = [data[@"album"][@"album_id"] stringValue];
-        [self toAlbumDetailVC: albumId];
+        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        [self toAlbumDetailVC: albumId source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 2) {
         [self tapDetectedForURL: indexPath.row];
     } else if (collectionView.tag == 3) {
@@ -2172,7 +2175,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
     } else if (collectionView.tag == 6) {
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
-        [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue]];
+        SearchTabCollectionViewCell *cell = (SearchTabCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
+        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue] source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 71 || collectionView.tag == 72) {
         NSDictionary *userDic = followUserData[indexPath.row][@"user"];
         if (collectionView.tag == 72)
@@ -2184,26 +2189,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
-- (void)toAlbumDetailVC:(NSString *)albumId {
+- (void)toAlbumDetailVC:(NSString *)albumId  source:(CGRect)source sourceImage:(UIImageView *)sourceImage{
     NSLog(@"toAlbumDetailVC");
     if (![wTools objectExists: albumId]) {
         return;
     }
     NSLog(@"After objectExists check");
-    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-    aDVC.albumId = albumId;
-    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-    
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.5;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionMoveIn;
-    transition.subtype = kCATransitionFromTop;
+    YAlbumDetailContainerViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YAlbumDetailContainerViewController"];
+
+    aDVC.sourceRect = source;
+    aDVC.album_id = albumId;
+    aDVC.sourceView = sourceImage;
+    aDVC.zoomTransitionController.toDelegate = aDVC;
+    aDVC.zoomTransitionController.fromDelegate = aDVC;
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-    NSLog(@"Before PushViewController");
-    [appDelegate.myNav pushViewController: aDVC animated: NO];
+    appDelegate.myNav.delegate = aDVC.zoomTransitionController;
+    [appDelegate.myNav pushViewController: aDVC animated: YES];
 }
 
 - (void)toCreatorVC:(NSString *)userId {

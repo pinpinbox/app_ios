@@ -373,7 +373,10 @@
 		CB8FB7802199223600D3C23C /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB8FB77F2199223600D3C23C /* PDFKit.framework */; };
 		CBAD7DE621AE50090084682B /* 3rdPartyVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */; };
 		CBAD7DE821AE50DD0084682B /* 3rdPartyVideoPlayerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */; };
+		CBCDB5FE21E4544200C82939 /* YAlbumDetailContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5FD21E4544200C82939 /* YAlbumDetailContainerViewController.m */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
+		CBD42CF021E2EF5F0046C1A9 /* YAlbumDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD42CEF21E2EF5F0046C1A9 /* YAlbumDetailViewController.m */; };
+		CBD42CF321E2F1D70046C1A9 /* YAlbumDetailHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD42CF221E2F1D70046C1A9 /* YAlbumDetailHeaderCell.m */; };
 		CBD977EF21A2574600F04205 /* URLAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD977EE21A2574600F04205 /* URLAddViewController.m */; };
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBF9DAE021BE555A00596E28 /* Login.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CBF9DADF21BE555A00596E28 /* Login.xcassets */; };
@@ -1038,8 +1041,14 @@
 		CBAD7DE421AE50090084682B /* 3rdPartyVideoPlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 3rdPartyVideoPlayerViewController.h; sourceTree = "<group>"; };
 		CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = 3rdPartyVideoPlayerViewController.m; sourceTree = "<group>"; };
 		CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = 3rdPartyVideoPlayerVC.storyboard; sourceTree = "<group>"; };
+		CBCDB5FC21E4544200C82939 /* YAlbumDetailContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YAlbumDetailContainerViewController.h; sourceTree = "<group>"; };
+		CBCDB5FD21E4544200C82939 /* YAlbumDetailContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YAlbumDetailContainerViewController.m; sourceTree = "<group>"; };
 		CBCE8572219C074600ED185D /* LocationMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationMapViewController.h; sourceTree = "<group>"; };
 		CBCE8573219C074600ED185D /* LocationMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationMapViewController.m; sourceTree = "<group>"; };
+		CBD42CEE21E2EF5F0046C1A9 /* YAlbumDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YAlbumDetailViewController.h; sourceTree = "<group>"; };
+		CBD42CEF21E2EF5F0046C1A9 /* YAlbumDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YAlbumDetailViewController.m; sourceTree = "<group>"; };
+		CBD42CF121E2F1D70046C1A9 /* YAlbumDetailHeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YAlbumDetailHeaderCell.h; sourceTree = "<group>"; };
+		CBD42CF221E2F1D70046C1A9 /* YAlbumDetailHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YAlbumDetailHeaderCell.m; sourceTree = "<group>"; };
 		CBD977ED21A2574600F04205 /* URLAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLAddViewController.h; sourceTree = "<group>"; };
 		CBD977EE21A2574600F04205 /* URLAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = URLAddViewController.m; sourceTree = "<group>"; };
 		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
@@ -1362,6 +1371,12 @@
 				54951AF22005E6A0001FFAF9 /* AlbumDetailViewController.h */,
 				54951AF32005E6A0001FFAF9 /* AlbumDetailViewController.m */,
 				54138323200461110043D6CC /* AlbumDetailVC.storyboard */,
+				CBD42CEE21E2EF5F0046C1A9 /* YAlbumDetailViewController.h */,
+				CBD42CEF21E2EF5F0046C1A9 /* YAlbumDetailViewController.m */,
+				CBD42CF121E2F1D70046C1A9 /* YAlbumDetailHeaderCell.h */,
+				CBD42CF221E2F1D70046C1A9 /* YAlbumDetailHeaderCell.m */,
+				CBCDB5FC21E4544200C82939 /* YAlbumDetailContainerViewController.h */,
+				CBCDB5FD21E4544200C82939 /* YAlbumDetailContainerViewController.m */,
 			);
 			name = AlbumDetail;
 			sourceTree = "<group>";
@@ -2871,7 +2886,7 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = APD4588SHJ;
+						DevelopmentTeam = 392DCPHLMM;
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -3080,6 +3095,7 @@
 				630B5B881DEEBB540003DF34 /* TWMessageBarManager.m in Sources */,
 				92A155A41C33A87C00E83EC5 /* Taoban3TableViewCell.m in Sources */,
 				92B8CB171C1AA93600035F06 /* InAppPurchaseManager.m in Sources */,
+				CBD42CF021E2EF5F0046C1A9 /* YAlbumDetailViewController.m in Sources */,
 				92F6CCE11B79AB9F002E547C /* UIApplication+RSKImageCropper.m in Sources */,
 				54231DC91FBAE973001B8D9E /* MBProgressHUD.m in Sources */,
 				92A1559F1C33A81700E83EC5 /* TaobantextTableViewCell.m in Sources */,
@@ -3279,6 +3295,7 @@
 				D70145071D1A9135005D8CDE /* NSString+passwordValidation.m in Sources */,
 				920279B41C4500B200A63027 /* CooperationAddViewController.m in Sources */,
 				630B8F931EDD0F16009D72FB /* CategoryDetailViewController.m in Sources */,
+				CBCDB5FE21E4544200C82939 /* YAlbumDetailContainerViewController.m in Sources */,
 				6306D6501DB4CEA5005EC98C /* UIImage+AverageColor.m in Sources */,
 				540D74992161DE1F0061E463 /* CreatorListCollectionReusableView.m in Sources */,
 				CB44299F21B1336600B0E19A /* RecommandCollectionViewCell.m in Sources */,
@@ -3306,6 +3323,7 @@
 				9295A3B81C22528400317FEA /* wShowImageList.m in Sources */,
 				631768CE1EA0B5270047BAB7 /* CustomIOSAlertView.m in Sources */,
 				927823FE1C45FB280063F82D /* CooperationAddTableViewCell.m in Sources */,
+				CBD42CF321E2F1D70046C1A9 /* YAlbumDetailHeaderCell.m in Sources */,
 				63C375B91EB9B72F000C7FC1 /* CreatorCollectionViewCell.m in Sources */,
 				54885DC220DB442100644A82 /* AlbumSponsorListTableViewCell.m in Sources */,
 				63419E341EFB33EF00EB3829 /* TouchDetectedScrollView.m in Sources */,
@@ -3467,7 +3485,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				DEVELOPMENT_TEAM = 392DCPHLMM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3511,7 +3529,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = APD4588SHJ;
+				DEVELOPMENT_TEAM = 392DCPHLMM;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
