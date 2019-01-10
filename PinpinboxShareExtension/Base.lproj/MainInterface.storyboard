@@ -383,7 +383,7 @@
                                         <blurEffect style="light"/>
                                     </visualEffectView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tOV-yo-wDN">
-                                        <rect key="frame" x="146.5" y="208" width="82" height="82"/>
+                                        <rect key="frame" x="146.5" y="216" width="82" height="82"/>
                                         <color key="backgroundColor" red="0.94891661410000006" green="0.9490789771" blue="0.94890636210000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="82" id="Y59-7Q-bsd"/>
@@ -396,24 +396,24 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="qYj-Uj-SY5">
-                                        <rect key="frame" x="158.5" y="220" width="58" height="58"/>
+                                        <rect key="frame" x="158.5" y="228" width="58" height="58"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="58" id="6Mk-ap-LdW"/>
                                             <constraint firstAttribute="width" constant="58" id="Xii-eN-UJD"/>
                                         </constraints>
                                     </imageView>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="請先登入Pinpinbox app，再使用分享功能。" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="q4c-WS-2DF">
-                                        <rect key="frame" x="67.5" y="289.5" width="240" height="64"/>
+                                        <rect key="frame" x="67.5" y="297.5" width="240" height="48"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="240" id="Jtc-Rd-vrq"/>
-                                            <constraint firstAttribute="height" constant="64" id="kdN-JA-rlm"/>
+                                            <constraint firstAttribute="height" constant="48" id="kdN-JA-rlm"/>
                                         </constraints>
                                         <color key="textColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="swB-hU-FRO">
-                                        <rect key="frame" x="137.5" y="361.5" width="100" height="40"/>
+                                        <rect key="frame" x="137.5" y="353.5" width="100" height="40"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="100" id="cxg-DN-Ubq"/>

@@ -2190,22 +2190,24 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)toAlbumDetailVC:(NSString *)albumId  source:(CGRect)source sourceImage:(UIImageView *)sourceImage{
-    NSLog(@"toAlbumDetailVC");
     if (![wTools objectExists: albumId]) {
         return;
     }
-    NSLog(@"After objectExists check");
-    YAlbumDetailContainerViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YAlbumDetailContainerViewController"];
-
-    aDVC.sourceRect = source;
-    aDVC.album_id = albumId;
-    aDVC.sourceView = sourceImage;
-    aDVC.zoomTransitionController.toDelegate = aDVC;
-    aDVC.zoomTransitionController.fromDelegate = aDVC;
+    
+    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+    aDVC.albumId = albumId;
+    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+    
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.5;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionMoveIn;
+    transition.subtype = kCATransitionFromTop;
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.myNav.delegate = aDVC.zoomTransitionController;
-    [appDelegate.myNav pushViewController: aDVC animated: YES];
+    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+    
+    [appDelegate.myNav pushViewController: aDVC animated: NO];
 }
 
 - (void)toCreatorVC:(NSString *)userId {

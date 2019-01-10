@@ -219,12 +219,15 @@
     
     if ([UserInfo getUserId].length < 1 ) {
         //self.notLoginCover.hidden = NO;
-        [self showErrorMessage:@"請先登入Pinpinbox app，再使用分享功能。"];
+        [self showErrorMessage:@"請先登入Pinpinbox app，再使用分享功能。" retry:NO];
         return;
     }
+    [self loadUesrInfo];
     
-    [self displayExtensionContext];
     
+    self.navigationController.delegate = self;
+}
+- (void)loadUesrInfo {
     __block typeof(self) wself = self;
     [UserAPI userProfileWithCompletionBlock:^(NSDictionary *result, NSError *error) {
         if (result) {
@@ -236,16 +239,13 @@
             
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [wself showErrorMessage:@"無法取得用戶資料，請稍後再試"];
+                [wself showErrorMessage:@"目前無法取得用戶資料" retry:YES];
             });
         }
         
     }];
-    
-    
-    self.navigationController.delegate = self;
+    [self displayExtensionContext];
 }
-
 - (void)displayExtensionContext {
     self.shareItems = [NSMutableArray array];
     
@@ -465,9 +465,19 @@
         
     }
 }
+- (IBAction)tryReloadUserInfo:(id)sender {
+    self.notLoginCover.alpha = 0;
+    self.retryBtn.hidden = YES;
+    [self loadUesrInfo];
+}
+- (IBAction)tryReloadAlbumList:(id)sender {
+    self.notLoginCover.alpha = 0;
+    self.retryBtn.hidden = YES;
+    [self reloadAlbumList];
+}
 #pragma mark -
-- (void)showErrorMessage:(NSString *)message {
-    
+- (void)showErrorMessage:(NSString *)message retry:(BOOL)retry {
+    self.retryBtn.hidden = YES;
     self.coverNotice.text = message;
     self.notLoginCover.alpha = 0;
     self.notLoginCover.hidden = NO;
@@ -476,7 +486,14 @@
     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.2 options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.notLoginCover.alpha = 1;
     } completion:^(BOOL finished) {
-        
+        if (retry) {
+            self.retryBtn.hidden = NO;
+            if ([message containsString:@"用戶資料"]) {
+                [self.retryBtn addTarget:self action:@selector(tryReloadUserInfo:) forControlEvents:UIControlEventTouchUpInside];
+            } else if ([message containsString:@"作品資料"]) {
+                [self.retryBtn addTarget:self action:@selector(tryReloadAlbumList:) forControlEvents:UIControlEventTouchUpInside];
+            }
+        }
     }];
     
 }
@@ -587,6 +604,10 @@
                     
                     //[self displayExtensionContext];
                     
+                });
+            } else if (error && wself.albumlist.count < 1) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself showErrorMessage:@"目前無法取得作品資料" retry:YES];
                 });
             }
         }];
@@ -814,7 +835,7 @@
         if ([self.shareItems containsObject:item]) {
             [self.shareItems removeObject:item];
             if (self.shareItems.count < 1) {
-                [self showErrorMessage:@"沒有可分享的內容(30秒影片、影片連結或圖片)，請重新選擇。"];
+                [self showErrorMessage:@"沒有可分享的內容(30秒影片、影片連結或圖片)，請重新選擇。" retry:NO];
             } else
                 [self.photoList reloadData];
         }
