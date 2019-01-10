@@ -104,10 +104,16 @@
 }
 
 - (IBAction)goVotingBtnPress:(id)sender {
-    VotingViewController *votingVC = [[UIStoryboard storyboardWithName: @"VotingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"VotingViewController"];
-    votingVC.eventId = self.eventId;
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate.myNav pushViewController: votingVC animated: YES];
+    NSLog(@"goVotingBtnPress");
+    if ([wTools timeCalculation: self.voteStartTime] <= 0 && [wTools timeCalculation: self.voteEndtime] >= 0) {
+        NSLog(@"latter than start time and earlier than end time");
+        VotingViewController *votingVC = [[UIStoryboard storyboardWithName: @"VotingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"VotingViewController"];
+        votingVC.eventId = self.eventId;
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [appDelegate.myNav pushViewController: votingVC animated: YES];
+    } else {
+        [self warnToastWithMessage: @"投票已結束"];
+    }
     
     /*
     if (!self.eventFinished) {
@@ -137,11 +143,9 @@
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");
     NSLog(@"self.templateArray: %@", self.templateArray);
-    
     for (UIView *subViews in self.vertLayout.subviews) {
         [subViews removeFromSuperview];
     }
-    
     self.toolBarView.hidden = NO;
     
     self.arrowVoteImage.transform = CGAffineTransformMakeRotation(M_PI);
@@ -158,24 +162,26 @@
     self.customPostActionSheet.delegate = self;
     self.customPostActionSheet.topicStr = @"請選擇投稿方式";
     
+    NSLog(@"self.eventFinished: %d", self.eventFinished);
+    
     if (self.eventFinished) {
         self.eventPostBtn.layer.cornerRadius = kCornerRadius;
         [self.eventPostBtn setTitle: @"活動已結束" forState: UIControlStateNormal];
-        [self.eventPostBtn setTitleColor: [UIColor thirdGrey] forState: UIControlStateNormal];
-        self.eventPostBtn.layer.borderColor = [UIColor thirdGrey].CGColor;
+        [self.eventPostBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
+        self.eventPostBtn.layer.borderColor = [UIColor secondGrey].CGColor;
         self.eventPostBtn.layer.borderWidth = 1.0;
         self.eventPostBtn.backgroundColor = [UIColor clearColor];
-        
         self.eventPostBtn.userInteractionEnabled = NO;
     } else {
-        [self.eventPostBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
+        self.eventPostBtn.layer.cornerRadius = kCornerRadius;
+        [self.eventPostBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
         self.eventPostBtn.layer.borderColor = [UIColor clearColor].CGColor;
         self.eventPostBtn.layer.borderWidth = 0;
         self.eventPostBtn.backgroundColor = [UIColor firstMain];
-        
         self.eventPostBtn.userInteractionEnabled = YES;
     }
     self.eventPostBtnHeight.constant = kToolBarButtonHeight;
+    
     self.toolBarView.backgroundColor = [UIColor barColor];
     self.toolBarView.myLeftMargin = self.toolBarView.myRightMargin = 0;
     self.toolBarView.myBottomMargin = 0;
@@ -268,9 +274,9 @@
     contentLabel.myLeftMargin = contentLabel.myRightMargin = 16;
     contentLabel.font = [UIFont systemFontOfSize: 18];
     contentLabel.textColor = [UIColor firstGrey];
-    if ([wTools objectExists: self.evtTitle]) {
-        contentLabel.text = self.evtTitle;
-        [LabelAttributeStyle changeGapString: contentLabel content: self.evtTitle];
+    if ([wTools objectExists: self.eventTitle]) {
+        contentLabel.text = self.eventTitle;
+        [LabelAttributeStyle changeGapString: contentLabel content: self.eventTitle];
     }
     contentLabel.numberOfLines = 0;
     contentLabel.wrapContentHeight = YES;
@@ -282,7 +288,7 @@
     activityLabel.text = @"活動詳情";
     [LabelAttributeStyle changeGapString: activityLabel content: @"活動詳情"];
     activityLabel.textColor = [UIColor firstMain];
-    activityLabel.font = [UIFont boldSystemFontOfSize: 18];
+    activityLabel.font = [UIFont systemFontOfSize: 18];
     [activityLabel sizeToFit];
     [self.vertLayout addSubview: activityLabel];
     
@@ -293,6 +299,46 @@
     self.vertLayout.wrapContentHeight = YES;
     
     NSLog(@"self.scrollView.contentSize: %@", NSStringFromCGSize(self.scrollView.contentSize));
+ 
+    [self checkEventPostBtn];
+    [self checkGoVotingView];
+}
+
+- (void)checkEventPostBtn {
+    NSLog(@"checkEventPostBtn");
+    NSLog(@"self.contributeStartTime: %@", self.contributeStartTime);
+    NSLog(@"self.contributeEndTime: %@", self.contributeEndTime);
+    
+    NSLog(@"time calculation self.contributeStartTime: %ld", [wTools timeCalculation: self.contributeStartTime]);
+    NSLog(@"time calculation self.contributeEndTime: %ld", [wTools timeCalculation: self.contributeEndTime]);
+    
+    if ([wTools timeCalculation: self.contributeStartTime] == 0 || [wTools timeCalculation: self.contributeEndTime] == 0) {
+        NSLog(@"start or end time == 0");
+        self.eventPostBtn.hidden = YES;
+    } else if ([wTools timeCalculation: self.contributeStartTime] > 0 || [wTools timeCalculation: self.contributeEndTime] < 0) {
+        NSLog(@"earlier than start time latter than end time");
+        self.eventPostBtn.hidden = YES;
+    } else if ([wTools timeCalculation: self.contributeStartTime] <= 0 && [wTools timeCalculation: self.contributeEndTime] >= 0) {
+        NSLog(@"latter than start time and earlier than end time");
+        self.eventPostBtn.hidden = NO;
+    }
+}
+
+- (void)checkGoVotingView {
+    NSLog(@"checkGoVotingView");
+    NSLog(@"self.voteStartTime: %@", self.voteStartTime);
+    NSLog(@"self.voteEndtime: %@", self.voteEndtime);
+    
+    if ([wTools timeCalculation: self.voteStartTime] == 0 || [wTools timeCalculation: self.voteEndtime] == 0) {
+        NSLog(@"start or end time == 0");
+        self.goVotingView.hidden = YES;
+    } else if ([wTools timeCalculation: self.voteStartTime] > 0 || [wTools timeCalculation: self.voteEndtime] < 0) {
+        NSLog(@"earlier than start time latter than end time");
+        self.goVotingView.hidden = YES;
+    } else if ([wTools timeCalculation: self.voteStartTime] <= 0 && [wTools timeCalculation: self.voteEndtime] >= 0) {
+        NSLog(@"latter than start time and earlier than end time");
+        self.goVotingView.hidden = NO;
+    }
 }
 
 - (void)showExchangeInfoTouchDown:(UIButton *)sender {
@@ -343,6 +389,9 @@
         }
     }
     
+    self.toolBarViewHeight.constant = kToolBarViewHeight;
+    
+    /*
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
             case 1136:
@@ -363,7 +412,7 @@
                 break;
             case 2436:
                 printf("iPhone X");
-                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
                 break;
             default:
                 printf("unknown");
@@ -371,10 +420,10 @@
                 break;
         }
     }
+     */
 }
 
 #pragma mark - IBAction Methods
-
 - (IBAction)backBtnPress:(id)sender {
     //[self.navigationController popViewControllerAnimated: YES];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -386,22 +435,27 @@
     NSLog(@"eventPostBtnPress");
     NSLog(@"self.eventFinished: %d", self.eventFinished);
     
-    if (!self.eventFinished) {
-        //[self getExistedAlbum];
-        NewExistingAlbumViewController *newExistingAlbumVC = [[UIStoryboard storyboardWithName: @"NewExistingAlbumVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewExistingAlbumViewController"];
-        newExistingAlbumVC.templateArray = self.templateArray;
-        newExistingAlbumVC.eventId = self.eventId;
-        newExistingAlbumVC.contributionNumber = self.contributionNumber;
-        newExistingAlbumVC.prefixText = self.prefixText;
-        newExistingAlbumVC.specialUrl = self.specialUrl;
-        
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav pushViewController: newExistingAlbumVC animated: YES];
+    if ([wTools timeCalculation: self.contributeStartTime] <= 0 && [wTools timeCalculation: self.contributeEndTime] >= 0) {
+        NSLog(@"latter than start time and earlier than end time");
+        if (!self.eventFinished) {
+            //[self getExistedAlbum];
+            NewExistingAlbumViewController *newExistingAlbumVC = [[UIStoryboard storyboardWithName: @"NewExistingAlbumVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewExistingAlbumViewController"];
+            newExistingAlbumVC.templateArray = self.templateArray;
+            newExistingAlbumVC.eventId = self.eventId;
+            newExistingAlbumVC.contributionNumber = self.contributionNumber;
+            newExistingAlbumVC.prefixText = self.prefixText;
+            newExistingAlbumVC.specialUrl = self.specialUrl;
+            
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav pushViewController: newExistingAlbumVC animated: YES];
+        } else {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: @"活動結束" preferredStyle: UIAlertControllerStyleAlert];
+            UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"OK" style: UIAlertActionStyleDefault handler: nil];
+            [alert addAction: okBtn];
+            [self presentViewController: alert animated: YES completion: nil];
+        }
     } else {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle: @"" message: @"活動結束" preferredStyle: UIAlertControllerStyleAlert];
-        UIAlertAction *okBtn = [UIAlertAction actionWithTitle: @"OK" style: UIAlertActionStyleDefault handler: nil];
-        [alert addAction: okBtn];
-        [self presentViewController: alert animated: YES completion: nil];
+        [self warnToastWithMessage: @"投稿已結束"];
     }
 }
 
@@ -1135,6 +1189,18 @@
     NSLog(@"");
     
     return contentView;
+}
+
+#pragma mark - toast message
+- (void)warnToastWithMessage:(NSString *)message {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor thirdPink];
+    
+    [self.view makeToast: message
+                duration: 2.0
+                position: CSToastPositionBottom
+                   style: style];
 }
 
 @end

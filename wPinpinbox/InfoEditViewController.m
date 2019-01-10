@@ -376,6 +376,16 @@
         self.headshotImageView.imageURL = [NSURL URLWithString: myData[@"profilepic"]];
     }
     
+    [LabelAttributeStyle changeGapString: self.pwdChangeBtn.titleLabel content: self.pwdChangeBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapString: self.mobileChangeBtn.titleLabel content: self.mobileChangeBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapString: self.interestChangeBtn.titleLabel content: self.interestChangeBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapString: self.maleBtn.titleLabel content: self.maleBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapString: self.femaleBtn.titleLabel content: self.femaleBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapString: self.privateBtn.titleLabel content: self.privateBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapString: self.saveBtn.titleLabel content: self.saveBtn.titleLabel.text];
+    
+    self.saveBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
+    
     [LabelAttributeStyle changeGapString: self.creatorNameLabel content: self.creatorNameLabel.text];
     [self.creatorNameLabel sizeToFit];
     

@@ -69,6 +69,8 @@
 #import "RecommandCollectionViewCell.h"
 #import "SwitchButtonView.h"
 
+#import "YAlbumDetailContainerViewController.h"
+
 #import "UserInfo.h"
 
 #define kAdHeight 142
@@ -1606,55 +1608,27 @@
                 if (![wself checkTimedOut:response api:@"getEvent" eventId:eventId text:@""]) {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableLeaves error: nil];
-                    //NSLog(@"data: %@", data);
+                    NSLog(@"data: %@", data);
                     
                     if ([data[@"result"] intValue] == 1) {
                         NSLog(@"result is 1");
                         NSLog(@"GetEvent Success");
-                        
                         if (![wTools objectExists: data[@"data"][@"event"]]) {
                             return;
                         }
-                        
-                        NewEventPostViewController *newEventPostVC = [[UIStoryboard storyboardWithName: @"NewEventPostVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewEventPostViewController"];
-                        newEventPostVC.name = data[@"data"][@"event"][@"name"];
-                        newEventPostVC.title = data[@"data"][@"event"][@"title"];
-                        newEventPostVC.imageUrl = data[@"data"][@"event"][@"image"];
-                        newEventPostVC.urlString = data[@"data"][@"event"][@"url"];
-                        newEventPostVC.templateArray =  data[@"data"][@"event_templatejoin"];
-                        newEventPostVC.eventId = eventId;
-                        newEventPostVC.contributionNumber = [data[@"data"][@"event"][@"contribution"] integerValue];
-                        newEventPostVC.popularityNumber = [data[@"data"][@"event"][@"popularity"] integerValue];
-                        newEventPostVC.prefixText = data[@"data"][@"event"][@"prefix_text"];
-                        newEventPostVC.specialUrl = data[@"data"][@"special"][@"url"];
-                        newEventPostVC.eventFinished = NO;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: newEventPostVC animated: YES];
-                        
+                        [self toNewEventPostVC: data
+                                       eventId: eventId
+                                 eventFinished: NO];
                     } else if ([data[@"result"] intValue] == 2) {
                         NSLog(@"result is 2");
                         NSLog(@"event_templatejoin: %@", data[@"data"][@"event_templatejoin"]);
-                        
                         if (![wTools objectExists: data[@"data"][@"event"]]) {
                             return;
                         }
                         
-                        NewEventPostViewController *newEventPostVC = [[UIStoryboard storyboardWithName: @"NewEventPostVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewEventPostViewController"];
-                        newEventPostVC.name = data[@"data"][@"event"][@"name"];
-                        newEventPostVC.title = data[@"data"][@"event"][@"title"];
-                        newEventPostVC.imageUrl = data[@"data"][@"event"][@"image"];
-                        newEventPostVC.urlString = data[@"data"][@"event"][@"url"];
-                        newEventPostVC.templateArray = data[@"data"][@"event_templatejoin"];
-                        newEventPostVC.eventId = eventId;
-                        newEventPostVC.contributionNumber = [data[@"data"][@"event"][@"contribution"] integerValue];
-                        newEventPostVC.popularityNumber = [data[@"data"][@"event"][@"popularity"] integerValue];
-                        newEventPostVC.prefixText = data[@"data"][@"event"][@"prefix_text"];
-                        newEventPostVC.specialUrl = data[@"data"][@"special"][@"url"];
-                        newEventPostVC.eventFinished = YES;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: newEventPostVC animated: YES];
+                        [self toNewEventPostVC: data
+                                       eventId: eventId
+                                 eventFinished: YES];
                     } else if ([data[@"result"] intValue] == 0) {
                         NSLog(@"失敗： %@", data[@"message"]);
                         if ([wTools objectExists: data[@"message"]]) {
@@ -1671,11 +1645,34 @@
     });
 }
 
+- (void)toNewEventPostVC:(NSDictionary *)data
+                 eventId:(NSString *)eventId
+           eventFinished:(BOOL)eventFinished {
+    NewEventPostViewController *newEventPostVC = [[UIStoryboard storyboardWithName: @"NewEventPostVC" bundle: nil] instantiateViewControllerWithIdentifier: @"NewEventPostViewController"];
+    newEventPostVC.name = data[@"data"][@"event"][@"name"];
+    newEventPostVC.eventTitle = data[@"data"][@"event"][@"title"];
+    newEventPostVC.imageUrl = data[@"data"][@"event"][@"image"];
+    newEventPostVC.urlString = data[@"data"][@"event"][@"url"];
+    newEventPostVC.templateArray = data[@"data"][@"event_templatejoin"];
+    newEventPostVC.eventId = eventId;
+    newEventPostVC.contributionNumber = [data[@"data"][@"event"][@"contribution"] integerValue];
+    newEventPostVC.popularityNumber = [data[@"data"][@"event"][@"popularity"] integerValue];
+    newEventPostVC.prefixText = data[@"data"][@"event"][@"prefix_text"];
+    newEventPostVC.specialUrl = data[@"data"][@"special"][@"url"];
+    newEventPostVC.contributeStartTime = data[@"data"][@"event"][@"contribute_starttime"];
+    newEventPostVC.contributeEndTime = data[@"data"][@"event"][@"contribute_endtime"];
+    newEventPostVC.voteStartTime = data[@"data"][@"event"][@"vote_starttime"];
+    newEventPostVC.voteEndtime = data[@"data"][@"event"][@"vote_endtime"];
+    newEventPostVC.eventFinished = eventFinished;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: newEventPostVC animated: YES];
+}
+
 #pragma mark - UICollectionViewDataSource Methods
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
-
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section {
@@ -2146,7 +2143,7 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
     if (collectionView.tag == 1) {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+        HomeDataCollectionViewCell *cell = (HomeDataCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
         NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
         
         //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
@@ -2155,7 +2152,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         NSDictionary *data = pictures[indexPath.row];
         NSString *albumId = [data[@"album"][@"album_id"] stringValue];
-        [self toAlbumDetailVC: albumId];
+        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        [self toAlbumDetailVC: albumId source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 2) {
         [self tapDetectedForURL: indexPath.row];
     } else if (collectionView.tag == 3) {
@@ -2177,7 +2175,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
     } else if (collectionView.tag == 6) {
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
-        [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue]];
+        SearchTabCollectionViewCell *cell = (SearchTabCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
+        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue] source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 71 || collectionView.tag == 72) {
         NSDictionary *userDic = followUserData[indexPath.row][@"user"];
         if (collectionView.tag == 72)
@@ -2189,26 +2189,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
-- (void)toAlbumDetailVC:(NSString *)albumId {
+- (void)toAlbumDetailVC:(NSString *)albumId  source:(CGRect)source sourceImage:(UIImageView *)sourceImage{
     NSLog(@"toAlbumDetailVC");
     if (![wTools objectExists: albumId]) {
         return;
     }
     NSLog(@"After objectExists check");
-    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-    aDVC.albumId = albumId;
-    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-    
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.5;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionMoveIn;
-    transition.subtype = kCATransitionFromTop;
+    YAlbumDetailContainerViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YAlbumDetailContainerViewController"];
+
+    aDVC.sourceRect = source;
+    aDVC.album_id = albumId;
+    aDVC.sourceView = sourceImage;
+    aDVC.zoomTransitionController.toDelegate = aDVC;
+    aDVC.zoomTransitionController.fromDelegate = aDVC;
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-    NSLog(@"Before PushViewController");
-    [appDelegate.myNav pushViewController: aDVC animated: NO];
+    appDelegate.myNav.delegate = aDVC.zoomTransitionController;
+    [appDelegate.myNav pushViewController: aDVC animated: YES];
 }
 
 - (void)toCreatorVC:(NSString *)userId {

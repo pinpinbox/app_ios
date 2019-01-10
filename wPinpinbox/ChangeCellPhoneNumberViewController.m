@@ -24,6 +24,8 @@
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "LabelAttributeStyle.h"
+
 @interface ChangeCellPhoneNumberViewController () <SelectBarDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectTextField;
     NSDictionary *myData;
@@ -31,7 +33,10 @@
     NSInteger timeTick;
     NSTimer *timer;
 }
+@property (weak, nonatomic) IBOutlet UILabel *changeCellPhoneTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *currentPhoneNumberTextLabel;
 @property (weak, nonatomic) IBOutlet UILabel *cellPhoneNumberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *numberChangeSectionLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *countryCodeLabel;
 @property (weak, nonatomic) IBOutlet UIView *countryCodeView;
@@ -45,6 +50,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *smsTextField;
 @property (weak, nonatomic) IBOutlet UIView *smsView;
 
+@property (weak, nonatomic) IBOutlet UILabel *infoLabelForVerificationCode;
 @property (weak, nonatomic) IBOutlet UIButton *finishRegistrationBtn;
 
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -98,7 +104,19 @@
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     myData = [userPrefs objectForKey: @"profile"];
     NSLog(@"myData: %@", myData);
+    
+    self.changeCellPhoneTitleLabel.font = [UIFont boldSystemFontOfSize: 48.0];
+    self.changeCellPhoneTitleLabel.textColor = [UIColor firstGrey];
+    [LabelAttributeStyle changeGapString: self.changeCellPhoneTitleLabel content: self.changeCellPhoneTitleLabel.text];
+    
+    self.currentPhoneNumberTextLabel.textColor = [UIColor secondGrey];
+    
     self.cellPhoneNumberLabel.text = myData[@"cellphone"];
+    self.cellPhoneNumberLabel.textColor = [UIColor secondGrey];
+    
+    self.numberChangeSectionLabel.textColor = [UIColor firstGrey];
+    self.numberChangeSectionLabel.font = [UIFont boldSystemFontOfSize: 24.0];
+    [LabelAttributeStyle changeGapString: self.numberChangeSectionLabel content: self.numberChangeSectionLabel.text];
     
     self.countryCodeView.layer.cornerRadius = kCornerRadius;
     self.countryCodeView.backgroundColor = [UIColor thirdGrey];
@@ -111,13 +129,21 @@
     self.sendBtn.layer.cornerRadius = kCornerRadius;
     [self.sendBtn setTitle: NSLocalizedString(@"GeneralText-send", @"")
                   forState: UIControlStateNormal];
+    self.sendBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
+    [LabelAttributeStyle changeGapString: self.sendBtn.titleLabel content: self.sendBtn.titleLabel.text];
     
     self.finishRegistrationBtn.layer.cornerRadius = kCornerRadius;
     [self.finishRegistrationBtn setTitle: NSLocalizedString(@"RegText-finishedReg", @"")
                                 forState: UIControlStateNormal];
-        
+    self.finishRegistrationBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
+    [LabelAttributeStyle changeGapString: self.finishRegistrationBtn.titleLabel content: self.finishRegistrationBtn.titleLabel.text];
+    
     self.cellPhoneTextField.textColor = [UIColor firstGrey];
     self.smsTextField.textColor = [UIColor firstGrey];
+    
+    self.infoLabelForVerificationCode.textColor = [UIColor secondGrey];
+    self.infoLabelForVerificationCode.font = [UIFont systemFontOfSize: 18.0];
+    [LabelAttributeStyle changeGapString: self.infoLabelForVerificationCode content: self.infoLabelForVerificationCode.text];
     
     //取得檔案路徑
     NSString *path = [[NSBundle mainBundle] pathForResource:@"codebeautify" ofType:@"json"];

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,8 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="變更手機號碼" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a9p-Go-Keh">
-                                <rect key="frame" x="16" y="84" width="290" height="58"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="變更號碼" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a9p-Go-Keh">
+                                <rect key="frame" x="16" y="84" width="193" height="58"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="48"/>
                                 <color key="textColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -226,12 +226,16 @@
                         <outlet property="cellPhoneNumberLabel" destination="LzP-9R-a6V" id="A8c-IS-jko"/>
                         <outlet property="cellPhoneTextField" destination="0JG-Xf-pas" id="Zte-kq-Bxw"/>
                         <outlet property="cellPhoneView" destination="jlT-Ei-5K1" id="ac0-F0-rWP"/>
+                        <outlet property="changeCellPhoneTitleLabel" destination="a9p-Go-Keh" id="nzX-Fq-ybY"/>
                         <outlet property="countDownLabel" destination="bRP-J1-uAC" id="KOK-qf-2UD"/>
                         <outlet property="countryCodeLabel" destination="9s0-PJ-apo" id="bZW-nw-f5t"/>
                         <outlet property="countryCodeView" destination="DSf-WM-s1X" id="BQY-31-JcP"/>
+                        <outlet property="currentPhoneNumberTextLabel" destination="UZv-SM-nyy" id="A25-gB-EQs"/>
                         <outlet property="finishRegistrationBtn" destination="bQk-F4-hBn" id="kTD-nq-pUu"/>
+                        <outlet property="infoLabelForVerificationCode" destination="lKH-3w-S4m" id="bFJ-kf-d2i"/>
                         <outlet property="navBarHeight" destination="dW2-kF-34T" id="fep-5j-V7I"/>
                         <outlet property="navBarView" destination="s0c-9J-2me" id="Imv-c5-eLA"/>
+                        <outlet property="numberChangeSectionLabel" destination="9ze-3M-Zob" id="C1f-3F-Ddx"/>
                         <outlet property="sendBtn" destination="hJ9-yU-BGJ" id="TU9-Zc-rLM"/>
                         <outlet property="smsTextField" destination="73y-j8-tYL" id="VsE-Vp-ia2"/>
                         <outlet property="smsView" destination="OZC-XN-Zhk" id="9Ve-VE-s2T"/>
@@ -243,7 +247,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="72" height="72"/>
         <image name="ic200_sms_dark" width="144" height="144"/>
     </resources>
 </document>

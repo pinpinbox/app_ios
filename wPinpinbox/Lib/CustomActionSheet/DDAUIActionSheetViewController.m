@@ -172,7 +172,7 @@
         
         [btn setTitle: s forState: UIControlStateNormal];
         [btn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
-        btn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
+        btn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
         [btn sizeToFit];
         btn.accessibilityIdentifier = is;
         btn.tag = i + 1;
@@ -234,7 +234,7 @@
     } else {
         firstLabel.textColor = [UIColor thirdGrey];
     }
-    firstLabel.font = [UIFont boldSystemFontOfSize: 18];
+    firstLabel.font = [UIFont systemFontOfSize: 18];
     [firstLabel sizeToFit];
     [horzLayout addSubview: firstLabel];
     
@@ -280,7 +280,7 @@
         } else {
             secondLabel.textColor = [UIColor thirdGrey];
         }
-        secondLabel.font = [UIFont boldSystemFontOfSize: 18];
+        secondLabel.font = [UIFont systemFontOfSize: 18];
         [secondLabel sizeToFit];
         [horzLayout addSubview: secondLabel];
     }
@@ -358,7 +358,7 @@
             label.text = title;
             //[LabelAttributeStyle changeGapString: label content: title];
             label.textColor = [UIColor firstGrey];
-            label.font = [UIFont boldSystemFontOfSize: 18];
+            label.font = [UIFont systemFontOfSize: 18];
             [label sizeToFit];
             label.myCenterYOffset = 0;
             
@@ -455,7 +455,7 @@
             label.text = title;
             //[LabelAttributeStyle changeGapString: label content: title];
             label.textColor = [UIColor firstGrey];
-            label.font = [UIFont boldSystemFontOfSize: 18];
+            label.font = [UIFont systemFontOfSize: 18];
             [label sizeToFit];
             label.myCenterYOffset = 0;
             
@@ -559,7 +559,7 @@
             } else {
                 label.textColor = [UIColor firstGrey];
             }
-            label.font = [UIFont boldSystemFontOfSize: 18];
+            label.font = [UIFont systemFontOfSize: 18];
             [label sizeToFit];
             label.myCenterYOffset = 0;
             

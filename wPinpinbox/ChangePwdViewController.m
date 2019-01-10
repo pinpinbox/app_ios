@@ -17,7 +17,11 @@
 
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
+
 #import "UserInfo.h"
+
+#import "LabelAttributeStyle.h"
+
 
 @interface ChangePwdViewController () <UITextFieldDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectText;
@@ -36,6 +40,12 @@
 
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
+
+@property (weak, nonatomic) IBOutlet UILabel *changePWDTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *currentPWDTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *changeToPWDTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *confirmPWDTitleLabel;
+
 
 @end
 
@@ -95,6 +105,17 @@
     self.pwdCheckLabel2.hidden = YES;
     
     self.sendBtn.layer.cornerRadius = kCornerRadius;
+    self.sendBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
+    [LabelAttributeStyle changeGapString: self.sendBtn.titleLabel content: self.sendBtn.titleLabel.text];
+    
+    self.changePWDTitleLabel.textColor = [UIColor firstGrey];
+    self.changePWDTitleLabel.font = [UIFont boldSystemFontOfSize: 24.0];
+    self.currentPWDTitleLabel.textColor = [UIColor firstGrey];
+    self.currentPWDTitleLabel.font = [UIFont boldSystemFontOfSize: 24.0];
+    self.changeToPWDTitleLabel.textColor = [UIColor firstGrey];
+    self.changeToPWDTitleLabel.font = [UIFont boldSystemFontOfSize: 24.0];
+    self.confirmPWDTitleLabel.textColor = [UIColor firstGrey];
+    self.confirmPWDTitleLabel.font = [UIFont boldSystemFontOfSize: 24.0];
 }
 
 - (void)viewDidLayoutSubviews {

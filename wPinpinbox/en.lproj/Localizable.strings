@@ -60,7 +60,7 @@
 "RegText-tipAgreement" ="成功註冊表示同意 pinpinbox 的 ";
 "RegText-tipAgreementTitle" ="成功註冊表示同意pinpinbox平台規範";
 
-"RegText-finishedReg" ="完成註冊";
+"RegText-finishedReg" ="完成";
 "RegText-tipSMS" ="請稍候驗證碼簡訊送至你的手機，若等待時間過長，可回到前步驟再做確認以重新取得驗證碼";
 "RegText-empPwd" ="還沒設定密碼";
 "RegText-empEmail" ="信箱好像還沒填";

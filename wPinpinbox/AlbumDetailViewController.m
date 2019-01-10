@@ -118,7 +118,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 //@property (strong, nonatomic) UIViewController *dimVC;
 //@property (strong, nonatomic) UIViewController *modal;
-@property (weak, nonatomic) IBOutlet UIButton *headerImageBtn;
+//@property (weak, nonatomic) IBOutlet UIButton *headerImageBtn;
 
 @property (weak, nonatomic) IBOutlet UIView *creatorView;
 @property (weak, nonatomic) IBOutlet UIImageView *creatorHeadshotImageView;
@@ -388,6 +388,20 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark - Add Views on Parallax View
+- (void)adjustImage:(CGSize)size {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CGFloat ratio = size.height/size.width;
+        CGFloat height =  self.view.frame.size.width*ratio;
+        self.headerImageViewHeight.constant = height;
+        for (NSLayoutConstraint *c in self.headerImgBtn.constraints) {
+            if ([c.identifier isEqualToString:@"headerImgBtnHeight"]) {
+                c.constant = height;
+                break;
+            }
+        }
+        
+    });
+}
 - (void)parallaxViewSetup {
     NSLog(@"parallaxViewSetup");
     self.useBlurForPopup = YES;
@@ -404,7 +418,12 @@ static NSString *autoPlayStr = @"&autoplay=1";
             self.headerImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
             imageUrl = _data[@"photo"][0][@"image_url"];
-            [self.headerImageView sd_setImageWithURL: [NSURL URLWithString:imageUrl]];
+            __block typeof(self) wself = self;
+            [self.headerImageView sd_setImageWithURL: [NSURL URLWithString:imageUrl] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                [wself adjustImage:image.size];
+                
+            }];//sd_setImageWithURL:
+            
             //self.headerImageView.image = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString: imageUrl]]];
 //            [self.headerImageView sd_setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage: [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"] options:0];            
         }
@@ -763,7 +782,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             [rootLayout addSubview: vertEventLayout];
         }
     }
-    self.headerImageViewHeight.constant = 300;
+    //self.headerImageViewHeight.constant = 300;
     [self adjustContentViewHeight];
     [rootLayout sizeToFit];
     self.contentViewHeight.constant = rootLayout.frame.size.height + 100;

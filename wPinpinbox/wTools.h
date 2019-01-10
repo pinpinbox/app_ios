@@ -79,6 +79,7 @@
 //+ (NSString *)remainingTimeCalculation:(NSMutableDictionary *)dic;
 + (NSString *)remainingTimeCalculation:(NSString *)timeStr;
 + (NSInteger)remainingTimeCalculationOnlyMinute:(NSString *)timeStr;
++ (NSInteger)timeCalculation:(NSString *)timeStr;
 
 // Get Snapshot Image
 + (UIImage *)normalSnapshotImage:(UIView *)view;

@@ -92,6 +92,9 @@
     //self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
     self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);    
     
+    self.sendDataBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
+    [LabelAttributeStyle changeGapString: self.sendDataBtn.titleLabel content: self.sendDataBtn.titleLabel.text];
+    
     [self getHobbyList];
 }
 

@@ -112,7 +112,7 @@
     aboutBtn.myHeight = 48;
     aboutBtn.layer.cornerRadius = kCornerRadius;
     aboutBtn.backgroundColor = [UIColor firstMain];
-    aboutBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 20.0];
+    aboutBtn.titleLabel.font = [UIFont systemFontOfSize: 20.0];
     [aboutBtn setTitle: @"立即了解" forState: UIControlStateNormal];
     [aboutBtn addTarget: self action: @selector(toAboutPage) forControlEvents: UIControlEventTouchUpInside];
     [self.vertLayout addSubview: aboutBtn];
@@ -144,7 +144,7 @@
     label.myLeftMargin = 16;
     label.text = title;
     label.textColor = [UIColor firstGrey];
-    label.font = [UIFont boldSystemFontOfSize: 18];
+    label.font = [UIFont systemFontOfSize: 18];
     [LabelAttributeStyle changeGapString: label content: label.text];
     [label sizeToFit];
     return label;

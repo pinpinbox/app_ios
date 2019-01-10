@@ -26,11 +26,11 @@
     self.messageBtn.layer.cornerRadius = kCornerRadius;
     self.messageBtn.backgroundColor = [UIColor thirdGrey];
     [self.messageBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
-    self.messageBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0];
+    self.messageBtn.titleLabel.font = [UIFont systemFontOfSize: 16.0];
     [self.messageBtn addTarget: self action: @selector(showMessageBoard:) forControlEvents: UIControlEventTouchUpInside];
     
     self.followBtn.layer.cornerRadius = kCornerRadius;
-    self.followBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0];
+    self.followBtn.titleLabel.font = [UIFont systemFontOfSize: 16.0];
     [self.followBtn addTarget: self action: @selector(callFollowAPI:) forControlEvents: UIControlEventTouchUpInside];
 }
 
