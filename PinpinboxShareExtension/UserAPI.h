@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)insertNewAlbumWithSettings:(NSDictionary *)settings CompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)getAlbumSettingOptionsWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)userProfileWithCompletionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
-+ (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount  completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
++ (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount rank:(NSString *)rank completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)postPreCheck:(NSString *)album_id completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 + (void)insertPhotoWithAlbum_id:(NSString *)album_id taskId:(NSString *)taskId imageData:(NSData *)imageData progressDelegate:(id<UploadProgressDelegate>)progressDelegate completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;
 + (void)insertVideoWithAlbum_id:(NSString *)album_id taskId:(NSString *)taskId videopath:(NSString *)videopath progressDelegate:(id<UploadProgressDelegate>)progressDelegate completionBlock:(void(^)(NSDictionary *result, NSString *taskId,NSError *error))completionBlock;

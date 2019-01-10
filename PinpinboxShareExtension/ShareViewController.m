@@ -35,17 +35,22 @@
 @property(weak, nonatomic) IBOutlet UIImageView *albumStatus;
 @end
 
+@interface UIListButton : UIButton
+@property(nonatomic) CAShapeLayer *border;
+@end
 
 @interface ShareViewController ()<UITableViewDelegate, UITableViewDataSource,
                                   UICollectionViewDelegateFlowLayout,UICollectionViewDataSource,
                                   UploadProgressDelegate,PDFUploaderDelegate,ItemContentDelegate,AlbumSettingsDelegate>
 @property(weak, nonatomic) IBOutlet UILabel *userName;
 @property(weak, nonatomic) IBOutlet UITableView *albumList;
+@property(weak, nonatomic) IBOutlet UITableView *groupAlbumList;
 @property(weak, nonatomic) IBOutlet UICollectionView *photoList;
 @property(weak, nonatomic) IBOutlet UITextView *textArea;
 @property(weak, nonatomic) IBOutlet UIView *notLoginCover;
 @property(weak, nonatomic) IBOutlet UITextView *coverNotice;
 @property(nonatomic) NSMutableArray *albumlist;
+@property(nonatomic) NSMutableArray *groupalbumlist;
 @property(nonatomic ,strong) NSMutableArray *shareItems;
 @property(nonatomic, strong) NSString *selectedAlbum;
 @property(nonatomic, strong) NSString *albumNames;
@@ -58,6 +63,9 @@
 @property(nonatomic) NSInteger failCount;
 
 @property(nonatomic) IBOutlet UIButton *retryBtn;
+
+@property(nonatomic) IBOutlet UIListButton *mylist;
+@property(nonatomic) IBOutlet UIListButton *grouplist;
 @end
 
 
@@ -197,12 +205,46 @@
 }
 @end
 
+#pragma mark - Button with a liner below border
+@implementation UIListButton
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self ) {
+        [self createBorder];
+    }
+    return self;
+}
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self createBorder];
+}
+- (void)createBorder {
+    self.border = [[CAShapeLayer alloc] init];
+    self.border.frame = CGRectMake(0, self.frame.size.height-3, self.frame.size.width, 3);
+    [self.layer addSublayer:self.border];
+}
+- (void)setSelected:(BOOL)selected {
+    
+    [super setSelected:selected];
+    
+    if (selected) {
+        self.alpha = 1.0;
+        //self.backgroundColor = [UIColor colorWithRed: green: blue:0.882 alpha:1.0];
+        self.border.backgroundColor = [UIColor grayColor].CGColor;
+    } else {
+        self.alpha = 0.25;
+        //self.backgroundColor = [UIColor clearColor];
+        self.border.backgroundColor = [UIColor clearColor].CGColor;
+    }
+}
+@end
 #pragma mark - share extension VC
 @implementation ShareViewController
 
 - (void)viewDidLoad {
     
     self.albumlist = [NSMutableArray array];
+    self.groupalbumlist = [NSMutableArray array];
     self.failCount = 0;
     self.successCount = 0;
     self.albumList.tableFooterView = [self getWaitingView];
@@ -465,6 +507,25 @@
         
     }
 }
+- (IBAction)switchList:(id)sender {
+    UIListButton *btn = (UIListButton *)sender;
+    if (btn == self.mylist) {
+        [self.mylist setSelected:YES];
+        [self.grouplist setSelected:NO];
+        self.albumList.hidden = NO;
+        self.groupAlbumList.hidden = YES;
+    } else {
+        [self.mylist setSelected:NO];
+        [self.grouplist setSelected:YES];
+        if (self.groupalbumlist.count < 1) {
+            self.groupAlbumList.tableFooterView = [self getWaitingView];
+            [self loadGroupAlbumList];
+            
+        }
+        self.albumList.hidden = YES;
+        self.groupAlbumList.hidden = NO;
+    }
+}
 - (IBAction)tryReloadUserInfo:(id)sender {
     self.notLoginCover.alpha = 0;
     self.retryBtn.hidden = YES;
@@ -561,11 +622,68 @@
     }];
 }
 #pragma mark -
+- (void)loadGroupAlbumList {
+    
+    [self.mylist setSelected:NO];
+    [self.grouplist setSelected:YES];
+    if (!self.isLoading) {
+        __block typeof(self) wself = self;
+        self.isLoading = (self.groupalbumlist.count > 0);
+        [UserAPI loadAlbumListWithCompletionBlock:self.albumlist.count rank:@"cooperation" completionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIActivityIndicatorView *v = (UIActivityIndicatorView *)[wself.groupAlbumList viewWithTag:54321];
+                self.groupAlbumList.tableFooterView = nil;
+                if (v) {
+                    [v stopAnimating];
+                    [v removeFromSuperview];
+                    [wself.groupAlbumList setContentInset:UIEdgeInsetsZero];
+                    wself.groupAlbumList.bounces = YES;
+                }
+                
+            });
+            
+            if (result) {
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    NSArray *list = [result objectForKey:@"data"];
+                    int itemcount = (int)self.shareItems.count;
+                    NSMutableArray *filtered = [NSMutableArray array];
+                    [list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        NSDictionary *data = (NSDictionary *)obj;
+                        NSDictionary *album = data[@"album"];
+                        int count = [album[@"count_photo"] intValue];
+                        NSDictionary *user = data[@"usergrade"];
+                        int limit = [user[@"photo_limit_of_album"] intValue];
+                        if (itemcount + count <= limit)
+                            [filtered addObject:obj];
+                        
+                    }];
+                    [wself.groupalbumlist addObjectsFromArray:filtered];
+                    if (filtered.count) {
+                        [wself.groupAlbumList reloadData];
+                    }
+                    wself.isLoading = NO;
+                    
+                    //[self displayExtensionContext];
+                    
+                });
+            } else if (error && wself.groupalbumlist.count < 1) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself showErrorMessage:@"目前無法取得作品資料" retry:YES];
+                });
+            }
+        }];
+    }
+}
 - (void)loadAlbumList {
+    [self.mylist setSelected:YES];
+    [self.grouplist setSelected:NO];
     if (!self.isLoading) {
         __block typeof(self) wself = self;
         self.isLoading = (self.albumlist.count > 0);
-        [UserAPI loadAlbumListWithCompletionBlock:self.albumlist.count completionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
+        [UserAPI loadAlbumListWithCompletionBlock:self.albumlist.count rank:@"mine" completionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIActivityIndicatorView *v = (UIActivityIndicatorView *)[wself.albumList viewWithTag:54321];
@@ -662,6 +780,11 @@
 }
 #pragma mark -
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (tableView  == self.groupAlbumList) {
+        return;
+    }
+    
     if (indexPath.section == 1) {
         UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
         if (post)
@@ -683,6 +806,16 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (tableView  == self.groupAlbumList) {
+        
+        AlbumCellView *cell = [tableView dequeueReusableCellWithIdentifier:@"AlbumCell"];
+        if (!cell)
+            cell = [[AlbumCellView alloc] init];
+        [cell loadAlbum:[self.groupalbumlist objectAtIndex:indexPath.row]];
+        return cell;
+    }
+    
     switch (indexPath.section) {
         case 0: {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AddAlbumCell"];
@@ -701,6 +834,12 @@
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if (tableView == self.groupAlbumList) {
+        
+        return self.groupalbumlist.count;
+    }
+    
     switch (section) {
         case 0:
             return 1;
@@ -713,11 +852,44 @@
     return 80;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if (tableView == self.groupAlbumList) {
+        return 1;
+    }
     return 2;
 }
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!self.progressView.hidden) return;
-    switch (indexPath.section) {
+    
+    if (tableView == self.groupAlbumList) {
+        if ( (indexPath.row == self.groupalbumlist.count-1) && !self.isLoading) {
+            CGFloat contentHeight = tableView.contentSize.height;
+            CGFloat listHeight = tableView.frame.size.height ;
+            BOOL canLoad = contentHeight > listHeight;
+            if (canLoad && (contentHeight-tableView.contentOffset.y-96 <= (listHeight))){
+                UIView *v = [tableView viewWithTag:54321];
+                if (!self.isLoading && (v == nil)) {
+                    UIEdgeInsets u = tableView.contentInset;
+                    [tableView setContentInset:UIEdgeInsetsMake(0, u.left, 96, u.right)];
+                    
+                    UIActivityIndicatorView *indicator =
+                    indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+                    [indicator setColor:[UIColor darkGrayColor]];
+                    indicator.center = CGPointMake(tableView.center.x, tableView.contentSize.height+48);
+                    indicator.tag = 54321;
+                    [tableView addSubview:indicator];
+                    indicator.hidesWhenStopped = YES;
+                    [indicator startAnimating];
+                    
+                    dispatch_time_t after = dispatch_time(DISPATCH_TIME_NOW, 2.5 * NSEC_PER_SEC);
+                    dispatch_after(after, dispatch_get_main_queue(), ^{
+                        [self loadAlbumList];
+                        self.isLoading = NO;
+                    });
+                }
+            }
+        }
+    } else {
+        switch (indexPath.section) {
         case 0:
             break;
         default:{
@@ -751,6 +923,7 @@
             }
         }
             
+    }
     }
 }
 #pragma mark -

@@ -311,13 +311,13 @@
     }];
 
 }
-+ (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount  completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
++ (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount rank:(NSString *)rank  completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     NSString *limit = [NSString stringWithFormat:@"%ld,20",(long)((curCount==0)? curCount: curCount+1)];
     
     
     NSMutableDictionary *dic=[NSMutableDictionary new];
     
-    [dic setObject:@"mine" forKey:@"rank"];
+    [dic setObject:rank forKey:@"rank"];
     [dic setObject:[UserInfo getUserId]  forKey:@"id"];
     [dic setObject:[UserInfo getUserToken]  forKey:@"token"];
     [dic setObject:limit forKey:@"limit"];
