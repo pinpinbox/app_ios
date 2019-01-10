@@ -20,9 +20,11 @@
 #import "AppDelegate.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "ContentCheckingViewController.h"
 
 
-@interface YAlbumDetailViewController ()<UITableViewDataSource, UITableViewDelegate>
+
+@interface YAlbumDetailViewController ()<UITableViewDataSource, UITableViewDelegate,ContentCheckingViewControllerDelegate>
 @property(nonatomic) NSMutableDictionary *albumInfo;
 @property(nonatomic) NSString *album_id;
 @property(nonatomic) BOOL isViewed;
@@ -307,6 +309,16 @@
 }
 - (IBAction)viewContentTouched:(id)sender {
     
+    if (![wTools objectExists: self.album_id]) {
+        return;
+    }
+    ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+    contentCheckingVC.albumId = self.album_id;
+    contentCheckingVC.isLikes = 0; // [self getLikes];
+    contentCheckingVC.eventJoin = self.albumInfo[@"eventjoin"];
+    contentCheckingVC.delegate = self;
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
 }
 - (IBAction)eventVote:(id)sender {
     
@@ -422,6 +434,10 @@
     }];
     [alertTimeOutView setUseMotionEffects: YES];
     [alertTimeOutView show];
+}
+#pragma mark -
+- (void)contentCheckingViewControllerViewWillDisappear:(ContentCheckingViewController *)controller isLikeBtnPressed:(BOOL)isLikeBtnPressed {
+    
 }
 
 @end

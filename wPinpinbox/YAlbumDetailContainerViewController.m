@@ -250,7 +250,7 @@
                 
                 [animator.transitionImageView removeFromSuperview];
                 //animator.transitionImageView = nil;
-                
+                [self.transitionContext finishInteractiveTransition];
                 [self.transitionContext completeTransition:YES];
                 [animator.toDelegate transitionDidEndWith:animator];
                 self.transitionContext = nil;
@@ -332,7 +332,7 @@
                 fromImage.hidden = NO;
                 [animator.transitionImageView removeFromSuperview];
                 //animator.transitionImageView = nil;
-                
+                [self.transitionContext finishInteractiveTransition];
                 [self.transitionContext completeTransition:YES];
                 [animator.toDelegate transitionDidEndWith:animator];
                 self.transitionContext = nil;
@@ -560,6 +560,7 @@
         [self.currentDetailVC setAlubumId:self.album_id];
         [self.currentDetailVC setContentBtnVisible];
     }
+    self.zoomTransitionController.isInteractive = NO;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.delegate = nil;
     
