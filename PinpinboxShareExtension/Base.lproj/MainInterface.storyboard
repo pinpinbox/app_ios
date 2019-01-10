@@ -248,7 +248,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="AlbumCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AlbumCell" rowHeight="80" id="clA-36-6Sb" customClass="AlbumCellView">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AlbumCell" rowHeight="80" id="clA-36-6Sb" customClass="AlbumCellView">
                                         <rect key="frame" x="0.0" y="108" width="375" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="clA-36-6Sb" id="MWK-Hn-ggj">
@@ -291,9 +291,9 @@
                                                     <color key="highlightedColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Category . Sub category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DIP-2L-kjd">
-                                                    <rect key="frame" x="104" y="37" width="271" height="15"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                                                    <color key="textColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <rect key="frame" x="104" y="37" width="271" height="12"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                    <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00/00/00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bxn-lI-5DG">
@@ -306,27 +306,36 @@
                                                     <color key="textColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jgP-ca-Aqv" userLabel="cover">
+                                                    <rect key="frame" x="0.0" y="8" width="375" height="64"/>
+                                                    <color key="backgroundColor" white="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="2Ps-3e-jgI" firstAttribute="trailing" secondItem="DIP-2L-kjd" secondAttribute="trailing" id="1WC-3g-ULB"/>
                                                 <constraint firstItem="bxn-lI-5DG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Uoj-ta-BRp" secondAttribute="trailing" constant="8" symbolic="YES" id="2mQ-Tc-IDk"/>
                                                 <constraint firstItem="Uoj-ta-BRp" firstAttribute="top" secondItem="MWK-Hn-ggj" secondAttribute="top" constant="8" id="4mE-d1-8le"/>
+                                                <constraint firstItem="jgP-ca-Aqv" firstAttribute="leading" secondItem="MWK-Hn-ggj" secondAttribute="leading" id="5P8-O3-6QZ"/>
                                                 <constraint firstItem="QH0-aR-FQf" firstAttribute="top" secondItem="MWK-Hn-ggj" secondAttribute="top" constant="8" id="9z6-Et-WHx"/>
                                                 <constraint firstItem="bxn-lI-5DG" firstAttribute="bottom" secondItem="Uoj-ta-BRp" secondAttribute="bottom" id="A4f-MZ-282"/>
                                                 <constraint firstItem="2Ps-3e-jgI" firstAttribute="top" secondItem="Uoj-ta-BRp" secondAttribute="top" id="DGS-Ka-Saf"/>
                                                 <constraint firstItem="QH0-aR-FQf" firstAttribute="trailing" secondItem="MWK-Hn-ggj" secondAttribute="trailing" constant="-16" id="DVr-V4-6Fx"/>
                                                 <constraint firstItem="bxn-lI-5DG" firstAttribute="trailing" secondItem="MWK-Hn-ggj" secondAttribute="trailing" constant="-16" id="FFQ-BK-3z7"/>
+                                                <constraint firstItem="jgP-ca-Aqv" firstAttribute="top" secondItem="2Ps-3e-jgI" secondAttribute="top" id="HZ6-et-eCa"/>
                                                 <constraint firstItem="DIP-2L-kjd" firstAttribute="top" secondItem="MWK-Hn-ggj" secondAttribute="topMargin" constant="26" id="Qnb-mI-FGc"/>
                                                 <constraint firstItem="2Ps-3e-jgI" firstAttribute="trailing" secondItem="MWK-Hn-ggj" secondAttribute="trailing" id="SMK-jb-XOs"/>
                                                 <constraint firstItem="DIP-2L-kjd" firstAttribute="leading" secondItem="Uoj-ta-BRp" secondAttribute="trailing" constant="24" id="U47-sV-JXL"/>
                                                 <constraint firstItem="Uoj-ta-BRp" firstAttribute="leading" secondItem="MWK-Hn-ggj" secondAttribute="leading" constant="16" id="fKI-pi-hcF"/>
                                                 <constraint firstItem="lOK-NM-pva" firstAttribute="trailing" secondItem="MWK-Hn-ggj" secondAttribute="trailing" id="het-6e-VO3"/>
                                                 <constraint firstItem="2Ps-3e-jgI" firstAttribute="leading" secondItem="Uoj-ta-BRp" secondAttribute="trailing" constant="8" id="hhd-Ka-eOb"/>
+                                                <constraint firstItem="jgP-ca-Aqv" firstAttribute="trailing" secondItem="MWK-Hn-ggj" secondAttribute="trailing" id="obi-4g-Wde"/>
+                                                <constraint firstItem="jgP-ca-Aqv" firstAttribute="bottom" secondItem="bxn-lI-5DG" secondAttribute="bottom" id="rfv-lO-cV8"/>
                                                 <constraint firstItem="lOK-NM-pva" firstAttribute="bottom" secondItem="MWK-Hn-ggj" secondAttribute="bottom" constant="0.5" id="sD4-yU-uUV"/>
                                                 <constraint firstItem="lOK-NM-pva" firstAttribute="leading" secondItem="MWK-Hn-ggj" secondAttribute="leading" id="sEF-Wm-hOx"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="accessCover" destination="jgP-ca-Aqv" id="kHR-Xw-dZM"/>
                                             <outlet property="album" destination="Uoj-ta-BRp" id="ucJ-Fb-4rr"/>
                                             <outlet property="albumDate" destination="bxn-lI-5DG" id="MxW-4c-UJo"/>
                                             <outlet property="albumName" destination="2Ps-3e-jgI" id="KnY-bw-a97"/>
@@ -450,6 +459,11 @@
                                                     <color key="textColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="heJ-gX-JnO" userLabel="cover">
+                                                    <rect key="frame" x="0.0" y="8" width="375" height="64"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="1" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="F4d-HT-Lcd" firstAttribute="leading" secondItem="hxC-xW-XAz" secondAttribute="leading" id="1Wt-Qq-2tV"/>
@@ -471,6 +485,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="accessCover" destination="heJ-gX-JnO" id="gkk-fj-9AW"/>
                                             <outlet property="album" destination="0GA-nA-tSk" id="c1d-lg-hFM"/>
                                             <outlet property="albumDate" destination="sc7-Zg-6Ty" id="wre-3F-xxB"/>
                                             <outlet property="albumName" destination="cfg-Ae-oB7" id="2rX-PE-miQ"/>

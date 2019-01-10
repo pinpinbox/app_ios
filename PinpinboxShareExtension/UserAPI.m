@@ -312,7 +312,7 @@
 
 }
 + (void)loadAlbumListWithCompletionBlock:(NSInteger)curCount rank:(NSString *)rank  completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
-    NSString *limit = [NSString stringWithFormat:@"%ld,20",(long)((curCount==0)? curCount: curCount+1)];
+    NSString *limit = [NSString stringWithFormat:@"%ld,16",(long)((curCount==0)? curCount: curCount+1)];
     
     
     NSMutableDictionary *dic=[NSMutableDictionary new];

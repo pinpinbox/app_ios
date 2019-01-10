@@ -4093,7 +4093,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         if ([wTools objectExists: attString]) {
             self.descriptionLabel.text = attString;
         }
-    }    
+    } else {
+        self.descriptionLabel.text = @"";
+    }
     
     CGFloat btnHeight = 0;
     NSInteger urlCount = 0;

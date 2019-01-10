@@ -33,6 +33,7 @@
 @property(weak, nonatomic) IBOutlet UILabel *albumOwner;
 @property(weak, nonatomic) IBOutlet UILabel *albumDate;
 @property(weak, nonatomic) IBOutlet UIImageView *albumStatus;
+@property(weak, nonatomic) IBOutlet UIView *accessCover;
 @end
 
 @interface UIListButton : UIButton
@@ -202,6 +203,25 @@
             self.album.alpha = 0.5;
         }
     }
+    
+    NSDictionary *c = data[@"cooperation"];
+    if (c && ![c[@"identity"] isKindOfClass:[NSNull class]]) {
+        NSString *i = c[@"identity"];
+        if (i.length && [i isEqualToString:@"viewer"]) {
+            self.albumOwner.text = @"無上傳權限";
+            self.accessCover.hidden = NO;
+            self.userInteractionEnabled = NO;
+        } else {
+            self.albumOwner.text = @"";
+            self.accessCover.hidden = YES;
+            self.userInteractionEnabled = YES;
+        }
+    } else {
+        self.albumOwner.text = @"";
+        self.accessCover.hidden = YES;
+        self.userInteractionEnabled = YES;
+    }
+    
 }
 @end
 
@@ -534,7 +554,10 @@
 - (IBAction)tryReloadAlbumList:(id)sender {
     self.notLoginCover.alpha = 0;
     self.retryBtn.hidden = YES;
-    [self reloadAlbumList];
+    if (self.groupAlbumList.hidden)
+        [self reloadAlbumList];
+    else
+        [self reloadGroupAlbumList];
 }
 #pragma mark -
 - (void)showErrorMessage:(NSString *)message retry:(BOOL)retry {
@@ -629,7 +652,7 @@
     if (!self.isLoading) {
         __block typeof(self) wself = self;
         self.isLoading = (self.groupalbumlist.count > 0);
-        [UserAPI loadAlbumListWithCompletionBlock:self.albumlist.count rank:@"cooperation" completionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
+        [UserAPI loadAlbumListWithCompletionBlock:self.groupalbumlist.count rank:@"cooperation" completionBlock:^(NSDictionary * _Nonnull result, NSError * _Nonnull error) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIActivityIndicatorView *v = (UIActivityIndicatorView *)[wself.groupAlbumList viewWithTag:54321];
@@ -780,13 +803,34 @@
 }
 #pragma mark -
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
     if (tableView  == self.groupAlbumList) {
+        if (post)
+            post.enabled = YES;
+        
+        _selectedAlbum = nil;
+        _albumNames = nil;
+        
+        if (indexPath.row < self.groupalbumlist.count) {
+            NSDictionary *data = self.groupalbumlist[indexPath.row];
+            NSDictionary *album = data[@"album"];
+            NSDictionary *c = data[@"cooperation"];
+            
+            if (c && ![c[@"identity"] isKindOfClass:[NSNull class]]) {
+                NSString *i = c[@"identity"];
+                if (i.length && [i isEqualToString:@"viewer"]) {
+                    
+                    return;
+                }
+            }
+            _selectedAlbum = [album[@"album_id"] stringValue];
+            _albumNames = album[@"name"];
+        }
         return;
     }
     
     if (indexPath.section == 1) {
-        UIBarButtonItem *post = self.navigationItem.rightBarButtonItem;
+        
         if (post)
             post.enabled = YES;
         
@@ -882,7 +926,7 @@
                     
                     dispatch_time_t after = dispatch_time(DISPATCH_TIME_NOW, 2.5 * NSEC_PER_SEC);
                     dispatch_after(after, dispatch_get_main_queue(), ^{
-                        [self loadAlbumList];
+                        [self loadGroupAlbumList];
                         self.isLoading = NO;
                     });
                 }
@@ -976,6 +1020,10 @@
     
 }
 #pragma mark -
+- (void)reloadGroupAlbumList {
+    [self.groupalbumlist removeAllObjects];
+    [self loadGroupAlbumList];
+}
 - (void)reloadAlbumList {
     [self.albumlist removeAllObjects];
     [self loadAlbumList];
