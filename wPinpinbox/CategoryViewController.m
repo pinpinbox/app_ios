@@ -1247,7 +1247,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     printf("iPhone X");
                     yAxis = -48;
                     //if (screenHeight >= 2436)
-                    yAxis = -72;
+//                    yAxis = -72;
                     break;
 //                default:
 //                    printf("unknown");
@@ -1257,6 +1257,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         }
         // Meaning user scrolls down, video will be stopped
         // Video only plays when y axis is the original value
+        NSLog(@"self.tableView.contentOffset.y: %f", self.tableView.contentOffset.y);
+        NSLog(@"yAxis: %f", yAxis);
+        
         if (self.tableView.contentOffset.y > yAxis) {
             [playerView stopVideo];
         }
