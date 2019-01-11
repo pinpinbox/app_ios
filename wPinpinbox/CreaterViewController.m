@@ -728,6 +728,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
         cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
         //cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
     } else {
+        [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]]];
+        
+        if ([wTools objectExists: data[@"cover_hex"]]) {
+            cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"cover_hex"]];
+        } else {
+            cell.coverImageView.backgroundColor = [UIColor clearColor];
+        }
+        /*
         [cell.coverImageView sd_setImageWithURL:[NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
         if (error) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
@@ -735,6 +743,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             cell.coverImageView.image = image;
         }];
         cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"cover_hex"]];
+         */
     }
     
     // UserForView Info Setting

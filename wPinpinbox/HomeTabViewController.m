@@ -1811,15 +1811,16 @@
         if ([data[@"album"][@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
-            
+            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]]];            
+            cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"album"][@"cover_hex"]];
+            /*
             [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                 if (error) {
                     cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
                 } else
                     cell.coverImageView.image = image;
-                
             }];
-            
+            */
             if ([data[@"album"][@"cover_hex"] isKindOfClass: [NSNull class]]) {
                 cell.coverImageView.backgroundColor = [UIColor clearColor];
             } else {

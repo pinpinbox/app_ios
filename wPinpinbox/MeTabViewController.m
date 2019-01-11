@@ -1203,17 +1203,21 @@ static NSString *autoPlayStr = @"&autoplay=1";
     MeCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"MyInfo" forIndexPath: indexPath];
     cell.contentView.subviews[0].backgroundColor = nil;
     NSDictionary *data = pictures[indexPath.row];
-    //NSLog(@"data: %@", data);
+    NSLog(@"data: %@", data);
     if ([data[@"cover"] isEqual: [NSNull null]]) {
         cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
     } else {
-        //[cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]];        
+        //[cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]];
+        [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]]];
+        /*
         [cell.coverImageView sd_setImageWithURL:[NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if (error) {
                 cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
             } else
                 cell.coverImageView.image = image;
         }];
+         */
+        
     }
     // UserForView Info Setting
     BOOL gotAudio = [data[@"usefor"][@"audio"] boolValue];

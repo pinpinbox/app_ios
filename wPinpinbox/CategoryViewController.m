@@ -924,8 +924,8 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         if ([dic[@"album"][@"cover"] isEqual: [NSNull null]]) {
             cell.albumImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
         } else {
-            //[cell.albumImageView sd_setImageWithURL: [NSURL URLWithString: dic[@"album"][@"cover"]]];
-            
+            [cell.albumImageView sd_setImageWithURL: [NSURL URLWithString: dic[@"album"][@"cover"]]];
+            /*
             [cell.albumImageView sd_setImageWithURL:[NSURL URLWithString: dic[@"album"][@"cover"]] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                 if (error) {
                     cell.albumImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
@@ -933,8 +933,12 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                     cell.albumImageView.image = image;
                 
             }];
-            
-            cell.albumImageView.backgroundColor = [UIColor colorFromHexString: dic[@"album"][@"cover_hex"]];
+            */            
+            if ([wTools objectExists: dic[@"album"][@"cover_hex"]]) {
+                cell.albumImageView.backgroundColor = [UIColor colorFromHexString: dic[@"album"][@"cover_hex"]];
+            } else {
+                cell.albumImageView.backgroundColor = [UIColor clearColor];
+            }
         }
         
         if (![dic[@"album"][@"name"] isEqual: [NSNull null]]) {
