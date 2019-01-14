@@ -63,7 +63,7 @@
 #import "HudIndicatorView.h"
 #import "AlbumCreationIntroViewController.h"
 #import "UserInfo.h"
-
+#import "YAlbumDetailContainerViewController.h"
 
 #pragma mark - Photo Editor SDK
 #if TARGET_OS_SIMULATOR
@@ -2017,6 +2017,7 @@ shouldChangeTextInRange:(NSRange)range
                             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                             [appDelegate.myNav pushViewController: aSVC animated: NO];
                         } else if ([option isEqualToString: @"back"]) {
+                            
                             if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 
@@ -2029,6 +2030,9 @@ shouldChangeTextInRange:(NSRange)range
                                         break;
                                     }
                                 }
+                            } else if ([stSelf.fromVC isEqualToString: @"YAlbumDetailVC"]) {
+                                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                [appDelegate.myNav popViewControllerAnimated:YES];
                             } else if ([stSelf.fromVC isEqualToString: @"AlbumCollectionVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 for (UIViewController *vc in appDelegate.myNav.viewControllers) {

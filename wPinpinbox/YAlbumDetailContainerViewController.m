@@ -211,8 +211,8 @@
                 
                 [animator.transitionImageView removeFromSuperview];
                 //animator.transitionImageView = nil;
-                [self.transitionContext cancelInteractiveTransition];
-                [self.transitionContext completeTransition:NO];
+                [self.transitionContext finishInteractiveTransition];
+                [self.transitionContext completeTransition:YES];
                 [animator.toDelegate transitionDidEndWith:animator];
                 self.transitionContext = nil;
                 
@@ -488,7 +488,8 @@
         
         CGPoint velocity = [p velocityInView:self.view];
         if (velocity.y < 0) return ![self.currentDetailVC isPointInHeader:location];
-
+        //  do nothing when messageboard or actionsheet is visible //
+        return [self.currentDetailVC isPanValid];
     }
     return YES;
 }
@@ -524,7 +525,9 @@
                 
                 self.zoomTransitionController.isEasyOut = YES;
             } else {
-                self.zoomTransitionController.isEasyOut = ![self.currentDetailVC isPointInHeader:an];
+                BOOL inHeader = [self.currentDetailVC isPointInHeader:an];
+                if (delta.y < 0 && !inHeader) return;
+                self.zoomTransitionController.isEasyOut = !inHeader;
             }
             self.currentDetailVC.baseView.scrollEnabled = NO;
             self.zoomTransitionController.isInteractive = YES;
@@ -534,9 +537,14 @@
             
             break;
         }
+        case UIGestureRecognizerStateFailed :
+        case UIGestureRecognizerStateCancelled : {
+            self.currentDetailVC.baseView.scrollEnabled = YES;
+            break;
+        }
          case UIGestureRecognizerStateEnded: {
              if (self.zoomTransitionController.isInteractive) {
-                 self.currentDetailVC.baseView.scrollEnabled = YES;
+                 
                  self.zoomTransitionController.isInteractive = NO;
                  [self.zoomTransitionController didPanWith:gestureRecognizer];
         }

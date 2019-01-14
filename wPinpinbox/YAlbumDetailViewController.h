@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setContentBtnVisible;
 - (void)setHeaderPlaceholder:(UIImage *)placeholder;
 - (BOOL)isPointInHeader:(CGPoint)point;
+- (BOOL)isPanValid;
 @end
 
 NS_ASSUME_NONNULL_END

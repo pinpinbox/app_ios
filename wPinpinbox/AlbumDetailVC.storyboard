@@ -212,7 +212,7 @@
                                             <constraint firstItem="0pW-sX-bUH" firstAttribute="top" secondItem="9xT-23-SdE" secondAttribute="top" id="ylk-YO-2qw"/>
                                         </constraints>
                                     </view>
-                                    <tableView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="oOi-vw-rqE">
+                                    <tableView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="oOi-vw-rqE">
                                         <rect key="frame" x="0.0" y="300" width="375" height="320"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -244,28 +244,28 @@
                                                     <outlet property="titleLabel" destination="2Zx-7o-7Ff" id="LD4-WT-9tB"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="YAlbumLocationCell" rowHeight="36" id="gec-jg-9rD" customClass="YAlbumLocationCell">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="YAlbumLocationCell" rowHeight="36" id="gec-jg-9rD" customClass="YAlbumLocationCell">
                                                 <rect key="frame" x="0.0" y="65" width="375" height="36"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gec-jg-9rD" id="ioU-jc-hbx">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="36"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="地點：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kw6-gg-VyT">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="人瀏覽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kw6-gg-VyT">
                                                             <rect key="frame" x="16" y="16" width="43" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_location_light" translatesAutoresizingMaskIntoConstraints="NO" id="s2q-Hz-FuB">
-                                                            <rect key="frame" x="63" y="15.5" width="18" height="18"/>
+                                                            <rect key="frame" x="75" y="15.5" width="18" height="18"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="18" id="GKg-UX-aMc"/>
                                                                 <constraint firstAttribute="width" constant="18" id="URc-hY-ccv"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGl-f3-u2T">
-                                                            <rect key="frame" x="85" y="16" width="36" height="17"/>
+                                                            <rect key="frame" x="97" y="16" width="36" height="17"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -274,17 +274,19 @@
                                                     <constraints>
                                                         <constraint firstItem="kw6-gg-VyT" firstAttribute="leading" secondItem="ioU-jc-hbx" secondAttribute="leading" constant="16" id="Mc7-ty-NLq"/>
                                                         <constraint firstItem="kw6-gg-VyT" firstAttribute="top" secondItem="ioU-jc-hbx" secondAttribute="top" constant="16" id="T6D-Q5-JSd"/>
-                                                        <constraint firstItem="s2q-Hz-FuB" firstAttribute="leading" secondItem="kw6-gg-VyT" secondAttribute="trailing" constant="4" id="cz6-Sj-X0p"/>
+                                                        <constraint firstItem="s2q-Hz-FuB" firstAttribute="leading" secondItem="kw6-gg-VyT" secondAttribute="trailing" constant="16" id="cz6-Sj-X0p"/>
                                                         <constraint firstItem="FGl-f3-u2T" firstAttribute="centerY" secondItem="s2q-Hz-FuB" secondAttribute="centerY" id="jId-hy-He6"/>
                                                         <constraint firstItem="FGl-f3-u2T" firstAttribute="leading" secondItem="s2q-Hz-FuB" secondAttribute="trailing" constant="4" id="lIc-ag-wIl"/>
                                                         <constraint firstItem="s2q-Hz-FuB" firstAttribute="centerY" secondItem="kw6-gg-VyT" secondAttribute="centerY" id="tPg-w6-nHo"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <connections>
+                                                    <outlet property="locIcon" destination="s2q-Hz-FuB" id="ksM-QP-sX5"/>
                                                     <outlet property="locationLabel" destination="FGl-f3-u2T" id="bxf-8j-MYI"/>
+                                                    <outlet property="viewedCountLabel" destination="kw6-gg-VyT" id="vo8-3J-2aW"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="YAlbumContentTypeCell" rowHeight="36" id="CGI-xn-Dfa" customClass="YAlbumContentTypeCell">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="YAlbumContentTypeCell" rowHeight="36" id="CGI-xn-Dfa" customClass="YAlbumContentTypeCell">
                                                 <rect key="frame" x="0.0" y="101" width="375" height="36"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CGI-xn-Dfa" id="Poc-r2-5gm">
@@ -297,21 +299,21 @@
                                                             <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_location_light" translatesAutoresizingMaskIntoConstraints="NO" id="4qo-LD-wCT" userLabel="ic200_location_light1">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_video_light" translatesAutoresizingMaskIntoConstraints="NO" id="4qo-LD-wCT" userLabel="ic200_location_light1">
                                                             <rect key="frame" x="96" y="15.5" width="18" height="18"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="18" id="7T4-sn-Ylc"/>
                                                                 <constraint firstAttribute="width" constant="18" id="8MX-PQ-PPf"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_location_light" translatesAutoresizingMaskIntoConstraints="NO" id="S8o-1t-Ph8" userLabel="ic200_location_light2">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_audio_play_light" translatesAutoresizingMaskIntoConstraints="NO" id="S8o-1t-Ph8" userLabel="ic200_location_light2">
                                                             <rect key="frame" x="122" y="15.5" width="18" height="18"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="18" id="pQz-qP-odO"/>
                                                                 <constraint firstAttribute="height" constant="18" id="rcp-6Q-fqC"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_location_light" translatesAutoresizingMaskIntoConstraints="NO" id="5NV-KN-Yih" userLabel="ic200_location_light3">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_gift_light" translatesAutoresizingMaskIntoConstraints="NO" id="5NV-KN-Yih" userLabel="ic200_location_light3">
                                                             <rect key="frame" x="148" y="15.5" width="18" height="18"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="18" id="S72-SA-cUx"/>
@@ -336,19 +338,20 @@
                                                     <outlet property="vidIcon" destination="4qo-LD-wCT" id="fdS-rU-ieQ"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="YAlbumDescCell" rowHeight="275" id="1gD-f8-Z1a" customClass="YAlbumDescCell">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="YAlbumDescCell" rowHeight="275" id="1gD-f8-Z1a" customClass="YAlbumDescCell">
                                                 <rect key="frame" x="0.0" y="137" width="375" height="275"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1gD-f8-Z1a" id="jll-HA-bMo">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="275"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xgo-S4-n7f">
+                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="justified" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xgo-S4-n7f">
                                                             <rect key="frame" x="16" y="0.0" width="343" height="243"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <color key="textColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                            <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                                         </textView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mU6-EI-sHy">
                                                             <rect key="frame" x="0.0" y="273" width="375" height="1"/>
@@ -372,7 +375,7 @@
                                                     <outlet property="albumDesc" destination="xgo-S4-n7f" id="fUU-30-9nY"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="YAlbumFollowerCell" rowHeight="52" id="C9A-IU-a13" customClass="YAlbumFollowerCell">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="YAlbumFollowerCell" rowHeight="52" id="C9A-IU-a13" customClass="YAlbumFollowerCell">
                                                 <rect key="frame" x="0.0" y="412" width="375" height="52"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="C9A-IU-a13" id="ml3-9l-CBX">
@@ -426,7 +429,7 @@
                                                     <outlet property="followerCount" destination="Dud-c7-sbf" id="pQc-aK-6cG"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="YAlbumPointCell" rowHeight="52" id="oKz-g8-rmX" customClass="YAlbumPointCell">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="YAlbumPointCell" rowHeight="52" id="oKz-g8-rmX" customClass="YAlbumPointCell">
                                                 <rect key="frame" x="0.0" y="464" width="375" height="52"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oKz-g8-rmX" id="4bi-uB-zmQ">
@@ -480,7 +483,7 @@
                                                     <outlet property="pointCount" destination="BXH-qH-hAz" id="heB-rq-saz"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="YAlbumMessageCell" rowHeight="52" id="QKF-U0-TYH" customClass="YAlbumMessageCell">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="YAlbumMessageCell" rowHeight="52" id="QKF-U0-TYH" customClass="YAlbumMessageCell">
                                                 <rect key="frame" x="0.0" y="516" width="375" height="52"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QKF-U0-TYH" id="1yk-fa-KNr">
@@ -534,11 +537,11 @@
                                                     <outlet property="messageCount" destination="8Av-mJ-4Oi" id="Ycr-2e-jmZ"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="YAlbumCreatorCell" rowHeight="148" id="Bg1-gR-2f0" customClass="YAlbumCreatorCell">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="YAlbumCreatorCell" rowHeight="148" id="Bg1-gR-2f0" customClass="YAlbumCreatorCell">
                                                 <rect key="frame" x="0.0" y="568" width="375" height="148"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Bg1-gR-2f0" id="dBQ-hv-d1U">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="147.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="148"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="創作人" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F9U-wF-Kzj">
@@ -606,11 +609,11 @@
                                                     <outlet property="creatorWorks" destination="PwN-kt-WJM" id="Swt-Vv-SIO"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="YAlbumEventCell" rowHeight="180" id="l1L-XF-WGY" customClass="YAlbumEventCell">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="YAlbumEventCell" rowHeight="180" id="l1L-XF-WGY" customClass="YAlbumEventCell">
                                                 <rect key="frame" x="0.0" y="716" width="375" height="180"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l1L-XF-WGY" id="YBG-xU-tu7">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="179.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="39f-oN-bKD">
@@ -782,6 +785,7 @@
                         <outlet property="dismissBtn" destination="Gpe-Ox-jLj" id="kXd-TL-QPl"/>
                         <outlet property="headerHeight" destination="pYp-JY-KLp" id="AfY-vi-A9N"/>
                         <outlet property="headerView" destination="0pW-sX-bUH" id="sAS-Vm-2fr"/>
+                        <outlet property="infoHeight" destination="Xgv-yA-OXf" id="jBx-B0-eWX"/>
                         <outlet property="infoView" destination="oOi-vw-rqE" id="ETf-hI-8cT"/>
                         <outlet property="likeBtn" destination="3GH-ws-1AU" id="RGg-M6-UVH"/>
                         <outlet property="messageBtn" destination="sul-ns-1YC" id="FTH-SE-4Mp"/>
@@ -825,10 +829,13 @@
     <resources>
         <image name="ic200_arrow_down_dark" width="144" height="144"/>
         <image name="ic200_arrow_right_dark" width="144" height="144"/>
+        <image name="ic200_audio_play_light" width="144" height="144"/>
         <image name="ic200_count_sponsor_dark" width="144" height="144"/>
         <image name="ic200_ding_dark" width="144" height="144"/>
+        <image name="ic200_gift_light" width="144" height="144"/>
         <image name="ic200_location_light" width="144" height="144"/>
         <image name="ic200_message_dark" width="48" height="48"/>
         <image name="ic200_more_dark" width="144" height="144"/>
+        <image name="ic200_video_light" width="144" height="144"/>
     </resources>
 </document>

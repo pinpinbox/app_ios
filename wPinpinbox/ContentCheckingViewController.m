@@ -4087,6 +4087,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"page: %ld", (long)page);
     NSString *description = self.photoArray[page][@"description"];
     
+    self.descriptionLabel.text = @"";
+    
     if ([wTools objectExists: description]) {
         NSAttributedString *attString = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleBody], NSKernAttributeName: @1, NSForegroundColorAttributeName: [UIColor whiteColor]}];
         if ([wTools objectExists: attString]) {

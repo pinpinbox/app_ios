@@ -13,7 +13,7 @@ typedef void(^viewTouch)(NSInteger tagId, BOOL isTouchDown, NSString *identifier
 
 @class MessageboardViewController;
 @protocol MessageboardViewControllerDelegate <NSObject>
-- (void)actionSheetViewDidSlideOut:(MessageboardViewController *)controller;
+- (void)actionSheetViewDidSlideOut:(UIViewController *)controller;
 - (void)gotMessageData;
 @end
 

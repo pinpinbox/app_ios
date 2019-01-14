@@ -24,4 +24,5 @@
 @property (nonatomic) NSString *voteStartTime;
 @property (nonatomic) NSString *voteEndtime;
 @property (nonatomic) BOOL eventFinished;
+- (void)prepareData:(NSDictionary *)data eventId:(NSString *)eventId finished:(BOOL)finished;
 @end
