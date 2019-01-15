@@ -1341,7 +1341,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"checkBeforeGoingToAlbumCreationVC");
     NSLog(@"self.fromVC: %@", self.fromVC);
     
-    if ([self.fromVC isEqualToString: @"AlbumCollectionVC"] || [self.fromVC isEqualToString: @"AlbumDetailVC"]) {
+    if ([self.fromVC isEqualToString: @"AlbumCollectionVC"] ||
+        [self.fromVC isEqualToString: @"AlbumDetailVC"] ||
+        [self.fromVC isEqualToString: @"YAlbumDetailVC"] ) {
         NSLog(@"self.fromVC is AlbumColletionVC");
         AlbumCreationViewController *acVC = [[UIStoryboard storyboardWithName: @"AlbumCreationVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumCreationViewController"];
         //acVC.selectrow = [wTools userbook];

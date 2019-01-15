@@ -1607,15 +1607,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSString *location = self.photoArray[page][@"location"];
     NSLog(@"location: %@", location);
     
-    if (![location isKindOfClass: [NSNull class]]) {
+    if ([wTools objectExists:self.photoArray[page][@"location"]]){
+        
         if (![location isEqualToString: @""]) {
             self.locationBtn.hidden = NO;
-        } else {
-            self.locationBtn.hidden = YES;
+            return;
+            
         }
-    } else {
-        self.locationBtn.hidden = NO;
     }
+    
+    self.locationBtn.hidden = YES;
+    
 }
 
 #pragma mark - Help Method for DailyMotion
@@ -4088,6 +4090,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"page: %ld", (long)page);
     NSString *description = self.photoArray[page][@"description"];
     
+    self.descriptionLabel.text = @"";
+    
     if ([wTools objectExists: description]) {
         NSAttributedString *attString = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleBody], NSKernAttributeName: @1, NSForegroundColorAttributeName: [UIColor whiteColor]}];
         if ([wTools objectExists: attString]) {
@@ -4283,11 +4287,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     // Custom ActionSheet Setting
     NSInteger page = [self getCurrentPage];
-    NSLog(@"location Str: %@", self.bookdata[@"photo"][page][@"location"]);
-    self.mapShowingActionSheet.locationStr = self.bookdata[@"photo"][page][@"location"];
+    if ([wTools objectExists:self.bookdata[@"photo"][page][@"location"]]) {
+    //NSLog(@"location Str: %@", self.bookdata[@"photo"][page][@"location"]);
+        self.mapShowingActionSheet.locationStr = self.bookdata[@"photo"][page][@"location"];
     
-    [self.view addSubview: self.mapShowingActionSheet.view];
-    [self.mapShowingActionSheet viewWillAppear: NO];
+        [self.view addSubview: self.mapShowingActionSheet.view];
+        [self.mapShowingActionSheet viewWillAppear: NO];
+    }
 }
 
 - (IBAction)soundBtnPressed:(id)sender {
@@ -4605,6 +4611,7 @@ didFailWithError:(NSError *)error {
     NSLog(@"mapShowingActionSheetDidSlideOut");
     [self.effectView removeFromSuperview];
     self.effectView = nil;
+    
 }
 
 - (void)gotMessageData {

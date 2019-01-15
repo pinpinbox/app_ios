@@ -31,6 +31,8 @@
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
 
+#import "YAlbumDetailContainerViewController.h"
+
 static NSString *sharingLink = @"http://www.pinpinbox.com/index/album/content/?album_id=%@%@";
 //static NSString *userIdSharingLink = @"http://www.pinpinbox.com/index/creative/content/?user_id=%@%@";
 static NSString *autoPlayStr = @"&autoplay=1";
@@ -729,6 +731,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
         cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
         //cell.coverImageView.image = [UIImage imageNamed: @"bg200_no_image.jpg"];
     } else {
+        [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]]];
+        
+        if ([wTools objectExists: data[@"cover_hex"]]) {
+            cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"cover_hex"]];
+        } else {
+            cell.coverImageView.backgroundColor = [UIColor clearColor];
+        }
+        /*
         [cell.coverImageView sd_setImageWithURL:[NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
         if (error) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
@@ -736,6 +746,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             cell.coverImageView.image = image;
         }];
         cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"cover_hex"]];
+         */
     }
     
     // UserForView Info Setting
@@ -828,14 +839,16 @@ static NSString *autoPlayStr = @"&autoplay=1";
 #pragma mark - UICollectionViewDelegate Methods
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+    CreatorCollectionViewCell *cell = (CreatorCollectionViewCell *) [collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
     NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
     NSDictionary *data = pictures[indexPath.row];
     NSString *albumId = [data[@"album_id"] stringValue];
     
+    CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+    
     if ([wTools objectExists: albumId]) {
-        [self ToRetrievealbumpViewControlleralbumid: albumId];
+        [self ToRetrievealbumpViewControlleralbumid: albumId  sourceRect:source sourceImageView:cell.coverImageView];
     }
 }
  
@@ -1262,8 +1275,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 NSLog(@"response from doTask2");
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"AlbumDetailViewController");
+                    NSLog(@"Time Out Message Return");                    
                     NSLog(@"checkPoint");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"doTask2"
@@ -1415,8 +1427,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - Call Protocol
-- (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
-    NSLog(@"ToRetrievealbumpViewControlleralbumid");
+- (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid
+                                   sourceRect:(CGRect)sourceRect
+                              sourceImageView:(UIImageView *) sourceImageView {
     @try {
         [wTools ShowMBProgressHUD];
     } @catch (NSException *exception) {
@@ -1468,20 +1481,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                             return;
                         }
                         
-                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                        aDVC.data = [dic[@"data"] mutableCopy];
-                        aDVC.albumId = albumid;
-                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-                        
-                        CATransition *transition = [CATransition animation];
-                        transition.duration = 0.5;
-                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                        transition.type = kCATransitionMoveIn;
-                        transition.subtype = kCATransitionFromTop;
+                        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumid albumInfo:dic[@"data"] sourceRect:sourceRect sourceImageView:sourceImageView];
                         
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-                        [appDelegate.myNav pushViewController: aDVC animated: NO];
+                        [appDelegate.myNav pushViewController: aDVC animated: YES];
+                        
+
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         if ([wTools objectExists: dic[@"message"]]) {
@@ -1547,9 +1552,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 [weakSelf followBtnPress: nil];
             } else if ([protocolName isEqualToString: @"getcreative"]) {
                 [weakSelf getCreator];
-            } else if ([protocolName isEqualToString: @"retrievealbump"]) {
-                [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
-            } else if ([protocolName isEqualToString: @"doTask2"]) {
+            } //else if ([protocolName isEqualToString: @"retrievealbump"]) {
+              //  [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
+            //}
+            else if ([protocolName isEqualToString: @"doTask2"]) {
                 [weakSelf checkPoint];
             }
         }

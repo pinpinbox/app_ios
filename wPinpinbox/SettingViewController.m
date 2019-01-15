@@ -174,6 +174,7 @@
     self.audioSelectedView.layer.cornerRadius = kCornerRadius;
     self.audioSelectedView.layer.borderColor = [UIColor secondGrey].CGColor;
     self.audioSelectedView.layer.borderWidth = 0.5;
+    self.audioSelectedView.tag = 200;
     [audioPlayLayout addSubview: self.audioSelectedView];
     
     [audioPlayLayout addGestureRecognizer: singleTap];
@@ -225,6 +226,7 @@
     self.videoSelectedView.layer.cornerRadius = kCornerRadius;
     self.videoSelectedView.layer.borderColor = [UIColor secondGrey].CGColor;
     self.videoSelectedView.layer.borderWidth = 0.5;
+    self.videoSelectedView.tag = 300;
     [videoPlayLayout addSubview: self.videoSelectedView];
     
     [videoPlayLayout addGestureRecognizer: singleTap];
@@ -401,8 +403,7 @@
 #pragma mark - UITapGestureRecognizer Selector Handler Method
 // The method below will be called when finger lifts only applies to the situation
 // when user presses the view for a long time
-- (void)handleTapFromView: (UITapGestureRecognizer *)gesture
-{
+- (void)handleTapFromView: (UITapGestureRecognizer *)gesture {
     NSLog(@"");
     NSLog(@"handleTapFromView");
     NSLog(@"gesture: %@", gesture);
@@ -500,47 +501,33 @@
     switch (touch.view.tag) {
         case 2:
         {
-            NSLog(@"case 2");
             if (CGRectContainsPoint(touch.view.bounds, location)) {
                 NSLog(@"in the touch.view.tag == 2");
-                
-                self.isAudioPlayedAutomatically = !self.isAudioPlayedAutomatically;
-                
-                if (self.isAudioPlayedAutomatically) {
-                    self.audioSelectedView.backgroundColor = [UIColor thirdMain];
-                } else {
-                    self.audioSelectedView.backgroundColor = [UIColor clearColor];
-                }
-                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                [defaults setObject: [NSNumber numberWithBool: self.isAudioPlayedAutomatically] forKey: @"isAudioPlayedAutomatically"];
-                [defaults synchronize];
-                
-                NSLog(@"isAudioPlayedAutomatically: %d", [[defaults objectForKey: @"isAudioPlayedAutomatically"] boolValue]);
-            } else {
-                NSLog(@"outside the touch.view.tag == 2");
+                [self setupAudioPlayAutomatically];
+            }
+        }
+            break;
+        case 200:
+        {
+            if (CGRectContainsPoint(touch.view.bounds, location)) {
+                NSLog(@"in the touch.view.tag == 200");
+                [self setupAudioPlayAutomatically];
             }
         }
             break;
         case 3:
         {
-            NSLog(@"case 3");
             if (CGRectContainsPoint(touch.view.bounds, location)) {
                 NSLog(@"in the touch.view.tag == 3");
-                
-                self.isVideoPlayedAutomatically = !self.isVideoPlayedAutomatically;
-                
-                if (self.isVideoPlayedAutomatically) {
-                    self.videoSelectedView.backgroundColor = [UIColor thirdMain];
-                } else {
-                    self.videoSelectedView.backgroundColor = [UIColor clearColor];
-                }
-                NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                [defaults setObject: [NSNumber numberWithBool: self.isVideoPlayedAutomatically] forKey: @"isVideoPlayedAutomatically"];
-                [defaults synchronize];
-                
-                NSLog(@"isVideoPlayedAutomatically: %d", [[defaults objectForKey: @"isVideoPlayedAutomatically"] boolValue]);
-            } else {
-                NSLog(@"outside the touch.view.tag == 3");
+                [self setupVideoPlayAutomatically];
+            }
+        }
+            break;
+        case 300:
+        {
+            if (CGRectContainsPoint(touch.view.bounds, location)) {
+                NSLog(@"in the touch.view.tag == 300");
+                [self setupVideoPlayAutomatically];
             }
         }
             break;
@@ -548,11 +535,9 @@
         {
             NSLog(@"case 4");
             if (CGRectContainsPoint(touch.view.bounds, location)) {
-                NSLog(@"in the touch.view.tag == 3");
+                NSLog(@"in the touch.view.tag == 4");
                 
                 [self toPlatformRulePage: @"https://www.pinpinbox.com/index/index/terms/"];
-            } else {
-                NSLog(@"outside the touch.view.tag == 3");
             }
         }
             break;
@@ -562,8 +547,6 @@
                 NSLog(@"in the touch.view.tag == 5");
                 
                 [self toAboutVC];
-            } else {
-                NSLog(@"outside the touch.view.tag == 5");
             }
         }
             break;
@@ -573,13 +556,41 @@
                 NSLog(@"in the touch.view.tag == 6");
                 [wTools deleteAllCoreData];
                 [wTools logOut];
-            } else {
-                NSLog(@"outside the touch.view.tag == 6");
             }
         }
         default:
             break;
     }
+}
+
+- (void)setupAudioPlayAutomatically {
+    self.isAudioPlayedAutomatically = !self.isAudioPlayedAutomatically;
+    
+    if (self.isAudioPlayedAutomatically) {
+        self.audioSelectedView.backgroundColor = [UIColor thirdMain];
+    } else {
+        self.audioSelectedView.backgroundColor = [UIColor clearColor];
+    }
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject: [NSNumber numberWithBool: self.isAudioPlayedAutomatically] forKey: @"isAudioPlayedAutomatically"];
+    [defaults synchronize];
+    
+    NSLog(@"isAudioPlayedAutomatically: %d", [[defaults objectForKey: @"isAudioPlayedAutomatically"] boolValue]);
+}
+
+- (void)setupVideoPlayAutomatically {
+    self.isVideoPlayedAutomatically = !self.isVideoPlayedAutomatically;
+    
+    if (self.isVideoPlayedAutomatically) {
+        self.videoSelectedView.backgroundColor = [UIColor thirdMain];
+    } else {
+        self.videoSelectedView.backgroundColor = [UIColor clearColor];
+    }
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject: [NSNumber numberWithBool: self.isVideoPlayedAutomatically] forKey: @"isVideoPlayedAutomatically"];
+    [defaults synchronize];
+    
+    NSLog(@"isVideoPlayedAutomatically: %d", [[defaults objectForKey: @"isVideoPlayedAutomatically"] boolValue]);
 }
 
 - (IBAction)backBtnPress:(id)sender {

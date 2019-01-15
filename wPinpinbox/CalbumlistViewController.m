@@ -469,13 +469,15 @@
     
     img.layer.borderWidth = 0;
     if (![data[@"cover"] isKindOfClass:[NSNull class]]) {
-        
+        [img sd_setImageWithURL: [NSURL URLWithString:data[@"cover"]]];
+        /*
         [img sd_setImageWithURL:[NSURL URLWithString:data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if (error) {
                 img.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
             } else
                 img.image = image;
         }];
+         */
     } else {
         img.contentMode = UIViewContentModeScaleAspectFit;
         img.imageURL = nil;
@@ -1788,8 +1790,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 NSLog(@"response from checkTaskCompleted");
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"AlbumDetailViewController");
+                    NSLog(@"Time Out Message Return");                
                     NSLog(@"checkTaskComplete");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"checkTaskCompleted"
@@ -2028,7 +2029,6 @@ didCompleteWithResults:(NSDictionary *)results {
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"AlbumDetailViewController");
                     NSLog(@"checkPoint");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"doTask2"

@@ -15,36 +15,46 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) IBOutlet UIButton *viewBtn;
 @end
 
-@interface YAlbumTitleCell : UITableViewCell
+@protocol DetailCellProtocal
+- (void)loadData:(NSDictionary *)data;
++ (CGFloat)estimatedHeight:(NSDictionary *)data;
+@end
+
+@interface YAlbumTitleCell : UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UILabel *titleLabel;
 @end
 
-@interface YAlbumLocationCell : UITableViewCell
+@interface YAlbumLocationCell : UITableViewCell<DetailCellProtocal>
+@property (nonatomic) IBOutlet UIImageView *locIcon;
+@property (nonatomic) IBOutlet UILabel *viewedCountLabel;
 @property (nonatomic) IBOutlet UILabel *locationLabel;
 @end
-@interface YAlbumContentTypeCell : UITableViewCell
+@interface YAlbumContentTypeCell : UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UIImageView *vidIcon;
 @property (nonatomic) IBOutlet UIImageView *audIcon;
 @property (nonatomic) IBOutlet UIImageView *giftIcon;
+@property (nonatomic) IBOutlet NSLayoutConstraint *audioLeading;
+@property (nonatomic) IBOutlet NSLayoutConstraint *giftLeading;
++ (BOOL)ifVisible:(NSDictionary *)data;
 @end
-@interface YAlbumDescCell : UITableViewCell
+@interface YAlbumDescCell : UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UITextView *albumDesc;
 @end
-@interface YAlbumFollowerCell : UITableViewCell
+@interface YAlbumFollowerCell : UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UILabel *followerCount;
 @end
-@interface YAlbumPointCell: UITableViewCell
+@interface YAlbumPointCell: UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UILabel *pointCount;
 @end
-@interface YAlbumMessageCell: UITableViewCell
+@interface YAlbumMessageCell: UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UILabel *messageCount;
 @end
-@interface YAlbumCreatorCell: UITableViewCell
+@interface YAlbumCreatorCell: UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UILabel *creatorName;
 @property (nonatomic) IBOutlet UIImageView *creatorAvatar;
 @property (nonatomic) IBOutlet UIButton *creatorWorks;
 @end
-@interface YAlbumEventCell: UITableViewCell
+@interface YAlbumEventCell: UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UITextView *eventDesc;
 @property (nonatomic) IBOutlet UIButton *voteBtn;
 @end

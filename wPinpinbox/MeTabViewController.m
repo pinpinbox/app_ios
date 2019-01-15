@@ -51,7 +51,10 @@
 #import "CropImageViewController.h"
 #import "UIViewController+ErrorAlert.h"
 
+
 #import "UserInfo.h"
+#import "YAlbumDetailContainerViewController.h"
+
 
 #define kStatusHeight 20;
 #define kTopGapToHeashot 44
@@ -1208,17 +1211,21 @@ static NSString *autoPlayStr = @"&autoplay=1";
     MeCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"MyInfo" forIndexPath: indexPath];
     cell.contentView.subviews[0].backgroundColor = nil;
     NSDictionary *data = pictures[indexPath.row];
-    //NSLog(@"data: %@", data);
+    NSLog(@"data: %@", data);
     if ([data[@"cover"] isEqual: [NSNull null]]) {
         cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"];
     } else {
-        //[cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]];        
+        //[cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed: @"bg_2_0_0_no_image"]];
+        [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"cover"]]];
+        /*
         [cell.coverImageView sd_setImageWithURL:[NSURL URLWithString: data[@"cover"]] placeholderImage:[UIImage imageNamed:@"bg_2_0_0_no_image"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if (error) {
                 cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
             } else
                 cell.coverImageView.image = image;
         }];
+         */
+        
     }
     // UserForView Info Setting
     BOOL gotAudio = [data[@"usefor"][@"audio"] boolValue];
@@ -1321,14 +1328,19 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
-    NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
+    MeCollectionViewCell *cell = (MeCollectionViewCell *) [collectionView cellForItemAtIndexPath: indexPath];
+    //NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
     //cell.contentView.backgroundColor =
     //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
-    NSLog(@"pictures: %@", pictures[indexPath.row]);
+    //NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
+    //NSLog(@"pictures: %@", pictures[indexPath.row]);
     NSString *albumId = [pictures[indexPath.row][@"album_id"] stringValue];
-    [self ToRetrievealbumpViewControlleralbumid: albumId];
+    CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+    YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.coverImageView noParam:YES];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.myNav pushViewController: aDVC animated: YES];
+    //[self ToRetrievealbumpViewControlleralbumid: albumId];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
@@ -1709,85 +1721,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 //}
 
 #pragma mark - Call Protocol
-- (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
-    NSLog(@"ToRetrievealbumpViewControlleralbumid");
-    
-    @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI retrievealbump: albumid
-                                               uid: [wTools getUserID]
-                                             token: [wTools getUserToken]];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
-            
-            if (response != nil) {
-                NSLog(@"response from retrievealbump");
-                
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"MeTabViewController");
-                    NSLog(@"ToRetrievealbumpViewControlleralbumid");
-                    
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"retrievealbump"
-                                         albumId: albumid];
-                } else {
-                    NSLog(@"Get Real Response");
-                    
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"result bool value is YES");
-                        NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
-                        NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
-                        
-                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                        aDVC.data = [dic[@"data"] mutableCopy];
-                        aDVC.albumId = albumid;
-                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-                        
-                        CATransition *transition = [CATransition animation];
-                        transition.duration = 0.5;
-                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                        transition.type = kCATransitionMoveIn;
-                        transition.subtype = kCATransitionFromTop;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-                        [appDelegate.myNav pushViewController: aDVC animated: NO];
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        if ([wTools objectExists: dic[@"message"]]) {
-                            [self showCustomErrorAlert: dic[@"message"]];
-                        } else {
-                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        }
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
-                }
-            }
-        });
-    });
-}
-
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
@@ -1833,9 +1766,10 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
                 [weakSelf getUrPoints];
             } else if ([protocolName isEqualToString: @"doTask1"]) {
                 [weakSelf checkPoint];
-            } else if ([protocolName isEqualToString: @"retrievealbump"]) {
-                [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
             }
+//            else if ([protocolName isEqualToString: @"retrievealbump"]) {
+//                [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
+//            }
         }
     }];
     [alertTimeOutView setUseMotionEffects: YES];

@@ -102,7 +102,21 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+- (void)prepareData:(NSDictionary *)data eventId:(NSString *)eventId finished:(BOOL)finished{
+    
+    self.name = data[@"event"][@"name"];
+    self.title = data[@"event"][@"title"];
+    self.imageUrl = data[@"event"][@"image"];
+    self.urlString = data[@"event"][@"url"];
+    self.templateArray = data[@"event_templatejoin"];
+    self.eventId = eventId;
+    self.contributionNumber = [data[@"event"][@"contribution"] integerValue];
+    self.popularityNumber = [data[@"event"][@"popularity"] integerValue];
+    self.prefixText = data[@"event"][@"prefix_text"];
+    self.specialUrl = data[@"special"][@"url"];
+    self.eventFinished = finished;
+    
+}
 - (IBAction)goVotingBtnPress:(id)sender {
     NSLog(@"goVotingBtnPress");
     if ([wTools timeCalculation: self.voteStartTime] <= 0 && [wTools timeCalculation: self.voteEndtime] >= 0) {

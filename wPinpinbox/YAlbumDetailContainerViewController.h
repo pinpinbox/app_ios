@@ -11,53 +11,41 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class ZoomAnimator;
+@class YAlbumDetailVCTransitionController;
 
 @protocol ZoomTransitionDelegate  <NSObject>
 @optional
 - (void)transitionWillStartWith:(ZoomAnimator *)zoomAnimator;
 - (void)transitionDidEndWith:(ZoomAnimator *)zoomAnimator;
-- (UIImageView *)sourceImageView:(ZoomAnimator *)zoomAnimator;
+- (UIImageView * _Nullable )sourceImageView:(ZoomAnimator *)zoomAnimator;
 - (UIImageView *)referenceImageView:(ZoomAnimator *)zoomAnimator;
 - (CGRect)sourceImageViewFrameInTransitioningView:(ZoomAnimator *)zoomAnimator;
 - (CGRect)referenceImageViewFrameInTransitioningView:(ZoomAnimator *)zoomAnimator;
 @end
-// VC transition animation controller
-@interface ZoomAnimator : NSObject <UIViewControllerAnimatedTransitioning>
-@property(weak, nonatomic) id<ZoomTransitionDelegate> fromDelegate;
-@property(weak, nonatomic) id<ZoomTransitionDelegate> toDelegate;
-//  temp cell image
-@property(nonatomic) UIImageView *transitionImageView;
-@property(nonatomic) BOOL isPresenting;
-- (void)animateZoomInTransition:(id<UIViewControllerContextTransitioning>) transitionContext;
-- (void)animateZoomOutTransition:(id<UIViewControllerContextTransitioning>) transitionContext;
-@end
 
-// VC Transition with user interaction, pan or drag
-@interface  ZoomDismissalInteractionController : NSObject <UIViewControllerInteractiveTransitioning>
-@property(nonatomic) id<UIViewControllerContextTransitioning> __nullable transitionContext;
-@property(nonatomic) id<UIViewControllerAnimatedTransitioning> animator;
-@property(nonatomic) BOOL isEasyOut; //  TRUE: dismiss by right-to-left pan, FALSE: drag down to dismiss
-@property(nonatomic) CGRect fromReferenceImageViewFrame;
-@property(nonatomic) CGRect toReferenceImageViewFrame;
-@end
-
-@interface YAlbumDetailVCTransitionController : NSObject <UINavigationControllerDelegate, UIViewControllerTransitioningDelegate>
-@property(nonatomic) BOOL isInteractive; //  TRUE: Using pan / drag to dismiss, FALSE: controlled by zoom in/ zoom out effect
-@property(nonatomic) BOOL isEasyOut; //  TRUE: dismiss by right-to-left pan, FALSE: drag down to dismiss
-@property(nonatomic) ZoomAnimator *animator;
-@property(nonatomic) ZoomDismissalInteractionController *interactionController;
-@property(weak, nonatomic) id<ZoomTransitionDelegate> fromDelegate;
-@property(weak, nonatomic) id<ZoomTransitionDelegate> toDelegate;
-
-@end
 
 @interface YAlbumDetailContainerViewController : UIViewController<ZoomTransitionDelegate>
 @property (nonatomic) YAlbumDetailViewController *currentDetailVC; //  content VC to display album detail
 @property (nonatomic) YAlbumDetailVCTransitionController *zoomTransitionController;
 @property (nonatomic) id<ZoomTransitionDelegate> toVCDelegate;
 @property (nonatomic) CGRect sourceRect;
-@property (nonatomic) UIImageView *sourceView;
+@property (nonatomic) UIImageView  * _Nullable sourceView;
 @property (nonatomic) NSString *album_id;
+@property (nonatomic) BOOL noparam;
+@property (nonatomic) NSString *fromVC;
+@property (nonatomic) BOOL getMessagePush;
++ (YAlbumDetailContainerViewController *)albumDetailVCWithAlbumID:(NSString *)albumid
+                                                        albumInfo:(NSDictionary * _Nullable )albumInfo;
++ (YAlbumDetailContainerViewController *)albumDetailVCWithAlbumID:(NSString *)albumid
+                                                        albumInfo:(NSDictionary *)albumInfo
+                                                       sourceRect:(CGRect)sourceRect
+                                                  sourceImageView:(UIImageView * _Nullable )sourceImageView;
+
++ (YAlbumDetailContainerViewController *)albumDetailVCWithAlbumID:(NSString *)albumid
+                                                       sourceRect:(CGRect)sourceRect
+                                                  sourceImageView:( UIImageView * _Nullable )sourceImageView
+                                                          noParam:(BOOL)noParam;
+
 @end
 
 NS_ASSUME_NONNULL_END

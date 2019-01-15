@@ -232,13 +232,13 @@
     NSString *scrollDirection;
     
     NSLog(@"self.lastContentOffset: %f", self.lastContentOffset);
-    NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
+    //NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
     
     if (self.lastContentOffset > scrollView.contentOffset.y) {
         NSLog(@"scroll up");
         scrollDirection = @"ScrollUp";
     } else if (self.lastContentOffset < scrollView.contentOffset.y) {
-        NSLog(@"scroll down");
+        //NSLog(@"scroll down");
         scrollDirection = @"ScrollDown";
     } else if (self.lastContentOffset == scrollView.contentOffset.y) {
         NSLog(@"scroll up");

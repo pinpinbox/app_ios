@@ -26,6 +26,8 @@
 #import "ContentCheckingViewController.h"
 #import "UserInfo.h"
 
+#import "YAlbumDetailContainerViewController.h"
+
 @interface QrcordViewController () <AVCaptureMetadataOutputObjectsDelegate, UIGestureRecognizerDelegate>
 {
     __weak IBOutlet UILabel *lab_left;
@@ -83,7 +85,11 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = YES;
 }
-
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.captureSession.running)
+        [self.captureSession stopRunning];
+}
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     NSLog(@"QrcordViewController viewDidDisappear");
@@ -136,7 +142,7 @@
         [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (granted) {
-                    [wself startReading];
+                    [wself performSelector:@selector(startReading) withObject:nil afterDelay:1.0 ];
                 } else {
                     [wself showNoAccessAlertAndCancel];
                 }
@@ -309,7 +315,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         // Everything is done on the main thread.
         //[_lblStatus performSelectorOnMainThread:@selector(setText:) withObject:[metadataObj stringValue] waitUntilDone:NO];
         
-        [self performSelectorOnMainThread:@selector(stopReading) withObject:nil waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(stopReading) withObject:nil waitUntilDone:YES];
       
         _isReading = NO;
         
@@ -446,20 +452,23 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                        aDVC.data = [dic[@"data"] mutableCopy];
-                        aDVC.albumId = albumId;
-                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
                         
-                        CATransition *transition = [CATransition animation];
-                        transition.duration = 0.5;
-                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                        transition.type = kCATransitionMoveIn;
-                        transition.subtype = kCATransitionFromTop;
-                        
+                        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId albumInfo:dic[@"data"]];
+//                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+//                        aDVC.data = [dic[@"data"] mutableCopy];
+//                        aDVC.albumId = albumId;
+//                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+//
+//                        CATransition *transition = [CATransition animation];
+//                        transition.duration = 0.5;
+//                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+//                        transition.type = kCATransitionMoveIn;
+//                        transition.subtype = kCATransitionFromTop;
+//
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-                        [appDelegate.myNav pushViewController: aDVC animated: NO];
+//                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+                        [appDelegate.myNav pushViewController: aDVC animated: YES];
+                        [self stopReading];
                     } else if ([dic[@"result"] intValue] == 0) {
                         NSLog(@"失敗：%@",dic[@"message"]);
                         [self showCustomErrorAlert: dic[@"message"]];
@@ -516,6 +525,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 }
 - (void) processAlbumID:(NSString *)aid {
     self.albumId = aid;//[NSString stringWithString:aid];
+    
     [self ToRetrievealbumpViewControlleralbumid: self.albumId];
 }
 #pragma mark - Protocol Method Section

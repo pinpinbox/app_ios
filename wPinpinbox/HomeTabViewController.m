@@ -1813,15 +1813,16 @@
         if ([data[@"album"][@"cover"] isEqual: [NSNull null]]) {
             cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image.jpg"];
         } else {
-            
+            [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]]];            
+            cell.coverImageView.backgroundColor = [UIColor colorFromHexString: data[@"album"][@"cover_hex"]];
+            /*
             [cell.coverImageView sd_setImageWithURL: [NSURL URLWithString: data[@"album"][@"cover"]] placeholderImage:[UIImage imageNamed:@"bg200_no_image.jpg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
                 if (error) {
                     cell.coverImageView.image = [UIImage imageNamed: @"bg_2_0_0_no_image"] ;
                 } else
                     cell.coverImageView.image = image;
-                
             }];
-            
+            */
             if ([data[@"album"][@"cover_hex"] isKindOfClass: [NSNull class]]) {
                 cell.coverImageView.backgroundColor = [UIColor clearColor];
             } else {
@@ -2155,7 +2156,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
         [self toAlbumDetailVC: albumId source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 2) {
-        [self tapDetectedForURL: indexPath.row];
+        HomeBannerCollectionViewCell *cell = (HomeBannerCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
+        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        [self tapDetectedForURL:indexPath.row source:source sourceImageView:cell.bannerImageView];
     } else if (collectionView.tag == 3) {
         if (indexPath.row + 1 < categoryArray.count) {
             NSDictionary *data = categoryArray[indexPath.row+1];
@@ -2193,21 +2196,19 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (![wTools objectExists: albumId]) {
         return;
     }
-    
-    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-    aDVC.albumId = albumId;
-    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-    
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.5;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionMoveIn;
-    transition.subtype = kCATransitionFromTop;
-    
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-    
-    [appDelegate.myNav pushViewController: aDVC animated: NO];
+
+    NSLog(@"After objectExists check");
+    @try {
+        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:sourceImage noParam:NO];
+        
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav pushViewController: aDVC animated: YES];
+    } @catch (NSException *exception) {
+        [self showCustomErrorAlert:@"Album id is empty"];
+    } @finally {
+        
+    }
+
 }
 
 - (void)toCreatorVC:(NSString *)userId {
@@ -2240,10 +2241,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [appDelegate.myNav pushViewController: categoryVC animated: YES];
 }
 
-- (void)tapDetectedForURL:(NSInteger)page {
-    NSLog(@"tapDetectedForURL");
-    NSLog(@"page: %ld", (long)page);
-    NSLog(@"adArray[page]: %@", adArray[page]);
+- (void)tapDetectedForURL:(NSInteger)page source:(CGRect)source sourceImageView:(UIImageView *)sourceImageView {
+//    NSLog(@"tapDetectedForURL");
+//    NSLog(@"page: %ld", (long)page);
+//    NSLog(@"adArray[page]: %@", adArray[page]);
     
     NSString *album = adArray[page][@"album"];
     NSString *event = adArray[page][@"event"];
@@ -2257,18 +2258,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSString *albumIdString = [adArray[page][@"album"][@"album_id"] stringValue];
         
         if (![albumIdString isEqualToString: @""]) {
-            AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-            aDVC.albumId = albumIdString;
-            
-            CATransition *transition = [CATransition animation];
-            transition.duration = 0.5;
-            transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-            transition.type = kCATransitionFade;
-            transition.subtype = kCATransitionFromTop;
-            [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
+            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumIdString sourceRect:source sourceImageView:sourceImageView noParam:NO];
             
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            [appDelegate.myNav pushViewController: aDVC animated: NO];
+            [appDelegate.myNav pushViewController: aDVC animated: YES];
         }
     } else if (event != (NSString *)[NSNull null]) {
         NSString *eventIdString = [adArray[page][@"event"][@"event_id"] stringValue];
@@ -2634,10 +2627,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 //    }
     
     if (scrollView == self.homeCollectionView) {
-        NSLog(@"scrollView == self.homeCollectionView");
+        //NSLog(@"scrollView == self.homeCollectionView");
         
-        NSLog(@"self.lastContentOffset: %f", self.lastContentOffset);
-        NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
+        //NSLog(@"self.lastContentOffset: %f", self.lastContentOffset);
+        //NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
         
         if (!isViewLoading) {
             if (self.lastContentOffset > scrollView.contentOffset.y) {
@@ -2647,7 +2640,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     [self.navBarView layoutIfNeeded];
                 }];
             } else {
-                NSLog(@"Scroll Down");
+                //NSLog(@"Scroll Down");
                 [UIView animateWithDuration: 0.5 animations:^{
                     self.navBarView.hidden = YES;
                     [self.navBarView layoutIfNeeded];

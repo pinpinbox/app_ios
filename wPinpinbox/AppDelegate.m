@@ -43,7 +43,10 @@
 #import "GlobalVars.h"
 #import "UIViewController+ErrorAlert.h"
 
+
 #import "UserInfo.h"
+#import "YAlbumDetailContainerViewController.h"
+
 
 #define kPlzOpenLocSys @"請開啟定位:設置 > 隱私 > 位置 > 定位服務。"
 #define kTipTitle @"提示"
@@ -783,9 +786,9 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
         
         if (pairs[@"album_id"] != nil) {
             NSLog(@"album_id is not nil");
-            //[wTools ToRetrievealbumpViewControlleralbumid: pairs[@"album_id"]];
-            AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-            aDVC.albumId = pairs[@"album_id"];
+            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:pairs[@"album_id"] albumInfo:nil];
+//            AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+//            aDVC.albumId = pairs[@"album_id"];
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [self popToMyTabBarVC: appDelegate];
             [appDelegate.myNav pushViewController: aDVC animated: NO];
@@ -991,9 +994,11 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             }
             if ([dataType isEqualToString: @"albumqueue"]) {
                 NSLog(@"dataType isEqualToString: albumqueue");
-                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                NSLog(@"typeIdStr: %@", typeIdStr);
-                aDVC.albumId = typeIdStr;
+                
+//                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+//                NSLog(@"typeIdStr: %@", typeIdStr);
+//                aDVC.albumId = typeIdStr;
+                YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
@@ -1001,8 +1006,11 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             }
             if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
                 NSLog(@"dataType isEqualToString: albumqueue@messageboard");
-                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                aDVC.albumId = typeIdStr;
+                
+                YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
+                
+//                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+//                aDVC.albumId = typeIdStr;
                 aDVC.getMessagePush = YES;
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -1066,8 +1074,9 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 NSLog(@"typeIdStr: %@", typeIdStr);
                 
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
-                    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                    aDVC.albumId = typeIdStr;
+//                    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+//                    aDVC.albumId = typeIdStr;
+                    YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
@@ -1075,8 +1084,9 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 }];
             } else if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
-                    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                    aDVC.albumId = typeIdStr;
+                    //AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+                    //aDVC.albumId = typeIdStr;
+                    YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];                    
                     aDVC.getMessagePush = YES;
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

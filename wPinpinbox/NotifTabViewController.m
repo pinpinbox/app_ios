@@ -32,6 +32,8 @@
 #import "AlbumCollectionViewController.h"
 #import "UserInfo.h"
 
+#import "YAlbumDetailContainerViewController.h"
+
 #import "MyLayout.h"
 
 @interface NotifTabViewController () <UITableViewDataSource, UITableViewDelegate, SFSafariViewControllerDelegate, AlbumCreationViewControllerDelegate> {
@@ -56,12 +58,15 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
     [self initialValueSetup];
 }
-
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
+}
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"");
     NSLog(@"NotifTabTableViewController viewWillAppear");
     [super viewWillAppear:animated];
-    [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
+    
     
     for (UIView *v in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[v viewWithTag: 104];
@@ -491,25 +496,26 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
             [appDelegate.myNav pushViewController: cVC animated: YES];
         }
         if ([type isEqualToString: @"albumqueue"]) {
-            //[wTools ToRetrievealbumpViewControlleralbumid: type_id];
-            [self ToRetrievealbumpViewControlleralbumid: type_id];
+            NotifTabTableViewCell *cell = (NotifTabTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+            
+            CGRect source = [self.view convertRect:cell.headshotImaveView.frame fromView:cell];
+            //[self ToRetrievealbumpViewControlleralbumid: type_id source:source sourceImage:cell.headshotImaveView];
+            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:type_id sourceRect:source sourceImageView:cell.headshotImaveView noParam:YES];
+            
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            
+            [appDelegate.myNav pushViewController: aDVC animated: YES];
+            
         }
         if ([type isEqualToString: @"albumqueue@messageboard"]) {
             NSLog(@"type: %@", type);
-            AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-            aDVC.albumId = type_id;
+            NotifTabTableViewCell *cell = (NotifTabTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+            CGRect source = [self.view convertRect:cell.headshotImaveView.frame fromView:cell];
+            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:type_id sourceRect:source sourceImageView:cell.headshotImaveView noParam:YES];
             aDVC.getMessagePush = YES;
-            aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-            
-            CATransition *transition = [CATransition animation];
-            transition.duration = 0.5;
-            transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-            transition.type = kCATransitionMoveIn;
-            transition.subtype = kCATransitionFromTop;
-            
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-            [appDelegate.myNav pushViewController: aDVC animated: NO];
+            
+            [appDelegate.myNav pushViewController: aDVC animated: YES];
         }
         if ([type isEqualToString: @"albumcooperation"]) {
             NSLog(@"type isEqualToString albumcooperation");
@@ -757,69 +763,7 @@ heightForHeaderInSection:(NSInteger)section {
 }
 
 #pragma mark - Call Protocol
-- (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
-    NSLog(@"ToRetrievealbumpViewControlleralbumid");
-    [wTools ShowMBProgressHUD];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        NSString *response = [boxAPI retrievealbump: albumid
-                                                uid: [wTools getUserID]
-                                              token: [wTools getUserToken]];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
-            
-            if (response != nil) {
-                NSLog(@"check response");
-                NSLog(@"response: %@", response);
-                
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"NotifTabTableViewController");
-                    NSLog(@"ToRetrievealbumpViewControlleralbumid");
-                    
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"retrievealbump"
-                                         albumId: albumid];
-                } else {
-                    NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    if ([dic[@"result"] intValue] == 1) {
-                        NSLog(@"result bool value is YES");
-                        NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
-                        NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
-                        
-                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                        if ([wTools objectExists: dic[@"data"]]) {
-                            aDVC.data = [dic[@"data"] mutableCopy];
-                            
-                            if ([wTools objectExists: albumid]) {
-                                aDVC.albumId = albumid;
-                                aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-                                
-                                CATransition *transition = [CATransition animation];
-                                transition.duration = 0.5;
-                                transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                                transition.type = kCATransitionMoveIn;
-                                transition.subtype = kCATransitionFromTop;
-                                
-                                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                                [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-                                [appDelegate.myNav pushViewController: aDVC animated: NO];
-                            }
-                        }
-                    } else if ([dic[@"result"] intValue] == 0) {
-                        NSLog(@"失敗：%@",dic[@"message"]);
-                        [self showCustomErrorAlert: dic[@"message"]];
-                    } else {
-                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                    }
-                }
-            }
-        });
-    });
-}
+
 
 - (void)showCustomAlert:(NSString *)msg
             messageType:(NSString *)messageType {
@@ -1004,9 +948,10 @@ heightForHeaderInSection:(NSInteger)section {
         } else {
             if ([protocolName isEqualToString: @"getPushQueue"]) {
                 [weakSelf getPushQueue];
-            } else if ([protocolName isEqualToString: @"retrievealbump"]) {
-                [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
             }
+//            else if ([protocolName isEqualToString: @"retrievealbump"]) {
+//                [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
+//            }
         }
     }];
     [alertTimeOutView setUseMotionEffects: YES];

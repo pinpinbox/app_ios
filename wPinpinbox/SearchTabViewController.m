@@ -28,6 +28,7 @@
 #import "LabelAttributeStyle.h"
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
+#import "YAlbumDetailContainerViewController.h"
 
 //static NSString *hostURL = @"www.pinpinbox.com";
 
@@ -612,10 +613,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         //NSDictionary *albumDic = albumData[indexPath.row][@"album"];
         //NSLog(@"albumDic: %@", albumDic);
-        
+        SearchTabCollectionViewCell *cell = (SearchTabCollectionViewCell *) [collectionView cellForItemAtIndexPath: indexPath];
+        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
         if ([wTools objectExists: albumData[indexPath.row][@"album"][@"album_id"]]) {
             NSString *albumId = [albumData[indexPath.row][@"album"][@"album_id"] stringValue];
-            [self ToRetrievealbumpViewControlleralbumid: albumId];
+            [self ToRetrievealbumpViewControlleralbumid: albumId source:source imageView:cell.coverImageView ];
         }
     } else {
         NSLog(@"");
@@ -1108,57 +1110,50 @@ replacementString:(NSString *)string {
 }
 
 #pragma mark - Call Protocol
-- (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
-    NSLog(@"ToRetrievealbumpViewControlleralbumid");
+- (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid source:(CGRect)source imageView:(UIImageView *)imageview {
+    
+    
+
     [wTools ShowMBProgressHUD];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *response = [boxAPI retrievealbump: albumid
                                                 uid: [wTools getUserID]
                                               token: [wTools getUserToken]];
-        
+
         dispatch_async(dispatch_get_main_queue(), ^{
             [wTools HideMBProgressHUD];
-            
+
             if (response != nil) {
                 NSLog(@"response from retrievealbump");
                 //NSLog(@"respone: %@", respone);
-                
+
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"SearchTableViewController");
                     NSLog(@"ToRetrievealbumpViewControlleralbumid");
-                    
+
                     [self dismissKeyboard];
-                    
+
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"retrievealbump"
                                             text: @""
                                          albumId: albumid];
                 } else {
                     NSLog(@"Get Real Response");
-                    
+
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
+
                     if ([dic[@"result"] intValue] == 1) {
                         NSLog(@"result bool value is YES");
                         NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
                         NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
                         if ([wTools objectExists: dic[@"data"]]) {
                             if ([wTools objectExists: albumid]) {
-                                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                                aDVC.data = [dic[@"data"] mutableCopy];
-                                aDVC.albumId = albumid;
-                                aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-                                
-                                CATransition *transition = [CATransition animation];
-                                transition.duration = 0.5;
-                                transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                                transition.type = kCATransitionMoveIn;
-                                transition.subtype = kCATransitionFromTop;
+                                YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumid albumInfo:dic[@"data"] sourceRect:source sourceImageView:imageview];
                                 
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                                [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-                                [appDelegate.myNav pushViewController: aDVC animated: NO];
+                                [appDelegate.myNav pushViewController: aDVC animated: YES];
+                                
                             }
                         }
                     } else if ([dic[@"result"] intValue] == 0) {
@@ -1224,9 +1219,9 @@ replacementString:(NSString *)string {
                 [weakSelf filterUserContentForSearchText: text];
             } else if ([protocolName isEqualToString: @"filterAlbumContentForSearchText"]) {
                 [weakSelf filterAlbumContentForSearchText: text];
-            } else if ([protocolName isEqualToString: @"retrievealbump"]) {
-                [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
-            }
+            } //else if ([protocolName isEqualToString: @"retrievealbump"]) {
+              //  [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
+            //}
         }
     }];
     [alertTimeOutView setUseMotionEffects: YES];
