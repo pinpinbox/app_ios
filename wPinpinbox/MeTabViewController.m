@@ -1006,8 +1006,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
             [appDelegate.myNav pushViewController: sponsorListVC animated: YES];
         }
     };
-    [LabelAttributeStyle changeGapString: headerView.albumCollectionLabel
-                                 content: headerView.albumCollectionLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.albumCollectionLabel content: headerView.albumCollectionLabel.text];
+//    [LabelAttributeStyle changeGapString: headerView.albumCollectionLabel
+//                                 content: headerView.albumCollectionLabel.text];
     
     // Cover Image
     if ([self.userDic[@"cover"] isEqual: [NSNull null]]) {
@@ -1065,12 +1066,14 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // User Name Label
     if (![self.userDic[@"name"] isEqual: [NSNull null]]) {
         headerView.userNameLabel.text = self.userDic[@"name"];
-        [LabelAttributeStyle changeGapString: headerView.userNameLabel content: self.userDic[@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.userNameLabel content: headerView.userNameLabel.text];
+//        [LabelAttributeStyle changeGapString: headerView.userNameLabel content: self.userDic[@"name"]];
     }
     // Creative Name Label
     if (![self.userDic[@"creative_name"] isEqual: [NSNull null]]) {
         headerView.creativeNameLabel.text = self.userDic[@"creative_name"];
-        [LabelAttributeStyle changeGapString: headerView.creativeNameLabel content: self.userDic[@"creative_name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.creativeNameLabel content: headerView.creativeNameLabel.text];
+//        [LabelAttributeStyle changeGapString: headerView.creativeNameLabel content: self.userDic[@"creative_name"]];
         
         if ([self.userDic[@"creative_name"] isEqualToString: @""]) {
             headerView.gradientView.hidden = YES;
@@ -1303,7 +1306,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // AlbumNameLabel Setting
     if (![data[@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"name"];
-        [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
+//        [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"name"]];
     }
     return cell;
 }
