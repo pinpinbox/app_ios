@@ -556,7 +556,7 @@
         YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumid sourceRect:CGRectZero sourceImageView:nil noParam:NO];
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         
-        [appDelegate.myNav pushViewController: aDVC animated: NO];
+        [appDelegate.myNav pushViewController: aDVC animated: YES];
     } @catch (NSException *exception) {
         [self showCustomErrorAlert:@"Album id is empty"];
     } @finally {
