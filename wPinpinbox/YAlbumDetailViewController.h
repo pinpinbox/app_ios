@@ -13,7 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface YAlbumDetailViewController : UIViewController
 @property(nonatomic) IBOutlet UIScrollView *baseView;
 @property(nonatomic) IBOutlet UIButton *dismissBtn;
-- (void)setupAlbumWithInfo:(NSDictionary *)info;
+@property(nonatomic) BOOL noparam;
+@property(nonatomic) NSString *fromVC;
+@property(nonatomic) BOOL isMessageShowing;
+- (void)setupAlbumWithInfo:(NSDictionary *)info albumId:(NSString *)albumId;
 - (void)setAlubumId:(NSString *)aid;
 - (UIImageView *)albumCoverView;
 - (void)setContentBtnVisible;

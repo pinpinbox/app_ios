@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) IBOutlet UIImageView *vidIcon;
 @property (nonatomic) IBOutlet UIImageView *audIcon;
 @property (nonatomic) IBOutlet UIImageView *giftIcon;
+@property (nonatomic) IBOutlet NSLayoutConstraint *audioLeading;
+@property (nonatomic) IBOutlet NSLayoutConstraint *giftLeading;
 + (BOOL)ifVisible:(NSDictionary *)data;
 @end
 @interface YAlbumDescCell : UITableViewCell<DetailCellProtocal>

@@ -15,6 +15,7 @@
 
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
+#import "UIView+Toast.h"
 
 #import "UIViewController+ErrorAlert.h"
 #import "AppDelegate.h"
@@ -22,7 +23,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
 #import <FBSDKShareKit/FBSDKShareDialog.h>
-
+#import <SafariServices/SafariServices.h>
 
 #import "ContentCheckingViewController.h"
 #import "CreaterViewController.h"
@@ -35,11 +36,16 @@
 #import "BuyPPointViewController.h"
 #import "NewEventPostViewController.h"
 
+#import "OldCustomAlertView.h"
+#import "SelectBarViewController.h"
+#import "UIViewController+CWPopup.h"
+
+
 static NSString *autoPlayStr = @"&autoplay=1";
 
 @interface YAlbumDetailViewController ()<UITableViewDataSource, UITableViewDelegate,
 ContentCheckingViewControllerDelegate,MessageboardViewControllerDelegate,DDAUIActionSheetViewControllerDelegate,
-AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKSharingDelegate>
+AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKSharingDelegate,SFSafariViewControllerDelegate,SelectBarDelegate>
 @property(nonatomic) NSMutableDictionary *albumInfo;
 @property(nonatomic) NSString *album_id;
 @property(nonatomic) BOOL isViewed;
@@ -48,8 +54,10 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 @property(nonatomic) NSString *task_for;
 @property(nonatomic) BOOL isCollected;
 @property(nonatomic) NSInteger albumPoint;
+@property(nonatomic) NSString *eventUrl;
+@property(nonatomic) NSArray *reportIntentList;
 
-
+@property(nonatomic) OldCustomAlertView *alertGetPointView;
 @property(nonatomic) IBOutlet UITableView *detailView;
 
 @property(nonatomic) IBOutlet UIButton *messageBtn;
@@ -83,16 +91,23 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     [super viewWillAppear:animated];
     [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
 }
-- (void)setupAlbumWithInfo:(NSDictionary *)info {
+- (void)setupAlbumWithInfo:(NSDictionary *)info albumId:(NSString *)albumId {
+    self.album_id = albumId;
+    [self checkAlbumId:self.album_id];
     [self.albumInfo setDictionary:info];
     [self prepareCoverView];
     [self pointsUpdate];
     [self.detailView reloadData];
+    
+    if (_isMessageShowing) {
+        [self messageBtnTouched:self.messageBtn];
+    }
 }
 - (void)setAlubumId:(NSString *)aid {
     self.album_id = aid;
     [self checkAlbumId:self.album_id];
-    [self retrieveAlbum:self.album_id];
+    if (self.albumInfo.allKeys.count < 1)
+        [self retrieveAlbum:self.album_id];
 }
 - (void)checkAlbumId:(NSString *)albumId {
     
@@ -132,18 +147,9 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)pointsUpdate {
     
 }
-- (void)checkPoint {
-    
-}
-- (void)buyAlbum {
-    
-}
-- (void)getPoint {
-    
-}
 - (BOOL)isPanValid {
     
-    return self.customMessageActionSheet.view.superview != self.view;
+    return self.effectView == nil;
 }
 #pragma mark -
 - (BOOL)isPointInHeader:(CGPoint)point {
@@ -263,7 +269,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
             return [YAlbumDescCell estimatedHeight:self.albumInfo[@"album"]];
         } break;
         case 5: {
-            return [YAlbumPointCell estimatedHeight:self.albumInfo[@"album"]];
+            return [YAlbumPointCell estimatedHeight:self.albumInfo[@"user"]];
         }
         case 4:
         case 6: {
@@ -274,6 +280,9 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
             
         } break;
         case 8: {
+            if ([self.fromVC isEqualToString:@"VotingVC"]) {
+                return 0;
+            }
             return [YAlbumEventCell estimatedHeight:self.albumInfo[@"eventjoin"]];
             
         } break;
@@ -342,7 +351,11 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         case 8: {
             YAlbumEventCell *cell = (YAlbumEventCell *)[tableView dequeueReusableCellWithIdentifier:@"YAlbumEventCell"];
             [cell loadData:self.albumInfo];
+            if (![cell.voteBtn.allTargets containsObject:self]) {
+                [cell.voteBtn addTarget:self action:@selector(handleVotePressed:) forControlEvents:UIControlEventTouchUpInside];
+            }
             return cell;
+            
         } break;
         default: {
             YAlbumTitleCell *title = (YAlbumTitleCell *)[tableView dequeueReusableCellWithIdentifier:@"YAlbumTitleCell"];
@@ -417,9 +430,6 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
 }
-- (IBAction)eventVote:(id)sender {
-    
-}
 - (IBAction)moreAlbumList:(id)sender {
     if ([wTools objectExists:self.albumInfo[@"user"][@"user_id"]]) {
         CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
@@ -436,11 +446,16 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     __block NSString *viewedString = [NSString stringWithFormat: @"%d", self.isViewed];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        
-        NSString *response = [boxAPI retrievealbump: aid
-                                                uid: [wTools getUserID]
-                                              token: [wTools getUserToken]
-                                             viewed: viewedString];
+        NSString *response = nil;
+        if (wself.noparam)
+            response = [boxAPI retrievealbump: aid
+                                          uid: [wTools getUserID]
+                                        token: [wTools getUserToken]];                                       
+        else
+            response = [boxAPI retrievealbump: aid
+                                      uid: [wTools getUserID]
+                                    token: [wTools getUserToken]
+                                   viewed: viewedString];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
@@ -462,7 +477,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
-                        [wself setupAlbumWithInfo:dic[@"data"]];
+                        [wself setupAlbumWithInfo:dic[@"data"] albumId:wself.album_id];
                     } else if ([dic[@"result"] intValue] == 0) {
                         
                         if ([wTools objectExists: dic[@"message"]]) {
@@ -608,6 +623,523 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         });
     });
 }
+
+- (void)getPoint {
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI geturpoints: [wTools getUserID]
+                                           token: [wTools getUserToken]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            NSLog(@"response: %@", response);
+            
+            if (response != nil) {
+                NSLog(@"response from geturpoints");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return -- getPoint");
+                   
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"geturpoints"
+                                              row: 0
+                                          eventId: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    if ([dic[@"result"] intValue] == 1) {
+                        if (![wTools objectExists: dic[@"data"]]) {
+                            return;
+                        }
+                        NSInteger point = [dic[@"data"] integerValue];
+                        NSLog(@"%ld", (long)point);
+                        
+                        if (point >= wself.albumPoint) {
+                            [wself buyAlbum];
+                        } else {
+                            [wself showCustomAlert: @"你的P點不足，前往購點?" option: @"buyPoint"];
+                        }
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
+                }
+            }
+        });
+    });
+}
+
+- (void)buyAlbum {
+    NSLog(@"buyAlbum");
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI buyalbum: [wTools getUserID]
+                                        token: [wTools getUserToken]
+                                      albumid: self.album_id];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                NSLog(@"response: %@", response);
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return -- buyAlbum");
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"buyalbum"
+                                             row: 0
+                                         eventId: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSLog(@"response from buyAlbum");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    if ([dic[@"result"] intValue] == 1) {
+                        CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor firstMain];
+
+                        [wself.view makeToast: @"成功加入收藏"
+                                     duration: 2.0
+                                     position: CSToastPositionBottom
+                                        style: style];
+
+                        [wself checkAlbumCollectTask];
+                        wself.isCollected = YES;
+                    } else if ([dic[@"result"] intValue] == 2) {
+                        [wself showCustomErrorAlert: @"已擁有該相本"];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗： %@", dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [wself showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
+                    } else {
+                        [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
+                }
+            }
+        });
+    });
+}
+
+- (void)insertReport {
+    NSLog(@"insertReport");
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI getreportintentlist: [wTools getUserID]
+                                                   token: [wTools getUserToken]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return -- insertReport");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"getreportintentlist"
+                                              row: 0
+                                          eventId: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    [wself processReportResult:dic];
+                }
+            }
+        });
+    });
+}
+#pragma mark - SelectBarDelegate
+- (void)SaveDataRow:(NSInteger)row {
+    NSLog(@"SaveDataRow: row: %ld", (long)row);
+    NSString *rid = [self.reportIntentList[row][@"reportintent_id"] stringValue];
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI insertreport: [wTools getUserID]
+                                            token: [wTools getUserToken]
+                                              rid: rid
+                                             type: @"album"
+                                           typeid: self.album_id];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return -- SaveDataRow");
+                    
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"insertreport"
+                                             row: row
+                                         eventId: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding:NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSString *msg = @"";
+                    
+                    if ([dic[@"result"] intValue] == 1) {
+                        msg = NSLocalizedString(@"Works-tipRpSuccess", @"");
+                        [self showCustomAlert:msg btnName:@"關 閉"];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        if ([wTools objectExists: dic[@"message"]]) {
+                            [self showCustomErrorAlert: dic[@"message"]];
+                        } else {
+                            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                        }
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
+                }
+            }
+        });
+    });
+}
+#pragma mark - Event
+- (IBAction)handleVotePressed:(id)sender {
+
+    NSString *eventIdString = [self.albumInfo[@"event"][@"event_id"] stringValue];
+    
+    if (![eventIdString isEqual: [NSNull null]]) {
+        if (![eventIdString isEqualToString: @""]) {
+            [self getEventData: eventIdString];
+        }
+    }
+
+
+}
+#pragma mark - Buy Album
+- (void)checkAlbumCollectTask {
+    NSLog(@"checkAlbumCollectTask");
+    if (_albumPoint == 0) {
+        _task_for = @"collect_free_album";
+    } else if (_albumPoint > 0) {
+        _task_for = @"collect_pay_album";
+    }
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if ([_task_for isEqualToString: @"collect_free_album"]) {
+        // Check whether getting Free Album point or not
+        BOOL collect_free_album = [[defaults objectForKey: @"collect_free_album"] boolValue];
+        NSLog(@"Check whether getting Album Saving point or not");
+        NSLog(@"collect_free_album: %d", (int)collect_free_album);
+        
+        if (collect_free_album) {
+            NSLog(@"Get the First Time Album Saving Point Already");
+            [self retrieveAlbum:self.album_id];
+        } else {
+            NSLog(@"Haven't got the point of saving album for first time");
+            [self checkPoint];
+        }
+    } else if ([_task_for isEqualToString: @"collect_pay_album"]) {
+        // Check whether getting Pay Album Point or not
+        BOOL collect_pay_album = [[defaults objectForKey: @"collect_pay_album"] boolValue];
+        NSLog(@"Check whether getting paid album point or not");
+        NSLog(@"collect_pay_album: %d", (int)collect_pay_album);
+        
+        if (collect_pay_album) {
+            NSLog(@"Getting Paid Album Point Already");
+            [self retrieveAlbum:self.album_id];
+        } else {
+            NSLog(@"Haven't got the point of saving paid album for first time");
+            [self checkPoint];
+        }
+    }
+}
+
+- (void)checkPoint {
+    NSLog(@"checkPoint");
+    @try {
+        [wTools ShowMBProgressHUD];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+        NSString *response = [boxAPI doTask2: [wTools getUserID]
+                                       token: [wTools getUserToken]
+                                    task_for: wself.task_for
+                                    platform: @"apple"
+                                        type: @"album"
+                                     type_id: wself.album_id];
+        
+        NSLog(@"User ID: %@", [wTools getUserID]);
+        NSLog(@"Token: %@", [wTools getUserToken]);
+        NSLog(@"Task_For: %@", wself.task_for);
+        NSLog(@"Album ID: %@", wself.album_id);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [wTools HideMBProgressHUD];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                NSLog(@"response from doTask2");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return -- checkPoint");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                     protocolName: @"doTask2"
+                                              row: 0
+                                          eventId: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    [wself processCheckPointResult:data];
+                }
+            }
+        });
+    });
+}
+#pragma mark -
+- (void)showTheActivityPage {
+    NSLog(@"showTheActivityPage");
+    //NSString *activityLink = @"http://www.apple.com";
+    
+    if (![wTools objectExists: _eventUrl]) {
+        return;
+    }
+    
+    NSString *activityLink = _eventUrl;
+    NSURL *url = [NSURL URLWithString: activityLink];
+    // Close for present safari view controller, otherwise alertView will hide the background
+    [self.alertGetPointView close];
+    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
+    safariVC.delegate = self;
+    safariVC.preferredBarTintColor = [UIColor whiteColor];
+    [self presentViewController: safariVC animated: YES completion: nil];
+}
+
+- (void)processCheckPointResult:(NSDictionary *)data {
+    if ([data[@"result"] intValue] == 1) {
+        
+        self.eventUrl = data[@"data"][@"event"][@"url"];
+        
+        [self showAlertViewForGettingPoint:data[@"data"][@"task"] eventURL:self.eventUrl];
+        [self saveCollectInfoToDevice: NO];
+        [self retrieveAlbum:self.album_id];
+    } else if ([data[@"result"] intValue] == 2) {
+        NSLog(@"message: %@", data[@"message"]);
+        [self saveCollectInfoToDevice: YES];
+    } else if ([data[@"result"] intValue] == 0) {
+        NSLog(@"失敗： %@", data[@"message"]);
+        [self saveCollectInfoToDevice: YES];
+    } else if ([data[@"result"] intValue] == 3) {
+        NSLog(@"data result intValue: %d", [data[@"result"] intValue]);
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
+- (void)showAlertViewForGettingPoint:(NSDictionary *)task eventURL:(NSString *)eventURL {
+    NSString *missionTopicStr = task[@"name"];
+    //NSString *rewardType = task[@"reward"];
+    NSString *rewardValue = task[@"reward_value"];
+    NSString *restriction = task[@"restriction"];
+    NSString *restrictionValue = task[@"restriction_value"];
+    NSInteger numberOfCompleted = [task[@"numberofcompleted"] unsignedIntegerValue];
+    
+    UIView *pointView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, 250, 250)];
+    // Mission Topic Label
+    UILabel *missionTopicLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 15, 200, 10)];
+    //missionTopicLabel.text = @"收藏相本得點";
+    
+    if ([wTools objectExists: missionTopicStr]) {
+        missionTopicLabel.text = missionTopicStr;
+    }
+    
+    NSLog(@"Topic Label Text: %@", missionTopicStr);
+    [pointView addSubview: missionTopicLabel];
+    
+    if ([restriction isEqualToString: @"personal"]) {
+        UILabel *restrictionLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 45, 200, 10)];
+        restrictionLabel.textColor = [UIColor firstGrey];
+        restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
+        NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
+        [pointView addSubview: restrictionLabel];
+    }
+    // Gift Image
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame: CGRectMake(50, 90, 100, 100)];
+    imageView.image = [UIImage imageNamed: @"icon_present"];
+    imageView.center = CGPointMake(pointView.frame.size.width / 2, pointView.frame.size.height / 2);
+    [pointView addSubview: imageView];
+    
+    NSLog(@"imageView.center: %@", NSStringFromCGPoint(imageView.center));
+    
+    // Message Label
+    UILabel *messageLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 200, 200, 10)];
+    
+    NSString *congratulate = @"恭喜您獲得 ";
+    //NSString *number = @"1 ";
+    
+    NSLog(@"Reward Value: %@", rewardValue);
+    NSString *end = @"P!";
+    
+    /*
+     if ([rewardType isEqualToString: @"point"]) {
+     congratulate = @"恭喜您獲得 ";
+     number = @"5 ";
+     // number = rewardValue;
+     end = @"P!";
+     }
+     */
+    
+    if ([wTools objectExists: rewardValue]) {
+        messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
+    }
+    
+    [pointView addSubview: messageLabel];
+    
+    if ([_eventUrl isEqual: [NSNull null]] || _eventUrl == nil) {
+        NSLog(@"eventUrl is equal to null or eventUrl is nil");
+    } else {
+        // Activity Button
+        UIButton *activityButton = [UIButton buttonWithType: UIButtonTypeCustom];
+        [activityButton addTarget: self action: @selector(showTheActivityPage) forControlEvents: UIControlEventTouchUpInside];
+        activityButton.frame = CGRectMake(150, 220, 100, 10);
+        [activityButton setTitle: @"活動連結" forState: UIControlStateNormal];
+        [activityButton setTitleColor: [UIColor colorWithRed: 26.0/255.0 green: 196.0/255.0 blue: 199.0/255.0 alpha: 1.0]
+                             forState: UIControlStateNormal];
+        [pointView addSubview: activityButton];
+    }
+    
+    
+    self.alertGetPointView = [[OldCustomAlertView alloc] init];
+    [self.alertGetPointView setContainerView: pointView];//[self createPointView]];
+    [self.alertGetPointView setButtonTitles: [NSMutableArray arrayWithObject: @"確     認"]];
+    [self.alertGetPointView setUseMotionEffects: true];
+    [self.alertGetPointView show];
+    
+}
+- (void)saveCollectInfoToDevice: (BOOL)isCollect {
+    if ([_task_for isEqualToString: @"collect_free_album"]) {
+        // Save data for first collect album
+        BOOL collect_free_album = isCollect;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject: [NSNumber numberWithBool: collect_free_album]
+                     forKey: @"collect_free_album"];
+        [defaults synchronize];
+    } else if ([_task_for isEqualToString: @"collect_pay_album"]) {
+        // Save data for first collect paid album
+        BOOL collect_pay_album = isCollect;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject: [NSNumber numberWithBool: collect_pay_album]
+                     forKey: @"collect_pay_album"];
+        [defaults synchronize];
+    }
+}
+#pragma mark - Report Section
+- (void)processReportResult:(NSDictionary *)dic {
+    if ([dic[@"result"] intValue] == 1) {
+        self.reportIntentList = dic[@"data"];
+        SelectBarViewController *mv = [[SelectBarViewController alloc] initWithNibName: @"SelectBarViewController" bundle: nil];
+        NSMutableArray *strArr = [NSMutableArray new];
+        
+        for (int i = 0; i < self.reportIntentList.count; i++) {
+            [strArr addObject: self.reportIntentList[i][@"name"]];
+        }
+        mv.data = strArr;
+        mv.delegate = self;
+        mv.topViewController = self;
+        [self wpresentPopupViewController: mv animated: YES completion: nil];
+    } else if ([dic[@"result"] intValue] == 0) {
+        NSLog(@"失敗：%@",dic[@"message"]);
+        if ([wTools objectExists: dic[@"message"]]) {
+            [self showCustomErrorAlert: dic[@"message"]];
+        } else {
+            [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+        }
+    } else {
+        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+    }
+}
+
+
+
+- (void)cancelButtonPressed {
+    NSLog(@"cancelButtonPressed");
+}
+
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
@@ -641,27 +1173,27 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         if (buttonIndex == 0) {
         } else {
-//            if ([protocolName isEqualToString: @"checkTaskCompleted"]) {
-//                [weakSelf checkTaskComplete];
-//            } else if ([protocolName isEqualToString: @"geturpoints"]) {
-//                [weakSelf getPoint];
-//            } else if ([protocolName isEqualToString: @"buyalbum"]) {
-//                [weakSelf buyAlbum];
-//            } else if ([protocolName isEqualToString: @"doTask2"]) {
-//                [weakSelf checkPoint];
-//            } else if ([protocolName isEqualToString: @"getreportintentlist"]) {
-//                [weakSelf insertReport];
-//            } else if ([protocolName isEqualToString: @"retrievealbump"]) {
-//                [weakSelf retrieveAlbum];
-//            } else if ([protocolName isEqualToString: @"insertreport"]) {
-//                [weakSelf SaveDataRow: row];
-//            } else if ([protocolName isEqualToString: @"insertAlbum2Likes"]) {
-//                [weakSelf insertAlbumToLikes];
-//            } else if ([protocolName isEqualToString: @"deleteAlbum2Likes"]) {
-//                [weakSelf deleteAlbumToLikes];
-//            } else if ([protocolName isEqualToString: @"getUrPoints"]) {
-//                [weakSelf pointsUPdate];
-//            }
+            if ([protocolName isEqualToString: @"checkTaskCompleted"]) {
+                [weakSelf checkTaskComplete];
+            } else if ([protocolName isEqualToString: @"geturpoints"]) {
+                [weakSelf getPoint];
+            } else if ([protocolName isEqualToString: @"buyalbum"]) {
+                [weakSelf buyAlbum];
+            } else if ([protocolName isEqualToString: @"doTask2"]) {
+                [weakSelf checkPoint];
+            } else if ([protocolName isEqualToString: @"getreportintentlist"]) {
+                //[weakSelf insertReport];
+            } else if ([protocolName isEqualToString: @"retrievealbump"]) {
+                [weakSelf retrieveAlbum:self.album_id];
+            } else if ([protocolName isEqualToString: @"insertreport"]) {
+                //[weakSelf SaveDataRow: row];
+            } else if ([protocolName isEqualToString: @"insertAlbum2Likes"]) {
+                [weakSelf insertAlbumToLikes];
+            } else if ([protocolName isEqualToString: @"deleteAlbum2Likes"]) {
+                [weakSelf deleteAlbumToLikes];
+            } else if ([protocolName isEqualToString: @"getUrPoints"]) {
+                //[weakSelf pointsUPdate];
+            }
         }
     }];
     [alertTimeOutView setUseMotionEffects: YES];
@@ -677,6 +1209,8 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     self.effectView = nil;
         
     [self retrieveAlbum:self.album_id];
+    if (_isMessageShowing)
+        _isMessageShowing = NO;
 }
 #pragma mark -
 - (void)gotMessageData {
@@ -744,7 +1278,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 - (void)showCustomMessageActionSheet {
     NSLog(@"showCustomMessageActionSheet");
-    //isMessageShowing = YES;
+    _isMessageShowing = YES;
     self.messageBtn.backgroundColor = [UIColor clearColor];
     
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
@@ -844,10 +1378,10 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
                                         templateId: @"0"
                                    shareCollection: NO];
         } else if ([identifierStr isEqualToString: @"shareItem"]) {
-            //[weakSelf checkTaskComplete];
-            //[weakSelf showCustomShareActionSheet];
+            [weakSelf checkTaskComplete];
+            
         } else if ([identifierStr isEqualToString: @"reportItem"]) {
-            //[weakSelf insertReport];
+            [weakSelf insertReport];
         }
     };
 }

@@ -10,8 +10,40 @@
 #import "YAlbumDetailViewController.h"
 #import "AppDelegate.h"
 
+
+// VC transition animation controller
+@interface ZoomAnimator : NSObject <UIViewControllerAnimatedTransitioning>
+@property(weak, nonatomic) id<ZoomTransitionDelegate> fromDelegate;
+@property(weak, nonatomic) id<ZoomTransitionDelegate> toDelegate;
+//  temp cell image
+@property(nonatomic) UIImageView *transitionImageView;
+@property(nonatomic) BOOL isPresenting;
+- (void)animateZoomInTransition:(id<UIViewControllerContextTransitioning>) transitionContext;
+- (void)animateZoomOutTransition:(id<UIViewControllerContextTransitioning>) transitionContext;
+@end
+
+// VC Transition with user interaction, pan or drag
+@interface  ZoomDismissalInteractionController : NSObject <UIViewControllerInteractiveTransitioning>
+@property(nonatomic) id<UIViewControllerContextTransitioning> __nullable transitionContext;
+@property(nonatomic) id<UIViewControllerAnimatedTransitioning> animator;
+@property(nonatomic) BOOL isEasyOut; //  TRUE: dismiss by right-to-left pan, FALSE: drag down to dismiss
+@property(nonatomic) CGRect fromReferenceImageViewFrame;
+@property(nonatomic) CGRect toReferenceImageViewFrame;
+@end
+
+@interface YAlbumDetailVCTransitionController : NSObject <UINavigationControllerDelegate, UIViewControllerTransitioningDelegate>
+@property(nonatomic) BOOL isInteractive; //  TRUE: Using pan / drag to dismiss, FALSE: controlled by zoom in/ zoom out effect
+@property(nonatomic) BOOL isEasyOut; //  TRUE: dismiss by right-to-left pan, FALSE: drag down to dismiss
+@property(nonatomic) ZoomAnimator *animator;
+@property(nonatomic) ZoomDismissalInteractionController *interactionController;
+@property(weak, nonatomic) id<ZoomTransitionDelegate> fromDelegate;
+@property(weak, nonatomic) id<ZoomTransitionDelegate> toDelegate;
+
+@end
+
 @interface YAlbumDetailContainerViewController ()<UIGestureRecognizerDelegate>
 @property (nonatomic) UIPanGestureRecognizer *pangesture;
+@property (nonatomic) NSDictionary *info;
 @end
 
 #pragma mark -
@@ -36,41 +68,62 @@
     
     if (!fromVC || !toVC) return;
     
-    toVC.view.alpha = 0;
+    
     destImageView.hidden = YES;
     [v addSubview:toVC.view];
-    
-    UIImage *img = sourceImageView.image;
-    if (!self.transitionImageView) {
-        self.transitionImageView = [[UIImageView alloc] initWithImage:img];
-        self.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
-        self.transitionImageView.clipsToBounds = YES;
-        self.transitionImageView.frame = source;
+    //  VC transition without source image //
+    if (sourceImageView == nil) {
+        self.transitionImageView = nil;
+        toVC.view.transform = CGAffineTransformMakeTranslation(0, toVC.view.frame.size.height);
+        toVC.view.alpha = 1;
+        [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0
+             usingSpringWithDamping:0.8 initialSpringVelocity:0
+                            options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+                                toVC.view.transform = CGAffineTransformIdentity;
+                            } completion:^(BOOL finished) {
+                                if (self.transitionImageView) {
+                                    self.transitionImageView.alpha = 0;
+                                    [self.transitionImageView removeFromSuperview];
+                                    sourceImageView.hidden = NO;
+                                }
+                                destImageView.hidden = NO;
+                                
+                                [transitionContext completeTransition:YES];
+                                [self.toDelegate transitionDidEndWith: self];
+                                
+                            }];
+    } else {
+        // VC transition with source image//
+        toVC.view.alpha = 0;
+        UIImage *img = sourceImageView.image;
+        if (!self.transitionImageView) {
+            self.transitionImageView = [[UIImageView alloc] initWithImage:img];
+            self.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
+            self.transitionImageView.clipsToBounds = YES;
+            self.transitionImageView.frame = source;
+        }
+        [v addSubview : self.transitionImageView];
+        sourceImageView.hidden = YES;
         
+        CGRect finalresult =[self calculateZoomedFrame:img forView:destImageView];
         
+        [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0
+             usingSpringWithDamping:0.8 initialSpringVelocity:0
+                            options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+                                self.transitionImageView.frame = finalresult;
+                                toVC.view.alpha = 1.0;
+                                
+                            } completion:^(BOOL finished) {
+                                self.transitionImageView.alpha = 0;
+                                [self.transitionImageView removeFromSuperview];
+                                sourceImageView.hidden = NO;
+                                destImageView.hidden = NO;
+                                
+                                [transitionContext completeTransition:YES];
+                                [self.toDelegate transitionDidEndWith: self];
+                                
+                            }];
     }
-    [v addSubview : self.transitionImageView];
-    sourceImageView.hidden = YES;
-    
-    CGRect finalresult =[self calculateZoomedFrame:img forView:destImageView];
-    
-    [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0
-         usingSpringWithDamping:0.8 initialSpringVelocity:0
-                        options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-                            self.transitionImageView.frame = finalresult;
-                            toVC.view.alpha = 1.0;
-                            
-                        } completion:^(BOOL finished) {
-                            self.transitionImageView.alpha = 0;
-                            [self.transitionImageView removeFromSuperview];
-                            sourceImageView.hidden = NO;
-                            destImageView.hidden = NO;
-                            
-                            [transitionContext completeTransition:YES];
-                            [self.toDelegate transitionDidEndWith: self];
-                            
-                        }];
-    
 }
 //  Transition to dismiss AlbumDetail by pressing dismiss button
 - (void)animateZoomOutTransition:(id<UIViewControllerContextTransitioning>) transitionContext {
@@ -189,12 +242,17 @@
     
     CGPoint translatedPoint = [gestureRecognizer translationInView:fromVC.view];
     CGFloat delta = translatedPoint.x > 0 ? 0 : translatedPoint.x;
-    if (translatedPoint.x > 0) return;
+//    if (translatedPoint.x > 0) {
+//        delta = 0-(arc4random()%5+1);
+//        NSLog(@"right pan %f,%f",translatedPoint.x,translatedPoint.y);
+//        return;
+//
+//    }
     
     CGFloat alpha = [self backgroundAlphForEasyOut:fromVC.view withPanningVerticalDelta:delta];
     toVC.view.alpha = 1-alpha;
     
-    fromVC.view.transform = CGAffineTransformMakeTranslation(translatedPoint.x, 0);
+    fromVC.view.transform = CGAffineTransformMakeTranslation(delta,0);//translatedPoint.x, 0);
     
     [self.transitionContext updateInteractiveTransition:(1-alpha) ];
     CGFloat dx = fabs(translatedPoint.x);
@@ -452,16 +510,94 @@
 }
 
 @end
+
+
+
 #pragma mark -
 @implementation YAlbumDetailContainerViewController
+
+#pragma mark
++ (YAlbumDetailContainerViewController *)albumDetailVCWithAlbumID:(NSString *)albumid
+                                                        albumInfo:(NSDictionary * _Nullable )albumInfo {
+    
+    YAlbumDetailContainerViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YAlbumDetailContainerViewController"];
+    if ( !albumid) {
+        @throw [NSException exceptionWithName:@"Invalid Parameter" reason:@"Parameter \"album id\" is empty" userInfo:nil];
+        return nil;
+    }
+        
+    aDVC.info = albumInfo;
+    aDVC.sourceRect = CGRectZero;
+    aDVC.album_id = albumid;
+    aDVC.sourceView = nil;
+    aDVC.zoomTransitionController.toDelegate = aDVC;
+    aDVC.zoomTransitionController.fromDelegate = aDVC;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.delegate = aDVC.zoomTransitionController;
+    
+    return aDVC;
+}
+
++ (YAlbumDetailContainerViewController *)albumDetailVCWithAlbumID:(NSString *)albumid
+                                                        albumInfo:(NSDictionary *)albumInfo
+                                                       sourceRect:(CGRect)sourceRect
+                                                  sourceImageView:(UIImageView * _Nullable )sourceImageView {
+    if ( !albumid) {
+        @throw [NSException exceptionWithName:@"Invalid Parameter" reason:@"Parameter \"album id\" is empty" userInfo:nil];
+        return nil;
+    }
+    YAlbumDetailContainerViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YAlbumDetailContainerViewController"];
+    aDVC.info = albumInfo;
+
+    aDVC.sourceRect = sourceRect;
+    aDVC.album_id = albumid;
+    aDVC.sourceView = sourceImageView;
+    aDVC.zoomTransitionController.toDelegate = aDVC;
+    aDVC.zoomTransitionController.fromDelegate = aDVC;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.delegate = aDVC.zoomTransitionController;
+    
+    return aDVC;
+}
++ (YAlbumDetailContainerViewController *)albumDetailVCWithAlbumID:(NSString *)albumid
+                                                       sourceRect:(CGRect)sourceRect
+                                                  sourceImageView:(UIImageView *)sourceImageView
+                                                          noParam:(BOOL)noParam {
+    if ( !albumid) {
+        @throw [NSException exceptionWithName:@"Invalid Parameter" reason:@"Parameter \"album id\" is empty" userInfo:nil];
+        return nil;
+    }
+    
+    YAlbumDetailContainerViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YAlbumDetailContainerViewController"];
+    
+    aDVC.sourceRect = sourceRect;
+    aDVC.album_id = albumid;
+    aDVC.noparam = noParam;
+    aDVC.sourceView = sourceImageView;
+    aDVC.zoomTransitionController.toDelegate = aDVC;
+    aDVC.zoomTransitionController.fromDelegate = aDVC;
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.myNav.delegate = aDVC.zoomTransitionController;
+    
+    return aDVC;
+    
+}
+#pragma mark
+
 - (void)awakeFromNib {
     [super awakeFromNib];
-    if (!self.zoomTransitionController)
+    if (!self.zoomTransitionController) {
+        _noparam = NO;
         self.zoomTransitionController = [[YAlbumDetailVCTransitionController alloc] init];
+    }
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     if (!self.zoomTransitionController) {
+        _noparam = NO;
         self.zoomTransitionController = [[YAlbumDetailVCTransitionController alloc] init];
         
     }
@@ -471,7 +607,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"embedAlbumDetail"] ) {
         self.currentDetailVC = (YAlbumDetailViewController *)segue.destinationViewController;
-        
+        if (self.info)
+            [self.currentDetailVC setupAlbumWithInfo:self.info albumId:self.album_id];
+        self.currentDetailVC.noparam = self.noparam;
+        self.currentDetailVC.fromVC = self.fromVC;
         self.pangesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPanWith:)];
         self.pangesture.delegate = self;
         [self.currentDetailVC.view addGestureRecognizer:self.pangesture];
@@ -543,6 +682,7 @@
             break;
         }
          case UIGestureRecognizerStateEnded: {
+             self.currentDetailVC.baseView.scrollEnabled = YES;
              if (self.zoomTransitionController.isInteractive) {
                  
                  self.zoomTransitionController.isInteractive = NO;
@@ -550,10 +690,10 @@
         }
              break;
          }
-    default:
-            
-        if (self.zoomTransitionController.isInteractive) {
-            [self.zoomTransitionController didPanWith:gestureRecognizer];
+        default: {
+            if (self.zoomTransitionController.isInteractive) {
+                [self.zoomTransitionController didPanWith:gestureRecognizer];
+            }
         }
     }
 }
@@ -563,10 +703,20 @@
 }
 - (void)transitionDidEndWith:(ZoomAnimator *)zoomAnimator {
     if (zoomAnimator.isPresenting) {
-        //  load album detail 
-        [self.currentDetailVC setHeaderPlaceholder:self.sourceView.image];
-        [self.currentDetailVC setAlubumId:self.album_id];
+        [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
+        //  load album detail
+        if (self.sourceView)
+            [self.currentDetailVC setHeaderPlaceholder:self.sourceView.image];
+        
+        //  Sometimes preVC would get albumdata first instead of querying albumdata in albumdetailVC
+        if (self.info)
+            [self.currentDetailVC setupAlbumWithInfo:self.info albumId:self.album_id];
+        else
+            [self.currentDetailVC setAlubumId:self.album_id];
+        
         [self.currentDetailVC setContentBtnVisible];
+        self.currentDetailVC.isMessageShowing =  self.getMessagePush;
+        
     }
     self.zoomTransitionController.isInteractive = NO;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -582,7 +732,8 @@
     return [self.currentDetailVC albumCoverView];
 }
 - (CGRect)sourceImageViewFrameInTransitioningView:(ZoomAnimator *)zoomAnimator {
-    
+    if (self.sourceView == nil)
+        return [self.currentDetailVC.view convertRect:self.currentDetailVC.dismissBtn.frame fromView:self.currentDetailVC.dismissBtn];
     return self.sourceRect;
 }
 - (CGRect)referenceImageViewFrameInTransitioningView:(ZoomAnimator *)zoomAnimator {

@@ -29,6 +29,7 @@
 #import "UIView+Toast.h"
 #import <SafariServices/SafariServices.h>
 #import "UIViewController+ErrorAlert.h"
+#import "YAlbumDetailContainerViewController.h"
 
 //#define kUserImageViewNumber 6
 
@@ -550,19 +551,18 @@
 
 //  present AlbumDetailViewController by albumid
 - (void)presentAlbumDetailVC:(NSString *)albumid {
-    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-    aDVC.albumId = albumid;//[dic[@"album"][@"album_id"] stringValue];
-    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
     
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.5;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionMoveIn;
-    transition.subtype = kCATransitionFromTop;
+    @try {
+        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumid sourceRect:CGRectZero sourceImageView:nil noParam:NO];
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        
+        [appDelegate.myNav pushViewController: aDVC animated: NO];
+    } @catch (NSException *exception) {
+        [self showCustomErrorAlert:@"Album id is empty"];
+    } @finally {
+        
+    }
     
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-    [appDelegate.myNav pushViewController: aDVC animated: NO];
 }
 
 //  present CreaterViewController by userId
@@ -722,19 +722,20 @@
                     NSLog(@"strArray: %@", strArray);
                     
                     if ([strArray[0] isEqualToString: @"album_id"]) {
-                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                        aDVC.albumId = strArray[1];
-                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-                        
-                        CATransition *transition = [CATransition animation];
-                        transition.duration = 0.5;
-                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-                        transition.type = kCATransitionMoveIn;
-                        transition.subtype = kCATransitionFromTop;
-                        
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-                        [appDelegate.myNav pushViewController: aDVC animated: NO];
+                        [self presentAlbumDetailVC:strArray[1]];
+//                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+//                        aDVC.albumId = strArray[1];
+//                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+//
+//                        CATransition *transition = [CATransition animation];
+//                        transition.duration = 0.5;
+//                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+//                        transition.type = kCATransitionMoveIn;
+//                        transition.subtype = kCATransitionFromTop;
+//
+//                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+//                        [appDelegate.myNav pushViewController: aDVC animated: NO];
                     } else {
                         [self toSafariWebVC: strData];
                     }
@@ -1069,8 +1070,16 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSDictionary *dic = collectionViewArray[indexPath.item];
         
         if (![dic[@"album"][@"album_id"] isEqual: [NSNull null]]) {
-            NSLog(@"album_id: %@", dic[@"album"][@"album_id"]);
-            [self presentAlbumDetailVC:[dic[@"album"][@"album_id"] stringValue]];
+            //NSLog(@"album_id: %@", dic[@"album"][@"album_id"]);
+            NSString *albumId = [dic[@"album"][@"album_id"] stringValue];
+            //[self presentAlbumDetailVC:[dic[@"album"][@"album_id"] stringValue]];
+            CategoryCollectionViewCell *cell = (CategoryCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+            CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.albumImageView noParam:YES];
+            
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav pushViewController: aDVC animated: YES];
+            
         }
     } else if (collectionView.tag == 3) {
         NSDictionary *bannerDic = self.bannerDataArray[indexPath.row];
@@ -1118,7 +1127,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - UIScrollViewDelegate Methods
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     NSLog(@"scrollViewDidScroll");
-    NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
+    //NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
     if (!collectionView || collectionView.visibleCells.count < 1) return ;
 
     BannerCollectionViewCell *cell = collectionView.visibleCells[0];

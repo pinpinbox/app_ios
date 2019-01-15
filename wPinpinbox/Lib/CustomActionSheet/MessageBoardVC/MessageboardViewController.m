@@ -143,7 +143,7 @@
 
 - (void)getMessageBoardList {
     NSLog(@"getMessageBoardList");
-    
+    if (self.typeId == nil || self.type == nil) return;
     [wTools ShowMBProgressHUD];
     
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 10];
@@ -153,6 +153,7 @@
     NSLog(@"self.typeId: %@", self.typeId);
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        
         NSString *response = @"";
         response = [boxAPI getMessageBoardList: [wTools getUserID]
                                          token: [wTools getUserToken]

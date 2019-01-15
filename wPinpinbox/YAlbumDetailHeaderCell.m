@@ -129,6 +129,8 @@
     } else if (gotExchange || gotSlot) {
         _giftIcon.hidden = NO;
     }
+    self.audioLeading.constant = ((_vidIcon.hidden)?-_vidIcon.frame.size.width-8:8);//);
+    self.giftLeading.constant = ((_vidIcon.hidden)?8:0)+((_audIcon.hidden)?-_audIcon.frame.size.width:0);
 }
 
 @end
@@ -176,9 +178,9 @@
     
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
-    if ([data[@"own"] intValue] == 0)
-        return 0;
-    return 52;
+    NSInteger i = [[wTools getUserID] intValue];
+    NSInteger i1 = [data[@"user_id"] intValue];
+    return (i != i1)? 0 : 52;
 }
 @end
 @implementation YAlbumMessageCell: UITableViewCell

@@ -27,6 +27,8 @@
 #import "LabelAttributeStyle.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "YAlbumDetailContainerViewController.h"
+
 @interface VotingViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, JCCollectionViewWaterfallLayoutDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
     BOOL isReloading;
@@ -653,6 +655,7 @@
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 //    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+    VotingCollectionViewCell *cell = (VotingCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
     //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
     NSString *albumId = [voteArray[indexPath.row][@"album"][@"album_id"] stringValue];
     
@@ -660,20 +663,20 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     
-    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-    aDVC.albumId = albumId;
-    aDVC.fromVC = @"VotingVC";
-    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+    CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
     
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.5;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionMoveIn;
-    transition.subtype = kCATransitionFromTop;
+    @try {
+        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.coverImageView noParam:YES];
+        
+        aDVC.fromVC = @"VotingVC";
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav pushViewController: aDVC animated: YES];
+        
+    } @catch (NSException *exception) {
+        [self showCustomErrorAlert:@"Album id is empty"];
+    } @finally {        
+    }
     
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-    [appDelegate.myNav pushViewController: aDVC animated: NO];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
