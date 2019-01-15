@@ -601,16 +601,16 @@
     [cxt completeRequestReturningItems:nil completionHandler:nil];
     
 }
-- (void)trySendLocalNotification:(NSString *)message albumid:(NSString *)albumid {
+- (void)trySendLocalNotification:(NSString *)message albumid:(NSString *)albumid albumName:(NSString *)albumName {
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     __block typeof(self) wself = self;
     [center requestAuthorizationWithOptions:UNAuthorizationOptionBadge|UNAuthorizationOptionAlert|UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
         if (!error) {
-            [wself sendLocalNotification:message albumid: albumid];
+            [wself sendLocalNotification:message albumid: albumid albumName:albumName];
         }
     }];
 }
-- (void)sendLocalNotification:(NSString *)message albumid:(NSString *)albumid {
+- (void)sendLocalNotification:(NSString *)message albumid:(NSString *)albumid  albumName:(NSString *)albumName{
     
     if ([UserInfo getUserId].length < 1 ) {
         NSExtensionContext *cxt = self.extensionContext;
@@ -623,8 +623,11 @@
     
     cnt.title = @"已分享至Pinpinbox！";
     cnt.subtitle = message;
-    if (albumid.length > 1)
-        cnt.body = [NSString stringWithFormat:@"★彡 Pinpinbox相本[%@]已更新 ★彡", albumid];
+    NSInteger aid = [albumid integerValue];
+    cnt.userInfo = @{@"data":@{@"type":@"albumqueue",@"type_id":[NSNumber numberWithInteger:aid]}};
+    
+    if (albumName && albumName.length > 1)
+        cnt.body = [NSString stringWithFormat:@"★彡 Pinpinbox相本[%@]已更新 ★彡", albumName];
     else {
         cnt.body = [NSString stringWithFormat:@"★彡 Pinpinbox相本已更新 ★彡"];
     }
@@ -776,7 +779,7 @@
 }
 - (void)postFinished {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self trySendLocalNotification:@"" albumid:self.albumNames? self.albumNames : @""];
+        [self trySendLocalNotification:@"" albumid: self.selectedAlbum albumName: self.albumNames? self.albumNames : @""];
         [self cancelAndFinish:nil];
     });
 }

@@ -791,7 +791,7 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
 //            aDVC.albumId = pairs[@"album_id"];
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [self popToMyTabBarVC: appDelegate];
-            [appDelegate.myNav pushViewController: aDVC animated: NO];
+            [appDelegate.myNav pushViewController: aDVC animated: YES];
             
         }
         if (pairs[@"user_id"] != nil) {
@@ -1002,7 +1002,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
-                [appDelegate.myNav pushViewController: aDVC animated: NO];
+                [appDelegate.myNav pushViewController: aDVC animated: YES];
             }
             if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
                 NSLog(@"dataType isEqualToString: albumqueue@messageboard");
@@ -1015,7 +1015,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
-                [appDelegate.myNav pushViewController: aDVC animated: NO];
+                [appDelegate.myNav pushViewController: aDVC animated: YES];
             }
             if ([dataType isEqualToString: @"user@messageboard"]) {
                 NSLog(@"dataType isEqualToString: user@messageboard");
@@ -1080,7 +1080,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
-                    [appDelegate.myNav pushViewController: aDVC animated: NO];
+                    [appDelegate.myNav pushViewController: aDVC animated: YES];
                 }];
             } else if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
@@ -1091,7 +1091,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                     
                     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [self popToMyTabBarVC: appDelegate];
-                    [appDelegate.myNav pushViewController: aDVC animated: NO];
+                    [appDelegate.myNav pushViewController: aDVC animated: YES];
                 }];
             } else if ([dataType isEqualToString: @"user@messageboard"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
