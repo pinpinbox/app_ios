@@ -151,7 +151,7 @@
         t = data[@"description"];
     if (t.length) {
         NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
-        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:ctx];
+        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1} context:ctx];
         ctx = nil;
         return ss.size.height+72;
     }
