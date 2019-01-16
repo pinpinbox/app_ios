@@ -220,8 +220,7 @@
     self.eventDesc.text = @"";
     if ([wTools objectExists: ev] && [wTools objectExists: ev[@"name"]]) {
         NSString *evs = ev[@"name"];
-        evs = @"一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";        
-        //[LabelAttributeStyle changeGapStringForTextView:_eventDesc content:evs color:c fontSize:s];
+        
         [LabelAttributeStyle changeGapString: _eventDesc content: evs];
         _eventDesc.textAlignment = NSTextAlignmentJustified;
         _eventDesc.lineBreakMode = NSLineBreakByTruncatingTail;
