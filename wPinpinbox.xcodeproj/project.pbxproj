@@ -56,7 +56,6 @@
 		544FBEE8208D994400681097 /* SponsorListVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 544FBEE7208D994400681097 /* SponsorListVC.storyboard */; };
 		5451457B200EE2DB00332E9A /* CategoryCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5451457A200EE2DB00332E9A /* CategoryCollectionViewCell.m */; };
 		545685332018894400A5FD07 /* ReorderVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 545685322018894400A5FD07 /* ReorderVC.storyboard */; };
-		545D502D20AE7A7D00BA14F5 /* 4-19.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 545D502C20AE7A7D00BA14F5 /* 4-19.xcassets */; };
 		5466A49C200FAADF003F901A /* UserCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5466A49B200FAADF003F901A /* UserCollectionViewCell.m */; };
 		546DF49D20723F790056B73F /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 546DF49B20723F790056B73F /* MessageTableViewCell.m */; };
 		546DF49E20723F790056B73F /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546DF49C20723F790056B73F /* MessageTableViewCell.xib */; };
@@ -371,12 +370,9 @@
 		CBAD7DE821AE50DD0084682B /* 3rdPartyVideoPlayerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */; };
 		CBCDB5FE21E4544200C82939 /* YAlbumDetailContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5FD21E4544200C82939 /* YAlbumDetailContainerViewController.m */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
-
-		CBD90A8721D6218C000F66B9 /* EditNewAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD90A8621D6218C000F66B9 /* EditNewAlbumViewController.m */; };
-
 		CBD42CF021E2EF5F0046C1A9 /* YAlbumDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD42CEF21E2EF5F0046C1A9 /* YAlbumDetailViewController.m */; };
 		CBD42CF321E2F1D70046C1A9 /* YAlbumDetailHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD42CF221E2F1D70046C1A9 /* YAlbumDetailHeaderCell.m */; };
-
+		CBD90A8721D6218C000F66B9 /* EditNewAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD90A8621D6218C000F66B9 /* EditNewAlbumViewController.m */; };
 		CBD977EF21A2574600F04205 /* URLAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD977EE21A2574600F04205 /* URLAddViewController.m */; };
 		CBDA227021C3923200706E2C /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDA226F21C3923200706E2C /* ShareViewController.m */; };
 		CBDA227321C3923200706E2C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBDA227121C3923200706E2C /* MainInterface.storyboard */; };
@@ -528,7 +524,6 @@
 		54514579200EE2DB00332E9A /* CategoryCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CategoryCollectionViewCell.h; sourceTree = "<group>"; };
 		5451457A200EE2DB00332E9A /* CategoryCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CategoryCollectionViewCell.m; sourceTree = "<group>"; };
 		545685322018894400A5FD07 /* ReorderVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ReorderVC.storyboard; sourceTree = "<group>"; };
-		545D502C20AE7A7D00BA14F5 /* 4-19.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "4-19.xcassets"; path = "Image Resources/4-19.xcassets"; sourceTree = "<group>"; };
 		5466A49A200FAADF003F901A /* UserCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserCollectionViewCell.h; sourceTree = "<group>"; };
 		5466A49B200FAADF003F901A /* UserCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserCollectionViewCell.m; sourceTree = "<group>"; };
 		546DF49A20723F790056B73F /* MessageTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageTableViewCell.h; sourceTree = "<group>"; };
@@ -1065,15 +1060,12 @@
 		CBCDB5FD21E4544200C82939 /* YAlbumDetailContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YAlbumDetailContainerViewController.m; sourceTree = "<group>"; };
 		CBCE8572219C074600ED185D /* LocationMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationMapViewController.h; sourceTree = "<group>"; };
 		CBCE8573219C074600ED185D /* LocationMapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationMapViewController.m; sourceTree = "<group>"; };
-
-		CBD90A8521D6218C000F66B9 /* EditNewAlbumViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditNewAlbumViewController.h; sourceTree = "<group>"; };
-		CBD90A8621D6218C000F66B9 /* EditNewAlbumViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditNewAlbumViewController.m; sourceTree = "<group>"; };
-
 		CBD42CEE21E2EF5F0046C1A9 /* YAlbumDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YAlbumDetailViewController.h; sourceTree = "<group>"; };
 		CBD42CEF21E2EF5F0046C1A9 /* YAlbumDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YAlbumDetailViewController.m; sourceTree = "<group>"; };
 		CBD42CF121E2F1D70046C1A9 /* YAlbumDetailHeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YAlbumDetailHeaderCell.h; sourceTree = "<group>"; };
 		CBD42CF221E2F1D70046C1A9 /* YAlbumDetailHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YAlbumDetailHeaderCell.m; sourceTree = "<group>"; };
-
+		CBD90A8521D6218C000F66B9 /* EditNewAlbumViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditNewAlbumViewController.h; sourceTree = "<group>"; };
+		CBD90A8621D6218C000F66B9 /* EditNewAlbumViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditNewAlbumViewController.m; sourceTree = "<group>"; };
 		CBD977ED21A2574600F04205 /* URLAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = URLAddViewController.h; sourceTree = "<group>"; };
 		CBD977EE21A2574600F04205 /* URLAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = URLAddViewController.m; sourceTree = "<group>"; };
 		CBDA226C21C3923200706E2C /* PinpinboxShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PinpinboxShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2108,7 +2100,6 @@
 				54AB130520AD829200C7CC1A /* SignUp.xcassets */,
 				54AB130D20AD917F00C7CC1A /* OldImages.xcassets */,
 				549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */,
-				545D502C20AE7A7D00BA14F5 /* 4-19.xcassets */,
 			);
 			name = "Image Resources";
 			sourceTree = "<group>";
@@ -3082,7 +3073,6 @@
 				920279941C449B2900A63027 /* CooperationViewController.xib in Resources */,
 				54C964B82015E45500F995DF /* RetrievePasswordVC.storyboard in Resources */,
 				92D526051BCF9E58002C157B /* SelectBarViewController.xib in Resources */,
-				545D502D20AE7A7D00BA14F5 /* 4-19.xcassets in Resources */,
 				54F777EE20ABE70A00A6E195 /* PhotosVC.xcassets in Resources */,
 				54E612BD2012F24400EA773B /* QRCodeVC.storyboard in Resources */,
 				541B0D39200125D200890879 /* CreaterVC.storyboard in Resources */,

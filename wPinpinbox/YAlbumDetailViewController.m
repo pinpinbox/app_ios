@@ -163,10 +163,12 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     self.contentButton.hidden = NO;
 }
 - (void)setHeaderPlaceholder:(UIImage *)placeholder {
-    CGSize s = placeholder.size;
-    CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
-    self.headerView.image = placeholder;
-    self.headerHeight.constant = dh;
+    if (placeholder) {
+        CGSize s = placeholder.size;
+        CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+        self.headerView.image = placeholder;
+        self.headerHeight.constant = dh;
+    }
 }
 - (void)prepareCoverView {
     NSArray *a = self.albumInfo[@"photo"];
