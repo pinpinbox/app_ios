@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) IBOutlet UIButton *creatorWorks;
 @end
 @interface YAlbumEventCell: UITableViewCell<DetailCellProtocal>
-@property (nonatomic) IBOutlet UITextView *eventDesc;
+@property (nonatomic) IBOutlet UILabel *eventDesc;
 @property (nonatomic) IBOutlet UIButton *voteBtn;
 @end
 

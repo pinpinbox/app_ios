@@ -203,6 +203,7 @@
     if ([wTools objectExists:u[@"name"]])
         _creatorName.text = u[@"name"];
     [LabelAttributeStyle changeGapString: _creatorName content: u[@"name"]];
+    _creatorName.textAlignment = NSTextAlignmentJustified;
     if ([wTools objectExists:u[@"picture"]])
         [_creatorAvatar sd_setImageWithURL:[NSURL URLWithString:u[@"picture"]] placeholderImage:[UIImage imageNamed:@"member_back_head"]];
 }
@@ -218,7 +219,12 @@
     //NSDictionary *evj = data[@"eventjoin"];
     self.eventDesc.text = @"";
     if ([wTools objectExists: ev] && [wTools objectExists: ev[@"name"]]) {
-        self.eventDesc.text = ev[@"name"];
+        NSString *evs = ev[@"name"];
+        evs = @"一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";        
+        //[LabelAttributeStyle changeGapStringForTextView:_eventDesc content:evs color:c fontSize:s];
+        [LabelAttributeStyle changeGapString: _eventDesc content: evs];
+        _eventDesc.textAlignment = NSTextAlignmentJustified;
+        _eventDesc.lineBreakMode = NSLineBreakByTruncatingTail;
     }
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
