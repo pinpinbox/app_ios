@@ -49,11 +49,15 @@
 #pragma mark -
 @implementation ZoomAnimator
 - (CGRect)calculateZoomedFrame:(UIImage *)sourceimage forView:(UIView *)view {
+    if (sourceimage) {
+        CGFloat viewratio = view.frame.size.width/sourceimage.size.width;
+        CGFloat h = sourceimage.size.height*viewratio;
+        
+        return CGRectMake(0, 0, view.frame.size.width, h);
+        
+    }
     
-    CGFloat viewratio = view.frame.size.width/sourceimage.size.width;
-    CGFloat h = sourceimage.size.height*viewratio;
-    
-    return CGRectMake(0, 0, view.frame.size.width, h);
+    return CGRectMake(0, 0, view.frame.size.width, view.frame.size.height);
     
 }
 //  Transition to present AlbumDetail
@@ -95,9 +99,13 @@
     } else {
         // VC transition with source image//
         toVC.view.alpha = 0;
+        // but it might be nil (remote loading failure...)
         UIImage *img = sourceImageView.image;
         if (!self.transitionImageView) {
-            self.transitionImageView = [[UIImageView alloc] initWithImage:img];
+            if (img)
+                self.transitionImageView = [[UIImageView alloc] initWithImage:img];
+            else
+                self.transitionImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_2_0_0_no_image"]];
             self.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
             self.transitionImageView.clipsToBounds = YES;
             self.transitionImageView.frame = source;
