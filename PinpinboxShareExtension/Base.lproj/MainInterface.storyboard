@@ -592,7 +592,7 @@
                                             <constraint firstAttribute="width" constant="58" id="Xii-eN-UJD"/>
                                         </constraints>
                                     </imageView>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="請先登入Pinpinbox app，再使用分享功能。" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="q4c-WS-2DF">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="請先登入Pinpinbox app，再使用分享功能。" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q4c-WS-2DF">
                                         <rect key="frame" x="67.5" y="297.5" width="240" height="48"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="240" id="Jtc-Rd-vrq"/>

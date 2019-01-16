@@ -10,6 +10,7 @@
 #import "wTools.h"
 #import "LabelAttributeStyle.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "LabelAttributeStyle.h"
 
 @implementation YAlbumDetailHeaderCell
 
@@ -138,8 +139,11 @@
 - (void)loadData:(NSDictionary *)data {
     self.albumDesc.text = [data[@"description"] isKindOfClass:[NSNull class]]? @"" : data[@"description"];
     self.albumDesc.editable = NO;
-    //self.albumDesc.scrollEnabled = NO;
     self.albumDesc.dataDetectorTypes = UIDataDetectorTypeAll;
+    UIColor *c = self.albumDesc.textColor;
+    CGFloat s = self.albumDesc.font.pointSize;
+    [LabelAttributeStyle changeGapStringForTextView:self.albumDesc content:[data[@"description"] isKindOfClass:[NSNull class]]? @"" : data[@"description"] color:c fontSize:s];
+    //[LabelAttributeStyle changeGapStringForTextView:self.albumDesc
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     

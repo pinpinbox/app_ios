@@ -127,12 +127,12 @@
     [self loadMetadata];
 }
 - (void)handleKeyboardShown:(NSNotification *)notification {
-    
-    NSDictionary* info = [notification userInfo];
-    CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    
-    self.view.transform = CGAffineTransformMakeTranslation(0, -kbSize.height);//-self.albumPoint.frame.origin.y);
-    
+    if (self.albumPoint.isFirstResponder) {
+        NSDictionary* info = [notification userInfo];
+        CGSize kbSize = [[info objectForKey: UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+        
+        self.view.transform = CGAffineTransformMakeTranslation(0, -kbSize.height);//-self.albumPoint.frame.origin.y);
+    }
 }
 - (void)handleKeyboardDismissed:(NSNotification *)notification {
     self.view.transform = CGAffineTransformIdentity;
