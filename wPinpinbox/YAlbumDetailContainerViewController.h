@@ -26,8 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface YAlbumDetailContainerViewController : UIViewController<ZoomTransitionDelegate>
 @property (nonatomic) YAlbumDetailViewController *currentDetailVC; //  content VC to display album detail
-@property (nonatomic) YAlbumDetailVCTransitionController *zoomTransitionController;
-@property (nonatomic) id<ZoomTransitionDelegate> toVCDelegate;
+@property (nonatomic) YAlbumDetailVCTransitionController *zoomTransitionController; // VC transitioning handler
 @property (nonatomic) CGRect sourceRect; //  initial or target rect of transition animation
 @property (nonatomic) UIImageView  * _Nullable sourceView; //  get image from sourceView
 @property (nonatomic) NSString *album_id;

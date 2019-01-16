@@ -159,7 +159,7 @@
     
     sourceImageView.hidden = YES;
     [v bringSubviewToFront:self.transitionImageView];
-    [UIView animateWithDuration:0.5 delay:0 options:0 animations:^{
+    [UIView animateWithDuration:0.3 delay:0 options:0 animations:^{
         self.transitionImageView.frame = dest;
         fromVC.view.alpha = 0;
         toVC.view.alpha = 1.0;

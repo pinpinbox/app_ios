@@ -1327,6 +1327,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     
     NSString *collectStr;
     NSString *btnStr;
+    _isCollected = [self.albumInfo[@"album"][@"own"] boolValue];
     
     if (albumUserId != userId) {
         if (!_isCollected) {

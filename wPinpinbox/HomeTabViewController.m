@@ -296,12 +296,18 @@
     [self removeNotification];
     [self addNotification];
     
+    
     // Central Button
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = NO;
     }
     [wTools sendScreenTrackingWithScreenName:@"首頁"];
+    
+    if (!self.albumCollectionView.hidden) {
+        self.navBarView.hidden = NO;
+        self.searchView.hidden = NO;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
