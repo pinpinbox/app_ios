@@ -318,6 +318,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         self.followBtn = [self changeFollowBtn: self.followBtn];
         
+        if ([[NSString stringWithFormat:@"%@", _userId] isEqualToString:[wTools getUserID]]) {
+            self.followBtn.hidden = YES;
+        }
+        
         [self.collectionView reloadData];
         [self.refreshControl endRefreshing];
         

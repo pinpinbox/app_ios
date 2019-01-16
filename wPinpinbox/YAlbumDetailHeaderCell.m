@@ -10,6 +10,7 @@
 #import "wTools.h"
 #import "LabelAttributeStyle.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "LabelAttributeStyle.h"
 
 @implementation YAlbumDetailHeaderCell
 
@@ -20,7 +21,6 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
     // Configure the view for the selected state
 }
 
@@ -71,7 +71,7 @@
 @end
 @implementation YAlbumContentTypeCell : UITableViewCell
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
-
+    
     if ([YAlbumContentTypeCell ifVisible:data[@"usefor"]])
         return 36;
     return 0;
@@ -138,8 +138,10 @@
 - (void)loadData:(NSDictionary *)data {
     self.albumDesc.text = [data[@"description"] isKindOfClass:[NSNull class]]? @"" : data[@"description"];
     self.albumDesc.editable = NO;
-    //self.albumDesc.scrollEnabled = NO;
     self.albumDesc.dataDetectorTypes = UIDataDetectorTypeAll;
+    UIColor *c = self.albumDesc.textColor;
+    CGFloat s = self.albumDesc.font.pointSize;
+    [LabelAttributeStyle changeGapStringForTextView:self.albumDesc content:[data[@"description"] isKindOfClass:[NSNull class]]? @"" : data[@"description"] color:c fontSize:s];
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -191,7 +193,7 @@
     [LabelAttributeStyle changeGapString: self.messageCount content: [NSString stringWithFormat:@"%d則留言", c]];
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
-
+    
     return 52;
 }
 @end
@@ -200,6 +202,7 @@
     NSDictionary *u = data[@"user"];
     if ([wTools objectExists:u[@"name"]])
         _creatorName.text = u[@"name"];
+    [LabelAttributeStyle changeGapString: _creatorName content: u[@"name"]];
     if ([wTools objectExists:u[@"picture"]])
         [_creatorAvatar sd_setImageWithURL:[NSURL URLWithString:u[@"picture"]] placeholderImage:[UIImage imageNamed:@"member_back_head"]];
 }
@@ -221,7 +224,7 @@
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
     if ([wTools objectExists:data])
-         return 180;
+        return 180;
     return 0;
 }
 @end
