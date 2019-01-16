@@ -20,11 +20,48 @@
     //[attDic setValue:[UIColor cyanColor] forKey:NSBackgroundColorAttributeName];    // 设置字体背景色
     NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:content attributes:attDic];
     
-    //NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    //style.lineSpacing = 6;                                                          // 设置行之间的间距
-    //[attStr addAttribute:NSParagraphStyleAttributeName value:style range: NSMakeRange(0, content.length)];
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 3;
+    style.alignment = NSTextAlignmentCenter;
+    // 设置行之间的间距
+    [attStr addAttribute:NSParagraphStyleAttributeName value:style range: NSMakeRange(0, content.length)];
     
-    //.attributedText = attStr;
+    label.attributedText = attStr;
+}
+
++ (void)changeGapStringAndLineSpacingCenterAlignment:(UILabel *)label
+                                             content:(NSString *)content {
+    NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
+    //[attDic setValue:[UIFont systemFontOfSize:16] forKey:NSFontAttributeName];      // 字体大小
+    //[attDic setValue:[UIColor redColor] forKey:NSForegroundColorAttributeName];     // 字体颜色
+    [attDic setValue:@1 forKey:NSKernAttributeName];                                // 字间距
+    //[attDic setValue:[UIColor cyanColor] forKey:NSBackgroundColorAttributeName];    // 设置字体背景色
+    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:content attributes:attDic];
+    
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 3;
+    style.alignment = NSTextAlignmentCenter;
+    // 设置行之间的间距
+    [attStr addAttribute:NSParagraphStyleAttributeName value:style range: NSMakeRange(0, content.length)];
+    
+    label.attributedText = attStr;
+}
+
++ (void)changeGapStringAndLineSpacingLeftAlignment:(UILabel *)label
+                                           content:(NSString *)content {
+    NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
+    //[attDic setValue:[UIFont systemFontOfSize:16] forKey:NSFontAttributeName];      // 字体大小
+    //[attDic setValue:[UIColor redColor] forKey:NSForegroundColorAttributeName];     // 字体颜色
+    [attDic setValue:@1 forKey:NSKernAttributeName];                                // 字间距
+    //[attDic setValue:[UIColor cyanColor] forKey:NSBackgroundColorAttributeName];    // 设置字体背景色
+    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:content attributes:attDic];
+    
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 3;
+    style.alignment = NSTextAlignmentLeft;
+    // 设置行之间的间距
+    [attStr addAttribute:NSParagraphStyleAttributeName value:style range: NSMakeRange(0, content.length)];
+    
     label.attributedText = attStr;
 }
 
@@ -43,6 +80,10 @@
     [attDic setValue: font forKey: NSFontAttributeName];
     
     NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:content attributes:attDic];
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 3;                                                          // 设置行之间的间距
+    [attStr addAttribute:NSParagraphStyleAttributeName value:style range: NSMakeRange(0, content.length)];
+    
     textView.attributedText = attStr;
 }
 

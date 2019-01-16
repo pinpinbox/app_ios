@@ -362,7 +362,8 @@
 //    cell.headshotImaveView.showActivityIndicator = NO;
     cell.headshotImaveView.backgroundColor = [UIColor thirdGrey];
     cell.messageLabel.text = message;
-    [LabelAttributeStyle changeGapString: cell.messageLabel content: message];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.messageLabel content: cell.messageLabel.text];
+//    [LabelAttributeStyle changeGapString: cell.messageLabel content: message];
     cell.insertTimeLabel.text = insertTime;
     [LabelAttributeStyle changeGapString: cell.insertTimeLabel content: insertTime];
     
@@ -641,7 +642,8 @@ viewForHeaderInSection:(NSInteger)section {
     sectionHeaderTitle.myTopMargin = 32;
     sectionHeaderTitle.myBottomMargin = 0;
     sectionHeaderTitle.text = @"通知中心";
-    [LabelAttributeStyle changeGapString: sectionHeaderTitle content: @"通知中心"];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: sectionHeaderTitle content: sectionHeaderTitle.text];
+//    [LabelAttributeStyle changeGapString: sectionHeaderTitle content: @"通知中心"];
     sectionHeaderTitle.font = [UIFont boldSystemFontOfSize: 48];
     sectionHeaderTitle.textColor = [UIColor firstGrey];
     sectionHeaderTitle.backgroundColor = [UIColor clearColor];
