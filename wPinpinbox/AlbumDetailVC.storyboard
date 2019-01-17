@@ -708,9 +708,6 @@
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="11" minY="11" maxX="11" maxY="11"/>
                                                 <state key="normal" image="ic200_arrow_down_dark"/>
-                                                <connections>
-                                                    <action selector="dismissVC:" destination="dTY-Ba-Ioh" eventType="touchUpInside" id="gva-Y1-El8"/>
-                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sul-ns-1YC">
                                                 <rect key="frame" x="46" y="0.0" width="42" height="42"/>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -125,14 +125,39 @@
                                     <constraint firstItem="mdW-ft-YcQ" firstAttribute="centerY" secondItem="O2S-pf-E1Y" secondAttribute="centerY" id="x9I-qd-Mp0"/>
                                 </constraints>
                             </view>
+                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yyv-6F-4ZD">
+                                <rect key="frame" x="103" y="320" width="169" height="88"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="還沒有人釘作品" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="niZ-pl-2Xd">
+                                        <rect key="frame" x="27.5" y="34.5" width="114.5" height="19.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="textColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="niZ-pl-2Xd" firstAttribute="centerX" secondItem="Yyv-6F-4ZD" secondAttribute="centerX" id="3Hc-yW-M7X"/>
+                                    <constraint firstAttribute="height" constant="88" id="Bja-Zy-k8S"/>
+                                    <constraint firstAttribute="width" constant="169" id="bk0-03-rny"/>
+                                    <constraint firstItem="niZ-pl-2Xd" firstAttribute="centerY" secondItem="Yyv-6F-4ZD" secondAttribute="centerY" id="p89-S4-UHB"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="16"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="vFd-Wt-aE7" firstAttribute="top" secondItem="Yv7-Xz-6eb" secondAttribute="top" constant="20" symbolic="YES" id="Czd-fu-L6n"/>
+                            <constraint firstItem="Yyv-6F-4ZD" firstAttribute="centerX" secondItem="Yv7-Xz-6eb" secondAttribute="centerX" id="6PA-SR-wO1"/>
+                            <constraint firstItem="vFd-Wt-aE7" firstAttribute="top" secondItem="FGd-IC-9Vy" secondAttribute="top" id="Czd-fu-L6n"/>
                             <constraint firstItem="vFd-Wt-aE7" firstAttribute="leading" secondItem="FGd-IC-9Vy" secondAttribute="leading" id="Dg6-TN-7Ie"/>
                             <constraint firstItem="vFd-Wt-aE7" firstAttribute="trailing" secondItem="FGd-IC-9Vy" secondAttribute="trailing" id="ITV-3g-1eY"/>
                             <constraint firstItem="DLe-5r-cmT" firstAttribute="top" secondItem="Yv7-Xz-6eb" secondAttribute="top" id="Oby-Nb-jPR"/>
                             <constraint firstItem="DLe-5r-cmT" firstAttribute="trailing" secondItem="FGd-IC-9Vy" secondAttribute="trailing" id="hnJ-Zv-4Aj"/>
+                            <constraint firstItem="Yyv-6F-4ZD" firstAttribute="top" secondItem="FGd-IC-9Vy" secondAttribute="top" constant="300" id="ugB-CW-dgL"/>
                             <constraint firstItem="DLe-5r-cmT" firstAttribute="leading" secondItem="FGd-IC-9Vy" secondAttribute="leading" id="vJF-FE-Pwh"/>
                             <constraint firstItem="DLe-5r-cmT" firstAttribute="bottom" secondItem="FGd-IC-9Vy" secondAttribute="bottom" id="z9N-Hb-z3q"/>
                         </constraints>
@@ -141,6 +166,7 @@
                     <connections>
                         <outlet property="navBarHeight" destination="qub-7c-KB2" id="uhW-xa-X2y"/>
                         <outlet property="navBarView" destination="vFd-Wt-aE7" id="c5K-mu-vR3"/>
+                        <outlet property="notice" destination="Yyv-6F-4ZD" id="dpk-8N-wzs"/>
                         <outlet property="tableView" destination="DLe-5r-cmT" id="sYD-xw-omi"/>
                         <outlet property="titleLabel" destination="mdW-ft-YcQ" id="52I-RT-TSF"/>
                     </connections>
@@ -151,6 +177,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="72" height="72"/>
     </resources>
 </document>

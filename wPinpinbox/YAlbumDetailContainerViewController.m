@@ -623,8 +623,9 @@
         self.pangesture.delegate = self;
         [self.currentDetailVC.view addGestureRecognizer:self.pangesture];
         
-        UITapGestureRecognizer *btntap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapDismiss:)];
-        [self.currentDetailVC.dismissBtn addGestureRecognizer:btntap];
+        //UITapGestureRecognizer *btntap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapDismiss:)];
+        //[self.currentDetailVC.dismissBtn addGestureRecognizer:btntap];
+        [self.currentDetailVC.dismissBtn addTarget:self action:@selector(didTapDismiss:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 #pragma mark -
@@ -651,7 +652,7 @@
     
     return NO;
 }
-- (void)didTapDismiss:(UITapGestureRecognizer *)tap {
+- (void)didTapDismiss:(id)sender {//:(UITapGestureRecognizer *)tap {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.delegate = self.zoomTransitionController;
     [appDelegate.myNav popViewControllerAnimated:YES];

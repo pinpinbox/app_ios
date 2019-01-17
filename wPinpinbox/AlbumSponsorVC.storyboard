@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -135,15 +135,41 @@
                                     <constraint firstItem="UXO-Uf-q3w" firstAttribute="centerX" secondItem="G7L-GE-0SK" secondAttribute="centerX" id="yW7-SZ-MrS"/>
                                 </constraints>
                             </view>
+                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="00B-Do-s9C">
+                                <rect key="frame" x="103" y="320" width="169" height="88"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="還沒有人贊助" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jTk-2E-f39">
+                                        <rect key="frame" x="35.5" y="34.5" width="98" height="19.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="textColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="169" id="0nq-0N-Au3"/>
+                                    <constraint firstItem="jTk-2E-f39" firstAttribute="centerY" secondItem="00B-Do-s9C" secondAttribute="centerY" id="l7p-ZR-fBT"/>
+                                    <constraint firstAttribute="height" constant="88" id="tJ9-ZB-4bs"/>
+                                    <constraint firstItem="jTk-2E-f39" firstAttribute="centerX" secondItem="00B-Do-s9C" secondAttribute="centerX" id="tns-he-ONU"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="lfW-XY-ECu"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="16"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="G7L-GE-0SK" firstAttribute="top" secondItem="g32-xg-PzL" secondAttribute="top" constant="20" symbolic="YES" id="AeH-8w-UZp"/>
+                            <constraint firstItem="G7L-GE-0SK" firstAttribute="top" secondItem="NEy-MU-RrD" secondAttribute="top" id="AeH-8w-UZp"/>
                             <constraint firstItem="G7L-GE-0SK" firstAttribute="leading" secondItem="NEy-MU-RrD" secondAttribute="leading" id="DvD-gn-F9f"/>
                             <constraint firstItem="p07-jq-9oE" firstAttribute="trailing" secondItem="NEy-MU-RrD" secondAttribute="trailing" id="EXJ-Rs-IW4"/>
+                            <constraint firstItem="00B-Do-s9C" firstAttribute="centerX" secondItem="NEy-MU-RrD" secondAttribute="centerX" id="Fvo-zI-Kjt"/>
                             <constraint firstItem="G7L-GE-0SK" firstAttribute="trailing" secondItem="NEy-MU-RrD" secondAttribute="trailing" id="O5l-Gv-ori"/>
                             <constraint firstItem="p07-jq-9oE" firstAttribute="leading" secondItem="NEy-MU-RrD" secondAttribute="leading" id="P7K-YJ-DM9"/>
                             <constraint firstItem="p07-jq-9oE" firstAttribute="top" secondItem="g32-xg-PzL" secondAttribute="top" id="bhB-xy-vIN"/>
+                            <constraint firstItem="00B-Do-s9C" firstAttribute="top" secondItem="NEy-MU-RrD" secondAttribute="top" constant="300" id="h2D-5c-0fW"/>
                             <constraint firstItem="p07-jq-9oE" firstAttribute="bottom" secondItem="NEy-MU-RrD" secondAttribute="bottom" id="mF8-DG-puw"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="NEy-MU-RrD"/>
@@ -151,6 +177,7 @@
                     <connections>
                         <outlet property="navBarHeight" destination="PWG-hf-Kcw" id="3Gz-ef-JxW"/>
                         <outlet property="navBarView" destination="G7L-GE-0SK" id="Rrh-3Z-MW5"/>
+                        <outlet property="notice" destination="00B-Do-s9C" id="xWn-3b-ccM"/>
                         <outlet property="tableView" destination="p07-jq-9oE" id="0e1-ew-jfk"/>
                         <outlet property="titleLabel" destination="UXO-Uf-q3w" id="mHH-GZ-BQH"/>
                     </connections>
@@ -161,6 +188,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="72" height="72"/>
     </resources>
 </document>

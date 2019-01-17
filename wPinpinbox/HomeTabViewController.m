@@ -531,6 +531,7 @@
         [btn setImage: [UIImage imageNamed: @"ic200_scancamera_dark"] forState: UIControlStateNormal];
         [self dismissKeyboard];
         self.searchTextField.text = @"";
+        [self.searchTextField resignFirstResponder];
         isSearchTextFieldSelected = NO;
         self.homeCollectionView.hidden = NO;
     } else {

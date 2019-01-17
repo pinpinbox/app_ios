@@ -1486,7 +1486,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         }
                         
                         YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumid albumInfo:dic[@"data"] sourceRect:sourceRect sourceImageView:sourceImageView];
-                        
+                        aDVC.fromVC = @"creatorVC";
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav pushViewController: aDVC animated: YES];
                         

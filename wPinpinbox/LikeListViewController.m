@@ -36,6 +36,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) MessageboardViewController *customMessageActionSheet;
 @property (nonatomic) UIVisualEffectView *effectView;
+@property (nonatomic) IBOutlet UIView *notice;
 
 @end
 
@@ -106,7 +107,7 @@
     isReloading = NO;
     
     likeListArray = [[NSMutableArray alloc] init];
-    self.titleLabel.text = @"給作品讚的人";
+    self.titleLabel.text = @"給作品釘的人";
     
     self.navBarView.backgroundColor = [UIColor barColor];
     
@@ -224,7 +225,7 @@
         
         [self.refreshControl endRefreshing];
         isReloading = NO;
-        
+        self.notice.hidden = likeListArray.count > 0;
         [self.tableView reloadData];
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"SYSTEM_ERROR");
