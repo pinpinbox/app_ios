@@ -142,6 +142,8 @@
     UIColor *c = self.albumDesc.textColor;
     CGFloat s = self.albumDesc.font.pointSize;
     [LabelAttributeStyle changeGapStringForTextView:self.albumDesc content:[data[@"description"] isKindOfClass:[NSNull class]]? @"" : data[@"description"] color:c fontSize:s];
+    //self.albumDesc.bounces = NO;
+
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -153,7 +155,7 @@
         NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
         NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
         s.lineSpacing = 3;
-        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} context:ctx];
+        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} context:ctx];
         s = nil;
         ctx = nil;
         return ss.size.height+72;

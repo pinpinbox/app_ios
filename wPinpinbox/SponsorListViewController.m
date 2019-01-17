@@ -111,7 +111,7 @@
     
     sponsorArray = [[NSMutableArray alloc] init];
     self.titleLabel.text = @"贊助你的人";
-    
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
     self.navBarView.backgroundColor = [UIColor barColor];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -367,9 +367,10 @@
     }
     if (![name isEqual: [NSNull null]]) {
         cell.userNameLabel.text = name;
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
     }
-    cell.pPointLabel.text = [NSString stringWithFormat: @"%ld P", (long)point];
+    cell.pPointLabel.text = [NSString stringWithFormat: @"%ldP", (long)point];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.pPointLabel content: cell.pPointLabel.text];
     
     NSLog(@"user is_follow: %d", [dic[@"user"][@"is_follow"] boolValue]);
 //    cell.isFollow = [dic[@"user"][@"is_follow"] boolValue];

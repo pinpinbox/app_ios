@@ -358,7 +358,7 @@
     
     NSLog(@"myData: %@", myData);
     
-    [LabelAttributeStyle changeGapString: self.topicLabel content: self.topicLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.topicLabel content: self.topicLabel.text];
     [self.topicLabel sizeToFit];
     self.topicLabel.textColor = [UIColor firstGrey];
     
@@ -375,39 +375,37 @@
     if (![myData[@"profilepic"] isKindOfClass: [NSNull class]]) {
         self.headshotImageView.imageURL = [NSURL URLWithString: myData[@"profilepic"]];
     }
-    
-    [LabelAttributeStyle changeGapString: self.pwdChangeBtn.titleLabel content: self.pwdChangeBtn.titleLabel.text];
-    [LabelAttributeStyle changeGapString: self.mobileChangeBtn.titleLabel content: self.mobileChangeBtn.titleLabel.text];
-    [LabelAttributeStyle changeGapString: self.interestChangeBtn.titleLabel content: self.interestChangeBtn.titleLabel.text];
-    [LabelAttributeStyle changeGapString: self.maleBtn.titleLabel content: self.maleBtn.titleLabel.text];
-    [LabelAttributeStyle changeGapString: self.femaleBtn.titleLabel content: self.femaleBtn.titleLabel.text];
-    [LabelAttributeStyle changeGapString: self.privateBtn.titleLabel content: self.privateBtn.titleLabel.text];
-    [LabelAttributeStyle changeGapString: self.saveBtn.titleLabel content: self.saveBtn.titleLabel.text];
-    
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.pwdChangeBtn.titleLabel content: self.pwdChangeBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.mobileChangeBtn.titleLabel content: self.mobileChangeBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.interestChangeBtn.titleLabel content: self.interestChangeBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.maleBtn.titleLabel content: self.maleBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.femaleBtn.titleLabel content: self.femaleBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.privateBtn.titleLabel content: self.privateBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.saveBtn.titleLabel content: self.saveBtn.titleLabel.text];
     self.saveBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
     
-    [LabelAttributeStyle changeGapString: self.creatorNameLabel content: self.creatorNameLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.creatorNameLabel content: self.creatorNameLabel.text];
     [self.creatorNameLabel sizeToFit];
     
-    [LabelAttributeStyle changeGapString: self.emailLabel content: self.emailLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.emailLabel content: self.emailLabel.text];
     [self.emailLabel sizeToFit];
     
-    [LabelAttributeStyle changeGapString: self.pwdLabel content: self.pwdLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.pwdLabel content: self.pwdLabel.text];
     [self.pwdLabel sizeToFit];
     
-    [LabelAttributeStyle changeGapString: self.mobileLabel content: self.mobileLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.mobileLabel content: self.mobileLabel.text];
     [self.mobileLabel sizeToFit];
     
-    [LabelAttributeStyle changeGapString: self.genderLabel content: self.genderLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.genderLabel content: self.genderLabel.text];
     [self.genderLabel sizeToFit];
     
-    [LabelAttributeStyle changeGapString: self.birthdayLabel content: self.birthdayLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.birthdayLabel content: self.birthdayLabel.text];
     [self.birthdayLabel sizeToFit];
     
-    [LabelAttributeStyle changeGapString: self.interestLabel content: self.interestLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.interestLabel content: self.interestLabel.text];
     [self.interestLabel sizeToFit];
     
-    [LabelAttributeStyle changeGapString: self.communityLabel content: self.communityLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.communityLabel content: self.communityLabel.text];
     [self.communityLabel sizeToFit];
     
     self.scrollView.showsVerticalScrollIndicator = NO;    
