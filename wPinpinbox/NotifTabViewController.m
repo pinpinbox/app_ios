@@ -322,7 +322,7 @@
     label.myLeftMargin = label.myRightMargin = 8;
     label.numberOfLines = 0;
     label.text = title;
-    [LabelAttributeStyle changeGapString: label content: label.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: label content: label.text];
     label.font = [UIFont systemFontOfSize: 17];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor firstGrey];
@@ -363,15 +363,13 @@
     cell.headshotImaveView.backgroundColor = [UIColor thirdGrey];
     cell.messageLabel.text = message;
     [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.messageLabel content: cell.messageLabel.text];
-//    [LabelAttributeStyle changeGapString: cell.messageLabel content: message];
     cell.insertTimeLabel.text = insertTime;
-    [LabelAttributeStyle changeGapString: cell.insertTimeLabel content: insertTime];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.insertTimeLabel content: cell.insertTimeLabel.text];
     
     if (![target2type isKindOfClass: [NSNull class]]) {
         if (![target2type isEqualToString: @""]) {
             if ([target2type isEqualToString: @"albumqueue"]) {
                 cell.targetTypeLabel.text = @"作品通知";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_create_album_small_white"];
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyAlbumBackground];
                 
@@ -384,7 +382,6 @@
                 }
             } else if ([target2type isEqualToString: @"albumqueue@messageboard"]) {
                 cell.targetTypeLabel.text = @"創作人互動";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_small_white"];
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
                 cell.headshotImaveView.layer.cornerRadius = kCornerRadius;
@@ -397,7 +394,6 @@
                 }
             } else if ([target2type isEqualToString: @"user@messageboard"]) {
                 cell.targetTypeLabel.text = @"創作人互動";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_small_white"];
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
                 cell.headshotImaveView.layer.cornerRadius = cell.headshotImaveView.bounds.size.width / 2;
@@ -406,8 +402,6 @@
                 cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
             } else if ([target2type isEqualToString: @"user"]) {
                 cell.targetTypeLabel.text = @"創作人互動";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
-                //cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_white"];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_userinteractive_small_white"];
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
                 
@@ -423,7 +417,6 @@
                 }
             } else if ([target2type isEqualToString: @"albumcooperation"]) {
                 cell.targetTypeLabel.text = @"共用邀請";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"ic200_cooperation_small_white"];
                 cell.targetTypeImageView.backgroundColor = [UIColor notifyCooperationBackground];
                 
@@ -435,27 +428,25 @@
                 }
             } else if ([target2type isEqualToString: @"event"]) {
                 cell.targetTypeLabel.text = @"系統發布";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
                 cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
             } else if ([target2type isEqualToString: @"categoryarea"]) {
                 cell.targetTypeLabel.text = @"系統發布";
-                [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
                 cell.targetTypeImageView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
                 cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
             }
         } else {
             cell.targetTypeLabel.text = @"系統發布";
-            [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
             cell.targetTypeImageView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
             cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
         }
     } else {
         cell.targetTypeLabel.text = @"系統發布";
-        [LabelAttributeStyle changeGapString: cell.targetTypeLabel content: cell.targetTypeLabel.text];
         cell.targetTypeImageView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
         cell.headshotImaveView.image = [UIImage imageNamed: @"PinPinBoxLogo"];
-    }    
+    }
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.targetTypeLabel content: cell.targetTypeLabel.text];
+    
     return cell;
 }
 
@@ -625,7 +616,7 @@ viewForHeaderInSection:(NSInteger)section {
         updateLabel.myTopMargin = 0;
         updateLabel.myBottomMargin = 8;
         updateLabel.text = @"有新版本囉，立即前往AppStore!";
-        [LabelAttributeStyle changeGapString: updateLabel content: @"有新版本囉，立即前往AppStore!"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: updateLabel content: updateLabel.text];
         updateLabel.textColor = [UIColor firstPink];
         updateLabel.font = [UIFont systemFontOfSize: 18];
         updateLabel.userInteractionEnabled = YES;
@@ -643,7 +634,6 @@ viewForHeaderInSection:(NSInteger)section {
     sectionHeaderTitle.myBottomMargin = 0;
     sectionHeaderTitle.text = @"通知中心";
     [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: sectionHeaderTitle content: sectionHeaderTitle.text];
-//    [LabelAttributeStyle changeGapString: sectionHeaderTitle content: @"通知中心"];
     sectionHeaderTitle.font = [UIFont boldSystemFontOfSize: 48];
     sectionHeaderTitle.textColor = [UIColor firstGrey];
     sectionHeaderTitle.backgroundColor = [UIColor clearColor];

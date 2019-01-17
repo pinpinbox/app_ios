@@ -96,7 +96,7 @@
     topicLabel.myBottomMargin = 8;
     topicLabel.font = [UIFont boldSystemFontOfSize: 24];
     topicLabel.text = @"創造內容價值 獲得贊助回饋";
-    [LabelAttributeStyle changeGapString: topicLabel content: topicLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: topicLabel content: topicLabel.text];
     topicLabel.textColor = [UIColor firstGrey];
     [topicLabel sizeToFit];
     topicLabel.wrapContentHeight = YES;
@@ -145,7 +145,7 @@
     label.text = title;
     label.textColor = [UIColor firstGrey];
     label.font = [UIFont systemFontOfSize: 18];
-    [LabelAttributeStyle changeGapString: label content: label.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label content: label.text];    
     [label sizeToFit];
     return label;
 }
