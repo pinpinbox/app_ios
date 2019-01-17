@@ -2640,7 +2640,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         if (!isViewLoading) {
             if (self.lastContentOffset > scrollView.contentOffset.y) {
-                NSLog(@"Scroll Up");
+                //NSLog(@"Scroll Up");
                 [UIView animateWithDuration: 0.5 animations:^{
                     self.navBarView.hidden = NO;
                     [self.navBarView layoutIfNeeded];

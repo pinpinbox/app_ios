@@ -15,6 +15,7 @@
 
 #import "CustomIOSAlertView.h"
 #import "UIColor+Extensions.h"
+#import "UIColor+HexString.h"
 #import "UIView+Toast.h"
 
 #import "UIViewController+ErrorAlert.h"
@@ -39,6 +40,7 @@
 #import "OldCustomAlertView.h"
 #import "SelectBarViewController.h"
 #import "UIViewController+CWPopup.h"
+#import "LabelAttributeStyle.h"
 
 
 static NSString *autoPlayStr = @"&autoplay=1";
@@ -68,15 +70,13 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 @property(nonatomic) IBOutlet UIButton *contentButton;
 @property(nonatomic) IBOutlet NSLayoutConstraint *headerHeight;
 @property(nonatomic) IBOutlet NSLayoutConstraint *infoHeight;
+@property(nonatomic) IBOutlet UIButton *collectBtn;
 
 @property (nonatomic) DDAUIActionSheetViewController *customMoreActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
 @property (nonatomic) MessageboardViewController *customMessageActionSheet;
 @property (nonatomic) UIVisualEffectView *effectView;
 
-
-
-- (IBAction)dismissVC:(id)sender;
 - (void)showCustomAlert:(NSString *)msg btnName:(NSString *)btnName;
 @end
 
@@ -102,6 +102,8 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     if (_isMessageShowing) {
         [self messageBtnTouched:self.messageBtn];
     }
+    
+    [self layoutCollectButton];
 }
 - (void)setAlubumId:(NSString *)aid {
     self.album_id = aid;
@@ -240,6 +242,54 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
              [YAlbumEventCell estimatedHeight:self.albumInfo[@"eventjoin"]]+
              [YAlbumTitleCell estimatedHeight:self.albumInfo[@"album"]];
     return height+32;
+}
+- (void)layoutCollectButton {
+    _albumPoint = [self.albumInfo[@"album"][@"point"] integerValue];
+    _isCollected = [self.albumInfo[@"album"][@"own"] boolValue];
+    NSString * u = [NSString stringWithFormat:@"%lu", [self.albumInfo[@"user"][@"user_id"] longValue] ];
+    BOOL selfWork = [u isEqualToString: [wTools getUserID]];
+    self.collectBtn.hidden = selfWork;
+    
+    if (!selfWork) {
+        NSString *str = @"";
+        if (!_isCollected) {
+            
+            self.collectBtn.enabled = YES;
+            [self.collectBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            if (_albumPoint == 0) {
+                str = @"收藏";
+            } else if (_albumPoint > 0) {
+                if (_albumPoint > 1000)
+                    str = [NSString stringWithFormat: @"%ldP", (long)_albumPoint];
+                else
+                    str = [NSString stringWithFormat: @"收藏%ldP", (long)_albumPoint];
+            }
+            NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
+            [attDic setValue:@1 forKey:NSKernAttributeName];
+            [attDic setValue:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
+            NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:str attributes:attDic];
+            [self.collectBtn setAttributedTitle:attStr forState:UIControlStateNormal];
+        } else {
+            str = @"已收藏";
+            [self.collectBtn setBackgroundColor:[UIColor whiteColor]];
+            self.collectBtn.layer.borderColor = [UIColor colorFromHexString:@"d4d4d4"].CGColor;
+            self.collectBtn.layer.borderWidth = 0.8;
+            UIImage *image = [UIImage imageNamed:@"ic200_albumdetail_collect"];
+            UIImage *aimage = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            [self.collectBtn.imageView setTintColor:[UIColor colorFromHexString:@"d4d4d4"]];
+            [self.collectBtn setImage:aimage forState:UIControlStateDisabled];
+            self.collectBtn.enabled = NO;
+            
+            //[self.collectBtn setTitle:str forState:UIControlStateDisabled];
+            NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
+            [attDic setValue:@1 forKey:NSKernAttributeName];
+            [attDic setValue:[UIColor colorFromHexString:@"d4d4d4"] forKey:NSForegroundColorAttributeName];
+            NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:str attributes:attDic];
+            [self.collectBtn setAttributedTitle:attStr forState:UIControlStateDisabled];
+        }
+        
+        
+    }
 }
 - (NSInteger)getLikesCount {
     NSInteger c = 0;
@@ -401,6 +451,16 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     }
 }
 #pragma mark -
+- (IBAction)collectBtnTouched:(id)sender {
+    if (_albumPoint > 0) {
+        NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?\n點選「觀看內容」並前往最後一頁可進行贊助額度設定", (long)_albumPoint];
+        //                [weakSelf showCustomAlert: msgStr option: @"buyAlbum"];
+        
+        [self showCustomAlert: msgStr option: @"buyAlbum"];
+    } else {
+        [self buyAlbum];
+    }
+}
 - (IBAction)messageBtnTouched:(id)sender {
     [self showCustomMessageActionSheet];
 }
@@ -1323,25 +1383,25 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     
     NSInteger userId = [[userDefaults objectForKey: @"id"] intValue];
     NSInteger albumUserId = [self.albumInfo[@"user"][@"user_id"] intValue];
-    
-    NSString *collectStr;
-    NSString *btnStr;
-    _isCollected = [self.albumInfo[@"album"][@"own"] boolValue];
-    
-    if (albumUserId != userId) {
-        if (!_isCollected) {
-            if (_albumPoint == 0) {
-                collectStr = @"收藏";
-            } else if (_albumPoint > 0) {
-                collectStr = [NSString stringWithFormat: @"收藏(需要贊助%ldP)", (long)_albumPoint];
-                btnStr = @"贊助更多";
-            }
-        } else {
-            collectStr = @"已收藏";
-            btnStr = @"";
-        }
-        [self.customMoreActionSheet addSelectItem: @"ic200_collect_dark.png" title: collectStr btnStr: btnStr tagInt: 1 identifierStr: @"collectItem" isCollected: _isCollected];
-    }
+//
+//    NSString *collectStr;
+//    NSString *btnStr;
+//    _isCollected = [self.albumInfo[@"album"][@"own"] boolValue];
+//
+//    if (albumUserId != userId) {
+//        if (!_isCollected) {
+//            if (_albumPoint == 0) {
+//                collectStr = @"收藏";
+//            } else if (_albumPoint > 0) {
+//                collectStr = [NSString stringWithFormat: @"收藏(需要贊助%ldP)", (long)_albumPoint];
+//                btnStr = @"贊助更多";
+//            }
+//        } else {
+//            collectStr = @"已收藏";
+//            btnStr = @"";
+//        }
+//        [self.customMoreActionSheet addSelectItem: @"ic200_collect_dark.png" title: collectStr btnStr: btnStr tagInt: 1 identifierStr: @"collectItem" isCollected: _isCollected];
+//    }
     if (albumUserId == userId) {
         [self.customMoreActionSheet addSelectItem: @"" title: @"作品編輯" btnStr: @"" tagInt: 2 identifierStr: @"albumEdit"];
         [self.customMoreActionSheet addSelectItem: @"" title: @"修改資訊" btnStr: @"" tagInt: 3 identifierStr: @"modifyInfo"];
@@ -1353,25 +1413,26 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         [self.customMoreActionSheet addSelectItem: @"ic200_report_dark.png" title: @"檢舉" btnStr: @"" tagInt: 5 identifierStr: @"reportItem"];
     }
     __weak typeof(self) weakSelf = self;
-    __block NSInteger weakAlbumPoint = _albumPoint;
+//    __block NSInteger weakAlbumPoint = _albumPoint;
     
-    self.customMoreActionSheet.customButtonBlock = ^(BOOL selected) {
-        NSString *alertMsg = @"點選「觀看內容」並前往最後一頁可進行贊助額度設定";
-        NSString *btnName = @"我知道了";
-        [weakSelf showCustomAlert: alertMsg btnName: btnName];
-        [weakSelf.customMoreActionSheet slideOut];
-    };
+//    self.customMoreActionSheet.customButtonBlock = ^(BOOL selected) {
+//        NSString *alertMsg = @"點選「觀看內容」並前往最後一頁可進行贊助額度設定";
+//        NSString *btnName = @"我知道了";
+//        [weakSelf showCustomAlert: alertMsg btnName: btnName];
+//        [weakSelf.customMoreActionSheet slideOut];
+//    };
     self.customMoreActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
-        if ([identifierStr isEqualToString: @"collectItem"]) {
-        
-            
-            if (weakAlbumPoint == 0) {
-                [weakSelf buyAlbum];
-            } else {
-                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
-                [weakSelf showCustomAlert: msgStr option: @"buyAlbum"];
-            }
-        } else if ([identifierStr isEqualToString: @"albumEdit"]) {
+//        if ([identifierStr isEqualToString: @"collectItem"]) {
+//
+//
+//            if (weakAlbumPoint == 0) {
+//                [weakSelf buyAlbum];
+//            } else {
+//                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
+//                [weakSelf showCustomAlert: msgStr option: @"buyAlbum"];
+//            }
+//        } else
+        if ([identifierStr isEqualToString: @"albumEdit"]) {
             [weakSelf toAlbumCreationViewController: weakSelf.album_id
                                          templateId: @"0"
                                     shareCollection: NO];

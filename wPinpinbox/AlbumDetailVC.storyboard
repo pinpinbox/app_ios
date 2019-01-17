@@ -365,8 +365,8 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstItem="xgo-S4-n7f" firstAttribute="top" secondItem="jll-HA-bMo" secondAttribute="top" id="Czm-To-4w2"/>
-                                                        <constraint firstAttribute="trailing" secondItem="xgo-S4-n7f" secondAttribute="trailing" constant="16" id="E1Z-mE-E8r"/>
-                                                        <constraint firstAttribute="bottom" secondItem="xgo-S4-n7f" secondAttribute="bottom" constant="32" id="OEm-0B-5g9"/>
+                                                        <constraint firstItem="xgo-S4-n7f" firstAttribute="trailing" secondItem="jll-HA-bMo" secondAttribute="trailing" constant="-16" id="E1Z-mE-E8r"/>
+                                                        <constraint firstItem="xgo-S4-n7f" firstAttribute="bottom" secondItem="jll-HA-bMo" secondAttribute="bottom" constant="-32" id="OEm-0B-5g9"/>
                                                         <constraint firstItem="mU6-EI-sHy" firstAttribute="bottom" secondItem="jll-HA-bMo" secondAttribute="bottom" constant="-1" id="RlR-YL-fft"/>
                                                         <constraint firstItem="xgo-S4-n7f" firstAttribute="leading" secondItem="jll-HA-bMo" secondAttribute="leading" constant="16" id="Xf0-aP-auK"/>
                                                         <constraint firstItem="mU6-EI-sHy" firstAttribute="trailing" secondItem="jll-HA-bMo" secondAttribute="trailing" id="Ysd-Oa-0XZ"/>
@@ -747,12 +747,34 @@
                                             </button>
                                         </subviews>
                                     </stackView>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pjs-rM-5OO">
+                                        <rect key="frame" x="247" y="4" width="112" height="40"/>
+                                        <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="Hrb-Eh-8CX"/>
+                                            <constraint firstAttribute="width" constant="112" id="jiy-cn-MPz"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="titleEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="收藏" image="ic200_albumdetail_collect"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="collectBtnTouched:" destination="dTY-Ba-Ioh" eventType="touchUpInside" id="CnS-NX-0cW"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="NBN-iK-PSB" firstAttribute="leading" secondItem="CiG-Ee-htK" secondAttribute="leading" constant="16" id="J3n-ym-DSa"/>
                                     <constraint firstAttribute="bottom" secondItem="NBN-iK-PSB" secondAttribute="bottom" id="VWh-TA-g1g"/>
+                                    <constraint firstItem="pjs-rM-5OO" firstAttribute="top" secondItem="CiG-Ee-htK" secondAttribute="top" constant="4" id="fnd-4w-vDJ"/>
                                     <constraint firstAttribute="height" constant="49" id="ksx-nY-P5V"/>
+                                    <constraint firstAttribute="trailing" secondItem="pjs-rM-5OO" secondAttribute="trailing" constant="16" id="t4p-6X-rwn"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -775,6 +797,7 @@
                     </view>
                     <connections>
                         <outlet property="baseView" destination="9va-KA-CrB" id="Nc5-aj-yBn"/>
+                        <outlet property="collectBtn" destination="pjs-rM-5OO" id="eSS-EC-7wC"/>
                         <outlet property="contentButton" destination="2Li-AF-USo" id="EFq-fv-wVP"/>
                         <outlet property="detailView" destination="oOi-vw-rqE" id="ZgP-8E-3zu"/>
                         <outlet property="dismissBtn" destination="Gpe-Ox-jLj" id="kXd-TL-QPl"/>
@@ -822,6 +845,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="ic200_albumdetail_collect" width="20" height="20"/>
         <image name="ic200_arrow_down_dark" width="144" height="144"/>
         <image name="ic200_arrow_right_dark" width="144" height="144"/>
         <image name="ic200_audio_play_light" width="144" height="144"/>
