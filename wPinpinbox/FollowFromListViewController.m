@@ -111,7 +111,7 @@
     
     followFromListArray = [[NSMutableArray alloc] init];
     self.titleLabel.text = @"關注我的人";
-    
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
     self.navBarView.backgroundColor = [UIColor barColor];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -359,7 +359,7 @@
     }
     if (![name isEqual: [NSNull null]]) {
         cell.userNameLabel.text = name;
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
     }
     NSLog(@"user is_follow: %d", [dic[@"user"][@"is_follow"] boolValue]);
     //    cell.isFollow = [dic[@"user"][@"is_follow"] boolValue];

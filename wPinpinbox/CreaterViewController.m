@@ -169,8 +169,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
                 break;
             case 2436:
                 printf("iPhone X");
-                self.navBarHeight.constant = 48;//navBarHeightConstant;
-                self.collectionView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
+                self.navBarHeight.constant = 48;
+                self.collectionView.contentInset = UIEdgeInsetsMake(48, 0, 0, 0);
                 break;
             default:
                 printf("unknown");
@@ -397,14 +397,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
     label.myLeftMargin = label.myRightMargin = 8;
     label.numberOfLines = 0;
     label.text = title;
-    [LabelAttributeStyle changeGapString: label content: label.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: label content: label.text];
     label.font = [UIFont systemFontOfSize: 17];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor firstGrey];
     [label sizeToFit];
-    //    label.myCenterXOffset = 0;
-    //    label.myCenterYOffset = 0;
-    
     return label;
 }
 
@@ -525,12 +522,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"viewForSupplementaryElementOfKind");
     NSLog(@"userDic: %@", userDic);
     NSLog(@"followDic: %@", followDic);
-    
     CreatorCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
-    
-    [LabelAttributeStyle changeGapString: headerView.viewedLabel content: headerView.viewedLabel.text];
-    [LabelAttributeStyle changeGapString: headerView.likeLabel content: headerView.likeLabel.text];
-    [LabelAttributeStyle changeGapString: headerView.sponsoredLabel content: headerView.sponsoredLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: headerView.viewedLabel content: headerView.viewedLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: headerView.likeLabel content: headerView.likeLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: headerView.sponsoredLabel content: headerView.sponsoredLabel.text];
     
     NSLog(@"cover: %@", userDic[@"cover"]);
     
@@ -591,13 +586,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // User Name Label
     if (![userDic[@"name"] isEqual: [NSNull null]]) {
         headerView.userNameLabel.text = userDic[@"name"];
-        [LabelAttributeStyle changeGapString: headerView.userNameLabel content: userDic[@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.userNameLabel content: headerView.userNameLabel.text];
     }
     
     // Creative Name Label
     if (![userDic[@"creative_name"] isEqual: [NSNull null]]) {
         headerView.creativeNameLabel.text = userDic[@"creative_name"];
-        [LabelAttributeStyle changeGapString: headerView.creativeNameLabel content: userDic[@"creative_name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.creativeNameLabel content: headerView.creativeNameLabel.text];
         
         if ([userDic[@"creative_name"] isEqualToString: @""]) {
             headerView.gradientView.hidden = YES;
@@ -643,7 +638,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             //linkLabelStr = [NSString stringWithFormat: @"%@的連結", userDic[@"name"]];
             linkLabelStr = [NSString stringWithFormat: @"連結"];
             headerView.linkLabel.text = linkLabelStr;
-            [LabelAttributeStyle changeGapString: headerView.linkLabel content: linkLabelStr];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.linkLabel content: headerView.linkLabel.text];
             
             if ([wTools objectExists: userDic[@"sociallink"][@"facebook"]]) {
                 if ([userDic[@"sociallink"][@"facebook"] isEqualToString: @""]) {
@@ -836,7 +831,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // AlbumNameLabel Setting
     if (![data[@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"name"];
-        [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];        
     }
     return cell;
 }
