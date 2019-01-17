@@ -21,7 +21,6 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
     // Configure the view for the selected state
 }
 
@@ -72,7 +71,7 @@
 @end
 @implementation YAlbumContentTypeCell : UITableViewCell
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
-
+    
     if ([YAlbumContentTypeCell ifVisible:data[@"usefor"]])
         return 36;
     return 0;
@@ -143,7 +142,6 @@
     UIColor *c = self.albumDesc.textColor;
     CGFloat s = self.albumDesc.font.pointSize;
     [LabelAttributeStyle changeGapStringForTextView:self.albumDesc content:[data[@"description"] isKindOfClass:[NSNull class]]? @"" : data[@"description"] color:c fontSize:s];
-    //[LabelAttributeStyle changeGapStringForTextView:self.albumDesc
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -153,7 +151,10 @@
         t = data[@"description"];
     if (t.length) {
         NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
-        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:ctx];
+        NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
+        s.lineSpacing = 3;
+        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} context:ctx];
+        s = nil;
         ctx = nil;
         return ss.size.height+72;
     }
@@ -195,7 +196,7 @@
     [LabelAttributeStyle changeGapString: self.messageCount content: [NSString stringWithFormat:@"%d則留言", c]];
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
-
+    
     return 52;
 }
 @end
@@ -204,6 +205,8 @@
     NSDictionary *u = data[@"user"];
     if ([wTools objectExists:u[@"name"]])
         _creatorName.text = u[@"name"];
+    [LabelAttributeStyle changeGapString: _creatorName content: u[@"name"]];
+    _creatorName.textAlignment = NSTextAlignmentJustified;
     if ([wTools objectExists:u[@"picture"]])
         [_creatorAvatar sd_setImageWithURL:[NSURL URLWithString:u[@"picture"]] placeholderImage:[UIImage imageNamed:@"member_back_head"]];
 }
@@ -219,13 +222,17 @@
     //NSDictionary *evj = data[@"eventjoin"];
     self.eventDesc.text = @"";
     if ([wTools objectExists: ev] && [wTools objectExists: ev[@"name"]]) {
-        self.eventDesc.text = ev[@"name"];
+        NSString *evs = ev[@"name"];
+        
+        [LabelAttributeStyle changeGapString: _eventDesc content: evs];
+        _eventDesc.textAlignment = NSTextAlignmentJustified;
+        _eventDesc.lineBreakMode = NSLineBreakByTruncatingTail;
     }
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
     if ([wTools objectExists:data])
-         return 180;
+        return 180;
     return 0;
 }
 @end

@@ -98,6 +98,7 @@
     } else {
         // VC transition with source image//
         toVC.view.alpha = 0;
+        // but it might be nil (remote loading failure...)
         UIImage *img = sourceImageView.image;
         if (!self.transitionImageView) {
             if (img)
@@ -157,7 +158,7 @@
     
     sourceImageView.hidden = YES;
     [v bringSubviewToFront:self.transitionImageView];
-    [UIView animateWithDuration:0.5 delay:0 options:0 animations:^{
+    [UIView animateWithDuration:0.3 delay:0 options:0 animations:^{
         self.transitionImageView.frame = dest;
         fromVC.view.alpha = 0;
         toVC.view.alpha = 1.0;
@@ -621,8 +622,9 @@
         self.pangesture.delegate = self;
         [self.currentDetailVC.view addGestureRecognizer:self.pangesture];
         
-        UITapGestureRecognizer *btntap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapDismiss:)];
-        [self.currentDetailVC.dismissBtn addGestureRecognizer:btntap];
+        //UITapGestureRecognizer *btntap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapDismiss:)];
+        //[self.currentDetailVC.dismissBtn addGestureRecognizer:btntap];
+        [self.currentDetailVC.dismissBtn addTarget:self action:@selector(didTapDismiss:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 #pragma mark -
@@ -649,7 +651,7 @@
     
     return NO;
 }
-- (void)didTapDismiss:(UITapGestureRecognizer *)tap {
+- (void)didTapDismiss:(id)sender {//:(UITapGestureRecognizer *)tap {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.delegate = self.zoomTransitionController;
     [appDelegate.myNav popViewControllerAnimated:YES];

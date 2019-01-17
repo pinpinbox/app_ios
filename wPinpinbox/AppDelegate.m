@@ -984,8 +984,9 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             [self popToMyTabBarVC: appDelegate];
             [self checkVCAndPresentSafariVC: appDelegate urlStr: urlStr];
         } else {
+            // launchedByNotification, nothing is set up yet
             if (self.myNav == nil) {
-                self.tempLaunchOptions = [NSDictionary dictionaryWithDictionary:userInfo0];
+                self.tempLaunchOptions = userInfo;
                 return;
             }
             if ([dataType isEqualToString: @"user"]) {
@@ -1000,9 +1001,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             if ([dataType isEqualToString: @"albumqueue"]) {
                 NSLog(@"dataType isEqualToString: albumqueue");
                 
-//                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-//                NSLog(@"typeIdStr: %@", typeIdStr);
-//                aDVC.albumId = typeIdStr;
                 YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -1013,11 +1011,8 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 NSLog(@"dataType isEqualToString: albumqueue@messageboard");
                 
                 YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
-                
-//                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-//                aDVC.albumId = typeIdStr;
+        
                 aDVC.getMessagePush = YES;
-                
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
                 [appDelegate.myNav pushViewController: aDVC animated: YES];
@@ -1057,7 +1052,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         if ([alertDic isEqual: [NSNull null]]) {
             NSLog(@"empty alertStr");
         } else {
-            
             __block typeof(self) wself = self;
             if ([dataType isEqual: [NSNull null]]) {
                 NSLog(@"dataType is Null");
@@ -1089,27 +1083,21 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                 NSString *msg = alertDic[@"body"];
                 if (!msg) msg = @"";
                 
-                if (self.tempLaunchOptions != nil) {
-                    YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
+                [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
                     
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [self popToMyTabBarVC: appDelegate];
-                    [appDelegate.myNav pushViewController: aDVC animated: YES];
-                } else {
-                    [[TWMessageBarManager sharedInstance] showMessageWithTitle: title description: msg type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration*2.0 statusBarStyle: UIStatusBarStyleDefault callback:^{
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
-                            
-                            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                            [wself popToMyTabBarVC: appDelegate];
-                            [appDelegate.myNav pushViewController: aDVC animated: YES];
-                        });
-                    }];
-                }
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [wself popToMyTabBarVC: appDelegate];
+                        [appDelegate.myNav pushViewController: aDVC animated: YES];
+                    });
+                }];
+
             } else if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
                     dispatch_async(dispatch_get_main_queue(), ^{
                         YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
+
                         aDVC.getMessagePush = YES;
                     
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -1124,7 +1112,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
                         cVC.userId = typeIdStr;
                         
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [self popToMyTabBarVC: appDelegate];
+                        [wself popToMyTabBarVC: appDelegate];
                         [appDelegate.myNav pushViewController: cVC animated: YES];
                     });
                 }];

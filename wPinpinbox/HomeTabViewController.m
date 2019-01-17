@@ -296,12 +296,18 @@
     [self removeNotification];
     [self addNotification];
     
+    
     // Central Button
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = NO;
     }
     [wTools sendScreenTrackingWithScreenName:@"首頁"];
+    
+    if (!self.albumCollectionView.hidden) {
+        self.navBarView.hidden = NO;
+        self.searchView.hidden = NO;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -525,6 +531,7 @@
         [btn setImage: [UIImage imageNamed: @"ic200_scancamera_dark"] forState: UIControlStateNormal];
         [self dismissKeyboard];
         self.searchTextField.text = @"";
+        [self.searchTextField resignFirstResponder];
         isSearchTextFieldSelected = NO;
         self.homeCollectionView.hidden = NO;
     } else {

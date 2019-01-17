@@ -476,14 +476,11 @@ static NSString *autoPlayStr = @"&autoplay=1";
     label.myLeftMargin = label.myRightMargin = 8;
     label.numberOfLines = 0;
     label.text = title;
-    [LabelAttributeStyle changeGapString: label content: label.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: label content: label.text];
     label.font = [UIFont systemFontOfSize: 17];
         label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor firstGrey];
     [label sizeToFit];
-    //    label.myCenterXOffset = 0;
-    //    label.myCenterYOffset = 0;
-    
     return label;
 }
 
@@ -994,9 +991,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"viewForSupplementaryElementOfKind");
     NSLog(@"self.userDic: %@", self.userDic);
     MeCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
-    [LabelAttributeStyle changeGapString: headerView.viewedLabel content: headerView.viewedLabel.text];
-    [LabelAttributeStyle changeGapString: headerView.likeLabel content: headerView.likeLabel.text];
-    [LabelAttributeStyle changeGapString: headerView.sponsoredLabel content: headerView.sponsoredLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: headerView.viewedLabel content: headerView.viewedLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: headerView.likeLabel content: headerView.likeLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: headerView.sponsoredLabel content: headerView.sponsoredLabel.text];
     
     headerView.customBlock = ^(BOOL selected, NSInteger tag) {
         if (tag == 102) {
@@ -1014,8 +1011,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             [appDelegate.myNav pushViewController: sponsorListVC animated: YES];
         }
     };
-    [LabelAttributeStyle changeGapString: headerView.albumCollectionLabel
-                                 content: headerView.albumCollectionLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.albumCollectionLabel content: headerView.albumCollectionLabel.text];
     
     // Cover Image
     if ([self.userDic[@"cover"] isEqual: [NSNull null]]) {
@@ -1073,13 +1069,12 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // User Name Label
     if (![self.userDic[@"name"] isEqual: [NSNull null]]) {
         headerView.userNameLabel.text = self.userDic[@"name"];
-        [LabelAttributeStyle changeGapString: headerView.userNameLabel content: self.userDic[@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.userNameLabel content: headerView.userNameLabel.text];
     }
     // Creative Name Label
     if (![self.userDic[@"creative_name"] isEqual: [NSNull null]]) {
         headerView.creativeNameLabel.text = self.userDic[@"creative_name"];
-        [LabelAttributeStyle changeGapString: headerView.creativeNameLabel content: self.userDic[@"creative_name"]];
-        
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.creativeNameLabel content: headerView.creativeNameLabel.text];
         if ([self.userDic[@"creative_name"] isEqualToString: @""]) {
             headerView.gradientView.hidden = YES;
         } else {
@@ -1092,15 +1087,15 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // Number Section
     if (![self.userDic[@"viewed"] isEqual: [NSNull null]]) {
         headerView.viewedNumberLabel.text = [self numberConversion: [self.userDic[@"viewed"] integerValue]];
-        [LabelAttributeStyle changeGapString: headerView.viewedNumberLabel content: [self numberConversion: [self.userDic[@"viewed"] integerValue]]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: headerView.viewedNumberLabel content: headerView.viewedNumberLabel.text];
     }
     if (![followDic[@"count_from"] isEqual: [NSNull null]]) {
         headerView.likeNumberLabel.text = [self numberConversion: [followDic[@"count_from"] integerValue]];
-        [LabelAttributeStyle changeGapString: headerView.likeNumberLabel content: [self numberConversion: [followDic[@"count_from"] integerValue]]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: headerView.likeNumberLabel content: headerView.likeNumberLabel.text];
     }
     if (![sponsorDic[@"besponsored"] isEqual: [NSNull null]]) {
         headerView.sponsoredNumberLabel.text = [self numberConversion: [sponsorDic[@"besponsored"] integerValue]];
-        [LabelAttributeStyle changeGapString: headerView.sponsoredNumberLabel content: [self numberConversion: [sponsorDic[@"besponsored"] integerValue]]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: headerView.sponsoredNumberLabel content: headerView.sponsoredNumberLabel.text];
     }
     
     // Link Section
@@ -1118,9 +1113,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
             
             NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
             
-            linkLabelStr = [NSString stringWithFormat: @"連結"];//, self.userDic[@"name"]];
+            linkLabelStr = [NSString stringWithFormat: @"連結"];
             headerView.linkLabel.text = linkLabelStr;
-            [LabelAttributeStyle changeGapString: headerView.linkLabel content: linkLabelStr];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.linkLabel content: headerView.linkLabel.text];
+            
             if ([wTools objectExists: self.userDic[@"sociallink"][@"facebook"]]) {
                 if ([self.userDic[@"sociallink"][@"facebook"] isEqualToString: @""]) {
                     headerView.fbBtn.hidden = YES;
@@ -1311,7 +1307,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // AlbumNameLabel Setting
     if (![data[@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"name"];
-        [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
     }
     return cell;
 }

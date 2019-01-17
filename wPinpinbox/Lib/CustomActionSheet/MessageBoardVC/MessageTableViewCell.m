@@ -14,7 +14,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    self.subContentLayout.myRightMargin = 0;
+    self.subContentLayout.myRightMargin = 0;    
     
     self.pictureImageView.layer.cornerRadius = self.pictureImageView.bounds.size.width / 2;
     self.pictureImageView.layer.borderColor = [UIColor thirdGrey].CGColor;

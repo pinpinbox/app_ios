@@ -401,12 +401,6 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     }
 }
 #pragma mark -
-- (IBAction)dismissVC:(id)sender {
-//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//    [appDelegate.myNav popViewControllerAnimated:YES];
-//    appDelegate.myNav.delegate = nil;
-//    
-}
 - (IBAction)messageBtnTouched:(id)sender {
     [self showCustomMessageActionSheet];
 }
@@ -433,11 +427,16 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     [appDelegate.myNav pushViewController: contentCheckingVC animated: YES];
 }
 - (IBAction)moreAlbumList:(id)sender {
-    if ([wTools objectExists:self.albumInfo[@"user"][@"user_id"]]) {
-        CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-        cVC.userId = self.albumInfo[@"user"][@"user_id"];
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [appDelegate.myNav pushViewController: cVC animated: YES];
+    if ([self.fromVC isEqualToString:@"creatorVC"]) {
+        [self.dismissBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
+    } else {
+        if ([wTools objectExists:self.albumInfo[@"user"][@"user_id"]]) {
+            CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+            cVC.userId = self.albumInfo[@"user"][@"user_id"];
+            AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            [appDelegate.myNav pushViewController: cVC animated: YES];
+        }
+        
     }
 }
 
@@ -1327,6 +1326,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     
     NSString *collectStr;
     NSString *btnStr;
+    _isCollected = [self.albumInfo[@"album"][@"own"] boolValue];
     
     if (albumUserId != userId) {
         if (!_isCollected) {

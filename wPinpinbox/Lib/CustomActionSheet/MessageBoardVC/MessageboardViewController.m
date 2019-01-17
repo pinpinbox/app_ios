@@ -423,8 +423,7 @@
     NSLog(@"cellForRowAtIndexPath");
     static NSString *cellIdentifier = @"Cell";
 
-    NSDictionary *dic = [messageArray[indexPath.row] copy];
-    
+    NSDictionary *dic = [messageArray[indexPath.row] copy];    
     
     NSString *imageUrl = dic[@"user"][@"picture"];
     NSString *nameStr = dic[@"user"][@"name"];
@@ -483,12 +482,12 @@
         } else {
             NSLog(@"No Tag");
             cell.contentLabel.text = contentStr;
-            [LabelAttributeStyle changeGapString: cell.contentLabel content: cell.contentLabel.text];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.contentLabel content: cell.contentLabel.text];
         }
         [cell.contentLabel sizeToFit];
     }
     if (![inserTime isEqual: [NSNull null]]) {
-        cell.insertTimeLabel.text = inserTime;
+        cell.insertTimeLabel.text = inserTime;        
     }
     
     CGSize nameStrSize = [nameStr boundingRectWithSize: CGSizeMake(260, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 14]} context: nil].size;
@@ -500,7 +499,7 @@
     
     CGSize insertTimeSize = [inserTime boundingRectWithSize: CGSizeMake(260, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 14]} context: nil].size;
     
-    CGFloat rowHeight = 16 + nameStrSize.height + 4 + contentStrSize.height + 4 + insertTimeSize.height + 8;
+    CGFloat rowHeight = 16 + nameStrSize.height + 4 + contentStrSize.height + 4 + insertTimeSize.height + 8 + 25;
 //    [rowHeightArray insertObject: [NSNumber numberWithFloat: rowHeight] atIndex: indexPath.row];
     
     tableView.rowHeight = rowHeight;
@@ -660,7 +659,7 @@
         }
         cell.userNameLabel.text = userDic[@"name"];
         NSLog(@"cell.userNameLabel.text: %@", cell.userNameLabel.text);
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
     } else {
         NSLog(@"userData is nil");
     }
@@ -1037,7 +1036,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     self.topicLabel.myTopMargin = 16;
     self.topicLabel.myHeight = 25.0f;
     self.topicLabel.text = self.topicStr;
-    [LabelAttributeStyle changeGapString: self.topicLabel content: self.topicStr];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.topicLabel content: self.topicLabel.text];
     self.topicLabel.textColor = [UIColor whiteColor];
     self.topicLabel.font = [UIFont boldSystemFontOfSize: 24];
     [self.topicLabel sizeToFit];
@@ -1052,7 +1051,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         self.userNameLabel.myHeight = 25.0f;
         NSLog(@"self.userName: %@", self.userName);
         self.userNameLabel.text = self.userName;
-        [LabelAttributeStyle changeGapString: self.userNameLabel content: self.userName];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.userNameLabel content: self.userNameLabel.text];
         self.userNameLabel.textColor = [UIColor secondGrey];
         self.userNameLabel.font = [UIFont boldSystemFontOfSize: 20];
         [self.userNameLabel sizeToFit];
@@ -1145,7 +1144,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     placeHolderNameLabel.textColor = [UIColor hintGrey];
     
     [placeHolderNameLabel sizeToFit];
-    [LabelAttributeStyle changeGapString: placeHolderNameLabel content: placeHolderNameLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: placeHolderNameLabel content: placeHolderNameLabel.text];
     [inputTextView addSubview: placeHolderNameLabel];
     
     inputTextView.font = [UIFont systemFontOfSize: 14.f];
@@ -1178,7 +1177,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     clearDataBtn.layer.cornerRadius = kCornerRadius;
     clearDataBtn.backgroundColor = [UIColor thirdGrey];
     clearDataBtn.myRightMargin = 8;
-    [LabelAttributeStyle changeGapString: clearDataBtn.titleLabel content: clearDataBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: clearDataBtn.titleLabel content: clearDataBtn.titleLabel.text];
     [horzLayout2 addSubview:clearDataBtn];
     
     UIButton *sendDataButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1193,7 +1192,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     sendDataButton.backgroundColor = [UIColor firstMain];
     sendDataButton.myRightMargin = 16;
     sendDataButton.myLeftMargin = 8;
-    [LabelAttributeStyle changeGapString: sendDataButton.titleLabel content: sendDataButton.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: sendDataButton.titleLabel content: sendDataButton.titleLabel.text];
     [horzLayout2 addSubview:sendDataButton];
     
     [self addHorizontalLine];

@@ -10,4 +10,5 @@
 
 @interface AlbumSponsorListViewController : UIViewController
 @property (strong, nonatomic) NSString *albumId;
+@property (weak,nonatomic) IBOutlet UIView *notice;
 @end

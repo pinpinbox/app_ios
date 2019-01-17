@@ -13,6 +13,12 @@
 + (void)changeGapString:(UILabel *)label
                 content:(NSString *)content;
 
++ (void)changeGapStringAndLineSpacingCenterAlignment:(UILabel *)label
+                                             content:(NSString *)content;
+
++ (void)changeGapStringAndLineSpacingLeftAlignment:(UILabel *)label
+                                           content:(NSString *)content;
+
 + (void)changeGapStringForTextView:(UITextView *)textView
                            content:(NSString *)content
                              color:(UIColor *)color

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -141,7 +141,7 @@
                             <constraint firstItem="OVh-SG-wji" firstAttribute="leading" secondItem="hER-69-3af" secondAttribute="leading" id="1GP-sm-ua1"/>
                             <constraint firstItem="OVh-SG-wji" firstAttribute="top" secondItem="s3B-FI-eg3" secondAttribute="top" id="Jp9-Xi-Ehl"/>
                             <constraint firstItem="cOo-0A-79j" firstAttribute="trailing" secondItem="hER-69-3af" secondAttribute="trailing" id="WKb-KU-RCz"/>
-                            <constraint firstItem="cOo-0A-79j" firstAttribute="top" secondItem="s3B-FI-eg3" secondAttribute="top" constant="20" symbolic="YES" id="cyl-pp-lNI"/>
+                            <constraint firstItem="cOo-0A-79j" firstAttribute="top" secondItem="hER-69-3af" secondAttribute="top" id="cyl-pp-lNI"/>
                             <constraint firstItem="OVh-SG-wji" firstAttribute="trailing" secondItem="hER-69-3af" secondAttribute="trailing" id="foP-wi-WlU"/>
                             <constraint firstItem="cOo-0A-79j" firstAttribute="leading" secondItem="hER-69-3af" secondAttribute="leading" id="oZO-8Q-ZAO"/>
                             <constraint firstItem="OVh-SG-wji" firstAttribute="bottom" secondItem="hER-69-3af" secondAttribute="bottom" id="voY-Oa-gnd"/>
@@ -161,6 +161,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="72" height="72"/>
     </resources>
 </document>

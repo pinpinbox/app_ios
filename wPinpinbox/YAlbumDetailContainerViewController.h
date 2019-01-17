@@ -26,14 +26,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface YAlbumDetailContainerViewController : UIViewController<ZoomTransitionDelegate>
 @property (nonatomic) YAlbumDetailViewController *currentDetailVC; //  content VC to display album detail
-@property (nonatomic) YAlbumDetailVCTransitionController *zoomTransitionController;
-@property (nonatomic) id<ZoomTransitionDelegate> toVCDelegate;
-@property (nonatomic) CGRect sourceRect;
-@property (nonatomic) UIImageView  * _Nullable sourceView;
+@property (nonatomic) YAlbumDetailVCTransitionController *zoomTransitionController; // VC transitioning handler
+@property (nonatomic) CGRect sourceRect; //  initial or target rect of transition animation
+@property (nonatomic) UIImageView  * _Nullable sourceView; //  get image from sourceView
 @property (nonatomic) NSString *album_id;
-@property (nonatomic) BOOL noparam;
-@property (nonatomic) NSString *fromVC;
-@property (nonatomic) BOOL getMessagePush;
+@property (nonatomic) BOOL noparam; // YES: dont send isViewed, NO: send isViewed to backend
+@property (nonatomic) NSString *fromVC; // VC name of presenting Album detail
+@property (nonatomic) BOOL getMessagePush; // if show messageboard directly
+
 + (YAlbumDetailContainerViewController *)albumDetailVCWithAlbumID:(NSString *)albumid
                                                         albumInfo:(NSDictionary * _Nullable )albumInfo;
 + (YAlbumDetailContainerViewController *)albumDetailVCWithAlbumID:(NSString *)albumid

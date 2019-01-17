@@ -323,7 +323,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
             self.followBtn.hidden = YES;
         }
         
-        
         [self.collectionView reloadData];
         [self.refreshControl endRefreshing];
         
@@ -1488,7 +1487,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         }
                         
                         YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumid albumInfo:dic[@"data"] sourceRect:sourceRect sourceImageView:sourceImageView];
-                        
+                        aDVC.fromVC = @"creatorVC";
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate.myNav pushViewController: aDVC animated: YES];
                         

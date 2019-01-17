@@ -63,7 +63,7 @@
 #import "HudIndicatorView.h"
 #import "AlbumCreationIntroViewController.h"
 #import "UserInfo.h"
-#import "YAlbumDetailContainerViewController.h"
+//#import "YAlbumDetailContainerViewController.h"
 
 #pragma mark - Photo Editor SDK
 #if TARGET_OS_SIMULATOR
