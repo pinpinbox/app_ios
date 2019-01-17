@@ -107,12 +107,14 @@
     
     self.changeCellPhoneTitleLabel.font = [UIFont boldSystemFontOfSize: 48.0];
     self.changeCellPhoneTitleLabel.textColor = [UIColor firstGrey];
-    [LabelAttributeStyle changeGapString: self.changeCellPhoneTitleLabel content: self.changeCellPhoneTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.changeCellPhoneTitleLabel content: self.changeCellPhoneTitleLabel.text];
     
     self.currentPhoneNumberTextLabel.textColor = [UIColor secondGrey];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.currentPhoneNumberTextLabel content: self.currentPhoneNumberTextLabel.text];
     
     self.cellPhoneNumberLabel.text = myData[@"cellphone"];
     self.cellPhoneNumberLabel.textColor = [UIColor secondGrey];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.cellPhoneNumberLabel content: self.cellPhoneNumberLabel.text];
     
     self.numberChangeSectionLabel.textColor = [UIColor firstGrey];
     self.numberChangeSectionLabel.font = [UIFont boldSystemFontOfSize: 24.0];
@@ -130,20 +132,20 @@
     [self.sendBtn setTitle: NSLocalizedString(@"GeneralText-send", @"")
                   forState: UIControlStateNormal];
     self.sendBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
-    [LabelAttributeStyle changeGapString: self.sendBtn.titleLabel content: self.sendBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.sendBtn.titleLabel content: self.sendBtn.titleLabel.text];
     
     self.finishRegistrationBtn.layer.cornerRadius = kCornerRadius;
     [self.finishRegistrationBtn setTitle: NSLocalizedString(@"RegText-finishedReg", @"")
                                 forState: UIControlStateNormal];
     self.finishRegistrationBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
-    [LabelAttributeStyle changeGapString: self.finishRegistrationBtn.titleLabel content: self.finishRegistrationBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.finishRegistrationBtn.titleLabel content: self.finishRegistrationBtn.titleLabel.text];
     
     self.cellPhoneTextField.textColor = [UIColor firstGrey];
     self.smsTextField.textColor = [UIColor firstGrey];
     
     self.infoLabelForVerificationCode.textColor = [UIColor secondGrey];
     self.infoLabelForVerificationCode.font = [UIFont systemFontOfSize: 18.0];
-    [LabelAttributeStyle changeGapString: self.infoLabelForVerificationCode content: self.infoLabelForVerificationCode.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.infoLabelForVerificationCode content: self.infoLabelForVerificationCode.text];
     
     //取得檔案路徑
     NSString *path = [[NSBundle mainBundle] pathForResource:@"codebeautify" ofType:@"json"];
