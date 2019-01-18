@@ -188,7 +188,7 @@
     
     if (![self.exchangeDic[@"photousefor"][@"name"] isEqual: [NSNull null]]) {
         nameLabel.text = self.exchangeDic[@"photousefor"][@"name"];
-        [LabelAttributeStyle changeGapString: nameLabel content: nameLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: nameLabel content: nameLabel.text];
     }
     nameLabel.textColor = [UIColor firstGrey];
     [nameLabel sizeToFit];
@@ -207,7 +207,7 @@
     if (![self.exchangeDic[@"photousefor"][@"description"] isEqual: [NSNull null]]) {
         NSLog(@"description: %@", self.exchangeDic[@"photousefor"][@"description"]);
         descriptionLabel.text = self.exchangeDic[@"photousefor"][@"description"];
-        [LabelAttributeStyle changeGapString: descriptionLabel content: descriptionLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: descriptionLabel content: descriptionLabel.text];
     }
     descriptionLabel.textColor = [UIColor firstGrey];
     [descriptionLabel sizeToFit];
@@ -231,7 +231,7 @@
     modifyContactInfoLabel.myRightMargin = 16;
     modifyContactInfoLabel.font = [UIFont boldSystemFontOfSize: 22.0];
     modifyContactInfoLabel.text = @"聯絡資訊";
-    [LabelAttributeStyle changeGapString: modifyContactInfoLabel content: modifyContactInfoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: modifyContactInfoLabel content: modifyContactInfoLabel.text];
     modifyContactInfoLabel.textColor = [UIColor firstGrey];
     [modifyContactInfoLabel sizeToFit];
     [horzLayout1 addSubview: modifyContactInfoLabel];
@@ -254,7 +254,7 @@
     userLabel.myLeftMargin = 0;
     userLabel.font = [UIFont systemFontOfSize: 18.0];
     userLabel.text = @"真實姓名";
-    [LabelAttributeStyle changeGapString: userLabel content: userLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: userLabel content: userLabel.text];
     userLabel.textColor = [UIColor firstGrey];
     [userLabel sizeToFit];
     [bgLayout addSubview: userLabel];
@@ -297,7 +297,7 @@
     telephoneLabel.myLeftMargin = 0;
     telephoneLabel.font = [UIFont systemFontOfSize: 18.0];
     telephoneLabel.text = @"電話";
-    [LabelAttributeStyle changeGapString: telephoneLabel content: telephoneLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: telephoneLabel content: telephoneLabel.text];
     [telephoneLabel sizeToFit];
     [horzLayout2 addSubview: telephoneLabel];
     
@@ -308,7 +308,7 @@
     telephoneInfoLabel.myLeftMargin = 16;
     telephoneInfoLabel.font = [UIFont systemFontOfSize: 18.0];
     telephoneInfoLabel.text = @"使用註冊時的號碼";
-    [LabelAttributeStyle changeGapString: telephoneInfoLabel content: telephoneInfoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: telephoneInfoLabel content: telephoneInfoLabel.text];
     telephoneInfoLabel.textColor = [UIColor firstMain];
     [telephoneInfoLabel sizeToFit];
     [horzLayout2 addSubview: telephoneInfoLabel];
@@ -352,7 +352,7 @@
     addressLabel.myLeftMargin = 0;
     addressLabel.font = [UIFont systemFontOfSize: 18.0];
     addressLabel.text = @"地址";
-    [LabelAttributeStyle changeGapString: addressLabel content: addressLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: addressLabel content: addressLabel.text];
     addressLabel.textColor = [UIColor firstGrey];
     [addressLabel sizeToFit];
     [bgLayout addSubview: addressLabel];
@@ -449,7 +449,7 @@
             }
             timeLabel.textColor = [UIColor firstPink];
         }
-        [LabelAttributeStyle changeGapString: timeLabel content: timeLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: timeLabel content: timeLabel.text];
         timeLabel.font = [UIFont boldSystemFontOfSize: 20.0];
         [timeLabel sizeToFit];
         [navBarView addSubview: timeLabel];
@@ -510,6 +510,7 @@
         sendBtn.backgroundColor = [UIColor firstMain];
         sendBtn.myCenterOffset = CGPointZero;
         sendBtn.layer.cornerRadius = kCornerRadius;
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: sendBtn.titleLabel content: sendBtn.titleLabel.text];
         
         [bottomBarView addSubview: sendBtn];
         
@@ -623,7 +624,7 @@
     label1.numberOfLines = 1;
     label1.textAlignment = NSTextAlignmentCenter;
     label1.text = @"兌換成功";
-    [LabelAttributeStyle changeGapString: label1 content: label1.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label1 content: label1.text];
     label1.textColor = [UIColor whiteColor];
     [label1 sizeToFit];
     label1.font = [UIFont boldSystemFontOfSize: 24.0];
@@ -637,7 +638,7 @@
     label2.numberOfLines = 0;
     label2.textAlignment = NSTextAlignmentCenter;
     label2.text = @"獎項資訊已保存在個人專區 > 選單 > 兌換清單";
-    [LabelAttributeStyle changeGapString: label2 content: label2.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label2 content: label2.text];
     label2.textColor = [UIColor whiteColor];
     [label2 sizeToFit];
     label2.font = [UIFont boldSystemFontOfSize: 20.0];

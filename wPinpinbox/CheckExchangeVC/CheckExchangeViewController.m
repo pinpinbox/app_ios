@@ -259,6 +259,7 @@
     
     if (![data[@"photousefor"][@"name"] isEqual: [NSNull null]]) {
         cell.nameLabel.text = data[@"photousefor"][@"name"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.nameLabel content: cell.nameLabel.text];
     }
     
     if (self.hasExchanged) {
@@ -273,8 +274,8 @@
             cell.timeLabel.textColor = [UIColor firstPink];
         } else {
             cell.timeLabel.text = @"無期限";
-            [LabelAttributeStyle changeGapString: cell.timeLabel content: cell.timeLabel.text];
             cell.timeLabel.textColor = [UIColor secondGrey];
+            [LabelAttributeStyle changeGapString: cell.timeLabel content: cell.timeLabel.text];
         }
     }
     return cell;
