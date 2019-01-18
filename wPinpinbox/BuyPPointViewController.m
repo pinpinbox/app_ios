@@ -47,6 +47,7 @@
 }
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *userPointLabel;
 
 @property (weak, nonatomic) IBOutlet UIButton *firstBtn;
@@ -64,6 +65,8 @@
 @property (nonatomic,strong) NSString *orderid;
 
 @property (weak, nonatomic) IBOutlet UILabel *pPointInfoNoticeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *chooseOneItemLabel;
+@property (weak, nonatomic) IBOutlet UILabel *totalLabel;
 @end
 
 @implementation BuyPPointViewController
@@ -102,9 +105,16 @@
 #pragma mark -
 - (void)initialValueSetup {
     self.navBarView.backgroundColor = [UIColor barColor];
-    
-    [LabelAttributeStyle changeGapString: self.pPointInfoNoticeLabel content: self.pPointInfoNoticeLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.pPointInfoNoticeLabel content: self.pPointInfoNoticeLabel.text];
 
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.userPointLabel content: self.userPointLabel.text];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.chooseOneItemLabel content: self.chooseOneItemLabel.text];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.totalLabel content: self.totalLabel.text];
+    
     self.firstBtn.layer.borderColor = [UIColor blackColor].CGColor;
     self.firstBtn.layer.borderWidth = 0;
     self.firstBtn.layer.cornerRadius = kCornerRadius;
@@ -131,6 +141,8 @@
     self.sixthBtn.layer.cornerRadius = kCornerRadius;
     
     self.buyBtn.layer.cornerRadius = kCornerRadius;
+    self.buyBtn.titleLabel.font = [UIFont systemFontOfSize: 20.0];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.buyBtn.titleLabel content: self.buyBtn.titleLabel.text];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -277,6 +289,7 @@
             }
             if ([wTools objectExists: totalArray[0]]) {
                 self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[0]];
+                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.priceLabel content: self.priceLabel.text];
             }
             selectproductid = datakey[0];
             [self getUrPoints];
@@ -356,6 +369,7 @@
             //self.priceLabel.text = str;
             if ([wTools objectExists: totalArray[0]]) {
                 self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[0]];
+                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.priceLabel content: self.priceLabel.text];
             }
             selectproductid = datakey[0];
             
@@ -394,6 +408,7 @@
             //self.priceLabel.text = str;
             if ([wTools objectExists: totalArray[1]]) {
                 self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[1]];
+                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.priceLabel content: self.priceLabel.text];
             }
             selectproductid = datakey[1];
             
@@ -432,6 +447,7 @@
             //self.priceLabel.text = str;
             if ([wTools objectExists: totalArray[2]]) {
                 self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[2]];
+                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.priceLabel content: self.priceLabel.text];
             }
             selectproductid = datakey[2];
             
@@ -470,6 +486,7 @@
             //self.priceLabel.text = str;
             if ([wTools objectExists: totalArray[3]]) {
                 self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[3]];
+                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.priceLabel content: self.priceLabel.text];
             }
             selectproductid = datakey[3];
             
@@ -508,6 +525,7 @@
             //self.priceLabel.text = str;
             if ([wTools objectExists: totalArray[4]]) {
                 self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[4]];
+                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.priceLabel content: self.priceLabel.text];
             }
             selectproductid = datakey[4];
             
@@ -546,6 +564,7 @@
             //self.priceLabel.text = str;
             if ([wTools objectExists: totalArray[5]]) {
                 self.priceLabel.text = [NSString stringWithFormat: @"NT$%@", totalArray[5]];
+                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.priceLabel content: self.priceLabel.text];
             }
             selectproductid = datakey[5];
             

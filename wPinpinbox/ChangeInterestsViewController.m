@@ -93,8 +93,7 @@
     self.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);    
     
     self.sendDataBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
-    [LabelAttributeStyle changeGapString: self.sendDataBtn.titleLabel content: self.sendDataBtn.titleLabel.text];
-    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.sendDataBtn.titleLabel content: self.sendDataBtn.titleLabel.text];    
     [self getHobbyList];
 }
 
@@ -196,10 +195,10 @@
     NSLog(@"viewForSupplementaryElementOfKind");
     //UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
     ChangeInterestsCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
-    headerView.topicLabel.text = @"對哪種類型的資訊感興趣呢?";
-    [LabelAttributeStyle changeGapString: headerView.topicLabel content: headerView.topicLabel.text];
+    headerView.topicLabel.text = @"對哪種類型的資訊感興趣呢?";    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.topicLabel content: headerView.topicLabel.text];
 //    [headerView.topicLabel sizeToFit];
-    [LabelAttributeStyle changeGapString: headerView.infoLabel content: headerView.infoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.infoLabel content: headerView.infoLabel.text];
 //    [headerView.infoLabel sizeToFit];
     
     return headerView;
@@ -230,6 +229,7 @@
     }
     if ([wTools objectExists: hobbyArray[indexPath.row][@"hobby"][@"name"]]) {
         cell.hobbyLabel.text = hobbyArray[indexPath.row][@"hobby"][@"name"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.hobbyLabel content: cell.hobbyLabel.text];
     }
     return cell;
 }

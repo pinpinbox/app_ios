@@ -19,6 +19,8 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
+#import "LabelAttributeStyle.h"
+
 
 @interface RecentBrowsingViewController () <UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -191,10 +193,12 @@
     
     if (![[browseData valueForKey: @"title"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = [browseData valueForKey: @"title"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
     }
     //cell.creatorNameLabel.text = @"creator";
     if (![[browseData valueForKey: @"author"] isEqual: [NSNull null]]) {
         cell.creatorNameLabel.text = [browseData valueForKey: @"author"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.creatorNameLabel content: cell.creatorNameLabel.text];
     }        
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
@@ -218,6 +222,7 @@ viewForHeaderInSection:(NSInteger)section {
     
     UILabel *sectionHeaderTitle = [[UILabel alloc] initWithFrame: CGRectMake(16, 64, 200, 58)];
     sectionHeaderTitle.text = @"最近瀏覽";
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: sectionHeaderTitle content: sectionHeaderTitle.text];
     sectionHeaderTitle.font = [UIFont boldSystemFontOfSize: 48];
     sectionHeaderTitle.textColor = [UIColor firstGrey];
     sectionHeaderTitle.backgroundColor = [UIColor clearColor];

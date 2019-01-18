@@ -52,6 +52,21 @@
     
     return self;
 }
+- (void)loadVideoTimedOut{
+    if (self.handleTimedOutBlock) {
+        self.handleTimedOutBlock();
+    }
+}
+- (nullable WKNavigation *)loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL {
+    //  Add a timed-out notification, because video in iframe may be failed to load from time to time....
+    [NSTimer scheduledTimerWithTimeInterval: 120.0
+                                     target: self
+                                   selector: @selector(loadVideoTimedOut)
+                                   userInfo: nil
+                                    repeats: NO];
+    return [super loadHTMLString:string baseURL:baseURL];
+}
+
 - (void)setVideoPath:(NSString *)path {
     self.backgroundColor = [UIColor blackColor];
     self.path = path;
