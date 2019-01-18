@@ -268,6 +268,7 @@
                     <connections>
                         <outlet property="backBtn" destination="gBR-wm-DvG" id="nH4-Pb-bsS"/>
                         <outlet property="buyBtn" destination="1cg-yp-SzT" id="53H-B7-hJw"/>
+                        <outlet property="chooseOneItemLabel" destination="fqm-ve-xTF" id="CI7-nk-esa"/>
                         <outlet property="fifthBtn" destination="AD9-hp-6u6" id="xb3-NY-q01"/>
                         <outlet property="firstBtn" destination="29v-Zg-ed0" id="yXt-IF-PGw"/>
                         <outlet property="fourthBtn" destination="kjY-5l-TQs" id="cTA-Lc-9d7"/>
@@ -278,6 +279,8 @@
                         <outlet property="secondBtn" destination="ohP-H2-TFq" id="XIr-sh-pIV"/>
                         <outlet property="sixthBtn" destination="ZmQ-Ws-Ohs" id="11f-YY-lmi"/>
                         <outlet property="thirdBtn" destination="C5H-7a-kJF" id="XrD-o9-mGO"/>
+                        <outlet property="titleLabel" destination="CiL-PA-fto" id="Ltx-W6-rcu"/>
+                        <outlet property="totalLabel" destination="v1g-Qo-BW8" id="cmv-K3-mBG"/>
                         <outlet property="userPointLabel" destination="akL-T9-ydp" id="Cyx-A6-7gS"/>
                     </connections>
                 </viewController>
