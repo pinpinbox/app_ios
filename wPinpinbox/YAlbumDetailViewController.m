@@ -391,7 +391,10 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         } break;
         case 7: {
             YAlbumCreatorCell *cell = (YAlbumCreatorCell *)[tableView dequeueReusableCellWithIdentifier:@"YAlbumCreatorCell"];
+            //cell.creatorWorks.hidden = [self.fromVC isEqualToString:@"creatorVC"];
             [cell loadData:self.albumInfo];
+            
+            
             if (![cell.creatorWorks.allTargets containsObject:self]) {
                 [cell.creatorWorks addTarget:self action:@selector(moreAlbumList:) forControlEvents:UIControlEventTouchUpInside];
             }

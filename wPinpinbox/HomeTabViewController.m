@@ -1899,6 +1899,7 @@
         if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = data[@"album"][@"name"];
             [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"album"][@"name"]];
+            cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
         }
         
         return cell;
@@ -1950,6 +1951,7 @@
             }
             cell.userNameLabel.text = userDic[@"name"];
             [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+            
         } else {
             NSLog(@"userData is nil");
         }
@@ -2068,6 +2070,7 @@
         if (![albumDic[@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = albumDic[@"name"];
             [LabelAttributeStyle changeGapString: cell.albumNameLabel content: cell.albumNameLabel.text];
+            cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
         }
         NSLog(@"cell.albumNameLabel.text: %@", cell.albumNameLabel.text);
         NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
@@ -2132,6 +2135,7 @@
             }
             cell.userNameLabel.text = userDic[@"name"];
             [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+            
         } else {
             NSLog(@"userData is nil");
         }

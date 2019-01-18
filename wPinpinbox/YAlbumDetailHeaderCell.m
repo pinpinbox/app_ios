@@ -197,7 +197,7 @@
     int c = 0;
     if (data[@"exchange"])
         c = (int)[data[@"exchange"] integerValue];
-    [LabelAttributeStyle changeGapString: self.pointCount content: [NSString stringWithFormat:@"%d人贊助", c]];
+    [LabelAttributeStyle changeGapString: self.pointCount content: [NSString stringWithFormat:@"%d次贊助", c]];
     
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
@@ -224,9 +224,11 @@
     if ([wTools objectExists:u[@"name"]])
         _creatorName.text = u[@"name"];
     
-    NSInteger i = [[wTools getUserID] intValue];
-    NSInteger i1 = [u[@"user_id"] intValue];
-    self.creatorWorks.hidden = (i == i1);
+    if (!_creatorWorks.hidden) {
+        NSInteger i = [[wTools getUserID] intValue];
+        NSInteger i1 = [u[@"user_id"] intValue];
+        self.creatorWorks.hidden = (i == i1);
+    }
     
     [LabelAttributeStyle changeGapString: _creatorName content: u[@"name"]];
     _creatorName.textAlignment = NSTextAlignmentJustified;
