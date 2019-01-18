@@ -291,6 +291,11 @@
     NSString *imageUrl = dic[@"user"][@"picture"];
     NSString *name = dic[@"user"][@"name"];
     NSInteger userId = [dic[@"user"][@"user_id"] integerValue];
+    NSInteger uid = [[wTools getUserID] integerValue];
+    //if (self.authorId == uid) {
+    cell.followBtn.hidden = (userId == uid);
+    cell.messageBtn.hidden = (userId == uid);
+    //}
     
     if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
         cell.headshotImageView.image = [UIImage imageNamed: @"member_back_head.png"];

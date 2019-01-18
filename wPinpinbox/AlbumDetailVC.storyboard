@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -189,7 +189,7 @@
                                                     <constraint firstAttribute="width" constant="88" id="NAN-3p-etL"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                <state key="normal" title="觀看內容">
+                                                <state key="normal" title="進入觀看">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <userDefinedRuntimeAttributes>
@@ -381,7 +381,7 @@
                                                 <rect key="frame" x="0.0" y="412" width="375" height="52"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="C9A-IU-a13" id="ml3-9l-CBX">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="51.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_arrow_right_dark" translatesAutoresizingMaskIntoConstraints="NO" id="WIk-Ed-4VH">
@@ -435,7 +435,7 @@
                                                 <rect key="frame" x="0.0" y="464" width="375" height="52"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oKz-g8-rmX" id="4bi-uB-zmQ">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="51.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_arrow_right_dark" translatesAutoresizingMaskIntoConstraints="NO" id="Qq1-6h-4OD">
@@ -489,7 +489,7 @@
                                                 <rect key="frame" x="0.0" y="516" width="375" height="52"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QKF-U0-TYH" id="1yk-fa-KNr">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="51.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_arrow_right_dark" translatesAutoresizingMaskIntoConstraints="NO" id="M6v-em-MiX">
@@ -543,7 +543,7 @@
                                                 <rect key="frame" x="0.0" y="568" width="375" height="148"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Bg1-gR-2f0" id="dBQ-hv-d1U">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="148"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="147.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="創作人" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F9U-wF-Kzj">

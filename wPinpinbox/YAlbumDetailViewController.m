@@ -175,6 +175,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     if ([wTools objectExists:p[@"image_url"]]) {
         NSURL *u = [NSURL URLWithString:p[@"image_url"]];
         __block typeof(self) wself = self;
+        
         [self.headerView sd_setImageWithURL:u completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if (error || image == nil) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -195,6 +196,9 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         }];
         //[header.albumHeader sd_setImageWithURL:u placeholderImage:];
     }
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToContent:)];
+    [self.headerView addGestureRecognizer:tap];
     
     self.detailView.scrollEnabled = NO;
     self.infoHeight.constant = [self estimateInfoHeight];
@@ -294,6 +298,15 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     if ([wTools objectExists: data[@"likes"]])
         c = (int)[data[@"likes"] integerValue];
     return c;
+}
+- (NSInteger)getAuthor {
+    NSInteger aid = 0;
+    
+    if ([wTools objectExists:self.albumInfo[@"user"]]) {
+        NSDictionary *u = self.albumInfo[@"user"];
+        aid = [u[@"user_id"] integerValue];
+    }
+    return aid;
 }
 #pragma mark -
 - (void)viewDidLayoutSubviews {
@@ -448,6 +461,9 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     }
 }
 #pragma mark -
+- (void)tapToContent:(UITapGestureRecognizer *)gesture {
+    [self viewContentTouched:self.contentButton];
+}
 - (IBAction)collectBtnTouched:(id)sender {
     if (_albumPoint > 0) {
         NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?\n點選「觀看內容」並前往最後一頁可進行贊助額度設定", (long)_albumPoint];
