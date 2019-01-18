@@ -11,14 +11,12 @@
 #import "GlobalVars.h"
 
 @implementation ChangeInterestsCollectionViewCell
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
+- (void)awakeFromNib {
+    [super awakeFromNib];    
     self.hobbyBgView.layer.cornerRadius = kCornerRadius;
     self.hobbyBgView.clipsToBounds = YES;
     
-    self.hobbyImageView.layer.cornerRadius = 16;
+    self.hobbyImageView.layer.cornerRadius = kCornerRadius;
     self.hobbyImageView.clipsToBounds = YES;
     
     self.hobbyLabel.font = [UIFont systemFontOfSize: 16.0];
