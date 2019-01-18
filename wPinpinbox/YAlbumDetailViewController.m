@@ -146,9 +146,6 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         self.isViewed = YES;
     }
 }
-- (void)pointsUpdate {
-    
-}
 - (BOOL)isPanValid {
     
     return self.effectView == nil;
@@ -501,6 +498,34 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 
 #pragma mark - API
+- (void)pointsUpdate {
+    NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *pointStr = [boxAPI geturpoints: [userPrefs objectForKey: @"id"]
+                                           token: [userPrefs objectForKey: @"token"]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"pointStr: %@", pointStr);
+            if (pointStr != nil) {
+                if ([pointStr isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"AlbumDetailViewController");
+                    NSLog(@"pointsUpdate");
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"getUrPoints"
+                                             row: 0
+                                         eventId: @""];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *pointDic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [pointStr dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    NSInteger point = [pointDic[@"data"] integerValue];
+                    [userPrefs setObject: [NSNumber numberWithInteger: point] forKey: @"pPoint"];
+                    [userPrefs synchronize];
+                }
+            }
+        });
+    });
+}
+
 - (void)retrieveAlbum:(NSString *)aid {
     
     [wTools ShowMBProgressHUD];
@@ -807,6 +832,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 
                         [wself checkAlbumCollectTask];
                         wself.isCollected = YES;
+                        [wself layoutCollectButton];
                     } else if ([dic[@"result"] intValue] == 2) {
                         [wself showCustomErrorAlert: @"已擁有該相本"];
                     } else if ([dic[@"result"] intValue] == 0) {
@@ -1253,7 +1279,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
             } else if ([protocolName isEqualToString: @"deleteAlbum2Likes"]) {
                 [weakSelf deleteAlbumToLikes];
             } else if ([protocolName isEqualToString: @"getUrPoints"]) {
-                //[weakSelf pointsUPdate];
+                [weakSelf pointsUpdate];
             }
         }
     }];
