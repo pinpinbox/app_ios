@@ -14,8 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSString (extractURLs)
 - (NSArray *)findURLs;
 @end
+typedef void(^IframeTimedOutBlock)(void);
 
 @interface WKVideoPlayerView : WKWebView
+@property (nonatomic) IframeTimedOutBlock handleTimedOutBlock;
 //  init WKVideoPlayerView with video path and WKWebViewConfiguration
 - (id)initWithString:(NSString *)path configuration:(nonnull WKWebViewConfiguration *)configuration;
 //  check if url is valid
@@ -25,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setVideoPath:(NSString *)path;
 //  pause video
 - (void)pauseVid;
+
 @end
 
 NS_ASSUME_NONNULL_END

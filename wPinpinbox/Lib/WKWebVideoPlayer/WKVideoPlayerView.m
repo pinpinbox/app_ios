@@ -58,6 +58,8 @@
     self.urls = [NSMutableArray arrayWithArray:[path findURLs]];
     [self.scrollView setScrollEnabled:NO];
     [self setup];
+    
+    
 }
 - (BOOL)isURLsContained {
     if (self.urls.count) {
@@ -128,7 +130,7 @@
             }
         } else if ([url.absoluteString containsString:@"vimeo.com"]) {
             NSString *videoPath = url.lastPathComponent;
-            NSString *realLink = [NSString stringWithFormat:@"https://player.vimeo.com/video/%@?autoplay=1&quality=108v0p",videoPath];
+            NSString *realLink = [NSString stringWithFormat:@"https://player.vimeo.com/video/%@?autoplay=1&quality=1080p",videoPath];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *html = [self getVimeoString:realLink];
@@ -145,7 +147,21 @@
     }
 
 }
-
+- (void)loadVideoTimedOut{
+    if (self.handleTimedOutBlock) {
+        self.handleTimedOutBlock();
+    }
+}
+- (nullable WKNavigation *)loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL {
+    //  Add a simple timed-out notification, because video in iframe may be failed to load from time to time....
+    [NSTimer scheduledTimerWithTimeInterval: 180.0
+                                     target: self
+                                   selector: @selector(loadVideoTimedOut)
+                                   userInfo: nil
+                                    repeats: NO];
+    
+    return [super loadHTMLString:string baseURL:baseURL];
+}
 //  pause video on web page from native code
 - (void)pauseVid {
     [self evaluateJavaScript:@"stopPlayer();" completionHandler:^(id _Nullable obj, NSError * _Nullable error) {
