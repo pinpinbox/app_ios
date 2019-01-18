@@ -256,10 +256,10 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
             if (_albumPoint == 0) {
                 str = @"收藏";
             } else if (_albumPoint > 0) {
-                if (_albumPoint > 1000)
-                    str = [NSString stringWithFormat: @"%ldP", (long)_albumPoint];
-                else
-                    str = [NSString stringWithFormat: @"收藏%ldP", (long)_albumPoint];
+                //if (_albumPoint > 1000)
+                str = [NSString stringWithFormat: @"%ldP", (long)_albumPoint];
+                //else
+                //    str = [NSString stringWithFormat: @"收藏%ldP", (long)_albumPoint];
             }
             NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
             [attDic setValue:@1 forKey:NSKernAttributeName];
