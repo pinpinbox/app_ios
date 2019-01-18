@@ -48,7 +48,7 @@
             return ss.size.height+32;
         }
     }
-        
+    
     return 64;
 }
 @end
@@ -159,7 +159,7 @@
     CGFloat s = self.albumDesc.font.pointSize;
     [LabelAttributeStyle changeGapStringForTextView:self.albumDesc content:[data[@"description"] isKindOfClass:[NSNull class]]? @"" : data[@"description"] color:c fontSize:s];
     //self.albumDesc.bounces = NO;
-
+    
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -223,6 +223,11 @@
     NSDictionary *u = data[@"user"];
     if ([wTools objectExists:u[@"name"]])
         _creatorName.text = u[@"name"];
+    
+    NSInteger i = [[wTools getUserID] intValue];
+    NSInteger i1 = [u[@"user_id"] intValue];
+    self.creatorWorks.hidden = (i == i1);
+    
     [LabelAttributeStyle changeGapString: _creatorName content: u[@"name"]];
     _creatorName.textAlignment = NSTextAlignmentJustified;
     if ([wTools objectExists:u[@"picture"]])
