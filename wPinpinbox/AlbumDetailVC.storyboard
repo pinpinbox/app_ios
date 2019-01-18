@@ -226,15 +226,15 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Zx-7o-7Ff">
-                                                            <rect key="frame" x="16" y="32" width="359" height="32"/>
-                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Zx-7o-7Ff">
+                                                            <rect key="frame" x="16" y="32" width="343" height="32"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
                                                             <color key="textColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="2Zx-7o-7Ff" firstAttribute="trailing" secondItem="4t1-pi-esS" secondAttribute="trailing" id="MJS-zR-lbw"/>
+                                                        <constraint firstItem="2Zx-7o-7Ff" firstAttribute="trailing" secondItem="4t1-pi-esS" secondAttribute="trailing" constant="-16" id="MJS-zR-lbw"/>
                                                         <constraint firstItem="2Zx-7o-7Ff" firstAttribute="leading" secondItem="4t1-pi-esS" secondAttribute="leading" constant="16" id="O59-9E-QdJ"/>
                                                         <constraint firstItem="2Zx-7o-7Ff" firstAttribute="bottom" secondItem="4t1-pi-esS" secondAttribute="bottom" id="fN3-hw-tSw"/>
                                                         <constraint firstItem="2Zx-7o-7Ff" firstAttribute="top" secondItem="4t1-pi-esS" secondAttribute="top" constant="32" id="jgO-ag-tKm"/>

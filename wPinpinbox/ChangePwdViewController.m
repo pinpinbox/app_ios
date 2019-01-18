@@ -106,14 +106,21 @@
     
     self.sendBtn.layer.cornerRadius = kCornerRadius;
     self.sendBtn.titleLabel.font = [UIFont systemFontOfSize: 18.0];
-    [LabelAttributeStyle changeGapString: self.sendBtn.titleLabel content: self.sendBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.sendBtn.titleLabel content: self.sendBtn.titleLabel.text];
     
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.changePWDTitleLabel content: self.changePWDTitleLabel.text];
     self.changePWDTitleLabel.textColor = [UIColor firstGrey];
-    self.changePWDTitleLabel.font = [UIFont boldSystemFontOfSize: 24.0];
+    self.changePWDTitleLabel.font = [UIFont boldSystemFontOfSize: 48.0];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.currentPWDTitleLabel content: self.currentPWDTitleLabel.text];
     self.currentPWDTitleLabel.textColor = [UIColor firstGrey];
     self.currentPWDTitleLabel.font = [UIFont boldSystemFontOfSize: 24.0];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.changeToPWDTitleLabel content: self.changeToPWDTitleLabel.text];
     self.changeToPWDTitleLabel.textColor = [UIColor firstGrey];
     self.changeToPWDTitleLabel.font = [UIFont boldSystemFontOfSize: 24.0];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.confirmPWDTitleLabel content: self.confirmPWDTitleLabel.text];
     self.confirmPWDTitleLabel.textColor = [UIColor firstGrey];
     self.confirmPWDTitleLabel.font = [UIFont boldSystemFontOfSize: 24.0];
 }

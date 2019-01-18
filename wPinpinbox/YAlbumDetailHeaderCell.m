@@ -11,6 +11,7 @@
 #import "LabelAttributeStyle.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "LabelAttributeStyle.h"
+#import "UIColor+Extensions.h"
 
 @implementation YAlbumDetailHeaderCell
 
@@ -28,11 +29,31 @@
 
 @implementation YAlbumTitleCell : UITableViewCell
 - (void)loadData:(NSDictionary *)data {
-    if ([wTools objectExists:data[@"name"]])
-        _titleLabel.text = data[@"name"];
+    if ([wTools objectExists:data[@"name"]]) {
+        NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
+        s.lineSpacing = 0.5;
+        _titleLabel.attributedText = [[NSAttributedString alloc] initWithString:data[@"name"] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSForegroundColorAttributeName:[UIColor firstGrey],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} ];//text = data[@"name"];
+        s= nil;
+    }
 }
 
 + (CGFloat)estimatedHeight:( NSDictionary *)data {
+    
+    if ([wTools objectExists:data[@"name"]]) {
+        CGRect est = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width-32, CGFLOAT_MAX);
+        NSString *t = @"";
+        t = data[@"name"];
+        if (t.length) {
+            NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
+            NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
+            s.lineSpacing = 0.5;
+            CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} context:ctx];
+            s = nil;
+            ctx = nil;
+            return ss.size.height+32;
+        }
+    }
+        
     return 64;
 }
 @end

@@ -451,22 +451,11 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
-                    if ([dic[@"result"] intValue] == 1) {
+                    if ([dic[@"result"] intValue] == 1 && [wTools objectExists:dic[@"data"]]) {
                         
                         YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId albumInfo:dic[@"data"]];
-//                        AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-//                        aDVC.data = [dic[@"data"] mutableCopy];
-//                        aDVC.albumId = albumId;
-//                        aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-//
-//                        CATransition *transition = [CATransition animation];
-//                        transition.duration = 0.5;
-//                        transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-//                        transition.type = kCATransitionMoveIn;
-//                        transition.subtype = kCATransitionFromTop;
-//
+
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//                        [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
                         [appDelegate.myNav pushViewController: aDVC animated: YES];
                         [self stopReading];
                     } else if ([dic[@"result"] intValue] == 0) {

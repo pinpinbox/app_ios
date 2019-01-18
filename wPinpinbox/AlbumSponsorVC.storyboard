@@ -136,7 +136,7 @@
                                 </constraints>
                             </view>
                             <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="00B-Do-s9C">
-                                <rect key="frame" x="103" y="320" width="169" height="88"/>
+                                <rect key="frame" x="103" y="289.5" width="169" height="88"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="還沒有人贊助" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jTk-2E-f39">
                                         <rect key="frame" x="35.5" y="34.5" width="98" height="19.5"/>
@@ -163,13 +163,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="G7L-GE-0SK" firstAttribute="top" secondItem="NEy-MU-RrD" secondAttribute="top" id="AeH-8w-UZp"/>
+                            <constraint firstItem="00B-Do-s9C" firstAttribute="centerY" secondItem="g32-xg-PzL" secondAttribute="centerY" id="BZP-Ql-ZgO"/>
                             <constraint firstItem="G7L-GE-0SK" firstAttribute="leading" secondItem="NEy-MU-RrD" secondAttribute="leading" id="DvD-gn-F9f"/>
                             <constraint firstItem="p07-jq-9oE" firstAttribute="trailing" secondItem="NEy-MU-RrD" secondAttribute="trailing" id="EXJ-Rs-IW4"/>
                             <constraint firstItem="00B-Do-s9C" firstAttribute="centerX" secondItem="NEy-MU-RrD" secondAttribute="centerX" id="Fvo-zI-Kjt"/>
                             <constraint firstItem="G7L-GE-0SK" firstAttribute="trailing" secondItem="NEy-MU-RrD" secondAttribute="trailing" id="O5l-Gv-ori"/>
                             <constraint firstItem="p07-jq-9oE" firstAttribute="leading" secondItem="NEy-MU-RrD" secondAttribute="leading" id="P7K-YJ-DM9"/>
                             <constraint firstItem="p07-jq-9oE" firstAttribute="top" secondItem="g32-xg-PzL" secondAttribute="top" id="bhB-xy-vIN"/>
-                            <constraint firstItem="00B-Do-s9C" firstAttribute="top" secondItem="NEy-MU-RrD" secondAttribute="top" constant="300" id="h2D-5c-0fW"/>
                             <constraint firstItem="p07-jq-9oE" firstAttribute="bottom" secondItem="NEy-MU-RrD" secondAttribute="bottom" id="mF8-DG-puw"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="NEy-MU-RrD"/>

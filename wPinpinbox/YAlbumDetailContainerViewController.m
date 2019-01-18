@@ -658,6 +658,7 @@
     
 }
 - (void)didPanWith:(UIPanGestureRecognizer *) gestureRecognizer {
+    if (![self.currentDetailVC isPanValid]) return;
     
     switch (gestureRecognizer.state) {
         case UIGestureRecognizerStateBegan: {
