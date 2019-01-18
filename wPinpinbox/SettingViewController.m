@@ -118,7 +118,7 @@
     topicLabel.myBottomMargin = kCellGap;
     topicLabel.font = [UIFont boldSystemFontOfSize: 48];
     topicLabel.text = @"設定";
-    [LabelAttributeStyle changeGapString: topicLabel content: topicLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: topicLabel content: topicLabel.text];
     topicLabel.textColor = [UIColor firstGrey];
     [topicLabel sizeToFit];
     topicLabel.wrapContentHeight = YES;
@@ -146,7 +146,7 @@
     UILabel *audioPlayLabel = [UILabel new];
     audioPlayLabel.myLeftMargin = 16;
     audioPlayLabel.text = @"自動播放音效 (作品)";
-    [LabelAttributeStyle changeGapString: audioPlayLabel content: audioPlayLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: audioPlayLabel content: audioPlayLabel.text];
     audioPlayLabel.textColor = [UIColor firstGrey];
     audioPlayLabel.font = [UIFont systemFontOfSize: 17];
     [audioPlayLabel sizeToFit];
@@ -200,7 +200,7 @@
     UILabel *videoPlayLabel = [UILabel new];
     videoPlayLabel.myLeftMargin = 16;
     videoPlayLabel.text = @"自動播放影片 (分類輪播)";
-    [LabelAttributeStyle changeGapString: videoPlayLabel content: videoPlayLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: videoPlayLabel content: videoPlayLabel.text];
     videoPlayLabel.textColor = [UIColor firstGrey];
     videoPlayLabel.font = [UIFont systemFontOfSize: 17];
     [videoPlayLabel sizeToFit];
@@ -261,7 +261,7 @@
     UILabel *platformRuleLabel = [UILabel new];
     platformRuleLabel.myLeftMargin = 16;
     platformRuleLabel.text = @"平台規範";
-    [LabelAttributeStyle changeGapString: platformRuleLabel content: platformRuleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: platformRuleLabel content: platformRuleLabel.text];
     platformRuleLabel.textColor = [UIColor firstGrey];
     platformRuleLabel.font = [UIFont systemFontOfSize: 17];
     [platformRuleLabel sizeToFit];
@@ -298,7 +298,7 @@
     UILabel *aboutLabel = [UILabel new];
     aboutLabel.myLeftMargin = 16;
     aboutLabel.text = @"關於pinpinbox";
-    [LabelAttributeStyle changeGapString: aboutLabel content: aboutLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: aboutLabel content: aboutLabel.text];
     aboutLabel.textColor = [UIColor firstGrey];
     aboutLabel.font = [UIFont systemFontOfSize: 17];
     [aboutLabel sizeToFit];
@@ -337,7 +337,7 @@
     UILabel *logOutLabel = [UILabel new];
     logOutLabel.myLeftMargin = 16;
     logOutLabel.text = @"登出";
-    [LabelAttributeStyle changeGapString: logOutLabel content: logOutLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: logOutLabel content: logOutLabel.text];    
     logOutLabel.textColor = [UIColor firstPink];
     logOutLabel.font = [UIFont systemFontOfSize: 17];
     [logOutLabel sizeToFit];
