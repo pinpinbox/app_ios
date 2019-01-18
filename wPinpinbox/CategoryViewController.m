@@ -947,6 +947,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         if (![dic[@"album"][@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = dic[@"album"][@"name"];
             [LabelAttributeStyle changeGapString: cell.albumNameLabel content: dic[@"album"][@"name"]];
+            cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
         }
         
         // UserForView Info Setting

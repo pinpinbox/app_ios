@@ -160,22 +160,6 @@
             
         }
     }
-
-}
-- (void)loadVideoTimedOut{
-    if (self.handleTimedOutBlock) {
-        self.handleTimedOutBlock();
-    }
-}
-- (nullable WKNavigation *)loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL {
-    //  Add a simple timed-out notification, because video in iframe may be failed to load from time to time....
-    [NSTimer scheduledTimerWithTimeInterval: 180.0
-                                     target: self
-                                   selector: @selector(loadVideoTimedOut)
-                                   userInfo: nil
-                                    repeats: NO];
-    
-    return [super loadHTMLString:string baseURL:baseURL];
 }
 //  pause video on web page from native code
 - (void)pauseVid {

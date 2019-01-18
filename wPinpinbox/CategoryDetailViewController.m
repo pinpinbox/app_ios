@@ -336,6 +336,7 @@
     if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"album"][@"name"];
         [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"album"][@"name"]];
+        cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
     }
     return cell;
 }
