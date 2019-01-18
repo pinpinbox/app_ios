@@ -76,6 +76,21 @@
     
     return self;
 }
+- (void)loadVideoTimedOut{
+    if (self.handleTimedOutBlock) {
+        self.handleTimedOutBlock();
+    }
+}
+- (nullable WKNavigation *)loadHTMLString:(NSString *)string baseURL:(nullable NSURL *)baseURL {
+    //  Add a timed-out notification, because video in iframe may be failed to load from time to time....
+    [NSTimer scheduledTimerWithTimeInterval: 120.0
+                                     target: self
+                                   selector: @selector(loadVideoTimedOut)
+                                   userInfo: nil
+                                    repeats: NO];
+    return [super loadHTMLString:string baseURL:baseURL];
+}
+
 - (void)setVideoPath:(NSString *)path {
     self.backgroundColor = [UIColor blackColor];
     self.path = path;
@@ -152,7 +167,7 @@
             }
         } else if ([url.absoluteString containsString:@"vimeo.com"]) {
             NSString *videoPath = url.lastPathComponent;
-            NSString *realLink = [NSString stringWithFormat:@"https://player.vimeo.com/video/%@?autoplay=1&quality=108v0p",videoPath];
+            NSString *realLink = [NSString stringWithFormat:@"https://player.vimeo.com/video/%@?autoplay=1&quality=1080p",videoPath];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *html = [self getVimeoString:realLink];
