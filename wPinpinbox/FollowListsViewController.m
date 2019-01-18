@@ -318,7 +318,7 @@
     label.myLeftMargin = label.myRightMargin = 8;
     label.numberOfLines = 0;
     label.text = title;
-    [LabelAttributeStyle changeGapString: label content: label.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: label content: label.text];
     label.font = [UIFont systemFontOfSize: 17];
 //    label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor firstGrey];
@@ -430,7 +430,7 @@
     NSLog(@"viewForSupplementaryElementOfKind");
 //    UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerCell" forIndexPath: indexPath];
     FollowListsCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerCell" forIndexPath: indexPath];
-    [LabelAttributeStyle changeGapString: headerView.topicLabel content: headerView.topicLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.topicLabel content: headerView.topicLabel.text];
     return headerView;
 }
 
@@ -467,7 +467,7 @@
     nameLabel.font = [UIFont systemFontOfSize: 16];
     if ([wTools objectExists: name]) {
         nameLabel.text = name;
-        [LabelAttributeStyle changeGapString: nameLabel content: name];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: nameLabel content: nameLabel.text];
     }
     UIButton *followBtn = (UIButton *)[cell viewWithTag: 102];
     [followBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
@@ -476,7 +476,6 @@
     followBtn.clipsToBounds = YES;
     followBtn.layer.borderColor = [UIColor secondGrey].CGColor;
     followBtn.layer.borderWidth = 1.0;
-    
     return cell;
 }
 
