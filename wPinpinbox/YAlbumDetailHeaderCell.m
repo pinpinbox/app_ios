@@ -30,10 +30,7 @@
 @implementation YAlbumTitleCell : UITableViewCell
 - (void)loadData:(NSDictionary *)data {
     if ([wTools objectExists:data[@"name"]]) {
-        NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
-        s.lineSpacing = 0.5;
-        _titleLabel.attributedText = [[NSAttributedString alloc] initWithString:data[@"name"] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSForegroundColorAttributeName:[UIColor firstGrey],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} ];//text = data[@"name"];
-        s= nil;
+        _titleLabel.attributedText = [[NSAttributedString alloc] initWithString:data[@"name"] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSForegroundColorAttributeName:[UIColor firstGrey],NSKernAttributeName:@1} ];//text = data[@"name"];
     }
 }
 
@@ -45,10 +42,8 @@
         t = data[@"name"];
         if (t.length) {
             NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
-            NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
-            s.lineSpacing = 0.5;
-            CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} context:ctx];
-            s = nil;
+            CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1} context:ctx];
+            
             ctx = nil;
             return ss.size.height+32;
         }
