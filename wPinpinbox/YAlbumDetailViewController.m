@@ -102,8 +102,8 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     if (_isMessageShowing) {
         [self messageBtnTouched:self.messageBtn];
     }
-    
-    [self layoutCollectButton];
+    self.albumPoint = [self.albumInfo[@"album"][@"point"] integerValue];
+    self.isCollected = [self.albumInfo[@"album"][@"own"] boolValue];
 }
 - (void)setAlubumId:(NSString *)aid {
     self.album_id = aid;
@@ -149,6 +149,10 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (BOOL)isPanValid {
     
     return self.effectView == nil;
+}
+- (void)setIsCollected:(BOOL)isCollected {
+    _isCollected = isCollected;
+    [self layoutCollectButton];
 }
 #pragma mark -
 - (BOOL)isPointInHeader:(CGPoint)point {
@@ -245,15 +249,14 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     return height+32;
 }
 - (void)layoutCollectButton {
-    _albumPoint = [self.albumInfo[@"album"][@"point"] integerValue];
-    _isCollected = [self.albumInfo[@"album"][@"own"] boolValue];
+    
     NSString * u = [NSString stringWithFormat:@"%lu", [self.albumInfo[@"user"][@"user_id"] longValue] ];
     BOOL selfWork = [u isEqualToString: [wTools getUserID]];
     self.collectBtn.hidden = selfWork;
     
     if (!selfWork) {
         NSString *str = @"";
-        if (!_isCollected) {
+        if (!self.isCollected) {
             
             self.collectBtn.enabled = YES;
             [self.collectBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -851,7 +854,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 
                         [wself checkAlbumCollectTask];
                         wself.isCollected = YES;
-                        [wself layoutCollectButton];
+                        
                     } else if ([dic[@"result"] intValue] == 2) {
                         [wself showCustomErrorAlert: @"已擁有該相本"];
                     } else if ([dic[@"result"] intValue] == 0) {
