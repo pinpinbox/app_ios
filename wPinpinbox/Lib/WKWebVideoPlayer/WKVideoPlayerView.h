@@ -14,8 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSString (extractURLs)
 - (NSArray *)findURLs;
 @end
+typedef void(^VideoTimedoutBlock)(void);
 
 @interface WKVideoPlayerView : WKWebView
+@property (nonatomic) VideoTimedoutBlock handleTimedOutBlock;
 //  init WKVideoPlayerView with video path and WKWebViewConfiguration
 - (id)initWithString:(NSString *)path configuration:(nonnull WKWebViewConfiguration *)configuration;
 //  check if url is valid
