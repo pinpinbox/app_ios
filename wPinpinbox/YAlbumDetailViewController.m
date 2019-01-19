@@ -175,34 +175,42 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     }
 }
 - (void)prepareCoverView {
-    NSArray *a = self.albumInfo[@"photo"];
-    NSDictionary *p = a[0];
-    if ([wTools objectExists:p[@"image_url"]]) {
-        NSURL *u = [NSURL URLWithString:p[@"image_url"]];
-        __block typeof(self) wself = self;
-        UIImage *placholder = [UIImage imageWithCGImage:self.headerView.image.CGImage];
-        
-        [self.headerView sd_setImageWithURL:u placeholderImage:placholder  completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            if (error || image == nil) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UIImage *image = [UIImage imageNamed:@"bg_2_0_0_no_image.jpg"];
-                    CGSize s = image.size;
-                    CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
-                    wself.headerView.image = image;
-                    wself.headerHeight.constant = dh;
-                });
-            } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    CGSize s = image.size;
-                    CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
-                    wself.headerView.image = image;
-                    wself.headerHeight.constant = dh;
-                });
-            }
-        }];
-        //[header.albumHeader sd_setImageWithURL:u placeholderImage:];
+    if (![wTools objectExists:self.albumInfo[@"photo"]]) {
+        UIImage *image = [UIImage imageNamed:@"bg_2_0_0_no_image.jpg"];
+        CGSize s = image.size;
+        CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+        self.headerView.image = image;
+        self.headerHeight.constant = dh;
+        return;
+    } else {
+        NSArray *a = self.albumInfo[@"photo"];
+        NSDictionary *p = a[0];
+        if ([wTools objectExists:p[@"image_url"]]) {
+            NSURL *u = [NSURL URLWithString:p[@"image_url"]];
+            __block typeof(self) wself = self;
+            UIImage *placholder = [UIImage imageWithCGImage:self.headerView.image.CGImage];
+            
+            [self.headerView sd_setImageWithURL:u placeholderImage:placholder  completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                if (error || image == nil) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIImage *image = [UIImage imageNamed:@"bg_2_0_0_no_image.jpg"];
+                        CGSize s = image.size;
+                        CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+                        wself.headerView.image = image;
+                        wself.headerHeight.constant = dh;
+                    });
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        CGSize s = image.size;
+                        CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+                        wself.headerView.image = image;
+                        wself.headerHeight.constant = dh;
+                    });
+                }
+            }];
+            //[header.albumHeader sd_setImageWithURL:u placeholderImage:];
+        }
     }
-    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToContent:)];
     [self.headerView addGestureRecognizer:tap];
     

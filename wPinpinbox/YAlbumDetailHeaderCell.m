@@ -63,8 +63,7 @@
 {
     NSMutableAttributedString* mutableText = [attributedText mutableCopy];
     [mutableText addAttributes:@{NSKernAttributeName: @(self.spacing)} range:[mutableText fullRange]];
-    [super setAttributedText:mutableText];
-    NSLog(@"%@",mutableText);
+    [super setAttributedText:mutableText];    
     [self setNeedsDisplay];
 }
 
@@ -272,8 +271,8 @@
     } else if (gotExchange || gotSlot) {
         _giftIcon.hidden = NO;
     }
-    self.audioLeading.constant = ((_vidIcon.hidden)?-_vidIcon.frame.size.width-8:8);//);
-    self.giftLeading.constant = ((_vidIcon.hidden)?8:0)+((_audIcon.hidden)?-_audIcon.frame.size.width:0);
+    self.audioLeading.constant = ((_vidIcon.hidden)?-_vidIcon.frame.size.width:8);//);
+    self.giftLeading.constant = ((_audIcon.hidden)?-_audIcon.frame.size.width:0);
 }
 
 @end
