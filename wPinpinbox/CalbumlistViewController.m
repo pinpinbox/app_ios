@@ -316,7 +316,9 @@
 }
 
 - (void)processCalbumlist:(NSDictionary *)dic {
+    NSLog(@"processCalbumlist");
     if (dic[@"result"]) {
+        NSLog(@"dic: %@", dic);
         if ([dic[@"result"] intValue] == 1) {
             NSLog(@"section::: %@",dic[@"section"]);
             NSInteger pn = nextId;

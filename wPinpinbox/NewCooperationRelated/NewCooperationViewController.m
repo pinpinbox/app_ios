@@ -153,6 +153,8 @@
     self.qrCodeBgView.backgroundColor = [UIColor blackColor];
     self.qrCodeBgView.alpha = 0.7;
     self.qrCodeImageView.backgroundColor = [UIColor whiteColor];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.qrCodeInfoLabel content: self.qrCodeInfoLabel.text];
     [self hideQRCodeRelatedView];
 }
 
@@ -179,7 +181,7 @@
     self.infoView.backgroundColor = [UIColor thirdGrey];
     self.infoView.layer.cornerRadius = 16;
     self.infoLabel.text = NSLocalizedString(@"GeneralText-DefaultInfo", @"");
-    [LabelAttributeStyle changeGapString: self.infoLabel content: self.infoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.infoLabel content: self.infoLabel.text];
     self.infoLabel.textColor = [UIColor firstGrey];
     self.infoLabel.font = [UIFont systemFontOfSize: 20.0];
     self.infoLabel.numberOfLines = 0;
@@ -442,7 +444,7 @@ replacementString:(NSString *)string {
                             if (self.creatorListData.count == 0) {
                                 self.infoLabel.text = NSLocalizedString(@"GeneralText-NoMatchCreator", @"");
                                 self.infoLabel.textAlignment = NSTextAlignmentCenter;
-                                [LabelAttributeStyle changeGapString: self.infoLabel content: self.infoLabel.text];
+                                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.infoLabel content: self.infoLabel.text];
                                 
                                 self.creatorListCollectionView.hidden = YES;;
                                 self.infoView.hidden = NO;
@@ -728,6 +730,7 @@ replacementString:(NSString *)string {
         }
         if ([wTools objectExists: userDic[@"name"]]) {
             cell.userNameLabel.text = userDic[@"name"];
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
         }
         NSDictionary *cooperationDic = self.cooperationData[indexPath.row][@"cooperation"];
         
@@ -746,14 +749,15 @@ replacementString:(NSString *)string {
         }
         if ([wTools objectExists: userDic[@"name"]]) {
             cell.userNameLabel.text = userDic[@"name"];
+            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
         }
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
         
         if ([self checkUsersInCooperationDataOrNot: [userDic[@"user_id"] intValue]]) {
             [cell setInviteBtnEnabled: NO];
         } else {
             [cell setInviteBtnEnabled: YES];
         }
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.inviteBtn.titleLabel content: cell.inviteBtn.titleLabel.text];
         return cell;
     }
 }
@@ -789,6 +793,7 @@ replacementString:(NSString *)string {
         [btn setTitle: @"瀏覽" forState: UIControlStateNormal];
         [self changeBtnStyle: btn identity: identity];
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: btn.titleLabel content: btn.titleLabel.text];
     return btn;
 }
 
@@ -805,6 +810,7 @@ replacementString:(NSString *)string {
         btn.layer.borderColor = [UIColor clearColor].CGColor;
         btn.layer.borderWidth = 0;
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: btn.titleLabel content: btn.titleLabel.text];
     return btn;
 }
 

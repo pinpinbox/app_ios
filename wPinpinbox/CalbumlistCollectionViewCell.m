@@ -18,6 +18,8 @@
 #import "UIColor+Extensions.h"
 #import "UIViewController+ErrorAlert.h"
 #import "CustomIOSAlertView.h"
+#import "LabelAttributeStyle.h"
+
 @interface CalbumlistCollectionViewCell ()
 @property (nonatomic) UIImageView *caution;
 @end
@@ -88,6 +90,8 @@
 - (void)setAlbumDesc:(NSString *)desc {
     _descLabel.numberOfLines = 0;
     _descLabel.text = desc;
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: _descLabel content: _descLabel.text];
+    
     CGSize s = [_descLabel sizeThatFits:CGSizeMake(225, 58)];
     CGPoint t = _descLabel.frame.origin;
     if (s.height > 58) {

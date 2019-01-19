@@ -36,6 +36,7 @@
 #import "UIViewController+ErrorAlert.h"
 
 #import "NotifTabViewController.h"
+#import "LabelAttributeStyle.h"
 
 @interface AlbumCollectionViewController () <CAPSPageMenuDelegate, MyAlbumCollectionViewControllerDelegate, OtherCollectionViewControllerDelegate, CalbumlistViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic) CAPSPageMenu *pageMenu;
@@ -254,6 +255,7 @@
     self.leftLabel = [UILabel new];
     self.leftLabel.text = @"我的作品";
     self.leftLabel.font = [UIFont systemFontOfSize:15];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.leftLabel content: self.leftLabel.text];
     [self.leftLabel sizeToFit];
     self.leftLabel.centerXPos.equalTo(@0);
     self.leftLabel.centerYPos.equalTo(@0); //标题尺寸由内容包裹，位置在布局视图中居中。
@@ -275,6 +277,7 @@
     self.centerLabel = [UILabel new];
     self.centerLabel.text = @"收藏▪︎贊助";
     self.centerLabel.font = [UIFont systemFontOfSize:15];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.centerLabel content: self.centerLabel.text];
     [self.centerLabel sizeToFit];
     self.centerLabel.centerXPos.equalTo(@0);
     self.centerLabel.centerYPos.equalTo(@0); //标题尺寸由内容包裹，位置在布局视图中居中。
@@ -299,6 +302,7 @@
     self.rightLabel = [UILabel new];
     self.rightLabel.text = @"群組作品";
     self.rightLabel.font = [UIFont systemFontOfSize:15];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.rightLabel content: self.rightLabel.text];
     [self.rightLabel sizeToFit];
     self.rightLabel.centerXPos.equalTo(@0);
     self.rightLabel.centerYPos.equalTo(@0); //标题尺寸由内容包裹，位置在布局视图中居中。
@@ -364,7 +368,6 @@
                 CGPoint f = cc.collectionview.contentOffset;
                 [cc.collectionview setContentOffset:f animated:NO];
             }
-            
             [self.pageMenu moveToPage: 0];
             break;
         case 1:
@@ -376,8 +379,7 @@
                 CalbumlistViewController *cc = (CalbumlistViewController *)c;
                 CGPoint f = cc.collectionview.contentOffset;
                 [cc.collectionview setContentOffset:f animated:NO];
-            }
-            
+            }            
             [self.pageMenu moveToPage: 1];
             break;
         case 2:
