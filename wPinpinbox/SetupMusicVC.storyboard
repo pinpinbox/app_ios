@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -65,7 +65,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(移除所有音檔設定)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pij-1t-Dzi">
-                                                <rect key="frame" x="56" y="35" width="159" height="21"/>
+                                                <rect key="frame" x="56" y="35" width="311" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.83137254901960778" green="0.83137254901960778" blue="0.83137254901960778" alpha="1" colorSpace="calibratedRGB"/>
@@ -112,7 +112,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(使用每頁的錄音或音效)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NSi-n7-W4F">
-                                                <rect key="frame" x="56" y="43" width="159" height="21"/>
+                                                <rect key="frame" x="56" y="43" width="311" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -159,7 +159,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="(作品內唯一播放)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A0f-gc-JN5">
-                                                <rect key="frame" x="56" y="43" width="159" height="21"/>
+                                                <rect key="frame" x="56" y="43" width="311" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -353,7 +353,8 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="ZIl-NX-Jfk"/>
                                 </constraints>
-                                <state key="normal" title="保 存">
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="保存">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -386,13 +387,21 @@
                         <outlet property="collectionView" destination="1C7-AQ-RXv" id="hCx-Bp-Y4K"/>
                         <outlet property="eachPageMusicView" destination="0l4-t9-YZ6" id="MSU-wc-WAb"/>
                         <outlet property="eachPageSelectionView" destination="1Jc-mf-Wrl" id="zQO-YF-Ydb"/>
+                        <outlet property="multipleSongSubTitleLabel" destination="NSi-n7-W4F" id="JVg-d5-fbk"/>
+                        <outlet property="mutipleSongTitleLabel" destination="fCz-eV-WKf" id="WXt-Yi-h6x"/>
                         <outlet property="noMusicSelectionView" destination="hO8-8j-QAT" id="ma5-Hb-AZX"/>
+                        <outlet property="noMusicSubTitleLabel" destination="pij-1t-Dzi" id="gd6-GQ-cW9"/>
+                        <outlet property="noMusicTitleLabel" destination="i75-vx-PQa" id="MVU-cg-PZN"/>
                         <outlet property="noMusicView" destination="WEr-Lx-2ov" id="2ry-nz-oOW"/>
                         <outlet property="playerBtn" destination="UjB-0T-AUQ" id="od2-q0-yBe"/>
                         <outlet property="saveBtn" destination="EcD-zM-gZL" id="x0e-0i-PdK"/>
+                        <outlet property="singleSongSubTitleLabel" destination="A0f-gc-JN5" id="D9a-h8-54H"/>
+                        <outlet property="singleSongTitleLabel" destination="z86-BH-7Lk" id="7F4-dW-42H"/>
+                        <outlet property="titleLabel" destination="Hvp-Jl-Oz9" id="vwc-aG-bJm"/>
                         <outlet property="uploadAudioFileName" destination="56c-Vk-gmm" id="UIH-Bh-2V9"/>
                         <outlet property="uploadBtn" destination="ObX-ia-dF4" id="VFy-Nz-cuL"/>
                         <outlet property="uploadMusicSelectionView" destination="pbv-rN-PpH" id="QXN-rL-OAw"/>
+                        <outlet property="uploadTitleLabel" destination="6Q4-1l-SYM" id="nhF-cl-ZeG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bpZ-Gk-qXT" userLabel="First Responder" sceneMemberID="firstResponder"/>
