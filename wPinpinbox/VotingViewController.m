@@ -150,18 +150,16 @@
         NSLog(@"voteLeft >= 10000000");
         voteLeft = voteLeft / 1000000;
         self.remainingVoteLabel.text = [NSString stringWithFormat: @"今日剩餘票數: %ldM", (long)voteLeft];
-        [LabelAttributeStyle changeGapString: self.remainingVoteLabel content: [NSString stringWithFormat: @"今日剩餘票數: %ldM", (long)voteLeft]];
     } else if (voteLeft >= 10000) {
         NSLog(@"voteLeft >= 10000");
         voteLeft = voteLeft/ 1000;
         self.remainingVoteLabel.text = [NSString stringWithFormat: @"今日剩餘票數: %ldK", (long)voteLeft];
-        [LabelAttributeStyle changeGapString: self.remainingVoteLabel content: [NSString stringWithFormat: @"今日剩餘票數: %ldK", (long)voteLeft]];
     } else {
         NSLog(@"else");
         self.remainingVoteLabel.text = [NSString stringWithFormat: @"今日剩餘票數: %ld", (long)voteLeft];
-        [LabelAttributeStyle changeGapString: self.remainingVoteLabel content: [NSString stringWithFormat: @"今日剩餘票數: %ld", (long)voteLeft]];
         NSLog(@"self.remainingVoteLabel.text: %@", self.remainingVoteLabel.text);
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.remainingVoteLabel content: self.remainingVoteLabel.text];
     [self.remainingVoteLabel sizeToFit];
 }
 
@@ -546,12 +544,12 @@
     // AlbumNameLabel Setting
     if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"album"][@"name"];
-        [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"album"][@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
     }
     if (![data[@"album"][@"album_id"] isEqual:[NSNull null]]) {
         NSString *albumIdStr = [data[@"album"][@"album_id"] stringValue];
         cell.albumIdLabel.text = [NSString stringWithFormat: @"編號:%@", albumIdStr];
-        [LabelAttributeStyle changeGapString: cell.albumIdLabel content: [NSString stringWithFormat: @"編號:%@", albumIdStr]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumIdLabel content: cell.albumIdLabel.text];
     }
     if (![data[@"eventjoin"][@"count"] isEqual:[NSNull null]]) {
         NSInteger eventJoinInt = [data[@"eventjoin"][@"count"] integerValue];
@@ -560,17 +558,16 @@
             NSLog(@"voteLeft >= 10000000");
             eventJoinInt = eventJoinInt / 1000000;
             cell.eventJoinLabel.text = [NSString stringWithFormat: @"票數:%ld", (long)eventJoinInt];
-            [LabelAttributeStyle changeGapString: cell.eventJoinLabel content: [NSString stringWithFormat: @"票數:%ld", (long)eventJoinInt]];
+            
         } else if (eventJoinInt >= 10000) {
             NSLog(@"voteLeft >= 10000");
             eventJoinInt = eventJoinInt/ 1000;
             cell.eventJoinLabel.text = [NSString stringWithFormat: @"票數:%ld", (long)eventJoinInt];
-            [LabelAttributeStyle changeGapString: cell.eventJoinLabel content: [NSString stringWithFormat: @"票數:%ld", (long)eventJoinInt]];
         } else {
             NSLog(@"else");
             cell.eventJoinLabel.text = [NSString stringWithFormat: @"票數:%ld", (long)eventJoinInt];
-            [LabelAttributeStyle changeGapString: cell.eventJoinLabel content: [NSString stringWithFormat: @"票數:%ld", (long)eventJoinInt]];
         }
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.eventJoinLabel content: cell.eventJoinLabel.text];
     }
     
     // Check rank label
@@ -579,7 +576,7 @@
     if (indexPath.row <= 59) {
         NSLog(@"indexPath.row <= 59");
         cell.rankLabel.text = [NSString stringWithFormat: @"%ld", (long)(indexPath.row + 1)];
-        [LabelAttributeStyle changeGapString: cell.rankLabel content: [NSString stringWithFormat: @"%ld", (long)(indexPath.row + 1)]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.rankLabel content: cell.rankLabel.text];
         cell.rankLabel.hidden = NO;
     } else {
         cell.rankLabel.hidden = YES;
@@ -594,7 +591,7 @@
     // UserNameLabel Setting
     if (![data[@"user"][@"name"] isEqual: [NSNull null]]) {
         cell.userNameLabel.text = data[@"user"][@"name"];
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: data[@"user"][@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
     }
     
     if (![data[@"album"][@"has_voted"] isEqual: [NSNull null]]) {
@@ -611,7 +608,7 @@
             cell.voteBtn.hidden = NO;
         }
     }
-    [LabelAttributeStyle changeGapString: cell.votedLabel content: cell.votedLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.votedLabel content: cell.votedLabel.text];
     cell.userId = data[@"user"][@"user_id"];
     cell.albumId = data[@"album"][@"album_id"];
     

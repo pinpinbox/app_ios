@@ -26,8 +26,8 @@
     // Do any additional setup after loading the view.
     //self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent: 0.8];
     //self.imageView.wrapContentHeight = YES;
-    
-    [LabelAttributeStyle changeGapString: self.topicLabel content: self.topicLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.topicLabel content: self.topicLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.dimissBtn.titleLabel content: self.dimissBtn.titleLabel.text];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
