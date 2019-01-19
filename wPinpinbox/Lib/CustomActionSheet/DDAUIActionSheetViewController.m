@@ -11,7 +11,7 @@
 #import "UIColor+Extensions.h"
 #import "GlobalVars.h"
 #import "wTools.h"
-//#import "LabelAttributeStyle.h"
+#import "LabelAttributeStyle.h"
 
 @interface DDAUIActionSheetViewController () <UITextViewDelegate> {
     BOOL isTouchDown;
@@ -180,6 +180,7 @@
         [btn addTarget: self action: @selector(buttonHighlight:) forControlEvents: UIControlEventTouchDown];
         [btn addTarget: self action: @selector(buttonNormal:) forControlEvents: UIControlEventTouchUpInside];
         [btn addTarget: self action: @selector(buttonTouchUpOutside:) forControlEvents: UIControlEventTouchUpOutside];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: btn.titleLabel content: btn.titleLabel.text];
         
         [horzLayout addSubview: btn];
     }
@@ -228,13 +229,14 @@
     firstLabel.myLeftMargin = 16;
     firstLabel.myRightMargin = 4;
     firstLabel.text = firstLabelText;
-    //[LabelAttributeStyle changeGapString: label content: title];
+    
     if (gridViewSelected) {
         firstLabel.textColor = [UIColor firstGrey];
     } else {
         firstLabel.textColor = [UIColor thirdGrey];
     }
     firstLabel.font = [UIFont systemFontOfSize: 18];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: firstLabel content: firstLabel.text];
     [firstLabel sizeToFit];
     [horzLayout addSubview: firstLabel];
     
@@ -274,13 +276,14 @@
         secondLabel.myCenterYOffset = 0;
         secondLabel.myLeftMargin = 4;
         secondLabel.text = @"頁";
-        //[LabelAttributeStyle changeGapString: label content: title];
+        
         if (gridViewSelected) {
             secondLabel.textColor = [UIColor firstGrey];
         } else {
             secondLabel.textColor = [UIColor thirdGrey];
         }
         secondLabel.font = [UIFont systemFontOfSize: 18];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: secondLabel content: secondLabel.text];
         [secondLabel sizeToFit];
         [horzLayout addSubview: secondLabel];
     }
@@ -356,12 +359,11 @@
                 label.myLeftMargin = 8;
             }
             label.text = title;
-            //[LabelAttributeStyle changeGapString: label content: title];
             label.textColor = [UIColor firstGrey];
             label.font = [UIFont systemFontOfSize: 18];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label content: label.text];
             [label sizeToFit];
             label.myCenterYOffset = 0;
-            
             [horzLayout addSubview: label];
         }
     }
@@ -393,7 +395,7 @@
             [btn setTitle: btnStr forState: UIControlStateNormal];
             [btn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
             [btn sizeToFit];
-            
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: btn.titleLabel content: btn.titleLabel.text];
             [horzLayout addSubview: btn];
         }
     }
@@ -453,12 +455,11 @@
             }
             
             label.text = title;
-            //[LabelAttributeStyle changeGapString: label content: title];
             label.textColor = [UIColor firstGrey];
             label.font = [UIFont systemFontOfSize: 18];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label content: label.text];
             [label sizeToFit];
             label.myCenterYOffset = 0;
-            
             [horzLayout addSubview: label];
         }
     } else if (title == nil) {
@@ -483,11 +484,10 @@
             [btn setTitle: btnStr forState: UIControlStateNormal];
             [btn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
             [btn sizeToFit];
-            
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: btn.titleLabel content: btn.titleLabel.text];
             [horzLayout addSubview: btn];
         }
     }
-    
     [self.contentLayout addSubview: horzLayout];
 }
 
@@ -552,7 +552,6 @@
             }
             
             label.text = title;
-            //[LabelAttributeStyle changeGapString: label content: title];
             
             if (isCollected) {
                 label.textColor = [UIColor lightGrayColor];
@@ -560,9 +559,9 @@
                 label.textColor = [UIColor firstGrey];
             }
             label.font = [UIFont systemFontOfSize: 18];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label content: label.text];
             [label sizeToFit];
             label.myCenterYOffset = 0;
-            
             [horzLayout addSubview: label];
         }
     } else if (title == nil) {
@@ -588,7 +587,7 @@
                 [btn setTitle: btnStr forState: UIControlStateNormal];
                 [btn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
                 [btn sizeToFit];
-                
+                [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: btn.titleLabel content: btn.titleLabel.text];
                 [horzLayout addSubview: btn];
             }                        
         }
@@ -662,10 +661,10 @@
     self.topicLabel.myTopMargin = 4;
     self.topicLabel.myBottomMargin = 16;    
     self.topicLabel.text = self.topicStr;
-    //[LabelAttributeStyle changeGapString: self.topicLabel content: self.topicStr];
     self.topicLabel.textColor = [UIColor whiteColor];
     self.topicLabel.font = [UIFont boldSystemFontOfSize: 24];
-    [self.topicLabel sizeToFit];        
+    [self.topicLabel sizeToFit];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.topicLabel content: self.topicLabel.text];
     
     // ContentLayout Setting
     self.contentLayout.padding = UIEdgeInsetsMake(16, 0, 16, 0);

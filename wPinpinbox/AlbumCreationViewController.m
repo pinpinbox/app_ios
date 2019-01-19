@@ -63,7 +63,7 @@
 #import "HudIndicatorView.h"
 #import "AlbumCreationIntroViewController.h"
 #import "UserInfo.h"
-
+#import "LabelAttributeStyle.h"
 
 #pragma mark - Photo Editor SDK
 #if TARGET_OS_SIMULATOR
@@ -342,7 +342,9 @@ DSPhotoEditorViewControllerDelegate>
             [_nextBtn setTitle: @"下一步" forState: UIControlStateNormal];
         }
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.nextBtn.titleLabel content: self.nextBtn.titleLabel.text];
     //[[_ShowView layer] setMasksToBounds:YES];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.addTextBtn.titleLabel content: self.addTextBtn.titleLabel.text];
     
     if (_imagedata == nil) {
         ImageDataArr=[NSMutableArray new];
@@ -3169,8 +3171,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         //[audioButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
     }
     
-    
-    
     UILabel *lab = (UILabel *)[myCell viewWithTag:1111];
     
     if (indexPath.item - 1 == 0) {
@@ -3182,6 +3182,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         NSLog(@"else");
         NSLog(@"lab.text: %@", lab.text);
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: lab content: lab.text];
     NSString *userIdStr = ImageDataArr[indexPath.item - 1][@"user_id"];
     
     UIImageView *privateImageView = (UIImageView *)[myCell viewWithTag: 6666];

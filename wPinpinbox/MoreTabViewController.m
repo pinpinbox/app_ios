@@ -115,6 +115,7 @@
     aboutBtn.titleLabel.font = [UIFont systemFontOfSize: 20.0];
     [aboutBtn setTitle: @"立即了解" forState: UIControlStateNormal];
     [aboutBtn addTarget: self action: @selector(toAboutPage) forControlEvents: UIControlEventTouchUpInside];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: aboutBtn.titleLabel content: aboutBtn.titleLabel.text];
     [self.vertLayout addSubview: aboutBtn];
 }
 
@@ -145,7 +146,7 @@
     label.text = title;
     label.textColor = [UIColor firstGrey];
     label.font = [UIFont systemFontOfSize: 18];
-    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label content: label.text];    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label content: label.text];
     [label sizeToFit];
     return label;
 }
