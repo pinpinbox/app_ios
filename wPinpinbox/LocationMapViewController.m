@@ -9,6 +9,7 @@
 #import "LocationMapViewController.h"
 #import "MapHelper.h"
 #import "wTools.h"
+#import "LabelAttributeStyle.h"
 
 #if(DEBUG)
 #define MAPAPIKEY @"AIzaSyBKCVhRB6zjhZ0d0gcXALT8Ts4s8AfxMBk"
@@ -24,6 +25,7 @@
 
 
 @interface LocationMapViewController ()<CLLocationManagerDelegate, UITextFieldDelegate,MKMapViewDelegate>//, GMSMapViewDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *locationInputTitleLabel;
 @property (nonatomic) IBOutlet MKMapView *map;
 @property (nonatomic) CLLocationManager *locationManager;
 
@@ -174,6 +176,18 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if ([wTools objectExists: self.titleLabel]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
+    }
+    if ([wTools objectExists: self.locationInputTitleLabel]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.locationInputTitleLabel content: self.locationInputTitleLabel.text];
+    }
+    if ([wTools objectExists: self.locSearch]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.locSearch.titleLabel content: self.locSearch.titleLabel.text];
+    }    
+    if ([wTools objectExists: self.saveBtn]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.saveBtn.titleLabel content: self.saveBtn.titleLabel.text];
+    }
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;

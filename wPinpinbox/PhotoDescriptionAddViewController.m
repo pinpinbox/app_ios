@@ -7,10 +7,13 @@
 //
 
 #import "PhotoDescriptionAddViewController.h"
-
+#import "LabelAttributeStyle.h"
 
 @interface PhotoDescriptionAddViewController ()<UITextViewDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *descriptionTitleLabel;
 @property(nonatomic) IBOutlet UITextView *itemDesc;
+@property (weak, nonatomic) IBOutlet UIButton *saveBtn;
 @property(nonatomic) DescSubmitBlock submitBlock;
 @property(nonatomic) IBOutlet NSLayoutConstraint *textViewHeight;
 @property(nonatomic) IBOutlet UILabel *placeholder;
@@ -36,6 +39,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    if ([wTools objectExists: self.titleLabel]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
+    }
+    if ([wTools objectExists: self.descriptionTitleLabel]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.descriptionTitleLabel content: self.descriptionTitleLabel.text];
+    }
+    if ([wTools objectExists: self.saveBtn]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.saveBtn.titleLabel content: self.saveBtn.titleLabel.text];
+    }    
+    
     [self addDismissTap];
     [self addKeyboardNotification];
 }
