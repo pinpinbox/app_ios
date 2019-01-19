@@ -21,6 +21,7 @@
 #import "SwitchButtonView.h"
 #import "AudioUploader.h"
 #import "MBProgressHUD.h"
+#import "LabelAttributeStyle.h"
 
 typedef NS_ENUM(NSInteger, SetupAudioType) {
     None = 1,
@@ -76,7 +77,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) SetupAudioType audioType;
 @property (nonatomic) SetupAudioType dataAudioType; // audiotype from getalbumsettings
 
-
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *noMusicTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *noMusicSubTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *mutipleSongTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *multipleSongSubTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *singleSongTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *singleSongSubTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *uploadTitleLabel;
 
 @end
 
@@ -94,6 +102,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [self setupUI];
     [self getAlbumDataOptions];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.noMusicTitleLabel content: self.noMusicTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.noMusicSubTitleLabel content: self.noMusicSubTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.mutipleSongTitleLabel content: self.mutipleSongTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.multipleSongSubTitleLabel content: self.multipleSongSubTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.singleSongTitleLabel content: self.singleSongTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.singleSongSubTitleLabel content: self.singleSongSubTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.uploadTitleLabel content: self.uploadTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.uploadBtn.titleLabel content: self.uploadBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.saveBtn.titleLabel content: self.saveBtn.titleLabel.text];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -510,6 +529,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if ([wTools objectExists: musicArray[indexPath.row][@"name"]]) {
         textLabel.text = musicArray[indexPath.row][@"name"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: textLabel content: textLabel.text];
     }
     
     if ([musicArray[indexPath.row][@"selected"] boolValue]) {

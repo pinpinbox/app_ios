@@ -247,7 +247,7 @@
             [exchangeBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
             exchangeBtn.backgroundColor = [UIColor colorFromHexString: @"fd9b64"];
             exchangeBtn.titleLabel.font = [UIFont systemFontOfSize: 16];
-            [LabelAttributeStyle changeGapString: exchangeBtn.titleLabel content: @"我要兌換"];
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: exchangeBtn.titleLabel content: exchangeBtn.titleLabel.text];
             exchangeBtn.myLeftMargin = 0;
             exchangeBtn.myRightMargin = 0.5;
             exchangeBtn.layer.cornerRadius = kCornerRadius;
@@ -276,7 +276,7 @@
     topicLabel.textColor = [UIColor firstGrey];
     if ([wTools objectExists: self.name]) {
         topicLabel.text = self.name;
-        [LabelAttributeStyle changeGapString: topicLabel content: self.name];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: topicLabel content: topicLabel.text];
     }
     topicLabel.numberOfLines = 0;
     topicLabel.wrapContentHeight = YES;
@@ -289,7 +289,7 @@
     contentLabel.textColor = [UIColor firstGrey];
     if ([wTools objectExists: self.eventTitle]) {
         contentLabel.text = self.eventTitle;
-        [LabelAttributeStyle changeGapString: contentLabel content: self.eventTitle];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: contentLabel content: contentLabel.text];
     }
     contentLabel.numberOfLines = 0;
     contentLabel.wrapContentHeight = YES;
@@ -299,7 +299,7 @@
     activityLabel.myTopMargin = 16;
     activityLabel.myRightMargin = 16;
     activityLabel.text = @"活動詳情";
-    [LabelAttributeStyle changeGapString: activityLabel content: @"活動詳情"];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: activityLabel content: activityLabel.text];
     activityLabel.textColor = [UIColor firstMain];
     activityLabel.font = [UIFont systemFontOfSize: 18];
     [activityLabel sizeToFit];
@@ -886,7 +886,7 @@
     UILabel *postLabel = [[UILabel alloc] initWithFrame: CGRectMake(8, view.bounds.size.height / 2 + 50,  view.bounds.size.width - 16, 70)];
     postLabel.textColor = [UIColor firstPink];
     postLabel.text = @"投稿作品數量已達上限，是否確認撤下該作品並建立新作品？（若確定，則原作品的投票數將會歸零）";;
-    [LabelAttributeStyle changeGapString: postLabel content: @"投稿作品數量已達上限，是否確認撤下該作品並建立新作品？（若確定，則原作品的投票數將會歸零）"];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: postLabel content: postLabel.text];
     //postLabel.textAlignment = NSTextAlignmentCenter;
     postLabel.font = [UIFont systemFontOfSize: 14.0f];
     postLabel.numberOfLines = 0;

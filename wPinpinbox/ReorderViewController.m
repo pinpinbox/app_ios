@@ -14,6 +14,7 @@
 #import "GlobalVars.h"
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
+#import "LabelAttributeStyle.h"
 
 #define kCellHeightForReorder 150
 #define kViewHeightForReorder 568
@@ -24,6 +25,8 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
 @property (nonatomic) UILongPressGestureRecognizer *longPress;
 
 @property (nonatomic) NSMutableArray *labelArray;
@@ -37,7 +40,6 @@ static NSString * const reuseIdentifier = @"Cell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     // Register cell classes
     //[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
@@ -53,7 +55,9 @@ static NSString * const reuseIdentifier = @"Cell";
     lpgr.delaysTouchesBegan = YES;
     [self.collectionView addGestureRecognizer: lpgr];
     self.collectionView.showsVerticalScrollIndicator = NO;
-    //NSLog(@"self.imageArray: %@", self.imageArray);
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.backButton.titleLabel content: self.backButton.titleLabel.text];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -291,6 +295,7 @@ static NSString * const reuseIdentifier = @"Cell";
     // Set up the label text
     UILabel *lab = (UILabel *)[cell viewWithTag: 200];
     lab.text = self.labelArray[indexPath.row];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: lab content: lab.text];
     
     /*
     if (indexPath.item == 0) {
