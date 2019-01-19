@@ -843,7 +843,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *data = pictures[indexPath.row];
     NSString *albumId = [data[@"album_id"] stringValue];
     
-    CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+    CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+    source = [self.view convertRect:source fromView:collectionView];
     
     if ([wTools objectExists: albumId]) {
         [self ToRetrievealbumpViewControlleralbumid: albumId  sourceRect:source sourceImageView:cell.coverImageView];

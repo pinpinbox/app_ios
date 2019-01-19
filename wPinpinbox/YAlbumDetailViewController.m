@@ -66,11 +66,10 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 @property(nonatomic) IBOutlet UIButton *likeBtn;
 @property(nonatomic) IBOutlet UIButton *moreBtn;
 @property(nonatomic) IBOutlet UITableView *infoView;
-@property(nonatomic) IBOutlet UIImageView *headerView;
-@property(nonatomic) IBOutlet UIButton *contentButton;
+@property(nonatomic) IBOutlet UIKernedButton *contentButton;
 @property(nonatomic) IBOutlet NSLayoutConstraint *headerHeight;
 @property(nonatomic) IBOutlet NSLayoutConstraint *infoHeight;
-@property(nonatomic) IBOutlet UIButton *collectBtn;
+@property(nonatomic) IBOutlet UIKernedButton *collectBtn;
 
 @property (nonatomic) DDAUIActionSheetViewController *customMoreActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
@@ -109,7 +108,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     self.album_id = aid;
     [self checkAlbumId:self.album_id];
     if (self.albumInfo.allKeys.count < 1)
-        [self retrieveAlbum:self.album_id];
+        [self retrieveAlbum:self.album_id silence:NO];
 }
 - (void)checkAlbumId:(NSString *)albumId {
     
@@ -156,13 +155,15 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 #pragma mark -
 - (BOOL)isPointInHeader:(CGPoint)point {
-    CGRect r = [self.view convertRect:self.headerView.frame fromView:self.headerView];
-    return CGRectContainsPoint(r, point);
+    //CGRect r = [self.view convertRect:self.headerView.frame fromView:self.headerView];
+    //return CGRectContainsPoint(r, point);
+    return self.baseView.contentOffset.y < 1;
 }
 - (UIImageView *)albumCoverView{
     return self.headerView;
 }
 - (void)setContentBtnVisible {
+    [self.contentButton setTitle:@"進入觀看" forState:UIControlStateNormal];
     self.contentButton.hidden = NO;
 }
 - (void)setHeaderPlaceholder:(UIImage *)placeholder {
@@ -179,8 +180,9 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     if ([wTools objectExists:p[@"image_url"]]) {
         NSURL *u = [NSURL URLWithString:p[@"image_url"]];
         __block typeof(self) wself = self;
+        UIImage *placholder = [UIImage imageWithCGImage:self.headerView.image.CGImage];
         
-        [self.headerView sd_setImageWithURL:u completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+        [self.headerView sd_setImageWithURL:u placeholderImage:placholder  completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if (error || image == nil) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     UIImage *image = [UIImage imageNamed:@"bg_2_0_0_no_image.jpg"];
@@ -548,9 +550,10 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     });
 }
 
-- (void)retrieveAlbum:(NSString *)aid {
+- (void)retrieveAlbum:(NSString *)aid silence:(BOOL)silence {
     
-    [wTools ShowMBProgressHUD];
+    if (!silence)
+        [wTools ShowMBProgressHUD];
     __block NSString *viewedString = [NSString stringWithFormat: @"%d", self.isViewed];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1007,7 +1010,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         if (collect_free_album) {
             NSLog(@"Get the First Time Album Saving Point Already");
-            [self retrieveAlbum:self.album_id];
+            [self retrieveAlbum:self.album_id silence:NO];
         } else {
             NSLog(@"Haven't got the point of saving album for first time");
             [self checkPoint];
@@ -1020,7 +1023,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         if (collect_pay_album) {
             NSLog(@"Getting Paid Album Point Already");
-            [self retrieveAlbum:self.album_id];
+            [self retrieveAlbum:self.album_id silence:NO];
         } else {
             NSLog(@"Haven't got the point of saving paid album for first time");
             [self checkPoint];
@@ -1107,7 +1110,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         [self showAlertViewForGettingPoint:data[@"data"][@"task"] eventURL:self.eventUrl];
         [self saveCollectInfoToDevice: NO];
-        [self retrieveAlbum:self.album_id];
+        [self retrieveAlbum:self.album_id silence:NO];
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
         [self saveCollectInfoToDevice: YES];
@@ -1293,7 +1296,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
             } else if ([protocolName isEqualToString: @"getreportintentlist"]) {
                 //[weakSelf insertReport];
             } else if ([protocolName isEqualToString: @"retrievealbump"]) {
-                [weakSelf retrieveAlbum:self.album_id];
+                [weakSelf retrieveAlbum:self.album_id silence:NO];
             } else if ([protocolName isEqualToString: @"insertreport"]) {
                 //[weakSelf SaveDataRow: row];
             } else if ([protocolName isEqualToString: @"insertAlbum2Likes"]) {
@@ -1317,7 +1320,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     [self.effectView removeFromSuperview];
     self.effectView = nil;
         
-    [self retrieveAlbum:self.album_id];
+    [self retrieveAlbum:self.album_id silence:YES];
     if (_isMessageShowing)
         _isMessageShowing = NO;
 }
@@ -1329,6 +1332,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 #pragma mark -
 - (void)showCustomShareActionSheet {
+    if (self.albumInfo.allKeys.count < 1) return;
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
     
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
@@ -1407,7 +1411,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 
 - (void)showCustomMoreActionSheet {
-    
+    if (self.albumInfo.allKeys.count < 1) return;
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
     
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
@@ -1461,25 +1465,8 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         [self.customMoreActionSheet addSelectItem: @"ic200_report_dark.png" title: @"檢舉" btnStr: @"" tagInt: 5 identifierStr: @"reportItem"];
     }
     __weak typeof(self) weakSelf = self;
-//    __block NSInteger weakAlbumPoint = _albumPoint;
-    
-//    self.customMoreActionSheet.customButtonBlock = ^(BOOL selected) {
-//        NSString *alertMsg = @"點選「觀看內容」並前往最後一頁可進行贊助額度設定";
-//        NSString *btnName = @"我知道了";
-//        [weakSelf showCustomAlert: alertMsg btnName: btnName];
-//        [weakSelf.customMoreActionSheet slideOut];
-//    };
+
     self.customMoreActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
-//        if ([identifierStr isEqualToString: @"collectItem"]) {
-//
-//
-//            if (weakAlbumPoint == 0) {
-//                [weakSelf buyAlbum];
-//            } else {
-//                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
-//                [weakSelf showCustomAlert: msgStr option: @"buyAlbum"];
-//            }
-//        } else
         if ([identifierStr isEqualToString: @"albumEdit"]) {
             [weakSelf toAlbumCreationViewController: weakSelf.album_id
                                          templateId: @"0"
@@ -1650,7 +1637,7 @@ alertView.arrangeStyle = @"Horizontal";
 - (void)processInsertAlbumLikesResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         
-        [self retrieveAlbum:self.album_id];
+        [self retrieveAlbum:self.album_id silence:NO];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@", dic[@"message"]);
         NSString *msg = dic[@"message"];

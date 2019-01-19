@@ -1898,8 +1898,8 @@
         // AlbumNameLabel Setting
         if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = data[@"album"][@"name"];
-            [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"album"][@"name"]];
-            cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment:cell.albumNameLabel content: data[@"album"][@"name"]];//changeGapString:
+            
         }
         
         return cell;
@@ -2069,8 +2069,7 @@
         // AlbumNameLabel Setting
         if (![albumDic[@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = albumDic[@"name"];
-            [LabelAttributeStyle changeGapString: cell.albumNameLabel content: cell.albumNameLabel.text];
-            cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment:cell.albumNameLabel content: cell.albumNameLabel.text];            
         }
         NSLog(@"cell.albumNameLabel.text: %@", cell.albumNameLabel.text);
         NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
@@ -2164,11 +2163,14 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         NSDictionary *data = pictures[indexPath.row];
         NSString *albumId = [data[@"album"][@"album_id"] stringValue];
-        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
         [self toAlbumDetailVC: albumId source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 2) {
         HomeBannerCollectionViewCell *cell = (HomeBannerCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
-        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        //CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        CGRect source = [collectionView convertRect:cell.bannerImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
         [self tapDetectedForURL:indexPath.row source:source sourceImageView:cell.bannerImageView];
     } else if (collectionView.tag == 3) {
         if (indexPath.row + 1 < categoryArray.count) {
@@ -2190,7 +2192,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     } else if (collectionView.tag == 6) {
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
         SearchTabCollectionViewCell *cell = (SearchTabCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
-        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
+//        CGSize size = cell.coverImageView.frame.size;
+//        source = CGRectMake(source.origin.x, source.origin.y, size.width, size.height);
         [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue] source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 71 || collectionView.tag == 72) {
         NSDictionary *userDic = followUserData[indexPath.row][@"user"];
@@ -2540,7 +2545,6 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 16.0f;
 }
 
@@ -2563,6 +2567,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         return 16.0f;
     } else if (collectionView.tag == 6) {
         return 24.0f;
+    } else if (collectionView.tag == 71 || collectionView.tag == 72) {
+        return 16;
     } else {
         return 24.0f;
     }

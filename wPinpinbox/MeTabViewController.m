@@ -1319,13 +1319,11 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     MeCollectionViewCell *cell = (MeCollectionViewCell *) [collectionView cellForItemAtIndexPath: indexPath];
-    //NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
-    //cell.contentView.backgroundColor =
-    //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    //NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
-    //NSLog(@"pictures: %@", pictures[indexPath.row]);
+    
     NSString *albumId = [pictures[indexPath.row][@"album_id"] stringValue];
-    CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+    CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+    source = [self.view convertRect:source fromView:collectionView];
+    
     YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.coverImageView noParam:YES];
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

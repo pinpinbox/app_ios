@@ -10,14 +10,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface YAlbumDetailHeaderCell : UITableViewCell
-@property (nonatomic) IBOutlet UIImageView *albumHeader;
-@property (nonatomic) IBOutlet UIButton *viewBtn;
-@end
-
 @protocol DetailCellProtocal
 - (void)loadData:(NSDictionary *)data;
 + (CGFloat)estimatedHeight:(NSDictionary *)data;
+@end
+
+@interface UIKernedButton : UIButton
+@property IBInspectable CGFloat spacing;
+@end
+
+@interface UIKernedLabel : UILabel
+@property IBInspectable CGFloat spacing;
 @end
 
 @interface YAlbumTitleCell : UITableViewCell<DetailCellProtocal>
@@ -52,11 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface YAlbumCreatorCell: UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UILabel *creatorName;
 @property (nonatomic) IBOutlet UIImageView *creatorAvatar;
-@property (nonatomic) IBOutlet UIButton *creatorWorks;
+@property (nonatomic) IBOutlet UIKernedButton *creatorWorks;
 @end
 @interface YAlbumEventCell: UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UILabel *eventDesc;
-@property (nonatomic) IBOutlet UIButton *voteBtn;
+@property (nonatomic) IBOutlet UIKernedButton *voteBtn;
 @end
 
 
