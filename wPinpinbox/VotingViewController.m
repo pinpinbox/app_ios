@@ -663,7 +663,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     
-    CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+    CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+    source = [self.view convertRect:source fromView:collectionView];
     
     @try {
         YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.coverImageView noParam:YES];

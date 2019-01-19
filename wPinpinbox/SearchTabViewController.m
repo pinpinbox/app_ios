@@ -613,7 +613,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         //NSDictionary *albumDic = albumData[indexPath.row][@"album"];
         //NSLog(@"albumDic: %@", albumDic);
         SearchTabCollectionViewCell *cell = (SearchTabCollectionViewCell *) [collectionView cellForItemAtIndexPath: indexPath];
-        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
+        
         if ([wTools objectExists: albumData[indexPath.row][@"album"][@"album_id"]]) {
             NSString *albumId = [albumData[indexPath.row][@"album"][@"album_id"] stringValue];
             [self ToRetrievealbumpViewControlleralbumid: albumId source:source imageView:cell.coverImageView ];

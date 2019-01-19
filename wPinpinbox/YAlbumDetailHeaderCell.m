@@ -45,13 +45,26 @@
 @end
 
 @implementation UIKernedLabel
-
-
+- (void)prepareForInterfaceBuilder {
+    
+}
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if(self != nil) {
+        _kernspace = 1.5;
+    }
+    return self;
+}
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self setSpacing:1.5];
+}
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
     NSMutableAttributedString* mutableText = [attributedText mutableCopy];
     [mutableText addAttributes:@{NSKernAttributeName: @(self.spacing)} range:[mutableText fullRange]];
     [super setAttributedText:mutableText];
+    NSLog(@"%@",mutableText);
     [self setNeedsDisplay];
 }
 
@@ -64,17 +77,31 @@
         mutableText = [NSMutableAttributedString attributedStringWithTitle:text font:self.font color:self.textColor];
         
     }
+    
     [self setAttributedText:mutableText];
     
 }
 - (void)updateText {
-    [self setNeedsDisplay];
+   // [self setNeedsDisplay];
+    NSMutableAttributedString* mutableText;
+    NSString *text = [NSString stringWithString: self.text];
+    if (self.attributedText && self.attributedText.length) {
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text fromExistingAttributedString:self.attributedText];
+    } else {
+        
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text font:self.font color:self.textColor];
+        
+    }
+    
+    [self setAttributedText:mutableText];
 }
 - (CGFloat)spacing {
     return _kernspace;
 }
 - (void)setSpacing:(CGFloat)spacing {
-    _kernspace = spacing;
+    if (spacing >= 1.5) {
+        _kernspace = spacing;
+    }
     [self updateText];
 }
 @end
@@ -85,8 +112,13 @@
 @end
 
 @implementation UIKernedButton
-
-
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if(self != nil) {
+        self.spacing = 1;
+    }
+    return self;
+}
 - (void)setAttributedTitle:(NSAttributedString *)title forState:(UIControlState)state
 {
     NSMutableAttributedString* mutableTitle = [title mutableCopy];
@@ -121,7 +153,9 @@
 @implementation YAlbumTitleCell : UITableViewCell
 - (void)loadData:(NSDictionary *)data {
     if ([wTools objectExists:data[@"name"]]) {
-        _titleLabel.attributedText = [[NSAttributedString alloc] initWithString:data[@"name"] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSForegroundColorAttributeName:[UIColor firstGrey],NSKernAttributeName:@1} ];//text = data[@"name"];
+        [_titleLabel setText: data[@"name"]];
+        /*_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:data[@"name"] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSForegroundColorAttributeName:[UIColor firstGrey],NSKernAttributeName:@1} ];//text = data[@"name"];
+         */
     }
 }
 
@@ -160,13 +194,15 @@
         NSInteger viewed = [data[@"albumstatistics"][@"viewed"] integerValue];
         if (viewed >= 100000) {
             viewed /= 10000;
-            [LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat: @"%ldM次瀏覽", (long)viewed]];
+            [_viewedCountLabel setText:[NSString stringWithFormat: @"%ldM次瀏覽", (long)viewed]];
+            //[LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat: @"%ldM次瀏覽", (long)viewed]];
         } else if (viewed >= 10000) {
             viewed /= 1000;
-            [LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat:  @"%ldK次瀏覽", (long)viewed]];
+            [_viewedCountLabel setText:[NSString stringWithFormat: @"%ldK次瀏覽", (long)viewed]];
+            //[LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat:  @"%ldK次瀏覽", (long)viewed]];
         } else {
-            
-            [LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat: @"%ld次瀏覽", (long)viewed]];
+            [_viewedCountLabel setText:[NSString stringWithFormat: @"%ld次瀏覽", (long)viewed]];
+            //[LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat: @"%ld次瀏覽", (long)viewed]];
         }
         
     }
@@ -180,7 +216,7 @@
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
     if ([YAlbumContentTypeCell ifVisible:data[@"usefor"]])
-        return 36;
+        return 32;
     return 0;
 }
 + (BOOL)ifVisible:(NSDictionary *)data {
@@ -265,7 +301,7 @@
         CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} context:ctx];
         s = nil;
         ctx = nil;
-        return ss.size.height+32;
+        return ss.size.height+40;
     }
     
     return 0;

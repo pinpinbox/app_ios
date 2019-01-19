@@ -19,18 +19,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property IBInspectable CGFloat spacing;
 @end
 
-@interface UIKernedLabel : UILabel
+@interface IB_DESIGNABLE UIKernedLabel : UILabel
 @property IBInspectable CGFloat spacing;
 @end
 
 @interface YAlbumTitleCell : UITableViewCell<DetailCellProtocal>
-@property (nonatomic) IBOutlet UILabel *titleLabel;
+@property (nonatomic) IBOutlet UIKernedLabel *titleLabel;
 @end
 
 @interface YAlbumLocationCell : UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UIImageView *locIcon;
-@property (nonatomic) IBOutlet UILabel *viewedCountLabel;
-@property (nonatomic) IBOutlet UILabel *locationLabel;
+@property (nonatomic) IBOutlet UIKernedLabel *viewedCountLabel;
+@property (nonatomic) IBOutlet UIKernedLabel *locationLabel;
 @end
 @interface YAlbumContentTypeCell : UITableViewCell<DetailCellProtocal>
 @property (nonatomic) IBOutlet UIImageView *vidIcon;
@@ -44,21 +44,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) IBOutlet UITextView *albumDesc;
 @end
 @interface YAlbumFollowerCell : UITableViewCell<DetailCellProtocal>
-@property (nonatomic) IBOutlet UILabel *followerCount;
+@property (nonatomic) IBOutlet UIKernedLabel *followerCount;
 @end
 @interface YAlbumPointCell: UITableViewCell<DetailCellProtocal>
-@property (nonatomic) IBOutlet UILabel *pointCount;
+@property (nonatomic) IBOutlet UIKernedLabel *pointCount;
 @end
 @interface YAlbumMessageCell: UITableViewCell<DetailCellProtocal>
-@property (nonatomic) IBOutlet UILabel *messageCount;
+@property (nonatomic) IBOutlet UIKernedLabel *messageCount;
 @end
 @interface YAlbumCreatorCell: UITableViewCell<DetailCellProtocal>
-@property (nonatomic) IBOutlet UILabel *creatorName;
+@property (nonatomic) IBOutlet UIKernedLabel *creatorName;
 @property (nonatomic) IBOutlet UIImageView *creatorAvatar;
 @property (nonatomic) IBOutlet UIKernedButton *creatorWorks;
 @end
 @interface YAlbumEventCell: UITableViewCell<DetailCellProtocal>
-@property (nonatomic) IBOutlet UILabel *eventDesc;
+@property (nonatomic) IBOutlet UIKernedLabel *eventDesc;
 @property (nonatomic) IBOutlet UIKernedButton *voteBtn;
 @end
 

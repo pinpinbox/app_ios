@@ -1074,7 +1074,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             NSString *albumId = [dic[@"album"][@"album_id"] stringValue];
             //[self presentAlbumDetailVC:[dic[@"album"][@"album_id"] stringValue]];
             CategoryCollectionViewCell *cell = (CategoryCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-            CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+            CGRect source = [collectionView convertRect:cell.albumImageView.frame fromView:cell];
+            source = [self.view convertRect:source fromView:collectionView];
+            
             YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.albumImageView noParam:YES];
             
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

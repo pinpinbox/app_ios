@@ -489,7 +489,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         if ([type isEqualToString: @"albumqueue"]) {
             NotifTabTableViewCell *cell = (NotifTabTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
             
-            CGRect source = [self.view convertRect:cell.headshotImaveView.frame fromView:cell];
+            CGRect source = [tableView convertRect:cell.headshotImaveView.frame fromView:cell];
+            source = [self.view convertRect:source fromView:tableView];
             //[self ToRetrievealbumpViewControlleralbumid: type_id source:source sourceImage:cell.headshotImaveView];
             YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:type_id sourceRect:source sourceImageView:cell.headshotImaveView noParam:YES];
             
@@ -501,7 +502,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         if ([type isEqualToString: @"albumqueue@messageboard"]) {
             NSLog(@"type: %@", type);
             NotifTabTableViewCell *cell = (NotifTabTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-            CGRect source = [self.view convertRect:cell.headshotImaveView.frame fromView:cell];
+            CGRect source = [tableView convertRect:cell.headshotImaveView.frame fromView:cell];
+            source = [self.view convertRect:source fromView:tableView];
             YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:type_id sourceRect:source sourceImageView:cell.headshotImaveView noParam:YES];
             aDVC.getMessagePush = YES;
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
