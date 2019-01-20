@@ -166,7 +166,7 @@
     self.closeBtnHeight.constant = 0;
     self.closeBtn.hidden = YES;
     
-    [LabelAttributeStyle changeGapString: self.creatorLabel content: @"創作人推薦"];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.creatorLabel content: self.creatorLabel.text];
     [self.closeBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
     
     NSLog(@"self.categoryAreaId: %@", self.categoryAreaId);
@@ -604,8 +604,7 @@
     
     CategoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"CategoryCell" forIndexPath: indexPath];
     if ([wTools objectExists: self.albumExploreArray[indexPath.row][@"name"]]) {
-        cell.albumExploreLabel.text = self.albumExploreArray[indexPath.row][@"name"];
-        [LabelAttributeStyle changeGapString: cell.albumExploreLabel content: self.albumExploreArray[indexPath.row][@"name"]];
+        cell.albumExploreLabel.text = self.albumExploreArray[indexPath.row][@"name"];        
         NSLog(@"cell.albumExploreLabel.text: %@", cell.albumExploreLabel.text);
     }
     NSLog(@"indexPath.row: %ld", (long)indexPath.row);
@@ -854,7 +853,6 @@
     [wTools sendScreenTrackingWithScreenName:[NSString stringWithFormat:@"分類(%@)",_categoryName]];
     topicLabel.text = self.categoryName;
     topicLabel.textColor = [UIColor firstGrey];
-    [LabelAttributeStyle changeGapString: topicLabel content: self.categoryName];
     topicLabel.font = [UIFont boldSystemFontOfSize: 42];
     [topicLabel sizeToFit];
     UIView *space = [[UIView alloc] initWithFrame:CGRectMake(0, 0, topicLabel.frame.size.width, 25)];
@@ -943,7 +941,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         
         if (![dic[@"album"][@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = dic[@"album"][@"name"];
-            [LabelAttributeStyle changeGapString: cell.albumNameLabel content: dic[@"album"][@"name"]];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
         }
         
         // UserForView Info Setting
@@ -1044,6 +1042,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         }
         if (![pictureDic[@"name"] isEqual: [NSNull null]]) {
             cell.userNameLabel.text = pictureDic[@"name"];
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
         }
         return cell;
     }

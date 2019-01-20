@@ -24,7 +24,7 @@
     self.maskView.layer.cornerRadius = kCornerRadius;
     
     self.cancelPostLabel.text = @"取消投稿";
-    [LabelAttributeStyle changeGapString: self.cancelPostLabel content: self.cancelPostLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.cancelPostLabel content: self.cancelPostLabel.text];
     
     self.cancelPostLabel.textColor = [UIColor whiteColor];
     self.cancelPostLabel.font = [UIFont systemFontOfSize: 18];

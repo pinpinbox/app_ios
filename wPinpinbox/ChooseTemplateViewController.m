@@ -67,7 +67,7 @@
     NSLog(@"initialValueSetup");
     self.navBarView.backgroundColor = [UIColor barColor];
     self.titleLabel.textColor = [UIColor firstGrey];
-    [LabelAttributeStyle changeGapString: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
     pictures = [NSMutableArray new];
     self.collectionView.contentInset = UIEdgeInsetsMake(72, 0, 0, 0);
 }
@@ -235,7 +235,7 @@
     UILabel *label = (UILabel *)[cell viewWithTag: 200];
     if ([wTools objectExists: data[@"template"][@"name"]]) {
         label.text = data[@"template"][@"name"];
-        [LabelAttributeStyle changeGapString: label content: data[@"template"][@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: label content: label.text];
     }
     label.textColor = [UIColor firstGrey];
     label.font = [UIFont systemFontOfSize: 12];
@@ -823,7 +823,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     if ([wTools objectExists: missionTopicStr]) {
         missionTopicLabel.text = missionTopicStr;
-        [LabelAttributeStyle changeGapString: missionTopicLabel content: missionTopicStr];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: missionTopicLabel content: missionTopicLabel.text];
     }
     NSLog(@"Topic Label Text: %@", missionTopicStr);
     [pointView addSubview: missionTopicLabel];
@@ -832,7 +832,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         UILabel *restrictionLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 45, 200, 10)];
         restrictionLabel.textColor = [UIColor firstGrey];
         restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
-        [LabelAttributeStyle changeGapString: restrictionLabel content: [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: restrictionLabel content: restrictionLabel.text];
         NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
         [pointView addSubview: restrictionLabel];
     }
@@ -862,7 +862,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     if ([wTools objectExists: rewardValue]) {
         messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
-        [LabelAttributeStyle changeGapString: messageLabel content: [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: messageLabel content: messageLabel.text];
     }
     [pointView addSubview: messageLabel];
     
