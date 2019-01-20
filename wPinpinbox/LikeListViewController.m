@@ -299,7 +299,7 @@
     
     if (![name isEqual: [NSNull null]]) {
         cell.userNameLabel.text = name;
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];        
     }
     NSLog(@"user is_follow: %d", [dic[@"user"][@"is_follow"] boolValue]);
     //    cell.isFollow = [dic[@"user"][@"is_follow"] boolValue];
