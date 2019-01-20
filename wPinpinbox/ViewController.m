@@ -35,6 +35,7 @@
 #import "UIViewController+ErrorAlert.h"
 #import <SafariServices/SafariServices.h>
 #import "UserInfo.h"
+#import "LabelAttributeStyle.h"
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
@@ -123,6 +124,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     self.facebookLoginBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     [self.facebookLoginBtn setTitle: @"Facebook" forState: UIControlStateNormal];
     [self.facebookLoginBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.facebookLoginBtn.titleLabel content: self.facebookLoginBtn.titleLabel.text];
 }
 
 - (void)createAccountBtnSetup {
@@ -130,6 +132,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     self.createAccountBtn.backgroundColor = [UIColor thirdGrey];
     self.createAccountBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     [self.createAccountBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.createAccountBtn.titleLabel content: self.createAccountBtn.titleLabel.text];
 }
 
 - (void)scanBtnSetup {
@@ -137,6 +140,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     self.scanBtn.backgroundColor = [UIColor thirdGrey];
     self.scanBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     [self.scanBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.scanBtn.titleLabel content: self.scanBtn.titleLabel.text];
 }
 
 - (void)emailTextFieldAndViewSetup {
@@ -160,6 +164,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [self.loginBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
     self.loginBtn.backgroundColor = [UIColor firstMain];
     [self.loginBtn setTitle: NSLocalizedString(@"LoginText-login", @"") forState: UIControlStateNormal];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.loginBtn.titleLabel content: self.loginBtn.titleLabel.text];
 }
 
 - (void)aboutBtnSetup {
@@ -168,6 +173,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     self.aboutBtn.layer.masksToBounds = YES;
     [self.aboutBtn setTitleColor: [UIColor secondGrey] forState: UIControlStateNormal];
     self.aboutBtn.backgroundColor = [UIColor clearColor];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.aboutBtn.titleLabel content: self.aboutBtn.titleLabel.text];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

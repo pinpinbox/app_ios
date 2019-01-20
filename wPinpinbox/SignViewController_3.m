@@ -24,6 +24,8 @@
 #import "UIViewController+ErrorAlert.h"
 
 #import "UserInfo.h"
+#import "LabelAttributeStyle.h"
+
 
 @interface SignViewController_3 ()<UITextFieldDelegate, SelectBarDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectText;
@@ -45,6 +47,9 @@
 //    BOOL wantToGetInfo;
     BOOL wantToGetNewsLetter;
 }
+@property (weak, nonatomic) IBOutlet UILabel *emailInfoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *verificationInfoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *newsLetterCheckView;
 @property (weak, nonatomic) IBOutlet UIView *newsLetterCheckSelectionView;
 
@@ -62,7 +67,6 @@
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self viewSetup];
     [self navBarBtnSetup];
     [self inputFieldSetup];
@@ -124,6 +128,14 @@
     self.newsLetterCheckSelectionView.layer.borderColor = [UIColor thirdGrey].CGColor;
     self.newsLetterCheckSelectionView.layer.borderWidth = 1.0;
     self.newsLetterCheckSelectionView.backgroundColor = [UIColor thirdMain];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: navBackBtn.titleLabel content: navBackBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: countDownLabel content: countDownLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: btn_send.titleLabel content: btn_send.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.verificationInfoLabel content: self.verificationInfoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.emailInfoLabel content: self.emailInfoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: btn_finishedReg.titleLabel content: btn_finishedReg.titleLabel.text];
 }
 
 - (void)navBarBtnSetup {

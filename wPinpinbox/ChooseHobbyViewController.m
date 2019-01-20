@@ -24,6 +24,7 @@
 
 #import "GlobalVars.h"
 #import "UIViewController+ErrorAlert.h"
+#import "LabelAttributeStyle.h"
 
 @interface ChooseHobbyViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 {
@@ -34,6 +35,8 @@
     NSInteger columnCount;
     NSInteger miniInteriorSpacing;
 }
+@property (weak, nonatomic) IBOutlet UILabel *subTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIButton *startUsingPinpinboxBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *startUsingPinpinboxBtnHeight;
@@ -47,6 +50,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.subTitleLabel content: self.subTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.startUsingPinpinboxBtn.titleLabel content: self.startUsingPinpinboxBtn.titleLabel.text];
     columnCount = 3;
     miniInteriorSpacing = 16;
     
@@ -214,6 +220,7 @@
     }
     if ([wTools objectExists: hobbyArray[indexPath.row][@"hobby"][@"name"]]) {
         cell.hobbyLabel.text = hobbyArray[indexPath.row][@"hobby"][@"name"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.hobbyLabel content: cell.hobbyLabel.text];
     }
     return cell;
 }

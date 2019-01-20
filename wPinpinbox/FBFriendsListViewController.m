@@ -18,12 +18,14 @@
 #import "AppDelegate.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIViewController+ErrorAlert.h"
+#import "LabelAttributeStyle.h"
 
 @interface FBFriendsListViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 {
     NSInteger columnCount;
     NSInteger miniInteriorSpacing;
 }
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIButton *nextBtn;
 @property (weak, nonatomic) IBOutlet UIView *gradientView;
@@ -67,6 +69,9 @@
     
     columnCount = 2;
     miniInteriorSpacing = 16;
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.nextBtn.titleLabel content: self.nextBtn.titleLabel.text];
 }
 
 #pragma mark <UICollectionViewDataSource>
@@ -116,6 +121,7 @@
     
     if ([wTools objectExists: name]) {
         nameLabel.text = name;
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: nameLabel content: nameLabel.text];
     }
     UIButton *followSwitchButton = (UIButton *)[cell viewWithTag: 102];
     followSwitchButton.layer.masksToBounds = YES;
@@ -132,6 +138,8 @@
         followSwitchButton.backgroundColor = [UIColor firstMain];
         [followSwitchButton setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: followSwitchButton.titleLabel content: followSwitchButton.titleLabel.text];
+    
     return cell;
 }
 
