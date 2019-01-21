@@ -74,7 +74,7 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
-                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="headerId" id="WIb-lx-eAf">
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="headerId" id="WIb-lx-eAf" customClass="ChooseHobbyCollectionReusableView">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="131"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
@@ -101,6 +101,10 @@
                                         <constraint firstAttribute="trailing" secondItem="SK7-LY-GgB" secondAttribute="trailing" constant="16" id="tbs-m4-MdK"/>
                                         <constraint firstItem="SK7-LY-GgB" firstAttribute="top" secondItem="JAi-p7-bjy" secondAttribute="bottom" constant="8" id="zob-Uf-d9x"/>
                                     </constraints>
+                                    <connections>
+                                        <outlet property="subTitleLabel" destination="SK7-LY-GgB" id="6oF-kk-29i"/>
+                                        <outlet property="titleLabel" destination="JAi-p7-bjy" id="EHY-c0-la5"/>
+                                    </connections>
                                 </collectionReusableView>
                                 <connections>
                                     <outlet property="dataSource" destination="ny9-zn-cAH" id="nO2-rQ-Aha"/>
@@ -149,8 +153,6 @@
                         <outlet property="startUsingPinpinboxBtn" destination="YbY-hY-rZ0" id="r4r-el-uSZ"/>
                         <outlet property="startUsingPinpinboxBtnHeight" destination="96r-n5-bwL" id="MSF-p3-PV2"/>
                         <outlet property="startUsingPinpinboxView" destination="0xi-a8-Dkr" id="jCG-Ga-Rgk"/>
-                        <outlet property="subTitleLabel" destination="SK7-LY-GgB" id="8qv-ae-1nR"/>
-                        <outlet property="titleLabel" destination="JAi-p7-bjy" id="v7Q-zd-Ycg"/>
                         <outlet property="toolBarViewHeight" destination="sU8-AA-3GW" id="h84-1a-F33"/>
                     </connections>
                 </viewController>

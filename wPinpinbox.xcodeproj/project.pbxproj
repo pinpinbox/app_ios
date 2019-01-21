@@ -62,6 +62,7 @@
 		546DF49D20723F790056B73F /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 546DF49B20723F790056B73F /* MessageTableViewCell.m */; };
 		546DF49E20723F790056B73F /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546DF49C20723F790056B73F /* MessageTableViewCell.xib */; };
 		5476620B20131F90009D475F /* BuyPointVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5476620A20131F90009D475F /* BuyPointVC.storyboard */; };
+		5477C11721F5605D0028332A /* ChooseHobbyCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5477C11621F5605D0028332A /* ChooseHobbyCollectionReusableView.m */; };
 		5478874F214613D600F7B8BB /* WdataButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5478874E214613D500F7B8BB /* WdataButton.m */; };
 		547BC6D21F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 547BC6D11F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m */; };
 		54877CF11F905B030050C077 /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877CF01F905B030050C077 /* GlobalVars.m */; };
@@ -501,6 +502,8 @@
 		546DF49B20723F790056B73F /* MessageTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
 		546DF49C20723F790056B73F /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
 		5476620A20131F90009D475F /* BuyPointVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = BuyPointVC.storyboard; sourceTree = "<group>"; };
+		5477C11521F5605D0028332A /* ChooseHobbyCollectionReusableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChooseHobbyCollectionReusableView.h; sourceTree = "<group>"; };
+		5477C11621F5605D0028332A /* ChooseHobbyCollectionReusableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChooseHobbyCollectionReusableView.m; sourceTree = "<group>"; };
 		5478874D214613D400F7B8BB /* WdataButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WdataButton.h; sourceTree = "<group>"; };
 		5478874E214613D500F7B8BB /* WdataButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WdataButton.m; sourceTree = "<group>"; };
 		547BC6D01F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanCodeForAdvancedSettingViewController.h; sourceTree = "<group>"; };
@@ -2584,6 +2587,8 @@
 				63B340E41EC98DF000AEC4E9 /* ChooseHobbyViewController.m */,
 				63B340E61EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.h */,
 				63B340E71EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m */,
+				5477C11521F5605D0028332A /* ChooseHobbyCollectionReusableView.h */,
+				5477C11621F5605D0028332A /* ChooseHobbyCollectionReusableView.m */,
 				54AE99682016522C0003D060 /* ChooseHobbyVC.storyboard */,
 				63F3064C1EA48104009B6BF3 /* FBFriendsFindingViewController.h */,
 				63F3064D1EA48104009B6BF3 /* FBFriendsFindingViewController.m */,
@@ -3210,6 +3215,7 @@
 				5406362E2050DF34004C9F21 /* CheckExchangeCollectionViewCell.m in Sources */,
 				CB071CF4213E4754003D01D8 /* DMViewController.m in Sources */,
 				6308C4521EAC9ADD00F99AC0 /* MeTabViewController.m in Sources */,
+				5477C11721F5605D0028332A /* ChooseHobbyCollectionReusableView.m in Sources */,
 				5427BBD31F4FE237000B438D /* UIColor+HexString.m in Sources */,
 				543043D320B2A5F600018AF4 /* BannerCollectionViewCell.m in Sources */,
 				63B340E81EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m in Sources */,
