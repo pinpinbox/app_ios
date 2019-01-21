@@ -70,6 +70,7 @@
 #import "SwitchButtonView.h"
 
 #import "YAlbumDetailContainerViewController.h"
+#import "SwitchButtonView.h"
 
 #import "UserInfo.h"
 
@@ -155,8 +156,8 @@
     NSMutableArray *albumData;
     NSMutableArray *userData;
     
-    UILabel *userRecommendationLabel;
-    UILabel *albumRecommendationLabel;
+    UIKernedLabel *userRecommendationLabel;
+    UIKernedLabel *albumRecommendationLabel;
     
     UITextField *selectTextField;
     
@@ -1723,15 +1724,15 @@
         self.followAlbumCollectionView = headerView.followAlbumCollectionView;
         
         followUserLabel = headerView.followUserLabel;
-        [LabelAttributeStyle changeGapString: followUserLabel content: followUserLabel.text];
+        //[LabelAttributeStyle changeGapString: followUserLabel content: followUserLabel.text];
         followUserHorzView = headerView.followUserHorzView;
         
         followAlbumLabel = headerView.followAlbumLabel;
-        [LabelAttributeStyle changeGapString: followAlbumLabel content: followAlbumLabel.text];
+        //[LabelAttributeStyle changeGapString: followAlbumLabel content: followAlbumLabel.text];
         followAlbumHorzView = headerView.followAlbumHorzView;
         
         recommendationLabel = headerView.recommendationLabel;
-        [LabelAttributeStyle changeGapString: recommendationLabel content: recommendationLabel.text];
+        //[LabelAttributeStyle changeGapString: recommendationLabel content: recommendationLabel.text];
         
         recommendationHorzView = headerView.recommendationHorzView;
         
@@ -3650,7 +3651,7 @@ replacementString:(NSString *)string {
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UILabel *l = [[UILabel alloc] init];
+    UIKernedLabel *l = [[UIKernedLabel alloc] init];
     UIView *v = [[UIView alloc] init];
     l.textColor = [UIColor hintGrey];
     l.font = [UIFont boldSystemFontOfSize:18];
@@ -3658,6 +3659,7 @@ replacementString:(NSString *)string {
         l.text = @"推薦";
     else
         l.text = @"熱門";
+    
     l.backgroundColor = UIColor.clearColor;
     [l sizeToFit];
     //CGSize s = l.frame.size;

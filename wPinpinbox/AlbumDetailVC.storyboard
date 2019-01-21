@@ -400,7 +400,7 @@
                                                 <rect key="frame" x="0.0" y="428" width="375" height="52"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="C9A-IU-a13" id="ml3-9l-CBX">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="51.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qXB-bP-Sv0">
@@ -587,7 +587,7 @@
                                                 <rect key="frame" x="0.0" y="584" width="375" height="148"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Bg1-gR-2f0" id="dBQ-hv-d1U">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="148"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="147.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="創作人" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F9U-wF-Kzj" customClass="UIKernedLabel">
@@ -679,7 +679,7 @@
                                                 <rect key="frame" x="0.0" y="732" width="375" height="180"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l1L-XF-WGY" id="YBG-xU-tu7">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="180"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="179.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="39f-oN-bKD">

@@ -7,20 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SwitchButtonView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol DetailCellProtocal
 - (void)loadData:(NSDictionary *)data;
 + (CGFloat)estimatedHeight:(NSDictionary *)data;
-@end
-
-@interface UIKernedButton : UIButton
-@property IBInspectable CGFloat spacing;
-@end
-
-@interface IB_DESIGNABLE UIKernedLabel : UILabel
-@property IBInspectable CGFloat spacing;
 @end
 
 @interface YAlbumTitleCell : UITableViewCell<DetailCellProtocal>

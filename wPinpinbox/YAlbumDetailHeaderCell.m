@@ -13,142 +13,6 @@
 #import "LabelAttributeStyle.h"
 #import "UIColor+Extensions.h"
 
-
-@interface NSMutableAttributedString (ForButton)
-+ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title fromExistingAttributedString:(NSAttributedString*)attributedString;
-+ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color;
-- (NSRange)fullRange;
-@end
-@implementation NSMutableAttributedString(ForButton)
-+ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title fromExistingAttributedString:(NSAttributedString*)attributedString
-{
-    NSDictionary *attributes = [attributedString attributesAtIndex:0 effectiveRange:NULL];
-    return [[NSMutableAttributedString alloc] initWithString:title attributes:attributes];
-}
-
-+ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color
-{
-    NSMutableAttributedString* mutableTitle = [[NSMutableAttributedString alloc] initWithString:title];
-    [mutableTitle addAttribute:NSFontAttributeName value:font range:[mutableTitle fullRange]];
-    [mutableTitle addAttribute:NSForegroundColorAttributeName value:color range:[mutableTitle fullRange]];
-    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-    [mutableTitle addAttribute:NSParagraphStyleAttributeName value:style range:[mutableTitle fullRange]];
-    return mutableTitle;
-}
-- (NSRange) fullRange {
-    return NSMakeRange(0, self.length);
-}
-@end
-#pragma mark -
-@interface UIKernedLabel()
-@property (nonatomic) CGFloat kernspace;
-@end
-
-@implementation UIKernedLabel
-- (void)prepareForInterfaceBuilder {
-    
-}
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if(self != nil) {
-        _kernspace = 1.5;
-    }
-    return self;
-}
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self setSpacing:1.5];
-}
-- (void)setAttributedText:(NSAttributedString *)attributedText
-{
-    NSMutableAttributedString* mutableText = [attributedText mutableCopy];
-    [mutableText addAttributes:@{NSKernAttributeName: @(self.spacing)} range:[mutableText fullRange]];
-    [super setAttributedText:mutableText];    
-    [self setNeedsDisplay];
-}
-
-- (void)setText:(NSString *)text
-{
-    NSMutableAttributedString* mutableText;
-    if (self.attributedText && self.attributedText.length) {
-        mutableText = [NSMutableAttributedString attributedStringWithTitle:text fromExistingAttributedString:self.attributedText];
-    } else {
-        mutableText = [NSMutableAttributedString attributedStringWithTitle:text font:self.font color:self.textColor];
-        
-    }
-    
-    [self setAttributedText:mutableText];
-    
-}
-- (void)updateText {
-   // [self setNeedsDisplay];
-    NSMutableAttributedString* mutableText;
-    NSString *text = [NSString stringWithString: self.text];
-    if (self.attributedText && self.attributedText.length) {
-        mutableText = [NSMutableAttributedString attributedStringWithTitle:text fromExistingAttributedString:self.attributedText];
-    } else {
-        
-        mutableText = [NSMutableAttributedString attributedStringWithTitle:text font:self.font color:self.textColor];
-        
-    }
-    
-    [self setAttributedText:mutableText];
-}
-- (CGFloat)spacing {
-    return _kernspace;
-}
-- (void)setSpacing:(CGFloat)spacing {
-    if (spacing >= 1.5) {
-        _kernspace = spacing;
-    }
-    [self updateText];
-}
-@end
-
-#pragma mark -
-@interface UIKernedButton()
-@property (nonatomic) CGFloat kernspace;
-@end
-
-@implementation UIKernedButton
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if(self != nil) {
-        self.spacing = 1;
-    }
-    return self;
-}
-- (void)setAttributedTitle:(NSAttributedString *)title forState:(UIControlState)state
-{
-    NSMutableAttributedString* mutableTitle = [title mutableCopy];
-    [mutableTitle addAttributes:@{NSKernAttributeName: @(self.spacing)} range:[mutableTitle fullRange]];
-    [super setAttributedTitle:mutableTitle forState:state];
-    [self setNeedsDisplay];
-}
-
-- (void)setTitle:(NSString *)title forState:(UIControlState)state
-{
-    NSMutableAttributedString* mutableTitle;
-    if ([self attributedTitleForState:state]) {
-        mutableTitle = [NSMutableAttributedString attributedStringWithTitle:title fromExistingAttributedString:[self attributedTitleForState:state]];
-    } else {
-        mutableTitle = [NSMutableAttributedString attributedStringWithTitle:title font:self.titleLabel.font color:[self titleColorForState:state]];
-    }
-    [self setAttributedTitle:mutableTitle forState:state];
-}
-- (void)updateTitle {
-    [self setAttributedTitle:self.titleLabel.attributedText forState:UIControlStateNormal];
-    [self setAttributedTitle:self.titleLabel.attributedText forState:UIControlStateDisabled];
-}
-- (CGFloat)spacing {
-    return _kernspace;
-}
-- (void)setSpacing:(CGFloat)spacing {
-    _kernspace = spacing;
-    [self updateTitle];
-}
-@end
-
 @implementation YAlbumTitleCell : UITableViewCell
 - (void)loadData:(NSDictionary *)data {
     if ([wTools objectExists:data[@"name"]]) {
@@ -311,7 +175,8 @@
     int c = 0;
     if (data[@"likes"])
         c = (int)[data[@"likes"] integerValue];
-    [LabelAttributeStyle changeGapString: self.followerCount content: [NSString stringWithFormat:@"%d人釘過", c]];
+    self.followerCount.text = [NSString stringWithFormat:@"%d人釘過", c];
+    //[LabelAttributeStyle changeGapString: self.followerCount content: [NSString stringWithFormat:@"%d人釘過", c]];
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -323,7 +188,8 @@
     int c = 0;
     if (data[@"exchange"])
         c = (int)[data[@"exchange"] integerValue];
-    [LabelAttributeStyle changeGapString: self.pointCount content: [NSString stringWithFormat:@"%d次贊助", c]];
+    self.pointCount.text = [NSString stringWithFormat:@"%d次贊助", c];
+    //[LabelAttributeStyle changeGapString: self.pointCount content: [NSString stringWithFormat:@"%d次贊助", c]];
     
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
@@ -337,7 +203,8 @@
     int c = 0;
     if (data[@"messageboard"])
         c = (int)[data[@"messageboard"] integerValue];
-    [LabelAttributeStyle changeGapString: self.messageCount content: [NSString stringWithFormat:@"%d則留言", c]];
+    self.messageCount.text = [NSString stringWithFormat:@"%d則留言", c];
+    //[LabelAttributeStyle changeGapString: self.messageCount content: [NSString stringWithFormat:@"%d則留言", c]];
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -355,9 +222,9 @@
         NSInteger i1 = [u[@"user_id"] intValue];
         self.creatorWorks.hidden = (i == i1);
     }
-    
-    [LabelAttributeStyle changeGapString: _creatorName content: u[@"name"]];
-    _creatorName.textAlignment = NSTextAlignmentJustified;
+    _creatorName.text = u[@"name"];
+    //[LabelAttributeStyle changeGapString: _creatorName content: u[@"name"]];
+    //_creatorName.textAlignment = NSTextAlignmentJustified;
     if ([wTools objectExists:u[@"picture"]])
         [_creatorAvatar sd_setImageWithURL:[NSURL URLWithString:u[@"picture"]] placeholderImage:[UIImage imageNamed:@"member_back_head"]];
 }
@@ -374,8 +241,8 @@
     self.eventDesc.text = @"";
     if ([wTools objectExists: ev] && [wTools objectExists: ev[@"name"]]) {
         NSString *evs = ev[@"name"];
-        
-        [LabelAttributeStyle changeGapString: _eventDesc content: evs];
+        _eventDesc.text = evs;
+        //[LabelAttributeStyle changeGapString: _eventDesc content: evs];
         _eventDesc.textAlignment = NSTextAlignmentJustified;
         _eventDesc.lineBreakMode = NSLineBreakByTruncatingTail;
     }

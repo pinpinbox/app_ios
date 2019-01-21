@@ -30,6 +30,8 @@
 #import <SafariServices/SafariServices.h>
 #import "UIViewController+ErrorAlert.h"
 #import "YAlbumDetailContainerViewController.h"
+#import "LabelAttributeStyle.h"
+#import "SwitchButtonView.h"
 
 //#define kUserImageViewNumber 6
 
@@ -43,7 +45,8 @@
     CGFloat bannerHeight;
     UIPageControl *pageControl;
     
-    UIButton *actionButton;
+    //UIButton *actionButton;
+    UIKernedButton *actionButton;
     UILabel *infoLabel;
     UIView *actionBase;
     
@@ -480,10 +483,12 @@
 - (void)setBtnText:(NSString *)btntext infoText:(NSString *)infotext {
     infoLabel.text = @"";
     if (btntext && btntext.length > 0) {
-        [actionButton setTitle:btntext forState:UIControlStateNormal];
-        if (infotext)
-            infoLabel.text = infotext;
         
+        [actionButton setTitle:btntext forState:UIControlStateNormal];
+        if (infotext) {
+            infoLabel.text = infotext;
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment:infoLabel content:infotext];
+        }
         actionBase.hidden = NO;
     } else {
         actionBase.hidden = YES;
@@ -808,7 +813,7 @@
         
         //  button and link desc under the banner //
         actionBase = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 36)];
-        actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        actionButton = [UIKernedButton buttonWithType:UIButtonTypeCustom];
         actionBase.backgroundColor = [UIColor whiteColor];
         actionButton.frame = CGRectMake(self.view.bounds.size.width-96, 0, 96, 36);
         actionButton.backgroundColor = [UIColor colorWithRed:0  green:0.67 blue:0.76 alpha:1];

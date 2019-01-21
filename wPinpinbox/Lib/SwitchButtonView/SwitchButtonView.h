@@ -44,4 +44,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CustomTintBarItem : UITabBarItem
 @end
 
+
+
+@interface UIKernedButton : UIButton
+@property IBInspectable CGFloat spacing;
+@end
+
+@interface UIKernedLabel : UILabel
+@property IBInspectable CGFloat spacing;
+@end
+
 NS_ASSUME_NONNULL_END

@@ -217,3 +217,141 @@
     [self setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor colorFromHexString:@"#4d4d4d"]} forState:UIControlStateHighlighted];
 }
 @end
+
+#pragma mark -
+@interface NSMutableAttributedString (ForButton)
++ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title fromExistingAttributedString:(NSAttributedString*)attributedString;
++ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color;
+- (NSRange)fullRange;
+@end
+@implementation NSMutableAttributedString(ForButton)
++ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title fromExistingAttributedString:(NSAttributedString*)attributedString
+{
+    NSDictionary *attributes = [attributedString attributesAtIndex:0 effectiveRange:NULL];
+    return [[NSMutableAttributedString alloc] initWithString:title attributes:attributes];
+}
+
++ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color
+{
+    NSMutableAttributedString* mutableTitle = [[NSMutableAttributedString alloc] initWithString:title];
+    [mutableTitle addAttribute:NSFontAttributeName value:font range:[mutableTitle fullRange]];
+    [mutableTitle addAttribute:NSForegroundColorAttributeName value:color range:[mutableTitle fullRange]];
+    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [mutableTitle addAttribute:NSParagraphStyleAttributeName value:style range:[mutableTitle fullRange]];
+    return mutableTitle;
+}
+- (NSRange) fullRange {
+    return NSMakeRange(0, self.length);
+}
+@end
+
+
+@interface UIKernedLabel()
+@property (nonatomic) CGFloat kernspace;
+@end
+
+@implementation UIKernedLabel
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self setSpacing:1.5];
+}
+- (void)setAttributedText:(NSAttributedString *)attributedText
+{
+    NSMutableAttributedString* mutableText = [attributedText mutableCopy];
+    [mutableText addAttributes:@{NSKernAttributeName: @(_kernspace)} range:[mutableText fullRange]];
+    NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
+    s.lineBreakMode = NSLineBreakByTruncatingTail;
+    [mutableText addAttribute:NSParagraphStyleAttributeName value:s range:[mutableText fullRange]];
+    [super setAttributedText:mutableText];
+    [self setNeedsDisplay];
+}
+
+- (void)setText:(NSString *)text
+{
+    if (_kernspace <= 0)
+        _kernspace = 1.5;
+    NSMutableAttributedString* mutableText;
+    if (self.attributedText && self.attributedText.length) {
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text fromExistingAttributedString:self.attributedText];
+    } else {
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text font:self.font color:self.textColor];
+        
+    }
+    
+    [self setAttributedText:mutableText];
+    
+}
+- (void)updateText {
+    if (!self.text) {
+        NSLog(@"text is null");
+        return;
+    }
+    NSMutableAttributedString* mutableText;
+    NSString *text = [NSString stringWithString: self.text];
+    if (self.attributedText && self.attributedText.length) {
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text fromExistingAttributedString:self.attributedText];
+    } else {
+        
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text font:self.font color:self.textColor];
+        
+    }
+    
+    [self setAttributedText:mutableText];
+}
+- (CGFloat)spacing {
+    return _kernspace;
+}
+- (void)setSpacing:(CGFloat)spacing {
+    if (spacing >= 1.5) {
+        _kernspace = spacing;
+    }
+    [self updateText];
+}
+@end
+
+#pragma mark -
+@interface UIKernedButton()
+@property (nonatomic) CGFloat kernspace;
+@end
+
+@implementation UIKernedButton
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if(self != nil) {
+        self.spacing = 1;
+    }
+    return self;
+}
+- (void)setAttributedTitle:(NSAttributedString *)title forState:(UIControlState)state
+{
+    NSMutableAttributedString* mutableTitle = [title mutableCopy];
+    [mutableTitle addAttributes:@{NSKernAttributeName: @(self.spacing)} range:[mutableTitle fullRange]];
+    [super setAttributedTitle:mutableTitle forState:state];
+    [self setNeedsDisplay];
+}
+
+- (void)setTitle:(NSString *)title forState:(UIControlState)state
+{
+    if (_kernspace <= 0)
+        _kernspace = 1;
+    NSMutableAttributedString* mutableTitle;
+    if ([self attributedTitleForState:state]) {
+        mutableTitle = [NSMutableAttributedString attributedStringWithTitle:title fromExistingAttributedString:[self attributedTitleForState:state]];
+    } else {
+        mutableTitle = [NSMutableAttributedString attributedStringWithTitle:title font:self.titleLabel.font color:[self titleColorForState:state]];
+    }
+    [self setAttributedTitle:mutableTitle forState:state];
+}
+- (void)updateTitle {
+    [self setAttributedTitle:self.titleLabel.attributedText forState:UIControlStateNormal];
+    [self setAttributedTitle:self.titleLabel.attributedText forState:UIControlStateDisabled];
+}
+- (CGFloat)spacing {
+    return _kernspace;
+}
+- (void)setSpacing:(CGFloat)spacing {
+    _kernspace = spacing;
+    [self updateTitle];
+}
+@end
+
