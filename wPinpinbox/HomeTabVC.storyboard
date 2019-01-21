@@ -451,10 +451,10 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="sFr-hA-Hzy">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="245"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="251"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="245" id="6E4-bK-zYH"/>
+                                                <constraint firstAttribute="height" constant="251" id="6E4-bK-zYH"/>
                                             </constraints>
                                             <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="8" id="XVK-91-jqU">
                                                 <size key="itemSize" width="343" height="245"/>
@@ -464,14 +464,17 @@
                                             </collectionViewFlowLayout>
                                             <cells>
                                                 <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="HomeBannerCell" id="y55-11-2r8" customClass="HomeBannerCollectionViewCell">
-                                                    <rect key="frame" x="16" y="0.0" width="343" height="245"/>
+                                                    <rect key="frame" x="16" y="3" width="343" height="245"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                                         <rect key="frame" x="0.0" y="0.0" width="343" height="245"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FwR-5B-vfQ" customClass="FLAnimatedImageView">
-                                                                <rect key="frame" x="0.0" y="54" width="343" height="191"/>
+                                                                <rect key="frame" x="0.0" y="53" width="343" height="192"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="192" id="epc-Do-faH"/>
+                                                                </constraints>
                                                                 <userDefinedRuntimeAttributes>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                                         <integer key="value" value="8"/>
@@ -501,7 +504,6 @@
                                                         <constraint firstAttribute="trailing" secondItem="f28-mU-WVX" secondAttribute="trailing" id="I9Y-SZ-ZYo"/>
                                                         <constraint firstAttribute="trailing" secondItem="FwR-5B-vfQ" secondAttribute="trailing" id="Wj9-mF-qmf"/>
                                                         <constraint firstItem="f28-mU-WVX" firstAttribute="top" secondItem="y55-11-2r8" secondAttribute="top" constant="8" id="pO6-HC-Siq"/>
-                                                        <constraint firstItem="FwR-5B-vfQ" firstAttribute="top" secondItem="y55-11-2r8" secondAttribute="top" constant="54" id="qnn-f5-ku1"/>
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="bannerImageView" destination="FwR-5B-vfQ" id="gaC-jj-rJ0"/>
@@ -515,7 +517,7 @@
                                             </connections>
                                         </collectionView>
                                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="253" text="新加入" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W2b-qV-Q6z" customClass="UIKernedLabel">
-                                            <rect key="frame" x="16" y="761" width="67" height="28"/>
+                                            <rect key="frame" x="16" y="771" width="67" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="28" id="7nx-NF-0SE"/>
                                             </constraints>
@@ -529,14 +531,14 @@
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UAG-eH-B9y">
-                                            <rect key="frame" x="99" y="775" width="205" height="0.5"/>
+                                            <rect key="frame" x="99" y="785" width="205" height="0.5"/>
                                             <color key="backgroundColor" red="0.90980392156862744" green="0.90980392156862744" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="eI6-XP-S34"/>
                                             </constraints>
                                         </view>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="4" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Rhx-rG-vXu">
-                                            <rect key="frame" x="0.0" y="807.5" width="320" height="122"/>
+                                            <rect key="frame" x="0.0" y="817.5" width="320" height="122"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="122" id="Rt3-Gu-mfo"/>
@@ -592,7 +594,7 @@
                                             </connections>
                                         </collectionView>
                                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="專區精選" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JyL-2C-52M" customClass="UIKernedLabel">
-                                            <rect key="frame" x="16" y="269" width="89.5" height="28"/>
+                                            <rect key="frame" x="16" y="279" width="89.5" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="28" id="Gwe-U5-dQJ"/>
                                             </constraints>
@@ -606,14 +608,14 @@
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LGU-KF-4WE">
-                                            <rect key="frame" x="121.5" y="283" width="174.5" height="0.5"/>
+                                            <rect key="frame" x="121.5" y="293" width="174.5" height="0.5"/>
                                             <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="zeB-Hb-ODO"/>
                                             </constraints>
                                         </view>
                                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="184" estimatedRowHeight="-1" sectionHeaderHeight="30" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="aqm-s2-S1v">
-                                            <rect key="frame" x="0.0" y="313" width="320" height="432"/>
+                                            <rect key="frame" x="0.0" y="323" width="320" height="432"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="432" id="7tk-0L-b6Q"/>
@@ -722,7 +724,7 @@
                                             </connections>
                                         </tableView>
                                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="推薦作品" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="grE-4Y-xO0" customClass="UIKernedLabel">
-                                            <rect key="frame" x="16" y="961.5" width="89.5" height="28"/>
+                                            <rect key="frame" x="16" y="971.5" width="89.5" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="28" id="S0C-ul-9j4"/>
                                             </constraints>
@@ -736,7 +738,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </label>
                                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IYe-Sd-oUI">
-                                            <rect key="frame" x="121.5" y="975" width="182.5" height="0.5"/>
+                                            <rect key="frame" x="121.5" y="985" width="182.5" height="0.5"/>
                                             <color key="backgroundColor" red="0.90980392160000001" green="0.90980392160000001" blue="0.90980392160000001" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="0.5" id="4Ib-QJ-jig"/>
@@ -748,7 +750,7 @@
                                         <constraint firstItem="IYe-Sd-oUI" firstAttribute="centerY" secondItem="grE-4Y-xO0" secondAttribute="centerY" id="1Xk-SG-AQt"/>
                                         <constraint firstItem="JyL-2C-52M" firstAttribute="leading" secondItem="lfL-FP-nb5" secondAttribute="leading" constant="16" id="4Tx-Ob-IFn"/>
                                         <constraint firstAttribute="trailing" secondItem="Rhx-rG-vXu" secondAttribute="trailing" id="6xa-6l-L39"/>
-                                        <constraint firstItem="JyL-2C-52M" firstAttribute="top" secondItem="sFr-hA-Hzy" secondAttribute="bottom" constant="24" id="BAr-UF-Ovv"/>
+                                        <constraint firstItem="JyL-2C-52M" firstAttribute="top" secondItem="sFr-hA-Hzy" secondAttribute="bottom" constant="28" id="BAr-UF-Ovv"/>
                                         <constraint firstItem="UAG-eH-B9y" firstAttribute="leading" secondItem="W2b-qV-Q6z" secondAttribute="trailing" constant="16" id="P1f-xp-9az"/>
                                         <constraint firstItem="aqm-s2-S1v" firstAttribute="top" secondItem="JyL-2C-52M" secondAttribute="bottom" constant="16" id="PRv-2e-BKl"/>
                                         <constraint firstItem="LGU-KF-4WE" firstAttribute="leading" secondItem="JyL-2C-52M" secondAttribute="trailing" constant="16" id="QA0-Vj-ohY"/>

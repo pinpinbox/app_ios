@@ -2453,7 +2453,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         return finalSize;
     } else if (collectionView.tag == 2) {
         // ad banners 
-        return CGSizeMake(343,237);//bannerWidth, bannerHeight);
+        return CGSizeMake(343,251);//bannerWidth, bannerHeight);
     } else if (collectionView.tag == 3) {
         // category
         return CGSizeMake(163.0, 163.0);
