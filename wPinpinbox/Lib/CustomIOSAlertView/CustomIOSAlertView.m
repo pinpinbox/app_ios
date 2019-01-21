@@ -12,6 +12,7 @@
 #import "CustomIOSAlertView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+Extensions.h"
+#import "LabelAttributeStyle.h"
 
 const static CGFloat kCustomIOSAlertViewDefaultButtonHeight       = 42;//50;
 const /*static*/ CGFloat kCustomIOSAlertViewDefaultButtonSpacerHeight = 16;//5;
@@ -355,6 +356,7 @@ CGFloat buttonSpacerHeight = 0;
         [closeButton setTag: 0];
         
         [closeButton setTitle:[buttonTitles objectAtIndex: 0] forState:UIControlStateNormal];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: closeButton.titleLabel content: closeButton.titleLabel.text];
         [closeButton setTitleColor: [buttonTitlesColor objectAtIndex: 0] forState: UIControlStateNormal];
         [closeButton setTitleColor: [buttonTitlesHighlightColor objectAtIndex: 0] forState: UIControlStateHighlighted];
         
@@ -378,8 +380,8 @@ CGFloat buttonSpacerHeight = 0;
                 
                 [closeButton addTarget:self action:@selector(customIOS7dialogButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
                 [closeButton setTag:i];
-                [closeButton setTitle:[buttonTitles objectAtIndex:i] forState:UIControlStateNormal];\
-                
+                [closeButton setTitle:[buttonTitles objectAtIndex:i] forState:UIControlStateNormal];
+                [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: closeButton.titleLabel content: closeButton.titleLabel.text];
                 //[closeButton setBackgroundColor: kCustomIOS7DefaultButtonColor];
                 if([buttonColors count] > i && [buttonColors objectAtIndex:i])
                     [closeButton setBackgroundColor:[buttonColors objectAtIndex:i]];
@@ -417,6 +419,7 @@ CGFloat buttonSpacerHeight = 0;
                 [closeButton addTarget:self action:@selector(customIOS7dialogButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
                 [closeButton setTag:i];
                 [closeButton setTitle:[buttonTitles objectAtIndex:i] forState:UIControlStateNormal];
+                [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: closeButton.titleLabel content: closeButton.titleLabel.text];
                 
                 if([buttonColors count] > i && [buttonColors objectAtIndex:i])
                     [closeButton setBackgroundColor:[buttonColors objectAtIndex:i]];
