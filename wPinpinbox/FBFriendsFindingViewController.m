@@ -24,6 +24,7 @@
 
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
+#import "LabelAttributeStyle.h"
 
 typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
@@ -34,6 +35,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSInteger nextId;
     NSMutableArray *pictures;
 }
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel1;
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel2;
 @end
 
 @implementation FBFriendsFindingViewController
@@ -67,6 +70,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     nextId = 0;
     isLoading = NO;
     pictures = [NSMutableArray new];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.infoLabel1 content: self.infoLabel1.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.infoLabel2 content: self.infoLabel2.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.okBtn.titleLabel content: self.okBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.skipBtn.titleLabel content: self.skipBtn.titleLabel.text];
 }
 
 - (void)buttonSetup {

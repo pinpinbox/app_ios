@@ -11,8 +11,10 @@
 #import "ChooseHobbyViewController.h"
 #import "AppDelegate.h"
 #import "GlobalVars.h"
+#import "LabelAttributeStyle.h"
 
 @interface FBFriendNotFoundViewController ()
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIView *messageContainerView;
 @property (weak, nonatomic) IBOutlet UIButton *nextBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *nextBtnHeight;
@@ -80,6 +82,8 @@
 - (void)viewSetup {
     self.messageContainerView.layer.cornerRadius = 16;
     self.nextBtn.layer.cornerRadius = 16;
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.infoLabel content: self.infoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.nextBtn.titleLabel content: self.nextBtn.titleLabel.text];
 }
 
 - (IBAction)nextBtnPress:(id)sender {

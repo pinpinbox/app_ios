@@ -14,6 +14,7 @@
 #import "GlobalVars.h"
 #import "wTools.h"
 #import "MapHelper.h"
+#import "LabelAttributeStyle.h"
 
 @interface AlbumInfoViewController () {
     float lon;
@@ -161,6 +162,7 @@
     //    self.topicLabel.myLeftMargin = 16;
     //    self.topicLabel.myRightMargin = 16;
     self.topicLabel.wrapContentHeight = YES;
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.topicLabel content: self.topicLabel.text];
     
     if ([wTools objectExists: self.data[@"album"][@"description"]]) {
         self.descriptionLabel.text = self.data[@"album"][@"description"];
@@ -174,6 +176,7 @@
     //    self.descriptionLabel.myLeftMargin = 16;
     //    self.descriptionLabel.myRightMargin = 16;
     self.descriptionLabel.wrapContentHeight = YES;
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.descriptionLabel content: self.descriptionLabel.text];
     
     //self.creatorInfoHorzLayout.backgroundColor = [UIColor blueColor];
     self.creatorInfoHorzLayout.myTopMargin = 16;
@@ -202,6 +205,7 @@
     //    self.nameLabel.myRightMargin = 16;
     self.nameLabel.weight = 1.0;
     self.nameLabel.wrapContentHeight = YES;
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.nameLabel content: self.nameLabel.text];
     
     self.scrollView.weight = 0.7;
     // Set the four sides to 0 for display correctly when change orietnation

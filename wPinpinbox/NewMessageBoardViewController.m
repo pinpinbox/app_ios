@@ -590,7 +590,7 @@
         } else {
             NSLog(@"No Tag");
             cell.contentLabel.text = contentStr;
-            [LabelAttributeStyle changeGapString: cell.contentLabel content: cell.contentLabel.text];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.contentLabel content: cell.contentLabel.text];
         }
         [cell.contentLabel sizeToFit];
     }
@@ -735,7 +735,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         if ([wTools objectExists: userDic[@"name"]]) {
             cell.userNameLabel.text = userDic[@"name"];
             NSLog(@"cell.userNameLabel.text: %@", cell.userNameLabel.text);
-            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];            
         }
     } else {
         NSLog(@"userData is nil");

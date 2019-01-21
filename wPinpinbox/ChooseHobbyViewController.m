@@ -24,6 +24,8 @@
 
 #import "GlobalVars.h"
 #import "UIViewController+ErrorAlert.h"
+#import "LabelAttributeStyle.h"
+#import "ChooseHobbyCollectionReusableView.h"
 
 @interface ChooseHobbyViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 {
@@ -46,7 +48,8 @@
 #pragma mark - viewDidLoad
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.startUsingPinpinboxBtn.titleLabel content: self.startUsingPinpinboxBtn.titleLabel.text];
     columnCount = 3;
     miniInteriorSpacing = 16;
     
@@ -197,9 +200,9 @@
            viewForSupplementaryElementOfKind:(NSString *)kind
                                  atIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"viewForSupplementaryElementOfKind");
-    
-    UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
-    
+    ChooseHobbyCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"headerId" forIndexPath: indexPath];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.titleLabel content: headerView.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.subTitleLabel content: headerView.subTitleLabel.text];
     return headerView;
 }
 
@@ -214,6 +217,7 @@
     }
     if ([wTools objectExists: hobbyArray[indexPath.row][@"hobby"][@"name"]]) {
         cell.hobbyLabel.text = hobbyArray[indexPath.row][@"hobby"][@"name"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.hobbyLabel content: cell.hobbyLabel.text];
     }
     return cell;
 }

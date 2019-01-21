@@ -47,10 +47,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     NSLog(@"CategoryDetailViewController");
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
     [self loadData];
 }
@@ -89,6 +87,8 @@
     
     columnCount = 2;
     miniInteriorSpacing = 16;
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -333,7 +333,7 @@
     // AlbumNameLabel Setting
     if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"album"][@"name"];
-        [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"album"][@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];        
     }
     return cell;
 }

@@ -257,6 +257,7 @@
 }
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
+    if (!attributedText) return ;
     NSMutableAttributedString* mutableText = [attributedText mutableCopy];
     [mutableText addAttributes:@{NSKernAttributeName: @(_kernspace)} range:[mutableText fullRange]];
     NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
@@ -268,6 +269,7 @@
 
 - (void)setText:(NSString *)text
 {
+    if (!text) return ;
     if (_kernspace <= 0)
         _kernspace = 1.5;
     NSMutableAttributedString* mutableText;
@@ -324,6 +326,7 @@
 }
 - (void)setAttributedTitle:(NSAttributedString *)title forState:(UIControlState)state
 {
+    if (!title) return ;
     NSMutableAttributedString* mutableTitle = [title mutableCopy];
     [mutableTitle addAttributes:@{NSKernAttributeName: @(self.spacing)} range:[mutableTitle fullRange]];
     [super setAttributedTitle:mutableTitle forState:state];
@@ -334,6 +337,9 @@
 {
     if (_kernspace <= 0)
         _kernspace = 1;
+    
+    if (!title) return ;
+    
     NSMutableAttributedString* mutableTitle;
     if ([self attributedTitleForState:state]) {
         mutableTitle = [NSMutableAttributedString attributedStringWithTitle:title fromExistingAttributedString:[self attributedTitleForState:state]];

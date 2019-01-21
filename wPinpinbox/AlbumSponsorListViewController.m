@@ -45,7 +45,6 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
     [self loadData];
 }
@@ -307,9 +306,10 @@
     
     if (![name isEqual: [NSNull null]]) {
         cell.userNameLabel.text = name;
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
     }
-    cell.pPointLabel.text = [NSString stringWithFormat: @"%ld P", (long)point];
+    cell.pPointLabel.text = [NSString stringWithFormat: @"%ldP", (long)point];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.pPointLabel content: cell.pPointLabel.text];
     
     NSLog(@"user is_follow: %d", [dic[@"user"][@"is_follow"] boolValue]);
     [self updateFollowBtnStatus: cell.followBtn isFollow: [dic[@"user"][@"is_follow"] boolValue]];

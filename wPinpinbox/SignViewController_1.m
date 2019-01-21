@@ -34,6 +34,7 @@
 #import "AppDelegate.h"
 
 #import "UIViewController+ErrorAlert.h"
+#import "LabelAttributeStyle.h"
 
 typedef void (^FBBlock)(void);
 
@@ -63,6 +64,7 @@ typedef void (^FBBlock)(void);
     __weak IBOutlet UILabel *pwd1CheckLabel;
     __weak IBOutlet UILabel *pwd2CheckLabel;
 }
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @end
 
 @implementation SignViewController_1
@@ -93,6 +95,12 @@ typedef void (^FBBlock)(void);
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: navBackBtn.titleLabel content: navBackBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: nextBtn.titleLabel content: nextBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: emailBtn.titleLabel content: emailBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: pwd1CheckLabel content: pwd1CheckLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: pwd2CheckLabel content: pwd2CheckLabel.text];
     [self navBarBtnSetup];
     [self nextBtnSetup];
     [self inputFieldSetup];

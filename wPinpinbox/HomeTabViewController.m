@@ -1899,8 +1899,7 @@
         // AlbumNameLabel Setting
         if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = data[@"album"][@"name"];
-            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment:cell.albumNameLabel content: data[@"album"][@"name"]];//changeGapString:
-            
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
         }
         
         return cell;
@@ -1920,9 +1919,7 @@
         cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
         
         if (indexPath.row + 1 < categoryArray.count) {
-            
             NSDictionary *dic = categoryArray[indexPath.row+1][@"categoryarea"];
-            
             NSLog(@"dic name: %@", dic[@"name"]);
             NSLog(@"dic image_360x360: %@", dic[@"image_360x360"]);
             
@@ -1933,7 +1930,7 @@
             
             if (![dic[@"name"] isEqual:[NSNull null]]) {
                 cell.categoryNameLabel.text = dic[@"name"];
-                //[LabelAttributeStyle changeGapString: cell.categoryNameLabel content: dic[@"name"]];
+                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.categoryNameLabel content: cell.categoryNameLabel.text];
             }
         }
         return cell;
@@ -1951,26 +1948,25 @@
                                              placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
             }
             cell.userNameLabel.text = userDic[@"name"];
-            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
-            
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
+
         } else {
             NSLog(@"userData is nil");
         }
         return cell;
     } else if (collectionView.tag == 5) {
         //NSLog(@"collectionView.tag == 5");
-        
         RecommandCollectionViewCell *cell =  [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath: indexPath];
         cell.albumImageView.backgroundColor = UIColor.purpleColor;
         cell.albumDesc.text = [NSString stringWithFormat:@"%ld -- %ld\n\n=======",(long)indexPath.section, (long)indexPath.row];
         cell.personnelView.backgroundColor = UIColor.yellowColor;
-        
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumDesc content: cell.albumDesc.text];
         return cell;
     } else if (collectionView.tag == 6) {
         //NSLog(@"collectionView.tag == 6");
         //        NSLog(@"isSearching: %d", isSearching);
         albumRecommendationLabel.text = @"找到的作品";
-        [LabelAttributeStyle changeGapString: albumRecommendationLabel content: albumRecommendationLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: albumRecommendationLabel content: albumRecommendationLabel.text];
         
         NSLog(@"SearchTabCollectionViewCell *cell");
         SearchTabCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"SearchCell" forIndexPath: indexPath];
@@ -2001,7 +1997,6 @@
                 
             }];
         }
-        
         // UserForView Info Setting
         BOOL gotAudio = [albumDic[@"usefor"][@"audio"] boolValue];
         BOOL gotVideo = [albumDic[@"usefor"][@"video"] boolValue];
@@ -2070,14 +2065,14 @@
         // AlbumNameLabel Setting
         if (![albumDic[@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = albumDic[@"name"];
-            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment:cell.albumNameLabel content: cell.albumNameLabel.text];            
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
+
         }
         NSLog(@"cell.albumNameLabel.text: %@", cell.albumNameLabel.text);
         NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
         
         return cell;
     } else if (collectionView.tag == 71 || collectionView.tag == 72){
-        
         RecommandCollectionViewCell *c = [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath:indexPath];
         NSDictionary *data = followUserData[indexPath.row];
         if (collectionView.tag == 72)
@@ -2102,17 +2097,17 @@
         
         if (user[@"description"] && ![user[@"description"] isEqual: [NSNull null]]) {
             c.albumDesc.text = user[@"description"];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: c.albumDesc content: c.albumDesc.text];
         }
         c.personnelView.layer.cornerRadius = 16;
         c.personnelView.clipsToBounds = YES;
         c.albumImageView.layer.cornerRadius = 8;
         c.albumImageView.clipsToBounds = YES;
-        
         return c;
     } else {
         //NSLog(@"collectionView.tag == 7");
         userRecommendationLabel.text = @"找到的創作人";
-        [LabelAttributeStyle changeGapString: userRecommendationLabel content: userRecommendationLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: userRecommendationLabel content: userRecommendationLabel.text];
         
         if (userData.count == 0) {
             noInfoHorzView.hidden = NO;
@@ -2134,8 +2129,8 @@
                                              placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
             }
             cell.userNameLabel.text = userDic[@"name"];
-            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
-            
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
+
         } else {
             NSLog(@"userData is nil");
         }
