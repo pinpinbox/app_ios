@@ -69,6 +69,9 @@
 #import "RecommandCollectionViewCell.h"
 #import "SwitchButtonView.h"
 
+#import "YAlbumDetailContainerViewController.h"
+#import "SwitchButtonView.h"
+
 #import "UserInfo.h"
 
 #define kAdHeight 142
@@ -153,8 +156,8 @@
     NSMutableArray *albumData;
     NSMutableArray *userData;
     
-    UILabel *userRecommendationLabel;
-    UILabel *albumRecommendationLabel;
+    UIKernedLabel *userRecommendationLabel;
+    UIKernedLabel *albumRecommendationLabel;
     
     UITextField *selectTextField;
     
@@ -294,12 +297,18 @@
     [self removeNotification];
     [self addNotification];
     
+    
     // Central Button
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = NO;
     }
     [wTools sendScreenTrackingWithScreenName:@"首頁"];
+    
+    if (!self.albumCollectionView.hidden) {
+        self.navBarView.hidden = NO;
+        self.searchView.hidden = NO;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -523,6 +532,7 @@
         [btn setImage: [UIImage imageNamed: @"ic200_scancamera_dark"] forState: UIControlStateNormal];
         [self dismissKeyboard];
         self.searchTextField.text = @"";
+        [self.searchTextField resignFirstResponder];
         isSearchTextFieldSelected = NO;
         self.homeCollectionView.hidden = NO;
     } else {
@@ -1714,15 +1724,15 @@
         self.followAlbumCollectionView = headerView.followAlbumCollectionView;
         
         followUserLabel = headerView.followUserLabel;
-        [LabelAttributeStyle changeGapString: followUserLabel content: followUserLabel.text];
+        //[LabelAttributeStyle changeGapString: followUserLabel content: followUserLabel.text];
         followUserHorzView = headerView.followUserHorzView;
         
         followAlbumLabel = headerView.followAlbumLabel;
-        [LabelAttributeStyle changeGapString: followAlbumLabel content: followAlbumLabel.text];
+        //[LabelAttributeStyle changeGapString: followAlbumLabel content: followAlbumLabel.text];
         followAlbumHorzView = headerView.followAlbumHorzView;
         
         recommendationLabel = headerView.recommendationLabel;
-        [LabelAttributeStyle changeGapString: recommendationLabel content: recommendationLabel.text];
+        //[LabelAttributeStyle changeGapString: recommendationLabel content: recommendationLabel.text];
         
         recommendationHorzView = headerView.recommendationHorzView;
         
@@ -1939,6 +1949,7 @@
             }
             cell.userNameLabel.text = userDic[@"name"];
             [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
+
         } else {
             NSLog(@"userData is nil");
         }
@@ -2055,6 +2066,7 @@
         if (![albumDic[@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = albumDic[@"name"];
             [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
+
         }
         NSLog(@"cell.albumNameLabel.text: %@", cell.albumNameLabel.text);
         NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
@@ -2118,6 +2130,7 @@
             }
             cell.userNameLabel.text = userDic[@"name"];
             [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
         } else {
             NSLog(@"userData is nil");
         }
@@ -2137,7 +2150,7 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
     if (collectionView.tag == 1) {
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+        HomeDataCollectionViewCell *cell = (HomeDataCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
         NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
         
         //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
@@ -2146,9 +2159,15 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         NSDictionary *data = pictures[indexPath.row];
         NSString *albumId = [data[@"album"][@"album_id"] stringValue];
-        [self toAlbumDetailVC: albumId];
+        CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
+        [self toAlbumDetailVC: albumId source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 2) {
-        [self tapDetectedForURL: indexPath.row];
+        HomeBannerCollectionViewCell *cell = (HomeBannerCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
+        //CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        CGRect source = [collectionView convertRect:cell.bannerImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
+        [self tapDetectedForURL:indexPath.row source:source sourceImageView:cell.bannerImageView];
     } else if (collectionView.tag == 3) {
         if (indexPath.row + 1 < categoryArray.count) {
             NSDictionary *data = categoryArray[indexPath.row+1];
@@ -2168,7 +2187,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
     } else if (collectionView.tag == 6) {
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
-        [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue]];
+        SearchTabCollectionViewCell *cell = (SearchTabCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
+        CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
+//        CGSize size = cell.coverImageView.frame.size;
+//        source = CGRectMake(source.origin.x, source.origin.y, size.width, size.height);
+        [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue] source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 71 || collectionView.tag == 72) {
         NSDictionary *userDic = followUserData[indexPath.row][@"user"];
         if (collectionView.tag == 72)
@@ -2180,26 +2204,22 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
-- (void)toAlbumDetailVC:(NSString *)albumId {
+- (void)toAlbumDetailVC:(NSString *)albumId  source:(CGRect)source sourceImage:(UIImageView *)sourceImage{
     NSLog(@"toAlbumDetailVC");
     if (![wTools objectExists: albumId]) {
         return;
     }
     NSLog(@"After objectExists check");
-    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-    aDVC.albumId = albumId;
-    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
-    
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.5;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionMoveIn;
-    transition.subtype = kCATransitionFromTop;
-    
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-    NSLog(@"Before PushViewController");
-    [appDelegate.myNav pushViewController: aDVC animated: NO];
+    @try {
+        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:sourceImage noParam:NO];
+        
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [appDelegate.myNav pushViewController: aDVC animated: YES];
+    } @catch (NSException *exception) {
+        [self showCustomErrorAlert:@"Album id is empty"];
+    } @finally {
+        
+    }
 }
 
 - (void)toCreatorVC:(NSString *)userId {
@@ -2232,10 +2252,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [appDelegate.myNav pushViewController: categoryVC animated: YES];
 }
 
-- (void)tapDetectedForURL:(NSInteger)page {
-    NSLog(@"tapDetectedForURL");
-    NSLog(@"page: %ld", (long)page);
-    NSLog(@"adArray[page]: %@", adArray[page]);
+- (void)tapDetectedForURL:(NSInteger)page source:(CGRect)source sourceImageView:(UIImageView *)sourceImageView {
+//    NSLog(@"tapDetectedForURL");
+//    NSLog(@"page: %ld", (long)page);
+//    NSLog(@"adArray[page]: %@", adArray[page]);
     
     NSString *album = adArray[page][@"album"];
     NSString *event = adArray[page][@"event"];
@@ -2249,18 +2269,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSString *albumIdString = [adArray[page][@"album"][@"album_id"] stringValue];
         
         if (![albumIdString isEqualToString: @""]) {
-            AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-            aDVC.albumId = albumIdString;
-            
-            CATransition *transition = [CATransition animation];
-            transition.duration = 0.5;
-            transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-            transition.type = kCATransitionFade;
-            transition.subtype = kCATransitionFromTop;
-            [self.navigationController.view.layer addAnimation: transition forKey: kCATransition];
+            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumIdString sourceRect:source sourceImageView:sourceImageView noParam:NO];
             
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            [appDelegate.myNav pushViewController: aDVC animated: NO];
+            [appDelegate.myNav pushViewController: aDVC animated: YES];
         }
     } else if (event != (NSString *)[NSNull null]) {
         NSString *eventIdString = [adArray[page][@"event"][@"event_id"] stringValue];
@@ -2441,7 +2453,7 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         return finalSize;
     } else if (collectionView.tag == 2) {
         // ad banners 
-        return CGSizeMake(343,237);//bannerWidth, bannerHeight);
+        return CGSizeMake(343,251);//bannerWidth, bannerHeight);
     } else if (collectionView.tag == 3) {
         // category
         return CGSizeMake(163.0, 163.0);
@@ -2529,7 +2541,6 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 16.0f;
 }
 
@@ -2552,6 +2563,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         return 16.0f;
     } else if (collectionView.tag == 6) {
         return 24.0f;
+    } else if (collectionView.tag == 71 || collectionView.tag == 72) {
+        return 16;
     } else {
         return 24.0f;
     }
@@ -2626,20 +2639,20 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 //    }
     
     if (scrollView == self.homeCollectionView) {
-        NSLog(@"scrollView == self.homeCollectionView");
+        //NSLog(@"scrollView == self.homeCollectionView");
         
-        NSLog(@"self.lastContentOffset: %f", self.lastContentOffset);
-        NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
+        //NSLog(@"self.lastContentOffset: %f", self.lastContentOffset);
+        //NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
         
         if (!isViewLoading) {
             if (self.lastContentOffset > scrollView.contentOffset.y) {
-                NSLog(@"Scroll Up");
+                //NSLog(@"Scroll Up");
                 [UIView animateWithDuration: 0.5 animations:^{
                     self.navBarView.hidden = NO;
                     [self.navBarView layoutIfNeeded];
                 }];
             } else {
-                NSLog(@"Scroll Down");
+                //NSLog(@"Scroll Down");
                 [UIView animateWithDuration: 0.5 animations:^{
                     self.navBarView.hidden = YES;
                     [self.navBarView layoutIfNeeded];
@@ -3633,7 +3646,7 @@ replacementString:(NSString *)string {
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UILabel *l = [[UILabel alloc] init];
+    UIKernedLabel *l = [[UIKernedLabel alloc] init];
     UIView *v = [[UIView alloc] init];
     l.textColor = [UIColor hintGrey];
     l.font = [UIFont boldSystemFontOfSize:18];
@@ -3641,6 +3654,7 @@ replacementString:(NSString *)string {
         l.text = @"推薦";
     else
         l.text = @"熱門";
+    
     l.backgroundColor = UIColor.clearColor;
     [l sizeToFit];
     //CGSize s = l.frame.size;

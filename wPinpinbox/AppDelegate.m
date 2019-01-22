@@ -43,6 +43,8 @@
 #import "GlobalVars.h"
 #import "UIViewController+ErrorAlert.h"
 
+#import "YAlbumDetailContainerViewController.h"
+
 #define kPlzOpenLocSys @"請開啟定位:設置 > 隱私 > 位置 > 定位服務。"
 #define kTipTitle @"提示"
 
@@ -781,12 +783,12 @@ handleEventsForBackgroundURLSession:(NSString *)identifier
         
         if (pairs[@"album_id"] != nil) {
             NSLog(@"album_id is not nil");
-            //[wTools ToRetrievealbumpViewControlleralbumid: pairs[@"album_id"]];
-            AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-            aDVC.albumId = pairs[@"album_id"];
+            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:pairs[@"album_id"] albumInfo:nil];
+//            AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+//            aDVC.albumId = pairs[@"album_id"];
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [self popToMyTabBarVC: appDelegate];
-            [appDelegate.myNav pushViewController: aDVC animated: NO];
+            [appDelegate.myNav pushViewController: aDVC animated: YES];
             
         }
         if (pairs[@"user_id"] != nil) {
@@ -978,6 +980,12 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             [self popToMyTabBarVC: appDelegate];
             [self checkVCAndPresentSafariVC: appDelegate urlStr: urlStr];
         } else {
+            // launchedByNotification, nothing is set up yet
+            if (self.myNav == nil) {
+                self.tempLaunchOptions = userInfo;
+                return;
+            }
+            
             if ([dataType isEqualToString: @"user"]) {
                 NSLog(@"[dataType isEqualToString: user");
                 CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
@@ -989,23 +997,22 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             }
             if ([dataType isEqualToString: @"albumqueue"]) {
                 NSLog(@"dataType isEqualToString: albumqueue");
-                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                NSLog(@"typeIdStr: %@", typeIdStr);
-                aDVC.albumId = typeIdStr;
+                
+                YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
                 
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
-                [appDelegate.myNav pushViewController: aDVC animated: NO];
+                [appDelegate.myNav pushViewController: aDVC animated: YES];
             }
             if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
                 NSLog(@"dataType isEqualToString: albumqueue@messageboard");
-                AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                aDVC.albumId = typeIdStr;
-                aDVC.getMessagePush = YES;
                 
+                YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
+        
+                aDVC.getMessagePush = YES;
                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                 [self popToMyTabBarVC: appDelegate];
-                [appDelegate.myNav pushViewController: aDVC animated: NO];
+                [appDelegate.myNav pushViewController: aDVC animated: YES];
             }
             if ([dataType isEqualToString: @"user@messageboard"]) {
                 NSLog(@"dataType isEqualToString: user@messageboard");
@@ -1042,68 +1049,83 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         if ([alertDic isEqual: [NSNull null]]) {
             NSLog(@"empty alertStr");
         } else {
+            __block typeof(self) wself = self;
             if ([dataType isEqual: [NSNull null]]) {
                 NSLog(@"dataType is Null");
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration callback:^{
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [self popToMyTabBarVC: appDelegate];
-                    [self checkVCAndPresentSafariVC: appDelegate urlStr: urlStr];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [wself popToMyTabBarVC: appDelegate];
+                        [wself checkVCAndPresentSafariVC: appDelegate urlStr: urlStr];
+                    });
                 }];
             } else if ([dataType isEqualToString: @"user"]) {
                 NSLog(@"dataType isEqualToString user");
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
-                    CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-                    cVC.userId = typeIdStr;
-                    
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [self popToMyTabBarVC: appDelegate];
-                    [appDelegate.myNav pushViewController: cVC animated: YES];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+                        cVC.userId = typeIdStr;
+                        
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [wself popToMyTabBarVC: appDelegate];
+                        [appDelegate.myNav pushViewController: cVC animated: YES];
+                        
+                    });
                 }];
             } else if ([dataType isEqualToString: @"albumqueue"]) {
                 NSLog(@"dataType isEqualToString albumqueue");
                 NSLog(@"typeIdStr: %@", typeIdStr);
                 
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
-                    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                    aDVC.albumId = typeIdStr;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
                     
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [self popToMyTabBarVC: appDelegate];
-                    [appDelegate.myNav pushViewController: aDVC animated: NO];
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [wself popToMyTabBarVC: appDelegate];
+                        [appDelegate.myNav pushViewController: aDVC animated: YES];
+                    });
                 }];
             } else if ([dataType isEqualToString: @"albumqueue@messageboard"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
-                    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-                    aDVC.albumId = typeIdStr;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:typeIdStr albumInfo:nil];
                     aDVC.getMessagePush = YES;
                     
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [self popToMyTabBarVC: appDelegate];
-                    [appDelegate.myNav pushViewController: aDVC animated: NO];
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [wself popToMyTabBarVC: appDelegate];
+                        [appDelegate.myNav pushViewController: aDVC animated: YES];
+                    });
                 }];
             } else if ([dataType isEqualToString: @"user@messageboard"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
-                    CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
-                    cVC.userId = typeIdStr;
-                    
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [self popToMyTabBarVC: appDelegate];
-                    [appDelegate.myNav pushViewController: cVC animated: YES];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        CreaterViewController *cVC = [[UIStoryboard storyboardWithName: @"CreaterVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CreaterViewController"];
+                        cVC.userId = typeIdStr;
+                        
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [wself popToMyTabBarVC: appDelegate];
+                        [appDelegate.myNav pushViewController: cVC animated: YES];
+                    });
                 }];
             } else if ([dataType isEqualToString: @"event"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
-                    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                    [self popToMyTabBarVC: appDelegate];
-                    [self checkVCAndShowEventVC: appDelegate typeId: typeIdStr];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                        [wself popToMyTabBarVC: appDelegate];
+                        [wself checkVCAndShowEventVC: appDelegate typeId: typeIdStr];
+                    });
                 }];
             } else if ([dataType isEqualToString: @"categoryarea"]) {
                 [[TWMessageBarManager sharedInstance] showMessageWithTitle: alertDic[@"title"] description: alertDic[@"body"] type: TWMessageBarMessageTypeInfo duration: kMessageBarDuration statusBarStyle: UIStatusBarStyleDefault callback:^{
-                    CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
-                    categoryVC.categoryAreaId = typeIdStr;
-                    
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [self popToMyTabBarVC: appDelegate];
-                    [appDelegate.myNav pushViewController: categoryVC animated: YES];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
+                        categoryVC.categoryAreaId = typeIdStr;
+                        
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [wself popToMyTabBarVC: appDelegate];
+                        [appDelegate.myNav pushViewController: categoryVC animated: YES];
+                    });
                 }];
             }
         }

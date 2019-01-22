@@ -1606,15 +1606,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSString *location = self.photoArray[page][@"location"];
     NSLog(@"location: %@", location);
     
-    if (![location isKindOfClass: [NSNull class]]) {
+    if ([wTools objectExists:self.photoArray[page][@"location"]]){
+        
         if (![location isEqualToString: @""]) {
             self.locationBtn.hidden = NO;
-        } else {
-            self.locationBtn.hidden = YES;
+            return;
+            
         }
-    } else {
-        self.locationBtn.hidden = NO;
     }
+    
+    self.locationBtn.hidden = YES;
+    
 }
 
 #pragma mark - Help Method for DailyMotion
@@ -2848,10 +2850,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"self.photoArray.count: %lu", (unsigned long)self.photoArray.count);
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
         NSLog(@"self.imageScrollCV: %@", self.imageScrollCV);
-        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
         
         NSLog(@"self.thumbnailImageScrollCV: %@", self.thumbnailImageScrollCV);
-        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
     }
 }
 
@@ -4087,6 +4089,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"page: %ld", (long)page);
     NSString *description = self.photoArray[page][@"description"];
     
+    self.descriptionLabel.text = @"";
+    
     if ([wTools objectExists: description]) {
         NSAttributedString *attString = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName: [UIFont preferredFontForTextStyle: UIFontTextStyleBody], NSKernAttributeName: @1, NSForegroundColorAttributeName: [UIColor whiteColor]}];
         if ([wTools objectExists: attString]) {
@@ -4280,11 +4284,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     // Custom ActionSheet Setting
     NSInteger page = [self getCurrentPage];
-    NSLog(@"location Str: %@", self.bookdata[@"photo"][page][@"location"]);
-    self.mapShowingActionSheet.locationStr = self.bookdata[@"photo"][page][@"location"];
+    if ([wTools objectExists:self.bookdata[@"photo"][page][@"location"]]) {
+    //NSLog(@"location Str: %@", self.bookdata[@"photo"][page][@"location"]);
+        self.mapShowingActionSheet.locationStr = self.bookdata[@"photo"][page][@"location"];
     
-    [self.view addSubview: self.mapShowingActionSheet.view];
-    [self.mapShowingActionSheet viewWillAppear: NO];
+        [self.view addSubview: self.mapShowingActionSheet.view];
+        [self.mapShowingActionSheet viewWillAppear: NO];
+    }
 }
 
 - (IBAction)soundBtnPressed:(id)sender {
@@ -4424,7 +4430,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 collectStr = @"收藏";
             } else if (albumPoint > 0) {
                 collectStr = [NSString stringWithFormat: @"收藏(需要贊助%ldP)", (long)albumPoint];
-                btnStr = @"贊助更多";
+//                btnStr = @"贊助更多";
             }
         } else {
             collectStr = @"已收藏";
@@ -4458,8 +4464,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             if (weakAlbumPoint == 0) {
                 [weakSelf buyAlbum];
             } else {
-                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
-                [weakSelf showBuyAlbumCustomAlert: msgStr option: @"buyAlbum" pointStr: [NSString stringWithFormat: @"%ld", (long)weakAlbumPoint]];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
+                [weakSelf.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
+                [weakSelf.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
+                
+//                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
+//                [weakSelf showBuyAlbumCustomAlert: msgStr option: @"buyAlbum" pointStr: [NSString stringWithFormat: @"%ld", (long)weakAlbumPoint]];
             }
             
         } else if ([identifierStr isEqualToString: @"shareItem"]) {
@@ -4602,6 +4612,7 @@ didFailWithError:(NSError *)error {
     NSLog(@"mapShowingActionSheetDidSlideOut");
     [self.effectView removeFromSuperview];
     self.effectView = nil;
+    
 }
 
 - (void)gotMessageData {

@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SwitchButtonView.h"
 
 @interface SearchTabCollectionReusableView : UICollectionReusableView
-@property (weak, nonatomic) IBOutlet UILabel *userRecommendationLabel;
-@property (weak, nonatomic) IBOutlet UILabel *albumRecommendationLabel;
+@property (weak, nonatomic) IBOutlet UIKernedLabel *userRecommendationLabel;
+@property (weak, nonatomic) IBOutlet UIKernedLabel *albumRecommendationLabel;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *userCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *horzLineView;

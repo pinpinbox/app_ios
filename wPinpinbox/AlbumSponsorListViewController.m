@@ -228,6 +228,7 @@
         isReloading = NO;
         
         [self.tableView reloadData];
+        self.notice.hidden = albumSponsorArray.count > 0;
     } else if ([dic[@"result"] isEqualToString: @"SYSTEM_ERROR"]) {
         NSLog(@"SYSTEM_ERROR");
         NSLog(@"失敗：%@",dic[@"message"]);

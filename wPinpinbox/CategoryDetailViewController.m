@@ -25,6 +25,7 @@
 #import "customLayout.h"
 #import "LabelAttributeStyle.h"
 #import "UIViewController+ErrorAlert.h"
+#import "YAlbumDetailContainerViewController.h"
 
 @interface CategoryDetailViewController () <customLayoutDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
@@ -350,7 +351,7 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath: indexPath];
+    CategoryDetailCollectionViewCell *cell = (CategoryDetailCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
     NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
     //cell.contentView.backgroundColor =
     cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
@@ -365,20 +366,31 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     
-    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
-    //aDVC.data = [dic[@"data"] mutableCopy];
-    aDVC.albumId = albumId;
-    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+    CGRect source = [collectionView convertRect:cell.coverImageView.frame
+                                       fromView:cell];
+    source = [self.view convertRect:source fromView:collectionView];
     
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.5;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionMoveIn;
-    transition.subtype = kCATransitionFromTop;
+    YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.coverImageView noParam:NO];
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
-    [appDelegate.myNav pushViewController: aDVC animated: NO];
+    [appDelegate.myNav pushViewController: aDVC animated: YES];
+    
+//    AlbumDetailViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"AlbumDetailViewController"];
+//    //aDVC.data = [dic[@"data"] mutableCopy];
+//    aDVC.albumId = albumId;
+//    aDVC.snapShotImage = [wTools normalSnapshotImage: self.view];
+//
+//    CATransition *transition = [CATransition animation];
+//    transition.duration = 0.5;
+//    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut];
+//    transition.type = kCATransitionMoveIn;
+//    transition.subtype = kCATransitionFromTop;
+//
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [appDelegate.myNav.view.layer addAnimation: transition forKey: kCATransition];
+//    [appDelegate.myNav pushViewController: aDVC animated: NO];
+    
+    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView

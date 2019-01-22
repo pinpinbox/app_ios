@@ -58,9 +58,10 @@
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
     self.bottomScroll.delegate = self;
-    self.headerImageViewHeight.constant = HEADER_IMAGE_HEIGHT;
-    self.bottomViewTopConstraint.constant = self.headerImageViewHeight.constant;
-    self.contentViewHeight.constant = [UIScreen mainScreen].bounds.size.height - HEADER_IMAGE_HEIGHT;
+    
+    
+    //self.bottomViewTopConstraint.constant = self.headerImageViewHeight.constant;
+    //self.contentViewHeight.constant = [UIScreen mainScreen].bounds.size.height - HEADER_IMAGE_HEIGHT;
 
     //self.topScroll.showsVerticalScrollIndicator = NO;
     self.bottomScroll.showsVerticalScrollIndicator = NO;
@@ -193,8 +194,8 @@
 }
 
 - (void)adjustContentViewHeight{
-    self.bottomViewTopConstraint.constant = self.headerImageViewHeight.constant;
-    self.contentViewHeight.constant = [UIScreen mainScreen].bounds.size.height -  self.headerImageViewHeight.constant;
+//    self.bottomViewTopConstraint.constant = self.headerImageViewHeight.constant;
+//    self.contentViewHeight.constant = [UIScreen mainScreen].bounds.size.height -  self.headerImageViewHeight.constant;
 }
 
 - (IBAction)headerImgBtnPress:(id)sender {
@@ -231,13 +232,13 @@
     NSString *scrollDirection;
     
     NSLog(@"self.lastContentOffset: %f", self.lastContentOffset);
-    NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
+    //NSLog(@"scrollView.contentOffset.y: %f", scrollView.contentOffset.y);
     
     if (self.lastContentOffset > scrollView.contentOffset.y) {
         NSLog(@"scroll up");
         scrollDirection = @"ScrollUp";
     } else if (self.lastContentOffset < scrollView.contentOffset.y) {
-        NSLog(@"scroll down");
+        //NSLog(@"scroll down");
         scrollDirection = @"ScrollDown";
     } else if (self.lastContentOffset == scrollView.contentOffset.y) {
         NSLog(@"scroll up");

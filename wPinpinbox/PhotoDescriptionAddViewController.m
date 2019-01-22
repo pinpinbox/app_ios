@@ -10,10 +10,10 @@
 #import "LabelAttributeStyle.h"
 
 @interface PhotoDescriptionAddViewController ()<UITextViewDelegate>
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionTitleLabel;
 @property(nonatomic) IBOutlet UITextView *itemDesc;
-@property (weak, nonatomic) IBOutlet UIButton *saveBtn;
+//@property (weak, nonatomic) IBOutlet UIButton *saveBtn;
 @property(nonatomic) DescSubmitBlock submitBlock;
 @property(nonatomic) IBOutlet NSLayoutConstraint *textViewHeight;
 @property(nonatomic) IBOutlet UILabel *placeholder;

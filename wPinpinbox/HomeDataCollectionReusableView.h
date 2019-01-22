@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SwitchButtonView.h"
 
 @interface HomeDataCollectionReusableView : UICollectionReusableView
 
@@ -16,13 +17,13 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *followUserCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *followAlbumCollectionView;
 
-@property (weak, nonatomic) IBOutlet UILabel *followUserLabel;
+@property (weak, nonatomic) IBOutlet UIKernedLabel *followUserLabel;
 @property (weak, nonatomic) IBOutlet UIView *followUserHorzView;
 
-@property (weak, nonatomic) IBOutlet UILabel *followAlbumLabel;
+@property (weak, nonatomic) IBOutlet UIKernedLabel *followAlbumLabel;
 @property (weak, nonatomic) IBOutlet UIView *followAlbumHorzView;
 
-@property (weak, nonatomic) IBOutlet UILabel *recommendationLabel;
+@property (weak, nonatomic) IBOutlet UIKernedLabel *recommendationLabel;
 @property (weak, nonatomic) IBOutlet UIView *recommendationHorzView;
 
 @property (weak, nonatomic) IBOutlet UITableView *recommandListView;

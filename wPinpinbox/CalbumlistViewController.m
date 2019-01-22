@@ -1793,8 +1793,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                 NSLog(@"response from checkTaskCompleted");
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"AlbumDetailViewController");
+                    NSLog(@"Time Out Message Return");                
                     NSLog(@"checkTaskComplete");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"checkTaskCompleted"
@@ -2033,7 +2032,6 @@ didCompleteWithResults:(NSDictionary *)results {
                 
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
-                    NSLog(@"AlbumDetailViewController");
                     NSLog(@"checkPoint");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"doTask2"

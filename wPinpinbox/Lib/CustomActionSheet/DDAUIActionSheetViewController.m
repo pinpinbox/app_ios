@@ -28,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *topicLabel;
 @property (weak, nonatomic) IBOutlet MyLinearLayout *contentLayout;
 @property (nonatomic) NSInteger allPageNum;
+@property (nonatomic) NSInteger selectedTag;
 
 @end
 

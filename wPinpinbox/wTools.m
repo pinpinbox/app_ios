@@ -207,17 +207,17 @@ static wTools *instance =nil;
 
 + (BOOL)objectExists:(id)object {
     if (object != nil) {
-        NSLog(@"object is not nil");
+        //NSLog(@"object is not nil");
         
         if (![object isEqual: [NSNull null]]) {
-            NSLog(@"object does not equal to null");
+            //NSLog(@"object does not equal to null");
             return YES;
         } else {
-            NSLog(@"object does equal to null");
+            //NSLog(@"object does equal to null");
             return NO;
         }
     } else {
-        NSLog(@"object is nil");
+        //NSLog(@"object is nil");
         return NO;
     }
 }
