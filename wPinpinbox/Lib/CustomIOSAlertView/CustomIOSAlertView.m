@@ -684,12 +684,14 @@ CGFloat buttonSpacerHeight = 0;
 
 
 
-- (void)setContentViewWithMsg:(NSString *)message contentBackgroundColor:(UIColor *)cntBackgroundColor badgeName:(NSString *)badgeName {
-    
+- (void)setContentViewWithMsg:(NSString *)message
+       contentBackgroundColor:(UIColor *)cntBackgroundColor
+                    badgeName:(NSString *)badgeName {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(16, 16, 268, 22)];
     //textView.text = @"帳號已經存在，請使用另一個";
     textView.text = message;
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignmentForTextView: textView content: textView.text];
     textView.backgroundColor = [UIColor clearColor];
     textView.textColor = [UIColor whiteColor];
     textView.font = [UIFont systemFontOfSize: 16];
