@@ -694,9 +694,9 @@ CGFloat buttonSpacerHeight = 0;
     [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignmentForTextView: textView content: textView.text];
     textView.backgroundColor = [UIColor clearColor];
     textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
+    textView.font = [UIFont systemFontOfSize: 18];
     textView.editable = NO;
-    textView.textAlignment = NSTextAlignmentJustified;
+//    textView.textAlignment = NSTextAlignmentJustified;
 
     // Adjust textView frame size for the content
     CGFloat fixedWidth = textView.frame.size.width;
