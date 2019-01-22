@@ -430,7 +430,7 @@
     
     realframe.origin.y = 0;
     _realImageView.frame = realframe;
-    //self.layer.contents = nil;
+    self.layer.contents = nil;
 }
 
 - (CGSize)realContentSize
