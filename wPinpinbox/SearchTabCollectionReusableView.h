@@ -16,4 +16,4 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *userCollectionView;
 @property (weak, nonatomic) IBOutlet UIView *horzLineView;
 
-@end
+@end 

@@ -252,8 +252,7 @@
 
 @implementation UIKernedLabel
 - (void)awakeFromNib {
-    [super awakeFromNib];
-    [self setSpacing:1.5];
+    [super awakeFromNib];    
 }
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
@@ -359,5 +358,131 @@
     _kernspace = spacing;
     [self updateTitle];
 }
+@end
+
+@implementation UIImageViewAligned
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self)
+    {
+        [self commonInit];
+    }
+    return self;
+}
+
+
+- (id)initWithImage:(UIImage *)image
+{
+    self = [super initWithImage:image];
+    if (self)
+    {
+        [self commonInit];
+        [self setImage:image];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self)
+        [self commonInit];
+    return self;
+}
+
+- (void)commonInit
+{
+    _realImageView = [[UIImageView alloc] initWithFrame:self.bounds];
+    _realImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _realImageView.contentMode = self.contentMode;
+    [self addSubview:_realImageView];
+    
+    
+}
+
+- (UIImage*)image
+{
+    return _realImageView.image;
+}
+
+- (void)setImage:(UIImage *)image
+{
+    if (!_realImageView) return;
+    [_realImageView setImage:image];
+    [self setNeedsLayout];
+}
+
+- (void)setContentMode:(UIViewContentMode)contentMode
+{
+    [super setContentMode:contentMode];
+    _realImageView.contentMode = contentMode;
+    [self setNeedsLayout];
+}
+
+- (void)layoutSubviews
+{
+    CGSize realsize = [self realContentSize];
+    
+    // Start centered
+    CGRect realframe = CGRectMake((self.bounds.size.width - realsize.width)/2, (self.bounds.size.height - realsize.height) / 2, realsize.width, realsize.height);
+    
+    realframe.origin.y = 0;
+    _realImageView.frame = realframe;
+    //self.layer.contents = nil;
+}
+
+- (CGSize)realContentSize
+{
+    CGSize size = self.bounds.size;
+    
+    if (self.image == nil)
+        return size;
+    
+    switch (self.contentMode)
+    {
+        case UIViewContentModeScaleAspectFit:
+        {
+            float scalex = self.bounds.size.width / _realImageView.image.size.width;
+            float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            float scale = MIN(scalex, scaley);
+
+            size = CGSizeMake(_realImageView.image.size.width * scale, _realImageView.image.size.height * scale);
+            break;
+        }
+            
+        case UIViewContentModeScaleAspectFill:
+        {
+            float scalex = self.bounds.size.width / _realImageView.image.size.width;
+            float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            float scale = MAX(scalex, scaley);
+            
+            size = CGSizeMake(_realImageView.image.size.width * scale, _realImageView.image.size.height * scale);
+            break;
+        }
+            
+        case UIViewContentModeScaleToFill:
+        {
+            float scalex = self.bounds.size.width / _realImageView.image.size.width;
+            float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            
+            size = CGSizeMake(_realImageView.image.size.width * scalex, _realImageView.image.size.height * scaley);
+            break;
+        }
+            
+        default:
+            size = _realImageView.image.size;
+            break;
+    }
+    
+    return size;
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    return [self.realImageView sizeThatFits:size];
+}
+
+
 @end
 

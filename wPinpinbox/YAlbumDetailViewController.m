@@ -68,6 +68,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 @property(nonatomic) IBOutlet UITableView *infoView;
 @property(nonatomic) IBOutlet UIKernedButton *contentButton;
 @property(nonatomic) IBOutlet NSLayoutConstraint *headerHeight;
+@property(nonatomic) IBOutlet NSLayoutConstraint *coverHeight;
 @property(nonatomic) IBOutlet NSLayoutConstraint *infoHeight;
 @property(nonatomic) IBOutlet UIKernedButton *collectBtn;
 
@@ -170,15 +171,21 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     if (placeholder) {
         CGSize s = placeholder.size;
         CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+        CGFloat sh =  [UIScreen mainScreen].bounds.size.height;
+        self.coverHeight.constant = dh;
+        dh = (dh > sh*0.67)? sh*0.67:dh;
         self.headerView.image = placeholder;
         self.headerHeight.constant = dh;
     }
 }
 - (void)prepareCoverView {
+    CGFloat sh =  [UIScreen mainScreen].bounds.size.height;
     if (![wTools objectExists:self.albumInfo[@"photo"]]) {
         UIImage *image = [UIImage imageNamed:@"bg_2_0_0_no_image.jpg"];
         CGSize s = image.size;
         CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+        self.coverHeight.constant = dh;
+        dh = (dh > sh*0.67)? sh*0.67:dh;
         self.headerView.image = image;
         self.headerHeight.constant = dh;
         return;
@@ -196,6 +203,8 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
                         UIImage *image = [UIImage imageNamed:@"bg_2_0_0_no_image.jpg"];
                         CGSize s = image.size;
                         CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+                        self.coverHeight.constant = dh;
+                        dh = (dh > sh*0.67)? sh*0.67:dh;
                         wself.headerView.image = image;
                         wself.headerHeight.constant = dh;
                     });
@@ -203,6 +212,8 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
                     dispatch_async(dispatch_get_main_queue(), ^{
                         CGSize s = image.size;
                         CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+                        self.coverHeight.constant = dh;
+                        dh = (dh > sh*0.67)? sh*0.67:dh;
                         wself.headerView.image = image;
                         wself.headerHeight.constant = dh;
                     });

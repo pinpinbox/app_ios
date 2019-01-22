@@ -54,4 +54,32 @@ NS_ASSUME_NONNULL_BEGIN
 @property IBInspectable CGFloat spacing;
 @end
 
+
+typedef enum
+{
+    UIImageViewAlignmentMaskCenter = 0,
+    
+    UIImageViewAlignmentMaskLeft   = 1,
+    UIImageViewAlignmentMaskRight  = 2,
+    UIImageViewAlignmentMaskTop    = 4,
+    UIImageViewAlignmentMaskBottom = 8,
+    
+    UIImageViewAlignmentMaskBottomLeft = UIImageViewAlignmentMaskBottom | UIImageViewAlignmentMaskLeft,
+    UIImageViewAlignmentMaskBottomRight = UIImageViewAlignmentMaskBottom | UIImageViewAlignmentMaskRight,
+    UIImageViewAlignmentMaskTopLeft = UIImageViewAlignmentMaskTop | UIImageViewAlignmentMaskLeft,
+    UIImageViewAlignmentMaskTopRight = UIImageViewAlignmentMaskTop | UIImageViewAlignmentMaskRight,
+    
+}UIImageViewAlignmentMask;
+
+typedef UIImageViewAlignmentMask UIImageViewAignmentMask __attribute__((deprecated("Use UIImageViewAlignmentMask. Use of UIImageViewAignmentMask (misspelled) is deprecated.")));
+
+
+
+@interface UIImageViewAligned : UIImageView
+
+// Just in case you need access to the inner image view
+@property (nonatomic, readonly) UIImageView* realImageView;
+
+@end
+
 NS_ASSUME_NONNULL_END

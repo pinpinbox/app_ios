@@ -22,6 +22,7 @@
 #import "MessageboardViewController.h"
 #import "CreaterViewController.h"
 #import "UIViewController+ErrorAlert.h"
+#import "SwitchButtonView.h"
 
 @interface AlbumSponsorListViewController () <UITableViewDataSource, UITableViewDelegate, MessageboardViewControllerDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
@@ -30,7 +31,7 @@
     NSMutableArray *albumSponsorArray;
 }
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UIKernedLabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;

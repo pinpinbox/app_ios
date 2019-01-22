@@ -1930,7 +1930,7 @@
             
             if (![dic[@"name"] isEqual:[NSNull null]]) {
                 cell.categoryNameLabel.text = dic[@"name"];
-                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.categoryNameLabel content: cell.categoryNameLabel.text];
+                [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.categoryNameLabel content: cell.categoryNameLabel.text];
             }
         }
         return cell;

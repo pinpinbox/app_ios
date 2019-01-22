@@ -167,7 +167,7 @@
         return ss.size.height+40;
     }
     
-    return 0;
+    return 32;
 }
 @end
 @implementation YAlbumFollowerCell : UITableViewCell
