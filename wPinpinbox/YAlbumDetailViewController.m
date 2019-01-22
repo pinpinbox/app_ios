@@ -42,7 +42,6 @@
 #import "UIViewController+CWPopup.h"
 #import "LabelAttributeStyle.h"
 
-
 static NSString *autoPlayStr = @"&autoplay=1";
 
 @interface YAlbumDetailViewController ()<UITableViewDataSource, UITableViewDelegate,
@@ -493,10 +492,17 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 - (IBAction)collectBtnTouched:(id)sender {
     if (_albumPoint > 0) {
-        NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?\n點選「觀看內容」並前往最後一頁可進行贊助額度設定", (long)_albumPoint];
-        //                [weakSelf showCustomAlert: msgStr option: @"buyAlbum"];
+        BOOL rewardAfterCollect = [self.albumInfo[@"album"][@"reward_after_collect"] boolValue];
+        NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
+        NSString *msgStr;
         
-        [self showCustomAlert: msgStr option: @"buyAlbum"];
+        if (rewardAfterCollect) {
+            msgStr = [NSString stringWithFormat: @"點選「進入觀看」並前往最後一頁可填寫回饋表單"];
+            [self showCustomAlert: msgStr btnName: @"我知道了"];
+        } else {
+            NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?\n點選「觀看內容」並前往最後一頁可進行贊助額度設定", (long)_albumPoint];
+            [self showCustomAlert: msgStr option: @"buyAlbum"];
+        }
     } else {
         [self buyAlbum];
     }
@@ -1521,7 +1527,8 @@ alertView.arrangeStyle = @"Horizontal";
     [alertView setUseMotionEffects: YES];
     [alertView show];
 }
-- (void)showCustomAlert: (NSString *)msg option:(NSString *)option {
+- (void)showCustomAlert:(NSString *)msg
+                 option:(NSString *)option {
     
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     

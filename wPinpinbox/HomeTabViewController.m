@@ -2129,8 +2129,8 @@
                                              placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
             }
             cell.userNameLabel.text = userDic[@"name"];
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
             [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
-
         } else {
             NSLog(@"userData is nil");
         }

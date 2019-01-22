@@ -19,6 +19,9 @@
 + (void)changeGapStringAndLineSpacingLeftAlignment:(UILabel *)label
                                            content:(NSString *)content;
 
++ (void)changeGapStringAndLineSpacingLeftAlignmentForTextView:(UITextView *)textView
+                                                      content:(NSString *)content;
+
 + (void)changeGapStringForTextView:(UITextView *)textView
                            content:(NSString *)content
                              color:(UIColor *)color

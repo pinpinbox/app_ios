@@ -65,6 +65,22 @@
     label.attributedText = attStr;
 }
 
++ (void)changeGapStringAndLineSpacingLeftAlignmentForTextView:(UITextView *)textView
+                                                      content:(NSString *)content {
+    NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
+    // Text Gap
+    [attDic setValue: @1 forKey: NSKernAttributeName];
+    
+    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:content attributes:attDic];
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 3;
+    style.alignment = NSTextAlignmentLeft;
+    // 设置行之间的间距
+    [attStr addAttribute:NSParagraphStyleAttributeName value:style range: NSMakeRange(0, content.length)];
+    
+    textView.attributedText = attStr;
+}
+
 + (void)changeGapStringForTextView:(UITextView *)textView
                            content:(NSString *)content
                              color:(UIColor *)color
@@ -81,7 +97,8 @@
     
     NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithString:content attributes:attDic];
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    style.lineSpacing = 3;                                                          // 设置行之间的间距
+    style.lineSpacing = 3;
+    // 设置行之间的间距
     [attStr addAttribute:NSParagraphStyleAttributeName value:style range: NSMakeRange(0, content.length)];
     
     textView.attributedText = attStr;

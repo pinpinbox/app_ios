@@ -12,6 +12,7 @@
 #import "CustomIOSAlertView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+Extensions.h"
+#import "LabelAttributeStyle.h"
 
 const static CGFloat kCustomIOSAlertViewDefaultButtonHeight       = 42;//50;
 const /*static*/ CGFloat kCustomIOSAlertViewDefaultButtonSpacerHeight = 16;//5;
@@ -355,6 +356,7 @@ CGFloat buttonSpacerHeight = 0;
         [closeButton setTag: 0];
         
         [closeButton setTitle:[buttonTitles objectAtIndex: 0] forState:UIControlStateNormal];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: closeButton.titleLabel content: closeButton.titleLabel.text];
         [closeButton setTitleColor: [buttonTitlesColor objectAtIndex: 0] forState: UIControlStateNormal];
         [closeButton setTitleColor: [buttonTitlesHighlightColor objectAtIndex: 0] forState: UIControlStateHighlighted];
         
@@ -378,8 +380,8 @@ CGFloat buttonSpacerHeight = 0;
                 
                 [closeButton addTarget:self action:@selector(customIOS7dialogButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
                 [closeButton setTag:i];
-                [closeButton setTitle:[buttonTitles objectAtIndex:i] forState:UIControlStateNormal];\
-                
+                [closeButton setTitle:[buttonTitles objectAtIndex:i] forState:UIControlStateNormal];
+                [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: closeButton.titleLabel content: closeButton.titleLabel.text];
                 //[closeButton setBackgroundColor: kCustomIOS7DefaultButtonColor];
                 if([buttonColors count] > i && [buttonColors objectAtIndex:i])
                     [closeButton setBackgroundColor:[buttonColors objectAtIndex:i]];
@@ -417,6 +419,7 @@ CGFloat buttonSpacerHeight = 0;
                 [closeButton addTarget:self action:@selector(customIOS7dialogButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
                 [closeButton setTag:i];
                 [closeButton setTitle:[buttonTitles objectAtIndex:i] forState:UIControlStateNormal];
+                [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: closeButton.titleLabel content: closeButton.titleLabel.text];
                 
                 if([buttonColors count] > i && [buttonColors objectAtIndex:i])
                     [closeButton setBackgroundColor:[buttonColors objectAtIndex:i]];
@@ -681,17 +684,19 @@ CGFloat buttonSpacerHeight = 0;
 
 
 
-- (void)setContentViewWithMsg:(NSString *)message contentBackgroundColor:(UIColor *)cntBackgroundColor badgeName:(NSString *)badgeName {
-    
+- (void)setContentViewWithMsg:(NSString *)message
+       contentBackgroundColor:(UIColor *)cntBackgroundColor
+                    badgeName:(NSString *)badgeName {
     // TextView Setting
     UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(16, 16, 268, 22)];
     //textView.text = @"帳號已經存在，請使用另一個";
     textView.text = message;
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignmentForTextView: textView content: textView.text];
     textView.backgroundColor = [UIColor clearColor];
     textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
+    textView.font = [UIFont systemFontOfSize: 18];
     textView.editable = NO;
-    textView.textAlignment = NSTextAlignmentJustified;
+//    textView.textAlignment = NSTextAlignmentJustified;
 
     // Adjust textView frame size for the content
     CGFloat fixedWidth = textView.frame.size.width;

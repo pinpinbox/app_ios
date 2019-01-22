@@ -562,11 +562,14 @@
     
     if (![userdata[@"picture"] isKindOfClass:[NSNull class]]) {
         if (![userdata[@"picture"] isEqualToString:@""]) {
-            [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: img];
-            img.imageURL=[NSURL URLWithString:userdata[@"picture"]];
+            [img sd_setImageWithURL: [NSURL URLWithString:userdata[@"picture"]]];
+//            [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: img];
+//            img.imageURL=[NSURL URLWithString:userdata[@"picture"]];
+        } else {
+            img.image = [UIImage imageNamed: @"member_back_head.png"];
         }
-    }else{
-        img.image=[UIImage imageNamed:@""];
+    } else {
+        img.image = [UIImage imageNamed: @"member_back_head.png"];
     }
     img.layer.masksToBounds = YES;
     img.layer.cornerRadius = 12;

@@ -9,6 +9,7 @@
 #import "OldCustomAlertView.h"
 #import <QuartzCore/QuartzCore.h>
 #import <CoreMotion/CoreMotion.h>
+#import "LabelAttributeStyle.h"
 
 const static CGFloat kCustomIOSAlertViewDefaultbtnHeight       = 50;
 const static CGFloat kCustomIOSAlertViewDefaultbtnSpacerHeight = 1;
@@ -282,6 +283,7 @@ CGFloat btnSpacerHeight = 0;
         [closeButton setTitleColor:[UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f] forState:UIControlStateNormal];
         [closeButton setTitleColor:[UIColor colorWithRed:0.2f green:0.2f blue:0.2f alpha:0.5f] forState:UIControlStateHighlighted];
         [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: closeButton.titleLabel content: closeButton.titleLabel.text];
         [closeButton.layer setCornerRadius:kCustomIOSAlertViewCornerRadius];
         
         [container addSubview:closeButton];
@@ -312,6 +314,7 @@ CGFloat btnSpacerHeight = 0;
         [closeButton setTitleColor:[UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f] forState:UIControlStateNormal];
         [closeButton setTitleColor:[UIColor colorWithRed:0.2f green:0.2f blue:0.2f alpha:0.5f] forState:UIControlStateHighlighted];
         [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: closeButton.titleLabel content: closeButton.titleLabel.text];
         [closeButton.layer setCornerRadius:kCustomIOSAlertViewCornerRadius];
         
         [container addSubview:closeButton];
