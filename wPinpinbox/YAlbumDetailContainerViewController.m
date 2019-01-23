@@ -160,6 +160,15 @@
         self.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
         self.transitionImageView.clipsToBounds = YES;
         self.transitionImageView.frame = source;
+    } else {
+        CGFloat sh = (referenceImage.size.height*source.size.width)/referenceImage.size.width;
+//        CGImageRef imageRef = CGImageCreateWithImageInRect(referenceImage.CGImage, CGRectMake(0, 0, referenceImage.size.width, sh));
+//        UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
+//        CGImageRelease(imageRef);
+        
+        self.transitionImageView.frame = CGRectMake(source.origin.x, source.origin.y, source.size.width, sh);//source;
+        [self.transitionImageView setImage:referenceImage];
+        
     }
     self.transitionImageView.alpha = 1;
     [v addSubview : self.transitionImageView];

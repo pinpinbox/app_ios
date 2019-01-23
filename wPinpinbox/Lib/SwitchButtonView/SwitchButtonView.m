@@ -411,6 +411,7 @@
 {
     if (!_realImageView) return;
     [_realImageView setImage:image];
+    [_realImageView setFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
     [self setNeedsLayout];
 }
 
@@ -455,10 +456,10 @@
         case UIViewContentModeScaleAspectFill:
         {
             float scalex = self.bounds.size.width / _realImageView.image.size.width;
-            float scaley = self.bounds.size.height / _realImageView.image.size.height;
-            float scale = MAX(scalex, scaley);
+            //float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            //float scale = MAX(scalex, scaley);
             
-            size = CGSizeMake(_realImageView.image.size.width * scale, _realImageView.image.size.height * scale);
+            size = CGSizeMake(_realImageView.image.size.width * scalex, _realImageView.image.size.height * scalex);
             break;
         }
             
