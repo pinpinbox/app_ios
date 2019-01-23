@@ -10,6 +10,7 @@
 #import "YAlbumDetailViewController.h"
 #import "AppDelegate.h"
 #import "SwitchButtonView.h"
+#import "wTools.h"
 
 
 // VC transition animation controller

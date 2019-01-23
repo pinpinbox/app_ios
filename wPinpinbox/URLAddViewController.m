@@ -11,6 +11,7 @@
 #import "UIView+Toast.h"
 #import "UIColor+Extensions.h"
 #import "LabelAttributeStyle.h"
+#import "wTools.h"
 
 @interface  URLDataCell : UITableViewCell
 
