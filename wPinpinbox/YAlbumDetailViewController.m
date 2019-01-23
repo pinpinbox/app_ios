@@ -88,6 +88,8 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    //  album detail is changed outward //
+    [self checkCollectedOutward];
     [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
 }
 - (void)setupAlbumWithInfo:(NSDictionary *)info albumId:(NSString *)albumId {
@@ -1622,6 +1624,19 @@ alertView.arrangeStyle = @"Horizontal";
 }
 - (void)albumSettingViewControllerUpdate:(AlbumSettingViewController *)controller {
     
+}
+#pragma mark -
+- (void)checkCollectedOutward {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *aid = (NSString *) [defaults objectForKey:@"keepOwnedAlbumLocal"];
+    if (aid) {
+        if ([aid isEqualToString:self.album_id] && self.albumInfo.allKeys.count) {
+            [self retrieveAlbum:self.album_id silence:YES];
+        }
+        [defaults removeObjectForKey:@"keepOwnedAlbumLocal"];
+    }
+    [defaults synchronize];
 }
 #pragma mark - Likes
 - (void)insertAlbumToLikes {

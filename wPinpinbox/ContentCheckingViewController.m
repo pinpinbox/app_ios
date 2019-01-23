@@ -2644,8 +2644,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [album setObject: [NSNumber numberWithBool: YES] forKey: @"own"];
     [dictionary setObject: album forKey: @"album"];
     self.bookdata = dictionary;
+    [self keepOwnedAlbumLocal:self.albumId];
 }
-
+- (void)keepOwnedAlbumLocal:(NSString *)aid {
+    if (aid) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:aid forKey:@"keepOwnedAlbumLocal"];
+        [defaults synchronize];
+    }
+}
 - (void)checkIsOwnedOrNot:(NSDictionary *)dic {
     NSLog(@"checkIsOwnedOrNot");
     self.bookdata = [dic mutableCopy];
