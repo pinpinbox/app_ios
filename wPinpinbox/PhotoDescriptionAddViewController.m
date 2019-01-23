@@ -8,6 +8,7 @@
 
 #import "PhotoDescriptionAddViewController.h"
 #import "LabelAttributeStyle.h"
+#import "wTools.h"
 
 @interface PhotoDescriptionAddViewController ()<UITextViewDelegate>
 //@property (weak, nonatomic) IBOutlet UILabel *titleLabel;

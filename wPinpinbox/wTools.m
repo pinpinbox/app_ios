@@ -746,7 +746,7 @@ static wTools *instance =nil;
     NSLog(@"time: %f", time);
     
     NSInteger minutes = ((int)time) % (3600 * 24) % 3600 / 60;
-    NSLog(@"minutes: %ld", minutes);
+    NSLog(@"minutes: %ld", (long)minutes);
     
     return minutes;
 }
