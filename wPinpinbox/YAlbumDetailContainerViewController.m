@@ -159,13 +159,16 @@
         self.transitionImageView = [[UIImageViewAligned alloc] initWithImage:referenceImage];
         self.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
         self.transitionImageView.clipsToBounds = YES;
+        self.transitionImageView.slim = [self.fromDelegate isSlim];
         self.transitionImageView.frame = source;
+        
     } else {
+        
         CGFloat sh = (referenceImage.size.height*source.size.width)/referenceImage.size.width;
 //        CGImageRef imageRef = CGImageCreateWithImageInRect(referenceImage.CGImage, CGRectMake(0, 0, referenceImage.size.width, sh));
 //        UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
 //        CGImageRelease(imageRef);
-        
+        self.transitionImageView.slim = [self.fromDelegate isSlim];
         self.transitionImageView.frame = CGRectMake(source.origin.x, source.origin.y, source.size.width, sh);//source;
         [self.transitionImageView setImage:referenceImage];
         
@@ -240,6 +243,7 @@
     animator.transitionImageView.transform = CGAffineTransformIdentity;
     animator.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
     animator.transitionImageView.clipsToBounds = YES;
+    animator.transitionImageView.slim = [animator.fromDelegate isSlim];
     animator.transitionImageView.frame = self.fromReferenceImageViewFrame;
     fromImage.alpha = 0;
     [containerView addSubview : animator.transitionImageView];
@@ -784,5 +788,9 @@
     }
     return self.currentDetailVC.view.frame;
 }
-
+- (BOOL)isSlim {
+    if (self.fromVC && [self.fromVC isEqualToString:@"CategoryVC"])
+        return YES;
+    return NO;
+}
 @end

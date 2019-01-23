@@ -559,6 +559,7 @@
     
     @try {
         YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumid sourceRect:CGRectZero sourceImageView:nil noParam:NO];
+        aDVC.fromVC = @"CategoryVC";
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         
         [appDelegate.myNav pushViewController: aDVC animated: YES];
@@ -1082,7 +1083,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             source = [self.view convertRect:source fromView:collectionView];
             
             YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.albumImageView noParam:YES];
-            
+            aDVC.fromVC = @"CategoryVC";
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [appDelegate.myNav pushViewController: aDVC animated: YES];
             

@@ -369,7 +369,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     CGRect source = [collectionView convertRect:cell.coverImageView.frame
                                        fromView:cell];
     source = [self.view convertRect:source fromView:collectionView];
-    
+    cell.imgBgView.backgroundColor = [UIColor clearColor];
     YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.coverImageView noParam:NO];
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIImageView *)referenceImageView:(ZoomAnimator *)zoomAnimator;
 - (CGRect)sourceImageViewFrameInTransitioningView:(ZoomAnimator *)zoomAnimator;
 - (CGRect)referenceImageViewFrameInTransitioningView:(ZoomAnimator *)zoomAnimator;
+- (BOOL)isSlim;
 @end
 
 
