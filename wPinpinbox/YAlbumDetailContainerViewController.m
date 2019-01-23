@@ -790,7 +790,7 @@
     return self.currentDetailVC.view.frame;
 }
 - (BOOL)isSlim {
-    if (self.fromVC && [self.fromVC isEqualToString:@"CategoryVC"])
+    if (self.fromVC && ([self.fromVC isEqualToString:@"CategoryVC"] || [self.fromVC isEqualToString:@"creatorVC"]))
         return YES;
     return NO;
 }
