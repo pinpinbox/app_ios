@@ -9,14 +9,17 @@
 #import "AlbumInfoViewController.h"
 #import "UIColor+Extensions.h"
 #import "MyLinearLayout.h"
-#import <MapKit/MapKit.h>
 #import "AppDelegate.h"
 #import "GlobalVars.h"
 #import "wTools.h"
 #import "MapHelper.h"
 #import "LabelAttributeStyle.h"
+#import "CustomIOSAlertView.h"
 
-@interface AlbumInfoViewController () {
+@import MapKit;
+@import CoreLocation;
+
+@interface AlbumInfoViewController ()<CLLocationManagerDelegate> {
     float lon;
     float lat;
 }
@@ -35,6 +38,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIButton *routeButton;
+@property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) CLLocation *current;
 @end
 
 @implementation AlbumInfoViewController
@@ -58,7 +64,12 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    CGRect r1 = [self.view convertRect:self.mapView.frame fromView:self.mapView.superview];
+    self.routeButton.frame = CGRectMake(r1.origin.x+r1.size.width-72, r1.origin.y+8, 64, 64);
+    
+}
 - (void)viewWillLayoutSubviews {
     NSLog(@"----------------------");
     NSLog(@"AlbumInfoViewController");
@@ -135,6 +146,10 @@
 
 #pragma mark -
 - (void)initialValueSetup {
+    
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    
     self.navBarView.backgroundColor = [UIColor barColor];
     self.navBarView.myTopMargin = 0;
     self.navBarView.myLeftMargin = self.navBarView.myRightMargin = 0;
@@ -247,8 +262,7 @@
             }
         }
     }
-    //self.mapView.myTopMargin = 8;
-    //self.mapView.myLeftMargin = self.mapView.myRightMargin = 0;
+
 }
 
 - (IBAction)dimissVC:(id)sender {
@@ -262,16 +276,72 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav popViewControllerAnimated: NO];
 }
-
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+- (IBAction)showRoute:(id)sender {
+    
+    if (self.localData) {
+        
+        MKMapItem *item = self.localData[@"mapitem"];
+        MKMapItem *current = [MKMapItem mapItemForCurrentLocation];
+        if (item && current && self.current) {
+            
+            NSString* url = [NSString stringWithFormat: @"http://maps.apple.com/maps?saddr=%f,%f&daddr=%f,%f",self.current.coordinate.latitude,self.current.coordinate.longitude,item.placemark.location.coordinate.latitude,item.placemark.location.coordinate.longitude];
+            
+            CustomIOSAlertView *alertPostView = [[CustomIOSAlertView alloc] init];
+            [alertPostView setContentViewWithMsg:@"即將開啟iOS地圖" contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+            [alertPostView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
+            alertPostView.arrangeStyle = @"Horizontal";
+            [alertPostView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor],[UIColor whiteColor], nil]];
+            [alertPostView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
+                
+            
+            __weak CustomIOSAlertView *weakAlertPostView = alertPostView;
+            [alertPostView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertAlbumView, int buttonIndex) {
+                NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertAlbumView tag]);
+                
+                [weakAlertPostView close];
+                
+                if (buttonIndex == 1) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url] options:@{} completionHandler:^(BOOL success) {
+                        //  try google map if failed
+                        if (!success) {
+                            NSString *gs = @"comgooglemaps://?saddr=%f,%f&daddr=%f,%f";
+                            NSString *u = [NSString stringWithFormat:gs, self.current.coordinate.latitude,self.current.coordinate.longitude,item.placemark.location.coordinate.latitude,item.placemark.location.coordinate.longitude];
+                            NSURL *url = [NSURL URLWithString:u];
+                            if ([[UIApplication sharedApplication] canOpenURL:url]) {
+                                [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+                            } else {
+                                NSString *gs = @"https://maps.google.com?saddr=%f,%f&daddr=%f,%f";
+                                NSString *u = [NSString stringWithFormat:gs, self.current.coordinate.latitude,self.current.coordinate.longitude,item.placemark.location.coordinate.latitude,item.placemark.location.coordinate.longitude];
+                                NSURL *url = [NSURL URLWithString:u];
+                                [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+                            }
+                        }
+                    }];
+                }
+                
+            }];
+            [alertPostView setUseMotionEffects: YES];
+            [alertPostView show];
+            
+            
+        }
+    }
+}
+#pragma mark CLLocationManagerDelegate functions
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    if (locations.count > 0) {
+        CLLocation *l = [locations firstObject];
+        self.current = [[CLLocation alloc] initWithLatitude:l.coordinate.latitude longitude:l.coordinate.longitude];
+        [self.locationManager stopUpdatingLocation];
+        
+    }
+    
+}
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [self.locationManager startUpdatingLocation];
+    }
+}
 
 @end
