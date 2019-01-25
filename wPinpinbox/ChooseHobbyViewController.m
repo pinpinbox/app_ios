@@ -8,7 +8,6 @@
 
 #import "ChooseHobbyViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "MBProgressHUD.h"
 #import "boxAPI.h"
 #import "wTools.h"
 #import "AsyncImageView.h"
@@ -36,6 +35,7 @@
     NSInteger columnCount;
     NSInteger miniInteriorSpacing;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIButton *startUsingPinpinboxBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *startUsingPinpinboxBtnHeight;
@@ -48,7 +48,8 @@
 #pragma mark - viewDidLoad
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.    
+    // Do any additional setup after loading the view.
+    [self initActivityIndicatorView];
     [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.startUsingPinpinboxBtn.titleLabel content: self.startUsingPinpinboxBtn.titleLabel.text];
     columnCount = 3;
     miniInteriorSpacing = 16;
@@ -104,6 +105,13 @@
     self.startUsingPinpinboxBtnHeight.constant = kToolBarButtonHeight;
 }
 
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor thirdMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
 - (void)processHobbyListResult:(NSDictionary *)data {
     if ([data[@"result"] intValue] == 1) {
         NSLog(@"getHobbyList Success");
@@ -138,7 +146,7 @@
 
 - (void)getHobbyList {
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -152,7 +160,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: wself.view animated: YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -335,7 +343,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"selectTag: %@", selectTag);
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -353,7 +361,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -403,7 +411,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"getProfile");
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -420,7 +428,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -485,7 +493,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -499,7 +507,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                                            token: [userPrefs objectForKey:@"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView: self.view animated: YES];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from geturpoints");
