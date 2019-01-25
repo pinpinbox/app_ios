@@ -161,10 +161,10 @@
         NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
         NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
         s.lineSpacing = 3;
-        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} context:ctx];
+        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:ctx];
         s = nil;
         ctx = nil;
-        return ss.size.height+40;
+        return ss.size.height+80;
     }
     
     return 32;

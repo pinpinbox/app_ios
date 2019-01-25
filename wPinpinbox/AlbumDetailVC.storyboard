@@ -378,7 +378,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="275"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="xgo-S4-n7f">
+                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="xgo-S4-n7f">
                                                             <rect key="frame" x="16" y="0.0" width="343" height="243"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <color key="textColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -402,7 +402,7 @@
                                                 <rect key="frame" x="0.0" y="428" width="375" height="52"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="C9A-IU-a13" id="ml3-9l-CBX">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="51.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qXB-bP-Sv0">
@@ -471,7 +471,7 @@
                                                 <rect key="frame" x="0.0" y="480" width="375" height="52"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oKz-g8-rmX" id="4bi-uB-zmQ">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="51.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="52"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic200_arrow_right_dark" translatesAutoresizingMaskIntoConstraints="NO" id="Qq1-6h-4OD">
@@ -783,7 +783,7 @@
                                 <rect key="frame" x="0.0" y="618" width="375" height="49"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="NBN-iK-PSB">
-                                        <rect key="frame" x="16" y="7" width="180" height="42"/>
+                                        <rect key="frame" x="6" y="7" width="180" height="42"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gpe-Ox-jLj">
                                                 <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
@@ -877,7 +877,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="NBN-iK-PSB" firstAttribute="leading" secondItem="CiG-Ee-htK" secondAttribute="leading" constant="16" id="J3n-ym-DSa"/>
+                                    <constraint firstItem="NBN-iK-PSB" firstAttribute="leading" secondItem="CiG-Ee-htK" secondAttribute="leading" constant="6" id="J3n-ym-DSa"/>
                                     <constraint firstAttribute="bottom" secondItem="NBN-iK-PSB" secondAttribute="bottom" id="VWh-TA-g1g"/>
                                     <constraint firstItem="pjs-rM-5OO" firstAttribute="top" secondItem="CiG-Ee-htK" secondAttribute="top" constant="4" id="fnd-4w-vDJ"/>
                                     <constraint firstAttribute="height" constant="49" id="ksx-nY-P5V"/>
