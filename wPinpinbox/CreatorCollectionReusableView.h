@@ -19,6 +19,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *userPictureImageView;
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *userNameLabelHeight;
 @property (weak, nonatomic) IBOutlet UILabel *creativeNameLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *creativeNameLabelHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *creativeNameLabelBottomConstraint;

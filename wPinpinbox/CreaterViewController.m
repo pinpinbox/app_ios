@@ -61,6 +61,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     CGFloat coverImageHeight;
     CGFloat creativeNameLabelHeight;
+    CGFloat userNameLabelHeight;
     CGFloat linkBgViewHeight;
     
     // For Showing Message of Getting Point
@@ -450,7 +451,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (CGFloat)headerHeightCalculation {
     CGFloat headerHeight = 0;
     //headerHeight += coverImageHeight + 32 * 3 + creativeNameLabelHeight + 32 + 67 + 32;
-    headerHeight += coverImageHeight + 32 + 32 * 2;
+    headerHeight += coverImageHeight + 32 + 96;
+    
+    if (![userDic[@"name"] isEqual: [NSNull null]]) {
+        if (![userDic[@"name"] isEqualToString: @""]) {
+            headerHeight += userNameLabelHeight + 16 * 2;
+        }
+    }
     
     if (![userDic[@"sociallink"] isEqual: [NSNull null]]) {
         if (socialLinkInt != 0) {
@@ -459,7 +466,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     }
     // linkBgView
-    headerHeight += 67 + 32;
+    headerHeight += 32;
     
     if (![userDic[@"sociallink"] isEqual: [NSNull null]]) {
         if (socialLinkInt != 0) {
@@ -472,10 +479,10 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog(@"userDic socialLink: %@", userDic[@"sociallink"]);
     }
 //    headerHeight += 1 + 32 + 26.5 + 16;
-    headerHeight += 1 + 26.5 + 16;
+    headerHeight += 1 + 17.5 + 16;
     
     // Add 20 for banner doesn't look to be compressed
-    headerHeight += 20;
+//    headerHeight += 20;
     
     return headerHeight;
 }
@@ -584,7 +591,18 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // User Name Label
     if (![userDic[@"name"] isEqual: [NSNull null]]) {
         headerView.userNameLabel.text = userDic[@"name"];
+        NSLog(@"userDic name: %@", userDic[@"name"]);
         [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.userNameLabel content: headerView.userNameLabel.text];
+        NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        style.lineBreakMode = NSLineBreakByWordWrapping;
+        style.alignment = NSTextAlignmentLeft;
+        NSAttributedString *string = [[NSAttributedString alloc] initWithString: headerView.userNameLabel.text attributes: @{NSFontAttributeName:[UIFont boldSystemFontOfSize: 42.0], NSParagraphStyleAttributeName:style}];
+        CGSize userNameLabelSize = [string boundingRectWithSize: CGSizeMake([UIScreen mainScreen].bounds.size.width - 32 * 2, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context: nil].size;
+        NSLog(@"userNameLabelSize.height: %f", userNameLabelSize.height);
+        
+        // + 10 in order to show real headerView.userNameLabelHeight
+        headerView.userNameLabelHeight.constant = userNameLabelSize.height + 10;
+        userNameLabelHeight = userNameLabelSize.height + 10;
     }
     
     // Creative Name Label
