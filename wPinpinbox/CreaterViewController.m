@@ -455,7 +455,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     if (![userDic[@"name"] isEqual: [NSNull null]]) {
         if (![userDic[@"name"] isEqualToString: @""]) {
-            headerHeight += userNameLabelHeight + 16 * 2;
+            headerHeight += userNameLabelHeight + 16 + 32;
         }
     }
     
@@ -466,7 +466,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     }
     // linkBgView
-    headerHeight += 32;
+//    headerHeight += 32;
     
     if (![userDic[@"sociallink"] isEqual: [NSNull null]]) {
         if (socialLinkInt != 0) {
@@ -479,7 +479,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         NSLog(@"userDic socialLink: %@", userDic[@"sociallink"]);
     }
 //    headerHeight += 1 + 32 + 26.5 + 16;
-    headerHeight += 1 + 17.5 + 16;
+    headerHeight += 1 + 26.5 + 16;
     
     // Add 20 for banner doesn't look to be compressed
 //    headerHeight += 20;
