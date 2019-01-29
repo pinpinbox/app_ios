@@ -23,7 +23,7 @@
 @interface ChangePwdViewController () <UITextFieldDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectText;
 }
-
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UITextField *currentPwdTextField;
 @property (weak, nonatomic) IBOutlet UITextField *pwdTextField1;
 @property (weak, nonatomic) IBOutlet UITextField *pwdTextField2;
@@ -54,7 +54,7 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
+    [self initActivityIndicatorView];
     [self initialValueSetup];
 }
 
@@ -79,6 +79,13 @@
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
+}
+
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)initialValueSetup {
@@ -427,7 +434,7 @@ replacementString:(NSString *)string {
         return;
     }
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -443,7 +450,7 @@ replacementString:(NSString *)string {
                 
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
