@@ -44,6 +44,8 @@
     
     OldCustomAlertView *alertTaskView;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -75,6 +77,7 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    [self initActivityIndicatorView];
     [self initialValueSetup];
 }
 
@@ -102,6 +105,13 @@
 }
 
 #pragma mark -
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
 - (void)initialValueSetup {
     self.navBarView.backgroundColor = [UIColor barColor];
     [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.pPointInfoNoticeLabel content: self.pPointInfoNoticeLabel.text];
@@ -179,7 +189,7 @@
 - (void)getPointStore {
     NSLog(@"getPointStore");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -194,7 +204,7 @@
                                             token: [userPrefs objectForKey: @"token"]];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -693,7 +703,7 @@
         return;
     }
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -709,7 +719,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -813,7 +823,7 @@
     selectproductid = datakey[0];
     
     @try {
-        [wTools HideMBProgressHUD];
+        [self.activityIndicatorView stopAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -837,7 +847,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -920,7 +930,7 @@
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -941,7 +951,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1316,7 +1326,7 @@
             } else if ([protocolName isEqualToString: @"getpayload"]) {
                 [weakSelf buyPoint: selectProductId];
             } else if ([protocolName isEqualToString: @"finishpurchased"]) {
-                [wTools ShowMBProgressHUD];
+                [self.activityIndicatorView startAnimating];
                 [weakSelf finishPurchase: dataSignature];
             } else if ([protocolName isEqualToString: @"doTask1"]) {
                 [weakSelf checkPoint];
