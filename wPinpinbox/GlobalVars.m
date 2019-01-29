@@ -54,7 +54,7 @@ CGFloat kToolBarButtonHeight = 45;
 CGFloat kToolBarViewHeight = 49;
 CGFloat kToolBarViewHeightForX = 87;
 
-CGFloat kActivityIndicatorViewSize = 60;
+CGFloat kActivityIndicatorViewSize = 56;
 
 @implementation GlobalVars
  
