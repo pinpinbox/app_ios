@@ -15,6 +15,7 @@
 #import "MapHelper.h"
 #import "LabelAttributeStyle.h"
 #import "CustomIOSAlertView.h"
+#import "UIViewController+ErrorAlert.h"
 
 @import MapKit;
 @import CoreLocation;
@@ -239,9 +240,10 @@
     if (self.localData == nil) {
         NSLog(@"self.localData == nil");
         self.mapView.hidden = YES;
+        self.routeButton.hidden = YES;
     } else {
         self.mapView.hidden = NO;
-        
+        self.routeButton.hidden = NO;
         if (self.localData) {
             MKMapItem *item = self.localData[@"mapitem"];
             if (item) {
@@ -324,6 +326,15 @@
             [alertPostView show];
             
             
+        } else {
+            [UIViewController showCustomErrorAlertWithMessage:@"請先開啟定位服務，再查詢路線。" onButtonTouchUpBlock:^(CustomIOSAlertView * _Nonnull customAlertView, int buttonIndex) {
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                    [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+                });
+                [customAlertView close];
+            }];
         }
     }
 }
@@ -341,6 +352,8 @@
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     if (status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
         [self.locationManager startUpdatingLocation];
+    } else {
+        self.current = nil;
     }
 }
 

@@ -217,6 +217,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 @property (nonatomic) WKWebViewConfiguration *wkvideoplayerConf;
 @property (nonatomic) BOOL is3rdPartyVideoPlaying;
+
+@property (nonatomic) IBOutlet UIView *autoplayView;
+@property (nonatomic) IBOutlet NSLayoutConstraint *autoplayViewConstraint;
+@property (nonatomic) IBOutlet UIButton *autoplay;
+@property (nonatomic) dispatch_source_t autoplayTimer;
+@property (nonatomic) dispatch_queue_t autoplayQueue;
+@property (nonatomic) NSTimeInterval playStart;
+@property (nonatomic) NSTimeInterval playThrough;
 @end
 
 @implementation ContentCheckingViewController
@@ -959,6 +967,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self checkAudio: wself->oldCurrentPage];
                         [self.imageScrollCV reloadData];
                         [self.thumbnailImageScrollCV reloadData];
+                        [self checkAutoPlay];
                         
                         double delayInSeconds = 0.5;
                         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -1618,7 +1627,82 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.locationBtn.hidden = YES;
     
 }
+#pragma mark - Autoplay
+- (void)checkAutoPlay {
+    self.autoplayViewConstraint.constant = 0;
+    self.autoplayView.hidden = YES;
+    self.playThrough = 0;
+    for (NSDictionary *p in self.photoArray) {
+        if (p[@"duration"] && ![p[@"duration"] isKindOfClass:[NSNull class]]) {
+            NSInteger t = [p[@"duration"] integerValue];
+            if ( t != 0) {
+                self.autoplayViewConstraint.constant = 56;
+                self.autoplayView.hidden = NO;
+                if (p == [self.photoArray firstObject]) {
+                    [self switchAutoPlay:self.autoplay];
+                }
+                break;
+            }
+            
+        }
+    }
+}
+- (void)processAutoplayTime:(NSTimeInterval )tick {
+    self.playThrough += (tick - self.playStart);
+    self.playStart = tick;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSInteger p = [self getCurrentPage];
+        NSDictionary *photo = self.photoArray[p];
+        NSInteger duration = [photo[@"duration"] integerValue];
+        if (self.playThrough >= duration && (p+1) < self.photoArray.count) {
+            
+                [self.imageScrollCV scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:p+1 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+                //self.imageScrollCV.contentOffset = CGPointMake(self.imageScrollCV.frame.size.width+x, 0);
+            
+            self.playThrough = 0;
+            
+            photo = self.photoArray[p+1];
+            duration = [photo[@"duration"] integerValue];
+            if (duration == 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self switchAutoPlay:self.autoplay];
+                });
+                self.playThrough = 0;
+                self.playStart = 0;
+                return;
+            }
+        } else if (p+1 >= self.photoArray.count) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self switchAutoPlay:self.autoplay];
+            });
+            self.playThrough = 0;
+            self.playStart = 0;
+        }
+    });
+}
+- (void) setupAutoplayProcess {
+    if (self.autoplayTimer) {
+        dispatch_cancel(self.autoplayTimer);
+        self.autoplayTimer = nil;
+    } else {
+        self.autoplayQueue = dispatch_queue_create("com.pinpinbox.autoplay" , 0);
+    }
+    self.playStart = [[NSDate date] timeIntervalSinceReferenceDate];
+    self.autoplayTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,self.autoplayQueue);
+    dispatch_source_set_timer(self.autoplayTimer, dispatch_walltime(NULL, 0), 0.5 * NSEC_PER_SEC, 0.1 * NSEC_PER_SEC);
+    __block typeof(self) wself = self;
+    dispatch_source_set_event_handler(self.autoplayTimer, ^{
+        //NSLog(@"dispatch_source_set_event_handler %lf", [[NSDate date] timeIntervalSinceReferenceDate]);
+        [wself processAutoplayTime:[[NSDate date] timeIntervalSinceReferenceDate] ];
+    });
+    dispatch_resume(self.autoplayTimer);
+}
 
+- (void)stopTimer {
+    if (self.autoplayTimer)
+        dispatch_cancel(self.autoplayTimer);
+    self.autoplayTimer = nil;
+}
 #pragma mark - Help Method for DailyMotion
 - (NSDictionary *)queryDictionaryFromString:(NSString *)queryString {
     if ([queryString hasPrefix:@"&"] || [queryString hasPrefix:@"?"]) {
@@ -2696,6 +2780,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             // if the oldCurrentPage didn't minus 1, then it will be crashed when collect function called
             oldCurrentPage -= 1;
             NSLog(@"oldCurrentPage: %lu", (unsigned long)oldCurrentPage);
+        }
+    }
+    if (currentPage < self.photoArray.count) {
+        NSDictionary *photo = self.photoArray[currentPage];
+        if (photo && ![photo[@"duration"] isKindOfClass:[NSNull class]]) {
+            NSInteger t = [photo[@"duration"] integerValue];
+            self.playThrough = 0;
+            self.playStart = 0;
+            if (t){
+                if (self.autoplayTimer == nil)
+                    [self switchAutoPlay:self.autoplay];
+                else
+                    self.playStart = [[NSDate date] timeIntervalSinceReferenceDate];
+            } else if (self.autoplayTimer ){
+                [self switchAutoPlay:self.autoplay];
+            }
         }
     }
 }
@@ -4245,6 +4345,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"backBtnPressed");
     self.navigationController.delegate = nil;
     
+    [self stopTimer];
+    
     [self.videoPlayer pause];
     self.videoPlay = NO;
     self.videoPlayerItem = nil;
@@ -4395,7 +4497,19 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
     [self showCustomMoreActionSheet];
 }
-
+- (IBAction)switchAutoPlay:(id)sender {
+    if (sender) {
+        UIButton *p = (UIButton *)sender;
+        p.selected = !(p.selected);
+        if (p.selected) {
+            [self setupAutoplayProcess];
+            
+        } else {
+            [self stopTimer];
+        }
+    }
+    
+}
 - (void)showCustomMoreActionSheet {
     NSLog(@"");
     NSLog(@"showCustomMoreActionSheet");

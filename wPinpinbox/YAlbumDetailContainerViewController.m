@@ -785,11 +785,15 @@
     if (v) {
         UIView *sv = v.superview;
         CGRect dest = [self.currentDetailVC.view convertRect:sv.frame fromView:sv];
+        if (v.frame.size.height > dest.size.height) {
+            dest = CGRectMake(dest.origin.x, dest.origin.y, v.frame.size.width, v.frame.size.height);
+        }
         return dest;
     }
     return self.currentDetailVC.view.frame;
 }
 - (BOOL)isSlim {
+    
     if (self.fromVC && ([self.fromVC isEqualToString:@"CategoryVC"] || [self.fromVC isEqualToString:@"creatorVC"]))
         return YES;
     return NO;

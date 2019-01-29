@@ -585,6 +585,18 @@ static NSString *autoPlayStr = @"&autoplay=1";
     if (![userDic[@"name"] isEqual: [NSNull null]]) {
         headerView.userNameLabel.text = userDic[@"name"];
         [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.userNameLabel content: headerView.userNameLabel.text];
+        
+//        NSAttributedString *t = headerView.userNameLabel.attributedText;
+    
+//        CGRect ss = [t boundingRectWithSize:CGSizeMake(headerView.userNameLabel.frame.size.width
+//                                           , 1000) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading context: nil];
+        CGSize ss = [headerView.userNameLabel sizeThatFits:CGSizeMake(headerView.userNameLabel.frame.size.width, 1000)];
+        for (NSLayoutConstraint *c in headerView.userNameLabel.constraints) {
+            if (c.firstAttribute == NSLayoutAttributeHeight) {
+                c.constant = ss.height;
+                break;
+            }
+        }
     }
     
     // Creative Name Label
@@ -887,6 +899,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
  heightForHeaderInSection:(NSInteger)section {
     NSLog(@"");
     NSLog(@"heightForHeaderInSection");
+    
+    if (userDic[@"name"] && ![userDic[@"name"] isEqual: [NSNull null]]) {
+        
+        NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
+        [attDic setValue:[UIFont boldSystemFontOfSize:48] forKey:NSFontAttributeName];      // 字体大小
+        [attDic setValue:@1 forKey:NSKernAttributeName];                                // 字间距
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineSpacing = 3;
+        style.alignment = NSTextAlignmentLeft;
+        [attDic setObject:style forKey:NSParagraphStyleAttributeName];
+        NSString *username = userDic[@"name"];
+        
+        CGRect ss = [username boundingRectWithSize:CGSizeMake(self.view.frame.size.width, 1000) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attDic context:nil];
+        
+        return self.jccLayout.headerHeight+ss.size.height-48;
+    }
     return self.jccLayout.headerHeight;
 }
 
