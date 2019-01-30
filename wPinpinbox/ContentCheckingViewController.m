@@ -59,7 +59,7 @@
 #import "3rdPartyVideoPlayerViewController.h"
 #import "MapHelper.h"
 
-#import "MBProgressHUD.h"
+//#import "MBProgressHUD.h"
 
 
 #define kTextContentHeight 155
@@ -138,6 +138,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     BOOL rewardAfterCollect;
     BOOL displayNumOfCollect;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 @property (weak, nonatomic) IBOutlet UIView *navBarBgView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarBgViewHeight;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -379,6 +381,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self initActivityIndicatorView];
     [self initialValueSetup];
     [self retrieveAlbum];
     //self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
@@ -450,6 +453,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // Force to return to portrait orientation
     NSNumber *value = [NSNumber numberWithInt: UIInterfaceOrientationPortrait];
     [[UIDevice currentDevice] setValue: value forKey: @"orientation"];
+}
+
+#pragma mark - initActivityIndicatorView
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 #pragma mark - initialValueSetup
@@ -892,7 +903,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Calling API
 - (void)retrieveAlbum {
     NSLog(@"retrieveAlbum");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     __block typeof(self.albumId) aid = self.albumId;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -901,7 +912,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                               token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -2020,7 +2031,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark -
 - (void)buyAlbum {
     NSLog(@"buyAlbum");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI buyalbum: [wTools getUserID]
@@ -2028,7 +2039,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                       albumid: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response: %@", response);
@@ -2077,13 +2088,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)getPoint: (NSString *)pointStr {
     NSLog(@"getPoint");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
+    
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [wTools getUserID] token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -2131,7 +2143,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (void)newBuyAlbum: (NSString *)pointStr {
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     NSMutableDictionary *rewardDic;
     NSData *jsonData;
     NSString *jsonStr;
@@ -2155,7 +2167,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                           reward: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -2263,7 +2275,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Check Point Task
 - (void)checkTaskComplete {
     NSLog(@"checkTask");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
@@ -2279,7 +2291,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //                                               platform: @"apple"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 //NSLog(@"%@", response);
@@ -2340,7 +2352,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)insertAlbumToLikes {
     NSLog(@"insertAlbumToLikes");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI insertAlbum2Likes: [wTools getUserID]
@@ -2348,7 +2360,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                albumId: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -2386,7 +2398,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)deleteAlbumToLikes {
     NSLog(@"deleteAlbumToLikes");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI deleteAlbum2Likes: [wTools getUserID]
@@ -2394,7 +2406,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                albumId: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 //NSLog(@"response: %@", response);
@@ -2436,14 +2448,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"");
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
                                            token: [userPrefs objectForKey:@"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from geturpoints");
@@ -2528,7 +2540,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2552,7 +2564,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2913,11 +2925,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UIDevice *device = [UIDevice currentDevice];
     NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
-    hud.graceTime = kHUDGraceTime;
-    [app.window addSubview: hud];
-    [hud showAnimated: YES];
+    [self.activityIndicatorView startAnimating];
+    
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
+//    hud.graceTime = kHUDGraceTime;
+//    [app.window addSubview: hud];
+//    [hud showAnimated: YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI slotPhotoUseFor: currentDeviceId
@@ -2925,8 +2939,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                token: [wTools getUserToken]
                                               userId: [wTools getUserID]];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [hud hideAnimated: YES];
-            [hud removeFromSuperview];
+            [self.activityIndicatorView stopAnimating];
+//            [hud hideAnimated: YES];
+//            [hud removeFromSuperview];
             
             if (response != nil) {
                 NSLog(@"response from slotPhotoUseFor");
@@ -3079,11 +3094,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"photoId: %ld", (long)photoId);
     NSString *photoIdStr = [self.photoArray[indexPathRow][@"photo_id"] stringValue];
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
-    hud.graceTime = kHUDGraceTime;
-    [app.window addSubview: hud];
-    [hud showAnimated: YES];
+    [self.activityIndicatorView startAnimating];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
+//    hud.graceTime = kHUDGraceTime;
+//    [app.window addSubview: hud];
+//    [hud showAnimated: YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getPhotoUseFor: photoIdStr
@@ -3091,8 +3107,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                              userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [hud hideAnimated: YES];
-            [hud removeFromSuperview];
+            [self.activityIndicatorView stopAnimating];
+//            [hud hideAnimated: YES];
+//            [hud removeFromSuperview];
             
             if (response != nil) {
                 NSLog(@"response from getPhotoUseFor");
