@@ -79,7 +79,6 @@ typedef UIImageViewAlignmentMask UIImageViewAignmentMask __attribute__((deprecat
 
 // Just in case you need access to the inner image view
 @property (nonatomic, readonly) UIImageView* realImageView;
-@property (nonatomic) BOOL slim;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -393,8 +393,7 @@
 }
 
 - (void)commonInit
-{
-    self.slim = NO;
+{    
     _realImageView = [[UIImageView alloc] initWithFrame:self.bounds];
     _realImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _realImageView.contentMode = self.contentMode;
@@ -457,11 +456,11 @@
         case UIViewContentModeScaleAspectFill:
         {
             float scalex = self.bounds.size.width / _realImageView.image.size.width;
-            if (self.slim) {
-                float scaley = self.bounds.size.height / _realImageView.image.size.height;
-                float scale = MAX(scalex, scaley);
-                scalex = scale;
-            }
+            
+            float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            float scale = MAX(scalex, scaley);
+            scalex = scale;
+        
             
             size = CGSizeMake(_realImageView.image.size.width * scalex, _realImageView.image.size.height * scalex);
             break;

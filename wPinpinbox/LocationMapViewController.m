@@ -16,7 +16,8 @@
 #else
 #define MAPAPIKEY @"AIzaSyBccGhjCogT8jAtxA9H8wpjL-chOjJI1HE"
 #endif
-#define mapboxkey @"sk.eyJ1IjoiYW50aHkwMTExIiwiYSI6ImNqb3Fzank4NzA3cDgzcGxoNGt0Z3JiMWYifQ.lpjmNxrbXh5L6WZ4bETD9Q"
+#define mapboxkey @"sk.eyJ1IjoicGlucGluYm94ODg4IiwiYSI6ImNqcmg5NHpsbzF3Njc0Nm1yNzRhcnd2ancifQ.0NTJUpEd9G8IYM2Npt46bw"
+
 
 @import MapKit;
 @import CoreLocation;

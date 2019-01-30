@@ -160,16 +160,11 @@
         self.transitionImageView = [[UIImageViewAligned alloc] initWithImage:referenceImage];
         self.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
         self.transitionImageView.clipsToBounds = YES;
-        self.transitionImageView.slim = [self.fromDelegate isSlim];
         self.transitionImageView.frame = source;
         
     } else {
         
         CGFloat sh = (referenceImage.size.height*source.size.width)/referenceImage.size.width;
-//        CGImageRef imageRef = CGImageCreateWithImageInRect(referenceImage.CGImage, CGRectMake(0, 0, referenceImage.size.width, sh));
-//        UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
-//        CGImageRelease(imageRef);
-        self.transitionImageView.slim = [self.fromDelegate isSlim];
         self.transitionImageView.frame = CGRectMake(source.origin.x, source.origin.y, source.size.width, sh);//source;
         [self.transitionImageView setImage:referenceImage];
         
@@ -244,7 +239,6 @@
     animator.transitionImageView.transform = CGAffineTransformIdentity;
     animator.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
     animator.transitionImageView.clipsToBounds = YES;
-    animator.transitionImageView.slim = [animator.fromDelegate isSlim];
     animator.transitionImageView.frame = self.fromReferenceImageViewFrame;
     fromImage.alpha = 0;
     [containerView addSubview : animator.transitionImageView];
@@ -418,9 +412,11 @@
             }
             
             
-            [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-                fromVC.view.alpha = 0;
+            [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+                
+                transitionImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(scale, scale);
                 transitionImageView.frame = destFrame;
+                fromVC.view.alpha = 0;
                 transitionImageView.layer.cornerRadius = 6;
                 transitionImageView.alpha = 0.8;
                 toVC.view.alpha = 1.0;
@@ -791,11 +787,5 @@
         return dest;
     }
     return self.currentDetailVC.view.frame;
-}
-- (BOOL)isSlim {
-    
-    if (self.fromVC && ([self.fromVC isEqualToString:@"CategoryVC"] || [self.fromVC isEqualToString:@"creatorVC"]))
-        return YES;
-    return NO;
 }
 @end

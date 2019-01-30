@@ -29,11 +29,14 @@
         NSString *t = @"";
         t = data[@"name"];
         if (t.length) {
-            NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
-            CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1} context:ctx];
+            //NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
+            NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
+            s.lineBreakMode = NSLineBreakByWordWrapping;
+            s.lineSpacing = 3;
+            CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:nil];
             
-            ctx = nil;
-            return ss.size.height+32;
+            //ctx = nil;
+            return (ss.size.height > 68) ? 68+32: ss.size.height+32;
         }
     }
     
@@ -158,13 +161,13 @@
     if (![data[@"description"] isKindOfClass:[NSNull class]])
         t = data[@"description"];
     if (t.length) {
-        NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
         NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
         s.lineSpacing = 3;
-        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:ctx];
+        s.lineBreakMode = NSLineBreakByWordWrapping;
+        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:nil];
         s = nil;
-        ctx = nil;
-        return ss.size.height+80;
+        
+        return ss.size.height+64;
     }
     
     return 32;
