@@ -18,7 +18,6 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "MBProgressHUD.h"
 #import "boxAPI.h"
 #import "wTools.h"
 #import "AsyncImageView.h"
@@ -174,6 +173,8 @@
     
     BOOL wantToGetNewsLetter;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 @property (nonatomic, strong) JCCollectionViewWaterfallLayout *jccLayout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UICollectionView *homeCollectionView;
@@ -250,9 +251,8 @@
 - (void)viewDidLoad {
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
-    
     NSLog(@"UserId: %@", [wTools getUserID]);
-    
+    [self initActivityIndicatorView];
     isSearchTextFieldSelected = NO;
     self.albumCollectionView.hidden = YES;
     isViewLoading = YES;
@@ -264,11 +264,6 @@
     
     oldNavBarViewYValue = self.navBarView.frame.origin.y;
     NSLog(@"self.navBarView.frame.origin.y: %f", self.navBarView.frame.origin.y);
-    
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    CGFloat screenScale = [[UIScreen mainScreen] scale];
-    CGSize screenSize = CGSizeMake(screenBounds.size.width * screenScale, screenBounds.size.height * screenScale);
-    NSLog(@"screenSize: %@", NSStringFromCGSize(screenSize));
     
     // Get user data for flurry
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -319,6 +314,13 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)settingSizeBasedOnDevice {
@@ -388,7 +390,7 @@
 #pragma mark - Version Update
 - (void)checkVersion {
     NSLog(@"call checkVersion");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *version = [self getVersion];
@@ -398,7 +400,7 @@
         NSString *response = [boxAPI checkUpdateVersion: @"apple" version: version];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"checkVersion Response != nil");
@@ -630,7 +632,7 @@
 - (void)updateList {
     NSLog(@"");
     NSLog(@"updateList");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
@@ -646,7 +648,7 @@
                                            rank: wself->rankType];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from updateList");
@@ -750,8 +752,7 @@
     NSLog(@"checkAd");
     
     @try {
-        //        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -767,7 +768,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -824,7 +825,7 @@
     NSLog(@"getCategoryList");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -838,7 +839,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -894,7 +895,7 @@
     NSLog(@"\ngetTheMeArea");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -908,7 +909,7 @@
         NSString *response = [boxAPI getTheMeArea: [wTools getUserToken] userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from getTheMeArea");
@@ -993,7 +994,7 @@
 }
 #pragma mark - Get Newly joined user list (116)
 - (void)showNewJoinUsersList {
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     __block typeof(self) wself = self;
     NSUInteger count = _justJoinedListArray? _justJoinedListArray.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1003,7 +1004,7 @@
                                    userId:[wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             if (response) {
                 if (![wself checkTimedOut:response api:@"getNewJoinList" eventId:@"" text:@""]){
                     
@@ -1045,8 +1046,7 @@
 }
 #pragma mark - Get hotlist (115)
 - (void)showHotList {
-    
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     __block typeof(self) wself = self;
     NSUInteger count = _hotListArray? _hotListArray.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1057,22 +1057,20 @@
                                userId:[wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
+            
             if (response) {
                 if (![wself checkTimedOut:response api:@"getHotList" eventId:@"" text:@""]){
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if (![dic[@"result"] isEqualToString:@"SYSTEM_OK"]) {
                         NSLog(@"showHotList result: %@", dic[@"result"]);
-                        
                         if (dic[@"message"])
                             [wself showCustomErrorAlert: dic[@"message"]];
                         else
                             [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        
                         return ;
                     }
-                    
                     [wself processHotList:dic];
                 }
             }
@@ -1118,7 +1116,7 @@
 }
 #pragma mark - Get Recommended User List
 - (void)showUserRecommendedList {
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     __block typeof(self) wself = self;
     NSUInteger count = followUserData? followUserData.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1132,7 +1130,7 @@
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             if (response != nil) {
                 NSLog(@"showUserRecommendedList");
                 NSLog(@"response from getRecommendedList");
@@ -1193,7 +1191,7 @@
 }
 
 - (void)showAlbumRecommendedList {
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1207,7 +1205,7 @@
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"showAlbumRecommendedList");
@@ -1471,8 +1469,7 @@
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     @try {
-        //        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1488,8 +1485,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                //                [MBProgressHUD hideHUDForView: self.view animated: YES];
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1584,7 +1580,7 @@
     NSLog(@"eventId: %@", eventId);
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1601,7 +1597,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2129,8 +2125,7 @@
                                              placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
             }
             cell.userNameLabel.text = userDic[@"name"];
-            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
-            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];            
         } else {
             NSLog(@"userData is nil");
         }
@@ -3492,7 +3487,7 @@ replacementString:(NSString *)string {
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: dataDic options: 0 error: nil];
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
     
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -3500,7 +3495,7 @@ replacementString:(NSString *)string {
                                           token: [wTools getUserToken]
                                           param: jsonStr];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 if (![wself checkTimedOut:response api:@"updateUser" eventId:@"" text:@""]) {
