@@ -67,6 +67,7 @@
 
 
 #pragma mark - Photo Editor SDK
+//  DSPhotoEditorSDK.framework archive之前必須先移除i386, x86_64 才能上傳app store connect //
 #if TARGET_OS_SIMULATOR
 #else
 #import <DSPhotoEditorSDK/DSPhotoEditorSDK.h>
