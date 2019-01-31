@@ -164,6 +164,8 @@
 }
 
 // User Setting Data
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 @property (strong,nonatomic) NSDictionary *data;
 
 @property (nonatomic, strong) NSIndexPath *firstCategoryIndexPath;
@@ -242,6 +244,8 @@
     NSLog(@"self.postMode: %d", self.postMode);
     NSLog(@"self.fromVC: %@", self.fromVC);
     NSLog(@"self.userIdentity: %@", self.userIdentity);
+    [self initActivityIndicatorView];
+
     [self setupUI1];
     [self getAlbumDataOptions];
     //[self checkCreatePointTask];
@@ -289,10 +293,17 @@
     }
 }
 
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
 - (void)getAlbumDataOptions {
     NSLog(@"getAlbumDataOptions");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -307,7 +318,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -356,7 +367,7 @@
 - (void)getAlbumSettings {
     NSLog(@"getAlbumSettings");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -371,7 +382,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -521,7 +532,7 @@
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -535,7 +546,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1424,7 +1435,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)postAlbum {
     NSLog(@"postAlbum");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1441,7 +1452,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         dispatch_async(dispatch_get_main_queue(), ^{
             //[wTools HideMBProgressHUD];
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1745,7 +1756,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"callAlbumSettings");
     NSLog(@"jsonStr: %@", jsonStr);
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1764,7 +1775,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1870,7 +1881,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
     NSLog(@"ToRetrievealbumpViewControlleralbumid");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1885,7 +1896,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

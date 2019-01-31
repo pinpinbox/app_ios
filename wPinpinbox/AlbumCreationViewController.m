@@ -160,6 +160,7 @@ DSPhotoEditorViewControllerDelegate>
     NSInteger previewPageStrToInt;
     BOOL isPreviewPageModified;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 
 @property (strong, nonatomic) AVPlayer *avPlayer;
 @property (strong, nonatomic) AVPlayerItem *avPlayerItem;
@@ -282,10 +283,10 @@ DSPhotoEditorViewControllerDelegate>
     [st layoutIfNeeded];
 }
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.    
+    // Do any additional setup after loading the view.
+    [self initActivityIndicatorView];
     isPreviewPageModified = NO;
     
     [wTools sendScreenTrackingWithScreenName:@"編輯器"];
@@ -446,6 +447,13 @@ DSPhotoEditorViewControllerDelegate>
                 break;
         }
     }
+}
+
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 #pragma mark - handleEnteredBackground
@@ -801,7 +809,7 @@ DSPhotoEditorViewControllerDelegate>
 
 - (void)callAlbumSettingsForPreviewPage:(NSString *)jsonStr {
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -819,7 +827,7 @@ DSPhotoEditorViewControllerDelegate>
                                           settings: jsonStr];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -865,7 +873,7 @@ DSPhotoEditorViewControllerDelegate>
 
 - (void)callUpdatePhotoOfDiyWithoutPhoto: (NSString *)textStr {
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -888,7 +896,7 @@ DSPhotoEditorViewControllerDelegate>
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 
@@ -896,12 +904,8 @@ DSPhotoEditorViewControllerDelegate>
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
-                
-                
                 if ([response isEqualToString: timeOutErrorCode]) {
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"callUpdatePhotoOfDiyWithoutPhoto"
                                          textStr: textStr
@@ -911,7 +915,6 @@ DSPhotoEditorViewControllerDelegate>
                                        audioMode: @""
                                           option: @""];
                 } else {
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
@@ -1506,7 +1509,7 @@ shouldChangeTextInRange:(NSRange)range
 - (void)updateAudio {
     NSLog(@"updateAudio");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1534,7 +1537,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1611,7 +1614,7 @@ shouldChangeTextInRange:(NSRange)range
 
 - (void)deleteAudioOfDiy {
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1634,7 +1637,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1765,7 +1768,7 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"reload");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1783,7 +1786,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught %@", exception );
@@ -1862,7 +1865,7 @@ shouldChangeTextInRange:(NSRange)range
 
 - (void)getCooperation {
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1883,7 +1886,7 @@ shouldChangeTextInRange:(NSRange)range
                                                data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1952,7 +1955,7 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"updateAlbumOfDiy");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1969,7 +1972,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2130,7 +2133,7 @@ shouldChangeTextInRange:(NSRange)range
     NSString *pid = [ImageDataArr[selectItem][@"photo_id"] stringValue];
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2148,7 +2151,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2197,7 +2200,7 @@ shouldChangeTextInRange:(NSRange)range
     NSString *pid = [ImageDataArr[selectItem][@"photo_id"] stringValue];
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2216,7 +2219,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2825,7 +2828,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     NSLog(@"selectItem: %ld", (long)selectItem);
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2852,7 +2855,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -3890,7 +3893,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                                  encoding: NSUTF8StringEncoding];
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -3906,7 +3909,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                           settings: jsonString];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -4867,7 +4870,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - MBProgressHUD
 - (void)showHUDWithMessage:(NSString *)message {
-    
     self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     self.hud.mode = MBProgressHUDModeIndeterminate;
     self.hud.label.text = message;
@@ -4919,21 +4921,17 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 #pragma mark -
 - (void)didSelectLocation:(NSString *)location {
-    
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         
     }
-    
-    
-    
     NSString *pid = [ImageDataArr [selectItem][@"photo_id"] stringValue];
     __block typeof(self) wself = self;
     [boxAPI updatephotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:self.albumid photo_id:pid key:@"location" settingStr:location  completed:^(NSDictionary *result, NSError *error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
         });
         
         if (result) {
@@ -5003,7 +5001,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)addHyperLinks:(NSString *)jsonstr {
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         
     } @finally {
@@ -5016,7 +5014,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     __block typeof(self) wself = self;
     [boxAPI updatephotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:self.albumid photo_id:pid key:@"hyperlink" settingStr:jsonstr  completed:^(NSDictionary *result, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
         });
         
         if (result) {
