@@ -288,7 +288,7 @@
             NSString* url = [NSString stringWithFormat: @"http://maps.apple.com/maps?saddr=%f,%f&daddr=%f,%f",self.current.coordinate.latitude,self.current.coordinate.longitude,item.placemark.location.coordinate.latitude,item.placemark.location.coordinate.longitude];
             
             CustomIOSAlertView *alertPostView = [[CustomIOSAlertView alloc] init];
-            [alertPostView setContentViewWithMsg:@"即將開啟iOS地圖" contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+            [alertPostView setContentViewWithMsg:@"即將開啟地圖" contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
             [alertPostView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
             alertPostView.arrangeStyle = @"Horizontal";
             [alertPostView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor],[UIColor whiteColor], nil]];

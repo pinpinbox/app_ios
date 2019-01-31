@@ -369,6 +369,9 @@
     UIImageView *fromImage = [animator.fromDelegate referenceImageView:animator];
     UIImageView *sourceImage = [animator.fromDelegate sourceImageView:animator];
     
+    fromImage.alpha = 0;
+    sourceImage.alpha = 0;
+    
     CGPoint anchor = CGPointMake(CGRectGetMidX(sourceFrame),CGRectGetMidY(sourceFrame) );
     CGPoint translatedPoint = [gestureRecognizer translationInView:sourceImage];
     
@@ -395,10 +398,11 @@
                 [UIView animateWithDuration:[self.animator transitionDuration:self.transitionContext] delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                     transitionImageView.frame = sourceFrame;
                     fromVC.view.alpha = 1.0;
-                    sourceImage.alpha = 1.0;
-                    fromImage.hidden = NO;
-                    fromImage.alpha = 1;
+            
                 } completion:^(BOOL finished) {
+                    
+                    fromImage.alpha = 1;
+                    sourceImage.alpha = 1.0;
                     sourceImage.hidden = NO;
                     fromImage.hidden = NO;
                     [animator.transitionImageView removeFromSuperview];
@@ -411,7 +415,8 @@
                 return;
             }
             
-            
+            fromImage.alpha = 0;
+            sourceImage.alpha = 0.0;
             [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                 
                 transitionImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(scale, scale);

@@ -1647,6 +1647,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
     }
 }
+- (void)postProcessAutoplay:(NSNumber *)p{
+    NSInteger p0 = [p integerValue];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self scrollViewDidEndDecelerating:self.imageScrollCV];
+    });
+}
 - (void)processAutoplayTime:(NSTimeInterval )tick {
     self.playThrough += (tick - self.playStart);
     self.playStart = tick;
@@ -1656,12 +1663,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSInteger duration = [photo[@"duration"] integerValue];
         if (self.playThrough >= duration && (p+1) < self.photoArray.count) {
             
-                [self.imageScrollCV scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:p+1 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
-                //self.imageScrollCV.contentOffset = CGPointMake(self.imageScrollCV.frame.size.width+x, 0);
-            
-            self.playThrough = 0;
+            [self.imageScrollCV scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:p+1 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
             
             photo = self.photoArray[p+1];
+            
+            
+            [self performSelector:@selector(postProcessAutoplay:) withObject:[NSNumber numberWithInteger:p+1] afterDelay:0.5];
+            self.playThrough = 0;
+            
+            
             duration = [photo[@"duration"] integerValue];
             if (duration == 0) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1736,6 +1746,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         return;
     }
     if ([useFor isEqualToString: @"video"]) {
+        cell.videoBtn.hidden = NO;
         if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
             [self playUploadedVideo: cell page: page];
         }
@@ -2051,7 +2062,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     //    NSLog(@"playerItem: %@", playerItem);
     
     videoIsPlaying = YES;
-    
+    cell.videoBtn.hidden = YES;
     [self.avPlayer pause];
     self.mScrubber.hidden = YES;
     

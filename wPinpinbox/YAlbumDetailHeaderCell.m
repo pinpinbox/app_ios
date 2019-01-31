@@ -34,9 +34,8 @@
             s.lineBreakMode = NSLineBreakByWordWrapping;
             s.lineSpacing = 3;
             CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:nil];
-            
-            //ctx = nil;
-            return (ss.size.height > 68) ? 68+32: ss.size.height+32;
+                        
+            return ss.size.height+64;
         }
     }
     

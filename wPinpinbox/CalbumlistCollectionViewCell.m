@@ -19,6 +19,7 @@
 #import "UIViewController+ErrorAlert.h"
 #import "CustomIOSAlertView.h"
 #import "LabelAttributeStyle.h"
+#import "UIColor+HexString.h"
 
 @interface CalbumlistCollectionViewCell ()
 @property (nonatomic) UIImageView *caution;
@@ -33,8 +34,8 @@
     self.userAvatar.multipleTouchEnabled = YES;
     [self.userAvatar addGestureRecognizer:tap];
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 95, [UIScreen mainScreen].bounds.size.width, 1)];
-    line.backgroundColor = [UIColor thirdGrey];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 95, [UIScreen mainScreen].bounds.size.width, 0.5)];
+    line.backgroundColor = [UIColor colorFromHexString:@"d4d4d4"];
     [self addSubview: line];
     
     _caution = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic200_warn_pink"]];
