@@ -9,7 +9,6 @@
 #import "NotifTabViewController.h"
 #import "boxAPI.h"
 #import "wTools.h"
-#import "MBProgressHUD.h"
 #import "NotifTabTableViewCell.h"
 #import "AsyncImageView.h"
 #import "UIColor+Extensions.h"
@@ -45,6 +44,8 @@
     UIView *noInfoView;
     BOOL isNoInfoViewCreate;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @end
@@ -55,17 +56,19 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
+    [self initActivityIndicatorView];
     [self initialValueSetup];
 }
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
 }
+
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"");
     NSLog(@"NotifTabTableViewController viewWillAppear");
     [super viewWillAppear:animated];
-    
     
     for (UIView *v in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[v viewWithTag: 104];
@@ -107,6 +110,13 @@
 }
 
 #pragma mark -
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
 - (void)initialValueSetup {
     nextId = 0;
     isLoading = NO;
@@ -153,7 +163,7 @@
 
 - (void)getPushQueue {
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -172,7 +182,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

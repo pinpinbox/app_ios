@@ -20,4 +20,7 @@ target 'wPinpinbox' do
   pod 'FBSDKCoreKit', '~> 4.38.1'
   pod 'FBSDKLoginKit', '~> 4.38.1'
   pod 'GoogleAnalytics'
+
+  pod 'DGActivityIndicatorView'
+
 end

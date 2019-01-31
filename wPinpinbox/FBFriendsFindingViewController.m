@@ -10,7 +10,6 @@
 #import "UIColor+Extensions.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
-#import "MBProgressHUD.h"
 #import "boxAPI.h"
 #import "wTools.h"
 #import "FBFriendsListViewController.h"
@@ -35,6 +34,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSInteger nextId;
     NSMutableArray *pictures;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel1;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel2;
 @end
@@ -44,6 +44,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [self initActivityIndicatorView];
     [self gradientViewSetup];
     [self initSetup];
     [self buttonSetup];
@@ -55,8 +56,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 #pragma mark - Setup Methods
-- (void)gradientViewSetup
-{
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
+- (void)gradientViewSetup {
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.gradientView.bounds;
     gradient.colors = @[(id)[UIColor FBGradientViewColor].CGColor, (id)[UIColor whiteColor].CGColor];
@@ -65,8 +72,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     self.gradientView.alpha = 0.6;
 }
 
-- (void)initSetup
-{
+- (void)initSetup {
     nextId = 0;
     isLoading = NO;
     pictures = [NSMutableArray new];
@@ -305,7 +311,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     if (!isLoading) {
         if (pictures.count == 0) {
             @try {
-                [MBProgressHUD showHUDAddedTo: self.view animated:YES];
+                [self.activityIndicatorView startAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -332,7 +338,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 @try {
-                    [MBProgressHUD hideHUDForView: self.view  animated:YES];
+                    [self.activityIndicatorView stopAnimating];
                 } @catch (NSException *exception) {
                     // Print exception information
                     NSLog( @"NSException caught" );

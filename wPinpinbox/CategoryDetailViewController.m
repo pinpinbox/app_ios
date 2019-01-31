@@ -34,6 +34,8 @@
     NSInteger columnCount;
     NSInteger miniInteriorSpacing;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 @property (nonatomic, strong) JCCollectionViewWaterfallLayout *jccLayout;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -49,6 +51,7 @@
     NSLog(@"CategoryDetailViewController");
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    [self initActivityIndicatorView];
     [self initialValueSetup];
     [self loadData];
 }
@@ -76,6 +79,13 @@
 }
 
 #pragma mark -
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
 - (void)initialValueSetup {
     nextId = 0;
     isLoading = NO;
@@ -133,7 +143,7 @@
 - (void)retrieveHotRank {
     NSLog(@"retrieveHotRank");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -153,7 +163,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

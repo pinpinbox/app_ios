@@ -32,6 +32,7 @@
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import "NewCooperationViewController.h"
 #import <SafariServices/SafariServices.h>
+#import "ContentCheckingViewController.h"
 
 @interface CalbumlistCollectionViewLayout : UICollectionViewFlowLayout
 //@property (nonatomic) CGFloat itemHeight;
@@ -93,6 +94,7 @@
     
     OldCustomAlertView *alertView;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 
 //@property (nonatomic, strong) JCCollectionViewWaterfallLayout *layout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
@@ -114,7 +116,7 @@
     NSLog(@"CalbumlistViewController");
     NSLog(@"viewDidLoad");
     NSLog(@"Test");
-    
+
     wtitle.text=NSLocalizedString(@"GeneralText-fav", @"");
     dataarr=[NSMutableArray new];
     nextId = 0;
@@ -170,10 +172,18 @@
     NSLog(@"CalbumlistViewController");
     NSLog(@"viewWillAppear");
     NSLog(@"Test");
+    [self initActivityIndicatorView];
     [self reloaddata];
 }
 
 #pragma mark -
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2 - 100);
+    NSLog(@"self.activityIndicatorView.frame: %@", NSStringFromCGRect(self.activityIndicatorView.frame));
+    [self.view addSubview: self.activityIndicatorView];
+}
 
 - (void)refresh {
     NSLog(@"refresh");
@@ -214,8 +224,9 @@
     NSLog(@"getcalbumlist");
     
     if (nextId == 0)
-        [wTools ShowMBProgressHUD];
-
+        [self.activityIndicatorView startAnimating];
+    
+    NSLog(@"self.activityIndicatorView.frame: %@", NSStringFromCGRect(self.activityIndicatorView.frame));
     __block typeof(self) wself = self;
     NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
     
@@ -227,7 +238,7 @@
                                              limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             UIActivityIndicatorView *v = (UIActivityIndicatorView *)[self.collectionview viewWithTag:54321];
                 
             if (v) {
@@ -247,8 +258,12 @@
                 NSLog(@"getcalbumlist");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getcalbumlist"
-                                         albumId: @""];
+                                     protocolName: @"getcalbumlist"
+                                          albumId: @""
+                                         userbook: @""
+                                          eventId: @""
+                                         postMode: NO
+                                  fromEventPostVC: NO];
                     [wself.refreshControl endRefreshing];
                 });
                 wself->isreload = NO;
@@ -641,13 +656,25 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         //if (zipped) {
         NSLog(@"if zipped is YES");
         if (type == 2) {
-            [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+            [self ReadContentCheckingVC: albumId
+                               userbook: @"Y"
+                                eventId: nil
+                               postMode: NO
+                        fromEventPostVC: NO];
             return;
         }
         if ([[(id)userId stringValue] isEqualToString:[wTools getUserID]]) {
-            [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+            [self ReadContentCheckingVC: albumId
+                               userbook: @"Y"
+                                eventId: nil
+                               postMode: NO
+                        fromEventPostVC: NO];
         } else {
-            [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+            [self ReadContentCheckingVC: albumId
+                               userbook: @"Y"
+                                eventId: nil
+                               postMode: NO
+                        fromEventPostVC: NO];
         }
         //} else if (type == 2) {
         //    [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
@@ -666,6 +693,62 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - UICollectionViewFlowLayoutDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 
+}
+
+- (void)ReadContentCheckingVC: (NSString *)albumId
+                     userbook: (NSString *)userbook
+                      eventId: (NSString *)eventId
+                     postMode: (BOOL)postMode
+              fromEventPostVC: (BOOL)fromEventPostVC {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [self.activityIndicatorView startAnimating];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI retrievealbump: albumId
+                                                uid: [wTools getUserID]
+                                              token: [wTools getUserToken]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.activityIndicatorView stopAnimating];
+            
+            if (response != nil) {
+                NSLog(@"response from retrievealbump");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"wTools");
+                    NSLog(@"ReadContentCheckingVC");
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"ReadContentCheckingVC"
+                                         albumId: albumId
+                                        userbook: userbook
+                                         eventId: eventId
+                                        postMode: postMode
+                                 fromEventPostVC: fromEventPostVC];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    if ([dic[@"result"] intValue] == 1) {
+                        NSLog(@"result bool value is YES");
+                        NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
+                        NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
+                        
+                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                        contentCheckingVC.albumId = albumId;
+                        contentCheckingVC.postMode = postMode;
+                        
+                        [app.myNav pushViewController: contentCheckingVC animated: YES];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
+                }
+            }
+        });
+    });
 }
 
 - (void)updateAlbumact:(NSString *) albumid {
@@ -871,7 +954,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)getIdentity:(NSString *)albumId
          templateId:(NSString *)templateId
                 msg:(NSString *)msg {
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
@@ -885,7 +968,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSString *coopid = [boxAPI getcooperation: [wTools getUserID] token: [wTools getUserToken] data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response: %@", response);
@@ -959,14 +1042,14 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI delalbum: [wTools getUserID]
                                         token: [wTools getUserToken]
                                       albumid: albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from delalbum");
@@ -975,8 +1058,13 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CalbumlistViewController");
                     NSLog(@"delalbum");
-                    
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"") protocolName: @"delalbum" albumId: albumid];
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"delalbum"
+                                         albumId: albumid
+                                        userbook: nil
+                                         eventId: nil
+                                        postMode: NO
+                                 fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -1331,7 +1419,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 -(void)hidealbumqueue:(NSString *)albumid {
     NSLog(@"hidealbumqueue");
     
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = @"";
@@ -1340,17 +1428,20 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                   albumid: albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CalbumlistViewController");
                     NSLog(@"hidealbumqueue");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"hidealbumqueue"
-                                         albumId: albumid];
+                                         albumId: albumid
+                                        userbook: nil
+                                         eventId: nil
+                                        postMode: NO
+                                 fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -1406,7 +1497,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 -(void)deletecooperation:(NSString *)albumid {
     NSLog(@"deletecooperation");
     
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -1419,7 +1510,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                         data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from deletecooperation");
@@ -1430,7 +1521,11 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"deletecooperation");
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"deletecooperation"
-                                         albumId: albumid];
+                                         albumId: albumid
+                                        userbook: nil
+                                         eventId: nil
+                                        postMode: NO
+                                 fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -1756,7 +1851,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     self.albumId = albumId;
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1781,7 +1876,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSString *albumDetail = [boxAPI retrievealbump:albumId uid:[wTools getUserID] token:[wTools getUserToken]];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1797,8 +1892,11 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"checkTaskComplete");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"checkTaskCompleted"
-                                          albumId: albumId];
-                     
+                                          albumId: albumId
+                                         userbook: nil
+                                          eventId: nil
+                                         postMode: NO
+                                  fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *detail = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [albumDetail dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -1995,7 +2093,7 @@ didCompleteWithResults:(NSDictionary *)results {
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2019,7 +2117,7 @@ didCompleteWithResults:(NSDictionary *)results {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2035,7 +2133,11 @@ didCompleteWithResults:(NSDictionary *)results {
                     NSLog(@"checkPoint");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"doTask2"
-                                          albumId: wself.albumId];
+                                          albumId: wself.albumId
+                                         userbook: nil
+                                          eventId: nil
+                                         postMode: NO
+                                  fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -2198,7 +2300,11 @@ didCompleteWithResults:(NSDictionary *)results {
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert:(NSString *)msg
                   protocolName:(NSString *)protocolName
-                       albumId:(NSString *)albumId {
+                       albumId:(NSString *)albumId
+                      userbook:(NSString *)userbook
+                       eventId:(NSString *)eventId
+                      postMode:(BOOL)postMode
+               fromEventPostVC:(BOOL)fromEventPostVC {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -2235,6 +2341,8 @@ didCompleteWithResults:(NSDictionary *)results {
                 [weakSelf hidealbumqueue: albumId];
             } else if ([protocolName isEqualToString: @"doTask2"]) {
                 [weakSelf checkPoint];
+            } else if ([protocolName isEqualToString: @"ReadContentCheckingVC"]) {
+                [weakSelf ReadContentCheckingVC: albumId userbook: userbook eventId: eventId postMode: postMode fromEventPostVC: fromEventPostVC];
             }
         }
     }];

@@ -58,6 +58,8 @@
     BOOL isInsertBetweenTags;
     NSRange cursorRange;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 @property (weak, nonatomic) IBOutlet UIView *blackView;
 //@property (nonatomic) UIVisualEffectView *effectView;
 @property (weak, nonatomic) IBOutlet MyFrameLayout *actionSheetView;
@@ -76,6 +78,7 @@
     [super viewDidLoad];
     NSLog(@"MessageboardViewController");
     NSLog(@"viewDidLoad");
+    
     // Do any additional setup after loading the view from its nib.
 //    kbSize = CGSizeZero;
 }
@@ -107,6 +110,13 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)initialValueSetup {
@@ -144,7 +154,7 @@
 - (void)getMessageBoardList {
     NSLog(@"getMessageBoardList");
     if (self.typeId == nil || self.type == nil) return;
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 10];
     NSLog(@"limit: %@", limit);
@@ -162,7 +172,7 @@
                                          limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"");
@@ -351,12 +361,11 @@
     NSLog(@"");
     NSLog(@"insertMessage");
     NSLog(@"text: %@", text);
-    
     // Set userInteractionEnabled to NO to avoid crash when
     // user wants to scroll tableView, but the new data hasn't received yet
     self.tableView.userInteractionEnabled = NO;
     
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     NSLog(@"");
     NSLog(@"nextId: %ld", (long)nextId);
@@ -377,7 +386,7 @@
                                         limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"");
@@ -527,11 +536,11 @@
 - (void)slideIn {
     NSLog(@"");
     NSLog(@"sldeIn");
-    
     self.view.frame = [[UIScreen mainScreen] bounds];
     
 //    [inputTextView addObserver: self forKeyPath: @"selectedTextRange" options: NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context: nil];
     
+    [self initActivityIndicatorView];
     [self setupTagBackgroundView];
     [self setupCollectionView];
     [self setupActionSheetView];

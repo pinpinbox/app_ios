@@ -20,7 +20,7 @@
 #import "VersionUpdate.h"
 #import "UIColor+Extensions.h"
 #import "UIView+Toast.h"
-#import "MBProgressHUD.h"
+//#import "MBProgressHUD.h"
 #import "CustomIOSAlertView.h"
 #import "MyTabBarController.h"
 #import "FBFriendsFindingViewController.h"
@@ -53,6 +53,8 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSTimer *timer;
     UIImageView *bg;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 @property (weak, nonatomic) IBOutlet UIButton *termsAndConditionsBtn;
 
 @property (weak, nonatomic) IBOutlet UIButton *createAccountBtn;
@@ -84,6 +86,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [super viewDidLoad];
     NSLog(@"");
     NSLog(@"ViewController viewDidLoad");
+    [self initActivityIndicatorView];
     self.navigationController.navigationBar.hidden = YES;
     
     // Getting TimeStamp Info
@@ -114,6 +117,13 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [self loginBtnSetup];
     [self aboutBtnSetup];
     [self redirectionCheck];
+}
+
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)faceBookLoginBtnSetup {
@@ -313,7 +323,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSString *token = [userPrefs objectForKey:@"token"];
         
         @try {
-            [MBProgressHUD showHUDAddedTo: self.view animated:YES];
+            [self.activityIndicatorView startAnimating];
         } @catch (NSException *exception) {
             // Print exception information
             NSLog( @"NSException caught" );
@@ -332,7 +342,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
             */
             dispatch_async(dispatch_get_main_queue(), ^{
                 @try {
-                    [MBProgressHUD hideHUDForView: wself.view  animated:YES];
+                    [wself.activityIndicatorView stopAnimating];
                 } @catch (NSException *exception) {
                     // Print exception information
                     NSLog( @"NSException caught" );
@@ -496,7 +506,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)loginAccount {
     NSLog(@"loginAccount");
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated:YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog(@"NSException caught");
@@ -515,7 +525,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: sself.view  animated:YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog(@"NSException caught");
@@ -732,7 +742,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                             jsonStr:(NSString *)jsonStr {
     NSLog(@"buisnessSubUserFastRegister");
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog(@"NSException caught");
@@ -746,7 +756,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated:YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog(@"NSException caught");
@@ -831,7 +841,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 
 - (void)facebookLogin:(NSString *)fbId {
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated:YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -845,7 +855,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view  animated:YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -956,14 +966,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [dic setObject:@"" forKey:@"cellphone"];
     //  [dic setObject:app.coordinate  forKey:@"coordinate"];
     
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *respone = [boxAPI registration:dic];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (respone != nil) {
                 NSLog(@"response from registration");
@@ -1109,7 +1119,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)refreshToken {
     NSLog(@"\n\nrefreshToken");
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1124,7 +1134,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog(@"NSException caught");
@@ -1187,7 +1197,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSLog(@"getProfile");
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1206,7 +1216,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1284,7 +1294,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1298,7 +1308,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

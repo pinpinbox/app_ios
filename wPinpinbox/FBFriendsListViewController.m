@@ -9,7 +9,6 @@
 #import "FBFriendsListViewController.h"
 #import "boxAPI.h"
 #import "wTools.h"
-#import "MBProgressHUD.h"
 #import "AsyncImageView.h"
 #import "UIColor+Extensions.h"
 #import "ChooseHobbyViewController.h"
@@ -25,6 +24,7 @@
     NSInteger columnCount;
     NSInteger miniInteriorSpacing;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIButton *nextBtn;
@@ -39,7 +39,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    NSLog(@"self.fbArray: %@", self.fbArray);
+    [self initActivityIndicatorView];
  
     self.tmpAddUserId = [NSMutableArray new];
     
@@ -53,6 +53,13 @@
 }
 
 #pragma mark - Setup Methods
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
 - (void)gradientViewSetup {
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.gradientView.bounds;
@@ -194,7 +201,7 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"callChangeFollowStatus: userId: %@", userId);
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -208,7 +215,7 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

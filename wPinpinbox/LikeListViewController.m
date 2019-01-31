@@ -30,6 +30,7 @@
     NSInteger nextId;
     NSMutableArray *likeListArray;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UIKernedLabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -48,6 +49,7 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
+    [self initActivityIndicatorView];
     [self initialValueSetup];
     [self loadData];
 }
@@ -101,6 +103,13 @@
     [appDelegate.myNav popViewControllerAnimated: YES];
 }
 
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");
     nextId = 0;
@@ -150,7 +159,7 @@
 
 - (void)getLikesList {
     NSLog(@"getLikesList");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     __block typeof(self) wself = self;
@@ -161,7 +170,7 @@
                                                  userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -400,7 +409,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Call Server For Follow Function
 - (void)followBtnPress:(NSInteger)userId
                   cell:(LikeListTableViewCell *)cell {
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     NSString *userIdStr = [NSString stringWithFormat: @"%ld", (long)userId];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
@@ -410,7 +419,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

@@ -12,11 +12,9 @@
 #import "UICustomLineLabel.h"
 #import "wTools.h"
 #import "boxAPI.h"
-//
 
 #import "UIColor+Extensions.h"
 #import "UIView+Toast.h"
-#import "MBProgressHUD.h"
 #import "CustomIOSAlertView.h"
 #import "NSString+emailValidation.h"
 #import "AppDelegate.h"
@@ -37,6 +35,7 @@
     __weak IBOutlet UIView *mobilePhoneView;
     __weak IBOutlet UIView *emailView;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @end
 
 @implementation retrievepasswordViewController
@@ -47,24 +46,12 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
+    [self initActivityIndicatorView];
     [self viewSetup];
     [self navBarBtnSetup];
     [self inputFieldSetup];
     
     titlelab.lineType=LineTypeDown;
-    
-    /*
-    if ([emaillab respondsToSelector:@selector(setAttributedPlaceholder:)])
-    {
-        emaillab .attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"GeneralText-email", @"") attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
-    }
-    
-    if ([phone respondsToSelector:@selector(setAttributedPlaceholder:)])
-    {
-        phone.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"GeneralText-cellphone", @"") attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
-    }
-     */
-    
     titlelab.text=NSLocalizedString(@"ForgetPwdText-forgetPwd", @"");
     //取得檔案路徑
     NSString *path = [[NSBundle mainBundle] pathForResource:@"codebeautify" ofType:@"json"];
@@ -98,6 +85,13 @@
     [super viewDidDisappear:animated];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
+}
+
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)viewSetup {
@@ -210,9 +204,8 @@
     
     NSString *countrstr = [countryLabel.text componentsSeparatedByString:@"+"][1];
     
-    //[wTools ShowMBProgressHUD];
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated:YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -229,7 +222,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view  animated:YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

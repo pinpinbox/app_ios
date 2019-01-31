@@ -6,6 +6,7 @@
 //  Copyright (c) 2015年 Angus. All rights reserved.
 //
 #import "wTools.h"
+#import <DGActivityIndicatorView.h>
 #ifndef wPinpinbox_wPinpInbox_Prefix_pch
 #define wPinpinbox_wPinpInbox_Prefix_pch
 
@@ -15,7 +16,7 @@
 #endif
 
 #ifdef __OBJC__
-    #import <CoreData/CoreData.h>
+    #import <CoreData/CoreData.h>    
 #endif
 
 #ifdef DEBUG

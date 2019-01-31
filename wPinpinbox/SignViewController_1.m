@@ -26,7 +26,6 @@
 
 #import "UIColor+Extensions.h"
 #import "UIView+Toast.h"
-#import "MBProgressHUD.h"
 #import "CustomIOSAlertView.h"
 
 #import "GlobalVars.h"
@@ -64,34 +63,22 @@ typedef void (^FBBlock)(void);
     __weak IBOutlet UILabel *pwd1CheckLabel;
     __weak IBOutlet UILabel *pwd2CheckLabel;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @end
 
 @implementation SignViewController_1
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
     [self.view endEditing: YES];
 }
-
-//規範
-/*
-- (IBAction)TERMSbtn:(id)sender
-{
-    NSString *termStr = @"https://www.pinpinbox.com/index/index/terms";
-    NSURL *url = [NSURL URLWithString: termStr];
-    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
-    safariVC.preferredBarTintColor = [UIColor whiteColor];
-    [self presentViewController: safariVC animated: YES completion: nil];
-}
- */
 
 #pragma mark - View Related Method
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"SignViewController_1");
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
@@ -101,6 +88,7 @@ typedef void (^FBBlock)(void);
     [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: emailBtn.titleLabel content: emailBtn.titleLabel.text];
     [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: pwd1CheckLabel content: pwd1CheckLabel.text];
     [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: pwd2CheckLabel content: pwd2CheckLabel.text];
+    [self initActivityIndicatorView];
     [self navBarBtnSetup];
     [self nextBtnSetup];
     [self inputFieldSetup];
@@ -167,6 +155,13 @@ typedef void (^FBBlock)(void);
 }
 
 #pragma mark - UI Setup
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
 - (void)nextBtnSetup {
     nextBtn.layer.cornerRadius = 8;
     nextBtn.backgroundColor = [UIColor firstMain];
@@ -277,7 +272,7 @@ typedef void (^FBBlock)(void);
     } else {
         NSLog(@"Check with Server");
         @try {
-            [MBProgressHUD showHUDAddedTo: self.view animated:YES];
+            [self.activityIndicatorView startAnimating];
         } @catch (NSException *exception) {
             // Print exception information
             NSLog( @"NSException caught" );
@@ -294,7 +289,7 @@ typedef void (^FBBlock)(void);
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 @try {
-                    [MBProgressHUD hideHUDForView: self.view  animated:YES];
+                    [self.activityIndicatorView stopAnimating];
                 } @catch (NSException *exception) {
                     // Print exception information
                     NSLog( @"NSException caught" );

@@ -32,6 +32,8 @@
     
     NSInteger photoUseForUserId;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 //@property (strong, nonatomic) ExchangeStuff *exchangeStuff;
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) NSString *jsonStr;
@@ -50,7 +52,7 @@
     NSLog(@"self.exchangeDic: %@", self.exchangeDic);
     NSLog(@"self.exchangeDic photousefor image: %@", self.exchangeDic[@"photousefor"][@"image"]);
     NSLog(@"self.isExisting: %d", self.isExisting);
-    
+    [self initActivityIndicatorView];
     [self initialValueSetup];
 }
 
@@ -67,6 +69,13 @@
     NSLog(@"ExchangeInfoEditViewController");
     NSLog(@"viewWillDisappear");
     [self removeKeyboardNotification];
+}
+
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)initialValueSetup {
@@ -696,8 +705,7 @@
 // 106
 - (void)gainPhotoUseForUser {
     NSLog(@"gainPhotoUseForUser");
-    
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     NSString *photoUseForUserIdStr = [NSString stringWithFormat: @"%ld", (long)photoUseForUserId];
     NSLog(@"photoUseForUserIdStr: %@", photoUseForUserIdStr);
@@ -709,7 +717,7 @@
                                                   userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from gainPhotoUseForUser");
@@ -838,8 +846,7 @@
 }
 - (void)exchangePhotoUseFor {
     NSLog(@"exchangePhotoUseFor");
-    
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     UIDevice *device = [UIDevice currentDevice];
     NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
@@ -854,7 +861,7 @@
                                                   userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from exchangePhotoUseFor");
@@ -893,8 +900,7 @@
 // 109
 - (void)insertBookmark {
     NSLog(@"insertBookmark");
-    
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     NSInteger photoId = [self.exchangeDic[@"photo"][@"photo_id"] integerValue];
     NSString *photoIdStr = [NSString stringWithFormat: @"%ld", (long)photoId];
@@ -905,7 +911,7 @@
                                              userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from insertBookmark");
@@ -980,8 +986,7 @@
 // 43
 - (void)updatePhotoUseForUser {
     NSLog(@"updatePhotoUseForUser");
-    
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];    
     
     NSString *photoUseForUserIdStr = [NSString stringWithFormat: @"%ld", (long)photoUseForUserId];
     
@@ -992,7 +997,7 @@
                                                     userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from updatePhotoUseForUser");

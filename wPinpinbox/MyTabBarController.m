@@ -29,6 +29,8 @@
     UIButton *centerButton;
     BOOL isiPhoneX;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+
 @property (strong, nonatomic) NSString *tempAlbumId;
 
 @end
@@ -80,7 +82,8 @@ const CGFloat kBarHeight = 56;
     [super viewDidLoad];
     NSLog(@"");
     NSLog(@"MyTabBarController viewDidLoad");
-    
+    [self initActivityIndicatorView];
+
     isiPhoneX = NO;
     
     self.delegate = self;
@@ -146,6 +149,13 @@ const CGFloat kBarHeight = 56;
     
     
     [self.view bringSubviewToFront: centerButton];
+}
+
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)createCenterButton
@@ -249,14 +259,14 @@ const CGFloat kBarHeight = 56;
 - (void)checkAlbumOfDiy {
     NSLog(@"");
     NSLog(@"checkAlbumOfDiy");
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI checkalbumofdiy: [wTools getUserID]
                                                token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from checkalbumofdiy");
@@ -274,8 +284,6 @@ const CGFloat kBarHeight = 56;
                     NSLog(@"response: %@", response);
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
                     
                     if (dic != nil) {
                         NSLog(@"dic != nil");
@@ -304,8 +312,7 @@ const CGFloat kBarHeight = 56;
 {
     NSLog(@"");
     NSLog(@"updateAlbumOfDiy: albumId: %@", albumId);
-    
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI updatealbumofdiy: [wTools getUserID]
@@ -313,7 +320,7 @@ const CGFloat kBarHeight = 56;
                                              album_id: albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from checkalbumofdiy");
@@ -350,7 +357,7 @@ const CGFloat kBarHeight = 56;
     NSLog(@"addNewFastMod");
     
     //新增相本id
-    [wTools ShowMBProgressHUD];
+    [self.activityIndicatorView startAnimating];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
         NSString *response = [boxAPI insertalbumofdiy: [wTools getUserID]
@@ -358,7 +365,7 @@ const CGFloat kBarHeight = 56;
                                           template_id: @"0"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [self.activityIndicatorView stopAnimating];
             
             if (response != nil) {
                 NSLog(@"response from insertalbumofdiy");

@@ -51,6 +51,7 @@
     BOOL isInsertBetweenTags;
     NSRange cursorRange;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 
 @property (weak, nonatomic) IBOutlet MyLinearLayout *firstBgView;
 @property (weak, nonatomic) IBOutlet UILabel *topicLabel;
@@ -78,6 +79,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     //self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent: 0.6];
+    [self initActivityIndicatorView];
     [self initialValueSetup];
 }
 
@@ -108,6 +110,14 @@
 }
 
 #pragma mark -
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.height / 2);
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.window addSubview: self.activityIndicatorView];
+}
+
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");
     
@@ -291,7 +301,7 @@
 
 - (void)getMessageBoardList {
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -311,7 +321,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -415,7 +425,7 @@
     self.tableView.userInteractionEnabled = NO;
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -442,7 +452,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
