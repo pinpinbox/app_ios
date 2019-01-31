@@ -60,7 +60,6 @@
         [self.delegate albumInfoViewControllerDisappear: self];
     }
 }
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -298,11 +297,12 @@
             
             __weak CustomIOSAlertView *weakAlertPostView = alertPostView;
             [alertPostView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertAlbumView, int buttonIndex) {
-                NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertAlbumView tag]);
+                //NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertAlbumView tag]);
                 
                 [weakAlertPostView close];
                 
                 if (buttonIndex == 1) {
+                    //  open map app
                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url] options:@{} completionHandler:^(BOOL success) {
                         //  try google map if failed
                         if (!success) {
@@ -344,7 +344,7 @@
     if (locations.count > 0) {
         CLLocation *l = [locations firstObject];
         self.current = [[CLLocation alloc] initWithLatitude:l.coordinate.latitude longitude:l.coordinate.longitude];
-        [self.locationManager stopUpdatingLocation];
+        //[self.locationManager stopUpdatingLocation];
         
     }
     
