@@ -173,7 +173,7 @@
     [v addSubview : self.transitionImageView];
     
     [v insertSubview:toVC.view belowSubview:fromVC.view];
-    
+    destImageView.hidden = YES;
     sourceImageView.hidden = YES;
     [v bringSubviewToFront:self.transitionImageView];
     [UIView animateWithDuration:0.3 delay:0 options:0 animations:^{

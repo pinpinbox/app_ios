@@ -1659,7 +1659,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 - (void)postProcessAutoplay:(NSNumber *)p{
-    NSInteger p0 = [p integerValue];
+    //xNSInteger p0 = [p integerValue];
     dispatch_async(dispatch_get_main_queue(), ^{
         
         [self scrollViewDidEndDecelerating:self.imageScrollCV];
