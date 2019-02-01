@@ -21,9 +21,9 @@ PODS:
   - Flurry-iOS-SDK/FlurrySDK (9.3.0)
   - GoogleAnalytics (3.17.0)
   - RMPZoomTransitionAnimator (1.0.3)
-  - SDWebImage (4.4.4):
-    - SDWebImage/Core (= 4.4.4)
-  - SDWebImage/Core (4.4.4)
+  - SDWebImage (4.4.5):
+    - SDWebImage/Core (= 4.4.5)
+  - SDWebImage/Core (4.4.5)
   - SSFadingScrollView (1.1.0)
   - TTTAttributedLabel (2.0.0)
 
@@ -72,7 +72,7 @@ SPEC CHECKSUMS:
   Flurry-iOS-SDK: 43afe11656872692de232f580ef0a8a68b0b47c9
   GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
   RMPZoomTransitionAnimator: 33ded739d91052810c05c8e553663cc9ec79275b
-  SDWebImage: c00ec18ab25d10e5ffac109b0f78d1b4341c9691
+  SDWebImage: ecc03494e973b93b80213649d32175f8d2d17d4d
   SSFadingScrollView: ac908f565594b1faa748d2d55973f2dde919f754
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
 

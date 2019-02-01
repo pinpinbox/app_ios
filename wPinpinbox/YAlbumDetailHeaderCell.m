@@ -12,6 +12,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "LabelAttributeStyle.h"
 #import "UIColor+Extensions.h"
+#import "UIColor+HexString.h"
 
 @implementation YAlbumTitleCell : UITableViewCell
 - (void)loadData:(NSDictionary *)data {
@@ -180,6 +181,14 @@
     self.followerCount.text = [NSString stringWithFormat:@"%d人釘過", c];
     //[LabelAttributeStyle changeGapString: self.followerCount content: [NSString stringWithFormat:@"%d人釘過", c]];
 }
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    CGFloat sc = 1.0/[UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+    CGContextFillRect(ctx, CGRectMake(0, self.frame.size.height-1, self.frame.size.width, sc));
+}
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
     return 52;
@@ -194,6 +203,13 @@
     //[LabelAttributeStyle changeGapString: self.pointCount content: [NSString stringWithFormat:@"%d次贊助", c]];
     
 }
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    CGFloat sc = 1.0/[UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, self.frame.size.height-1, self.frame.size.width, sc));
+}
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     NSInteger i = [[wTools getUserID] intValue];
     NSInteger i1 = [data[@"user_id"] intValue];
@@ -207,6 +223,13 @@
         c = (int)[data[@"messageboard"] integerValue];
     self.messageCount.text = [NSString stringWithFormat:@"%d則留言", c];
     //[LabelAttributeStyle changeGapString: self.messageCount content: [NSString stringWithFormat:@"%d則留言", c]];
+}
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    CGFloat sc = 1.0/[UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, self.frame.size.height-1, self.frame.size.width, sc));
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -229,6 +252,13 @@
     //_creatorName.textAlignment = NSTextAlignmentJustified;
     if ([wTools objectExists:u[@"picture"]])
         [_creatorAvatar sd_setImageWithURL:[NSURL URLWithString:u[@"picture"]] placeholderImage:[UIImage imageNamed:@"member_back_head"]];
+}
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    CGFloat sc = 1.0/[UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, self.frame.size.height-1, self.frame.size.width, sc));
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     

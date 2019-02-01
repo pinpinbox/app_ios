@@ -21,6 +21,18 @@
 #import "LabelAttributeStyle.h"
 #import "UIColor+HexString.h"
 
+@interface CellBaseView : UIView
+@end
+@implementation CellBaseView
+- (void)drawRect:(CGRect)rect {
+    
+    CGFloat sc = 0.5/[UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, rect.size.height-1, self.frame.size.width, sc));
+    [super drawRect:rect];
+}
+@end
 @interface CalbumlistCollectionViewCell ()
 @property (nonatomic) UIImageView *caution;
 @end
@@ -34,10 +46,10 @@
     self.userAvatar.multipleTouchEnabled = YES;
     [self.userAvatar addGestureRecognizer:tap];
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 95, [UIScreen mainScreen].bounds.size.width, 0.5)];
-    line.backgroundColor = [UIColor colorFromHexString:@"d4d4d4"];
-    [self addSubview: line];
-    
+//    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 95, [UIScreen mainScreen].bounds.size.width, 0.5)];
+//    line.backgroundColor = [UIColor colorFromHexString:@"d4d4d4"];
+//    [self addSubview: line];
+//
     _caution = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic200_warn_pink"]];
     _caution.frame = CGRectMake(0, 0,32, 32);
     [self.bgview insertSubview:_caution belowSubview:self.opMenu]; //aboveSubview:self.imageView];
@@ -51,6 +63,7 @@
     button.imageView.image = op;
     button.imageView.tintColor = [UIColor whiteColor];
 }
+
 #pragma mark - arrange cell sub views by collectionViewType
 //  mode for displaying user's album list
 - (void)selfAlbumMode {
