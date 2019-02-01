@@ -35,9 +35,13 @@
 
 + (void)stop {
     if ([self sharedView]) {
-        [[self sharedView].layer removeAllAnimations];
         [[self sharedView] stopAnimating];
+        [[self sharedView].layer removeAllAnimations];
     }
+}
+
++ (BOOL)isAnimating {
+    return [self sharedView].animating;
 }
 
 @end

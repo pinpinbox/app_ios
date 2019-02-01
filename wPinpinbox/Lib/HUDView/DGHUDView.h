@@ -11,4 +11,5 @@
 @interface DGHUDView : DGActivityIndicatorView
 + (void)start;
 + (void)stop;
++ (BOOL)isAnimating;
 @end

@@ -173,8 +173,6 @@
     
     BOOL wantToGetNewsLetter;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (nonatomic, strong) JCCollectionViewWaterfallLayout *jccLayout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UICollectionView *homeCollectionView;
@@ -252,7 +250,6 @@
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
     NSLog(@"UserId: %@", [wTools getUserID]);
-    [self initActivityIndicatorView];
     isSearchTextFieldSelected = NO;
     self.albumCollectionView.hidden = YES;
     isViewLoading = YES;
@@ -314,13 +311,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)settingSizeBasedOnDevice {
@@ -390,7 +380,7 @@
 #pragma mark - Version Update
 - (void)checkVersion {
     NSLog(@"call checkVersion");
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *version = [self getVersion];
@@ -400,7 +390,7 @@
         NSString *response = [boxAPI checkUpdateVersion: @"apple" version: version];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+//            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"checkVersion Response != nil");
@@ -632,7 +622,9 @@
 - (void)updateList {
     NSLog(@"");
     NSLog(@"updateList");
-    [self.activityIndicatorView startAnimating];
+    if (![DGHUDView isAnimating]) {
+        [DGHUDView start];
+    }
     
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
@@ -648,7 +640,7 @@
                                            rank: wself->rankType];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+//            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from updateList");
@@ -752,7 +744,7 @@
     NSLog(@"checkAd");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+//        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -768,7 +760,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+//                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -777,7 +769,7 @@
                 return;
             }
             if (response != nil) {
-                NSLog(@"checkAd Response");
+                NSLog(@"Response from checkAd");
                 //NSLog(@"reponse: %@", response);
                 
                 if (![wself checkTimedOut:response api:@"getAdList" eventId:@"" text:@""]) {
@@ -825,7 +817,7 @@
     NSLog(@"getCategoryList");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+//        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -839,7 +831,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+//                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -848,7 +840,7 @@
                 return;
             }
             if (response != nil) {
-                NSLog(@"response from retrievecatgeorylist");
+                NSLog(@"response from getCategoryList");
                 if (![wself checkTimedOut:response api:@"retrievecatgeorylist" eventId:@"" text:@""])  {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -895,7 +887,7 @@
     NSLog(@"\ngetTheMeArea");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+//        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -909,7 +901,7 @@
         NSString *response = [boxAPI getTheMeArea: [wTools getUserToken] userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+//            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from getTheMeArea");
@@ -994,7 +986,8 @@
 }
 #pragma mark - Get Newly joined user list (116)
 - (void)showNewJoinUsersList {
-    [self.activityIndicatorView startAnimating];
+    NSLog(@"showNewJoinUsersList");
+//    [DGHUDView start];
     __block typeof(self) wself = self;
     NSUInteger count = _justJoinedListArray? _justJoinedListArray.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1004,15 +997,14 @@
                                    userId:[wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+//            [DGHUDView stop];
             if (response) {
+                NSLog(@"Response from showNewJoinUsersList");
                 if (![wself checkTimedOut:response api:@"getNewJoinList" eventId:@"" text:@""]){
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if (![dic[@"result"] isEqualToString:@"SYSTEM_OK"]) {
                         NSLog(@"showHotList result: %@", dic[@"result"]);
-                        
                         if (dic[@"message"])
                             [wself showCustomErrorAlert: dic[@"message"]];
                         else
@@ -1020,17 +1012,14 @@
                         
                         return ;
                     }
-                    
                     [wself processNewJoinedList:dic];
                 }
             }
-            
         });
-        
     });
 }
+
 - (void)processNewJoinedList:(NSDictionary *)dict {
-    
     if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]){
         NSArray *users = dict[@"data"];
         if (users && users.count ) {
@@ -1046,7 +1035,8 @@
 }
 #pragma mark - Get hotlist (115)
 - (void)showHotList {
-    [self.activityIndicatorView startAnimating];
+    NSLog(@"showHotList");
+//    [DGHUDView start];
     __block typeof(self) wself = self;
     NSUInteger count = _hotListArray? _hotListArray.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1057,9 +1047,10 @@
                                userId:[wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+//            [DGHUDView stop];
             
             if (response) {
+                NSLog(@"Response from showHotList");
                 if (![wself checkTimedOut:response api:@"getHotList" eventId:@"" text:@""]){
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
@@ -1078,7 +1069,6 @@
     });
 }
 - (void)processHotList:(NSDictionary *)dict {
-    
     if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]) {
         NSArray *users = dict[@"data"];
         if (users && users.count ) {
@@ -1105,18 +1095,14 @@
                 }
                 [c insertItemsAtIndexPaths:index];
             }
-            
-            
             //[self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
-            
-            
-            
         }
     }
 }
 #pragma mark - Get Recommended User List
 - (void)showUserRecommendedList {
-    [self.activityIndicatorView startAnimating];
+    NSLog(@"showUserRecommendedList");
+//    [DGHUDView start];
     __block typeof(self) wself = self;
     NSUInteger count = followUserData? followUserData.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1130,10 +1116,12 @@
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            if ([DGHUDView isAnimating]) {
+                [DGHUDView stop];
+            }
             if (response != nil) {
                 NSLog(@"showUserRecommendedList");
-                NSLog(@"response from getRecommendedList");
+                NSLog(@"response from showUserRecommendedList");
                 if (![wself checkTimedOut:response api:@"showUserRecommendedList" eventId:@"" text:@""]) {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -1149,9 +1137,7 @@
 }
 
 - (void)processUserRecommandedListResult:(NSDictionary *)dic {
-    
     if ([dic[@"result"] intValue] == 1) {
-        
         NSArray *list = dic[@"data"];
         
         if (![wTools objectExists: list]) {
@@ -1191,7 +1177,8 @@
 }
 
 - (void)showAlbumRecommendedList {
-    [self.activityIndicatorView startAnimating];
+    NSLog(@"showAlbumRecommendedList");
+//    [DGHUDView start];
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1205,7 +1192,7 @@
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"showAlbumRecommendedList");
@@ -1403,6 +1390,7 @@
                                     platform: @"apple"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            [DGHUDView stop];
             if (response != nil) {
                 NSLog(@"response from doTask1");
                 
@@ -1469,7 +1457,7 @@
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     @try {
-        [self.activityIndicatorView startAnimating];
+//        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1485,7 +1473,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1495,7 +1483,6 @@
             }
             if (response != nil) {
                 NSLog(@"response from geturpoints");
-                
                 
                 if (![wself checkTimedOut:response api:@"geturpoints" eventId:@"" text:@""]) {
                     NSLog(@"Get Real Response");
@@ -1580,7 +1567,7 @@
     NSLog(@"eventId: %@", eventId);
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1597,7 +1584,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1606,7 +1593,7 @@
                 return;
             }
             if (response != nil) {
-                NSLog(@"getEvent Response");
+                NSLog(@"Response from getEventData");
                 //NSLog(@"response: %@", response);
                 
                 if (![wself checkTimedOut:response api:@"getEvent" eventId:eventId text:@""]) {
@@ -3487,7 +3474,7 @@ replacementString:(NSString *)string {
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: dataDic options: 0 error: nil];
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
     
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -3495,12 +3482,13 @@ replacementString:(NSString *)string {
                                           token: [wTools getUserToken]
                                           param: jsonStr];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if (![wself checkTimedOut:response api:@"updateUser" eventId:@"" text:@""]) {
                     
                     NSLog(@"Get Real Response");
+                    NSLog(@"response from updateUser");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"dic: %@", dic);
                     
