@@ -61,6 +61,7 @@
 		546DF49D20723F790056B73F /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 546DF49B20723F790056B73F /* MessageTableViewCell.m */; };
 		546DF49E20723F790056B73F /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546DF49C20723F790056B73F /* MessageTableViewCell.xib */; };
 		5476620B20131F90009D475F /* BuyPointVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5476620A20131F90009D475F /* BuyPointVC.storyboard */; };
+		5476BFDB2204327D00DB4AEF /* DGHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5476BFDA2204327D00DB4AEF /* DGHUDView.m */; };
 		5477C11721F5605D0028332A /* ChooseHobbyCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5477C11621F5605D0028332A /* ChooseHobbyCollectionReusableView.m */; };
 		5478874F214613D600F7B8BB /* WdataButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5478874E214613D500F7B8BB /* WdataButton.m */; };
 		547BC6D21F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 547BC6D11F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m */; };
@@ -503,6 +504,8 @@
 		546DF49B20723F790056B73F /* MessageTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
 		546DF49C20723F790056B73F /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
 		5476620A20131F90009D475F /* BuyPointVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = BuyPointVC.storyboard; sourceTree = "<group>"; };
+		5476BFD92204327D00DB4AEF /* DGHUDView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGHUDView.h; sourceTree = "<group>"; };
+		5476BFDA2204327D00DB4AEF /* DGHUDView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DGHUDView.m; sourceTree = "<group>"; };
 		5477C11521F5605D0028332A /* ChooseHobbyCollectionReusableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChooseHobbyCollectionReusableView.h; sourceTree = "<group>"; };
 		5477C11621F5605D0028332A /* ChooseHobbyCollectionReusableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChooseHobbyCollectionReusableView.m; sourceTree = "<group>"; };
 		5478874D214613D400F7B8BB /* WdataButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WdataButton.h; sourceTree = "<group>"; };
@@ -1533,6 +1536,15 @@
 			name = ContentCheckingVC;
 			sourceTree = "<group>";
 		};
+		5476BFD8220431B900DB4AEF /* HUDView */ = {
+			isa = PBXGroup;
+			children = (
+				5476BFD92204327D00DB4AEF /* DGHUDView.h */,
+				5476BFDA2204327D00DB4AEF /* DGHUDView.m */,
+			);
+			path = HUDView;
+			sourceTree = "<group>";
+		};
 		5486C2272050F6B70016BB9D /* ExchangeInfoEditVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -2438,6 +2450,7 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				5476BFD8220431B900DB4AEF /* HUDView */,
 				CBFB1ADD21ABA94800813611 /* InfoBubbleView */,
 				CBE2773721A8045600A6E80D /* HudIndicatorView */,
 				CB84C63021A68903000D348C /* MapHelper */,
@@ -3098,6 +3111,7 @@
 				92B8CB171C1AA93600035F06 /* InAppPurchaseManager.m in Sources */,
 				CBD42CF021E2EF5F0046C1A9 /* YAlbumDetailViewController.m in Sources */,
 				92F6CCE11B79AB9F002E547C /* UIApplication+RSKImageCropper.m in Sources */,
+				5476BFDB2204327D00DB4AEF /* DGHUDView.m in Sources */,
 				54231DC91FBAE973001B8D9E /* MBProgressHUD.m in Sources */,
 				92A1559F1C33A81700E83EC5 /* TaobantextTableViewCell.m in Sources */,
 				920279A71C449F7400A63027 /* CopperatiocTableViewCell.m in Sources */,
