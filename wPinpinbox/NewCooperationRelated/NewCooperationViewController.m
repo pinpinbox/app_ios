@@ -26,8 +26,6 @@
 #import "CooperationInfoViewController.h"
 
 @interface NewCooperationViewController () <UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CooperationInfoViewControllerDelegate>
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (strong, nonatomic) NSString *qrImageStr;
 @property (strong, nonatomic) NSMutableArray *cooperationData;
 @property (strong, nonatomic) NSMutableArray *creatorListData;
@@ -64,7 +62,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self initActivityIndicatorView];
     [self initialValueSetup];
 }
 
@@ -99,13 +96,6 @@
                 break;
         }
     }
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)initialValueSetup {
@@ -245,7 +235,7 @@ replacementString:(NSString *)string {
 
 #pragma mark - Web Service
 - (void)getCooperationList {
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -255,7 +245,7 @@ replacementString:(NSString *)string {
                                                   token: [wTools getUserToken]
                                                    data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"getCooperationList response");
@@ -337,7 +327,7 @@ replacementString:(NSString *)string {
 }
 
 - (void)getQRCode {
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSMutableDictionary *qrDic = [NSMutableDictionary new];
@@ -352,7 +342,7 @@ replacementString:(NSString *)string {
         NSString *responseQRCode = [boxAPI getQRCode: [wTools getUserID] token: [wTools getUserToken] type: @"album" type_id: self.albumId effect: @"execute" is: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (responseQRCode != nil) {
                 NSLog(@"getQRCode response");
@@ -397,7 +387,7 @@ replacementString:(NSString *)string {
 
 - (void)searchCreator:(NSString *)text {
     NSLog(@"searchCreator");
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     NSString *string = text;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -411,7 +401,7 @@ replacementString:(NSString *)string {
                                        data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"searchCreator");
@@ -486,7 +476,7 @@ replacementString:(NSString *)string {
 - (void)updateCooperation:(NSString *)userId
                  identity:(NSString *)identity
                   albumId:(NSString *)albumId {
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -500,7 +490,7 @@ replacementString:(NSString *)string {
                                                   data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from updateCooperation");
@@ -555,7 +545,7 @@ replacementString:(NSString *)string {
 - (void)deleteCooperation:(NSString *)userId
                   albumId:(NSString *)albumId
                creatorDic:(NSMutableDictionary *)creatorDic {
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -567,7 +557,7 @@ replacementString:(NSString *)string {
                                                  token: [wTools getUserToken]
                                                   data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from deleteCooperation");
@@ -636,7 +626,7 @@ replacementString:(NSString *)string {
 - (void)addCoperation:(NSString *)userId
               albumId:(NSString *)albumId
            creatorDic:(NSMutableDictionary *)creatorDic {
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -648,7 +638,7 @@ replacementString:(NSString *)string {
                                                data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from addCoperation");
