@@ -18,7 +18,7 @@
 #import "GlobalVars.h"
 #import "LabelAttributeStyle.h"
 
-#define kLineHeight 0.5
+#define kLineHeight 1 / [UIScreen mainScreen].scale//0.5
 #define kLayoutHeight 48
 #define kCellGap 20
 

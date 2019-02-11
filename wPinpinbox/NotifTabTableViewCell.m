@@ -38,11 +38,11 @@
 }
 - (void)drawRect:(CGRect)rect {
     
-    CGFloat sc = 1.0/[UIScreen mainScreen].scale;
+    [super drawRect:rect];
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
     CGContextFillRect(ctx, CGRectMake(0, rect.size.height-1, self.frame.size.width, sc));
-    [super drawRect:rect];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

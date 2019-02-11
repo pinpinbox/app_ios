@@ -52,12 +52,15 @@
 @implementation ZoomAnimator
 - (CGRect)calculateZoomedFrame:(UIImage *)sourceimage forView:(UIView *)view {
     if (sourceimage) {
-        CGFloat viewratio = view.frame.size.width/sourceimage.size.width;
+        CGFloat w = view.frame.size.width;
+        if (w <  [UIScreen mainScreen].bounds.size.width)
+            w =  [UIScreen mainScreen].bounds.size.width;
+        CGFloat viewratio =w/sourceimage.size.width;
         CGFloat h = sourceimage.size.height*viewratio;
         CGFloat sh = [UIScreen mainScreen].bounds.size.height;
         if (h > sh*0.67)
             h = sh*0.67;
-        return CGRectMake(0, 0, view.frame.size.width, h);
+        return CGRectMake(0, 0, w, h);
         
     }
     

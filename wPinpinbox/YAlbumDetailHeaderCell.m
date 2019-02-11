@@ -183,11 +183,13 @@
 }
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
-    CGFloat sc = 1.0/[UIScreen mainScreen].scale;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
+    CGContextSetShouldAntialias(ctx, NO);    
+    CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
     CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
-    CGContextFillRect(ctx, CGRectMake(0, self.frame.size.height-1, self.frame.size.width, sc));
+    
+    
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -205,10 +207,11 @@
 }
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
-    CGFloat sc = 1.0/[UIScreen mainScreen].scale;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
-    CGContextFillRect(ctx, CGRectMake(0, self.frame.size.height-1, self.frame.size.width, sc));
+    CGContextSetShouldAntialias(ctx, NO);
+    CGContextSetFillColorWithColor(ctx,  [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     NSInteger i = [[wTools getUserID] intValue];
@@ -226,10 +229,10 @@
 }
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
-    CGFloat sc = 1.0/[UIScreen mainScreen].scale;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
-    CGContextFillRect(ctx, CGRectMake(0, self.frame.size.height-1, self.frame.size.width, sc));
+    CGContextSetFillColorWithColor(ctx,  [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -255,10 +258,12 @@
 }
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
-    CGFloat sc = 1.0/[UIScreen mainScreen].scale;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
-    CGContextFillRect(ctx, CGRectMake(0, self.frame.size.height-1, self.frame.size.width, sc));
+    CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+    CGContextFillRect(ctx, CGRectMake(0, rect.size.height-1, self.frame.size.width, sc));
+    
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     

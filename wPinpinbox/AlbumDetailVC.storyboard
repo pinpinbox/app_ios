@@ -549,7 +549,7 @@
                                                 <rect key="frame" x="0.0" y="584" width="375" height="148"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Bg1-gR-2f0" id="dBQ-hv-d1U">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="147.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="148"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="創作人" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F9U-wF-Kzj" customClass="UIKernedLabel">
