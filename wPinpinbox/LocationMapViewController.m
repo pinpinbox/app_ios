@@ -176,7 +176,6 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initActivityIndicatorView];
 
     if ([wTools objectExists: self.titleLabel]) {
         [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];

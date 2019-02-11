@@ -94,8 +94,6 @@
     
     OldCustomAlertView *alertView;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 //@property (nonatomic, strong) JCCollectionViewWaterfallLayout *layout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewBottomConstraint;
@@ -172,19 +170,10 @@
     NSLog(@"CalbumlistViewController");
     NSLog(@"viewWillAppear");
     NSLog(@"Test");
-    [self initActivityIndicatorView];
     [self reloaddata];
 }
 
 #pragma mark -
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2 - 100);
-    NSLog(@"self.activityIndicatorView.frame: %@", NSStringFromCGRect(self.activityIndicatorView.frame));
-    [self.view addSubview: self.activityIndicatorView];
-}
-
 - (void)refresh {
     NSLog(@"refresh");
     if (!isreload) {
@@ -224,9 +213,8 @@
     NSLog(@"getcalbumlist");
     
     if (nextId == 0)
-        [self.activityIndicatorView startAnimating];
-    
-    NSLog(@"self.activityIndicatorView.frame: %@", NSStringFromCGRect(self.activityIndicatorView.frame));
+        [DGHUDView start];
+        
     __block typeof(self) wself = self;
     NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
     
@@ -238,7 +226,7 @@
                                              limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             UIActivityIndicatorView *v = (UIActivityIndicatorView *)[self.collectionview viewWithTag:54321];
                 
             if (v) {
@@ -701,7 +689,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                      postMode: (BOOL)postMode
               fromEventPostVC: (BOOL)fromEventPostVC {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI retrievealbump: albumId
@@ -709,7 +697,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                               token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from retrievealbump");
@@ -954,7 +942,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)getIdentity:(NSString *)albumId
          templateId:(NSString *)templateId
                 msg:(NSString *)msg {
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
@@ -968,7 +956,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSString *coopid = [boxAPI getcooperation: [wTools getUserID] token: [wTools getUserToken] data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response: %@", response);
@@ -1042,14 +1030,14 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI delalbum: [wTools getUserID]
                                         token: [wTools getUserToken]
                                       albumid: albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from delalbum");
@@ -1419,7 +1407,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 -(void)hidealbumqueue:(NSString *)albumid {
     NSLog(@"hidealbumqueue");
     
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = @"";
@@ -1428,7 +1416,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                   albumid: albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -1497,7 +1485,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 -(void)deletecooperation:(NSString *)albumid {
     NSLog(@"deletecooperation");
     
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -1510,7 +1498,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                         data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from deletecooperation");
@@ -1851,7 +1839,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     self.albumId = albumId;
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1876,7 +1864,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSString *albumDetail = [boxAPI retrievealbump:albumId uid:[wTools getUserID] token:[wTools getUserToken]];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2093,7 +2081,7 @@ didCompleteWithResults:(NSDictionary *)results {
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2117,7 +2105,7 @@ didCompleteWithResults:(NSDictionary *)results {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
