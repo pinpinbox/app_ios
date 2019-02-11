@@ -20,8 +20,6 @@
 #define kViewHeightForPreview 568
 
 @interface PreviewPageSetupViewController ()
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -38,8 +36,6 @@
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self initActivityIndicatorView];
-
     self.backButton.layer.cornerRadius = 8;
     
     UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleTapGesture:)];
@@ -64,13 +60,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)callBackButtonFunction
-{
+- (void)callBackButtonFunction {
     [self back: nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     self.labelArray = [[NSMutableArray alloc] init];
@@ -112,15 +106,7 @@
     }
 }
 
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
-}
-
-- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer
-{
+- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer {
     /*
     for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
         NSIndexPath *indexPath = [self.collectionView indexPathForCell: cell];
@@ -179,8 +165,7 @@
     }
 }
 
-- (IBAction)back:(id)sender
-{
+- (IBAction)back:(id)sender {
     // For Presenting as ChildViewController
 //    [UIView animateWithDuration: 0.2 animations:^{
 //        self.view.frame = CGRectMake(0, kViewHeightForPreview, 320, kCellHeightForPreview);
@@ -202,10 +187,8 @@
     [self dismissViewControllerAnimated: YES completion: nil];
 }
 
-- (void)createDataForCallingServer
-{
+- (void)createDataForCallingServer {
     NSLog(@"createArrayForCallingServer");
-    
     NSMutableArray *arrayForSending = [[NSMutableArray alloc] init];
     
     NSLog(@"self.imageArray: %@", self.imageArray);
@@ -245,10 +228,9 @@
     [self callAlbumSettings: jsonStr];
 }
 
-- (void)callAlbumSettings: (NSString *)jsonStr
-{
+- (void)callAlbumSettings: (NSString *)jsonStr {
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -265,7 +247,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

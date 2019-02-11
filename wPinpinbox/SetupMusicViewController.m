@@ -47,8 +47,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     BOOL isAudioModeChanged;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (strong, nonatomic) AVPlayer *avPlayer;
 @property (strong, nonatomic) AVPlayerItem *avPlayerItem;
 @property (assign, nonatomic) BOOL isReadyToPlay;
@@ -95,7 +93,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     NSLog(@"SetupMusicViewController viewDidLoad");
-    [self initActivityIndicatorView];
 
     // Check avPlayer is ready or not
     self.isReadyToPlay = NO;
@@ -137,14 +134,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)optionsTapped:(UITapGestureRecognizer *)tap {
     if (tap.view)
         [self setMusicReferByType:(int)tap.view.tag];
-    
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)setupUI {
@@ -210,7 +199,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)getAlbumDataOptions {
     NSLog(@"getAlbumDataOptions");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -225,7 +214,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1209,7 +1198,7 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)callAlbumSettings: (NSString *)jsonStr {
     NSLog(@"callAlbumSettings");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1226,7 +1215,7 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
