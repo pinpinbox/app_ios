@@ -36,7 +36,8 @@
             s.lineSpacing = 3;
             CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:nil];
                         
-            return ss.size.height+64;
+            CGFloat height = (ceilf(ss.size.height/2))*2;
+            return height+64;
         }
     }
     
@@ -166,8 +167,8 @@
         s.lineBreakMode = NSLineBreakByWordWrapping;
         CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:nil];
         s = nil;
-        
-        return ss.size.height+64;
+        CGFloat height = (ceilf(ss.size.height/2))*2;
+        return height+64;
     }
     
     return 32;
@@ -183,9 +184,10 @@
 }
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
+    if (rect.size.height < 1) return;
     CGFloat sc = 1 / [UIScreen mainScreen].scale;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetShouldAntialias(ctx, NO);    
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
     CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
     CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
     
@@ -207,9 +209,11 @@
 }
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
+    if (rect.size.height < 1) return;
     CGFloat sc = 1 / [UIScreen mainScreen].scale;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetShouldAntialias(ctx, NO);
+    
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
     CGContextSetFillColorWithColor(ctx,  [UIColor secondGrey].CGColor);
     CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
 }
@@ -229,8 +233,10 @@
 }
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
+    if (rect.size.height < 1) return;
     CGFloat sc = 1 / [UIScreen mainScreen].scale;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
     CGContextSetFillColorWithColor(ctx,  [UIColor secondGrey].CGColor);
     CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
 }
@@ -260,9 +266,9 @@
     [super drawRect:rect];
     CGFloat sc = 1 / [UIScreen mainScreen].scale;
     CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
     CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
     CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
-    CGContextFillRect(ctx, CGRectMake(0, rect.size.height-1, self.frame.size.width, sc));
     
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
@@ -288,8 +294,19 @@
     
     if ([wTools objectExists:data])
         return 180;
-    return 0;
+    return 2;
 }
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+    
+    
+}
+
 @end
 
 
