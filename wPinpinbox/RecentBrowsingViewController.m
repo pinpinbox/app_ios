@@ -21,8 +21,6 @@
 #import "LabelAttributeStyle.h"
 
 @interface RecentBrowsingViewController () <UIGestureRecognizerDelegate>
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -46,7 +44,6 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    [self initActivityIndicatorView];
     [self initialValueSetup];
 }
 
@@ -54,7 +51,6 @@
     NSLog(@"");
     NSLog(@"RecentBrowsingViewController viewWillAppear");
     [super viewWillAppear:animated];
-    
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     
     for (UIView *v in self.tabBarController.view.subviews) {
@@ -77,13 +73,6 @@
 }
 
 #pragma mark - IBAction Methods
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
-}
-
 - (void)initialValueSetup {
     self.navBarView.backgroundColor = [UIColor barColor];
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -259,7 +248,7 @@ heightForHeaderInSection:(NSInteger)section {
 - (void)ToRetrievealbumpViewControlleralbumid:(NSString *)albumid {
     NSLog(@"ToRetrievealbumpViewControlleralbumid");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -274,7 +263,7 @@ heightForHeaderInSection:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
