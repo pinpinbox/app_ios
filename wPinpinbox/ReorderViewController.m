@@ -20,8 +20,6 @@
 #define kViewHeightForReorder 568
 
 @interface ReorderViewController ()
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -43,8 +41,6 @@ static NSString * const reuseIdentifier = @"Cell";
     // Do any additional setup after loading the view.
     // Register cell classes
     //[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
-    [self initActivityIndicatorView];
-
     NSLog(@"ReorderViewController");
     NSLog(@"imageArray number: %lu", (unsigned long)_imageArray.count);
     //NSLog(@"imageArray: %@", _imageArray);
@@ -105,13 +101,6 @@ static NSString * const reuseIdentifier = @"Cell";
 //                break;
         }
     }
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)handleLongGesture:(UILongPressGestureRecognizer *)gestureRecognizer {
@@ -211,7 +200,7 @@ static NSString * const reuseIdentifier = @"Cell";
     }
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -228,7 +217,7 @@ static NSString * const reuseIdentifier = @"Cell";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

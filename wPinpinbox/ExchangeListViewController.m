@@ -8,7 +8,6 @@
 
 #import "ExchangeListViewController.h"
 #import "wTools.h"
-#import "boxAPI.h"
 #import "UIColor+Extensions.h"
 #import "GlobalVars.h"
 #import "AppDelegate.h"

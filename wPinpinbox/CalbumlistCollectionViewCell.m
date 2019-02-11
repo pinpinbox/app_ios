@@ -274,12 +274,12 @@
         return;
     }
     
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *respone = [boxAPI delalbum:[wTools getUserID] token:[wTools getUserToken] albumid:albumid];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (respone!=nil) {
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -317,7 +317,7 @@
 }
 //  remove fav album
 -(void)hidealbumqueue:(NSString *)albumid{
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     __block typeof(self.delegate) wdelegate = self.delegate;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
@@ -325,7 +325,7 @@
         respone=[boxAPI hidealbumqueue:[wTools getUserID] token:[wTools getUserToken] albumid:albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             if (respone!=nil) {
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[respone dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 
@@ -393,7 +393,7 @@
 // remove coop
 //刪除共用-共用
 -(void)deletecooperation:(NSString *)albumid{
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     __block typeof(self.delegate) wdelegate = self.delegate;
     __block typeof(self.albumid) walbumid = self.albumid;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
@@ -406,7 +406,7 @@
         response=[boxAPI deletecooperation:[wTools getUserID] token:[wTools getUserToken] data:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             if (response!=nil) {
                 NSDictionary *dic= (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                 

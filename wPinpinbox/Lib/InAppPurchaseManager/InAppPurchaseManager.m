@@ -20,8 +20,6 @@
 #define kIAP_AppleStoreVerify @"https://buy.itunes.apple.com/verfyReceipt"
 static InAppPurchaseManager *instance =nil;
 @interface InAppPurchaseManager()
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property(nonatomic) NSString *productStr;
 @property(nonatomic) NSMutableData *receivedData;
 @property(nonatomic) NSData *verifyJsonData;
@@ -34,7 +32,7 @@ static InAppPurchaseManager *instance =nil;
 {
     self = [super init];
     if (self) {
-        [self initActivityIndicatorView];
+        
     }
     return self;
 }
@@ -52,15 +50,6 @@ static InAppPurchaseManager *instance =nil;
     return instance;
 }
 
-- (void)initActivityIndicatorView {
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(delegate.window.bounds.size.width / 2, delegate.window.bounds.size.height / 2);
-    [delegate.window addSubview: self.activityIndicatorView];
-}
-
 // InAppPurchaseManager.m
 - (void)requestProUpgradeProductData //檢查並取得以下商品apple資訊
 {
@@ -68,7 +57,7 @@ static InAppPurchaseManager *instance =nil;
     
     //[[WTools getInstance]playMBProgress:NSLocalizedString(@"StoreMsg_1", @"讀取商品列表")];
     
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     NSSet *productIdentifiers = [NSSet setWithArray:self.priceid];
     
     //    NSSet *productIdentifiers = [NSSet setWithObjects:
@@ -168,11 +157,11 @@ static InAppPurchaseManager *instance =nil;
 {
     if (isNeed)
     {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     }
     else
     {
-        [self.activityIndicatorView stopAnimating];        
+        [DGHUDView stop];
     }
     
 }

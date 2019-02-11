@@ -26,8 +26,6 @@
 //@import GoogleMaps;
 
 @interface LocationMapViewController ()<CLLocationManagerDelegate, UITextFieldDelegate,MKMapViewDelegate>//, GMSMapViewDelegate>
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (weak, nonatomic) IBOutlet UILabel *locationInputTitleLabel;
 @property (nonatomic) IBOutlet MKMapView *map;
 @property (nonatomic) CLLocationManager *locationManager;
@@ -179,7 +177,6 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initActivityIndicatorView];
 
     if ([wTools objectExists: self.titleLabel]) {
         [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
@@ -204,13 +201,6 @@
     [self addKeyboardNotification];
     [self addMapTap];
     //[self addDismissTap];
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)addKeyboardNotification {
@@ -364,7 +354,7 @@
     [self.view addGestureRecognizer:tap];
 }
 - (void)handleMapTap:(UITapGestureRecognizer *)tap {
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     CGPoint p = [tap locationInView:self.map];
     CLLocationCoordinate2D coord = [self.map convertPoint:p toCoordinateFromView:self.map];
     
@@ -383,7 +373,7 @@
     
     NSURLSessionDataTask *task = [s dataTaskWithURL:u completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
         });
         if (!error && data.length) {
             NSError *err = nil;
