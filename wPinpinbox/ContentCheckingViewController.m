@@ -1759,7 +1759,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if ([useFor isEqualToString: @"video"]) {
         cell.videoBtn.hidden = NO;
         if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
-            [self performSelector:@selector(deferedPlayVideo:) withObject:@[cell, [NSNumber numberWithInteger:page]] afterDelay:0.5];
+            [self performSelector:@selector(deferedPlayVideo:) withObject:@[cell, [NSNumber numberWithInteger:page]] afterDelay:0.3];
             //[self playUploadedVideo: cell page: page];
         }
     }
@@ -2114,7 +2114,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [view removeFromSuperview];
     }
     
+    
+    [self addChildViewController:self.videoPlayerViewController];
     [cell.videoView addSubview: self.videoPlayerViewController.view];
+    [self.videoPlayerViewController didMoveToParentViewController:self];
     [self.videoPlayer play];
     
     // Delay below is to avoid the previous video shows up
@@ -4159,8 +4162,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     if (scrollView == self.imageScrollCV) {
         if (self.videoPlayer)
             [self.videoPlayer pause];
-        if (self.autoplay.selected)
-            [self switchAutoPlay:self.autoplay];
+        
     }
 }
 
@@ -4176,6 +4178,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"self.imageScrollCV.frame.size.width: %f", self.imageScrollCV.frame.size.width);
     NSInteger page = [self getCurrentPage];
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
+
+    if (self.autoplay.selected)
+        [self switchAutoPlay:self.autoplay];
+
     [self updateOldCurrentPage: page];
     //    self.videoPlayerViewController.view.hidden = NO;
     
