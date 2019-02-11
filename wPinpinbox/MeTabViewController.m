@@ -108,8 +108,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     UIView *noInfoView;
     BOOL isNoInfoViewCreate;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (strong, nonatomic) NSDictionary *userDic;
 
 //@property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -140,7 +138,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     [super viewDidLoad];
     NSLog(@"MeTabViewController viewDidLoad");
     // Do any additional setup after loading the view.
-    [self initActivityIndicatorView];
     [self initialValueSetup];
     //[self loadData];        
 }
@@ -219,13 +216,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 }
 
 #pragma mark -
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
-}
-
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");        
     
@@ -325,7 +315,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)getCreatorInfo {
     NSLog(@"getCreatorInfo");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -345,7 +335,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -496,7 +486,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"getProfile");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -510,7 +500,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -648,7 +638,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"checkPoint");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -664,7 +654,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -749,7 +739,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -763,7 +753,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

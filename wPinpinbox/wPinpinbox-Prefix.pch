@@ -7,6 +7,7 @@
 //
 #import "wTools.h"
 #import <DGActivityIndicatorView.h>
+#import "DGHUDView.h"
 #ifndef wPinpinbox_wPinpInbox_Prefix_pch
 #define wPinpinbox_wPinpInbox_Prefix_pch
 

@@ -40,8 +40,6 @@
     NSInteger currentContributionNumber;
     CGFloat imageHeight;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (weak, nonatomic) IBOutlet UIButton *eventPostBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *eventPostBtnHeight;
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
@@ -66,7 +64,6 @@
     NSLog(@"self.prefixText: %@", self.prefixText);
     NSLog(@"self.contributionNumber: %ld", (long)self.contributionNumber);
     NSLog(@"self.specialUrl: %@", self.specialUrl);
-    [self initActivityIndicatorView];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     self.toolBarView.hidden = YES;
@@ -103,13 +100,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)prepareData:(NSDictionary *)data eventId:(NSString *)eventId finished:(BOOL)finished{
@@ -486,7 +476,7 @@
     NSLog(@"getExistedAlbum");
     existedAlbumArray = [[NSMutableArray alloc] init];
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -504,7 +494,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught");
@@ -702,6 +692,57 @@
     [appDelegate.myNav pushViewController: newExistingAlbumVC animated: YES];
 }
 
+
+
+- (void)checkPostedAlbum {
+    NSLog(@"checkPostedAlbum");
+    @try {
+        [DGHUDView start];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    
+    NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                             token: [wTools getUserToken]
+                                              rank: @"mine"
+                                             limit: limit];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [DGHUDView stop];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                NSLog(@"response from getcalbumlist");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"NewEventPostViewController");
+                    NSLog(@"checkPostedAlbum");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"checkPostedAlbum"];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    [wself processCheckPosted:dic];
+                }
+            }
+        });
+    });
+}
+
 #pragma mark - Calling API Methods
 - (void)processCheckPosted:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
@@ -788,56 +829,6 @@
     }
 }
 
-- (void)checkPostedAlbum {
-    NSLog(@"checkPostedAlbum");
-    
-    @try {
-        [self.activityIndicatorView startAnimating];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    
-    NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
-    __block typeof(self) wself = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
-                                             token: [wTools getUserToken]
-                                              rank: @"mine"
-                                             limit: limit];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [self.activityIndicatorView stopAnimating];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
-            if (response != nil) {
-                NSLog(@"response from getcalbumlist");
-                
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"NewEventPostViewController");
-                    NSLog(@"checkPostedAlbum");
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"checkPostedAlbum"];
-                } else {
-                    NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    [wself processCheckPosted:dic];
-                }
-            }
-        });
-    });
-}
-
 - (void)toChooseTempalteVC {
     chooseTemplateVC = [[UIStoryboard storyboardWithName: @"ChooseTemplateVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ChooseTemplateViewController"];
     chooseTemplateVC.rank = @"hot";
@@ -912,7 +903,7 @@
     NSLog(@"postAlbum");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -930,7 +921,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1004,10 +995,9 @@
 //快速套版
 - (void)addNewFastMod {
     NSLog(@"addNewFastMod");
-    
     //新增相本id
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1022,7 +1012,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1077,7 +1067,6 @@
         });
     });
 }
-
 
 /*
 #pragma mark - Navigation
