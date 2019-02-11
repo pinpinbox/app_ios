@@ -47,8 +47,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
 @interface YAlbumDetailViewController ()<UITableViewDataSource, UITableViewDelegate,
 ContentCheckingViewControllerDelegate,MessageboardViewControllerDelegate,DDAUIActionSheetViewControllerDelegate,
 AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKSharingDelegate,SFSafariViewControllerDelegate,SelectBarDelegate>
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property(nonatomic) NSMutableDictionary *albumInfo;
 @property(nonatomic) NSString *album_id;
 @property(nonatomic) BOOL isViewed;
@@ -85,7 +83,6 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initActivityIndicatorView];
     self.albumInfo = [NSMutableDictionary dictionary];
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -93,13 +90,6 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     //  album detail is changed outward //
     [self checkCollectedOutward];
     [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)setupAlbumWithInfo:(NSDictionary *)info albumId:(NSString *)albumId {
@@ -590,7 +580,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)retrieveAlbum:(NSString *)aid silence:(BOOL)silence {
     
     if (!silence)
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     __block NSString *viewedString = [NSString stringWithFormat: @"%d", self.isViewed];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -607,7 +597,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 return;
             }
@@ -644,7 +634,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)getEventData: (NSString *)eventId {
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         return;
     }
@@ -655,7 +645,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 return;
@@ -702,7 +692,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)checkTaskComplete {
 
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         return;
@@ -718,7 +708,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 return;
@@ -774,7 +764,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 
 - (void)getPoint {
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -789,7 +779,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -844,7 +834,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)buyAlbum {
     NSLog(@"buyAlbum");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -860,7 +850,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -916,7 +906,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)insertReport {
     NSLog(@"insertReport");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -931,7 +921,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -960,7 +950,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     NSLog(@"SaveDataRow: row: %ld", (long)row);
     NSString *rid = [self.reportIntentList[row][@"reportintent_id"] stringValue];
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -977,7 +967,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1071,7 +1061,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1095,7 +1085,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1651,7 +1641,7 @@ alertView.arrangeStyle = @"Horizontal";
 #pragma mark - Likes
 - (void)insertAlbumToLikes {
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         return;
     }
@@ -1663,7 +1653,7 @@ alertView.arrangeStyle = @"Horizontal";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 return;
             }
@@ -1698,7 +1688,7 @@ alertView.arrangeStyle = @"Horizontal";
 }
 - (void)deleteAlbumToLikes {
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         
@@ -1710,7 +1700,7 @@ alertView.arrangeStyle = @"Horizontal";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];                
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 return;
