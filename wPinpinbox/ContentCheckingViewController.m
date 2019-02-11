@@ -1759,11 +1759,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if ([useFor isEqualToString: @"video"]) {
         cell.videoBtn.hidden = NO;
         if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
-            [self playUploadedVideo: cell page: page];
+            [self performSelector:@selector(deferedPlayVideo:) withObject:@[cell, [NSNumber numberWithInteger:page]] afterDelay:0.5];
+            //[self playUploadedVideo: cell page: page];
         }
     }
     
     
+}
+- (void)deferedPlayVideo:(NSArray *)params {
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *) params[0];
+    NSNumber *n = params[1];
+    NSInteger page = [n integerValue];
+    
+    [self playUploadedVideo: cell page: page];
 }
 #pragma mark - Embedded videos
 - (void)playEmbeddedVideo:(ImageCollectionViewCell *)cell
@@ -2105,6 +2113,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     for (UIView *view in cell.videoView.subviews) {
         [view removeFromSuperview];
     }
+    
     [cell.videoView addSubview: self.videoPlayerViewController.view];
     [self.videoPlayer play];
     
@@ -4145,6 +4154,14 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"scrollViewDidScroll");
     [self dismissKeyboard];
     [self.thumbnailImageScrollCV reloadData];
+    
+    //  halt video and autoplay when scrolling
+    if (scrollView == self.imageScrollCV) {
+        if (self.videoPlayer)
+            [self.videoPlayer pause];
+        if (self.autoplay.selected)
+            [self switchAutoPlay:self.autoplay];
+    }
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
@@ -5738,4 +5755,5 @@ shouldChangeTextInRange:(NSRange)range
 - (void)albumInfoViewControllerDisappear: (AlbumInfoViewController *)controller {
     
 }
+
 @end
