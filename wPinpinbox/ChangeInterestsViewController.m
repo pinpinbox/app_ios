@@ -28,8 +28,6 @@
     NSInteger columnCount;
     NSInteger miniInteriorSpacing;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet UIButton *sendDataBtn;
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
@@ -45,7 +43,6 @@
     NSLog(@"viewDidLoad");
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    [self initActivityIndicatorView];
     [self initialValueSetup];
 }
 
@@ -57,7 +54,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -65,13 +61,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)initialValueSetup {
@@ -112,7 +101,7 @@
 
 - (void)getHobbyList {
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -126,7 +115,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -354,7 +343,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"selectTag: %@", selectTag);
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -371,7 +360,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught");
@@ -422,7 +411,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"getProfile");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -439,7 +428,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

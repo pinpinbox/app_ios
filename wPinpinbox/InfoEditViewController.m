@@ -54,8 +54,6 @@
 //    BOOL wantToGetInfo;
     BOOL wantToGetNewsLetter;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UILabel *topicLabel;
 @property (weak, nonatomic) IBOutlet AsyncImageView *headshotImageView;
@@ -140,7 +138,6 @@
     NSLog(@"InfoEditViewController viewDidLoad");
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    [self initActivityIndicatorView];
     [self initialValueSetup];
     [self userInterfaceSetup];
     [self getProfile];
@@ -176,13 +173,13 @@
 - (void)getProfile {
     NSLog(@"getProfile");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getprofile: [userPrefs objectForKey: @"id"] token: [userPrefs objectForKey: @"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -349,13 +346,6 @@
 }
 
 #pragma mark - UI Setup Section
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
-}
-
 - (void)initialValueSetup {
     // Get the profile data
     self.navBarView.backgroundColor = [UIColor barColor];
@@ -921,7 +911,7 @@
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -938,7 +928,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1012,7 +1002,7 @@
     UIImage *image = [wTools scaleImage: selectImage
                                 toScale: 0.5];
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1026,7 +1016,7 @@
                                                 image: image];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
