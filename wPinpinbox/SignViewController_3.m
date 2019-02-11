@@ -46,7 +46,6 @@
 //    BOOL wantToGetInfo;
     BOOL wantToGetNewsLetter;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UILabel *emailInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *verificationInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -67,7 +66,6 @@
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    [self initActivityIndicatorView];
     [self viewSetup];
     [self navBarBtnSetup];
     [self inputFieldSetup];
@@ -113,13 +111,6 @@
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)viewSetup {
@@ -300,7 +291,7 @@
         }
     }
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -315,7 +306,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -442,7 +433,7 @@
     [dic setObject: [NSNumber numberWithBool: wantToGetNewsLetter] forKey: @"newsletter"];
      */
     
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     NSString *phoneTextStr = [NSString stringWithFormat: @"%@,%@", countrStr, phone.text];
     NSString *pwdStr = keylab.text;
@@ -462,7 +453,7 @@
                                        newsletter: [NSString stringWithFormat: @"%d", sself->wantToGetNewsLetter]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from registration");

@@ -53,8 +53,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSTimer *timer;
     UIImageView *bg;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (weak, nonatomic) IBOutlet UIButton *termsAndConditionsBtn;
 
 @property (weak, nonatomic) IBOutlet UIButton *createAccountBtn;
@@ -86,7 +84,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [super viewDidLoad];
     NSLog(@"");
     NSLog(@"ViewController viewDidLoad");
-    [self initActivityIndicatorView];
     self.navigationController.navigationBar.hidden = YES;
     
     // Getting TimeStamp Info
@@ -117,13 +114,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [self loginBtnSetup];
     [self aboutBtnSetup];
     [self redirectionCheck];
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)faceBookLoginBtnSetup {
@@ -323,7 +313,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         NSString *token = [userPrefs objectForKey:@"token"];
         
         @try {
-            [self.activityIndicatorView startAnimating];
+            [DGHUDView start];
         } @catch (NSException *exception) {
             // Print exception information
             NSLog( @"NSException caught" );
@@ -342,7 +332,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
             */
             dispatch_async(dispatch_get_main_queue(), ^{
                 @try {
-                    [wself.activityIndicatorView stopAnimating];
+                    [DGHUDView stop];
                 } @catch (NSException *exception) {
                     // Print exception information
                     NSLog( @"NSException caught" );
@@ -506,7 +496,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)loginAccount {
     NSLog(@"loginAccount");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog(@"NSException caught");
@@ -525,7 +515,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog(@"NSException caught");
@@ -742,7 +732,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
                             jsonStr:(NSString *)jsonStr {
     NSLog(@"buisnessSubUserFastRegister");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog(@"NSException caught");
@@ -756,7 +746,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog(@"NSException caught");
@@ -840,8 +830,9 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 }
 
 - (void)facebookLogin:(NSString *)fbId {
+    NSLog(@"facebookLogin fbId: %@", fbId);
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -855,7 +846,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         __strong typeof(wself) sself = wself;
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -966,14 +957,14 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [dic setObject:@"" forKey:@"cellphone"];
     //  [dic setObject:app.coordinate  forKey:@"coordinate"];
     
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         NSString *respone = [boxAPI registration:dic];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (respone != nil) {
                 NSLog(@"response from registration");
@@ -1119,7 +1110,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)refreshToken {
     NSLog(@"\n\nrefreshToken");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1134,7 +1125,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog(@"NSException caught");
@@ -1197,7 +1188,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSLog(@"getProfile");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1216,7 +1207,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1294,7 +1285,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1308,7 +1299,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

@@ -556,6 +556,7 @@
                 NSLog(@"in the touch.view.tag == 6");
                 [wTools deleteAllCoreData];
                 [wTools logOut];
+                [DGHUDView stop];
             }
         }
         default:

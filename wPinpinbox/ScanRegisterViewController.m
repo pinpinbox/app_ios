@@ -43,7 +43,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     NSString *tokenStr;
     NSString *idStr;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UIView *viewPreview;
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *videoPreviewLayer;
@@ -58,7 +57,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self initActivityIndicatorView];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
@@ -75,13 +73,6 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     if ([CLLocationManager locationServicesEnabled] &&[[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         [_locationManager requestWhenInUseAuthorization];
     }
-}
-
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
@@ -459,7 +450,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     NSLog(@"buisnessSubUserFastRegister");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -474,7 +465,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -645,7 +636,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     NSLog(@"refreshToken");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -660,7 +651,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -722,7 +713,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     NSLog(@"getProfile");
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -740,7 +731,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -804,7 +795,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -818,7 +809,7 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

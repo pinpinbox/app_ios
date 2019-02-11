@@ -25,7 +25,7 @@
 
 + (void)start {
     [[self sharedView] startAnimating];
-    [UIView animateWithDuration: 1.0 delay: 1.0 options: UIViewAnimationOptionCurveLinear animations:^{
+    [UIView animateWithDuration: 0.1 delay: 1.0 options: UIViewAnimationOptionCurveLinear animations:^{
         [self sharedView].alpha = 0;
         [self sharedView].alpha = 1;
     } completion:^(BOOL finished) {
