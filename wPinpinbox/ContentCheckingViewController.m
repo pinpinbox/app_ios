@@ -4401,6 +4401,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [self.videoPlayer pause];
     self.videoPlay = NO;
     self.videoPlayerItem = nil;
+    [self.videoPlayerViewController removeFromParentViewController];
     self.videoPlayerViewController.player = nil;
     self.videoPlayerViewController = nil;
     
