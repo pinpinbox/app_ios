@@ -63,7 +63,6 @@ typedef void (^FBBlock)(void);
     __weak IBOutlet UILabel *pwd1CheckLabel;
     __weak IBOutlet UILabel *pwd2CheckLabel;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @end
 
@@ -88,7 +87,6 @@ typedef void (^FBBlock)(void);
     [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: emailBtn.titleLabel content: emailBtn.titleLabel.text];
     [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: pwd1CheckLabel content: pwd1CheckLabel.text];
     [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: pwd2CheckLabel content: pwd2CheckLabel.text];
-    [self initActivityIndicatorView];
     [self navBarBtnSetup];
     [self nextBtnSetup];
     [self inputFieldSetup];
@@ -155,13 +153,6 @@ typedef void (^FBBlock)(void);
 }
 
 #pragma mark - UI Setup
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
-}
-
 - (void)nextBtnSetup {
     nextBtn.layer.cornerRadius = 8;
     nextBtn.backgroundColor = [UIColor firstMain];
@@ -272,7 +263,7 @@ typedef void (^FBBlock)(void);
     } else {
         NSLog(@"Check with Server");
         @try {
-            [self.activityIndicatorView startAnimating];
+            [DGHUDView start];
         } @catch (NSException *exception) {
             // Print exception information
             NSLog( @"NSException caught" );
@@ -289,7 +280,7 @@ typedef void (^FBBlock)(void);
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 @try {
-                    [self.activityIndicatorView stopAnimating];
+                    [DGHUDView stop];
                 } @catch (NSException *exception) {
                     // Print exception information
                     NSLog( @"NSException caught" );
