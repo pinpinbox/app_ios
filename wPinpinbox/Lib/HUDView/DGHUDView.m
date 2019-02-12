@@ -8,6 +8,7 @@
 
 #import "DGHUDView.h"
 #import "UIColor+Extensions.h"
+#import "AppDelegate.h"
 
 @implementation DGHUDView
 
@@ -31,12 +32,24 @@
     } completion:^(BOOL finished) {
         
     }];
+    
+    UIView *view = [[UIView alloc] initWithFrame: CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+    view.accessibilityIdentifier = @"HUDTransparentView";
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate.window addSubview: view];
 }
 
 + (void)stop {
     if ([self sharedView]) {
         [[self sharedView] stopAnimating];
         [[self sharedView].layer removeAllAnimations];
+    }
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    for (UIView *view in appDelegate.window.subviews) {
+        if ([view.accessibilityIdentifier isEqualToString: @"HUDTransparentView"]) {
+            [view removeFromSuperview];
+        }
     }
 }
 

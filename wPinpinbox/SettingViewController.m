@@ -62,7 +62,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -554,9 +553,9 @@
         {
             if (CGRectContainsPoint(touch.view.bounds, location)) {
                 NSLog(@"in the touch.view.tag == 6");
+                [DGHUDView stop];
                 [wTools deleteAllCoreData];
                 [wTools logOut];
-                [DGHUDView stop];
             }
         }
         default:

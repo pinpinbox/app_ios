@@ -239,7 +239,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CategoryCell" id="AjO-ZU-rVl" customClass="HomeCategoryCollectionViewCell">
-                                        <rect key="frame" x="79" y="209" width="163" height="163"/>
+                                        <rect key="frame" x="78.5" y="209" width="163" height="163"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="163" height="163"/>

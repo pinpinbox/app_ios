@@ -285,10 +285,8 @@
     NSLog(@"HomeTabViewController viewWillAppear");
     [super viewWillAppear:animated];
     NSLog(@"status bar height: %f", [UIApplication sharedApplication].statusBarFrame.size.height);
-    
     [self removeNotification];
     [self addNotification];
-    
     
     // Central Button
     for (UIView *view in self.tabBarController.view.subviews) {
@@ -301,6 +299,7 @@
         self.navBarView.hidden = NO;
         self.searchView.hidden = NO;
     }
+    self.bannerCollectionView.userInteractionEnabled = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -2133,6 +2132,7 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
+    
     if (collectionView.tag == 1) {
         HomeDataCollectionViewCell *cell = (HomeDataCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
         NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
@@ -2147,6 +2147,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         source = [self.view convertRect:source fromView:collectionView];
         [self toAlbumDetailVC: albumId source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 2) {
+        NSLog(@"collectionView: %@", collectionView);
+        collectionView.userInteractionEnabled = NO;
         HomeBannerCollectionViewCell *cell = (HomeBannerCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
         //CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
         CGRect source = [collectionView convertRect:cell.bannerImageView.frame fromView:cell];
@@ -2402,6 +2404,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         duration: 2.0
                         position: CSToastPositionBottom
                            style: style];
+            self.bannerCollectionView.userInteractionEnabled = YES;
             return;
         }
     }
