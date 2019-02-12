@@ -1125,7 +1125,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                                      if (wself->albumPoint == 0) {
                                          [wself buyAlbum];
                                      } else {
-                                         NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)wself->albumPoint];
+                                         NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP(NTD%ld)?", (long)wself->albumPoint, (long)(wself->albumPoint / 2)];
                                          [wself showCustomAlert: msgStr option: @"buyAlbum"];
                                      }
                                  }];
@@ -2006,7 +2006,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             if (weakAlbumPoint == 0) {
                 [weakSelf buyAlbum];
             } else {
-                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
+                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP(NTD%ld)?", (long)weakAlbumPoint, (long)(weakAlbumPoint / 2)];
                 [weakSelf showCustomAlert: msgStr option: @"buyAlbum"];
             }
         } else if ([identifierStr isEqualToString: @"albumEdit"]) {

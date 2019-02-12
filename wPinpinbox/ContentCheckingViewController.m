@@ -4221,7 +4221,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     if (userPoint >= albumPoint) {
         if (userPoint >= inputPoint) {
-            NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)inputPoint];
+            NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP(NTD%ld)?", (long)inputPoint, (long)(inputPoint / 2)];
             [self showBuyAlbumCustomAlert: msgStr option: @"buyAlbum" pointStr: [NSString stringWithFormat: @"%ld", (long)inputPoint]];
         } else {
             [self showBuyAlbumCustomAlert: @"你的P點不足，前往購點?" option: @"buyPoint" pointStr: @""];
@@ -4639,11 +4639,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
                 [weakSelf.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
                 [weakSelf.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
-                
-//                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
-//                [weakSelf showBuyAlbumCustomAlert: msgStr option: @"buyAlbum" pointStr: [NSString stringWithFormat: @"%ld", (long)weakAlbumPoint]];
-            }
-            
+            }            
         } else if ([identifierStr isEqualToString: @"shareItem"]) {
             NSLog(@"shareItem is pressed");
             [weakSelf checkTaskComplete];
