@@ -890,7 +890,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)getEventData: (NSString *)eventId {
     NSLog(@"getEventData");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -905,7 +905,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -981,7 +981,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)checkTaskComplete {
     NSLog(@"checkTaskComplete");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1004,7 +1004,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1177,7 +1177,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 #pragma mark - Buy Album
 - (void)getPoint {
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1192,7 +1192,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1249,7 +1249,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)buyAlbum {
     NSLog(@"buyAlbum");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1265,7 +1265,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1360,7 +1360,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1384,7 +1384,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1474,7 +1474,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)insertReport {
     NSLog(@"insertReport");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1489,7 +1489,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1545,7 +1545,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"SaveDataRow: row: %ld", (long)row);
     NSString *rid = [reportIntentList[row][@"reportintent_id"] stringValue];
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1562,7 +1562,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1659,7 +1659,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (void)retrieveAlbum {
     NSLog(@"retrieveAlbum");
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     __block typeof(isViewed) isv = isViewed;
     __block typeof(self.albumId) aid = self.albumId;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1672,7 +1672,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2173,7 +2173,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)insertAlbumToLikes {
     NSLog(@"insertAlbumToLikes");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2189,7 +2189,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2222,7 +2222,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)deleteAlbumToLikes {
     NSLog(@"deleteAlbumToLikes");
     @try {
-        [self.activityIndicatorView startAnimating];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2236,7 +2236,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [self.activityIndicatorView stopAnimating];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
