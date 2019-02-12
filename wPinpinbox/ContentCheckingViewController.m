@@ -707,7 +707,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         self.textAndImageVertLayout.hidden = !self.textAndImageVertLayout.hidden;
         self.textViewBgView.hidden = !self.textViewBgView.hidden;
         //self.textView.hidden = !self.textView.hidden;
-        self.descriptionScrollView.hidden = !self.descriptionScrollView.hidden;                
+        self.descriptionScrollView.hidden = !self.descriptionScrollView.hidden;
+        if (self.autoplayViewConstraint.constant > 0) {
+            self.autoplayView.hidden = !self.autoplayView.hidden;
+        }
     }];
     
     if (![wTools objectExists: useFor]) {
