@@ -10,6 +10,7 @@
 #import "UIColor+Extensions.h"
 #import "MyLayout.h"
 #import <QuartzCore/QuartzCore.h>
+#import "UIColor+HexString.h"
 
 @implementation NotifTabTableViewCell
 
@@ -34,6 +35,14 @@
     [bgColorView setBackgroundColor:[UIColor thirdMain]];
 //    bgColorView.layer.cornerRadius = 10;
     [self setSelectedBackgroundView:bgColorView];
+}
+- (void)drawRect:(CGRect)rect {
+    
+    [super drawRect:rect];
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(ctx, [UIColor colorFromHexString:@"d4d4d4"].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, rect.size.height-1, self.frame.size.width, sc));
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

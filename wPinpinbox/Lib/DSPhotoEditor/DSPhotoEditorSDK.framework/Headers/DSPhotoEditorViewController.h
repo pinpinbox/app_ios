@@ -24,6 +24,35 @@ extern const int TOOL_DRAW;
 extern const int TOOL_STICKER;
 extern const int TOOL_TEXT;
 
+extern const NSString *DS_BACKGROUND_COLOR;
+extern const NSString *DS_HEADER_COLOR;
+extern const NSString *DS_TEXT_COLOR;
+
+extern const NSString *DS_ICON_FILTER;
+extern const NSString *DS_ICON_FRAME;
+extern const NSString *DS_ICON_ROUND;
+extern const NSString *DS_ICON_EXPOSURE;
+extern const NSString *DS_ICON_CONTRAST;
+extern const NSString *DS_ICON_VIGNETTE;
+extern const NSString *DS_ICON_CROP;
+extern const NSString *DS_ICON_CIRCLE;
+extern const NSString *DS_ICON_ORIENTATION;
+extern const NSString *DS_ICON_SATURATION;
+extern const NSString *DS_ICON_SHARPNESS;
+extern const NSString *DS_ICON_WARMTH;
+extern const NSString *DS_ICON_PIXELATE;
+extern const NSString *DS_ICON_DRAW;
+extern const NSString *DS_ICON_STICKER;
+extern const NSString *DS_ICON_TEXT;
+
+extern const NSString *DS_ICON_APPLY;
+extern const NSString *DS_ICON_CANCEL;
+extern const NSString *DS_ICON_ORIENTATION_LEFT;
+extern const NSString *DS_ICON_ORIENTATION_RIGHT;
+extern const NSString *DS_ICON_ORIENTATION_HORIZONTAL;
+extern const NSString *DS_ICON_ORIENTATION_VERTICAL;
+
+
 @protocol DSPhotoEditorViewControllerDelegate;
 
 @interface DSPhotoEditorViewController : UIViewController <UIGestureRecognizerDelegate>
@@ -33,6 +62,8 @@ extern const int TOOL_TEXT;
 @property (weak, nonatomic) IBOutlet UIImageView *dsPhotoEditorImageView;
 @property (weak, nonatomic) IBOutlet UIStackView *dsTopStackView;
 @property (weak, nonatomic) IBOutlet UILabel *dsTopTitleView;
+
+@property NSDictionary *dsDataBundle;
 
 @property (nonatomic, weak) id<DSPhotoEditorViewControllerDelegate> delegate;
 
@@ -61,6 +92,9 @@ extern const int TOOL_TEXT;
 - (IBAction)dsPhotoEditorStickerText:(id)sender;
 - (IBAction)dsPhotoEditorSdkInfo:(id)sender;
 - (void)initializeSDKSetting;
+- (void)setCustomView: (UIView *)dsCustomView;
+- (void)setCustomStickers: (NSArray *)dsCustomStickers
+                 inBundle: (NSBundle *)bundle;
 
 @end
 

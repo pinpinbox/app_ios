@@ -601,6 +601,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         // + 10 in order to show real headerView.userNameLabelHeight
         headerView.userNameLabelHeight.constant = userNameLabelSize.height + 10;
         userNameLabelHeight = userNameLabelSize.height + 10;
+
     }
     
     // Creative Name Label
@@ -903,6 +904,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
  heightForHeaderInSection:(NSInteger)section {
     NSLog(@"");
     NSLog(@"heightForHeaderInSection");
+    
+    if (userDic[@"name"] && ![userDic[@"name"] isEqual: [NSNull null]]) {
+        
+        NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
+        [attDic setValue:[UIFont boldSystemFontOfSize:48] forKey:NSFontAttributeName];      // 字体大小
+        [attDic setValue:@1 forKey:NSKernAttributeName];                                // 字间距
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineSpacing = 3;
+        style.alignment = NSTextAlignmentLeft;
+        [attDic setObject:style forKey:NSParagraphStyleAttributeName];
+        NSString *username = userDic[@"name"];
+        
+        CGRect ss = [username boundingRectWithSize:CGSizeMake(self.view.frame.size.width, 1000) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attDic context:nil];
+        
+        return self.jccLayout.headerHeight+ss.size.height-48;
+    }
     return self.jccLayout.headerHeight;
 }
 

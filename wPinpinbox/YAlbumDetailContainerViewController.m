@@ -52,12 +52,15 @@
 @implementation ZoomAnimator
 - (CGRect)calculateZoomedFrame:(UIImage *)sourceimage forView:(UIView *)view {
     if (sourceimage) {
-        CGFloat viewratio = view.frame.size.width/sourceimage.size.width;
+        CGFloat w = view.frame.size.width;
+        if (w <  [UIScreen mainScreen].bounds.size.width)
+            w =  [UIScreen mainScreen].bounds.size.width;
+        CGFloat viewratio =w/sourceimage.size.width;
         CGFloat h = sourceimage.size.height*viewratio;
         CGFloat sh = [UIScreen mainScreen].bounds.size.height;
         if (h > sh*0.67)
             h = sh*0.67;
-        return CGRectMake(0, 0, view.frame.size.width, h);
+        return CGRectMake(0, 0, w, h);
         
     }
     
@@ -160,16 +163,11 @@
         self.transitionImageView = [[UIImageViewAligned alloc] initWithImage:referenceImage];
         self.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
         self.transitionImageView.clipsToBounds = YES;
-        self.transitionImageView.slim = [self.fromDelegate isSlim];
         self.transitionImageView.frame = source;
         
     } else {
         
         CGFloat sh = (referenceImage.size.height*source.size.width)/referenceImage.size.width;
-//        CGImageRef imageRef = CGImageCreateWithImageInRect(referenceImage.CGImage, CGRectMake(0, 0, referenceImage.size.width, sh));
-//        UIImage *croppedImage = [UIImage imageWithCGImage:imageRef];
-//        CGImageRelease(imageRef);
-        self.transitionImageView.slim = [self.fromDelegate isSlim];
         self.transitionImageView.frame = CGRectMake(source.origin.x, source.origin.y, source.size.width, sh);//source;
         [self.transitionImageView setImage:referenceImage];
         
@@ -178,7 +176,7 @@
     [v addSubview : self.transitionImageView];
     
     [v insertSubview:toVC.view belowSubview:fromVC.view];
-    
+    destImageView.hidden = YES;
     sourceImageView.hidden = YES;
     [v bringSubviewToFront:self.transitionImageView];
     [UIView animateWithDuration:0.3 delay:0 options:0 animations:^{
@@ -244,7 +242,6 @@
     animator.transitionImageView.transform = CGAffineTransformIdentity;
     animator.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
     animator.transitionImageView.clipsToBounds = YES;
-    animator.transitionImageView.slim = [animator.fromDelegate isSlim];
     animator.transitionImageView.frame = self.fromReferenceImageViewFrame;
     fromImage.alpha = 0;
     [containerView addSubview : animator.transitionImageView];
@@ -375,6 +372,9 @@
     UIImageView *fromImage = [animator.fromDelegate referenceImageView:animator];
     UIImageView *sourceImage = [animator.fromDelegate sourceImageView:animator];
     
+    fromImage.alpha = 0;
+    sourceImage.alpha = 0;
+    
     CGPoint anchor = CGPointMake(CGRectGetMidX(sourceFrame),CGRectGetMidY(sourceFrame) );
     CGPoint translatedPoint = [gestureRecognizer translationInView:sourceImage];
     
@@ -401,10 +401,11 @@
                 [UIView animateWithDuration:[self.animator transitionDuration:self.transitionContext] delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                     transitionImageView.frame = sourceFrame;
                     fromVC.view.alpha = 1.0;
-                    sourceImage.alpha = 1.0;
-                    fromImage.hidden = NO;
-                    fromImage.alpha = 1;
+            
                 } completion:^(BOOL finished) {
+                    
+                    fromImage.alpha = 1;
+                    sourceImage.alpha = 1.0;
                     sourceImage.hidden = NO;
                     fromImage.hidden = NO;
                     [animator.transitionImageView removeFromSuperview];
@@ -417,10 +418,13 @@
                 return;
             }
             
-            
-            [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-                fromVC.view.alpha = 0;
+            fromImage.alpha = 0;
+            sourceImage.alpha = 0.0;
+            [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+                
+                transitionImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(scale, scale);
                 transitionImageView.frame = destFrame;
+                fromVC.view.alpha = 0;
                 transitionImageView.layer.cornerRadius = 6;
                 transitionImageView.alpha = 0.8;
                 toVC.view.alpha = 1.0;
@@ -785,13 +789,11 @@
     if (v) {
         UIView *sv = v.superview;
         CGRect dest = [self.currentDetailVC.view convertRect:sv.frame fromView:sv];
+        if (v.frame.size.height > dest.size.height) {
+            dest = CGRectMake(dest.origin.x, dest.origin.y, v.frame.size.width, v.frame.size.height);
+        }
         return dest;
     }
     return self.currentDetailVC.view.frame;
-}
-- (BOOL)isSlim {
-    if (self.fromVC && ([self.fromVC isEqualToString:@"CategoryVC"] || [self.fromVC isEqualToString:@"creatorVC"]))
-        return YES;
-    return NO;
 }
 @end

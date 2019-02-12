@@ -316,7 +316,7 @@
 - (void)settingSizeBasedOnDevice {
     self.navBarHeight.constant = 48;
     topContentOffset = self.navBarView.frame.size.height;
-    headerHeight = 1006;//871;
+    headerHeight = 982;//871;
     self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
     
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
@@ -2435,13 +2435,13 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         return finalSize;
     } else if (collectionView.tag == 2) {
         // ad banners 
-        return CGSizeMake(343,251);//bannerWidth, bannerHeight);
+        return CGSizeMake(343,248);//bannerWidth, bannerHeight);
     } else if (collectionView.tag == 3) {
         // category
         return CGSizeMake(163.0, 163.0);
     } else if (collectionView.tag == 4) {
         //  follow user collection
-        return CGSizeMake(96.0, 121.0);
+        return CGSizeMake(96.0, 142.0);
     } else if (collectionView.tag == 5) {
         
         return CGSizeMake(273, 168);
@@ -3639,11 +3639,11 @@ replacementString:(NSString *)string {
         l.text = @"熱門";
     
     l.backgroundColor = UIColor.clearColor;
-    [l sizeToFit];
-    //CGSize s = l.frame.size;
-    v.frame = CGRectMake(0, 0, 60,22);
+    CGSize s = [l sizeThatFits:CGSizeMake(60,22)];
+    
+    v.frame = CGRectMake(0, 0, 60,s.height);
     [v addSubview:l];
-    l.frame = CGRectMake(16,0, 40, 22);
+    l.frame = CGRectMake(16,0, 40,s.height);
     return v;
 }
 @end

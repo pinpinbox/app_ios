@@ -651,7 +651,7 @@
     
     [self.customPostActionSheet addSelectItem: @"" title: @"建立新作品" btnStr: @"" tagInt: 1 identifierStr: @"createNewAlbum"];
     [self.customPostActionSheet addSelectItem: @"" title: @"選擇現有作品" btnStr: @"" tagInt: 2 identifierStr: @"chooseExistedAlbum"];
-    
+    [self.customPostActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
     
     self.customPostActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {

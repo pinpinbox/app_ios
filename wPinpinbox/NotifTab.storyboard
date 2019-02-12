@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="lqx-km-tXh">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="lqx-km-tXh">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.43"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -61,13 +61,6 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dID-j0-3vD">
-                                                    <rect key="frame" x="0.0" y="73.5" width="375" height="0.5"/>
-                                                    <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="0.5" id="IcE-fy-uzf"/>
-                                                    </constraints>
-                                                </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="7wf-qg-Wnl" firstAttribute="leading" secondItem="9K1-Uf-fg1" secondAttribute="leading" constant="16" id="25W-26-TG7"/>
@@ -75,16 +68,12 @@
                                                 <constraint firstItem="kZS-PV-p6a" firstAttribute="baseline" secondItem="qz9-N1-kDs" secondAttribute="baseline" id="8mn-Ah-foY"/>
                                                 <constraint firstAttribute="trailing" secondItem="kZS-PV-p6a" secondAttribute="trailing" constant="16" id="CQj-ye-YCx"/>
                                                 <constraint firstAttribute="bottom" secondItem="SDZ-4h-qB1" secondAttribute="bottom" constant="32.5" id="EGt-PQ-gXq"/>
-                                                <constraint firstItem="dID-j0-3vD" firstAttribute="top" secondItem="Rcc-Tb-Wqa" secondAttribute="bottom" constant="8" id="Hky-pT-Rvv"/>
                                                 <constraint firstItem="SDZ-4h-qB1" firstAttribute="top" secondItem="9K1-Uf-fg1" secondAttribute="top" constant="8" id="Q7P-23-rqW"/>
                                                 <constraint firstAttribute="trailing" secondItem="SDZ-4h-qB1" secondAttribute="trailing" constant="16" id="UR6-wM-66r"/>
                                                 <constraint firstItem="7wf-qg-Wnl" firstAttribute="top" secondItem="SDZ-4h-qB1" secondAttribute="top" id="WYX-wu-veZ"/>
                                                 <constraint firstItem="kZS-PV-p6a" firstAttribute="top" secondItem="SDZ-4h-qB1" secondAttribute="bottom" constant="8" symbolic="YES" id="YSv-y4-BCp"/>
-                                                <constraint firstItem="dID-j0-3vD" firstAttribute="leading" secondItem="9K1-Uf-fg1" secondAttribute="leading" id="d43-My-cIO"/>
                                                 <constraint firstItem="kZS-PV-p6a" firstAttribute="leading" relation="lessThanOrEqual" secondItem="qz9-N1-kDs" secondAttribute="trailing" constant="209" id="lMd-4q-UxG"/>
                                                 <constraint firstItem="SDZ-4h-qB1" firstAttribute="leading" secondItem="7wf-qg-Wnl" secondAttribute="trailing" constant="8" id="nIU-J3-va2"/>
-                                                <constraint firstAttribute="bottom" secondItem="dID-j0-3vD" secondAttribute="bottom" id="o1e-sn-JbJ"/>
-                                                <constraint firstAttribute="trailing" secondItem="dID-j0-3vD" secondAttribute="trailing" id="owQ-1H-qS7"/>
                                                 <constraint firstItem="kZS-PV-p6a" firstAttribute="top" secondItem="Rcc-Tb-Wqa" secondAttribute="top" id="thc-rL-nac"/>
                                                 <constraint firstItem="qz9-N1-kDs" firstAttribute="leading" secondItem="Rcc-Tb-Wqa" secondAttribute="trailing" constant="8" id="ysa-R4-7kd"/>
                                             </constraints>
@@ -145,7 +134,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="NotifSelectedTab" width="37.5" height="37.5"/>
-        <image name="NotifTab" width="50" height="50"/>
+        <image name="NotifSelectedTab" width="25" height="25"/>
+        <image name="NotifTab" width="25" height="25"/>
     </resources>
 </document>

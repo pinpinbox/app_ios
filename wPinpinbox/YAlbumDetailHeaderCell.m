@@ -12,6 +12,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "LabelAttributeStyle.h"
 #import "UIColor+Extensions.h"
+#import "UIColor+HexString.h"
 
 @implementation YAlbumTitleCell : UITableViewCell
 - (void)loadData:(NSDictionary *)data {
@@ -29,11 +30,14 @@
         NSString *t = @"";
         t = data[@"name"];
         if (t.length) {
-            NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
-            CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1} context:ctx];
-            
-            ctx = nil;
-            return ss.size.height+32;
+            //NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
+            NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
+            s.lineBreakMode = NSLineBreakByWordWrapping;
+            s.lineSpacing = 3;
+            CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:nil];
+                        
+            CGFloat height = (ceilf(ss.size.height/2))*2;
+            return height+64;
         }
     }
     
@@ -158,13 +162,13 @@
     if (![data[@"description"] isKindOfClass:[NSNull class]])
         t = data[@"description"];
     if (t.length) {
-        NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
         NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
         s.lineSpacing = 3;
-        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} context:ctx];
+        s.lineBreakMode = NSLineBreakByWordWrapping;
+        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:nil];
         s = nil;
-        ctx = nil;
-        return ss.size.height+40;
+        CGFloat height = (ceilf(ss.size.height/2))*2;
+        return height+64;
     }
     
     return 32;
@@ -177,6 +181,17 @@
         c = (int)[data[@"likes"] integerValue];
     self.followerCount.text = [NSString stringWithFormat:@"%d人釘過", c];
     //[LabelAttributeStyle changeGapString: self.followerCount content: [NSString stringWithFormat:@"%d人釘過", c]];
+}
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if (rect.size.height < 1) return;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+    
+    
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -192,6 +207,16 @@
     //[LabelAttributeStyle changeGapString: self.pointCount content: [NSString stringWithFormat:@"%d次贊助", c]];
     
 }
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if (rect.size.height < 1) return;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx,  [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+}
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     NSInteger i = [[wTools getUserID] intValue];
     NSInteger i1 = [data[@"user_id"] intValue];
@@ -205,6 +230,15 @@
         c = (int)[data[@"messageboard"] integerValue];
     self.messageCount.text = [NSString stringWithFormat:@"%d則留言", c];
     //[LabelAttributeStyle changeGapString: self.messageCount content: [NSString stringWithFormat:@"%d則留言", c]];
+}
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if (rect.size.height < 1) return;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx,  [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -227,6 +261,15 @@
     //_creatorName.textAlignment = NSTextAlignmentJustified;
     if ([wTools objectExists:u[@"picture"]])
         [_creatorAvatar sd_setImageWithURL:[NSURL URLWithString:u[@"picture"]] placeholderImage:[UIImage imageNamed:@"member_back_head"]];
+}
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+    
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -251,8 +294,19 @@
     
     if ([wTools objectExists:data])
         return 180;
-    return 0;
+    return 2;
 }
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+    
+    
+}
+
 @end
 
 

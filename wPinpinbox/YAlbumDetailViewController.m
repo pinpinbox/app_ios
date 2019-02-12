@@ -1377,7 +1377,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     [self.customShareActionSheet addSelectItem: @"" title: @"一般分享" btnStr: @"" tagInt: 2 identifierStr: @"normalSharing"];
     
     __weak typeof(self) weakSelf = self;
-    
+    [self.customShareActionSheet addSafeArea];
     self.customShareActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         NSLog(@"");
         NSLog(@"customShareActionSheet.customViewBlock executes");
@@ -1492,7 +1492,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         [self.customMoreActionSheet addSelectItem: @"ic200_report_dark.png" title: @"檢舉" btnStr: @"" tagInt: 5 identifierStr: @"reportItem"];
     }
     __weak typeof(self) weakSelf = self;
-
+    [self.customMoreActionSheet addSafeArea];
     self.customMoreActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         if ([identifierStr isEqualToString: @"albumEdit"]) {
             [weakSelf toAlbumCreationViewController: weakSelf.album_id

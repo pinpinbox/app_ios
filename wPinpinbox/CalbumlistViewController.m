@@ -159,6 +159,7 @@
     self.customEditActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customEditActionSheet.delegate = self;
     self.customEditActionSheet.topicStr = @"編輯作品";
+    
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -1740,7 +1741,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [self.customEditActionSheet addSelectItem: @"" title: @"作品編輯" btnStr: @"" tagInt: 1 identifierStr: @"albumEdit"];
     [self.customEditActionSheet addSelectItem: @"" title: @"修改資訊" btnStr: @"" tagInt: 2 identifierStr: @"modifyInfo"];
-    
+    [self.customEditActionSheet addSafeArea];
     __block typeof(self) weakSelf = self;
     self.customEditActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         if ([identifierStr isEqualToString: @"albumEdit"]) {

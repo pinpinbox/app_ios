@@ -533,7 +533,7 @@
                                 identifierStr: @"toAlbumSettingVC"];
     
     __weak typeof(self) weakSelf = self;
-    
+    [self.customEditActionSheet addSafeArea];
     self.customEditActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         //NSLog(@"");
         NSLog(@"self.customEditActionSheet.customViewBlock");
