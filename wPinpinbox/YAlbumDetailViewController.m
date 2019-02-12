@@ -502,7 +502,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
             msgStr = [NSString stringWithFormat: @"點選「進入觀看」並前往最後一頁可填寫回饋表單"];
             [self showCustomAlert: msgStr btnName: @"我知道了"];
         } else {
-            NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?\n點選「觀看內容」並前往最後一頁可進行贊助額度設定", (long)_albumPoint];
+            NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP(NTD%ld)?\n點選「觀看內容」並前往最後一頁可進行贊助額度設定", (long)_albumPoint, (long)_albumPoint / 2];
             [self showCustomAlert: msgStr option: @"buyAlbum"];
         }
     } else {
