@@ -29,8 +29,6 @@
     UIButton *centerButton;
     BOOL isiPhoneX;
 }
-@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
-
 @property (strong, nonatomic) NSString *tempAlbumId;
 
 @end
@@ -77,13 +75,10 @@ const CGFloat kBarHeight = 56;
     [self presentViewController: safariVC animated: YES completion: nil];
 }
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"");
     NSLog(@"MyTabBarController viewDidLoad");
-    [self initActivityIndicatorView];
-
     isiPhoneX = NO;
     
     self.delegate = self;
@@ -122,15 +117,13 @@ const CGFloat kBarHeight = 56;
     [self createCenterButton];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSLog(@"MyTabBarController viewWillAppear");
     [self checkBadge];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     NSLog(@"MyTabBarController viewWillDisappear");
 }
@@ -142,24 +135,12 @@ const CGFloat kBarHeight = 56;
 
 - (void)viewWillLayoutSubviews {    
     NSLog(@"MyTabBarController viewWillLayoutSubviews");
-    
     //CGPoint center = self.tabBar.center;
-    
     centerButton.center = CGPointMake(self.tabBar.center.x, (self.tabBar.center.y+self.tabBar.frame.origin.y)/2);
-    
-    
     [self.view bringSubviewToFront: centerButton];
 }
 
-- (void)initActivityIndicatorView {
-    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
-    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
-    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-    [self.view addSubview: self.activityIndicatorView];
-}
-
-- (void)createCenterButton
-{
+- (void)createCenterButton {
     UIImage *buttonImage = [UIImage imageNamed: @"CreateTab"];
     UIImage *hightlightImage = [UIImage imageNamed: @"CreateSelectedTab"];
     
@@ -219,29 +200,25 @@ const CGFloat kBarHeight = 56;
     }
 }
 
-- (void)centerBtnPress
-{
+- (void)centerBtnPress {
     NSLog(@"centerButtonPress");
     
     [self toAlbumCreationVC];
 }
 
-- (void)hideCenterButton
-{
+- (void)hideCenterButton {
     NSLog(@"hideCenterButton");
     //centerButton.hidden = true;
     //[centerButton removeFromSuperview];
 }
 
-- (void)showCenterButton
-{
+- (void)showCenterButton {
     NSLog(@"showCenterButton");
     //centerButton.hidden = false;
     //[self createCenterButton];
 }
 
-- (void)bringCenterButtonToFront
-{
+- (void)bringCenterButtonToFront {
     //[self.view bringSubviewToFront: centerButton];
 }
 
@@ -259,14 +236,14 @@ const CGFloat kBarHeight = 56;
 - (void)checkAlbumOfDiy {
     NSLog(@"");
     NSLog(@"checkAlbumOfDiy");
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI checkalbumofdiy: [wTools getUserID]
                                                token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from checkalbumofdiy");
@@ -308,11 +285,10 @@ const CGFloat kBarHeight = 56;
     });
 }
 
-- (void)updateAlbumOfDiy: (NSString *)albumId
-{
+- (void)updateAlbumOfDiy: (NSString *)albumId {
     NSLog(@"");
     NSLog(@"updateAlbumOfDiy: albumId: %@", albumId);
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI updatealbumofdiy: [wTools getUserID]
@@ -320,7 +296,7 @@ const CGFloat kBarHeight = 56;
                                              album_id: albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from checkalbumofdiy");
@@ -355,9 +331,8 @@ const CGFloat kBarHeight = 56;
 //快速套版
 - (void)addNewFastMod {
     NSLog(@"addNewFastMod");
-    
     //新增相本id
-    [self.activityIndicatorView startAnimating];
+    [DGHUDView start];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
         NSString *response = [boxAPI insertalbumofdiy: [wTools getUserID]
@@ -365,7 +340,7 @@ const CGFloat kBarHeight = 56;
                                           template_id: @"0"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.activityIndicatorView stopAnimating];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from insertalbumofdiy");
