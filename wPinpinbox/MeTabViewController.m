@@ -258,6 +258,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     self.customActionSheet.delegate = self;
     self.customActionSheet.topicStr = @"要前往哪裡？";
     
+    
     nextId = 0;
     isLoading = NO;
     isReloading = NO;
@@ -1659,6 +1660,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [self.customActionSheet addSelectItem: @"ic200_gift_dark" title: @"兌換清單" btnStr: @"" tagInt: 6 identifierStr: @"exchangeList"];
     [self.customActionSheet addSelectItem: @"ic200_setting_dark" title: @"設定" btnStr: @"" tagInt: 71 identifierStr: @"setting"];
     
+    [self.customActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
         
     self.customActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {

@@ -549,6 +549,7 @@ DSPhotoEditorViewControllerDelegate>
     [self.customSettingActionSheet addSelectItem: @"" title: @"排序作品" btnStr: @"" tagInt: 1 identifierStr: @"reorder"];
     [self.customSettingActionSheet addSelectItem: @"" title: @"設定音樂" btnStr: @"" tagInt: 2 identifierStr: @"setupMusic"];
     [self.customSettingActionSheet addSelectItemForPreviewPage: @"" title: @"設定預覽頁" horzLine: YES btnStr: @"保存" tagInt: 999 identifierStr: @"setupPreview"];
+    [self.customSettingActionSheet addSafeArea];
     NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
     NSLog(@"previewPageNum: %ld", (long)previewPageNum);
     
@@ -3345,6 +3346,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     if (@available(iOS 11.0, *)) {
         [self.customAddActionSheet addSelectItem: @"ic200_pdf_dark" title: @"PDF" btnStr: @"" tagInt: 2 identifierStr: @"pdf"];
     }
+    [self.customAddActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
     self.customAddActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         NSLog(@"");
@@ -3407,7 +3409,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [self.customVideoActionSheet addSelectItem: @"" title: @"錄影" btnStr: @"" tagInt: 1 identifierStr: @"recordingVideo"];
     [self.customVideoActionSheet addSelectItem: @"" title: @"選擇現有影片" btnStr: @"" tagInt: 2 identifierStr: @"chooseExistingVideo"];
-    
+    [self.customVideoActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
     self.customVideoActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         NSLog(@"customVideoActionSheet.customViewBlock");

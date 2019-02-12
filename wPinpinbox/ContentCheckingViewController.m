@@ -4618,6 +4618,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __block NSInteger weakAlbumPoint = albumPoint;
     __weak NSDictionary *weakLocData = locdata;
     
+    [self.customMoreActionSheet addSafeArea];
     self.customMoreActionSheet.customButtonBlock = ^(BOOL selected) {
         NSLog(@"customButtonBlock press");
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
@@ -4706,7 +4707,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     [self.customShareActionSheet addSelectItem: @"" title: @"獎勵分享(facebook)" btnStr: @"" tagInt: 1 identifierStr: @"fbSharing"];
     [self.customShareActionSheet addSelectItem: @"" title: @"一般分享" btnStr: @"" tagInt: 2 identifierStr: @"normalSharing"];
-    
+    [self.customShareActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
     
     self.customShareActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {

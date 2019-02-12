@@ -650,6 +650,7 @@
     self.actionSheetView.frame = frame;
     
     self.actionSheetView.myLeftMargin = self.actionSheetView.myRightMargin = 0;
+    
     self.actionSheetView.myBottomMargin = 0;
     self.actionSheetView.wrapContentHeight = YES;
     
