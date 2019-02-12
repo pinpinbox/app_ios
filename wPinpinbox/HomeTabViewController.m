@@ -710,6 +710,7 @@
         
         if (isScrollingDown) {
             isScrollingDown = NO;
+            [DGHUDView stop];
         } else {
             [self checkAd];
         }
@@ -744,7 +745,7 @@
     NSLog(@"checkAd");
     
     @try {
-//        [DGHUDView start];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1192,7 +1193,9 @@
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [DGHUDView stop];
+            if ([DGHUDView isAnimating]) {
+                [DGHUDView stop];
+            }
             
             if (response != nil) {
                 NSLog(@"showAlbumRecommendedList");
