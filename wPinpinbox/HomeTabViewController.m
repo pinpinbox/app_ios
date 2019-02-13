@@ -299,6 +299,7 @@
         self.navBarView.hidden = NO;
         self.searchView.hidden = NO;
     }
+    // Restore status for preventing continuous clicking
     self.bannerCollectionView.userInteractionEnabled = YES;
 }
 
@@ -2148,6 +2149,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         [self toAlbumDetailVC: albumId source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 2) {
         NSLog(@"collectionView: %@", collectionView);
+        // To prevent continuous clicking
         collectionView.userInteractionEnabled = NO;
         HomeBannerCollectionViewCell *cell = (HomeBannerCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
         //CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
@@ -2192,6 +2194,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)toAlbumDetailVC:(NSString *)albumId  source:(CGRect)source sourceImage:(UIImageView *)sourceImage{
     NSLog(@"toAlbumDetailVC");
+    NSLog(@"albumId: %@", albumId);
     if (![wTools objectExists: albumId]) {
         return;
     }
@@ -2288,126 +2291,123 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             [appDelegate.myNav pushViewController: cVC animated: YES];
         }
     } else if (urlString != (NSString *)[NSNull null]) {
-        if (![urlString isEqualToString: @""]) {
-            NSURL *url = [NSURL URLWithString: urlString];
-            NSLog(@"scheme: %@", [url scheme]);
-            NSLog(@"host: %@", [url host]);
-            NSLog(@"port: %@", [url port]);
-            NSLog(@"path: %@", [url path]);
-            NSLog(@"path components: %@", [url pathComponents]);
-            NSLog(@"parameterString: %@", [url parameterString]);
-            NSLog(@"query: %@", [url query]);
-            NSLog(@"fragment: %@", [url fragment]);
-            
-            if ([[url path] isEqualToString: @"/index/album"]) {
-                NSLog(@"url path is equal to string index/album");
-                NSArray *bits = [self urlSeparationCheck: url];
-                NSString *key = bits[0];
-                NSString *value = bits[1];
+        if ([wTools objectExists: urlString]) {
+            if ([urlString isEqualToString: @""]) {
+                [self showToastMsgWithHint: @"無頁面跳轉"];
+            } else {
+                NSURL *url = [NSURL URLWithString: urlString];
+                NSLog(@"scheme: %@", [url scheme]);
+                NSLog(@"host: %@", [url host]);
+                NSLog(@"port: %@", [url port]);
+                NSLog(@"path: %@", [url path]);
+                NSLog(@"path components: %@", [url pathComponents]);
+                NSLog(@"last path components: %@", [url lastPathComponent]);
+                NSLog(@"parameterString: %@", [url parameterString]);
+                NSLog(@"query: %@", [url query]);
+                NSLog(@"fragment: %@", [url fragment]);
                 
-                NSLog(@"key: %@", key);
+#if(DEBUG)
+                NSString *hostStr = @"w3.pinpinbox.com";
+#else
+                NSString *hostStr = @"www.pinpinbox.com";
+#endif
+                NSLog(@"hostStr: %@", hostStr);
                 
-                if ([key isEqualToString: @"categoryarea_id"]) {
-                    NSLog(@"has categoryarea_id");
-                    CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
-                    categoryVC.categoryAreaId = value;
-                    NSLog(@"categoryVC.categoryAreaId: %@", categoryVC.categoryAreaId);
-                    //categoryVC.categoryName = @"Test";
-                    
-                    if ([value isEqualToString: @"-1"]) {
-                        categoryVC.dic = getTheMeAreaDic;
-                    }
-                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                    [appDelegate.myNav pushViewController: categoryVC animated: YES];
-                } else {
-                    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
-                    safariVC.preferredBarTintColor = [UIColor whiteColor];
-                    [self presentViewController: safariVC animated: YES completion: nil];
-                }
-                /*
-                if ([url query] != nil) {
-                    NSString *query = [url query];
-                    NSArray *bits = [query componentsSeparatedByString: @"="];
-                    NSLog(@"bits: %@", bits);
-                    NSString *key = bits[0];
-                    NSString *value = bits[1];
-                    NSLog(@"key: %@", key);
-                    NSLog(@"value: %@", value);
-                    
-                    if ([key isEqualToString: @"categoryarea_id"]) {
-                        NSLog(@"has categoryarea_id");
-                        CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
-                        categoryVC.categoryAreaId = value;
-                        NSLog(@"categoryVC.categoryAreaId: %@", categoryVC.categoryAreaId);
-                        //categoryVC.categoryName = @"Test";
-                        
-                        if ([value isEqualToString: @"-1"]) {
-                            categoryVC.dic = getTheMeAreaDic;
-                        }
+                if ([[url host] isEqualToString: hostStr]) {
+                    if ([[url lastPathComponent] containsString: @"point"]) {
+                        NSLog(@"lastPath contains point string");
+                        BuyPPointViewController *bPPVC = [[UIStoryboard storyboardWithName: @"BuyPointVC" bundle: nil] instantiateViewControllerWithIdentifier: @"BuyPPointViewController"];
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: categoryVC animated: YES];
+                        [appDelegate.myNav pushViewController: bPPVC animated: YES];
+                    } else if ([[url query] containsString: @"album_id"]) {
+                        NSLog(@"url query contains album_id string");
+                        NSArray *bits = [self urlSeparationCheck: url];
+                        NSString *key = bits[0];
+                        NSString *value = bits[1];
+                        
+                        if ([key isEqualToString: @"album_id"]) {
+                            if ([wTools objectExists: value]) {
+                                if (![value isEqualToString: @""]) {
+                                    YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:value sourceRect:source sourceImageView:sourceImageView noParam:NO];
+                                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                    [appDelegate.myNav pushViewController: aDVC animated: YES];
+                                }
+                            }
+                        }
+                    } else if ([[url query] containsString: @"user_id"]) {
+                        NSLog(@"url query contains user_id string");
+                        NSArray *bits = [self urlSeparationCheck: url];
+                        NSString *key = bits[0];
+                        NSString *value = bits[1];
+                        
+                        if ([key isEqualToString: @"user_id"]) {
+                            if ([wTools objectExists: value]) {
+                                if (![value isEqualToString: @""]) {
+                                    [self toCreatorVC: value];
+                                }
+                            }
+                        }
+                    } else if ([[url query] containsString: @"event_id"]) {
+                        NSLog(@"url query contains event_id string");
+                        NSArray *bits = [self urlSeparationCheck: url];
+                        NSString *key = bits[0];
+                        NSString *value = bits[1];
+                        
+                        if ([key isEqualToString: @"event_id"]) {
+                            if ([wTools objectExists: value]) {
+                                if (![value isEqualToString: @""]) {
+                                    [self getEventData: value];
+                                }
+                            }
+                        }
+                    } else if ([[url query] containsString: @"categoryarea_id"]) {
+                        NSLog(@"url query contains categoryarea_id string");
+                        NSArray *bits = [self urlSeparationCheck: url];
+                        NSString *key = bits[0];
+                        NSString *value = bits[1];
+                        
+                        if ([key isEqualToString: @"categoryarea_id"]) {
+                            if ([wTools objectExists: value]) {
+                                if (![value isEqualToString: @""]) {
+                                    CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
+                                    categoryVC.categoryAreaId = value;
+                                    NSLog(@"categoryVC.categoryAreaId: %@", categoryVC.categoryAreaId);
+                                    //categoryVC.categoryName = @"Test";
+                                    
+                                    if ([value isEqualToString: @"-1"]) {
+                                        categoryVC.dic = getTheMeAreaDic;
+                                    }
+                                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                    [appDelegate.myNav pushViewController: categoryVC animated: YES];
+                                }
+                            }
+                        }
                     } else {
+                        NSLog(@"else");
                         SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
                         safariVC.preferredBarTintColor = [UIColor whiteColor];
                         [self presentViewController: safariVC animated: YES completion: nil];
                     }
+                } else {
+                    [self showToastMsgWithHint: @"主機域名錯誤"];
                 }
-                 */
-            } else if ([[url path] isEqualToString: @"/index/creative/content"]) {
-                NSArray *bits = [self urlSeparationCheck: url];
-                NSString *key = bits[0];
-                NSString *value = bits[1];
-                
-                if ([key isEqualToString: @"user_id"]) {
-                    if ([wTools objectExists: value]) {
-                        [self toCreatorVC: value];
-                    }
-                }
-            } else if ([[url path] isEqualToString: @"/index/event/content"]) {
-                NSArray *bits = [self urlSeparationCheck: url];
-                NSString *key = bits[0];
-                NSString *value = bits[1];
-                
-                if ([key isEqualToString: @"event_id"]) {
-                    if ([wTools objectExists: value]) {
-                        [self getEventData: value];
-                    }
-                }
-            } else if ([[url path] isEqualToString: @"/index/album/content"]) {
-                NSArray *bits = [self urlSeparationCheck: url];
-                NSString *key = bits[0];
-                NSString *value = bits[1];
-                
-                if ([key isEqualToString: @"album_id"]) {
-                    if (![value isEqualToString: @""]) {
-                        YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:value sourceRect:source sourceImageView:sourceImageView noParam:NO];
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: aDVC animated: YES];
-                    }
-                }
-            } else if ([[url path] isEqualToString: @"/index/user/point"]) {
-                BuyPPointViewController *bPPVC = [[UIStoryboard storyboardWithName: @"BuyPointVC" bundle: nil] instantiateViewControllerWithIdentifier: @"BuyPPointViewController"];
-                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                [appDelegate.myNav pushViewController: bPPVC animated: YES];
-            } else {
-                NSLog(@"else");
-                SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
-                safariVC.preferredBarTintColor = [UIColor whiteColor];
-                [self presentViewController: safariVC animated: YES completion: nil];
             }
-        } else if ([urlString isEqualToString: @""]) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor hintGrey];
-            
-            [self.view makeToast: @"無頁面跳轉"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
-            self.bannerCollectionView.userInteractionEnabled = YES;
-            return;
+        } else {
+            [self showToastMsgWithHint: @"無頁面跳轉"];
         }
     }
+}
+
+- (void)showToastMsgWithHint:(NSString *)msg {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor hintGrey];
+    
+    [self.view makeToast: msg
+                duration: 2.0
+                position: CSToastPositionBottom
+                   style: style];
+    self.bannerCollectionView.userInteractionEnabled = YES;
 }
 
 - (NSArray *)urlSeparationCheck:(NSURL *)url {
