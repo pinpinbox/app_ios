@@ -2384,12 +2384,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         }
                     } else {
                         NSLog(@"else");
-                        SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
-                        safariVC.preferredBarTintColor = [UIColor whiteColor];
-                        [self presentViewController: safariVC animated: YES completion: nil];
+                        [self openSafariVC: urlString];
                     }
                 } else {
-                    [self showToastMsgWithHint: @"主機域名錯誤"];
+                    [self openSafariVC: urlString];
                 }
             }
         } else {
@@ -2408,6 +2406,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 position: CSToastPositionBottom
                    style: style];
     self.bannerCollectionView.userInteractionEnabled = YES;
+}
+
+- (void)openSafariVC:(NSString *)urlString {
+    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
+    safariVC.preferredBarTintColor = [UIColor whiteColor];
+    [self presentViewController: safariVC animated: YES completion: nil];
 }
 
 - (NSArray *)urlSeparationCheck:(NSURL *)url {
