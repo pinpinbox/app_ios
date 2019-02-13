@@ -389,7 +389,7 @@
         NSString *response = [boxAPI checkUpdateVersion: @"apple" version: version];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-//            [DGHUDView stop];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"checkVersion Response != nil");
@@ -639,7 +639,7 @@
                                            rank: wself->rankType];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-//            [DGHUDView stop];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from updateList");
@@ -760,7 +760,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-//                [DGHUDView stop];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -817,7 +817,7 @@
     NSLog(@"getCategoryList");
     
     @try {
-//        [DGHUDView start];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -831,7 +831,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-//                [DGHUDView stop];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -887,7 +887,7 @@
     NSLog(@"\ngetTheMeArea");
     
     @try {
-//        [DGHUDView start];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -901,7 +901,7 @@
         NSString *response = [boxAPI getTheMeArea: [wTools getUserToken] userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-//            [DGHUDView stop];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from getTheMeArea");
@@ -987,7 +987,7 @@
 #pragma mark - Get Newly joined user list (116)
 - (void)showNewJoinUsersList {
     NSLog(@"showNewJoinUsersList");
-//    [DGHUDView start];
+    [DGHUDView start];
     __block typeof(self) wself = self;
     NSUInteger count = _justJoinedListArray? _justJoinedListArray.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -997,7 +997,7 @@
                                    userId:[wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-//            [DGHUDView stop];
+            [DGHUDView stop];
             if (response) {
                 NSLog(@"Response from showNewJoinUsersList");
                 if (![wself checkTimedOut:response api:@"getNewJoinList" eventId:@"" text:@""]){
@@ -1036,7 +1036,7 @@
 #pragma mark - Get hotlist (115)
 - (void)showHotList {
     NSLog(@"showHotList");
-//    [DGHUDView start];
+    [DGHUDView start];
     __block typeof(self) wself = self;
     NSUInteger count = _hotListArray? _hotListArray.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1047,7 +1047,7 @@
                                userId:[wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-//            [DGHUDView stop];
+            [DGHUDView stop];
             
             if (response) {
                 NSLog(@"Response from showHotList");
@@ -1102,7 +1102,7 @@
 #pragma mark - Get Recommended User List
 - (void)showUserRecommendedList {
     NSLog(@"showUserRecommendedList");
-//    [DGHUDView start];
+    [DGHUDView start];
     __block typeof(self) wself = self;
     NSUInteger count = followUserData? followUserData.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1178,7 +1178,7 @@
 
 - (void)showAlbumRecommendedList {
     NSLog(@"showAlbumRecommendedList");
-//    [DGHUDView start];
+    [DGHUDView start];
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1459,7 +1459,7 @@
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     @try {
-//        [DGHUDView start];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -3349,8 +3349,10 @@ replacementString:(NSString *)string {
 }
 
 #pragma mark - Custom Method for TimeOut
-- (BOOL)checkTimedOut: (NSString *)result api:(NSString *)api eventId:(NSString *)eventId text:(NSString *)text{
-    
+- (BOOL)checkTimedOut:(NSString *)result
+                  api:(NSString *)api
+              eventId:(NSString *)eventId
+                 text:(NSString *)text{
     if ([result isEqualToString:timeOutErrorCode] ) {
         [self showCustomTimeOutAlert:NSLocalizedString(@"Connection-Timeout", @"")
                         protocolName:api
