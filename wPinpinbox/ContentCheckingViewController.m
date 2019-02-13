@@ -4529,7 +4529,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [self.customMessageActionSheet initialValueSetup];
     [self.customMessageActionSheet getMessage];
 }
-
+- (void)likeAlbum: (NSString *)aid {
+    if (aid) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:aid forKey:@"albumliked"];
+        [defaults synchronize];
+    }
+}
 - (IBAction)likeBtnPressed:(id)sender {
     isLikeBtnPressed = YES;
     
@@ -4538,6 +4544,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     } else {
         [self insertAlbumToLikes];
     }
+    
+    [self likeAlbum:self.albumId];
 }
 
 - (IBAction)moreBtnPressed:(id)sender {
