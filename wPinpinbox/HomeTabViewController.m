@@ -1839,22 +1839,22 @@
             cell.userInfoView.hidden = NO;
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
             CGRect rect = cell.userInfoView.frame;
-            rect.size.width = 20 * 1 + 6;            
+            rect.size.width = kIconForInfoViewWidth * 1 + 6;            
             cell.userInfoView.frame = rect;
             
             if (gotVideo) {
                 [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
                 [cell.btn2 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
                 CGRect rect = cell.userInfoView.frame;
-                rect.size.width = 20 * 2 + 12;
+                rect.size.width = kIconForInfoViewWidth * 2 + 12;
                 cell.userInfoView.frame = rect;
                 
                 if (gotExchange || gotSlot) {
                     [cell.btn1 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
                     [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
-                    [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];                    
+                    [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
                     CGRect rect = cell.userInfoView.frame;
-                    rect.size.width = 20 * 3 + 18;
+                    rect.size.width = kIconForInfoViewWidth * 3 + 18;
                     cell.userInfoView.frame = rect;
                 }
             }
@@ -1862,21 +1862,21 @@
             cell.userInfoView.hidden = NO;
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
             CGRect rect = cell.userInfoView.frame;
-            rect.size.width = 20 * 1 + 6;
+            rect.size.width = kIconForInfoViewWidth * 1 + 6;
             cell.userInfoView.frame = rect;
             
             if (gotExchange || gotSlot) {
                 [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
                 [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
                 CGRect rect = cell.userInfoView.frame;
-                rect.size.width = 20 * 2 + 12;
+                rect.size.width = kIconForInfoViewWidth * 2 + 12;
                 cell.userInfoView.frame = rect;
             }
         } else if (gotExchange || gotSlot) {
             cell.userInfoView.hidden = NO;
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
             CGRect rect = cell.userInfoView.frame;
-            rect.size.width = 20 * 1 + 6;
+            rect.size.width = kIconForInfoViewWidth * 1 + 6;
             cell.userInfoView.frame = rect;
         }
         
