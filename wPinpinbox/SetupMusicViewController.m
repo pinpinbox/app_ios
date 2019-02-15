@@ -1170,11 +1170,11 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
         self.uploadProgress =  [MBProgressHUD showHUDAddedTo: self.view animated: YES];
         self.uploadProgress.mode =  MBProgressHUDModeDeterminateHorizontalBar;
         self.uploadProgress.label.text = @"音樂上傳中";
-        [self.audioUploader startUpload:param uploadblock:^(NSUInteger currentUploaded, NSUInteger totalSize, NSString * _Nonnull desc) {
+        [self.audioUploader startUpload:param path:@"/updatealbumsettings/2.0" uploadblock:^(NSUInteger currentUploaded, NSUInteger totalSize, NSString * _Nonnull desc) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 wself.uploadProgress.progress = (float)currentUploaded/(float)totalSize;
             });
-        } uploadResultBlock:^(NSError * _Nullable error) {
+        } uploadResultBlock:^(NSDictionary * _Nullable result,  NSError * _Nullable error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wself.avPlayer pause];
                 [wself.uploadProgress hideAnimated:YES];

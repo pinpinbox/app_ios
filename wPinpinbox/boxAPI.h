@@ -516,5 +516,5 @@ doneHandler fail:(void(^)(NSInteger status)) failHandler;
                        completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 
 #pragma mark - upload album music
-+ (void)uploadMusicWithAlbumSettings:(NSDictionary *)audioSetting audioUrl:(NSURL *)audioUrl sessionDelegate:(id<NSURLSessionDelegate>)sessionDelegate completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
++ (void)uploadMusicWithAlbumSettings:(NSDictionary *)audioSetting path:(NSString *)path audioUrl:(NSURL *)audioUrl sessionDelegate:(id<NSURLSessionDelegate>)sessionDelegate completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock;
 @end

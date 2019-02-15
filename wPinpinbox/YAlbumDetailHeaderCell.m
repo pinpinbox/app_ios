@@ -18,8 +18,7 @@
 - (void)loadData:(NSDictionary *)data {
     if ([wTools objectExists:data[@"name"]]) {
         [_titleLabel setText: data[@"name"]];
-        /*_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:data[@"name"] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSForegroundColorAttributeName:[UIColor firstGrey],NSKernAttributeName:@1} ];//text = data[@"name"];
-         */
+
     }
 }
 

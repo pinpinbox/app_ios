@@ -28,13 +28,14 @@
     return self;
 }
 - (void)startUpload:(NSMutableDictionary *)params
+               path:(NSString *)path
         uploadblock:(AudioUploaderProgressBlock)uploadblock
   uploadResultBlock:(AudioUploaderResultBlock)resultblock {
     
-    [boxAPI uploadMusicWithAlbumSettings:params audioUrl:self.audioItemURL sessionDelegate:self completionBlock:^(NSDictionary *result, NSError *error) {
+    [boxAPI uploadMusicWithAlbumSettings:params path:path audioUrl:self.audioItemURL sessionDelegate:self completionBlock:^(NSDictionary *result, NSError *error) {
         
         if (resultblock)
-            resultblock(error);
+            resultblock(result, error);
     }];
     
     self.resultBlock = resultblock;

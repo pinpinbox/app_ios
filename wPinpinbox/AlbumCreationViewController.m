@@ -64,7 +64,7 @@
 #import "AlbumCreationIntroViewController.h"
 #import "UserInfo.h"
 #import "LabelAttributeStyle.h"
-
+#import "AudioUploader.h"
 
 #pragma mark - Photo Editor SDK
 //  DSPhotoEditorSDK.framework archive之前必須先移除i386, x86_64 才能上傳app store connect //
@@ -95,10 +95,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 
 #if TARGET_OS_SIMULATOR
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate>
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UIDocumentPickerDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate>
 
 #else
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate,
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UIDocumentPickerDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate,
 DSPhotoEditorViewControllerDelegate>
 
 #endif
@@ -187,6 +187,8 @@ DSPhotoEditorViewControllerDelegate>
 @property (nonatomic) DDAUIActionSheetViewController *customAddActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customVideoActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customSettingActionSheet;
+@property (nonatomic) DDAUIActionSheetViewController *customAudioUploadActionSheet;
+
 @property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) MBProgressHUD *vidHud;
 
@@ -221,6 +223,8 @@ DSPhotoEditorViewControllerDelegate>
 
 @property (weak, nonatomic)  IBOutlet UIView *audioBgView;
 
+@property (nonatomic) AudioUploader *audioUploader;
+@property (nonatomic) MBProgressHUD *uploadProgress;
 @end
 
 @implementation AlbumCreationViewController
@@ -391,6 +395,11 @@ DSPhotoEditorViewControllerDelegate>
     self.customSettingActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customSettingActionSheet.delegate = self;
     self.customSettingActionSheet.topicStr = @"作品設定";
+    
+    
+    self.customAudioUploadActionSheet = [[DDAUIActionSheetViewController alloc] init];
+    self.customAudioUploadActionSheet.delegate = self;
+    self.customAudioUploadActionSheet.topicStr = @"上傳音訊檔";
     
     // Add Long Press Gesture to collecitonView
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget: self action: @selector(handleLongPress:)];
@@ -1010,68 +1019,110 @@ shouldChangeTextInRange:(NSRange)range
     
     self.isReadyToPlay = NO;
 }
-
-- (IBAction)recordPausePlayTapped:(id)sender {
-    NSLog(@"");
-    NSLog(@"recordPausePlayTapped");
+- (void)processAudioUploadSheet {
     
-    NSLog(@"selectItem: %ld", (long)selectItem);
+    NSLog(@"showPhotoAndVideoActionSheet");
+    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
+    
+    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+    
+    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+    }];
+    
+    self.effectView.frame = self.view.frame;
+    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+    self.effectView.alpha = 0.8;
+    
+    [self.view addSubview: self.effectView];
+    
+    // CustomActionSheet Setting
+    [self.view addSubview: self.customAudioUploadActionSheet.view];
+    [self.customAudioUploadActionSheet viewWillAppear: NO];
+    
+    [self.customAudioUploadActionSheet addSelectItem:@"" title: @"錄音" btnStr: @"" tagInt: 1 identifierStr: @"record"];
+    [self.customAudioUploadActionSheet addSelectItem:@""  title: @"選擇檔案" btnStr: @"" tagInt: 2 identifierStr: @"audioupload"];
+    
+    
+    [self.customAudioUploadActionSheet addSafeArea];
+    __weak typeof(self) weakSelf = self;
+    self.customAudioUploadActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
+        
+        if ([identifierStr isEqualToString: @"audioupload"]) {
+            ///[PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf openAudioFileBrowser];
+                });
+            //}];
+        } else if ([identifierStr isEqualToString: @"record"]) {
+            [weakSelf recordingAudio];
+        }
+        
+        [weakSelf enableRecordAndPlayBtn];
+        
+    };
+    
+}
+- (void) openAudioFileBrowser {
+    if (@available(iOS 11.0, *)) {
+        
+        //UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes: @[(__bridge NSString * )kUTTypeMP3,(__bridge NSString * )kUTTypeWaveformAudio,(__bridge NSString * )kUTTypeMPEG4, (__bridge NSString *)kUTTypeMPEG4Audio] inMode:UIDocumentPickerModeImport];
+        UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes: @[(__bridge NSString * )kUTTypeMP3, (__bridge NSString *)kUTTypeMPEG4Audio] inMode:UIDocumentPickerModeImport];
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+}
+- (IBAction)recordPausePlayTapped:(id)sender {
+    
     NSString *userIdStr = ImageDataArr[selectItem][@"user_id"];
     
-    // If user doesn't have permission, they still can play audio, but can't modfity it.
-    
-    if ([wTools objectExists:audio_url]) { //![audio_url isKindOfClass: [NSNull class]]) {
-        if (![audio_url isEqualToString: @""]) {
-            NSLog(@"audio_url is not empty");
-            NSLog(@"play stream audio");
-            [self checkAudioStatus];
-        } else {
-            if (![userIdStr isEqual: [NSNull null]]) {
-                NSLog(@"userId is not null");
-                if (![self.userIdentity isEqual: [NSNull null]]) {
-                    NSLog(@"self.userIdentity is not null");
-                    if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
-                        [self checkAudioStatus];
-                    } else {
-                        [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
-                        
-                        return;
-                    }
-                }
-            }
-        }
-    } else {
-        if ([wTools objectExists:userIdStr] && [wTools objectExists:self.userIdentity]) { //![userIdStr isEqual: [NSNull null]]) {
-            NSLog(@"userId is not null");
-            //if (![self.userIdentity isEqual: [NSNull null]]) {
-            NSLog(@"self.userIdentity is not null");
-            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
-                [self checkAudioStatus];
-            } else {
-                [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
-                return;
-            }
-            //}
-        }
+    //  check permission first
+    if (![self.userIdentity isEqualToString: @"admin"] && [userIdStr integerValue] != [[wTools getUserID] integerValue]) {
+        [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
+        return;
     }
+    
+    [self checkAudioStatus];
+    
 }
 
 - (void)checkAudioStatus {
-    [self disableRecordAndPlayBtn];
     
-    NSLog(@"self.audioMode: %@", self.audioMode);
+    if (isRecordingAudio || isRecorded) {
+        [self recordingAudio];
+        return;
+    }
+    
+    
+    [self disableRecordAndPlayBtn];
     
     if ([self.audioMode isEqualToString: @"singular"]) {
         NSLog(@"self.audioMode isEqualToString singular");
+        //  check audio mode        
+        //if (![audio_url isEqualToString: @""]) {
+            NSString *msg = @"當 前 播 放 模 式 為 作 品 單 一 的 背 景 音 樂 ， 確 定 要 切 換 成 每 頁 的 錄 音 嗎 ？ (此動作會移除背景音樂唷)";
+            [self showCustomAudioModeCheckAlert: msg];
+        //}
         
-        NSString *msg = @"當 前 播 放 模 式 為 作 品 單 一 的 背 景 音 樂 ， 確 定 要 切 換 成 每 頁 的 錄 音 嗎 ？ (此動作會移除背景音樂唷)";
-        [self showCustomAudioModeCheckAlert: msg];
     } else if ([self.audioMode isEqualToString: @"plural"] || [self.audioMode isEqualToString: @"none"]) {
         NSLog(@"self.audioMode isEqualToString plural or none");
-        [self recordingAudio];
+        [self processAudioOption];
     }
 }
-
+- (void)processAudioOption {
+    //  Show customAudioUploadActionSheet for showing sound-recording and music-uploading options //
+    if (@available(iOS 11.0, *) ) {
+        [self processAudioUploadSheet];
+    } else {
+        // go recording
+        [self recordingAudio];
+    }
+    NSLog(@"self.audioMode: %@", self.audioMode);
+    
+}
 - (void)disableRecordAndPlayBtn {
     NSLog(@"disableRecordAndPlayBtn");
     self.recordPausePlayBtn.userInteractionEnabled = NO;
@@ -1177,6 +1228,80 @@ shouldChangeTextInRange:(NSRange)range
             [self avPlayerSetUp: audio_url];
         }
     }
+}
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray <NSURL *>*)urls {
+    
+//    if (self.avPlayer)
+//        [self.avPlayer pause];
+//
+    if (self.audioUploader) {
+        [self.audioUploader cacenlCurrentWork];
+        self.audioUploader = nil;
+    }
+//
+    [self disableRecordAndPlayBtn];
+    
+    NSString *photo_id = [ImageDataArr [selectItem][@"photo_id"] stringValue];
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param setObject:[wTools getUserID] forKey:@"id"];
+    [param setObject:[wTools getUserToken] forKey:@"token"];
+    [param setObject:self.albumid forKey:@"album_id"];
+    [param setObject: photo_id forKey: @"photo_id"];
+    
+    
+    //NSString *path = [[urls firstObject] path];
+    self.audioUploader = [[AudioUploader alloc] initWithAudio:[urls firstObject]  albumID:self.albumid];
+    __block typeof(self) wself = self;
+    
+    self.uploadProgress =  [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+    self.uploadProgress.mode =  MBProgressHUDModeDeterminateHorizontalBar;
+    self.uploadProgress.label.text = @"音訊上傳中";
+    
+    [self.audioUploader startUpload:param path:@"/updateaudioofdiy/1.2" uploadblock:^(NSUInteger currentUploaded, NSUInteger totalSize, NSString * _Nonnull desc) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            wself.uploadProgress.progress = (float)currentUploaded/(float)totalSize;
+        });
+    } uploadResultBlock:^(NSDictionary * _Nullable result,  NSError * _Nullable error) {
+        if (!error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself.uploadProgress hideAnimated:YES];
+                [wself.audioSwitchView switchOnWithAnimation];
+                [wself updateAlbumData: result];
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself.uploadProgress hideAnimated:YES];
+                [wself.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+                [wself.audioSwitchView switchOffWithAnimation];
+                
+                wself->isRecorded = NO;
+                [wself showCustomErrorAlert:[error localizedDescription]];
+            });
+            
+        }
+        [wself enableRecordAndPlayBtn];
+    }];
+}
+- (void)updateAlbumData:(NSDictionary *)data {
+    // Update audio_url for just finish recording
+    audio_url = data[@"data"][@"photo"][selectItem][@"audio_url"];
+    NSLog(@"audio_url: %@", audio_url);
+    
+    // Update ImageDataArr
+    ImageDataArr = [NSMutableArray arrayWithArray:data[@"data"][@"photo"]];
+    
+    //[mycollection reloadData];
+    [self.dataCollectionView reloadData];
+    
+    // Is Recorded
+    [self.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+    [self.audioSwitchView switchOnWithAnimation];
+    
+    isRecorded = YES;
+}
+- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
+    
 }
 
 // Check Audio Access Permission
@@ -3515,6 +3640,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     [self.effectView removeFromSuperview];
     self.effectView = nil;
+    
+    if (controller == self.customAudioUploadActionSheet) {
+        [self enableRecordAndPlayBtn];
+    }
 }
 
 #pragma mark -
