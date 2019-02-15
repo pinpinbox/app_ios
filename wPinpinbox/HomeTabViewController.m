@@ -1852,10 +1852,9 @@
                 if (gotExchange || gotSlot) {
                     [cell.btn1 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
                     [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
-                    [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
-                    
+                    [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];                    
                     CGRect rect = cell.userInfoView.frame;
-                    rect.size.width = 20 * 3 +18;
+                    rect.size.width = 20 * 3 + 18;
                     cell.userInfoView.frame = rect;
                 }
             }
@@ -1886,7 +1885,6 @@
             cell.albumNameLabel.text = data[@"album"][@"name"];
             [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
         }
-        
         return cell;
     } else if (collectionView.tag == 2) {
         //NSLog(@"collectionView.tag == 2");

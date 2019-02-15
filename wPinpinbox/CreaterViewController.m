@@ -766,16 +766,9 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     // UserForView Info Setting
     BOOL gotAudio = [data[@"usefor"][@"audio"] boolValue];
-    NSLog(@"gotAudio: %d", gotAudio);
-    
     BOOL gotVideo = [data[@"usefor"][@"video"] boolValue];
-    NSLog(@"gotVideo: %d", gotVideo);
-    
     BOOL gotExchange = [data[@"usefor"][@"exchange"] boolValue];
-    NSLog(@"gotExchange: %d", gotExchange);
-    
     BOOL gotSlot = [data[@"usefor"][@"slot"] boolValue];
-    NSLog(@"gotSlot: %d", gotSlot);
     
     [cell.btn1 setImage: nil forState: UIControlStateNormal];
     [cell.btn2 setImage: nil forState: UIControlStateNormal];
@@ -784,63 +777,53 @@ static NSString *autoPlayStr = @"&autoplay=1";
     cell.userInfoView.hidden = YES;
     
     if (gotAudio) {
-        NSLog(@"gotAudio");
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
         
         CGRect rect = cell.userInfoView.frame;
-        rect.size.width = 28 * 1;
+        rect.size.width = 20 * 1 + 6;
         cell.userInfoView.frame = rect;
         
         if (gotVideo) {
-            NSLog(@"gotAudio");
-            NSLog(@"gotVideo");
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
             [cell.btn2 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
             
             CGRect rect = cell.userInfoView.frame;
-            rect.size.width = 28 * 2;
+            rect.size.width = 20 * 2 + 12;
             cell.userInfoView.frame = rect;
             
             if (gotExchange || gotSlot) {
-                NSLog(@"gotAudio");
-                NSLog(@"gotVideo");
-                NSLog(@"gotExchange or gotSlot");
                 [cell.btn1 setImage: [UIImage imageNamed: @"ic200_audio_play_dark"] forState: UIControlStateNormal];
                 [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
                 [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
                 
                 CGRect rect = cell.userInfoView.frame;
-                rect.size.width = 28 * 3;
+                rect.size.width = 20 * 3 + 18;
                 cell.userInfoView.frame = rect;
             }
         }
     } else if (gotVideo) {
-        NSLog(@"gotVideo");
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
         
         CGRect rect = cell.userInfoView.frame;
-        rect.size.width = 28 * 1;
+        rect.size.width = 20 * 1 + 6;
         cell.userInfoView.frame = rect;
         
         if (gotExchange || gotSlot) {
-            NSLog(@"gotVideo");
-            NSLog(@"gotExchange or gotSlot");
             [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
             [cell.btn2 setImage: [UIImage imageNamed: @"ic200_video_dark"] forState: UIControlStateNormal];
             
             CGRect rect = cell.userInfoView.frame;
-            rect.size.width = 28 * 2;
+            rect.size.width = 20 * 2 + 12;
             cell.userInfoView.frame = rect;
         }
     } else if (gotExchange || gotSlot) {
-        NSLog(@"gotExchange or gotSlot");
         cell.userInfoView.hidden = NO;
         [cell.btn3 setImage: [UIImage imageNamed: @"ic200_gift_dark"] forState: UIControlStateNormal];
         
         CGRect rect = cell.userInfoView.frame;
-        rect.size.width = 28 * 1;
+        rect.size.width = 20 * 1 + 6;
         cell.userInfoView.frame = rect;
     }
     // AlbumNameLabel Setting
