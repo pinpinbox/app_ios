@@ -87,6 +87,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UITextView *nameTextView;
     UITextView *phoneTextView;
     UITextView *addressTextView;
+    UITextView *messageTextView;
     UITextField *inputTextField;
     
 //    UITextField *inputField;
@@ -2249,6 +2250,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [rewardDic setObject: nameTextView.text forKey: @"recipient"];
         [rewardDic setObject: phoneTextView.text forKey: @"recipient_tel"];
         [rewardDic setObject: addressTextView.text forKey: @"recipient_address"];
+        if ([wTools objectExists: messageTextView.text]) {
+            [rewardDic setObject: messageTextView.text forKey: @"recipient_text"];
+        } else {
+            [rewardDic setObject: @"" forKey: @"recipient_text"];
+        }
+        NSLog(@"rewardDic: %@", rewardDic);
         jsonData = [NSJSONSerialization dataWithJSONObject: rewardDic options: 0 error: nil];
         jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
     } else {
@@ -3896,11 +3903,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         nameTextView = cell.nameTextView;
                         phoneTextView = cell.phoneTextView;
                         addressTextView = cell.addressTextView;
+                        messageTextView = cell.messageTextView;
                         
                         inputTextField.delegate = self;
                         nameTextView.delegate = self;
                         phoneTextView.delegate = self;
                         addressTextView.delegate = self;
+                        messageTextView.delegate = self;
+                        
+                        if ([wTools objectExists: self.bookdata[@"user"][@"name"]]) {
+                            cell.messageLabel.text = [NSString stringWithFormat: @"給%@的留言 (非必填)", self.bookdata[@"user"][@"name"]];
+                        }
                         
                         if ([wTools objectExists: rewardDescription]) {
                             cell.rewardDescriptionLabel.text = rewardDescription;
@@ -3918,11 +3931,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         nameTextView = cell.nameTextView;
                         phoneTextView = cell.phoneTextView;
                         addressTextView = cell.addressTextView;
+                        messageTextView = cell.messageTextView;
                         
                         inputTextField.delegate = self;
                         nameTextView.delegate = self;
                         phoneTextView.delegate = self;
                         addressTextView.delegate = self;
+                        messageTextView.delegate = self;
+                        
+                        if ([wTools objectExists: self.bookdata[@"user"][@"name"]]) {
+                            cell.messageLabel.text = [NSString stringWithFormat: @"給%@的留言 (非必填)", self.bookdata[@"user"][@"name"]];
+                        }
                         
                         if ([wTools objectExists: rewardDescription]) {
                             cell.rewardDescriptionLabel.text = rewardDescription;
