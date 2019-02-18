@@ -170,18 +170,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (weak, nonatomic) IBOutlet MyLinearLayout *textAndImageVertLayout;
 
 @property (weak, nonatomic) IBOutlet UIView *textViewBgView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBgViewHeightConstraint;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBgViewHeightConstraint;
 //@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBgViewBottomConstraint;
 
-@property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewHeightConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBottomConstraint;
+//@property (weak, nonatomic) IBOutlet UITextView *textView;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewHeightConstraint;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBottomConstraint;
 
 //@property (weak, nonatomic) IBOutlet UIScrollView *descriptionScrollView;
 @property (weak, nonatomic) IBOutlet SSFadingScrollView *descriptionScrollView;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewHeightConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewBottomConstraint;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewLeadingConstraint;
 //@property (weak, nonatomic) IBOutlet FRHyperLabel *descriptionLabel;
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *descriptionLabel;
 @property (weak, nonatomic) IBOutlet UIStackView *linkStackView;
@@ -190,6 +190,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 @property (weak, nonatomic) IBOutlet UIView *horzLineView;
 @property (weak, nonatomic) IBOutlet UICollectionView *thumbnailImageScrollCV;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *thumbViewLeading;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *thumbViewBottomConstraint;
 
 @property (nonatomic) DDAUIActionSheetViewController *customMoreActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
@@ -221,6 +223,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 @property (nonatomic) IBOutlet UIView *autoplayView;
 @property (nonatomic) IBOutlet NSLayoutConstraint *autoplayViewConstraint;
+@property (nonatomic) IBOutlet NSLayoutConstraint *autoplayViewBottomConstraint;
 @property (nonatomic) IBOutlet UIButton *autoplay;
 @property (nonatomic) dispatch_source_t autoplayTimer;
 @property (nonatomic) dispatch_queue_t autoplayQueue;
@@ -704,8 +707,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         self.navBarView.hidden = !self.navBarView.hidden;
         self.textAndImageVertLayout.hidden = !self.textAndImageVertLayout.hidden;
         self.textViewBgView.hidden = !self.textViewBgView.hidden;
-        self.textView.hidden = !self.textView.hidden;
-        self.descriptionScrollView.hidden = !self.descriptionScrollView.hidden;                
+        //self.textView.hidden = !self.textView.hidden;
+        self.descriptionScrollView.hidden = !self.descriptionScrollView.hidden;
+        if (self.autoplayViewConstraint.constant > 0) {
+            self.autoplayView.hidden = !self.autoplayView.hidden;
+        }
     }];
     
     if (![wTools objectExists: useFor]) {
@@ -793,6 +799,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     
     if (orientation == 1) {
+        self.thumbViewBottomConstraint.constant = 0;
+        self.autoplayViewBottomConstraint.constant = 0;
+        self.descriptionScrollViewLeadingConstraint.constant = 32;
         NSLog(@"Portrait Mode");
         NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
         NSLog(@"");
@@ -801,32 +810,29 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self settingSizeBasedOnDevice];
         self.horzLineView.hidden = NO;
         self.thumbnailImageScrollCV.hidden = NO;
-        self.descriptionScrollViewBottomConstraint.constant = 0;
-        
-        //            self.descriptionScrollViewHeightConstraint.constant = 140;
-        //            self.textViewBottomConstraint.constant = 0;
-        //            self.textViewBgViewBottomConstraint.constant = 0;
+
     } else {
         NSLog(@"Landscape Mode");
         NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
         NSLog(@"");
         NSLog(@"self.imageScrollCV.frame.size: %@", NSStringFromCGSize(self.imageScrollCV.frame.size));
-        
+        if (self.autoplayView.hidden)
+            self.descriptionScrollViewLeadingConstraint.constant = 32;
+        else
+            self.descriptionScrollViewLeadingConstraint.constant = 64;
         self.navBarViewTopConstraint.constant = 0;
         self.horzLineView.hidden = YES;
         self.thumbnailImageScrollCV.hidden = YES;
-        //            self.descriptionScrollViewHeightConstraint.constant = 120;
         
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-                case 2436:
-                    printf("iPhone X");
-                    self.imageScrollCVBottomConstraint.constant = 40;
-                    //                        self.textViewBottomConstraint.constant = -20;
-                    self.descriptionScrollViewBottomConstraint.constant = -20;
-                    //                        self.textViewBgViewBottomConstraint.constant = -20;
-                    break;
+            if ([[UIScreen mainScreen] nativeBounds].size.height >= 2436) {
+                    //printf("iPhone X");
+                self.imageScrollCVBottomConstraint.constant = 40;
+                self.thumbViewBottomConstraint.constant = 20;
+                self.autoplayViewBottomConstraint.constant = 20;
+                
             }
+                
         }
     }
 }
@@ -1633,10 +1639,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.autoplayViewConstraint.constant = 0;
     self.autoplayView.hidden = YES;
     self.playThrough = 0;
+    self.thumbViewLeading.constant = 0;
+    
     for (NSDictionary *p in self.photoArray) {
         if (p[@"duration"] && ![p[@"duration"] isKindOfClass:[NSNull class]]) {
             NSInteger t = [p[@"duration"] integerValue];
             if ( t != 0) {
+                self.thumbViewLeading.constant = 56;
                 self.autoplayViewConstraint.constant = 56;
                 self.autoplayView.hidden = NO;
                 if (p == [self.photoArray firstObject]) {
@@ -4335,30 +4344,30 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                      btnHeight:(CGFloat)btnHeight {
     NSLog(@"setupContentSizeHeight");
     
-    if (![wTools objectExists: description]) {
-        return;
-    }
-    
-    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-    style.lineBreakMode = NSLineBreakByWordWrapping;
-    style.alignment = NSTextAlignmentLeft;
-    NSAttributedString *string = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName:[UIFont systemFontOfSize:16], NSParagraphStyleAttributeName:style}];
-    CGSize textSize = [string boundingRectWithSize: CGSizeMake([UIScreen mainScreen].bounds.size.width - 32 * 2, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context: nil].size;
-    NSLog(@"description: %@", description);
-    NSLog(@"self getCurrentPage: %ld", (long)[self getCurrentPage]);
-    NSLog(@"textSize.height: %f", textSize.height);
-    NSLog(@"btnHeight: %f", btnHeight);
-    
-    if (textSize.height + btnHeight + 30 < kTextContentHeight) {
-        self.descriptionScrollViewHeightConstraint.constant = textSize.height + btnHeight + 30;
-        NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
-        
-        if ([description isEqualToString: @""]) {
-            self.descriptionScrollViewHeightConstraint.constant = (btnHeight>0)?btnHeight+15:btnHeight;
-        }
-    } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
-        self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;
-    }
+//    if (![wTools objectExists: description]) {
+//        return;
+//    }
+//
+//    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+//    style.lineBreakMode = NSLineBreakByWordWrapping;
+//    style.alignment = NSTextAlignmentLeft;
+//    NSAttributedString *string = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName:[UIFont systemFontOfSize:16], NSParagraphStyleAttributeName:style}];
+//    CGSize textSize = [string boundingRectWithSize: CGSizeMake([UIScreen mainScreen].bounds.size.width - 32 * 2, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context: nil].size;
+//    NSLog(@"description: %@", description);
+//    NSLog(@"self getCurrentPage: %ld", (long)[self getCurrentPage]);
+//    NSLog(@"textSize.height: %f", textSize.height);
+//    NSLog(@"btnHeight: %f", btnHeight);
+//
+//    if (textSize.height + btnHeight + 30 < kTextContentHeight) {
+//        self.descriptionScrollViewHeightConstraint.constant = textSize.height + btnHeight + 30;
+//        NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
+//
+//        if ([description isEqualToString: @""]) {
+//            self.descriptionScrollViewHeightConstraint.constant = (btnHeight>0)?btnHeight+15:btnHeight;
+//        }
+//    } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
+//        self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;
+//    }
 }
 
 - (void)linkBt1Pressed {
@@ -4539,7 +4548,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [self.customMessageActionSheet initialValueSetup];
     [self.customMessageActionSheet getMessage];
 }
-
+- (void)likeAlbum: (NSString *)aid {
+    if (aid) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:aid forKey:@"albumliked"];
+        [defaults synchronize];
+    }
+}
 - (IBAction)likeBtnPressed:(id)sender {
     isLikeBtnPressed = YES;
     
@@ -4548,6 +4563,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     } else {
         [self insertAlbumToLikes];
     }
+    
+    [self likeAlbum:self.albumId];
 }
 
 - (IBAction)moreBtnPressed:(id)sender {

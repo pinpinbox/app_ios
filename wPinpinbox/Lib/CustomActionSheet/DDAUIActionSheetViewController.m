@@ -599,8 +599,8 @@
 
 - (void)addHorizontalLine {
     UIView *horizontalLineView = [UIView new];
-    horizontalLineView.backgroundColor = [UIColor thirdGrey];
-    horizontalLineView.myHeight = 1;
+    horizontalLineView.backgroundColor = [UIColor secondGrey];
+    horizontalLineView.myHeight = 0.5;
     horizontalLineView.myLeftMargin = horizontalLineView.myRightMargin = 0;
     horizontalLineView.myTopMargin = horizontalLineView.myBottomMargin = 10;
     [self.contentLayout addSubview: horizontalLineView];

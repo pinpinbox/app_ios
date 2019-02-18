@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.43"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -577,31 +577,6 @@
                                             <constraint firstAttribute="height" constant="0.5" id="e0X-sF-JFR"/>
                                         </constraints>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8iL-lU-NNE" userLabel="PlayerView">
-                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="56"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9gF-JT-oil">
-                                                <rect key="frame" x="8" y="8" width="40" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="40" id="Ghr-Yz-ctu"/>
-                                                    <constraint firstAttribute="height" constant="40" id="sp0-Sj-GqU"/>
-                                                </constraints>
-                                                <state key="normal" image="ic200_autoplay_light"/>
-                                                <state key="selected" image="ic200_autoplay_pink"/>
-                                                <state key="highlighted" image="ic200_autoplay_pink"/>
-                                                <connections>
-                                                    <action selector="switchAutoPlay:" destination="ZUu-YK-KeO" eventType="touchUpInside" id="VvQ-Y8-yx6"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" id="AdE-y7-MRw"/>
-                                            <constraint firstAttribute="height" constant="56" id="RMQ-F5-c6Y"/>
-                                            <constraint firstItem="9gF-JT-oil" firstAttribute="centerX" secondItem="8iL-lU-NNE" secondAttribute="centerX" id="b9r-hR-1vE"/>
-                                            <constraint firstItem="9gF-JT-oil" firstAttribute="centerY" secondItem="8iL-lU-NNE" secondAttribute="centerY" id="gOp-Sh-qzj"/>
-                                        </constraints>
-                                    </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="irG-WU-tpb">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="56.333333333333336"/>
                                         <subviews>
@@ -664,14 +639,36 @@
                                 <constraints>
                                     <constraint firstItem="JXd-ak-tK2" firstAttribute="leading" secondItem="Quh-ym-aFB" secondAttribute="leading" id="0MW-RX-exk"/>
                                     <constraint firstItem="irG-WU-tpb" firstAttribute="trailing" secondItem="Quh-ym-aFB" secondAttribute="trailing" id="0dD-GY-dO1"/>
-                                    <constraint firstItem="8iL-lU-NNE" firstAttribute="leading" secondItem="Quh-ym-aFB" secondAttribute="leading" id="Ajr-Fd-cJR"/>
-                                    <constraint firstItem="irG-WU-tpb" firstAttribute="leading" secondItem="8iL-lU-NNE" secondAttribute="trailing" id="Gmu-Sr-aR6"/>
+                                    <constraint firstItem="irG-WU-tpb" firstAttribute="leading" secondItem="Quh-ym-aFB" secondAttribute="leading" id="2gv-8X-qjb"/>
                                     <constraint firstItem="JXd-ak-tK2" firstAttribute="top" secondItem="Quh-ym-aFB" secondAttribute="top" id="Vzd-Ym-Dhd"/>
                                     <constraint firstItem="irG-WU-tpb" firstAttribute="bottom" secondItem="Quh-ym-aFB" secondAttribute="bottom" id="Wxs-8h-U9B"/>
-                                    <constraint firstItem="8iL-lU-NNE" firstAttribute="top" secondItem="Quh-ym-aFB" secondAttribute="top" id="XUt-r0-GIn"/>
                                     <constraint firstItem="irG-WU-tpb" firstAttribute="top" secondItem="Quh-ym-aFB" secondAttribute="top" id="dfR-6v-1uW"/>
                                     <constraint firstItem="JXd-ak-tK2" firstAttribute="trailing" secondItem="Quh-ym-aFB" secondAttribute="trailing" id="iOW-dn-4VD"/>
-                                    <constraint firstAttribute="height" constant="56.329999999999998" id="lOk-kg-cBh"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8iL-lU-NNE" userLabel="PlayerView">
+                                <rect key="frame" x="207" y="340" width="0.0" height="56"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9gF-JT-oil">
+                                        <rect key="frame" x="8" y="8" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="Ghr-Yz-ctu"/>
+                                            <constraint firstAttribute="height" constant="40" id="sp0-Sj-GqU"/>
+                                        </constraints>
+                                        <state key="normal" image="ic200_autoplay_light"/>
+                                        <state key="selected" image="ic200_autoplay_pink"/>
+                                        <state key="highlighted" image="ic200_autoplay_pink"/>
+                                        <connections>
+                                            <action selector="switchAutoPlay:" destination="ZUu-YK-KeO" eventType="touchUpInside" id="VvQ-Y8-yx6"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" id="AdE-y7-MRw"/>
+                                    <constraint firstAttribute="height" constant="56" id="RMQ-F5-c6Y"/>
+                                    <constraint firstItem="9gF-JT-oil" firstAttribute="centerX" secondItem="8iL-lU-NNE" secondAttribute="centerX" id="b9r-hR-1vE"/>
+                                    <constraint firstItem="9gF-JT-oil" firstAttribute="centerY" secondItem="8iL-lU-NNE" secondAttribute="centerY" id="gOp-Sh-qzj"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eds-XN-Ulm">
@@ -841,17 +838,21 @@
                             <constraint firstItem="2zQ-kJ-JFQ" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" id="FVi-MD-4To"/>
                             <constraint firstItem="2zQ-kJ-JFQ" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="G99-bX-b7q"/>
                             <constraint firstItem="TxV-bv-Xq8" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" id="HUn-BS-XnS"/>
+                            <constraint firstItem="8iL-lU-NNE" firstAttribute="bottom" secondItem="6iW-5Y-gqn" secondAttribute="bottom" id="Hcz-uN-jGH"/>
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" id="Pf4-LN-TiK"/>
                             <constraint firstItem="2zQ-kJ-JFQ" firstAttribute="top" secondItem="6iW-5Y-gqn" secondAttribute="top" id="VLs-j8-UdL"/>
                             <constraint firstItem="2zQ-kJ-JFQ" firstAttribute="bottom" secondItem="6iW-5Y-gqn" secondAttribute="bottom" id="WjV-Lx-g3c"/>
                             <constraint firstItem="TxV-bv-Xq8" firstAttribute="top" secondItem="6iW-5Y-gqn" secondAttribute="top" id="WkV-f3-ZR5"/>
+                            <constraint firstItem="8iL-lU-NNE" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" id="YgJ-Hj-6X8"/>
                             <constraint firstItem="eds-XN-Ulm" firstAttribute="top" secondItem="6iW-5Y-gqn" secondAttribute="top" id="ZEv-KX-lRV"/>
                             <constraint firstItem="TxV-bv-Xq8" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="ZzB-9r-oEe"/>
                             <constraint firstItem="MS8-GD-iEh" firstAttribute="height" secondItem="gD8-9M-Iko" secondAttribute="height" id="dIW-ZZ-mpQ"/>
+                            <constraint firstItem="Quh-ym-aFB" firstAttribute="top" secondItem="gD8-9M-Iko" secondAttribute="bottom" id="ecA-To-Ics"/>
                             <constraint firstItem="TxV-bv-Xq8" firstAttribute="top" secondItem="6iW-5Y-gqn" secondAttribute="top" id="eox-WF-aha"/>
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="bottom" secondItem="6iW-5Y-gqn" secondAttribute="bottom" id="ftN-Xn-39t"/>
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="top" secondItem="gD8-9M-Iko" secondAttribute="bottom" id="lZg-mo-sr9"/>
                             <constraint firstItem="eds-XN-Ulm" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="nV1-FK-AaJ"/>
+                            <constraint firstItem="MS8-GD-iEh" firstAttribute="leading" secondItem="6iW-5Y-gqn" secondAttribute="leading" id="pTD-i0-xpP"/>
                             <constraint firstItem="Quh-ym-aFB" firstAttribute="trailing" secondItem="6iW-5Y-gqn" secondAttribute="trailing" id="peX-90-NYJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6iW-5Y-gqn"/>
@@ -859,11 +860,11 @@
                     <connections>
                         <outlet property="autoplay" destination="9gF-JT-oil" id="AL7-Zc-pDo"/>
                         <outlet property="autoplayView" destination="8iL-lU-NNE" id="y12-tS-Sgp"/>
+                        <outlet property="autoplayViewBottomConstraint" destination="Hcz-uN-jGH" id="M2S-vQ-dz9"/>
                         <outlet property="autoplayViewConstraint" destination="AdE-y7-MRw" id="inz-sP-Odt"/>
                         <outlet property="descriptionLabel" destination="M8K-FQ-cYJ" id="dWY-h9-bYo"/>
                         <outlet property="descriptionScrollView" destination="gD8-9M-Iko" id="Q8H-k2-Isq"/>
-                        <outlet property="descriptionScrollViewBottomConstraint" destination="lZg-mo-sr9" id="8qK-Qp-hYH"/>
-                        <outlet property="descriptionScrollViewHeightConstraint" destination="n0z-Hn-tR5" id="IOJ-uw-FzV"/>
+                        <outlet property="descriptionScrollViewLeadingConstraint" destination="6AO-Qf-gAO" id="COV-bi-pgE"/>
                         <outlet property="horzLineView" destination="JXd-ak-tK2" id="9aI-NI-5Ox"/>
                         <outlet property="imageScrollCV" destination="2zQ-kJ-JFQ" id="X3N-f5-eBh"/>
                         <outlet property="imageScrollCVBottomConstraint" destination="WjV-Lx-g3c" id="V3I-2s-rZh"/>
@@ -885,6 +886,8 @@
                         <outlet property="soundBtn" destination="Yea-wh-43s" id="lLG-AU-BuO"/>
                         <outlet property="textAndImageVertLayout" destination="Quh-ym-aFB" id="aab-r1-riy"/>
                         <outlet property="textViewBgView" destination="MS8-GD-iEh" id="Z35-Ze-wpH"/>
+                        <outlet property="thumbViewBottomConstraint" destination="ftN-Xn-39t" id="gHJ-YC-cAr"/>
+                        <outlet property="thumbViewLeading" destination="2gv-8X-qjb" id="j5W-R9-mpB"/>
                         <outlet property="thumbnailImageScrollCV" destination="ePG-cC-JmH" id="2Pe-wC-y6G"/>
                     </connections>
                 </viewController>
@@ -894,7 +897,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="GiftImages1" width="560.25" height="560.25"/>
+        <image name="GiftImages1" width="747" height="747"/>
         <image name="ic200_arrow_left_light.png" width="16" height="16"/>
         <image name="ic200_audio_play_light.png" width="16" height="16"/>
         <image name="ic200_autoplay_light" width="144" height="144"/>

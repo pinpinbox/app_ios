@@ -1635,6 +1635,12 @@ alertView.arrangeStyle = @"Horizontal";
             [self retrieveAlbum:self.album_id silence:YES];
         }
         [defaults removeObjectForKey:@"keepOwnedAlbumLocal"];
+    } else {
+        aid = (NSString *)[defaults objectForKey:@"albumliked"];
+        if (aid && [aid isEqualToString:self.album_id] && self.albumInfo.allKeys.count) {
+            [self retrieveAlbum:self.album_id silence:YES];
+        }
+        [defaults removeObjectForKey:@"albumliked"];
     }
     [defaults synchronize];
 }
