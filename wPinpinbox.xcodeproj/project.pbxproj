@@ -80,7 +80,6 @@
 		54933AE0207F4A30001582C3 /* MintAnnotationChatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54933ADB207F4A30001582C3 /* MintAnnotationChatView.m */; };
 		54933AE1207F4A30001582C3 /* MintAnnotationMemoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54933ADC207F4A30001582C3 /* MintAnnotationMemoView.m */; };
 		54933AE2207F4A30001582C3 /* MintAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 54933ADE207F4A30001582C3 /* MintAnnotation.m */; };
-		54951AF42005E6A0001FFAF9 /* AlbumDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54951AF32005E6A0001FFAF9 /* AlbumDetailViewController.m */; };
 		549765D01F7EA0B300E2CBEF /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549765CF1F7EA0B300E2CBEF /* SettingViewController.m */; };
 		5498BF751FC7200A007BD033 /* ActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5498BF741FC7200A007BD033 /* ActivityDetailViewController.m */; };
 		549A18A120AE714D00532E1E /* APNS Banner Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */; };
@@ -542,8 +541,6 @@
 		54933ADC207F4A30001582C3 /* MintAnnotationMemoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MintAnnotationMemoView.m; sourceTree = "<group>"; };
 		54933ADD207F4A30001582C3 /* MintAttrColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MintAttrColor.h; sourceTree = "<group>"; };
 		54933ADE207F4A30001582C3 /* MintAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MintAnnotation.m; sourceTree = "<group>"; };
-		54951AF22005E6A0001FFAF9 /* AlbumDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumDetailViewController.h; sourceTree = "<group>"; };
-		54951AF32005E6A0001FFAF9 /* AlbumDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumDetailViewController.m; sourceTree = "<group>"; };
 		549765CE1F7EA0B300E2CBEF /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		549765CF1F7EA0B300E2CBEF /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		5498BF731FC72007007BD033 /* ActivityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityDetailViewController.h; sourceTree = "<group>"; };
@@ -1372,8 +1369,6 @@
 		540DE2BF20283BDD0090F584 /* AlbumDetail */ = {
 			isa = PBXGroup;
 			children = (
-				54951AF22005E6A0001FFAF9 /* AlbumDetailViewController.h */,
-				54951AF32005E6A0001FFAF9 /* AlbumDetailViewController.m */,
 				54138323200461110043D6CC /* AlbumDetailVC.storyboard */,
 				CBD42CEE21E2EF5F0046C1A9 /* YAlbumDetailViewController.h */,
 				CBD42CEF21E2EF5F0046C1A9 /* YAlbumDetailViewController.m */,
@@ -3275,7 +3270,6 @@
 				54C137F41F80FE5900CC12BC /* AboutPinpinBoxViewController.m in Sources */,
 				54F2CC27200CA0DA0091AA86 /* CategoryViewController.m in Sources */,
 				547BC6D21F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m in Sources */,
-				54951AF42005E6A0001FFAF9 /* AlbumDetailViewController.m in Sources */,
 				544FBEE5208D98AC00681097 /* SponsorListTableViewCell.m in Sources */,
 				54262AED1FA86D38008ED59B /* VotingCollectionReusableView.m in Sources */,
 				6308C4681EACF9B200F99AC0 /* AlbumCollectionViewController.m in Sources */,

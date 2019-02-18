@@ -22,7 +22,7 @@
 #import "GlobalVars.h"
 #import "AppDelegate.h"
 #import "ScanCodeForAdvancedSettingViewController.h"
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 #import "UIViewController+ErrorAlert.h"
 
 #import "UIImage+Resize.h"
@@ -1809,7 +1809,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                 NSLog(@"appDelegate.myNav.viewControllers: %@", appDelegate.myNav.viewControllers);
                 
                 for (UIViewController *vc in appDelegate.myNav.viewControllers) {
-                    if ([vc isKindOfClass: [AlbumDetailViewController class]]) {
+                    /*if ([vc isKindOfClass: [AlbumDetailViewController class]]) {
                         NSLog(@"vc is AlbumDetailVC");
                         
                         if ([self.delegate respondsToSelector: @selector(albumSettingViewControllerUpdate:)]) {
@@ -1818,7 +1818,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         [appDelegate.myNav popToViewController: vc animated: YES];
                         
                         return;
-                    } else if ([vc isKindOfClass: [AlbumCollectionViewController class]]) {
+                    } else */if ([vc isKindOfClass: [AlbumCollectionViewController class]]) {
                         NSLog(@"vc is AlbumCollectionVC");
                         if ([self.delegate respondsToSelector: @selector(albumSettingViewControllerUpdate:)]) {
                             [self.delegate albumSettingViewControllerUpdate: self];
@@ -2662,7 +2662,7 @@ replacementString:(NSString *)string {
                        albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

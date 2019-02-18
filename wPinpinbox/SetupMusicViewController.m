@@ -1266,7 +1266,7 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
                   protocolName: (NSString *)protocolName
                        jsonStr: (NSString *)jsonStr {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     alertTimeOutView.arrangeStyle = @"Horizontal";
     
     alertTimeOutView.parentView = self.view;

@@ -15,9 +15,13 @@
 + (CustomIOSAlertView * _Nullable)getCustomErrorAlert: (NSString * _Nonnull)msg {
     if ([msg length] < 1)
         msg = @"請稍後再試";
+    
     CustomIOSAlertView *errorAlertView = [[CustomIOSAlertView alloc] init];
     //[errorAlertView setContainerView: [self createErrorContainerView: msg]];
-    [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
+    if ([msg isEqualToString:NSLocalizedString(@"Host-NotAvailable", @"")])
+        [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstGrey] badgeName:nil];
+    else
+        [errorAlertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstPink] badgeName:nil];
     [errorAlertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     [errorAlertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     [errorAlertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondPink]]];

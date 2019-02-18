@@ -21,7 +21,7 @@
 #import <SafariServices/SafariServices.h>
 #import "CustomIOSAlertView.h"
 #import "OldCustomAlertView.h"
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 #import "GlobalVars.h"
 #import "AppDelegate.h"
 #import "UIColor+HexString.h"

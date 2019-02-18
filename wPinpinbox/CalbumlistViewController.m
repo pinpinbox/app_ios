@@ -1009,10 +1009,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     //檢查資料夾是否存在
     if ([fileManager fileExistsAtPath: docDirectoryPath]) {
         NSLog(@"fileManager fileExistsAtPath: docDirectoryPath");
-        [self showCustomAlert: @"確定要刪除相本?" path: docDirectoryPath albumId: albumId];
+        [self showAlbumDeleteCustomAlert: @"確定要刪除相本?" path: docDirectoryPath albumId: albumId];
     } else {
         NSLog(@"fileManager file does not ExistsAtPath: docDirectoryPath");
-        [self showCustomAlert: @"確定要刪除相本?" albumId: albumId];
+        [self showAlbumDeleteCustomAlert: @"確定要刪除相本?" albumId: albumId];
     }
 }
 
@@ -1086,36 +1086,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     style: style];
 }
 #pragma mark - Custom Alert Method
-- (void)showCustomAlertNormal: (NSString *)msg {
-    CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    //[alertView setContainerView: [self createContainerViewNormal: msg]];
-    [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
-    //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
-    alertView.arrangeStyle = @"Horizontal";
-    
-    [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
-    //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor clearColor], [UIColor clearColor],nil]];
-    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
-    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
-    //alertView.arrangeStyle = @"Vertical";
-    
-    [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        
-        [alertView close];
-        
-        if (buttonIndex == 0) {
-            
-        } else {
-            //[self changeFollowStatus: userId name: name];
-        }
-    }];
-    [alertView setUseMotionEffects: YES];
-    [alertView show];
-}
 
 - (UIView *)createContainerViewNormal: (NSString *)msg {
     // TextView Setting
@@ -1192,7 +1162,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 
-- (void)showCustomAlert: (NSString *)msg path:(NSString *)docDirectoryPath albumId:(NSString *)albumId {
+- (void)showAlbumDeleteCustomAlert: (NSString *)msg path:(NSString *)docDirectoryPath albumId:(NSString *)albumId {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     //[alertView setContainerView: [self createContainerView: msg]];
     [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1300,8 +1270,9 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - Custom Alert Method
-- (void)showCustomAlert:(NSString *)msg
-                albumId:(NSString *)albumId {
+
+- (void)showAlbumDeleteCustomAlert:(NSString *)msg
+                           albumId:(NSString *)albumId {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     //[alertView setContainerView: [self createContainerView1: msg]];
     [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1329,80 +1300,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     }];
     [alertView setUseMotionEffects: YES];
     [alertView show];
-}
-
-- (UIView *)createContainerView1: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    //NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    //NSLog(@"");
-    
-    return contentView;
 }
 
 -(void)hidealbumqueue:(NSString *)albumid {
@@ -2296,7 +2193,7 @@ didCompleteWithResults:(NSDictionary *)results {
                fromEventPostVC:(BOOL)fromEventPostVC {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

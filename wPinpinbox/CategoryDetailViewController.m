@@ -16,7 +16,7 @@
 #import "AsyncImageView.h"
 #import "JCCollectionViewWaterfallLayout.h"
 #import "CreaterViewController.h"
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 #import "UIColor+HexString.h"
 #import "CustomIOSAlertView.h"
 #import "GlobalVars.h"
@@ -533,7 +533,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

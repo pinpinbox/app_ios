@@ -1294,7 +1294,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     alertTimeOutView.arrangeStyle = @"Horizontal";
     
     alertTimeOutView.parentView = self.view;
