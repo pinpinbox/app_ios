@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,8 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="簡 訊 驗 證" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cTP-Wh-Ica">
-                                <rect key="frame" x="16" y="36" width="223" height="58"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="簡訊驗證" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cTP-Wh-Ica">
+                                <rect key="frame" x="16" y="36" width="193" height="58"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="48"/>
                                 <color key="textColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -31,7 +31,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="tintColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="返 回 註 冊"/>
+                                <state key="normal" title="返回註冊"/>
                                 <connections>
                                     <action selector="back:" destination="iWg-Wp-sHH" eventType="touchUpInside" id="4kr-bf-rsz"/>
                                 </connections>
@@ -72,8 +72,8 @@
                                     <constraint firstAttribute="height" constant="48" id="n2p-TE-7t5"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="剩餘 59 秒可再發送" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQ7-2v-rud">
-                                <rect key="frame" x="114" y="321.5" width="125" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="剩餘59秒可再發送" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQ7-2v-rud">
+                                <rect key="frame" x="121.5" y="321.5" width="117.5" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.94901960780000005" green="0.4823529412" blue="0.63921568630000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -85,7 +85,7 @@
                                     <constraint firstAttribute="width" constant="112" id="9mS-Bb-hpW"/>
                                     <constraint firstAttribute="height" constant="48" id="tnQ-lu-byE"/>
                                 </constraints>
-                                <state key="normal" title="送 出">
+                                <state key="normal" title="送出">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -138,7 +138,8 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="2bZ-XX-0mU"/>
                                 </constraints>
-                                <state key="normal" title="完 成 註 冊">
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="完成註冊">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -235,6 +236,7 @@
                         <outlet property="countDownLabel" destination="ZQ7-2v-rud" id="n7t-yp-PMc"/>
                         <outlet property="countryCodeView" destination="75z-Ky-l1r" id="arW-nM-q5Y"/>
                         <outlet property="countryLabel" destination="Wbr-Y5-QX0" id="sa3-QU-sy8"/>
+                        <outlet property="emailInfoLabel" destination="YAV-EJ-dLW" id="yvx-Nu-U62"/>
                         <outlet property="keylab" destination="sPt-sC-RBr" id="s3Z-4q-gTn"/>
                         <outlet property="mobilePhoneView" destination="bCj-Ac-4oq" id="4PH-CE-877"/>
                         <outlet property="navBackBtn" destination="wpI-gE-vI2" id="UQv-dr-YwX"/>
@@ -242,6 +244,8 @@
                         <outlet property="newsLetterCheckView" destination="Awa-ds-eLa" id="iAJ-HZ-2nH"/>
                         <outlet property="phone" destination="0kJ-Yu-sZs" id="CIR-ns-zqO"/>
                         <outlet property="smsView" destination="oho-14-CJv" id="E6P-Gb-PmY"/>
+                        <outlet property="titleLabel" destination="cTP-Wh-Ica" id="lkl-zL-a7X"/>
+                        <outlet property="verificationInfoLabel" destination="UGa-jd-z1j" id="cKw-Oq-Fvy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xWG-WG-4Je" userLabel="First Responder" sceneMemberID="firstResponder"/>

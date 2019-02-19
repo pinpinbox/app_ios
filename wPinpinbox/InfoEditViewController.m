@@ -55,7 +55,6 @@
 //    BOOL wantToGetInfo;
     BOOL wantToGetNewsLetter;
 }
-
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UILabel *topicLabel;
 @property (weak, nonatomic) IBOutlet AsyncImageView *headshotImageView;
@@ -140,7 +139,6 @@
     NSLog(@"InfoEditViewController viewDidLoad");
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
     [self userInterfaceSetup];
     [self getProfile];
@@ -176,13 +174,13 @@
 - (void)getProfile {
     NSLog(@"getProfile");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getprofile: [userPrefs objectForKey: @"id"] token: [userPrefs objectForKey: @"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -914,7 +912,7 @@
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -931,7 +929,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1005,7 +1003,7 @@
     UIImage *image = [wTools scaleImage: selectImage
                                 toScale: 0.5];
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1019,7 +1017,7 @@
                                                 image: image];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1303,7 +1301,7 @@ shouldChangeTextInRange:(NSRange)range
                   protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

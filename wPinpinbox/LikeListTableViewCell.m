@@ -9,6 +9,7 @@
 #import "LikeListTableViewCell.h"
 #import "UIColor+Extensions.h"
 #import "GlobalVars.h"
+#import "LabelAttributeStyle.h"
 
 @implementation LikeListTableViewCell
 
@@ -27,10 +28,12 @@
     self.messageBtn.backgroundColor = [UIColor thirdGrey];
     [self.messageBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
     self.messageBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.messageBtn.titleLabel content: self.messageBtn.titleLabel.text];
     [self.messageBtn addTarget: self action: @selector(showMessageBoard:) forControlEvents: UIControlEventTouchUpInside];
     
     self.followBtn.layer.cornerRadius = kCornerRadius;
     self.followBtn.titleLabel.font = [UIFont boldSystemFontOfSize: 16.0];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.followBtn.titleLabel content: self.followBtn.titleLabel.text];
     [self.followBtn addTarget: self action: @selector(callFollowAPI:) forControlEvents: UIControlEventTouchUpInside];
 }
 

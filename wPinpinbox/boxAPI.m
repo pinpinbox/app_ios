@@ -3499,7 +3499,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
 }
 
 #pragma mark - upload album music
-+ (void)uploadMusicWithAlbumSettings:(NSDictionary *)audioSetting audioUrl:(NSURL *)audioUrl sessionDelegate:(id<NSURLSessionDelegate>)sessionDelegate completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
++ (void)uploadMusicWithAlbumSettings:(NSDictionary *)audioSetting path:(NSString *)path  audioUrl:(NSURL *)audioUrl sessionDelegate:(id<NSURLSessionDelegate>)sessionDelegate completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
     NSData *vidData = [NSData dataWithContentsOfURL:audioUrl];
     NSString *audiofile = [audioUrl lastPathComponent];
@@ -3515,7 +3515,9 @@ static NSString *hostURL = @"www.pinpinbox.com";
     NSString* FileParamConstant = @"file";
     
     // the server url to which the image (or the media) is uploaded. Use your server url here
-    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",ServerURL,@"/updatealbumsettings",@"/2.0"]];
+    if (path == nil || path.length < 1)
+        path = @"/updatealbumsettings/2.0";
+    NSURL* requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",ServerURL,path]];
     
     // create request
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];//[[NSMutableURLRequest alloc] init];
@@ -3578,7 +3580,23 @@ static NSString *hostURL = @"www.pinpinbox.com";
             } else {
                 NSDictionary *dict = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options: NSJSONReadingMutableContainers error: nil];
                 if (dict != nil) {
-                    if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]) {
+                    if ([dict[@"result"] isKindOfClass:[NSNumber class]]) {
+                        NSNumber *r = dict[@"result"] ;
+                        if ([r integerValue] == 1) {
+                            if (completionBlock)
+                                completionBlock(dict,nil);
+                        } else {
+                            if (dict[@"message"] == nil) {
+                                if (completionBlock)
+                                    completionBlock(nil, [NSError errorWithDomain:@"" code:-1001 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Connection-Timeout", @"")}]);
+                                
+                            } else {
+                                if (completionBlock)
+                                    completionBlock(nil, [NSError errorWithDomain:@"" code:-1002 userInfo:@{NSLocalizedDescriptionKey:dict[@"message"] }]);
+                                
+                            }
+                        }
+                    } else if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]) {
                         if (completionBlock)
                             completionBlock(dict,nil);
                     } else {

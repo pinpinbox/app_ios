@@ -18,7 +18,7 @@
 #import "AsyncImageView.h"
 #import "CreaterViewController.h"
 #import "QrcordViewController.h"
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 #import "CustomIOSAlertView.h"
 #import "GlobalVars.h"
 #import "NSString+MD5.h"
@@ -614,7 +614,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         //NSDictionary *albumDic = albumData[indexPath.row][@"album"];
         //NSLog(@"albumDic: %@", albumDic);
         SearchTabCollectionViewCell *cell = (SearchTabCollectionViewCell *) [collectionView cellForItemAtIndexPath: indexPath];
-        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
+        
         if ([wTools objectExists: albumData[indexPath.row][@"album"][@"album_id"]]) {
             NSString *albumId = [albumData[indexPath.row][@"album"][@"album_id"] stringValue];
             [self ToRetrievealbumpViewControlleralbumid: albumId source:source imageView:cell.coverImageView ];
@@ -1187,7 +1189,7 @@ replacementString:(NSString *)string {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

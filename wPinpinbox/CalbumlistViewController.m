@@ -32,6 +32,7 @@
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import "NewCooperationViewController.h"
 #import <SafariServices/SafariServices.h>
+#import "ContentCheckingViewController.h"
 
 #import "UserInfo.h"
 
@@ -95,7 +96,6 @@
     
     OldCustomAlertView *alertView;
 }
-
 //@property (nonatomic, strong) JCCollectionViewWaterfallLayout *layout;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewBottomConstraint;
@@ -116,7 +116,7 @@
     NSLog(@"CalbumlistViewController");
     NSLog(@"viewDidLoad");
     NSLog(@"Test");
-    
+
     wtitle.text=NSLocalizedString(@"GeneralText-fav", @"");
     dataarr=[NSMutableArray new];
     nextId = 0;
@@ -161,6 +161,7 @@
     self.customEditActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customEditActionSheet.delegate = self;
     self.customEditActionSheet.topicStr = @"編輯作品";
+    
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -176,7 +177,6 @@
 }
 
 #pragma mark -
-
 - (void)refresh {
     NSLog(@"refresh");
     if (!isreload) {
@@ -216,8 +216,8 @@
     NSLog(@"getcalbumlist");
     
     if (nextId == 0)
-        [wTools ShowMBProgressHUD];
-
+        [DGHUDView start];
+        
     __block typeof(self) wself = self;
     NSString *limit=[NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
     
@@ -229,7 +229,7 @@
                                              limit: limit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             UIActivityIndicatorView *v = (UIActivityIndicatorView *)[self.collectionview viewWithTag:54321];
                 
             if (v) {
@@ -249,8 +249,12 @@
                 NSLog(@"getcalbumlist");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"getcalbumlist"
-                                         albumId: @""];
+                                     protocolName: @"getcalbumlist"
+                                          albumId: @""
+                                         userbook: @""
+                                          eventId: @""
+                                         postMode: NO
+                                  fromEventPostVC: NO];
                     [wself.refreshControl endRefreshing];
                 });
                 wself->isreload = NO;
@@ -318,7 +322,9 @@
 }
 
 - (void)processCalbumlist:(NSDictionary *)dic {
+    NSLog(@"processCalbumlist");
     if (dic[@"result"]) {
+        NSLog(@"dic: %@", dic);
         if ([dic[@"result"] intValue] == 1) {
             NSLog(@"section::: %@",dic[@"section"]);
             NSInteger pn = nextId;
@@ -562,11 +568,14 @@
     
     if (![userdata[@"picture"] isKindOfClass:[NSNull class]]) {
         if (![userdata[@"picture"] isEqualToString:@""]) {
-            [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: img];
-            img.imageURL=[NSURL URLWithString:userdata[@"picture"]];
+            [img sd_setImageWithURL: [NSURL URLWithString:userdata[@"picture"]]];
+//            [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget: img];
+//            img.imageURL=[NSURL URLWithString:userdata[@"picture"]];
+        } else {
+            img.image = [UIImage imageNamed: @"member_back_head.png"];
         }
-    }else{
-        img.image=[UIImage imageNamed:@""];
+    } else {
+        img.image = [UIImage imageNamed: @"member_back_head.png"];
     }
     img.layer.masksToBounds = YES;
     img.layer.cornerRadius = 12;
@@ -638,13 +647,25 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         //if (zipped) {
         NSLog(@"if zipped is YES");
         if (type == 2) {
-            [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+            [self ReadContentCheckingVC: albumId
+                               userbook: @"Y"
+                                eventId: nil
+                               postMode: NO
+                        fromEventPostVC: NO];
             return;
         }
         if ([[(id)userId stringValue] isEqualToString:[wTools getUserID]]) {
-            [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+            [self ReadContentCheckingVC: albumId
+                               userbook: @"Y"
+                                eventId: nil
+                               postMode: NO
+                        fromEventPostVC: NO];
         } else {
-            [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
+            [self ReadContentCheckingVC: albumId
+                               userbook: @"Y"
+                                eventId: nil
+                               postMode: NO
+                        fromEventPostVC: NO];
         }
         //} else if (type == 2) {
         //    [wTools ReadTestBookalbumid: albumId userbook: @"Y" eventId: nil postMode: NO fromEventPostVC: NO];
@@ -663,6 +684,62 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - UICollectionViewFlowLayoutDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 
+}
+
+- (void)ReadContentCheckingVC: (NSString *)albumId
+                     userbook: (NSString *)userbook
+                      eventId: (NSString *)eventId
+                     postMode: (BOOL)postMode
+              fromEventPostVC: (BOOL)fromEventPostVC {
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [DGHUDView start];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI retrievealbump: albumId
+                                                uid: [wTools getUserID]
+                                              token: [wTools getUserToken]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [DGHUDView stop];
+            
+            if (response != nil) {
+                NSLog(@"response from retrievealbump");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"wTools");
+                    NSLog(@"ReadContentCheckingVC");
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"ReadContentCheckingVC"
+                                         albumId: albumId
+                                        userbook: userbook
+                                         eventId: eventId
+                                        postMode: postMode
+                                 fromEventPostVC: fromEventPostVC];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    if ([dic[@"result"] intValue] == 1) {
+                        NSLog(@"result bool value is YES");
+                        NSLog(@"dic data photo: %@", dic[@"data"][@"photo"]);
+                        NSLog(@"dic data user name: %@", dic[@"data"][@"user"][@"name"]);
+                        
+                        ContentCheckingViewController *contentCheckingVC = [[UIStoryboard storyboardWithName: @"ContentCheckingVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ContentCheckingViewController"];
+                        contentCheckingVC.albumId = albumId;
+                        contentCheckingVC.postMode = postMode;
+                        
+                        [app.myNav pushViewController: contentCheckingVC animated: YES];
+                    } else if ([dic[@"result"] intValue] == 0) {
+                        NSLog(@"失敗：%@",dic[@"message"]);
+                        [self showCustomErrorAlert: dic[@"message"]];
+                    } else {
+                        [self showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+                    }
+                }
+            }
+        });
+    });
 }
 
 - (void)updateAlbumact:(NSString *) albumid {
@@ -868,7 +945,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)getIdentity:(NSString *)albumId
          templateId:(NSString *)templateId
                 msg:(NSString *)msg {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI getalbumofdiy: [wTools getUserID]
@@ -882,7 +959,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSString *coopid = [boxAPI getcooperation: [wTools getUserID] token: [wTools getUserToken] data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response: %@", response);
@@ -934,10 +1011,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     //檢查資料夾是否存在
     if ([fileManager fileExistsAtPath: docDirectoryPath]) {
         NSLog(@"fileManager fileExistsAtPath: docDirectoryPath");
-        [self showCustomAlert: @"確定要刪除相本?" path: docDirectoryPath albumId: albumId];
+        [self showAlbumDeleteCustomAlert: @"確定要刪除相本?" path: docDirectoryPath albumId: albumId];
     } else {
         NSLog(@"fileManager file does not ExistsAtPath: docDirectoryPath");
-        [self showCustomAlert: @"確定要刪除相本?" albumId: albumId];
+        [self showAlbumDeleteCustomAlert: @"確定要刪除相本?" albumId: albumId];
     }
 }
 
@@ -956,14 +1033,14 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = [boxAPI delalbum: [wTools getUserID]
                                         token: [wTools getUserToken]
                                       albumid: albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from delalbum");
@@ -972,8 +1049,13 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CalbumlistViewController");
                     NSLog(@"delalbum");
-                    
-                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"") protocolName: @"delalbum" albumId: albumid];
+                    [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"delalbum"
+                                         albumId: albumid
+                                        userbook: nil
+                                         eventId: nil
+                                        postMode: NO
+                                 fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -1006,36 +1088,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     style: style];
 }
 #pragma mark - Custom Alert Method
-- (void)showCustomAlertNormal: (NSString *)msg {
-    CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
-    //[alertView setContainerView: [self createContainerViewNormal: msg]];
-    [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
-    //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
-    //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
-    //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
-    alertView.arrangeStyle = @"Horizontal";
-    
-    [alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"取消", @"確定", nil]];
-    //[alertView setButtonTitles: [NSMutableArray arrayWithObjects: @"Close1", @"Close2", @"Close3", nil]];
-    [alertView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor clearColor], [UIColor clearColor],nil]];
-    [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
-    [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
-    //alertView.arrangeStyle = @"Vertical";
-    
-    [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
-        NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
-        
-        [alertView close];
-        
-        if (buttonIndex == 0) {
-            
-        } else {
-            //[self changeFollowStatus: userId name: name];
-        }
-    }];
-    [alertView setUseMotionEffects: YES];
-    [alertView show];
-}
 
 - (UIView *)createContainerViewNormal: (NSString *)msg {
     // TextView Setting
@@ -1112,7 +1164,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 
-- (void)showCustomAlert: (NSString *)msg path:(NSString *)docDirectoryPath albumId:(NSString *)albumId {
+- (void)showAlbumDeleteCustomAlert: (NSString *)msg path:(NSString *)docDirectoryPath albumId:(NSString *)albumId {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     //[alertView setContainerView: [self createContainerView: msg]];
     [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1145,83 +1197,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    //NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    //NSLog(@"");
-    
-    return contentView;
-}
-
 #pragma mark - Custom Alert Method
-- (void)showCustomAlert:(NSString *)msg
-                albumId:(NSString *)albumId {
+
+- (void)showAlbumDeleteCustomAlert:(NSString *)msg
+                           albumId:(NSString *)albumId {
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     //[alertView setContainerView: [self createContainerView1: msg]];
     [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1251,84 +1230,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertView show];
 }
 
-- (UIView *)createContainerView1: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    //NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    //NSLog(@"");
-    
-    return contentView;
-}
-
 -(void)hidealbumqueue:(NSString *)albumid {
     NSLog(@"hidealbumqueue");
     
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         
         NSString *response = @"";
@@ -1337,17 +1242,20 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                   albumid: albumid];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
                     NSLog(@"Time Out Message Return");
                     NSLog(@"CalbumlistViewController");
                     NSLog(@"hidealbumqueue");
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"hidealbumqueue"
-                                         albumId: albumid];
+                                         albumId: albumid
+                                        userbook: nil
+                                         eventId: nil
+                                        postMode: NO
+                                 fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -1403,7 +1311,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 -(void)deletecooperation:(NSString *)albumid {
     NSLog(@"deletecooperation");
     
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
         NSString *response = @"";
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -1416,7 +1324,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                         data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from deletecooperation");
@@ -1427,7 +1335,11 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"deletecooperation");
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"deletecooperation"
-                                         albumId: albumid];
+                                         albumId: albumid
+                                        userbook: nil
+                                         eventId: nil
+                                        postMode: NO
+                                 fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
@@ -1654,7 +1566,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [self.customEditActionSheet addSelectItem: @"" title: @"作品編輯" btnStr: @"" tagInt: 1 identifierStr: @"albumEdit"];
     [self.customEditActionSheet addSelectItem: @"" title: @"修改資訊" btnStr: @"" tagInt: 2 identifierStr: @"modifyInfo"];
-    
+    [self.customEditActionSheet addSafeArea];
     __block typeof(self) weakSelf = self;
     self.customEditActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         if ([identifierStr isEqualToString: @"albumEdit"]) {
@@ -1753,7 +1665,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     self.albumId = albumId;
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1778,7 +1690,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSString *albumDetail = [boxAPI retrievealbump:albumId uid:[wTools getUserID] token:[wTools getUserToken]];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1794,8 +1706,11 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                     NSLog(@"checkTaskComplete");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"checkTaskCompleted"
-                                          albumId: albumId];
-                     
+                                          albumId: albumId
+                                         userbook: nil
+                                          eventId: nil
+                                         postMode: NO
+                                  fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *detail = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [albumDetail dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -1992,7 +1907,7 @@ didCompleteWithResults:(NSDictionary *)results {
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2016,7 +1931,7 @@ didCompleteWithResults:(NSDictionary *)results {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2032,7 +1947,11 @@ didCompleteWithResults:(NSDictionary *)results {
                     NSLog(@"checkPoint");
                     [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                      protocolName: @"doTask2"
-                                          albumId: wself.albumId];
+                                          albumId: wself.albumId
+                                         userbook: nil
+                                          eventId: nil
+                                         postMode: NO
+                                  fromEventPostVC: NO];
                 } else {
                     NSLog(@"Get Real Response");
                     NSDictionary *data = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -2195,10 +2114,14 @@ didCompleteWithResults:(NSDictionary *)results {
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomTimeOutAlert:(NSString *)msg
                   protocolName:(NSString *)protocolName
-                       albumId:(NSString *)albumId {
+                       albumId:(NSString *)albumId
+                      userbook:(NSString *)userbook
+                       eventId:(NSString *)eventId
+                      postMode:(BOOL)postMode
+               fromEventPostVC:(BOOL)fromEventPostVC {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -2232,6 +2155,8 @@ didCompleteWithResults:(NSDictionary *)results {
                 [weakSelf hidealbumqueue: albumId];
             } else if ([protocolName isEqualToString: @"doTask2"]) {
                 [weakSelf checkPoint];
+            } else if ([protocolName isEqualToString: @"ReadContentCheckingVC"]) {
+                [weakSelf ReadContentCheckingVC: albumId userbook: userbook eventId: eventId postMode: postMode fromEventPostVC: fromEventPostVC];
             }
         }
     }];
@@ -2240,78 +2165,5 @@ didCompleteWithResults:(NSDictionary *)results {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    //NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    //NSLog(@"");
-    
-    return contentView;
-}
 
 @end

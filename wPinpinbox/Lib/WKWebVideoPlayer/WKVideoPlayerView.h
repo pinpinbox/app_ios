@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSString (extractURLs)
 - (NSArray *)findURLs;
 @end
-
 typedef void(^IframeTimedOutBlock)(void);
 
 @interface WKVideoPlayerView : WKWebView

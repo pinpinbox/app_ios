@@ -44,7 +44,7 @@
     self.navBarView.backgroundColor = [UIColor barColor];
     self.titleLabel.textColor = [UIColor firstGrey];
     
-    [LabelAttributeStyle changeGapString: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
     
     self.webView = [[WKWebView alloc] init];
     self.webView.navigationDelegate = self;

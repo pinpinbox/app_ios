@@ -158,7 +158,7 @@
 
 - (void)getSponsorList {
     NSLog(@"getSponsorList");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     __block typeof(self) wself = self;
@@ -167,7 +167,7 @@
                                              userId: [wTools getUserID]
                                               limit: limit];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -451,7 +451,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Call Server For Follow Function
 - (void)followBtnPress:(NSInteger)userId
                   cell:(SponsorListTableViewCell *)cell {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     NSString *userIdStr = [NSString stringWithFormat: @"%ld", (long)userId];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
@@ -461,7 +461,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -540,7 +540,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

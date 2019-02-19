@@ -37,7 +37,6 @@
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     self.backButton.layer.cornerRadius = 8;
     
     UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget: self action: @selector(handleTapGesture:)];
@@ -62,13 +61,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)callBackButtonFunction
-{
+- (void)callBackButtonFunction {
     [self back: nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     self.labelArray = [[NSMutableArray alloc] init];
@@ -110,8 +107,7 @@
     }
 }
 
-- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer
-{
+- (void)handleTapGesture: (UITapGestureRecognizer *)gestureRecognizer {
     /*
     for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
         NSIndexPath *indexPath = [self.collectionView indexPathForCell: cell];
@@ -170,8 +166,7 @@
     }
 }
 
-- (IBAction)back:(id)sender
-{
+- (IBAction)back:(id)sender {
     // For Presenting as ChildViewController
 //    [UIView animateWithDuration: 0.2 animations:^{
 //        self.view.frame = CGRectMake(0, kViewHeightForPreview, 320, kCellHeightForPreview);
@@ -193,10 +188,8 @@
     [self dismissViewControllerAnimated: YES completion: nil];
 }
 
-- (void)createDataForCallingServer
-{
+- (void)createDataForCallingServer {
     NSLog(@"createArrayForCallingServer");
-    
     NSMutableArray *arrayForSending = [[NSMutableArray alloc] init];
     
     NSLog(@"self.imageArray: %@", self.imageArray);
@@ -236,10 +229,9 @@
     [self callAlbumSettings: jsonStr];
 }
 
-- (void)callAlbumSettings: (NSString *)jsonStr
-{
+- (void)callAlbumSettings: (NSString *)jsonStr {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -256,7 +248,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -454,7 +446,7 @@
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

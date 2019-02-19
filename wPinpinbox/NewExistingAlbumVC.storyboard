@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qmt-MG-xMH">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Qmt-MG-xMH">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -113,16 +113,16 @@
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="6Ef-EH-W8c">
-                                        <rect key="frame" x="114" y="8.5" width="92" height="35.5"/>
+                                        <rect key="frame" x="114" y="32" width="92" height="12"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="選擇現有作品" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5jX-OG-05a">
-                                                <rect key="frame" x="0.0" y="0.0" width="92" height="18"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="選擇現有作品" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5jX-OG-05a">
+                                                <rect key="frame" x="0.0" y="0.0" width="92" height="8"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="僅限公開的作品" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-6G-71g">
-                                                <rect key="frame" x="0.0" y="22" width="92" height="13.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="僅限公開的作品" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-6G-71g">
+                                                <rect key="frame" x="0.0" y="12" width="92" height="0.0"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                 <color key="textColor" red="0.85383262429999995" green="0.1080925019" blue="0.090659169279999993" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -136,6 +136,7 @@
                                     <constraint firstItem="6Ef-EH-W8c" firstAttribute="centerX" secondItem="Day-g1-m9o" secondAttribute="centerX" id="9fu-z2-vdG"/>
                                     <constraint firstAttribute="height" constant="48" id="OJz-2f-7In"/>
                                     <constraint firstAttribute="bottom" secondItem="6Ef-EH-W8c" secondAttribute="bottom" constant="4" id="Okp-P3-w0v"/>
+                                    <constraint firstItem="6Ef-EH-W8c" firstAttribute="top" secondItem="Day-g1-m9o" secondAttribute="top" constant="32" id="lG5-6h-zZJ"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DYP-Cp-w5C">
@@ -196,6 +197,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic200_arrow_left_dark" width="144" height="144"/>
+        <image name="ic200_arrow_left_dark" width="72" height="72"/>
     </resources>
 </document>

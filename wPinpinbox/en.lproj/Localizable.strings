@@ -40,7 +40,7 @@
 "GeneralText-del" ="刪除";
 
 //登入頁
-"LoginText-login" ="登 入";
+"LoginText-login" ="登入";
 "LoginText-FBlogin" ="facebook\n登入";
 "LoginText-Reg" ="新成員註冊";
 "LoginText-forgetPwd" ="忘 記 密 碼";

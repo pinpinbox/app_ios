@@ -60,6 +60,8 @@
 		546DF49D20723F790056B73F /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 546DF49B20723F790056B73F /* MessageTableViewCell.m */; };
 		546DF49E20723F790056B73F /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 546DF49C20723F790056B73F /* MessageTableViewCell.xib */; };
 		5476620B20131F90009D475F /* BuyPointVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5476620A20131F90009D475F /* BuyPointVC.storyboard */; };
+		5476BFDB2204327D00DB4AEF /* DGHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5476BFDA2204327D00DB4AEF /* DGHUDView.m */; };
+		5477C11721F5605D0028332A /* ChooseHobbyCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5477C11621F5605D0028332A /* ChooseHobbyCollectionReusableView.m */; };
 		5478874F214613D600F7B8BB /* WdataButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5478874E214613D500F7B8BB /* WdataButton.m */; };
 		547BC6D21F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 547BC6D11F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m */; };
 		54877CF11F905B030050C077 /* GlobalVars.m in Sources */ = {isa = PBXBuildFile; fileRef = 54877CF01F905B030050C077 /* GlobalVars.m */; };
@@ -77,7 +79,6 @@
 		54933AE0207F4A30001582C3 /* MintAnnotationChatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54933ADB207F4A30001582C3 /* MintAnnotationChatView.m */; };
 		54933AE1207F4A30001582C3 /* MintAnnotationMemoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 54933ADC207F4A30001582C3 /* MintAnnotationMemoView.m */; };
 		54933AE2207F4A30001582C3 /* MintAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 54933ADE207F4A30001582C3 /* MintAnnotation.m */; };
-		54951AF42005E6A0001FFAF9 /* AlbumDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 54951AF32005E6A0001FFAF9 /* AlbumDetailViewController.m */; };
 		549765D01F7EA0B300E2CBEF /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 549765CF1F7EA0B300E2CBEF /* SettingViewController.m */; };
 		5498BF751FC7200A007BD033 /* ActivityDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5498BF741FC7200A007BD033 /* ActivityDetailViewController.m */; };
 		549A18A120AE714D00532E1E /* APNS Banner Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 549A18A020AE714D00532E1E /* APNS Banner Images.xcassets */; };
@@ -358,6 +359,13 @@
 		CB44299F21B1336600B0E19A /* RecommandCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CB44299E21B1336600B0E19A /* RecommandCollectionViewCell.m */; };
 		CB5E68EE2193EF1F00CB47F5 /* CooperationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */; };
 		CB5E68EF2193EF1F00CB47F5 /* CooperationInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */; };
+		CB7CDFD0221BAB9D001798F0 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CB7CDFBF221BAB9D001798F0 /* Assets.bundle */; };
+		CB7CDFD1221BAB9D001798F0 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7CDFC0221BAB9D001798F0 /* YTPlayerView.m */; };
+		CB7CDFD3221BAB9D001798F0 /* YTVimeoExtractorOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7CDFC4221BAB9D001798F0 /* YTVimeoExtractorOperation.m */; };
+		CB7CDFD4221BAB9D001798F0 /* YTVimeoURLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7CDFC5221BAB9D001798F0 /* YTVimeoURLParser.m */; };
+		CB7CDFD5221BAB9D001798F0 /* YTVimeoVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7CDFC6221BAB9D001798F0 /* YTVimeoVideo.m */; };
+		CB7CDFD7221BAB9D001798F0 /* Info-tvOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = CB7CDFCB221BAB9D001798F0 /* Info-tvOS.plist */; };
+		CB7CDFD8221BAB9D001798F0 /* YTVimeoExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7CDFCE221BAB9D001798F0 /* YTVimeoExtractor.m */; };
 		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
 		CB8404DA218718DB00E1C2A7 /* InfoTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8404D9218718DB00E1C2A7 /* InfoTextView.m */; };
 		CB84C63321A68903000D348C /* MapHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB84C63221A68903000D348C /* MapHelper.m */; };
@@ -391,7 +399,6 @@
 		CBE104C521C792C200E185D3 /* NSURL+Param.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE104C421C792C200E185D3 /* NSURL+Param.m */; };
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBE2AFA621CB437C0032290C /* notavailable.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE2AFA521CB437C0032290C /* notavailable.png */; };
-		CBE785B121DDF52600107146 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE785AE21DDF52500107146 /* YTPlayerView.m */; };
 		CBE785B321DDF7E800107146 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 630544091E5FE5E200B0CB6D /* UIView+Toast.m */; };
 		CBEB727821D32DB800B22B1C /* addIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = CBEB727721D32DB700B22B1C /* addIcon.png */; };
 		CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */; };
@@ -530,6 +537,10 @@
 		546DF49B20723F790056B73F /* MessageTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
 		546DF49C20723F790056B73F /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
 		5476620A20131F90009D475F /* BuyPointVC.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = BuyPointVC.storyboard; sourceTree = "<group>"; };
+		5476BFD92204327D00DB4AEF /* DGHUDView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGHUDView.h; sourceTree = "<group>"; };
+		5476BFDA2204327D00DB4AEF /* DGHUDView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DGHUDView.m; sourceTree = "<group>"; };
+		5477C11521F5605D0028332A /* ChooseHobbyCollectionReusableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChooseHobbyCollectionReusableView.h; sourceTree = "<group>"; };
+		5477C11621F5605D0028332A /* ChooseHobbyCollectionReusableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChooseHobbyCollectionReusableView.m; sourceTree = "<group>"; };
 		5478874D214613D400F7B8BB /* WdataButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WdataButton.h; sourceTree = "<group>"; };
 		5478874E214613D500F7B8BB /* WdataButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WdataButton.m; sourceTree = "<group>"; };
 		547BC6D01F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanCodeForAdvancedSettingViewController.h; sourceTree = "<group>"; };
@@ -564,8 +575,6 @@
 		54933ADC207F4A30001582C3 /* MintAnnotationMemoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MintAnnotationMemoView.m; sourceTree = "<group>"; };
 		54933ADD207F4A30001582C3 /* MintAttrColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MintAttrColor.h; sourceTree = "<group>"; };
 		54933ADE207F4A30001582C3 /* MintAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MintAnnotation.m; sourceTree = "<group>"; };
-		54951AF22005E6A0001FFAF9 /* AlbumDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumDetailViewController.h; sourceTree = "<group>"; };
-		54951AF32005E6A0001FFAF9 /* AlbumDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumDetailViewController.m; sourceTree = "<group>"; };
 		549765CE1F7EA0B300E2CBEF /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		549765CF1F7EA0B300E2CBEF /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		5498BF731FC72007007BD033 /* ActivityDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityDetailViewController.h; sourceTree = "<group>"; };
@@ -1041,6 +1050,21 @@
 		CB5E68EB2193EF1F00CB47F5 /* CooperationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CooperationInfoViewController.m; sourceTree = "<group>"; };
 		CB5E68EC2193EF1F00CB47F5 /* CooperationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CooperationInfoViewController.h; sourceTree = "<group>"; };
 		CB5E68ED2193EF1F00CB47F5 /* CooperationInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CooperationInfoViewController.xib; sourceTree = "<group>"; };
+		CB7CDFBD221BAB9D001798F0 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
+		CB7CDFBE221BAB9D001798F0 /* YouTubeiOSPlayerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeiOSPlayerHelper.h; sourceTree = "<group>"; };
+		CB7CDFBF221BAB9D001798F0 /* Assets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Assets.bundle; sourceTree = "<group>"; };
+		CB7CDFC0221BAB9D001798F0 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
+		CB7CDFC3221BAB9D001798F0 /* YTVimeoError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoError.h; sourceTree = "<group>"; };
+		CB7CDFC4221BAB9D001798F0 /* YTVimeoExtractorOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTVimeoExtractorOperation.m; sourceTree = "<group>"; };
+		CB7CDFC5221BAB9D001798F0 /* YTVimeoURLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTVimeoURLParser.m; sourceTree = "<group>"; };
+		CB7CDFC6221BAB9D001798F0 /* YTVimeoVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTVimeoVideo.m; sourceTree = "<group>"; };
+		CB7CDFC7221BAB9D001798F0 /* YTVimeoVideo+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YTVimeoVideo+Private.h"; sourceTree = "<group>"; };
+		CB7CDFC9221BAB9D001798F0 /* YTVimeoExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoExtractor.h; sourceTree = "<group>"; };
+		CB7CDFCA221BAB9D001798F0 /* YTVimeoExtractorOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoExtractorOperation.h; sourceTree = "<group>"; };
+		CB7CDFCB221BAB9D001798F0 /* Info-tvOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-tvOS.plist"; sourceTree = "<group>"; };
+		CB7CDFCC221BAB9D001798F0 /* YTVimeoVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoVideo.h; sourceTree = "<group>"; };
+		CB7CDFCD221BAB9D001798F0 /* YTVimeoURLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoURLParser.h; sourceTree = "<group>"; };
+		CB7CDFCE221BAB9D001798F0 /* YTVimeoExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTVimeoExtractor.m; sourceTree = "<group>"; };
 		CB7F2E40216C97AA00A3E1AD /* MultipartInputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultipartInputStream.h; path = MultipartInputStream/MultipartInputStream.h; sourceTree = "<group>"; };
 		CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MultipartInputStream.m; path = MultipartInputStream/MultipartInputStream.m; sourceTree = "<group>"; };
 		CB8404D9218718DB00E1C2A7 /* InfoTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoTextView.m; sourceTree = "<group>"; };
@@ -1086,9 +1110,6 @@
 		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
 		CBE2773921A8045600A6E80D /* HudIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudIndicatorView.m; sourceTree = "<group>"; };
 		CBE2AFA521CB437C0032290C /* notavailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notavailable.png; sourceTree = "<group>"; };
-		CBE785AB21DDF52500107146 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
-		CBE785AC21DDF52500107146 /* YouTubeiOSPlayerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeiOSPlayerHelper.h; sourceTree = "<group>"; };
-		CBE785AE21DDF52500107146 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
 		CBEB727721D32DB700B22B1C /* addIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addIcon.png; sourceTree = "<group>"; };
 		CBF138E921C24FD80070EBB8 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
 		CBF138EA21C24FD80070EBB8 /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
@@ -1409,8 +1430,6 @@
 		540DE2BF20283BDD0090F584 /* AlbumDetail */ = {
 			isa = PBXGroup;
 			children = (
-				54951AF22005E6A0001FFAF9 /* AlbumDetailViewController.h */,
-				54951AF32005E6A0001FFAF9 /* AlbumDetailViewController.m */,
 				54138323200461110043D6CC /* AlbumDetailVC.storyboard */,
 				CBD42CEE21E2EF5F0046C1A9 /* YAlbumDetailViewController.h */,
 				CBD42CEF21E2EF5F0046C1A9 /* YAlbumDetailViewController.m */,
@@ -1571,6 +1590,15 @@
 				CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */,
 			);
 			name = ContentCheckingVC;
+			sourceTree = "<group>";
+		};
+		5476BFD8220431B900DB4AEF /* HUDView */ = {
+			isa = PBXGroup;
+			children = (
+				5476BFD92204327D00DB4AEF /* DGHUDView.h */,
+				5476BFDA2204327D00DB4AEF /* DGHUDView.m */,
+			);
+			path = HUDView;
 			sourceTree = "<group>";
 		};
 		5486C2272050F6B70016BB9D /* ExchangeInfoEditVC */ = {
@@ -2469,7 +2497,9 @@
 		929ED4961B78446C00D21CF0 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
-				CBE785AA21DDF52500107146 /* youtube-ios-player-helper */,
+				CB7CDFBC221BAB9D001798F0 /* youtube-ios-player-helper */,
+				CB7CDFC2221BAB9D001798F0 /* YTVimeoExtractor */,
+				5476BFD8220431B900DB4AEF /* HUDView */,
 				CBFB1ADD21ABA94800813611 /* InfoBubbleView */,
 				CBE2773721A8045600A6E80D /* HudIndicatorView */,
 				CB84C63021A68903000D348C /* MapHelper */,
@@ -2631,6 +2661,8 @@
 				63B340E41EC98DF000AEC4E9 /* ChooseHobbyViewController.m */,
 				63B340E61EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.h */,
 				63B340E71EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m */,
+				5477C11521F5605D0028332A /* ChooseHobbyCollectionReusableView.h */,
+				5477C11621F5605D0028332A /* ChooseHobbyCollectionReusableView.m */,
 				54AE99682016522C0003D060 /* ChooseHobbyVC.storyboard */,
 				63F3064C1EA48104009B6BF3 /* FBFriendsFindingViewController.h */,
 				63F3064D1EA48104009B6BF3 /* FBFriendsFindingViewController.m */,
@@ -2808,6 +2840,35 @@
 			path = WKWebVideoPlayer;
 			sourceTree = "<group>";
 		};
+		CB7CDFBC221BAB9D001798F0 /* youtube-ios-player-helper */ = {
+			isa = PBXGroup;
+			children = (
+				CB7CDFBD221BAB9D001798F0 /* YTPlayerView.h */,
+				CB7CDFBE221BAB9D001798F0 /* YouTubeiOSPlayerHelper.h */,
+				CB7CDFBF221BAB9D001798F0 /* Assets.bundle */,
+				CB7CDFC0221BAB9D001798F0 /* YTPlayerView.m */,
+			);
+			path = "youtube-ios-player-helper";
+			sourceTree = "<group>";
+		};
+		CB7CDFC2221BAB9D001798F0 /* YTVimeoExtractor */ = {
+			isa = PBXGroup;
+			children = (
+				CB7CDFC3221BAB9D001798F0 /* YTVimeoError.h */,
+				CB7CDFC4221BAB9D001798F0 /* YTVimeoExtractorOperation.m */,
+				CB7CDFC5221BAB9D001798F0 /* YTVimeoURLParser.m */,
+				CB7CDFC6221BAB9D001798F0 /* YTVimeoVideo.m */,
+				CB7CDFC7221BAB9D001798F0 /* YTVimeoVideo+Private.h */,
+				CB7CDFC9221BAB9D001798F0 /* YTVimeoExtractor.h */,
+				CB7CDFCA221BAB9D001798F0 /* YTVimeoExtractorOperation.h */,
+				CB7CDFCB221BAB9D001798F0 /* Info-tvOS.plist */,
+				CB7CDFCC221BAB9D001798F0 /* YTVimeoVideo.h */,
+				CB7CDFCD221BAB9D001798F0 /* YTVimeoURLParser.h */,
+				CB7CDFCE221BAB9D001798F0 /* YTVimeoExtractor.m */,
+			);
+			path = YTVimeoExtractor;
+			sourceTree = "<group>";
+		};
 		CB7F2E3F216C972200A3E1AD /* MultipartInputStream */ = {
 			isa = PBXGroup;
 			children = (
@@ -2867,16 +2928,6 @@
 				CBE2773921A8045600A6E80D /* HudIndicatorView.m */,
 			);
 			path = HudIndicatorView;
-			sourceTree = "<group>";
-		};
-		CBE785AA21DDF52500107146 /* youtube-ios-player-helper */ = {
-			isa = PBXGroup;
-			children = (
-				CBE785AB21DDF52500107146 /* YTPlayerView.h */,
-				CBE785AC21DDF52500107146 /* YouTubeiOSPlayerHelper.h */,
-				CBE785AE21DDF52500107146 /* YTPlayerView.m */,
-			);
-			path = "youtube-ios-player-helper";
 			sourceTree = "<group>";
 		};
 		CBFB1ADD21ABA94800813611 /* InfoBubbleView */ = {
@@ -2959,8 +3010,9 @@
 				TargetAttributes = {
 					9276DF9F1B72FDC000E6ACC9 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = APD4588SHJ;
 						LastSwiftMigration = 0810;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3088,6 +3140,7 @@
 				54F777F420ABE99800A6E195 /* SettingsVC.xcassets in Resources */,
 				54F777F220ABE80D00A6E195 /* Voting.xcassets in Resources */,
 				54C964BC2015E9C800F995DF /* SignVC_3.storyboard in Resources */,
+				CB7CDFD7221BAB9D001798F0 /* Info-tvOS.plist in Resources */,
 				54331AA21FE50F11005E6ACE /* ActivityWebVC.storyboard in Resources */,
 				636349121F33D12400B17183 /* DDAUIActionSheetViewController.xib in Resources */,
 				5430446F20B8129600018AF4 /* CropResultViewController.xib in Resources */,
@@ -3101,6 +3154,7 @@
 				54FF9EED21359B610098A938 /* NewMessageBoardVC.storyboard in Resources */,
 				54B9F4981FE6C27300A694E4 /* InfoEditVC.storyboard in Resources */,
 				54A2645C20187B230066DD09 /* PreviewPageSetupVC.storyboard in Resources */,
+				CB7CDFD0221BAB9D001798F0 /* Assets.bundle in Resources */,
 				F039BD1A2148B8C6007AEA85 /* SystemImages.xcassets in Resources */,
 				54E00ED11FF35B41007881ED /* CategoryDetailVC.storyboard in Resources */,
 				54B9F49A1FE6C59300A694E4 /* ChangePwdVC.storyboard in Resources */,
@@ -3192,6 +3246,7 @@
 				92B8CB171C1AA93600035F06 /* InAppPurchaseManager.m in Sources */,
 				CBD42CF021E2EF5F0046C1A9 /* YAlbumDetailViewController.m in Sources */,
 				92F6CCE11B79AB9F002E547C /* UIApplication+RSKImageCropper.m in Sources */,
+				5476BFDB2204327D00DB4AEF /* DGHUDView.m in Sources */,
 				54231DC91FBAE973001B8D9E /* MBProgressHUD.m in Sources */,
 				92A1559F1C33A81700E83EC5 /* TaobantextTableViewCell.m in Sources */,
 				920279A71C449F7400A63027 /* CopperatiocTableViewCell.m in Sources */,
@@ -3229,6 +3284,7 @@
 				921156391C4F644A00F9200A /* TaobannameTableViewCell.m in Sources */,
 				54885DB120DA854500644A82 /* LikeListViewController.m in Sources */,
 				540636292050DEAB004C9F21 /* CheckExchangeViewController.m in Sources */,
+				CB7CDFD5221BAB9D001798F0 /* YTVimeoVideo.m in Sources */,
 				63C375BD1EB9E44A000C7FC1 /* CreatorCollectionReusableView.m in Sources */,
 				540DE2A920281C5C0090F584 /* ChangeInterestsViewController.m in Sources */,
 				630A83DF1EB1D07300AC8479 /* MyFlowLayout.m in Sources */,
@@ -3286,6 +3342,7 @@
 				630A83E41EB1D07300AC8479 /* MyLinearLayout.m in Sources */,
 				543B11A7205619A900111102 /* ZOZolaZoomTransition.m in Sources */,
 				CB8FB77E21991CB700D3C23C /* PDFUploader.m in Sources */,
+				CB7CDFD4221BAB9D001798F0 /* YTVimeoURLParser.m in Sources */,
 				630AD8521EA7659000825BBA /* FBFriendNotFoundViewController.m in Sources */,
 				6308C4591EACA84C00F99AC0 /* ScanCodeViewController.m in Sources */,
 				CB071CF8213E476A003D01D8 /* DMPlayerViewController.m in Sources */,
@@ -3319,6 +3376,7 @@
 				5406362E2050DF34004C9F21 /* CheckExchangeCollectionViewCell.m in Sources */,
 				CB071CF4213E4754003D01D8 /* DMViewController.m in Sources */,
 				6308C4521EAC9ADD00F99AC0 /* MeTabViewController.m in Sources */,
+				5477C11721F5605D0028332A /* ChooseHobbyCollectionReusableView.m in Sources */,
 				5427BBD31F4FE237000B438D /* UIColor+HexString.m in Sources */,
 				543043D320B2A5F600018AF4 /* BannerCollectionViewCell.m in Sources */,
 				63B340E81EC9A43700AEC4E9 /* ChooseHobbyCollectionViewCell.m in Sources */,
@@ -3343,6 +3401,7 @@
 				540C59D71F85DDAC000B633E /* BuyPPointViewController.m in Sources */,
 				6319A36D1DABB60C001CB8BD /* JCCollectionViewWaterfallLayout.m in Sources */,
 				548A9D691F7A438F009E269E /* NewExistingAlbumViewController.m in Sources */,
+				CB7CDFD1221BAB9D001798F0 /* YTPlayerView.m in Sources */,
 				630D31E21E531BC9001506EE /* NSArray+Reverse.m in Sources */,
 				54933ADF207F4A30001582C3 /* MintAttrColor.m in Sources */,
 				925119111CEAF63E002D4678 /* TERMSViewController.m in Sources */,
@@ -3352,7 +3411,6 @@
 				54C137F41F80FE5900CC12BC /* AboutPinpinBoxViewController.m in Sources */,
 				54F2CC27200CA0DA0091AA86 /* CategoryViewController.m in Sources */,
 				547BC6D21F9E1B5F00F7EFE4 /* ScanCodeForAdvancedSettingViewController.m in Sources */,
-				54951AF42005E6A0001FFAF9 /* AlbumDetailViewController.m in Sources */,
 				544FBEE5208D98AC00681097 /* SponsorListTableViewCell.m in Sources */,
 				54262AED1FA86D38008ED59B /* VotingCollectionReusableView.m in Sources */,
 				6308C4681EACF9B200F99AC0 /* AlbumCollectionViewController.m in Sources */,
@@ -3375,6 +3433,7 @@
 				92C4D5151B745E8900504B57 /* SignViewController_4.m in Sources */,
 				54262AE91FA824C2008ED59B /* VotingCollectionViewCell.m in Sources */,
 				5412B5E61FD92D50007F460A /* ActivityWebViewController.m in Sources */,
+				CB7CDFD3221BAB9D001798F0 /* YTVimeoExtractorOperation.m in Sources */,
 				5451457B200EE2DB00332E9A /* CategoryCollectionViewCell.m in Sources */,
 				540DE2C3202846CC0090F584 /* ChangeInterestsCollectionReusableView.m in Sources */,
 				CB878BAA21BFB25F00B4DA30 /* AudioUploader.m in Sources */,
@@ -3399,8 +3458,8 @@
 				6381289B1DFFCEAF00605466 /* MKDropdownMenu.m in Sources */,
 				634B60411F3484AD00C776E0 /* FXBlurView.m in Sources */,
 				5430446420B8121900018AF4 /* TKImageView.m in Sources */,
-				CBE785B121DDF52600107146 /* YTPlayerView.m in Sources */,
 				543FC4F920EB24320090DF43 /* MoreTabViewController.m in Sources */,
+				CB7CDFD8221BAB9D001798F0 /* YTVimeoExtractor.m in Sources */,
 				540D749B2161DE1F0061E463 /* NewCooperationViewController.m in Sources */,
 				635775DA1ED3ECFB00637914 /* RecentBrowsingViewController.m in Sources */,
 				CB0CA8E1219AC5A800B5018B /* SwitchButtonView.m in Sources */,
@@ -3612,8 +3671,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = APD4588SHJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3638,8 +3697,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "wPinpinbox/wPinpinbox-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_VERSION = 4.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WARNING_CFLAGS = "-Wno-nullability-completeness";
 			};
@@ -3657,8 +3715,8 @@
 				CODE_SIGN_ENTITLEMENTS = wPinpinbox/Pinpinbox.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = APD4588SHJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3666,7 +3724,7 @@
 					"$(PROJECT_DIR)/wPinpinbox/Lib/DSPhotoEditor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "";
+				GCC_PREFIX_HEADER = "wpinpinbox/wPinpinbox-Prefix.pch";
 				INFOPLIST_FILE = wPinpinbox/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -3682,8 +3740,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "wPinpinbox/wPinpinbox-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_VERSION = 4.0;
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WARNING_CFLAGS = "-Wno-nullability-completeness";
 			};

@@ -10,13 +10,47 @@
 
 #import "UIView+Toast.h"
 #import "UIColor+Extensions.h"
+#import "LabelAttributeStyle.h"
+#import "wTools.h"
 
 @interface  URLDataCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UILabel *linkNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *websiteLabel;
 @property (nonatomic) IBOutlet LeftPaddingTextfield *descTextField;
 @property (nonatomic) IBOutlet LeftPaddingTextfield *urlTextField;
 @end
 
 @implementation URLDataCell
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    if ([wTools objectExists: self.linkNameLabel]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.linkNameLabel content: self.linkNameLabel.text];
+    }
+    if ([wTools objectExists: self.websiteLabel]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.websiteLabel content: self.websiteLabel.text];
+    }
+    [self addTextViewAccessoryView:_descTextField];
+    [self addTextViewAccessoryView:_urlTextField];
+}
+- (void)dismissCurKeyboard {
+    if (_descTextField.isFirstResponder)
+        [_descTextField resignFirstResponder];
+    else if (_urlTextField.isFirstResponder)
+        [_urlTextField resignFirstResponder];
+    
+}
+- (void)addTextViewAccessoryView:(UITextField *)textfield {
+    UIToolbar *keybardBar = [[UIToolbar alloc] init];
+    [keybardBar sizeToFit];
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *dimiss = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissCurKeyboard)];
+    
+    keybardBar.items = @[space, dimiss];
+    
+    textfield.inputAccessoryView = keybardBar;
+    
+}
 @end
 
 
@@ -36,6 +70,9 @@
     self.hasPreviousData = NO;
     self.urldata = [NSMutableArray array];
     
+    if ([wTools objectExists: self.saveBtn]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.saveBtn.titleLabel content: self.saveBtn.titleLabel.text];
+    }    
 }
 
 - (void)loadURLs:(NSArray *)urls {

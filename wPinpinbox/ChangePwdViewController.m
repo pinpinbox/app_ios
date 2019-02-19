@@ -26,7 +26,6 @@
 @interface ChangePwdViewController () <UITextFieldDelegate, UIGestureRecognizerDelegate> {
     UITextField *selectText;
 }
-
 @property (weak, nonatomic) IBOutlet UITextField *currentPwdTextField;
 @property (weak, nonatomic) IBOutlet UITextField *pwdTextField1;
 @property (weak, nonatomic) IBOutlet UITextField *pwdTextField2;
@@ -57,7 +56,6 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
 }
 
@@ -430,7 +428,7 @@ replacementString:(NSString *)string {
         return;
     }
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -446,7 +444,7 @@ replacementString:(NSString *)string {
                 
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -518,7 +516,7 @@ replacementString:(NSString *)string {
                   protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

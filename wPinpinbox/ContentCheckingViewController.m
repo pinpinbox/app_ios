@@ -59,7 +59,7 @@
 #import "3rdPartyVideoPlayerViewController.h"
 #import "MapHelper.h"
 
-#import "MBProgressHUD.h"
+//#import "MBProgressHUD.h"
 
 
 
@@ -170,18 +170,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (weak, nonatomic) IBOutlet MyLinearLayout *textAndImageVertLayout;
 
 @property (weak, nonatomic) IBOutlet UIView *textViewBgView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBgViewHeightConstraint;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBgViewHeightConstraint;
 //@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBgViewBottomConstraint;
 
-@property (weak, nonatomic) IBOutlet UITextView *textView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewHeightConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBottomConstraint;
+//@property (weak, nonatomic) IBOutlet UITextView *textView;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewHeightConstraint;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textViewBottomConstraint;
 
 //@property (weak, nonatomic) IBOutlet UIScrollView *descriptionScrollView;
 @property (weak, nonatomic) IBOutlet SSFadingScrollView *descriptionScrollView;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewHeightConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewBottomConstraint;
+//@property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *descriptionScrollViewLeadingConstraint;
 //@property (weak, nonatomic) IBOutlet FRHyperLabel *descriptionLabel;
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *descriptionLabel;
 @property (weak, nonatomic) IBOutlet UIStackView *linkStackView;
@@ -190,6 +190,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 @property (weak, nonatomic) IBOutlet UIView *horzLineView;
 @property (weak, nonatomic) IBOutlet UICollectionView *thumbnailImageScrollCV;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *thumbViewLeading;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *thumbViewBottomConstraint;
 
 @property (nonatomic) DDAUIActionSheetViewController *customMoreActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
@@ -218,6 +220,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 @property (nonatomic) WKWebViewConfiguration *wkvideoplayerConf;
 @property (nonatomic) BOOL is3rdPartyVideoPlaying;
+
+@property (nonatomic) IBOutlet UIView *autoplayView;
+@property (nonatomic) IBOutlet NSLayoutConstraint *autoplayViewConstraint;
+@property (nonatomic) IBOutlet NSLayoutConstraint *autoplayViewBottomConstraint;
+@property (nonatomic) IBOutlet UIButton *autoplay;
+@property (nonatomic) dispatch_source_t autoplayTimer;
+@property (nonatomic) dispatch_queue_t autoplayQueue;
+@property (nonatomic) NSTimeInterval playStart;
+@property (nonatomic) NSTimeInterval playThrough;
 @end
 
 @implementation ContentCheckingViewController
@@ -696,8 +707,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         self.navBarView.hidden = !self.navBarView.hidden;
         self.textAndImageVertLayout.hidden = !self.textAndImageVertLayout.hidden;
         self.textViewBgView.hidden = !self.textViewBgView.hidden;
-        self.textView.hidden = !self.textView.hidden;
-        self.descriptionScrollView.hidden = !self.descriptionScrollView.hidden;                
+        //self.textView.hidden = !self.textView.hidden;
+        self.descriptionScrollView.hidden = !self.descriptionScrollView.hidden;
+        if (self.autoplayViewConstraint.constant > 0) {
+            self.autoplayView.hidden = !self.autoplayView.hidden;
+        }
     }];
     
     if (![wTools objectExists: useFor]) {
@@ -785,6 +799,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     
     if (orientation == 1) {
+        self.thumbViewBottomConstraint.constant = 0;
+        self.autoplayViewBottomConstraint.constant = 0;
+        self.descriptionScrollViewLeadingConstraint.constant = 32;
         NSLog(@"Portrait Mode");
         NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
         NSLog(@"");
@@ -793,32 +810,29 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self settingSizeBasedOnDevice];
         self.horzLineView.hidden = NO;
         self.thumbnailImageScrollCV.hidden = NO;
-        self.descriptionScrollViewBottomConstraint.constant = 0;
-        
-        //            self.descriptionScrollViewHeightConstraint.constant = 140;
-        //            self.textViewBottomConstraint.constant = 0;
-        //            self.textViewBgViewBottomConstraint.constant = 0;
+
     } else {
         NSLog(@"Landscape Mode");
         NSLog(@"self.view.frame: %@", NSStringFromCGRect(self.view.frame));
         NSLog(@"");
         NSLog(@"self.imageScrollCV.frame.size: %@", NSStringFromCGSize(self.imageScrollCV.frame.size));
-        
+        if (self.autoplayView.hidden)
+            self.descriptionScrollViewLeadingConstraint.constant = 32;
+        else
+            self.descriptionScrollViewLeadingConstraint.constant = 64;
         self.navBarViewTopConstraint.constant = 0;
         self.horzLineView.hidden = YES;
         self.thumbnailImageScrollCV.hidden = YES;
-        //            self.descriptionScrollViewHeightConstraint.constant = 120;
         
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            switch ((int)[[UIScreen mainScreen] nativeBounds].size.height) {
-                case 2436:
-                    printf("iPhone X");
-                    self.imageScrollCVBottomConstraint.constant = 40;
-                    //                        self.textViewBottomConstraint.constant = -20;
-                    self.descriptionScrollViewBottomConstraint.constant = -20;
-                    //                        self.textViewBgViewBottomConstraint.constant = -20;
-                    break;
+            if ([[UIScreen mainScreen] nativeBounds].size.height >= 2436) {
+                    //printf("iPhone X");
+                self.imageScrollCVBottomConstraint.constant = 40;
+                self.thumbViewBottomConstraint.constant = 20;
+                self.autoplayViewBottomConstraint.constant = 20;
+                
             }
+                
         }
     }
 }
@@ -893,7 +907,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Calling API
 - (void)retrieveAlbum {
     NSLog(@"retrieveAlbum");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     __block typeof(self.albumId) aid = self.albumId;
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -902,7 +916,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                               token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -960,6 +974,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         [self checkAudio: wself->oldCurrentPage];
                         [self.imageScrollCV reloadData];
                         [self.thumbnailImageScrollCV reloadData];
+                        [self checkAutoPlay];
                         
                         double delayInSeconds = 0.5;
                         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -1619,7 +1634,95 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.locationBtn.hidden = YES;
     
 }
+#pragma mark - Autoplay
+- (void)checkAutoPlay {
+    self.autoplayViewConstraint.constant = 0;
+    self.autoplayView.hidden = YES;
+    self.playThrough = 0;
+    self.thumbViewLeading.constant = 0;
+    
+    for (NSDictionary *p in self.photoArray) {
+        if (p[@"duration"] && ![p[@"duration"] isKindOfClass:[NSNull class]]) {
+            NSInteger t = [p[@"duration"] integerValue];
+            if ( t != 0) {
+                self.thumbViewLeading.constant = 56;
+                self.autoplayViewConstraint.constant = 56;
+                self.autoplayView.hidden = NO;
+                if (p == [self.photoArray firstObject]) {
+                    [self switchAutoPlay:self.autoplay];
+                }
+                break;
+            }
+            
+        }
+    }
+}
+- (void)postProcessAutoplay:(NSNumber *)p{
+    //xNSInteger p0 = [p integerValue];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self scrollViewDidEndDecelerating:self.imageScrollCV];
+    });
+}
+- (void)processAutoplayTime:(NSTimeInterval )tick {
+    self.playThrough += (tick - self.playStart);
+    self.playStart = tick;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSInteger p = [self getCurrentPage];
+        NSDictionary *photo = self.photoArray[p];
+        NSInteger duration = [photo[@"duration"] integerValue];
+        if (self.playThrough >= duration && (p+1) < self.photoArray.count) {
+            
+            [self.imageScrollCV scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:p+1 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+            
+            photo = self.photoArray[p+1];
+            
+            
+            [self performSelector:@selector(postProcessAutoplay:) withObject:[NSNumber numberWithInteger:p+1] afterDelay:0.5];
+            self.playThrough = 0;
+            
+            
+            duration = [photo[@"duration"] integerValue];
+            if (duration == 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self switchAutoPlay:self.autoplay];
+                });
+                self.playThrough = 0;
+                self.playStart = 0;
+                return;
+            }
+        } else if (p+1 >= self.photoArray.count) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self switchAutoPlay:self.autoplay];
+            });
+            self.playThrough = 0;
+            self.playStart = 0;
+        }
+    });
+}
+- (void) setupAutoplayProcess {
+    if (self.autoplayTimer) {
+        dispatch_cancel(self.autoplayTimer);
+        self.autoplayTimer = nil;
+    } else {
+        self.autoplayQueue = dispatch_queue_create("com.pinpinbox.autoplay" , 0);
+    }
+    self.playStart = [[NSDate date] timeIntervalSinceReferenceDate];
+    self.autoplayTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,self.autoplayQueue);
+    dispatch_source_set_timer(self.autoplayTimer, dispatch_walltime(NULL, 0), 0.5 * NSEC_PER_SEC, 0.1 * NSEC_PER_SEC);
+    __block typeof(self) wself = self;
+    dispatch_source_set_event_handler(self.autoplayTimer, ^{
+        //NSLog(@"dispatch_source_set_event_handler %lf", [[NSDate date] timeIntervalSinceReferenceDate]);
+        [wself processAutoplayTime:[[NSDate date] timeIntervalSinceReferenceDate] ];
+    });
+    dispatch_resume(self.autoplayTimer);
+}
 
+- (void)stopTimer {
+    if (self.autoplayTimer)
+        dispatch_cancel(self.autoplayTimer);
+    self.autoplayTimer = nil;
+}
 #pragma mark - Help Method for DailyMotion
 - (NSDictionary *)queryDictionaryFromString:(NSString *)queryString {
     if ([queryString hasPrefix:@"&"] || [queryString hasPrefix:@"?"]) {
@@ -1653,12 +1756,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         return;
     }
     if ([useFor isEqualToString: @"video"]) {
+        cell.videoBtn.hidden = NO;
         if ([refer isEqualToString: @"file"] || [refer isEqualToString: @"system"]) {
-            [self playUploadedVideo: cell page: page];
+            [self performSelector:@selector(deferedPlayVideo:) withObject:@[cell, [NSNumber numberWithInteger:page]] afterDelay:0.3];
+            //[self playUploadedVideo: cell page: page];
         }
     }
     
     
+}
+- (void)deferedPlayVideo:(NSArray *)params {
+    ImageCollectionViewCell *cell = (ImageCollectionViewCell *) params[0];
+    NSNumber *n = params[1];
+    NSInteger page = [n integerValue];
+    
+    [self playUploadedVideo: cell page: page];
 }
 #pragma mark - Embedded videos
 - (void)playEmbeddedVideo:(ImageCollectionViewCell *)cell
@@ -1968,7 +2080,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     //    NSLog(@"playerItem: %@", playerItem);
     
     videoIsPlaying = YES;
-    
+    cell.videoBtn.hidden = YES;
     [self.avPlayer pause];
     self.mScrubber.hidden = YES;
     
@@ -2000,7 +2112,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     for (UIView *view in cell.videoView.subviews) {
         [view removeFromSuperview];
     }
+    
+    
+    [self addChildViewController:self.videoPlayerViewController];
     [cell.videoView addSubview: self.videoPlayerViewController.view];
+    [self.videoPlayerViewController didMoveToParentViewController:self];
     [self.videoPlayer play];
     
     // Delay below is to avoid the previous video shows up
@@ -2021,7 +2137,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark -
 - (void)buyAlbum {
     NSLog(@"buyAlbum");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI buyalbum: [wTools getUserID]
@@ -2029,7 +2145,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                       albumid: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response: %@", response);
@@ -2078,13 +2194,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)getPoint: (NSString *)pointStr {
     NSLog(@"getPoint");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
+    
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [wTools getUserID] token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -2132,7 +2249,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (void)newBuyAlbum: (NSString *)pointStr {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     NSMutableDictionary *rewardDic;
     NSData *jsonData;
     NSString *jsonStr;
@@ -2156,7 +2273,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                           reward: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -2264,7 +2381,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark - Check Point Task
 - (void)checkTaskComplete {
     NSLog(@"checkTask");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
         NSString *response = [boxAPI checkTaskCompleted: [wTools getUserID]
@@ -2280,7 +2397,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //                                               platform: @"apple"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 //NSLog(@"%@", response);
@@ -2341,7 +2458,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)insertAlbumToLikes {
     NSLog(@"insertAlbumToLikes");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI insertAlbum2Likes: [wTools getUserID]
@@ -2349,7 +2466,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                albumId: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -2387,7 +2504,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)deleteAlbumToLikes {
     NSLog(@"deleteAlbumToLikes");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI deleteAlbum2Likes: [wTools getUserID]
@@ -2395,7 +2512,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                albumId: self.albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 //NSLog(@"response: %@", response);
@@ -2437,14 +2554,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"");
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI geturpoints: [userPrefs objectForKey:@"id"]
                                            token: [userPrefs objectForKey:@"token"]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from geturpoints");
@@ -2529,7 +2646,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2553,7 +2670,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2645,8 +2762,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [album setObject: [NSNumber numberWithBool: YES] forKey: @"own"];
     [dictionary setObject: album forKey: @"album"];
     self.bookdata = dictionary;
+    [self keepOwnedAlbumLocal:self.albumId];
 }
-
+- (void)keepOwnedAlbumLocal:(NSString *)aid {
+    if (aid) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:aid forKey:@"keepOwnedAlbumLocal"];
+        [defaults synchronize];
+    }
+}
 - (void)checkIsOwnedOrNot:(NSDictionary *)dic {
     NSLog(@"checkIsOwnedOrNot");
     self.bookdata = [dic mutableCopy];
@@ -2690,6 +2814,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             // if the oldCurrentPage didn't minus 1, then it will be crashed when collect function called
             oldCurrentPage -= 1;
             NSLog(@"oldCurrentPage: %lu", (unsigned long)oldCurrentPage);
+        }
+    }
+    if (currentPage < self.photoArray.count) {
+        NSDictionary *photo = self.photoArray[currentPage];
+        if (photo && ![photo[@"duration"] isKindOfClass:[NSNull class]]) {
+            NSInteger t = [photo[@"duration"] integerValue];
+            self.playThrough = 0;
+            self.playStart = 0;
+            if (t){
+                if (self.autoplayTimer == nil)
+                    [self switchAutoPlay:self.autoplay];
+                else
+                    self.playStart = [[NSDate date] timeIntervalSinceReferenceDate];
+            } else if (self.autoplayTimer ){
+                [self switchAutoPlay:self.autoplay];
+            }
         }
     }
 }
@@ -2851,10 +2991,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"self.photoArray.count: %lu", (unsigned long)self.photoArray.count);
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
         NSLog(@"self.imageScrollCV: %@", self.imageScrollCV);
-        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+        [self.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
         
         NSLog(@"self.thumbnailImageScrollCV: %@", self.thumbnailImageScrollCV);
-        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: NO];
+        [self.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
     }
 }
 
@@ -2907,11 +3047,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UIDevice *device = [UIDevice currentDevice];
     NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
-    hud.graceTime = kHUDGraceTime;
-    [app.window addSubview: hud];
-    [hud showAnimated: YES];
+    [DGHUDView start];
+    
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
+//    hud.graceTime = kHUDGraceTime;
+//    [app.window addSubview: hud];
+//    [hud showAnimated: YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI slotPhotoUseFor: currentDeviceId
@@ -2919,8 +3061,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                token: [wTools getUserToken]
                                               userId: [wTools getUserID]];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [hud hideAnimated: YES];
-            [hud removeFromSuperview];
+            [DGHUDView stop];
+//            [hud hideAnimated: YES];
+//            [hud removeFromSuperview];
             
             if (response != nil) {
                 NSLog(@"response from slotPhotoUseFor");
@@ -3073,11 +3216,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSLog(@"photoId: %ld", (long)photoId);
     NSString *photoIdStr = [self.photoArray[indexPathRow][@"photo_id"] stringValue];
     
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
-    hud.graceTime = kHUDGraceTime;
-    [app.window addSubview: hud];
-    [hud showAnimated: YES];
+    [DGHUDView start];
+//    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView: app.window];
+//    hud.graceTime = kHUDGraceTime;
+//    [app.window addSubview: hud];
+//    [hud showAnimated: YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI getPhotoUseFor: photoIdStr
@@ -3085,8 +3229,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                              userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [hud hideAnimated: YES];
-            [hud removeFromSuperview];
+            [DGHUDView stop];
+//            [hud hideAnimated: YES];
+//            [hud removeFromSuperview];
             
             if (response != nil) {
                 NSLog(@"response from getPhotoUseFor");
@@ -4011,6 +4156,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"scrollViewDidScroll");
     [self dismissKeyboard];
     [self.thumbnailImageScrollCV reloadData];
+    
+    //  halt video and autoplay when scrolling
+    if (scrollView == self.imageScrollCV) {
+        if (self.videoPlayer)
+            [self.videoPlayer pause];
+        
+    }
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
@@ -4025,6 +4177,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"self.imageScrollCV.frame.size.width: %f", self.imageScrollCV.frame.size.width);
     NSInteger page = [self getCurrentPage];
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem: page inSection: 0];
+
+    if (self.autoplay.selected)
+        [self switchAutoPlay:self.autoplay];
+
     [self updateOldCurrentPage: page];
     //    self.videoPlayerViewController.view.hidden = NO;
     
@@ -4066,7 +4222,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     if (userPoint >= albumPoint) {
         if (userPoint >= inputPoint) {
-            NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)inputPoint];
+            NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP(NTD%ld)?", (long)inputPoint, (long)(inputPoint / 2)];
             [self showBuyAlbumCustomAlert: msgStr option: @"buyAlbum" pointStr: [NSString stringWithFormat: @"%ld", (long)inputPoint]];
         } else {
             [self showBuyAlbumCustomAlert: @"你的P點不足，前往購點?" option: @"buyPoint" pointStr: @""];
@@ -4172,30 +4328,30 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                      btnHeight:(CGFloat)btnHeight {
     NSLog(@"setupContentSizeHeight");
     
-    if (![wTools objectExists: description]) {
-        return;
-    }
-    
-    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-    style.lineBreakMode = NSLineBreakByWordWrapping;
-    style.alignment = NSTextAlignmentLeft;
-    NSAttributedString *string = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName:[UIFont systemFontOfSize:16], NSParagraphStyleAttributeName:style}];
-    CGSize textSize = [string boundingRectWithSize: CGSizeMake([UIScreen mainScreen].bounds.size.width - 32 * 2, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context: nil].size;
-    NSLog(@"description: %@", description);
-    NSLog(@"self getCurrentPage: %ld", (long)[self getCurrentPage]);
-    NSLog(@"textSize.height: %f", textSize.height);
-    NSLog(@"btnHeight: %f", btnHeight);
-    
-    if (textSize.height + btnHeight + 30 < kTextContentHeight) {
-        self.descriptionScrollViewHeightConstraint.constant = textSize.height + btnHeight + 30;
-        NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
-        
-        if ([description isEqualToString: @""]) {
-            self.descriptionScrollViewHeightConstraint.constant = (btnHeight>0)?btnHeight+15:btnHeight;
-        }
-    } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
-        self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;
-    }
+//    if (![wTools objectExists: description]) {
+//        return;
+//    }
+//
+//    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+//    style.lineBreakMode = NSLineBreakByWordWrapping;
+//    style.alignment = NSTextAlignmentLeft;
+//    NSAttributedString *string = [[NSAttributedString alloc] initWithString: description attributes: @{NSFontAttributeName:[UIFont systemFontOfSize:16], NSParagraphStyleAttributeName:style}];
+//    CGSize textSize = [string boundingRectWithSize: CGSizeMake([UIScreen mainScreen].bounds.size.width - 32 * 2, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context: nil].size;
+//    NSLog(@"description: %@", description);
+//    NSLog(@"self getCurrentPage: %ld", (long)[self getCurrentPage]);
+//    NSLog(@"textSize.height: %f", textSize.height);
+//    NSLog(@"btnHeight: %f", btnHeight);
+//
+//    if (textSize.height + btnHeight + 30 < kTextContentHeight) {
+//        self.descriptionScrollViewHeightConstraint.constant = textSize.height + btnHeight + 30;
+//        NSLog(@"self.descriptionScrollViewHeightConstraint.constant: %f", self.descriptionScrollViewHeightConstraint.constant);
+//
+//        if ([description isEqualToString: @""]) {
+//            self.descriptionScrollViewHeightConstraint.constant = (btnHeight>0)?btnHeight+15:btnHeight;
+//        }
+//    } else if (textSize.height + btnHeight + 30 > kTextContentHeight) {
+//        self.descriptionScrollViewHeightConstraint.constant = kTextContentHeight;
+//    }
 }
 
 - (void)linkBt1Pressed {
@@ -4241,9 +4397,12 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"backBtnPressed");
     self.navigationController.delegate = nil;
     
+    [self stopTimer];
+    
     [self.videoPlayer pause];
     self.videoPlay = NO;
     self.videoPlayerItem = nil;
+    [self.videoPlayerViewController removeFromParentViewController];
     self.videoPlayerViewController.player = nil;
     self.videoPlayerViewController = nil;
     
@@ -4373,7 +4532,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [self.customMessageActionSheet initialValueSetup];
     [self.customMessageActionSheet getMessage];
 }
-
+- (void)likeAlbum: (NSString *)aid {
+    if (aid) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:aid forKey:@"albumliked"];
+        [defaults synchronize];
+    }
+}
 - (IBAction)likeBtnPressed:(id)sender {
     isLikeBtnPressed = YES;
     
@@ -4382,6 +4547,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     } else {
         [self insertAlbumToLikes];
     }
+    
+    [self likeAlbum:self.albumId];
 }
 
 - (IBAction)moreBtnPressed:(id)sender {
@@ -4391,7 +4558,19 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
     [self showCustomMoreActionSheet];
 }
-
+- (IBAction)switchAutoPlay:(id)sender {
+    if (sender) {
+        UIButton *p = (UIButton *)sender;
+        p.selected = !(p.selected);
+        if (p.selected) {
+            [self setupAutoplayProcess];
+            
+        } else {
+            [self stopTimer];
+        }
+    }
+    
+}
 - (void)showCustomMoreActionSheet {
     NSLog(@"");
     NSLog(@"showCustomMoreActionSheet");
@@ -4433,7 +4612,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                 collectStr = @"收藏";
             } else if (albumPoint > 0) {
                 collectStr = [NSString stringWithFormat: @"收藏(需要贊助%ldP)", (long)albumPoint];
-                btnStr = @"贊助更多";
+//                btnStr = @"贊助更多";
             }
         } else {
             collectStr = @"已收藏";
@@ -4448,6 +4627,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     __block NSInteger weakAlbumPoint = albumPoint;
     __weak NSDictionary *weakLocData = locdata;
     
+    [self.customMoreActionSheet addSafeArea];
     self.customMoreActionSheet.customButtonBlock = ^(BOOL selected) {
         NSLog(@"customButtonBlock press");
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
@@ -4467,10 +4647,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
             if (weakAlbumPoint == 0) {
                 [weakSelf buyAlbum];
             } else {
-                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
-                [weakSelf showBuyAlbumCustomAlert: msgStr option: @"buyAlbum" pointStr: [NSString stringWithFormat: @"%ld", (long)weakAlbumPoint]];
-            }
-            
+                NSIndexPath *indexPath = [NSIndexPath indexPathForItem: self.photoArray.count - 1 inSection: 0];
+                [weakSelf.imageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
+                [weakSelf.thumbnailImageScrollCV scrollToItemAtIndexPath: indexPath atScrollPosition: UICollectionViewScrollPositionCenteredHorizontally animated: YES];
+            }            
         } else if ([identifierStr isEqualToString: @"shareItem"]) {
             NSLog(@"shareItem is pressed");
             [weakSelf checkTaskComplete];
@@ -4532,7 +4712,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     [self.customShareActionSheet addSelectItem: @"" title: @"獎勵分享(facebook)" btnStr: @"" tagInt: 1 identifierStr: @"fbSharing"];
     [self.customShareActionSheet addSelectItem: @"" title: @"一般分享" btnStr: @"" tagInt: 2 identifierStr: @"normalSharing"];
-    
+    [self.customShareActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
     
     self.customShareActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
@@ -4691,80 +4871,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [alertAlbumView show];
 }
 
-- (UIView *)createBuyAlbumContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
@@ -4855,7 +4961,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
                            bgV: (MyLinearLayout *)bgV {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -4916,80 +5022,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-
 #pragma mark - showCustomCheckPostAlertView
 - (void)showCustomCheckPostAlertView: (NSString *)msg {
     NSLog(@"showCustomCheckPostAlertView msg: %@", msg);
@@ -5040,81 +5072,6 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     }];
     [alertPostView setUseMotionEffects: YES];
     [alertPostView show];
-}
-
-- (UIView *)createCheckPostContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    imageView.alpha = 0.4;
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
 }
 
 #pragma mark - Custom AlertView for Getting Point
@@ -5588,4 +5545,5 @@ shouldChangeTextInRange:(NSRange)range
 - (void)albumInfoViewControllerDisappear: (AlbumInfoViewController *)controller {
     
 }
+
 @end

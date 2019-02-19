@@ -52,7 +52,6 @@
     NSLog(@"self.exchangeDic: %@", self.exchangeDic);
     NSLog(@"self.exchangeDic photousefor image: %@", self.exchangeDic[@"photousefor"][@"image"]);
     NSLog(@"self.isExisting: %d", self.isExisting);
-    
     [self initialValueSetup];
 }
 
@@ -190,7 +189,7 @@
     
     if (![self.exchangeDic[@"photousefor"][@"name"] isEqual: [NSNull null]]) {
         nameLabel.text = self.exchangeDic[@"photousefor"][@"name"];
-        [LabelAttributeStyle changeGapString: nameLabel content: nameLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: nameLabel content: nameLabel.text];
     }
     nameLabel.textColor = [UIColor firstGrey];
     [nameLabel sizeToFit];
@@ -209,7 +208,7 @@
     if (![self.exchangeDic[@"photousefor"][@"description"] isEqual: [NSNull null]]) {
         NSLog(@"description: %@", self.exchangeDic[@"photousefor"][@"description"]);
         descriptionLabel.text = self.exchangeDic[@"photousefor"][@"description"];
-        [LabelAttributeStyle changeGapString: descriptionLabel content: descriptionLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: descriptionLabel content: descriptionLabel.text];
     }
     descriptionLabel.textColor = [UIColor firstGrey];
     [descriptionLabel sizeToFit];
@@ -233,7 +232,7 @@
     modifyContactInfoLabel.myRightMargin = 16;
     modifyContactInfoLabel.font = [UIFont boldSystemFontOfSize: 22.0];
     modifyContactInfoLabel.text = @"聯絡資訊";
-    [LabelAttributeStyle changeGapString: modifyContactInfoLabel content: modifyContactInfoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: modifyContactInfoLabel content: modifyContactInfoLabel.text];
     modifyContactInfoLabel.textColor = [UIColor firstGrey];
     [modifyContactInfoLabel sizeToFit];
     [horzLayout1 addSubview: modifyContactInfoLabel];
@@ -256,7 +255,7 @@
     userLabel.myLeftMargin = 0;
     userLabel.font = [UIFont systemFontOfSize: 18.0];
     userLabel.text = @"真實姓名";
-    [LabelAttributeStyle changeGapString: userLabel content: userLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: userLabel content: userLabel.text];
     userLabel.textColor = [UIColor firstGrey];
     [userLabel sizeToFit];
     [bgLayout addSubview: userLabel];
@@ -299,7 +298,7 @@
     telephoneLabel.myLeftMargin = 0;
     telephoneLabel.font = [UIFont systemFontOfSize: 18.0];
     telephoneLabel.text = @"電話";
-    [LabelAttributeStyle changeGapString: telephoneLabel content: telephoneLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: telephoneLabel content: telephoneLabel.text];
     [telephoneLabel sizeToFit];
     [horzLayout2 addSubview: telephoneLabel];
     
@@ -310,7 +309,7 @@
     telephoneInfoLabel.myLeftMargin = 16;
     telephoneInfoLabel.font = [UIFont systemFontOfSize: 18.0];
     telephoneInfoLabel.text = @"使用註冊時的號碼";
-    [LabelAttributeStyle changeGapString: telephoneInfoLabel content: telephoneInfoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: telephoneInfoLabel content: telephoneInfoLabel.text];
     telephoneInfoLabel.textColor = [UIColor firstMain];
     [telephoneInfoLabel sizeToFit];
     [horzLayout2 addSubview: telephoneInfoLabel];
@@ -354,7 +353,7 @@
     addressLabel.myLeftMargin = 0;
     addressLabel.font = [UIFont systemFontOfSize: 18.0];
     addressLabel.text = @"地址";
-    [LabelAttributeStyle changeGapString: addressLabel content: addressLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: addressLabel content: addressLabel.text];
     addressLabel.textColor = [UIColor firstGrey];
     [addressLabel sizeToFit];
     [bgLayout addSubview: addressLabel];
@@ -451,7 +450,7 @@
             }
             timeLabel.textColor = [UIColor firstPink];
         }
-        [LabelAttributeStyle changeGapString: timeLabel content: timeLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: timeLabel content: timeLabel.text];
         timeLabel.font = [UIFont boldSystemFontOfSize: 20.0];
         [timeLabel sizeToFit];
         [navBarView addSubview: timeLabel];
@@ -512,6 +511,7 @@
         sendBtn.backgroundColor = [UIColor firstMain];
         sendBtn.myCenterOffset = CGPointZero;
         sendBtn.layer.cornerRadius = kCornerRadius;
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: sendBtn.titleLabel content: sendBtn.titleLabel.text];
         
         [bottomBarView addSubview: sendBtn];
         
@@ -625,7 +625,7 @@
     label1.numberOfLines = 1;
     label1.textAlignment = NSTextAlignmentCenter;
     label1.text = @"兌換成功";
-    [LabelAttributeStyle changeGapString: label1 content: label1.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label1 content: label1.text];
     label1.textColor = [UIColor whiteColor];
     [label1 sizeToFit];
     label1.font = [UIFont boldSystemFontOfSize: 24.0];
@@ -639,7 +639,7 @@
     label2.numberOfLines = 0;
     label2.textAlignment = NSTextAlignmentCenter;
     label2.text = @"獎項資訊已保存在個人專區 > 選單 > 兌換清單";
-    [LabelAttributeStyle changeGapString: label2 content: label2.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label2 content: label2.text];
     label2.textColor = [UIColor whiteColor];
     [label2 sizeToFit];
     label2.font = [UIFont boldSystemFontOfSize: 20.0];
@@ -697,8 +697,7 @@
 // 106
 - (void)gainPhotoUseForUser {
     NSLog(@"gainPhotoUseForUser");
-    
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     NSString *photoUseForUserIdStr = [NSString stringWithFormat: @"%ld", (long)photoUseForUserId];
     NSLog(@"photoUseForUserIdStr: %@", photoUseForUserIdStr);
@@ -710,7 +709,7 @@
                                                   userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from gainPhotoUseForUser");
@@ -839,8 +838,7 @@
 }
 - (void)exchangePhotoUseFor {
     NSLog(@"exchangePhotoUseFor");
-    
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     UIDevice *device = [UIDevice currentDevice];
     NSString *currentDeviceId = [[device identifierForVendor] UUIDString];
@@ -855,7 +853,7 @@
                                                   userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from exchangePhotoUseFor");
@@ -894,8 +892,7 @@
 // 109
 - (void)insertBookmark {
     NSLog(@"insertBookmark");
-    
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     NSInteger photoId = [self.exchangeDic[@"photo"][@"photo_id"] integerValue];
     NSString *photoIdStr = [NSString stringWithFormat: @"%ld", (long)photoId];
@@ -906,7 +903,7 @@
                                              userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from insertBookmark");
@@ -981,8 +978,7 @@
 // 43
 - (void)updatePhotoUseForUser {
     NSLog(@"updatePhotoUseForUser");
-    
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     NSString *photoUseForUserIdStr = [NSString stringWithFormat: @"%ld", (long)photoUseForUserId];
     
@@ -993,7 +989,7 @@
                                                     userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from updatePhotoUseForUser");
@@ -1418,7 +1414,7 @@
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

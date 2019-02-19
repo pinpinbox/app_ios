@@ -9,6 +9,9 @@
 #import "LocationMapViewController.h"
 #import "MapHelper.h"
 #import "wTools.h"
+#import "LabelAttributeStyle.h"
+#import "GlobalVars.h"
+#import "UIColor+Extensions.h"
 
 
 #if(DEBUG)
@@ -16,15 +19,15 @@
 #else
 #define MAPAPIKEY @"AIzaSyBccGhjCogT8jAtxA9H8wpjL-chOjJI1HE"
 #endif
-#define mapboxkey @"sk.eyJ1IjoiYW50aHkwMTExIiwiYSI6ImNqb3Fzank4NzA3cDgzcGxoNGt0Z3JiMWYifQ.lpjmNxrbXh5L6WZ4bETD9Q"
+#define mapboxkey @"sk.eyJ1IjoicGlucGluYm94ODg4IiwiYSI6ImNqcmg5NHpsbzF3Njc0Nm1yNzRhcnd2ancifQ.0NTJUpEd9G8IYM2Npt46bw"
+
 
 @import MapKit;
 @import CoreLocation;
 //@import GoogleMaps;
 
-
-
 @interface LocationMapViewController ()<CLLocationManagerDelegate, UITextFieldDelegate,MKMapViewDelegate>//, GMSMapViewDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *locationInputTitleLabel;
 @property (nonatomic) IBOutlet MKMapView *map;
 @property (nonatomic) CLLocationManager *locationManager;
 
@@ -161,6 +164,19 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    if ([wTools objectExists: self.titleLabel]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
+    }
+    if ([wTools objectExists: self.locationInputTitleLabel]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.locationInputTitleLabel content: self.locationInputTitleLabel.text];
+    }
+    if ([wTools objectExists: self.locSearch]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.locSearch.titleLabel content: self.locSearch.titleLabel.text];
+    }    
+    if ([wTools objectExists: self.saveBtn]) {
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.saveBtn.titleLabel content: self.saveBtn.titleLabel.text];
+    }
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
@@ -308,8 +324,7 @@
     [self.view addGestureRecognizer:tap];
 }
 - (void)handleMapTap:(UITapGestureRecognizer *)tap {
-    
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     CGPoint p = [tap locationInView:self.map];
     CLLocationCoordinate2D coord = [self.map convertPoint:p toCoordinateFromView:self.map];
     
@@ -327,7 +342,7 @@
     
     NSURLSessionDataTask *task = [s dataTaskWithURL:u completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
         });
         if (!error && data.length) {
             NSError *err = nil;

@@ -16,7 +16,7 @@
 #import "AsyncImageView.h"
 #import "JCCollectionViewWaterfallLayout.h"
 #import "CreaterViewController.h"
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 #import "UIColor+HexString.h"
 #import "CustomIOSAlertView.h"
 #import "GlobalVars.h"
@@ -49,10 +49,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     NSLog(@"CategoryDetailViewController");
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
     [self loadData];
 }
@@ -91,6 +89,8 @@
     
     columnCount = 2;
     miniInteriorSpacing = 16;
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -135,7 +135,7 @@
 - (void)retrieveHotRank {
     NSLog(@"retrieveHotRank");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -155,7 +155,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -335,8 +335,8 @@
     // AlbumNameLabel Setting
     if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
         cell.albumNameLabel.text = data[@"album"][@"name"];
-        [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"album"][@"name"]];
-        cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];        
+
     }
     return cell;
 }
@@ -369,7 +369,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         return;
     }
     
-    CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+    CGRect source = [collectionView convertRect:cell.coverImageView.frame
+                                       fromView:cell];
+    source = [self.view convertRect:source fromView:collectionView];
+    cell.imgBgView.backgroundColor = [UIColor clearColor];
     YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.coverImageView noParam:NO];
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -533,7 +536,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

@@ -21,7 +21,7 @@
 #import <SafariServices/SafariServices.h>
 #import "CustomIOSAlertView.h"
 #import "OldCustomAlertView.h"
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 #import "GlobalVars.h"
 #import "AppDelegate.h"
 #import "UIColor+HexString.h"
@@ -62,6 +62,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     CGFloat coverImageHeight;
     CGFloat creativeNameLabelHeight;
+    CGFloat userNameLabelHeight;
     CGFloat linkBgViewHeight;
     
     // For Showing Message of Getting Point
@@ -79,7 +80,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     UIView *noInfoView;
     BOOL isNoInfoViewCreate;
 }
-
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 
@@ -106,7 +106,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"self.userId: %@", self.userId);
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
 }
 
@@ -239,7 +238,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)getCreator {
     NSLog(@"");
     NSLog(@"getCreator");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat:@"%ld,%d",(long)nextId, 16];
@@ -253,7 +252,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -452,7 +451,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (CGFloat)headerHeightCalculation {
     CGFloat headerHeight = 0;
     //headerHeight += coverImageHeight + 32 * 3 + creativeNameLabelHeight + 32 + 67 + 32;
-    headerHeight += coverImageHeight + 32 + 32 * 2;
+    headerHeight += coverImageHeight + 32 + 96;
+    
+    if (![userDic[@"name"] isEqual: [NSNull null]]) {
+        if (![userDic[@"name"] isEqualToString: @""]) {
+            headerHeight += userNameLabelHeight + 16 + 32;
+        }
+    }
     
     if (![userDic[@"sociallink"] isEqual: [NSNull null]]) {
         if (socialLinkInt != 0) {
@@ -461,7 +466,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     }
     // linkBgView
-    headerHeight += 67 + 32;
+//    headerHeight += 32;
     
     if (![userDic[@"sociallink"] isEqual: [NSNull null]]) {
         if (socialLinkInt != 0) {
@@ -477,7 +482,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     headerHeight += 1 + 26.5 + 16;
     
     // Add 20 for banner doesn't look to be compressed
-    headerHeight += 20;
+//    headerHeight += 20;
     
     return headerHeight;
 }
@@ -586,7 +591,19 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // User Name Label
     if (![userDic[@"name"] isEqual: [NSNull null]]) {
         headerView.userNameLabel.text = userDic[@"name"];
+        NSLog(@"userDic name: %@", userDic[@"name"]);
         [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.userNameLabel content: headerView.userNameLabel.text];
+        NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        style.lineBreakMode = NSLineBreakByWordWrapping;
+        style.alignment = NSTextAlignmentLeft;
+        NSAttributedString *string = [[NSAttributedString alloc] initWithString: headerView.userNameLabel.text attributes: @{NSFontAttributeName:[UIFont boldSystemFontOfSize: 42.0], NSParagraphStyleAttributeName:style}];
+        CGSize userNameLabelSize = [string boundingRectWithSize: CGSizeMake([UIScreen mainScreen].bounds.size.width - 32 * 2, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context: nil].size;
+        NSLog(@"userNameLabelSize.height: %f", userNameLabelSize.height);
+        
+        // + 10 in order to show real headerView.userNameLabelHeight
+        headerView.userNameLabelHeight.constant = userNameLabelSize.height + 10;
+        userNameLabelHeight = userNameLabelSize.height + 10;
+
     }
     
     // Creative Name Label
@@ -845,7 +862,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *data = pictures[indexPath.row];
     NSString *albumId = [data[@"album_id"] stringValue];
     
-    CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+    CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+    source = [self.view convertRect:source fromView:collectionView];
     
     if ([wTools objectExists: albumId]) {
         [self ToRetrievealbumpViewControlleralbumid: albumId  sourceRect:source sourceImageView:cell.coverImageView];
@@ -888,6 +906,23 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
  heightForHeaderInSection:(NSInteger)section {
     NSLog(@"");
     NSLog(@"heightForHeaderInSection");
+    
+    if (userDic[@"name"] && ![userDic[@"name"] isEqual: [NSNull null]]) {
+        
+        NSMutableDictionary *attDic = [NSMutableDictionary dictionary];
+        [attDic setValue:[UIFont boldSystemFontOfSize:48] forKey:NSFontAttributeName];      // 字体大小
+        [attDic setValue:@1 forKey:NSKernAttributeName];                                // 字间距
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineSpacing = 3;
+        style.alignment = NSTextAlignmentLeft;
+        [attDic setObject:style forKey:NSParagraphStyleAttributeName];
+        NSString *username = userDic[@"name"];
+        
+        CGRect ss = [username boundingRectWithSize:CGSizeMake(self.view.frame.size.width, 1000) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attDic context:nil];
+        
+        return self.jccLayout.headerHeight+ss.size.height-48;
+    }
     return self.jccLayout.headerHeight;
 }
 
@@ -1164,7 +1199,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (IBAction)followBtnPress:(id)sender {
     UIButton *followBtn = (UIButton *)sender;
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1179,7 +1214,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1244,7 +1279,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1263,7 +1298,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1431,7 +1466,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                                    sourceRect:(CGRect)sourceRect
                               sourceImageView:(UIImageView *) sourceImageView {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1446,7 +1481,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );

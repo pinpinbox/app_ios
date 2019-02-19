@@ -26,7 +26,6 @@
 
 #import "UIColor+Extensions.h"
 #import "UIView+Toast.h"
-#import "MBProgressHUD.h"
 #import "CustomIOSAlertView.h"
 
 #import "GlobalVars.h"
@@ -34,6 +33,7 @@
 #import "AppDelegate.h"
 
 #import "UIViewController+ErrorAlert.h"
+#import "LabelAttributeStyle.h"
 
 typedef void (^FBBlock)(void);
 
@@ -63,36 +63,30 @@ typedef void (^FBBlock)(void);
     __weak IBOutlet UILabel *pwd1CheckLabel;
     __weak IBOutlet UILabel *pwd2CheckLabel;
 }
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @end
 
 @implementation SignViewController_1
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+- (void)touchesBegan:(NSSet<UITouch *> *)touches
+           withEvent:(UIEvent *)event {
     [self.view endEditing: YES];
 }
-
-//規範
-/*
-- (IBAction)TERMSbtn:(id)sender
-{
-    NSString *termStr = @"https://www.pinpinbox.com/index/index/terms";
-    NSURL *url = [NSURL URLWithString: termStr];
-    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: url entersReaderIfAvailable: NO];
-    safariVC.preferredBarTintColor = [UIColor whiteColor];
-    [self presentViewController: safariVC animated: YES completion: nil];
-}
- */
 
 #pragma mark - View Related Method
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"SignViewController_1");
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
     
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: navBackBtn.titleLabel content: navBackBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: nextBtn.titleLabel content: nextBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: emailBtn.titleLabel content: emailBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: pwd1CheckLabel content: pwd1CheckLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: pwd2CheckLabel content: pwd2CheckLabel.text];
     [self navBarBtnSetup];
     [self nextBtnSetup];
     [self inputFieldSetup];
@@ -269,7 +263,7 @@ typedef void (^FBBlock)(void);
     } else {
         NSLog(@"Check with Server");
         @try {
-            [MBProgressHUD showHUDAddedTo: self.view animated:YES];
+            [DGHUDView start];
         } @catch (NSException *exception) {
             // Print exception information
             NSLog( @"NSException caught" );
@@ -286,7 +280,7 @@ typedef void (^FBBlock)(void);
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 @try {
-                    [MBProgressHUD hideHUDForView: self.view  animated:YES];
+                    [DGHUDView stop];
                 } @catch (NSException *exception) {
                     // Print exception information
                     NSLog( @"NSException caught" );
@@ -812,7 +806,7 @@ replacementString:(NSString *)string
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -845,79 +839,5 @@ replacementString:(NSString *)string
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg
-{
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
 
 @end

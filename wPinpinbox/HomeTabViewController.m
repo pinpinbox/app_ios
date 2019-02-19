@@ -18,12 +18,11 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "MBProgressHUD.h"
 #import "boxAPI.h"
 #import "wTools.h"
 #import "AsyncImageView.h"
 
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 
 #import "JCCollectionViewWaterfallLayout.h"
 #import "MyLayout.h"
@@ -70,6 +69,7 @@
 #import "SwitchButtonView.h"
 
 #import "YAlbumDetailContainerViewController.h"
+#import "SwitchButtonView.h"
 
 #import "UserInfo.h"
 
@@ -155,8 +155,8 @@
     NSMutableArray *albumData;
     NSMutableArray *userData;
     
-    UILabel *userRecommendationLabel;
-    UILabel *albumRecommendationLabel;
+    UIKernedLabel *userRecommendationLabel;
+    UIKernedLabel *albumRecommendationLabel;
     
     UITextField *selectTextField;
     
@@ -249,9 +249,7 @@
 - (void)viewDidLoad {
     NSLog(@"");
     NSLog(@"HomeTabViewController viewDidLoad");
-    
     NSLog(@"UserId: %@", [wTools getUserID]);
-    
     isSearchTextFieldSelected = NO;
     self.albumCollectionView.hidden = YES;
     isViewLoading = YES;
@@ -263,11 +261,6 @@
     
     oldNavBarViewYValue = self.navBarView.frame.origin.y;
     NSLog(@"self.navBarView.frame.origin.y: %f", self.navBarView.frame.origin.y);
-    
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    CGFloat screenScale = [[UIScreen mainScreen] scale];
-    CGSize screenSize = CGSizeMake(screenBounds.size.width * screenScale, screenBounds.size.height * screenScale);
-    NSLog(@"screenSize: %@", NSStringFromCGSize(screenSize));
     
     // Get user data for flurry
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -292,10 +285,8 @@
     NSLog(@"HomeTabViewController viewWillAppear");
     [super viewWillAppear:animated];
     NSLog(@"status bar height: %f", [UIApplication sharedApplication].statusBarFrame.size.height);
-    
     [self removeNotification];
     [self addNotification];
-    
     
     // Central Button
     for (UIView *view in self.tabBarController.view.subviews) {
@@ -308,6 +299,8 @@
         self.navBarView.hidden = NO;
         self.searchView.hidden = NO;
     }
+    // Restore status for preventing continuous clicking
+    self.bannerCollectionView.userInteractionEnabled = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -323,7 +316,7 @@
 - (void)settingSizeBasedOnDevice {
     self.navBarHeight.constant = 48;
     topContentOffset = self.navBarView.frame.size.height;
-    headerHeight = 1006;//871;
+    headerHeight = 982;//871;
     self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
     
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
@@ -387,7 +380,7 @@
 #pragma mark - Version Update
 - (void)checkVersion {
     NSLog(@"call checkVersion");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *version = [self getVersion];
@@ -397,7 +390,7 @@
         NSString *response = [boxAPI checkUpdateVersion: @"apple" version: version];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"checkVersion Response != nil");
@@ -629,7 +622,9 @@
 - (void)updateList {
     NSLog(@"");
     NSLog(@"updateList");
-    [wTools ShowMBProgressHUD];
+    if (![DGHUDView isAnimating]) {
+        [DGHUDView start];
+    }
     
     NSMutableDictionary *data = [NSMutableDictionary new];
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
@@ -645,7 +640,7 @@
                                            rank: wself->rankType];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from updateList");
@@ -715,6 +710,7 @@
         
         if (isScrollingDown) {
             isScrollingDown = NO;
+            [DGHUDView stop];
         } else {
             [self checkAd];
         }
@@ -749,8 +745,7 @@
     NSLog(@"checkAd");
     
     @try {
-        //        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -766,7 +761,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -775,7 +770,7 @@
                 return;
             }
             if (response != nil) {
-                NSLog(@"checkAd Response");
+                NSLog(@"Response from checkAd");
                 //NSLog(@"reponse: %@", response);
                 
                 if (![wself checkTimedOut:response api:@"getAdList" eventId:@"" text:@""]) {
@@ -823,7 +818,7 @@
     NSLog(@"getCategoryList");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -837,7 +832,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -846,7 +841,7 @@
                 return;
             }
             if (response != nil) {
-                NSLog(@"response from retrievecatgeorylist");
+                NSLog(@"response from getCategoryList");
                 if (![wself checkTimedOut:response api:@"retrievecatgeorylist" eventId:@"" text:@""])  {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -893,7 +888,7 @@
     NSLog(@"\ngetTheMeArea");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -907,7 +902,7 @@
         NSString *response = [boxAPI getTheMeArea: [wTools getUserToken] userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from getTheMeArea");
@@ -992,7 +987,8 @@
 }
 #pragma mark - Get Newly joined user list (116)
 - (void)showNewJoinUsersList {
-    [wTools ShowMBProgressHUD];
+    NSLog(@"showNewJoinUsersList");
+    [DGHUDView start];
     __block typeof(self) wself = self;
     NSUInteger count = _justJoinedListArray? _justJoinedListArray.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1002,15 +998,14 @@
                                    userId:[wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             if (response) {
+                NSLog(@"Response from showNewJoinUsersList");
                 if (![wself checkTimedOut:response api:@"getNewJoinList" eventId:@"" text:@""]){
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if (![dic[@"result"] isEqualToString:@"SYSTEM_OK"]) {
                         NSLog(@"showHotList result: %@", dic[@"result"]);
-                        
                         if (dic[@"message"])
                             [wself showCustomErrorAlert: dic[@"message"]];
                         else
@@ -1018,17 +1013,14 @@
                         
                         return ;
                     }
-                    
                     [wself processNewJoinedList:dic];
                 }
             }
-            
         });
-        
     });
 }
+
 - (void)processNewJoinedList:(NSDictionary *)dict {
-    
     if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]){
         NSArray *users = dict[@"data"];
         if (users && users.count ) {
@@ -1044,8 +1036,8 @@
 }
 #pragma mark - Get hotlist (115)
 - (void)showHotList {
-    
-    [wTools ShowMBProgressHUD];
+    NSLog(@"showHotList");
+    [DGHUDView start];
     __block typeof(self) wself = self;
     NSUInteger count = _hotListArray? _hotListArray.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1056,22 +1048,21 @@
                                userId:[wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
+            
             if (response) {
+                NSLog(@"Response from showHotList");
                 if (![wself checkTimedOut:response api:@"getHotList" eventId:@"" text:@""]){
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     
                     if (![dic[@"result"] isEqualToString:@"SYSTEM_OK"]) {
                         NSLog(@"showHotList result: %@", dic[@"result"]);
-                        
                         if (dic[@"message"])
                             [wself showCustomErrorAlert: dic[@"message"]];
                         else
                             [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        
                         return ;
                     }
-                    
                     [wself processHotList:dic];
                 }
             }
@@ -1079,7 +1070,6 @@
     });
 }
 - (void)processHotList:(NSDictionary *)dict {
-    
     if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]) {
         NSArray *users = dict[@"data"];
         if (users && users.count ) {
@@ -1106,18 +1096,14 @@
                 }
                 [c insertItemsAtIndexPaths:index];
             }
-            
-            
             //[self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
-            
-            
-            
         }
     }
 }
 #pragma mark - Get Recommended User List
 - (void)showUserRecommendedList {
-    [wTools ShowMBProgressHUD];
+    NSLog(@"showUserRecommendedList");
+    [DGHUDView start];
     __block typeof(self) wself = self;
     NSUInteger count = followUserData? followUserData.count:0;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1131,10 +1117,12 @@
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            if ([DGHUDView isAnimating]) {
+                [DGHUDView stop];
+            }
             if (response != nil) {
                 NSLog(@"showUserRecommendedList");
-                NSLog(@"response from getRecommendedList");
+                NSLog(@"response from showUserRecommendedList");
                 if (![wself checkTimedOut:response api:@"showUserRecommendedList" eventId:@"" text:@""]) {
                     NSLog(@"Get Real Response");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
@@ -1150,9 +1138,7 @@
 }
 
 - (void)processUserRecommandedListResult:(NSDictionary *)dic {
-    
     if ([dic[@"result"] intValue] == 1) {
-        
         NSArray *list = dic[@"data"];
         
         if (![wTools objectExists: list]) {
@@ -1192,7 +1178,8 @@
 }
 
 - (void)showAlbumRecommendedList {
-    [wTools ShowMBProgressHUD];
+    NSLog(@"showAlbumRecommendedList");
+    [DGHUDView start];
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1206,7 +1193,9 @@
                                          data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            if ([DGHUDView isAnimating]) {
+                [DGHUDView stop];
+            }
             
             if (response != nil) {
                 NSLog(@"showAlbumRecommendedList");
@@ -1404,6 +1393,7 @@
                                     platform: @"apple"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            [DGHUDView stop];
             if (response != nil) {
                 NSLog(@"response from doTask1");
                 
@@ -1470,8 +1460,7 @@
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     @try {
-        //        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1487,8 +1476,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                //                [MBProgressHUD hideHUDForView: self.view animated: YES];
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1498,7 +1486,6 @@
             }
             if (response != nil) {
                 NSLog(@"response from geturpoints");
-                
                 
                 if (![wself checkTimedOut:response api:@"geturpoints" eventId:@"" text:@""]) {
                     NSLog(@"Get Real Response");
@@ -1583,7 +1570,7 @@
     NSLog(@"eventId: %@", eventId);
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1600,7 +1587,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1609,7 +1596,7 @@
                 return;
             }
             if (response != nil) {
-                NSLog(@"getEvent Response");
+                NSLog(@"Response from getEventData");
                 //NSLog(@"response: %@", response);
                 
                 if (![wself checkTimedOut:response api:@"getEvent" eventId:eventId text:@""]) {
@@ -1692,7 +1679,6 @@
     } else if (collectionView.tag == 4) {
         return self.justJoinedListArray.count;
     } else if (collectionView.tag == 5) {
-        
         return followAlbumData.count;
     } else if (collectionView.tag == 6) {
         return albumData.count;
@@ -1723,15 +1709,15 @@
         self.followAlbumCollectionView = headerView.followAlbumCollectionView;
         
         followUserLabel = headerView.followUserLabel;
-        [LabelAttributeStyle changeGapString: followUserLabel content: followUserLabel.text];
+        //[LabelAttributeStyle changeGapString: followUserLabel content: followUserLabel.text];
         followUserHorzView = headerView.followUserHorzView;
         
         followAlbumLabel = headerView.followAlbumLabel;
-        [LabelAttributeStyle changeGapString: followAlbumLabel content: followAlbumLabel.text];
+        //[LabelAttributeStyle changeGapString: followAlbumLabel content: followAlbumLabel.text];
         followAlbumHorzView = headerView.followAlbumHorzView;
         
         recommendationLabel = headerView.recommendationLabel;
-        [LabelAttributeStyle changeGapString: recommendationLabel content: recommendationLabel.text];
+        //[LabelAttributeStyle changeGapString: recommendationLabel content: recommendationLabel.text];
         
         recommendationHorzView = headerView.recommendationHorzView;
         
@@ -1753,7 +1739,7 @@
             __block typeof(self) wself = self;
             
             header.tapBlock = ^{
-                
+                NSLog(@"header.tapBlock");
                 [wself toCategoryVC: [top[@"categoryarea_id"] stringValue]
                     categoryNameStr: top[@"name"]];
             };
@@ -1898,8 +1884,7 @@
         // AlbumNameLabel Setting
         if (![data[@"album"][@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = data[@"album"][@"name"];
-            [LabelAttributeStyle changeGapString: cell.albumNameLabel content: data[@"album"][@"name"]];
-            cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
         }
         
         return cell;
@@ -1919,9 +1904,7 @@
         cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
         
         if (indexPath.row + 1 < categoryArray.count) {
-            
             NSDictionary *dic = categoryArray[indexPath.row+1][@"categoryarea"];
-            
             NSLog(@"dic name: %@", dic[@"name"]);
             NSLog(@"dic image_360x360: %@", dic[@"image_360x360"]);
             
@@ -1932,7 +1915,7 @@
             
             if (![dic[@"name"] isEqual:[NSNull null]]) {
                 cell.categoryNameLabel.text = dic[@"name"];
-                //[LabelAttributeStyle changeGapString: cell.categoryNameLabel content: dic[@"name"]];
+                [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.categoryNameLabel content: cell.categoryNameLabel.text];
             }
         }
         return cell;
@@ -1950,26 +1933,25 @@
                                              placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
             }
             cell.userNameLabel.text = userDic[@"name"];
-            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
-            
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
+
         } else {
             NSLog(@"userData is nil");
         }
         return cell;
     } else if (collectionView.tag == 5) {
         //NSLog(@"collectionView.tag == 5");
-        
         RecommandCollectionViewCell *cell =  [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath: indexPath];
         cell.albumImageView.backgroundColor = UIColor.purpleColor;
         cell.albumDesc.text = [NSString stringWithFormat:@"%ld -- %ld\n\n=======",(long)indexPath.section, (long)indexPath.row];
         cell.personnelView.backgroundColor = UIColor.yellowColor;
-        
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumDesc content: cell.albumDesc.text];
         return cell;
     } else if (collectionView.tag == 6) {
         //NSLog(@"collectionView.tag == 6");
         //        NSLog(@"isSearching: %d", isSearching);
         albumRecommendationLabel.text = @"找到的作品";
-        [LabelAttributeStyle changeGapString: albumRecommendationLabel content: albumRecommendationLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: albumRecommendationLabel content: albumRecommendationLabel.text];
         
         NSLog(@"SearchTabCollectionViewCell *cell");
         SearchTabCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"SearchCell" forIndexPath: indexPath];
@@ -2000,7 +1982,6 @@
                 
             }];
         }
-        
         // UserForView Info Setting
         BOOL gotAudio = [albumDic[@"usefor"][@"audio"] boolValue];
         BOOL gotVideo = [albumDic[@"usefor"][@"video"] boolValue];
@@ -2069,15 +2050,14 @@
         // AlbumNameLabel Setting
         if (![albumDic[@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = albumDic[@"name"];
-            [LabelAttributeStyle changeGapString: cell.albumNameLabel content: cell.albumNameLabel.text];
-            cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
+
         }
         NSLog(@"cell.albumNameLabel.text: %@", cell.albumNameLabel.text);
         NSLog(@"cell.imgBgView.frame: %@", NSStringFromCGRect(cell.imgBgView.frame));
         
         return cell;
     } else if (collectionView.tag == 71 || collectionView.tag == 72){
-        
         RecommandCollectionViewCell *c = [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath:indexPath];
         NSDictionary *data = followUserData[indexPath.row];
         if (collectionView.tag == 72)
@@ -2102,17 +2082,17 @@
         
         if (user[@"description"] && ![user[@"description"] isEqual: [NSNull null]]) {
             c.albumDesc.text = user[@"description"];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: c.albumDesc content: c.albumDesc.text];
         }
         c.personnelView.layer.cornerRadius = 16;
         c.personnelView.clipsToBounds = YES;
         c.albumImageView.layer.cornerRadius = 8;
         c.albumImageView.clipsToBounds = YES;
-        
         return c;
     } else {
         //NSLog(@"collectionView.tag == 7");
         userRecommendationLabel.text = @"找到的創作人";
-        [LabelAttributeStyle changeGapString: userRecommendationLabel content: userRecommendationLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: userRecommendationLabel content: userRecommendationLabel.text];
         
         if (userData.count == 0) {
             noInfoHorzView.hidden = NO;
@@ -2134,8 +2114,7 @@
                                              placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
             }
             cell.userNameLabel.text = userDic[@"name"];
-            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
-            
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];            
         } else {
             NSLog(@"userData is nil");
         }
@@ -2154,6 +2133,7 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"didSelectItemAtIndexPath");
+    
     if (collectionView.tag == 1) {
         HomeDataCollectionViewCell *cell = (HomeDataCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
         NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
@@ -2164,11 +2144,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         NSDictionary *data = pictures[indexPath.row];
         NSString *albumId = [data[@"album"][@"album_id"] stringValue];
-        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
         [self toAlbumDetailVC: albumId source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 2) {
+        NSLog(@"collectionView: %@", collectionView);
+        // To prevent continuous clicking
+        collectionView.userInteractionEnabled = NO;
         HomeBannerCollectionViewCell *cell = (HomeBannerCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
-        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        //CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        CGRect source = [collectionView convertRect:cell.bannerImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
         [self tapDetectedForURL:indexPath.row source:source sourceImageView:cell.bannerImageView];
     } else if (collectionView.tag == 3) {
         if (indexPath.row + 1 < categoryArray.count) {
@@ -2190,7 +2176,10 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     } else if (collectionView.tag == 6) {
         NSDictionary *albumDic = albumData[indexPath.row][@"album"];
         SearchTabCollectionViewCell *cell = (SearchTabCollectionViewCell *)[collectionView cellForItemAtIndexPath: indexPath];
-        CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+        CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+        source = [self.view convertRect:source fromView:collectionView];
+//        CGSize size = cell.coverImageView.frame.size;
+//        source = CGRectMake(source.origin.x, source.origin.y, size.width, size.height);
         [self toAlbumDetailVC: [albumDic[@"album_id"] stringValue] source:source sourceImage:cell.coverImageView];
     } else if (collectionView.tag == 71 || collectionView.tag == 72) {
         NSDictionary *userDic = followUserData[indexPath.row][@"user"];
@@ -2252,7 +2241,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [appDelegate.myNav pushViewController: categoryVC animated: YES];
 }
 
-- (void)tapDetectedForURL:(NSInteger)page source:(CGRect)source sourceImageView:(UIImageView *)sourceImageView {
+- (void)tapDetectedForURL:(NSInteger)page
+                   source:(CGRect)source
+          sourceImageView:(UIImageView *)sourceImageView {
 //    NSLog(@"tapDetectedForURL");
 //    NSLog(@"page: %ld", (long)page);
 //    NSLog(@"adArray[page]: %@", adArray[page]);
@@ -2270,7 +2261,6 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         if (![albumIdString isEqualToString: @""]) {
             YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumIdString sourceRect:source sourceImageView:sourceImageView noParam:NO];
-            
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [appDelegate.myNav pushViewController: aDVC animated: YES];
         }
@@ -2301,73 +2291,137 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             [appDelegate.myNav pushViewController: cVC animated: YES];
         }
     } else if (urlString != (NSString *)[NSNull null]) {
-        if (![urlString isEqualToString: @""]) {
-            NSURL *url = [NSURL URLWithString: urlString];
-            NSLog(@"scheme: %@", [url scheme]);
-            NSLog(@"host: %@", [url host]);
-            NSLog(@"port: %@", [url port]);
-            NSLog(@"path: %@", [url path]);
-            NSLog(@"path components: %@", [url pathComponents]);
-            NSLog(@"parameterString: %@", [url parameterString]);
-            NSLog(@"query: %@", [url query]);
-            NSLog(@"fragment: %@", [url fragment]);
-            
-            if ([[url path] isEqualToString: @"/index/album/explore"]) {
-                if ([url query] != nil) {
-                    NSString *query = [url query];
-                    NSArray *bits = [query componentsSeparatedByString: @"="];
-                    NSLog(@"bits: %@", bits);
-                    NSString *key = bits[0];
-                    NSString *value = bits[1];
-                    NSLog(@"key: %@", key);
-                    NSLog(@"value: %@", value);
-                    
-                    if ([key isEqualToString: @"categoryarea_id"]) {
-                        NSLog(@"has categoryarea_id");
-                        CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
-                        categoryVC.categoryAreaId = value;
-                        NSLog(@"categoryVC.categoryAreaId: %@", categoryVC.categoryAreaId);
-                        //categoryVC.categoryName = @"Test";
-                        
-                        if ([value isEqualToString: @"-1"]) {
-                            categoryVC.dic = getTheMeAreaDic;
-                        }
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate.myNav pushViewController: categoryVC animated: YES];
-                    } else {
-                        SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
-                        safariVC.preferredBarTintColor = [UIColor whiteColor];
-                        [self presentViewController: safariVC animated: YES completion: nil];
-                    }
-                }
-            } else if ([[url path] isEqualToString: @"/index/user/point"]) {
-                BuyPPointViewController *bPPVC = [[UIStoryboard storyboardWithName: @"BuyPointVC" bundle: nil] instantiateViewControllerWithIdentifier: @"BuyPPointViewController"];
-                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                [appDelegate.myNav pushViewController: bPPVC animated: YES];
+        if ([wTools objectExists: urlString]) {
+            if ([urlString isEqualToString: @""]) {
+                [self showToastMsgWithHint: @"無頁面跳轉"];
             } else {
-                SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
-                safariVC.preferredBarTintColor = [UIColor whiteColor];
-                [self presentViewController: safariVC animated: YES completion: nil];
+                NSURL *url = [NSURL URLWithString: urlString];
+                NSLog(@"scheme: %@", [url scheme]);
+                NSLog(@"host: %@", [url host]);
+                NSLog(@"port: %@", [url port]);
+                NSLog(@"path: %@", [url path]);
+                NSLog(@"path components: %@", [url pathComponents]);
+                NSLog(@"last path components: %@", [url lastPathComponent]);
+                NSLog(@"parameterString: %@", [url parameterString]);
+                NSLog(@"query: %@", [url query]);
+                NSLog(@"fragment: %@", [url fragment]);
                 
-                /*
-                 ActivityWebViewController *activityWebVC = [[UIStoryboard storyboardWithName: @"ActivityWebVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ActivityWebViewController"];
-                 activityWebVC.eventURL = urlString;
-                 AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                 [appDelegate.myNav pushViewController: activityWebVC animated: YES];
-                 */
+#if(DEBUG)
+                NSString *hostStr = @"w3.pinpinbox.com";
+#else
+                NSString *hostStr = @"www.pinpinbox.com";
+#endif
+                NSLog(@"hostStr: %@", hostStr);
+                
+                if ([[url host] isEqualToString: hostStr]) {
+                    if ([[url lastPathComponent] containsString: @"point"]) {
+                        NSLog(@"lastPath contains point string");
+                        BuyPPointViewController *bPPVC = [[UIStoryboard storyboardWithName: @"BuyPointVC" bundle: nil] instantiateViewControllerWithIdentifier: @"BuyPPointViewController"];
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate.myNav pushViewController: bPPVC animated: YES];
+                    } else if ([[url query] containsString: @"album_id"]) {
+                        NSLog(@"url query contains album_id string");
+                        NSArray *bits = [self urlSeparationCheck: url];
+                        NSString *key = bits[0];
+                        NSString *value = bits[1];
+                        
+                        if ([key isEqualToString: @"album_id"]) {
+                            if ([wTools objectExists: value]) {
+                                if (![value isEqualToString: @""]) {
+                                    YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:value sourceRect:source sourceImageView:sourceImageView noParam:NO];
+                                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                    [appDelegate.myNav pushViewController: aDVC animated: YES];
+                                }
+                            }
+                        }
+                    } else if ([[url query] containsString: @"user_id"]) {
+                        NSLog(@"url query contains user_id string");
+                        NSArray *bits = [self urlSeparationCheck: url];
+                        NSString *key = bits[0];
+                        NSString *value = bits[1];
+                        
+                        if ([key isEqualToString: @"user_id"]) {
+                            if ([wTools objectExists: value]) {
+                                if (![value isEqualToString: @""]) {
+                                    [self toCreatorVC: value];
+                                }
+                            }
+                        }
+                    } else if ([[url query] containsString: @"event_id"]) {
+                        NSLog(@"url query contains event_id string");
+                        NSArray *bits = [self urlSeparationCheck: url];
+                        NSString *key = bits[0];
+                        NSString *value = bits[1];
+                        
+                        if ([key isEqualToString: @"event_id"]) {
+                            if ([wTools objectExists: value]) {
+                                if (![value isEqualToString: @""]) {
+                                    [self getEventData: value];
+                                }
+                            }
+                        }
+                    } else if ([[url query] containsString: @"categoryarea_id"]) {
+                        NSLog(@"url query contains categoryarea_id string");
+                        NSArray *bits = [self urlSeparationCheck: url];
+                        NSString *key = bits[0];
+                        NSString *value = bits[1];
+                        
+                        if ([key isEqualToString: @"categoryarea_id"]) {
+                            if ([wTools objectExists: value]) {
+                                if (![value isEqualToString: @""]) {
+                                    CategoryViewController *categoryVC = [[UIStoryboard storyboardWithName: @"CategoryVC" bundle: nil] instantiateViewControllerWithIdentifier: @"CategoryViewController"];
+                                    categoryVC.categoryAreaId = value;
+                                    NSLog(@"categoryVC.categoryAreaId: %@", categoryVC.categoryAreaId);
+                                    //categoryVC.categoryName = @"Test";
+                                    
+                                    if ([value isEqualToString: @"-1"]) {
+                                        categoryVC.dic = getTheMeAreaDic;
+                                    }
+                                    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                    [appDelegate.myNav pushViewController: categoryVC animated: YES];
+                                }
+                            }
+                        }
+                    } else {
+                        NSLog(@"else");
+                        [self openSafariVC: urlString];
+                    }
+                } else {
+                    [self openSafariVC: urlString];
+                }
             }
-        } else if ([urlString isEqualToString: @""]) {
-            CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
-            style.messageColor = [UIColor whiteColor];
-            style.backgroundColor = [UIColor hintGrey];
-            
-            [self.view makeToast: @"無頁面跳轉"
-                        duration: 2.0
-                        position: CSToastPositionBottom
-                           style: style];
-            return;
+        } else {
+            [self showToastMsgWithHint: @"無頁面跳轉"];
         }
     }
+}
+
+- (void)showToastMsgWithHint:(NSString *)msg {
+    CSToastStyle *style = [[CSToastStyle alloc] initWithDefaultStyle];
+    style.messageColor = [UIColor whiteColor];
+    style.backgroundColor = [UIColor hintGrey];
+    
+    [self.view makeToast: msg
+                duration: 2.0
+                position: CSToastPositionBottom
+                   style: style];
+    self.bannerCollectionView.userInteractionEnabled = YES;
+}
+
+- (void)openSafariVC:(NSString *)urlString {
+    SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL: [NSURL URLWithString: urlString] entersReaderIfAvailable: NO];
+    safariVC.preferredBarTintColor = [UIColor whiteColor];
+    [self presentViewController: safariVC animated: YES completion: nil];
+}
+
+- (NSArray *)urlSeparationCheck:(NSURL *)url {
+    NSArray *bits;
+    if ([url query] != nil) {
+        NSString *query = [url query];
+        bits = [query componentsSeparatedByString: @"="];
+        NSLog(@"bits: %@", bits);
+    }
+    return bits;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
@@ -2453,13 +2507,13 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         return finalSize;
     } else if (collectionView.tag == 2) {
         // ad banners 
-        return CGSizeMake(343,237);//bannerWidth, bannerHeight);
+        return CGSizeMake(343,248);//bannerWidth, bannerHeight);
     } else if (collectionView.tag == 3) {
         // category
         return CGSizeMake(163.0, 163.0);
     } else if (collectionView.tag == 4) {
         //  follow user collection
-        return CGSizeMake(96.0, 121.0);
+        return CGSizeMake(96.0, 142.0);
     } else if (collectionView.tag == 5) {
         
         return CGSizeMake(273, 168);
@@ -2541,7 +2595,6 @@ didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                    layout:(UICollectionViewLayout *)collectionViewLayout
 minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"minimumInteritemSpacingForSectionAtIndex");
-    
     return 16.0f;
 }
 
@@ -2564,6 +2617,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         return 16.0f;
     } else if (collectionView.tag == 6) {
         return 24.0f;
+    } else if (collectionView.tag == 71 || collectionView.tag == 72) {
+        return 16;
     } else {
         return 24.0f;
     }
@@ -3298,8 +3353,10 @@ replacementString:(NSString *)string {
 }
 
 #pragma mark - Custom Method for TimeOut
-- (BOOL)checkTimedOut: (NSString *)result api:(NSString *)api eventId:(NSString *)eventId text:(NSString *)text{
-    
+- (BOOL)checkTimedOut:(NSString *)result
+                  api:(NSString *)api
+              eventId:(NSString *)eventId
+                 text:(NSString *)text{
     if ([result isEqualToString:timeOutErrorCode] ) {
         [self showCustomTimeOutAlert:NSLocalizedString(@"Connection-Timeout", @"")
                         protocolName:api
@@ -3315,7 +3372,7 @@ replacementString:(NSString *)string {
                           text: (NSString *)text {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
@@ -3491,7 +3548,7 @@ replacementString:(NSString *)string {
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: dataDic options: 0 error: nil];
     NSString *jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
     
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -3499,12 +3556,13 @@ replacementString:(NSString *)string {
                                           token: [wTools getUserToken]
                                           param: jsonStr];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if (![wself checkTimedOut:response api:@"updateUser" eventId:@"" text:@""]) {
                     
                     NSLog(@"Get Real Response");
+                    NSLog(@"response from updateUser");
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
                     NSLog(@"dic: %@", dic);
                     
@@ -3645,7 +3703,7 @@ replacementString:(NSString *)string {
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UILabel *l = [[UILabel alloc] init];
+    UIKernedLabel *l = [[UIKernedLabel alloc] init];
     UIView *v = [[UIView alloc] init];
     l.textColor = [UIColor hintGrey];
     l.font = [UIFont boldSystemFontOfSize:18];
@@ -3653,12 +3711,13 @@ replacementString:(NSString *)string {
         l.text = @"推薦";
     else
         l.text = @"熱門";
+    
     l.backgroundColor = UIColor.clearColor;
-    [l sizeToFit];
-    //CGSize s = l.frame.size;
-    v.frame = CGRectMake(0, 0, 60,22);
+    CGSize s = [l sizeThatFits:CGSizeMake(60,22)];
+    
+    v.frame = CGRectMake(0, 0, 60,s.height);
     [v addSubview:l];
-    l.frame = CGRectMake(16,0, 40, 22);
+    l.frame = CGRectMake(16,0, 40,s.height);
     return v;
 }
 @end

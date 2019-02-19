@@ -76,12 +76,10 @@ const CGFloat kBarHeight = 56;
     [self presentViewController: safariVC animated: YES completion: nil];
 }
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"");
     NSLog(@"MyTabBarController viewDidLoad");
-    
     isiPhoneX = NO;
     
     self.delegate = self;
@@ -120,15 +118,13 @@ const CGFloat kBarHeight = 56;
     [self createCenterButton];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSLog(@"MyTabBarController viewWillAppear");
     [self checkBadge];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     NSLog(@"MyTabBarController viewWillDisappear");
 }
@@ -140,17 +136,12 @@ const CGFloat kBarHeight = 56;
 
 - (void)viewWillLayoutSubviews {    
     NSLog(@"MyTabBarController viewWillLayoutSubviews");
-    
     //CGPoint center = self.tabBar.center;
-    
     centerButton.center = CGPointMake(self.tabBar.center.x, (self.tabBar.center.y+self.tabBar.frame.origin.y)/2);
-    
-    
     [self.view bringSubviewToFront: centerButton];
 }
 
-- (void)createCenterButton
-{
+- (void)createCenterButton {
     UIImage *buttonImage = [UIImage imageNamed: @"CreateTab"];
     UIImage *hightlightImage = [UIImage imageNamed: @"CreateSelectedTab"];
     
@@ -210,29 +201,25 @@ const CGFloat kBarHeight = 56;
     }
 }
 
-- (void)centerBtnPress
-{
+- (void)centerBtnPress {
     NSLog(@"centerButtonPress");
     
     [self toAlbumCreationVC];
 }
 
-- (void)hideCenterButton
-{
+- (void)hideCenterButton {
     NSLog(@"hideCenterButton");
     //centerButton.hidden = true;
     //[centerButton removeFromSuperview];
 }
 
-- (void)showCenterButton
-{
+- (void)showCenterButton {
     NSLog(@"showCenterButton");
     //centerButton.hidden = false;
     //[self createCenterButton];
 }
 
-- (void)bringCenterButtonToFront
-{
+- (void)bringCenterButtonToFront {
     //[self.view bringSubviewToFront: centerButton];
 }
 
@@ -250,14 +237,14 @@ const CGFloat kBarHeight = 56;
 - (void)checkAlbumOfDiy {
     NSLog(@"");
     NSLog(@"checkAlbumOfDiy");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI checkalbumofdiy: [wTools getUserID]
                                                token: [wTools getUserToken]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from checkalbumofdiy");
@@ -275,8 +262,6 @@ const CGFloat kBarHeight = 56;
                     NSLog(@"response: %@", response);
                     
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-                    
-                    
                     
                     if (dic != nil) {
                         NSLog(@"dic != nil");
@@ -301,12 +286,10 @@ const CGFloat kBarHeight = 56;
     });
 }
 
-- (void)updateAlbumOfDiy: (NSString *)albumId
-{
+- (void)updateAlbumOfDiy: (NSString *)albumId {
     NSLog(@"");
     NSLog(@"updateAlbumOfDiy: albumId: %@", albumId);
-    
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *response = [boxAPI updatealbumofdiy: [wTools getUserID]
@@ -314,7 +297,7 @@ const CGFloat kBarHeight = 56;
                                              album_id: albumId];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from checkalbumofdiy");
@@ -349,9 +332,8 @@ const CGFloat kBarHeight = 56;
 //快速套版
 - (void)addNewFastMod {
     NSLog(@"addNewFastMod");
-    
     //新增相本id
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
         
         NSString *response = [boxAPI insertalbumofdiy: [wTools getUserID]
@@ -359,7 +341,7 @@ const CGFloat kBarHeight = 56;
                                           template_id: @"0"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from insertalbumofdiy");
@@ -524,7 +506,7 @@ const CGFloat kBarHeight = 56;
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

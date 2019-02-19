@@ -25,8 +25,8 @@
 #import <SafariServices/SafariServices.h>
 #import "GlobalVars.h"
 
-#define kLineHeight 0.5
-#define kLayoutHeight 53
+#define kLineHeight 1 / [UIScreen mainScreen].scale
+#define kLayoutHeight 49
 #define kCellGap 20
 
 @interface MoreTabViewController () <TouchDetectedScrollViewDelegate, UIGestureRecognizerDelegate>
@@ -90,13 +90,12 @@
 
 - (void)setupTopicLabel {
     UILabel *topicLabel = [UILabel new];
-    topicLabel.myTopMargin = 16;
-    topicLabel.myBottomMargin = 16;
-    topicLabel.myLeftMargin = topicLabel.myRightMargin = 16;
+    topicLabel.myTopMargin = 32;
     topicLabel.myBottomMargin = 8;
-    topicLabel.font = [UIFont boldSystemFontOfSize: 24];
+    topicLabel.myLeftMargin = topicLabel.myRightMargin = 16;
+    topicLabel.font = [UIFont boldSystemFontOfSize: 18];
     topicLabel.text = @"創造內容價值 獲得贊助回饋";
-    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: topicLabel content: topicLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: topicLabel content: topicLabel.text];
     topicLabel.textColor = [UIColor firstGrey];
     [topicLabel sizeToFit];
     topicLabel.wrapContentHeight = YES;
@@ -105,16 +104,17 @@
 
 - (void)setupAboutBtn {
     UIButton *aboutBtn = [UIButton buttonWithType: UIButtonTypeCustom];
-    aboutBtn.myTopMargin = 16;
+    aboutBtn.myTopMargin = 0;
     aboutBtn.myLeftMargin = aboutBtn.myRightMargin = 16;
-    aboutBtn.myBottomMargin = 16;
+    aboutBtn.myBottomMargin = 0;
     aboutBtn.wrapContentWidth = YES;
-    aboutBtn.myHeight = 48;
+    aboutBtn.myHeight = 40;
     aboutBtn.layer.cornerRadius = kCornerRadius;
     aboutBtn.backgroundColor = [UIColor firstMain];
-    aboutBtn.titleLabel.font = [UIFont systemFontOfSize: 20.0];
+    aboutBtn.titleLabel.font = [UIFont systemFontOfSize: 16.0];
     [aboutBtn setTitle: @"立即了解" forState: UIControlStateNormal];
     [aboutBtn addTarget: self action: @selector(toAboutPage) forControlEvents: UIControlEventTouchUpInside];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: aboutBtn.titleLabel content: aboutBtn.titleLabel.text];
     [self.vertLayout addSubview: aboutBtn];
 }
 
@@ -144,8 +144,8 @@
     label.myLeftMargin = 16;
     label.text = title;
     label.textColor = [UIColor firstGrey];
-    label.font = [UIFont systemFontOfSize: 18];
-    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label content: label.text];    
+    label.font = [UIFont systemFontOfSize: 16];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: label content: label.text];
     [label sizeToFit];
     return label;
 }

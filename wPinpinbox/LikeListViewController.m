@@ -22,7 +22,8 @@
 #import "MessageboardViewController.h"
 #import "CreaterViewController.h"
 #import "UIViewController+ErrorAlert.h"
-#import "UserInfo.h"
+#import "SwitchButtonView.h"
+
 
 @interface LikeListViewController () <UITableViewDataSource, UITableViewDelegate, MessageboardViewControllerDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
@@ -31,7 +32,7 @@
     NSMutableArray *likeListArray;
 }
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UIKernedLabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -150,7 +151,7 @@
 
 - (void)getLikesList {
     NSLog(@"getLikesList");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     __block typeof(self) wself = self;
@@ -161,7 +162,7 @@
                                                  userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -292,6 +293,11 @@
     NSString *imageUrl = dic[@"user"][@"picture"];
     NSString *name = dic[@"user"][@"name"];
     NSInteger userId = [dic[@"user"][@"user_id"] integerValue];
+    NSInteger uid = [[wTools getUserID] integerValue];
+    //if (self.authorId == uid) {
+    cell.followBtn.hidden = (userId == uid);
+    cell.messageBtn.hidden = (userId == uid);
+    //}
     
     if ([imageUrl isEqual: [NSNull null]] || [imageUrl isEqualToString: @""]) {
         cell.headshotImageView.image = [UIImage imageNamed: @"member_back_head.png"];
@@ -301,7 +307,7 @@
     
     if (![name isEqual: [NSNull null]]) {
         cell.userNameLabel.text = name;
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];        
     }
     NSLog(@"user is_follow: %d", [dic[@"user"][@"is_follow"] boolValue]);
     //    cell.isFollow = [dic[@"user"][@"is_follow"] boolValue];
@@ -395,7 +401,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Call Server For Follow Function
 - (void)followBtnPress:(NSInteger)userId
                   cell:(LikeListTableViewCell *)cell {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     NSString *userIdStr = [NSString stringWithFormat: @"%ld", (long)userId];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
@@ -405,7 +411,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -484,7 +490,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

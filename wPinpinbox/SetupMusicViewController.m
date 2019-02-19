@@ -21,7 +21,7 @@
 #import "SwitchButtonView.h"
 #import "AudioUploader.h"
 #import "MBProgressHUD.h"
-#import "UserInfo.h"
+#import "LabelAttributeStyle.h"
 
 typedef NS_ENUM(NSInteger, SetupAudioType) {
     None = 1,
@@ -47,7 +47,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     BOOL isAudioModeChanged;
 }
-
 @property (strong, nonatomic) AVPlayer *avPlayer;
 @property (strong, nonatomic) AVPlayerItem *avPlayerItem;
 @property (assign, nonatomic) BOOL isReadyToPlay;
@@ -77,7 +76,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) SetupAudioType audioType;
 @property (nonatomic) SetupAudioType dataAudioType; // audiotype from getalbumsettings
 
-
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *noMusicTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *noMusicSubTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *mutipleSongTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *multipleSongSubTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *singleSongTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *singleSongSubTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *uploadTitleLabel;
 
 @end
 
@@ -87,7 +93,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     NSLog(@"SetupMusicViewController viewDidLoad");
-    
+
     // Check avPlayer is ready or not
     self.isReadyToPlay = NO;
     
@@ -95,6 +101,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [self setupUI];
     [self getAlbumDataOptions];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.noMusicTitleLabel content: self.noMusicTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.noMusicSubTitleLabel content: self.noMusicSubTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.mutipleSongTitleLabel content: self.mutipleSongTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.multipleSongSubTitleLabel content: self.multipleSongSubTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.singleSongTitleLabel content: self.singleSongTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.singleSongSubTitleLabel content: self.singleSongSubTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.uploadTitleLabel content: self.uploadTitleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.uploadBtn.titleLabel content: self.uploadBtn.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.saveBtn.titleLabel content: self.saveBtn.titleLabel.text];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -117,8 +134,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)optionsTapped:(UITapGestureRecognizer *)tap {
     if (tap.view)
         [self setMusicReferByType:(int)tap.view.tag];
-    
 }
+
 - (void)setupUI {
     self.saveBtn.layer.cornerRadius = 8;
     UITapGestureRecognizer *t = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(optionsTapped:)];
@@ -182,7 +199,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)getAlbumDataOptions {
     NSLog(@"getAlbumDataOptions");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -197,7 +214,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -511,6 +528,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if ([wTools objectExists: musicArray[indexPath.row][@"name"]]) {
         textLabel.text = musicArray[indexPath.row][@"name"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: textLabel content: textLabel.text];
     }
     
     if ([musicArray[indexPath.row][@"selected"] boolValue]) {
@@ -949,80 +967,6 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertView show];
 }
 
-- (UIView *)createContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-
 #pragma mark -
 
 - (void)changeAudioMode {
@@ -1152,11 +1096,11 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
         self.uploadProgress =  [MBProgressHUD showHUDAddedTo: self.view animated: YES];
         self.uploadProgress.mode =  MBProgressHUDModeDeterminateHorizontalBar;
         self.uploadProgress.label.text = @"音樂上傳中";
-        [self.audioUploader startUpload:param uploadblock:^(NSUInteger currentUploaded, NSUInteger totalSize, NSString * _Nonnull desc) {
+        [self.audioUploader startUpload:param path:@"/updatealbumsettings/2.0" uploadblock:^(NSUInteger currentUploaded, NSUInteger totalSize, NSString * _Nonnull desc) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 wself.uploadProgress.progress = (float)currentUploaded/(float)totalSize;
             });
-        } uploadResultBlock:^(NSError * _Nullable error) {
+        } uploadResultBlock:^(NSDictionary * _Nullable result,  NSError * _Nullable error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [wself.avPlayer pause];
                 [wself.uploadProgress hideAnimated:YES];
@@ -1180,7 +1124,7 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)callAlbumSettings: (NSString *)jsonStr {
     NSLog(@"callAlbumSettings");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1197,7 +1141,7 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1248,7 +1192,7 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
                   protocolName: (NSString *)protocolName
                        jsonStr: (NSString *)jsonStr {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     alertTimeOutView.arrangeStyle = @"Horizontal";
     
     alertTimeOutView.parentView = self.view;
@@ -1281,79 +1225,6 @@ didDeselectItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertTimeOutView show];
 }
 
-- (UIView *)createTimeOutContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
 
 /*
 #pragma mark - Navigation

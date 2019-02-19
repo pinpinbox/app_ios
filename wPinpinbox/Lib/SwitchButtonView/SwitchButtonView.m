@@ -218,36 +218,275 @@
 }
 @end
 
+#pragma mark -
+@interface NSMutableAttributedString (ForButton)
++ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title fromExistingAttributedString:(NSAttributedString*)attributedString;
++ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color;
+- (NSRange)fullRange;
+@end
+@implementation NSMutableAttributedString(ForButton)
++ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title fromExistingAttributedString:(NSAttributedString*)attributedString
+{
+    NSDictionary *attributes = [attributedString attributesAtIndex:0 effectiveRange:NULL];
+    return [[NSMutableAttributedString alloc] initWithString:title attributes:attributes];
+}
 
-@implementation LeftPaddingTextfield
-- (id) initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self ) {
-        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 8, 16)];
-        view.backgroundColor = UIColor.clearColor;
-        view.userInteractionEnabled = NO;
-        self.leftView = view;
-        self.leftViewMode = UITextFieldViewModeAlways;
-        [self addTextViewAccessoryView];
++ (NSMutableAttributedString*)attributedStringWithTitle:(NSString*)title font:(UIFont*)font color:(UIColor*)color
+{
+    NSMutableAttributedString* mutableTitle = [[NSMutableAttributedString alloc] initWithString:title];
+    [mutableTitle addAttribute:NSFontAttributeName value:font range:[mutableTitle fullRange]];
+    [mutableTitle addAttribute:NSForegroundColorAttributeName value:color range:[mutableTitle fullRange]];
+    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [mutableTitle addAttribute:NSParagraphStyleAttributeName value:style range:[mutableTitle fullRange]];
+    return mutableTitle;
+}
+- (NSRange) fullRange {
+    return NSMakeRange(0, self.length);
+}
+@end
+
+
+@interface UIKernedLabel()
+@property (nonatomic) CGFloat kernspace;
+@end
+
+@implementation UIKernedLabel
+- (void)awakeFromNib {
+    [super awakeFromNib];    
+}
+- (void)setAttributedText:(NSAttributedString *)attributedText
+{
+    if (!attributedText) return ;
+    NSMutableAttributedString* mutableText = [attributedText mutableCopy];
+    [mutableText addAttributes:@{NSKernAttributeName: @(_kernspace)} range:[mutableText fullRange]];
+    NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
+    s.lineBreakMode = NSLineBreakByTruncatingTail;
+    [mutableText addAttribute:NSParagraphStyleAttributeName value:s range:[mutableText fullRange]];
+    [super setAttributedText:mutableText];
+    [self setNeedsDisplay];
+}
+
+- (void)setText:(NSString *)text
+{
+    if (!text) return ;
+    if (_kernspace <= 0)
+        _kernspace = 1.5;
+    NSMutableAttributedString* mutableText;
+    if (self.attributedText && self.attributedText.length) {
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text fromExistingAttributedString:self.attributedText];
+    } else {
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text font:self.font color:self.textColor];
+        
     }
     
+    [self setAttributedText:mutableText];
+    
+}
+- (void)updateText {
+    if (!self.text) {
+        NSLog(@"text is null");
+        return;
+    }
+    NSMutableAttributedString* mutableText;
+    NSString *text = [NSString stringWithString: self.text];
+    if (self.attributedText && self.attributedText.length) {
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text fromExistingAttributedString:self.attributedText];
+    } else {
+        
+        mutableText = [NSMutableAttributedString attributedStringWithTitle:text font:self.font color:self.textColor];
+        
+    }
+    
+    [self setAttributedText:mutableText];
+}
+- (CGFloat)spacing {
+    return _kernspace;
+}
+- (void)setSpacing:(CGFloat)spacing {
+    if (spacing >= 1.5) {
+        _kernspace = spacing;
+    }
+    [self updateText];
+}
+@end
+
+#pragma mark -
+@interface UIKernedButton()
+@property (nonatomic) CGFloat kernspace;
+@end
+
+@implementation UIKernedButton
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if(self != nil) {
+        self.spacing = 1;
+    }
     return self;
 }
-- (void)dismissCurKeyboard {
-    if (self.isFirstResponder)
-        [self resignFirstResponder];
-
+- (void)setAttributedTitle:(NSAttributedString *)title forState:(UIControlState)state
+{
+    if (!title) return ;
+    NSMutableAttributedString* mutableTitle = [title mutableCopy];
+    [mutableTitle addAttributes:@{NSKernAttributeName: @(self.spacing)} range:[mutableTitle fullRange]];
+    [super setAttributedTitle:mutableTitle forState:state];
+    [self setNeedsDisplay];
 }
-- (void)addTextViewAccessoryView {
-    UIToolbar *keybardBar = [[UIToolbar alloc] init];
-    [keybardBar sizeToFit];
-    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *dimiss = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissCurKeyboard)];
 
-    keybardBar.items = @[space, dimiss];
-
-    self.inputAccessoryView = keybardBar;
-
+- (void)setTitle:(NSString *)title forState:(UIControlState)state
+{
+    if (_kernspace <= 0)
+        _kernspace = 1;
+    
+    if (!title) return ;
+    
+    NSMutableAttributedString* mutableTitle;
+    if ([self attributedTitleForState:state]) {
+        mutableTitle = [NSMutableAttributedString attributedStringWithTitle:title fromExistingAttributedString:[self attributedTitleForState:state]];
+    } else {
+        mutableTitle = [NSMutableAttributedString attributedStringWithTitle:title font:self.titleLabel.font color:[self titleColorForState:state]];
+    }
+    [self setAttributedTitle:mutableTitle forState:state];
 }
+- (void)updateTitle {
+    [self setAttributedTitle:self.titleLabel.attributedText forState:UIControlStateNormal];
+    [self setAttributedTitle:self.titleLabel.attributedText forState:UIControlStateDisabled];
+}
+- (CGFloat)spacing {
+    return _kernspace;
+}
+- (void)setSpacing:(CGFloat)spacing {
+    _kernspace = spacing;
+    [self updateTitle];
+}
+@end
+
+@implementation UIImageViewAligned
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self)
+    {
+        [self commonInit];
+    }
+    return self;
+}
+
+
+- (id)initWithImage:(UIImage *)image
+{
+    self = [super initWithImage:image];
+    if (self)
+    {
+        [self commonInit];
+        [self setImage:image];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self)
+        [self commonInit];
+    return self;
+}
+
+- (void)commonInit
+{    
+    _realImageView = [[UIImageView alloc] initWithFrame:self.bounds];
+    _realImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _realImageView.contentMode = self.contentMode;
+    [self addSubview:_realImageView];
+    
+    
+}
+
+- (UIImage*)image
+{
+    return _realImageView.image;
+}
+
+- (void)setImage:(UIImage *)image
+{
+    if (!_realImageView) return;
+    [_realImageView setImage:image];
+    [_realImageView setFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    [self setNeedsLayout];
+}
+
+- (void)setContentMode:(UIViewContentMode)contentMode
+{
+    [super setContentMode:contentMode];
+    _realImageView.contentMode = contentMode;
+    [self setNeedsLayout];
+}
+
+- (void)layoutSubviews
+{
+    CGSize realsize = [self realContentSize];
+    
+    // Start centered
+    CGRect realframe = CGRectMake((self.bounds.size.width - realsize.width)/2, (self.bounds.size.height - realsize.height) / 2, realsize.width, realsize.height);
+    
+    realframe.origin.y = 0;
+    _realImageView.frame = realframe;
+    self.layer.contents = nil;
+}
+
+- (CGSize)realContentSize
+{
+    CGSize size = self.bounds.size;
+    
+    if (self.image == nil)
+        return size;
+    
+    switch (self.contentMode)
+    {
+        case UIViewContentModeScaleAspectFit:
+        {
+            float scalex = self.bounds.size.width / _realImageView.image.size.width;
+            float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            float scale = MIN(scalex, scaley);
+
+            size = CGSizeMake(_realImageView.image.size.width * scale, _realImageView.image.size.height * scale);
+            break;
+        }
+            
+        case UIViewContentModeScaleAspectFill:
+        {
+            float scalex = self.bounds.size.width / _realImageView.image.size.width;
+            
+            float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            float scale = MAX(scalex, scaley);
+            scalex = scale;
+        
+            
+            size = CGSizeMake(_realImageView.image.size.width * scalex, _realImageView.image.size.height * scalex);
+            break;
+        }
+            
+        case UIViewContentModeScaleToFill:
+        {
+            float scalex = self.bounds.size.width / _realImageView.image.size.width;
+            float scaley = self.bounds.size.height / _realImageView.image.size.height;
+            
+            size = CGSizeMake(_realImageView.image.size.width * scalex, _realImageView.image.size.height * scaley);
+            break;
+        }
+            
+        default:
+            size = _realImageView.image.size;
+            break;
+    }
+    
+    return size;
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+    return [self.realImageView sizeThatFits:size];
+}
+
 
 @end
+

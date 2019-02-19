@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface YAlbumDetailViewController : UIViewController
 @property(nonatomic) IBOutlet UIScrollView *baseView;
+@property(nonatomic) IBOutlet UIImageView *headerView;
 @property(nonatomic) IBOutlet UIButton *dismissBtn;
 @property(nonatomic) BOOL noparam;
 @property(nonatomic) NSString *fromVC;

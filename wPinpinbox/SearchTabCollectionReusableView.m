@@ -15,6 +15,6 @@
     [super awakeFromNib];
     self.userRecommendationLabel.textColor = [UIColor firstGrey];
     self.albumRecommendationLabel.textColor = [UIColor firstGrey];
-    self.horzLineView.backgroundColor = [UIColor thirdGrey];
+    self.horzLineView.backgroundColor = [UIColor secondGrey];
 }
 @end

@@ -42,7 +42,6 @@
 #import "UIViewController+CWPopup.h"
 #import "LabelAttributeStyle.h"
 
-
 static NSString *autoPlayStr = @"&autoplay=1";
 
 @interface YAlbumDetailViewController ()<UITableViewDataSource, UITableViewDelegate,
@@ -66,11 +65,11 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 @property(nonatomic) IBOutlet UIButton *likeBtn;
 @property(nonatomic) IBOutlet UIButton *moreBtn;
 @property(nonatomic) IBOutlet UITableView *infoView;
-@property(nonatomic) IBOutlet UIImageView *headerView;
-@property(nonatomic) IBOutlet UIButton *contentButton;
+@property(nonatomic) IBOutlet UIKernedButton *contentButton;
 @property(nonatomic) IBOutlet NSLayoutConstraint *headerHeight;
+@property(nonatomic) IBOutlet NSLayoutConstraint *coverHeight;
 @property(nonatomic) IBOutlet NSLayoutConstraint *infoHeight;
-@property(nonatomic) IBOutlet UIButton *collectBtn;
+@property(nonatomic) IBOutlet UIKernedButton *collectBtn;
 
 @property (nonatomic) DDAUIActionSheetViewController *customMoreActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
@@ -85,12 +84,14 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.albumInfo = [NSMutableDictionary dictionary];
-
 }
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    //  album detail is changed outward //
+    [self checkCollectedOutward];
     [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
 }
+
 - (void)setupAlbumWithInfo:(NSDictionary *)info albumId:(NSString *)albumId {
     self.album_id = albumId;
     [self checkAlbumId:self.album_id];
@@ -102,14 +103,14 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     if (_isMessageShowing) {
         [self messageBtnTouched:self.messageBtn];
     }
-    
-    [self layoutCollectButton];
+    self.albumPoint = [self.albumInfo[@"album"][@"point"] integerValue];
+    self.isCollected = [self.albumInfo[@"album"][@"own"] boolValue];
 }
 - (void)setAlubumId:(NSString *)aid {
     self.album_id = aid;
     [self checkAlbumId:self.album_id];
     if (self.albumInfo.allKeys.count < 1)
-        [self retrieveAlbum:self.album_id];
+        [self retrieveAlbum:self.album_id silence:NO];
 }
 - (void)checkAlbumId:(NSString *)albumId {
     
@@ -150,51 +151,80 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     
     return self.effectView == nil;
 }
+- (void)setIsCollected:(BOOL)isCollected {
+    _isCollected = isCollected;
+    [self layoutCollectButton];
+}
 #pragma mark -
 - (BOOL)isPointInHeader:(CGPoint)point {
-    CGRect r = [self.view convertRect:self.headerView.frame fromView:self.headerView];
-    return CGRectContainsPoint(r, point);
+    //CGRect r = [self.view convertRect:self.headerView.frame fromView:self.headerView];
+    //return CGRectContainsPoint(r, point);
+    return self.baseView.contentOffset.y < 1;
 }
 - (UIImageView *)albumCoverView{
     return self.headerView;
 }
 - (void)setContentBtnVisible {
+    [self.contentButton setTitle:@"進入觀看" forState:UIControlStateNormal];
     self.contentButton.hidden = NO;
 }
 - (void)setHeaderPlaceholder:(UIImage *)placeholder {
     if (placeholder) {
         CGSize s = placeholder.size;
         CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+        CGFloat sh =  [UIScreen mainScreen].bounds.size.height;
+        self.coverHeight.constant = dh;
+        dh = (dh > sh*0.67)? sh*0.67:dh;
         self.headerView.image = placeholder;
         self.headerHeight.constant = dh;
     }
 }
 - (void)prepareCoverView {
-    NSArray *a = self.albumInfo[@"photo"];
-    NSDictionary *p = a[0];
-    if ([wTools objectExists:p[@"image_url"]]) {
-        NSURL *u = [NSURL URLWithString:p[@"image_url"]];
-        __block typeof(self) wself = self;
-        [self.headerView sd_setImageWithURL:u completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            if (error || image == nil) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    UIImage *image = [UIImage imageNamed:@"bg_2_0_0_no_image.jpg"];
-                    CGSize s = image.size;
-                    CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
-                    wself.headerView.image = image;
-                    wself.headerHeight.constant = dh;
-                });
-            } else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    CGSize s = image.size;
-                    CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
-                    wself.headerView.image = image;
-                    wself.headerHeight.constant = dh;
-                });
-            }
-        }];
-        //[header.albumHeader sd_setImageWithURL:u placeholderImage:];
+    CGFloat sh =  [UIScreen mainScreen].bounds.size.height;
+    if (![wTools objectExists:self.albumInfo[@"photo"]]) {
+        UIImage *image = [UIImage imageNamed:@"bg_2_0_0_no_image.jpg"];
+        CGSize s = image.size;
+        CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+        self.coverHeight.constant = dh;
+        dh = (dh > sh*0.67)? sh*0.67:dh;
+        self.headerView.image = image;
+        self.headerHeight.constant = dh;
+        return;
+    } else {
+        NSArray *a = self.albumInfo[@"photo"];
+        NSDictionary *p = a[0];
+        if ([wTools objectExists:p[@"image_url"]]) {
+            NSURL *u = [NSURL URLWithString:p[@"image_url"]];
+            __block typeof(self) wself = self;
+            UIImage *placholder = [UIImage imageWithCGImage:self.headerView.image.CGImage];
+            
+            [self.headerView sd_setImageWithURL:u placeholderImage:placholder  completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+                if (error || image == nil) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIImage *image = [UIImage imageNamed:@"bg_2_0_0_no_image.jpg"];
+                        CGSize s = image.size;
+                        CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+                        self.coverHeight.constant = dh;
+                        dh = (dh > sh*0.67)? sh*0.67:dh;
+                        wself.headerView.image = image;
+                        wself.headerHeight.constant = dh;
+                    });
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        CGSize s = image.size;
+                        CGFloat dh = (s.height/s.width)* [UIScreen mainScreen].bounds.size.width;
+                        self.coverHeight.constant = dh;
+                        dh = (dh > sh*0.67)? sh*0.67:dh;
+                        wself.headerView.image = image;
+                        wself.headerHeight.constant = dh;
+                    });
+                }
+            }];
+            //[header.albumHeader sd_setImageWithURL:u placeholderImage:];
+        }
     }
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapToContent:)];
+    [self.headerView addGestureRecognizer:tap];
     
     self.detailView.scrollEnabled = NO;
     self.infoHeight.constant = [self estimateInfoHeight];
@@ -241,15 +271,14 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     return height+32;
 }
 - (void)layoutCollectButton {
-    _albumPoint = [self.albumInfo[@"album"][@"point"] integerValue];
-    _isCollected = [self.albumInfo[@"album"][@"own"] boolValue];
+    
     NSString * u = [NSString stringWithFormat:@"%lu", [self.albumInfo[@"user"][@"user_id"] longValue] ];
     BOOL selfWork = [u isEqualToString: [wTools getUserID]];
     self.collectBtn.hidden = selfWork;
     
     if (!selfWork) {
         NSString *str = @"";
-        if (!_isCollected) {
+        if (!self.isCollected) {
             
             self.collectBtn.enabled = YES;
             [self.collectBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -294,6 +323,15 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     if ([wTools objectExists: data[@"likes"]])
         c = (int)[data[@"likes"] integerValue];
     return c;
+}
+- (NSInteger)getAuthor {
+    NSInteger aid = 0;
+    
+    if ([wTools objectExists:self.albumInfo[@"user"]]) {
+        NSDictionary *u = self.albumInfo[@"user"];
+        aid = [u[@"user_id"] integerValue];
+    }
+    return aid;
 }
 #pragma mark -
 - (void)viewDidLayoutSubviews {
@@ -451,12 +489,22 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     }
 }
 #pragma mark -
+- (void)tapToContent:(UITapGestureRecognizer *)gesture {
+    [self viewContentTouched:self.contentButton];
+}
 - (IBAction)collectBtnTouched:(id)sender {
     if (_albumPoint > 0) {
-        NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?\n點選「觀看內容」並前往最後一頁可進行贊助額度設定", (long)_albumPoint];
-        //                [weakSelf showCustomAlert: msgStr option: @"buyAlbum"];
+        BOOL rewardAfterCollect = [self.albumInfo[@"album"][@"reward_after_collect"] boolValue];
+        NSLog(@"rewardAfterCollect: %d", rewardAfterCollect);
+        NSString *msgStr;
         
-        [self showCustomAlert: msgStr option: @"buyAlbum"];
+        if (rewardAfterCollect) {
+            msgStr = [NSString stringWithFormat: @"點選「進入觀看」並前往最後一頁可填寫回饋表單"];
+            [self showCustomAlert: msgStr btnName: @"我知道了"];
+        } else {
+            NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP(NTD%ld)?\n點選「觀看內容」並前往最後一頁可進行贊助額度設定", (long)_albumPoint, (long)_albumPoint / 2];
+            [self showCustomAlert: msgStr option: @"buyAlbum"];
+        }
     } else {
         [self buyAlbum];
     }
@@ -529,9 +577,10 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     });
 }
 
-- (void)retrieveAlbum:(NSString *)aid {
+- (void)retrieveAlbum:(NSString *)aid silence:(BOOL)silence {
     
-    [wTools ShowMBProgressHUD];
+    if (!silence)
+        [DGHUDView start];
     __block NSString *viewedString = [NSString stringWithFormat: @"%d", self.isViewed];
     __block typeof(self) wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -548,7 +597,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 return;
             }
@@ -585,7 +634,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)getEventData: (NSString *)eventId {
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         return;
     }
@@ -596,7 +645,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 return;
@@ -643,7 +692,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)checkTaskComplete {
 
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         return;
@@ -659,7 +708,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 return;
@@ -715,7 +764,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 
 - (void)getPoint {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -730,7 +779,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -785,7 +834,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)buyAlbum {
     NSLog(@"buyAlbum");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -801,7 +850,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -835,7 +884,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 
                         [wself checkAlbumCollectTask];
                         wself.isCollected = YES;
-                        [wself layoutCollectButton];
+                        
                     } else if ([dic[@"result"] intValue] == 2) {
                         [wself showCustomErrorAlert: @"已擁有該相本"];
                     } else if ([dic[@"result"] intValue] == 0) {
@@ -857,7 +906,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)insertReport {
     NSLog(@"insertReport");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -872,7 +921,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -901,7 +950,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     NSLog(@"SaveDataRow: row: %ld", (long)row);
     NSString *rid = [self.reportIntentList[row][@"reportintent_id"] stringValue];
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -918,7 +967,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -988,7 +1037,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         if (collect_free_album) {
             NSLog(@"Get the First Time Album Saving Point Already");
-            [self retrieveAlbum:self.album_id];
+            [self retrieveAlbum:self.album_id silence:NO];
         } else {
             NSLog(@"Haven't got the point of saving album for first time");
             [self checkPoint];
@@ -1001,7 +1050,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         if (collect_pay_album) {
             NSLog(@"Getting Paid Album Point Already");
-            [self retrieveAlbum:self.album_id];
+            [self retrieveAlbum:self.album_id silence:NO];
         } else {
             NSLog(@"Haven't got the point of saving paid album for first time");
             [self checkPoint];
@@ -1012,7 +1061,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1036,7 +1085,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1088,7 +1137,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         
         [self showAlertViewForGettingPoint:data[@"data"][@"task"] eventURL:self.eventUrl];
         [self saveCollectInfoToDevice: NO];
-        [self retrieveAlbum:self.album_id];
+        [self retrieveAlbum:self.album_id silence:NO];
     } else if ([data[@"result"] intValue] == 2) {
         NSLog(@"message: %@", data[@"message"]);
         [self saveCollectInfoToDevice: YES];
@@ -1245,7 +1294,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     alertTimeOutView.arrangeStyle = @"Horizontal";
     
     alertTimeOutView.parentView = self.view;
@@ -1274,7 +1323,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
             } else if ([protocolName isEqualToString: @"getreportintentlist"]) {
                 //[weakSelf insertReport];
             } else if ([protocolName isEqualToString: @"retrievealbump"]) {
-                [weakSelf retrieveAlbum:self.album_id];
+                [weakSelf retrieveAlbum:self.album_id silence:NO];
             } else if ([protocolName isEqualToString: @"insertreport"]) {
                 //[weakSelf SaveDataRow: row];
             } else if ([protocolName isEqualToString: @"insertAlbum2Likes"]) {
@@ -1298,7 +1347,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     [self.effectView removeFromSuperview];
     self.effectView = nil;
         
-    [self retrieveAlbum:self.album_id];
+    [self retrieveAlbum:self.album_id silence:YES];
     if (_isMessageShowing)
         _isMessageShowing = NO;
 }
@@ -1310,6 +1359,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 #pragma mark -
 - (void)showCustomShareActionSheet {
+    if (self.albumInfo.allKeys.count < 1) return;
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
     
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
@@ -1327,7 +1377,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     [self.customShareActionSheet addSelectItem: @"" title: @"一般分享" btnStr: @"" tagInt: 2 identifierStr: @"normalSharing"];
     
     __weak typeof(self) weakSelf = self;
-    
+    [self.customShareActionSheet addSafeArea];
     self.customShareActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         NSLog(@"");
         NSLog(@"customShareActionSheet.customViewBlock executes");
@@ -1388,7 +1438,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 
 - (void)showCustomMoreActionSheet {
-    
+    if (self.albumInfo.allKeys.count < 1) return;
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
     
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
@@ -1442,25 +1492,8 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
         [self.customMoreActionSheet addSelectItem: @"ic200_report_dark.png" title: @"檢舉" btnStr: @"" tagInt: 5 identifierStr: @"reportItem"];
     }
     __weak typeof(self) weakSelf = self;
-//    __block NSInteger weakAlbumPoint = _albumPoint;
-    
-//    self.customMoreActionSheet.customButtonBlock = ^(BOOL selected) {
-//        NSString *alertMsg = @"點選「觀看內容」並前往最後一頁可進行贊助額度設定";
-//        NSString *btnName = @"我知道了";
-//        [weakSelf showCustomAlert: alertMsg btnName: btnName];
-//        [weakSelf.customMoreActionSheet slideOut];
-//    };
+    [self.customMoreActionSheet addSafeArea];
     self.customMoreActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
-//        if ([identifierStr isEqualToString: @"collectItem"]) {
-//
-//
-//            if (weakAlbumPoint == 0) {
-//                [weakSelf buyAlbum];
-//            } else {
-//                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
-//                [weakSelf showCustomAlert: msgStr option: @"buyAlbum"];
-//            }
-//        } else
         if ([identifierStr isEqualToString: @"albumEdit"]) {
             [weakSelf toAlbumCreationViewController: weakSelf.album_id
                                          templateId: @"0"
@@ -1496,7 +1529,8 @@ alertView.arrangeStyle = @"Horizontal";
     [alertView setUseMotionEffects: YES];
     [alertView show];
 }
-- (void)showCustomAlert: (NSString *)msg option:(NSString *)option {
+- (void)showCustomAlert:(NSString *)msg
+                 option:(NSString *)option {
     
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     
@@ -1591,11 +1625,29 @@ alertView.arrangeStyle = @"Horizontal";
 - (void)albumSettingViewControllerUpdate:(AlbumSettingViewController *)controller {
     
 }
+#pragma mark -
+- (void)checkCollectedOutward {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *aid = (NSString *) [defaults objectForKey:@"keepOwnedAlbumLocal"];
+    if (aid) {
+        if ([aid isEqualToString:self.album_id] && self.albumInfo.allKeys.count) {
+            [self retrieveAlbum:self.album_id silence:YES];
+        }
+        [defaults removeObjectForKey:@"keepOwnedAlbumLocal"];
+    } else {
+        aid = (NSString *)[defaults objectForKey:@"albumliked"];
+        if (aid && [aid isEqualToString:self.album_id] && self.albumInfo.allKeys.count) {
+            [self retrieveAlbum:self.album_id silence:YES];
+        }
+        [defaults removeObjectForKey:@"albumliked"];
+    }
+    [defaults synchronize];
+}
 #pragma mark - Likes
 - (void)insertAlbumToLikes {
-    
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         return;
     }
@@ -1607,7 +1659,7 @@ alertView.arrangeStyle = @"Horizontal";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 return;
             }
@@ -1631,7 +1683,7 @@ alertView.arrangeStyle = @"Horizontal";
 - (void)processInsertAlbumLikesResult:(NSDictionary *)dic {
     if ([dic[@"result"] intValue] == 1) {
         
-        [self retrieveAlbum:self.album_id];
+        [self retrieveAlbum:self.album_id silence:NO];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@", dic[@"message"]);
         NSString *msg = dic[@"message"];
@@ -1641,9 +1693,8 @@ alertView.arrangeStyle = @"Horizontal";
     }
 }
 - (void)deleteAlbumToLikes {
-    
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         
@@ -1655,7 +1706,7 @@ alertView.arrangeStyle = @"Horizontal";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 return;

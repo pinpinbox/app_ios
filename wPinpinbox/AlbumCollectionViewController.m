@@ -36,7 +36,9 @@
 #import "UIViewController+ErrorAlert.h"
 
 #import "NotifTabViewController.h"
-#import "UserInfo.h"
+
+#import "LabelAttributeStyle.h"
+
 
 @interface AlbumCollectionViewController () <CAPSPageMenuDelegate, MyAlbumCollectionViewControllerDelegate, OtherCollectionViewControllerDelegate, CalbumlistViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic) CAPSPageMenu *pageMenu;
@@ -255,6 +257,7 @@
     self.leftLabel = [UILabel new];
     self.leftLabel.text = @"我的作品";
     self.leftLabel.font = [UIFont systemFontOfSize:15];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.leftLabel content: self.leftLabel.text];
     [self.leftLabel sizeToFit];
     self.leftLabel.centerXPos.equalTo(@0);
     self.leftLabel.centerYPos.equalTo(@0); //标题尺寸由内容包裹，位置在布局视图中居中。
@@ -276,6 +279,7 @@
     self.centerLabel = [UILabel new];
     self.centerLabel.text = @"收藏▪︎贊助";
     self.centerLabel.font = [UIFont systemFontOfSize:15];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.centerLabel content: self.centerLabel.text];
     [self.centerLabel sizeToFit];
     self.centerLabel.centerXPos.equalTo(@0);
     self.centerLabel.centerYPos.equalTo(@0); //标题尺寸由内容包裹，位置在布局视图中居中。
@@ -300,6 +304,7 @@
     self.rightLabel = [UILabel new];
     self.rightLabel.text = @"群組作品";
     self.rightLabel.font = [UIFont systemFontOfSize:15];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.rightLabel content: self.rightLabel.text];
     [self.rightLabel sizeToFit];
     self.rightLabel.centerXPos.equalTo(@0);
     self.rightLabel.centerYPos.equalTo(@0); //标题尺寸由内容包裹，位置在布局视图中居中。
@@ -365,7 +370,6 @@
                 CGPoint f = cc.collectionview.contentOffset;
                 [cc.collectionview setContentOffset:f animated:NO];
             }
-            
             [self.pageMenu moveToPage: 0];
             break;
         case 1:
@@ -377,8 +381,7 @@
                 CalbumlistViewController *cc = (CalbumlistViewController *)c;
                 CGPoint f = cc.collectionview.contentOffset;
                 [cc.collectionview setContentOffset:f animated:NO];
-            }
-            
+            }            
             [self.pageMenu moveToPage: 1];
             break;
         case 2:
@@ -532,7 +535,7 @@
                                 identifierStr: @"toAlbumSettingVC"];
     
     __weak typeof(self) weakSelf = self;
-    
+    [self.customEditActionSheet addSafeArea];
     self.customEditActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         //NSLog(@"");
         NSLog(@"self.customEditActionSheet.customViewBlock");
@@ -720,7 +723,7 @@
                        albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -750,80 +753,6 @@
     }];
     [alertTimeOutView setUseMotionEffects: YES];
     [alertTimeOutView show];
-}
-
-- (UIView *)createTimeOutContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    //NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    //NSLog(@"");
-    
-    return contentView;
 }
 
 /*

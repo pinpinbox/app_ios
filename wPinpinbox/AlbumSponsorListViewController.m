@@ -22,7 +22,7 @@
 #import "MessageboardViewController.h"
 #import "CreaterViewController.h"
 #import "UIViewController+ErrorAlert.h"
-#import "UserInfo.h"
+#import "SwitchButtonView.h"
 
 @interface AlbumSponsorListViewController () <UITableViewDataSource, UITableViewDelegate, MessageboardViewControllerDelegate, UIGestureRecognizerDelegate> {
     BOOL isLoading;
@@ -31,7 +31,7 @@
     NSMutableArray *albumSponsorArray;
 }
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UIKernedLabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -46,7 +46,6 @@
     // Do any additional setup after loading the view.
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
     [self loadData];
 }
@@ -150,7 +149,7 @@
 
 - (void)getSponsorList {
     NSLog(@"getSponsorList");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     NSString *limit = [NSString stringWithFormat: @"%ld,%d", (long)nextId, 16];
     __block typeof(self) wself = self;
@@ -162,7 +161,7 @@
                                                   userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 if ([response isEqualToString: timeOutErrorCode]) {
@@ -308,9 +307,10 @@
     
     if (![name isEqual: [NSNull null]]) {
         cell.userNameLabel.text = name;
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];
     }
-    cell.pPointLabel.text = [NSString stringWithFormat: @"%ld P", (long)point];
+    cell.pPointLabel.text = [NSString stringWithFormat: @"%ldP", (long)point];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.pPointLabel content: cell.pPointLabel.text];
     
     NSLog(@"user is_follow: %d", [dic[@"user"][@"is_follow"] boolValue]);
     [self updateFollowBtnStatus: cell.followBtn isFollow: [dic[@"user"][@"is_follow"] boolValue]];
@@ -401,7 +401,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Call Server For Follow Function
 - (void)followBtnPress:(NSInteger)userId
                   cell:(AlbumSponsorListTableViewCell *)cell {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     NSString *userIdStr = [NSString stringWithFormat: @"%ld", (long)userId];
     
     dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
@@ -411,7 +411,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -491,7 +491,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

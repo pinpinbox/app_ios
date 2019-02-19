@@ -39,7 +39,7 @@
     self.linkLabel.font = [UIFont systemFontOfSize: 14];
     self.linkLabel.textColor = [UIColor secondGrey];
     
-    self.horzLineView.backgroundColor = [UIColor thirdGrey];
-    self.albumCollectionLabel.textColor = [UIColor firstGrey];        
+    self.horzLineView.backgroundColor = [UIColor secondGrey];
+    self.albumCollectionLabel.textColor = [UIColor firstGrey];
 }
 @end

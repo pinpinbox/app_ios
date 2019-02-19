@@ -7,13 +7,13 @@
 //
 
 #import "PointCalculationViewController.h"
-#import "boxAPI.h"
 #import "wTools.h"
 #import "GlobalVars.h"
 #import "UIColor+Extensions.h"
 #import "TouchDetectedScrollView.h"
 #import "MyLinearLayout.h"
 #import "AppDelegate.h"
+#import "LabelAttributeStyle.h"
 
 @interface PointCalculationViewController () <UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -54,7 +54,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     for (UIView *view in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[view viewWithTag: 104];
         btn.hidden = YES;
@@ -69,7 +68,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -114,15 +112,23 @@
     
     self.pointCalculationTitleLabel.font = [UIFont boldSystemFontOfSize: 48.0];
     self.pointCalculationTitleLabel.textColor = [UIColor firstGrey];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.pointCalculationTitleLabel content: self.pointCalculationTitleLabel.text];
+    
     self.totalPointTitleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     self.totalPointTitleLabel.textColor = [UIColor firstGrey];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.totalPointTitleLabel content: self.totalPointTitleLabel.text];
+    
     self.monthPointTitleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     self.monthPointTitleLabel.textColor = [UIColor firstGrey];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.monthPointTitleLabel content: self.monthPointTitleLabel.text];
+    
     self.exchangeTitleLabel.font = [UIFont boldSystemFontOfSize: 18.0];
     self.exchangeTitleLabel.textColor = [UIColor firstGrey];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.exchangeTitleLabel content: self.exchangeTitleLabel.text];
     
     // Total Point
     [self.totalPointTitleLabel sizeToFit];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.totalPointTitleLabel content: self.totalPointTitleLabel.text];
     
     if (self.sum >= 10000000) {
         NSLog(@"self.sum >= 10000000");
@@ -138,9 +144,11 @@
         NSLog(@"self.totalPointNumberLabel.text: %@", self.totalPointNumberLabel.text);
     }
     [self.totalPointNumberLabel sizeToFit];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.totalPointNumberLabel content: self.totalPointNumberLabel.text];
     
     // Month Point
     [self.monthPointTitleLabel sizeToFit];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.monthPointTitleLabel content: self.monthPointTitleLabel.text];
     
     if (self.sumOfUnsettlement >= 10000000) {
         NSLog(@"self.sum >= 10000000");
@@ -156,10 +164,12 @@
         NSLog(@"self.monthPointNumberLabel.text: %@", self.monthPointNumberLabel.text);
     }
     [self.monthPointNumberLabel sizeToFit];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.monthPointNumberLabel content: self.monthPointNumberLabel.text];
     [self.monthSubTitleLabel sizeToFit];
     
     // Exchange
     [self.exchangeTitleLabel sizeToFit];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.exchangeTitleLabel content: self.exchangeTitleLabel.text];
     
     if (self.sumOfSettlement >= 10000000) {
         NSLog(@"self.sum >= 10000000");
@@ -175,6 +185,7 @@
         NSLog(@"self.exchangeNumberLabel.text: %@", self.exchangeNumberLabel.text);
     }
     [self.exchangeNumberLabel sizeToFit];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.exchangeNumberLabel content: self.exchangeNumberLabel.text];
     
     NSLog(@"self.identity: %@", self.identity);
     

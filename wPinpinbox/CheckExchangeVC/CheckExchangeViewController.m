@@ -100,13 +100,13 @@
 #pragma mark - Get Bookmark List
 - (void)getBookmarkList {
     NSLog(@"getBookmarkList");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *response = [boxAPI getBookmarkList: [wTools getUserToken] userId: [wTools getUserID]];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from getBookmarkList");
@@ -260,6 +260,7 @@
     
     if (![data[@"photousefor"][@"name"] isEqual: [NSNull null]]) {
         cell.nameLabel.text = data[@"photousefor"][@"name"];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.nameLabel content: cell.nameLabel.text];
     }
     
     if (self.hasExchanged) {
@@ -274,8 +275,8 @@
             cell.timeLabel.textColor = [UIColor firstPink];
         } else {
             cell.timeLabel.text = @"無期限";
-            [LabelAttributeStyle changeGapString: cell.timeLabel content: cell.timeLabel.text];
             cell.timeLabel.textColor = [UIColor secondGrey];
+            [LabelAttributeStyle changeGapString: cell.timeLabel content: cell.timeLabel.text];
         }
     }
     return cell;
@@ -378,7 +379,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                   protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

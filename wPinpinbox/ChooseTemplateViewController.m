@@ -69,7 +69,7 @@
     NSLog(@"initialValueSetup");
     self.navBarView.backgroundColor = [UIColor barColor];
     self.titleLabel.textColor = [UIColor firstGrey];
-    [LabelAttributeStyle changeGapString: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
     pictures = [NSMutableArray new];
     self.collectionView.contentInset = UIEdgeInsetsMake(72, 0, 0, 0);
 }
@@ -154,7 +154,7 @@
 - (void)getTemplateList {
     NSLog(@"getTemplateList");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -176,7 +176,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -237,7 +237,7 @@
     UILabel *label = (UILabel *)[cell viewWithTag: 200];
     if ([wTools objectExists: data[@"template"][@"name"]]) {
         label.text = data[@"template"][@"name"];
-        [LabelAttributeStyle changeGapString: label content: data[@"template"][@"name"]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: label content: label.text];
     }
     label.textColor = [UIColor firstGrey];
     label.font = [UIFont systemFontOfSize: 12];
@@ -329,7 +329,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)getPoint {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -344,7 +344,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -378,7 +378,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 -(void)buyapi {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -395,7 +395,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -439,7 +439,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 -(void)editTaoban {
     //判斷是否有編輯中相本
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -453,7 +453,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -502,7 +502,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"");
     NSLog(@"updateAlbumOfDiy: albumId: %@", albumId);
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -517,7 +517,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -563,7 +563,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"addNewTaobanMod");
     //新增相本id
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -580,7 +580,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -654,7 +654,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -673,7 +673,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -737,7 +737,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -751,7 +751,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -826,7 +826,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     if ([wTools objectExists: missionTopicStr]) {
         missionTopicLabel.text = missionTopicStr;
-        [LabelAttributeStyle changeGapString: missionTopicLabel content: missionTopicStr];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: missionTopicLabel content: missionTopicLabel.text];
     }
     NSLog(@"Topic Label Text: %@", missionTopicStr);
     [pointView addSubview: missionTopicLabel];
@@ -835,7 +835,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         UILabel *restrictionLabel = [[UILabel alloc] initWithFrame: CGRectMake(10, 45, 200, 10)];
         restrictionLabel.textColor = [UIColor firstGrey];
         restrictionLabel.text = [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue];
-        [LabelAttributeStyle changeGapString: restrictionLabel content: [NSString stringWithFormat: @"次數：%lu / %@", (unsigned long)numberOfCompleted, restrictionValue]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: restrictionLabel content: restrictionLabel.text];
         NSLog(@"restrictionLabel.text: %@", restrictionLabel.text);
         [pointView addSubview: restrictionLabel];
     }
@@ -865,7 +865,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     
     if ([wTools objectExists: rewardValue]) {
         messageLabel.text = [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end];
-        [LabelAttributeStyle changeGapString: messageLabel content: [NSString stringWithFormat: @"%@%@%@", congratulate, rewardValue, end]];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: messageLabel content: messageLabel.text];
     }
     [pointView addSubview: messageLabel];
     
@@ -1030,7 +1030,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

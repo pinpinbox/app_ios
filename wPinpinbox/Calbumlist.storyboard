@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.43"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -233,7 +233,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RrZ-1W-5BC">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RrZ-1W-5BC" customClass="CellBaseView">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UDr-Ix-y9i">
@@ -487,29 +487,29 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NGu-yf-H21" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-226.40000000000001" y="1073.6131934032985"/>
+            <point key="canvasLocation" x="-138" y="267"/>
         </scene>
     </scenes>
     <resources>
         <image name="3-05bg" width="540" height="960"/>
         <image name="button_menu2" width="60" height="60"/>
         <image name="button_search" width="60" height="60"/>
-        <image name="downbutton" width="270" height="72"/>
-        <image name="downbutton_click" width="270" height="72"/>
+        <image name="downbutton" width="270" height="72.5"/>
+        <image name="downbutton_click" width="270" height="72.5"/>
         <image name="ic200_cooperation_light" width="144" height="144"/>
         <image name="ic200_delete_light" width="144" height="144"/>
         <image name="ic200_edit_light" width="144" height="144"/>
         <image name="ic200_setting_light" width="144" height="144"/>
         <image name="ic200_share_light" width="144" height="144"/>
         <image name="icon_download" width="30" height="30"/>
-        <image name="icon_imgLine" width="195" height="7"/>
+        <image name="icon_imgLine" width="195" height="7.5"/>
         <image name="icon_lock" width="50" height="50"/>
-        <image name="icon_othercollection" width="22" height="22"/>
-        <image name="icon_othercollection_click" width="22" height="22"/>
-        <image name="icon_sharecollection" width="22" height="22"/>
-        <image name="icon_sharecollection_click" width="22" height="22"/>
-        <image name="icon_uploadphoto" width="22" height="22"/>
-        <image name="icon_uploadphoto_click" width="22" height="22"/>
+        <image name="icon_othercollection" width="22.5" height="22.5"/>
+        <image name="icon_othercollection_click" width="22.5" height="22.5"/>
+        <image name="icon_sharecollection" width="22.5" height="22.5"/>
+        <image name="icon_sharecollection_click" width="22.5" height="22.5"/>
+        <image name="icon_uploadphoto" width="22.5" height="22.5"/>
+        <image name="icon_uploadphoto_click" width="22.5" height="22.5"/>
         <image name="member_back_head" width="160" height="160"/>
     </resources>
 </document>

@@ -136,9 +136,11 @@
     [self.videoview setVideoPath:self.videoPath];
     __block typeof(self) wself = self;
     self.videoview.handleTimedOutBlock = ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [wself closedVideoScreen:nil];
-        });
+        if (!wself.hint.hidden) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself closedVideoScreen:nil];
+            });
+        }
     };
     [self.view bringSubviewToFront:self.hint];
     [self.view sendSubviewToBack:self.videoview];

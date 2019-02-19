@@ -80,9 +80,9 @@
     self.navBarView.backgroundColor = [UIColor barColor];
     
     self.currentAlbumLabel.textColor = [UIColor firstGrey];
-    [LabelAttributeStyle changeGapString: self.currentAlbumLabel content: self.currentAlbumLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.currentAlbumLabel content: self.currentAlbumLabel.text];
     self.onlyForPublicLabel.textColor = [UIColor secondGrey];
-    [LabelAttributeStyle changeGapString: self.onlyForPublicLabel content: self.onlyForPublicLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.onlyForPublicLabel content: self.onlyForPublicLabel.text];
     self.collectionView.showsVerticalScrollIndicator = NO;
     
     checkPostArray = [[NSMutableArray alloc] init];
@@ -95,10 +95,7 @@
     self.createNewAlbumBtn.layer.masksToBounds = YES;
     self.createNewAlbumBtn.layer.cornerRadius = kCornerRadius;
     self.createNewAlbumBtnHeight.constant = kToolBarButtonHeight;
-    [LabelAttributeStyle changeGapString: self.createNewAlbumBtn.titleLabel content: self.createNewAlbumBtn.titleLabel.text];
-    
-    [LabelAttributeStyle changeGapString: self.currentAlbumLabel content: self.currentAlbumLabel.text];
-    [LabelAttributeStyle changeGapString: self.onlyForPublicLabel content: self.onlyForPublicLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.createNewAlbumBtn.titleLabel content: self.createNewAlbumBtn.titleLabel.text];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -129,7 +126,8 @@
             case 2436:
                 printf("iPhone X");
                 self.navBarHeight.constant = navBarHeightConstant;
-                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
+                self.toolBarViewHeight.constant = kToolBarViewHeight;
+//                self.toolBarViewHeight.constant = kToolBarViewHeightForX;
                 break;
             default:
                 printf("unknown");
@@ -145,7 +143,7 @@
     existedAlbumArray = [[NSMutableArray alloc] init];
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -163,7 +161,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -314,7 +312,7 @@
 
 - (void)postAlbum:(UICollectionViewCell *)cell {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -331,7 +329,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -461,9 +459,8 @@
 #pragma mark - Calling API Methods
 - (void)checkPostedAlbum {
     NSLog(@"checkPostedAlbum");
-    
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -481,7 +478,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -589,7 +586,7 @@
     NSLog(@"addNewFastMod");
     //新增相本id
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -604,7 +601,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -709,7 +706,7 @@
     
     if ([wTools objectExists: existedAlbumArray[indexPath.row][@"name"]]) {
         cell.textLabel.text = existedAlbumArray[indexPath.row][@"name"];
-        [LabelAttributeStyle changeGapString: cell.textLabel content: cell.textLabel.text];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.textLabel content: cell.textLabel.text];
     }
     NSArray *eventArrayData = data[@"eventArrayData"];
     NSString *checkPost;
@@ -924,7 +921,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                           cell: (UICollectionViewCell *)cell {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];    
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

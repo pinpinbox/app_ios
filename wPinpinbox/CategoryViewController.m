@@ -10,7 +10,7 @@
 #import "CategoryTableViewCell.h"
 #import "CategoryCollectionViewCell.h"
 #import "CategoryDetailViewController.h"
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 #import "UserCollectionViewCell.h"
 #import "CreaterViewController.h"
 
@@ -31,6 +31,8 @@
 #import "UIViewController+ErrorAlert.h"
 #import "UserInfo.h"
 #import "YAlbumDetailContainerViewController.h"
+#import "LabelAttributeStyle.h"
+#import "SwitchButtonView.h"
 
 
 //#define kUserImageViewNumber 6
@@ -45,7 +47,8 @@
     CGFloat bannerHeight;
     UIPageControl *pageControl;
     
-    UIButton *actionButton;
+    //UIButton *actionButton;
+    UIKernedButton *actionButton;
     UILabel *infoLabel;
     UIView *actionBase;
     
@@ -90,7 +93,6 @@
     NSLog(@"viewDidLoad");
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
 }
 
@@ -117,8 +119,6 @@
 
 - (void)initialValueSetup {
     NSLog(@"initialValueSetup");
-    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
-    NSLog(@"screenWidth: %f", screenWidth);
     bannerHeight = 211;//screenWidth * 540 / 960;
     NSLog(@"bannerHeight: %f", bannerHeight);
     
@@ -169,7 +169,7 @@
     self.closeBtnHeight.constant = 0;
     self.closeBtn.hidden = YES;
     
-    [LabelAttributeStyle changeGapString: self.creatorLabel content: @"創作人推薦"];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.creatorLabel content: self.creatorLabel.text];
     [self.closeBtn setTitleColor: [UIColor firstGrey] forState: UIControlStateNormal];
     
     NSLog(@"self.categoryAreaId: %@", self.categoryAreaId);
@@ -346,7 +346,7 @@
     NSLog(@"");
     NSLog(@"getCategoryArea");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -361,7 +361,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught");
@@ -482,10 +482,12 @@
 - (void)setBtnText:(NSString *)btntext infoText:(NSString *)infotext {
     infoLabel.text = @"";
     if (btntext && btntext.length > 0) {
-        [actionButton setTitle:btntext forState:UIControlStateNormal];
-        if (infotext)
-            infoLabel.text = infotext;
         
+        [actionButton setTitle:btntext forState:UIControlStateNormal];
+        if (infotext) {
+            infoLabel.text = infotext;
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment:infoLabel content:infotext];
+        }
         actionBase.hidden = NO;
     } else {
         actionBase.hidden = YES;
@@ -556,6 +558,7 @@
     
     @try {
         YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumid sourceRect:CGRectZero sourceImageView:nil noParam:NO];
+        aDVC.fromVC = @"CategoryVC";
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         
         [appDelegate.myNav pushViewController: aDVC animated: YES];
@@ -606,8 +609,7 @@
     
     CategoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"CategoryCell" forIndexPath: indexPath];
     if ([wTools objectExists: self.albumExploreArray[indexPath.row][@"name"]]) {
-        cell.albumExploreLabel.text = self.albumExploreArray[indexPath.row][@"name"];
-        [LabelAttributeStyle changeGapString: cell.albumExploreLabel content: self.albumExploreArray[indexPath.row][@"name"]];
+        cell.albumExploreLabel.text = self.albumExploreArray[indexPath.row][@"name"];        
         NSLog(@"cell.albumExploreLabel.text: %@", cell.albumExploreLabel.text);
     }
     NSLog(@"indexPath.row: %ld", (long)indexPath.row);
@@ -810,7 +812,7 @@
         
         //  button and link desc under the banner //
         actionBase = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 36)];
-        actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        actionButton = [UIKernedButton buttonWithType:UIButtonTypeCustom];
         actionBase.backgroundColor = [UIColor whiteColor];
         actionButton.frame = CGRectMake(self.view.bounds.size.width-96, 0, 96, 36);
         actionButton.backgroundColor = [UIColor colorWithRed:0  green:0.67 blue:0.76 alpha:1];
@@ -857,7 +859,6 @@
     [wTools sendScreenTrackingWithScreenName:[NSString stringWithFormat:@"分類(%@)",_categoryName]];
     topicLabel.text = self.categoryName;
     topicLabel.textColor = [UIColor firstGrey];
-    [LabelAttributeStyle changeGapString: topicLabel content: self.categoryName];
     topicLabel.font = [UIFont boldSystemFontOfSize: 42];
     [topicLabel sizeToFit];
     UIView *space = [[UIView alloc] initWithFrame:CGRectMake(0, 0, topicLabel.frame.size.width, 25)];
@@ -946,8 +947,8 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         
         if (![dic[@"album"][@"name"] isEqual: [NSNull null]]) {
             cell.albumNameLabel.text = dic[@"album"][@"name"];
-            [LabelAttributeStyle changeGapString: cell.albumNameLabel content: dic[@"album"][@"name"]];
-            cell.albumNameLabel.textAlignment = NSTextAlignmentLeft;
+
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.albumNameLabel content: cell.albumNameLabel.text];
         }
         
         // UserForView Info Setting
@@ -1048,6 +1049,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         }
         if (![pictureDic[@"name"] isEqual: [NSNull null]]) {
             cell.userNameLabel.text = pictureDic[@"name"];
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
         }
         return cell;
     }
@@ -1077,9 +1079,11 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             NSString *albumId = [dic[@"album"][@"album_id"] stringValue];
             //[self presentAlbumDetailVC:[dic[@"album"][@"album_id"] stringValue]];
             CategoryCollectionViewCell *cell = (CategoryCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-            CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
-            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.albumImageView noParam:YES];
+            CGRect source = [collectionView convertRect:cell.albumImageView.frame fromView:cell];
+            source = [self.view convertRect:source fromView:collectionView];
             
+            YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.albumImageView noParam:YES];
+            aDVC.fromVC = @"CategoryVC";
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
             [appDelegate.myNav pushViewController: aDVC animated: YES];
             
@@ -1305,7 +1309,7 @@ didChangeToQuality:(YTPlaybackQuality)quality {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

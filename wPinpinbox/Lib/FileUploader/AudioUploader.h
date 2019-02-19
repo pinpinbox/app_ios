@@ -11,17 +11,20 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^AudioUploaderProgressBlock)(NSUInteger currentUploaded, NSUInteger totalSize, NSString *desc);
-typedef void(^AudioUploaderResultBlock)(NSError * _Nullable error);
+typedef void(^AudioUploaderResultBlock)(NSDictionary * _Nullable result,NSError * _Nullable error);
 
 
 
 @interface AudioUploader : NSObject
 - (id) initWithAudio:(NSURL *)itemURL albumID:(NSString *)albumID;
 - (void)startUpload:(NSMutableDictionary *)params
+               path:(NSString *)path
         uploadblock:(AudioUploaderProgressBlock)uploadblock
   uploadResultBlock:(AudioUploaderResultBlock)resultblock;
 - (void)cacenlCurrentWork;
 - (BOOL)isReady;
+
+//- (void)startUpload
 @property (nonatomic, readonly) NSString *audioName;
 @end
 

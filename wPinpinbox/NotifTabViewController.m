@@ -9,14 +9,13 @@
 #import "NotifTabViewController.h"
 #import "boxAPI.h"
 #import "wTools.h"
-#import "MBProgressHUD.h"
 #import "NotifTabTableViewCell.h"
 #import "AsyncImageView.h"
 #import "UIColor+Extensions.h"
 #import "CreaterViewController.h"
 #import "CustomIOSAlertView.h"
 #import "MyLinearLayout.h"
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 #import "GlobalVars.h"
 #import "AppDelegate.h"
 #import <SDWebImage/UIImageView+WebCache.h>
@@ -58,15 +57,16 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame: CGRectZero];
     [self initialValueSetup];
 }
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
 }
+
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"");
     NSLog(@"NotifTabTableViewController viewWillAppear");
     [super viewWillAppear:animated];
-    
     
     for (UIView *v in self.tabBarController.view.subviews) {
         UIButton *btn = (UIButton *)[v viewWithTag: 104];
@@ -154,7 +154,7 @@
 
 - (void)getPushQueue {
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -173,7 +173,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -490,7 +490,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         if ([type isEqualToString: @"albumqueue"]) {
             NotifTabTableViewCell *cell = (NotifTabTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
             
-            CGRect source = [self.view convertRect:cell.headshotImaveView.frame fromView:cell];
+            CGRect source = [tableView convertRect:cell.headshotImaveView.frame fromView:cell];
+            source = [self.view convertRect:source fromView:tableView];
             //[self ToRetrievealbumpViewControlleralbumid: type_id source:source sourceImage:cell.headshotImaveView];
             YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:type_id sourceRect:source sourceImageView:cell.headshotImaveView noParam:YES];
             
@@ -502,7 +503,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         if ([type isEqualToString: @"albumqueue@messageboard"]) {
             NSLog(@"type: %@", type);
             NotifTabTableViewCell *cell = (NotifTabTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-            CGRect source = [self.view convertRect:cell.headshotImaveView.frame fromView:cell];
+            CGRect source = [tableView convertRect:cell.headshotImaveView.frame fromView:cell];
+            source = [self.view convertRect:source fromView:tableView];
             YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:type_id sourceRect:source sourceImageView:cell.headshotImaveView noParam:YES];
             aDVC.getMessagePush = YES;
             AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -915,7 +917,7 @@ heightForHeaderInSection:(NSInteger)section {
                        albumId: (NSString *)albumId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

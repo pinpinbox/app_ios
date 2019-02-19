@@ -52,7 +52,6 @@
     BOOL isInsertBetweenTags;
     NSRange cursorRange;
 }
-
 @property (weak, nonatomic) IBOutlet MyLinearLayout *firstBgView;
 @property (weak, nonatomic) IBOutlet UILabel *topicLabel;
 @property (weak, nonatomic) IBOutlet UIButton *exitBtn;
@@ -292,7 +291,7 @@
 
 - (void)getMessageBoardList {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -315,7 +314,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -419,7 +418,7 @@
     self.tableView.userInteractionEnabled = NO;
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -446,7 +445,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -594,7 +593,7 @@
         } else {
             NSLog(@"No Tag");
             cell.contentLabel.text = contentStr;
-            [LabelAttributeStyle changeGapString: cell.contentLabel content: cell.contentLabel.text];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.contentLabel content: cell.contentLabel.text];
         }
         [cell.contentLabel sizeToFit];
     }
@@ -739,7 +738,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         if ([wTools objectExists: userDic[@"name"]]) {
             cell.userNameLabel.text = userDic[@"name"];
             NSLog(@"cell.userNameLabel.text: %@", cell.userNameLabel.text);
-            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
+            [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: cell.userNameLabel content: cell.userNameLabel.text];            
         }
     } else {
         NSLog(@"userData is nil");
@@ -1430,7 +1429,7 @@ shouldChangeTextInRange:(NSRange)range
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

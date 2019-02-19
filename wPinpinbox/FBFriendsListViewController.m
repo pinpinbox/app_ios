@@ -9,7 +9,6 @@
 #import "FBFriendsListViewController.h"
 #import "boxAPI.h"
 #import "wTools.h"
-#import "MBProgressHUD.h"
 #import "AsyncImageView.h"
 #import "UIColor+Extensions.h"
 #import "ChooseHobbyViewController.h"
@@ -18,13 +17,15 @@
 #import "AppDelegate.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UIViewController+ErrorAlert.h"
-#import "UserInfo.h"
+#import "LabelAttributeStyle.h"
 
 @interface FBFriendsListViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 {
     NSInteger columnCount;
     NSInteger miniInteriorSpacing;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIButton *nextBtn;
 @property (weak, nonatomic) IBOutlet UIView *gradientView;
@@ -38,7 +39,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    NSLog(@"self.fbArray: %@", self.fbArray);
+    [self initActivityIndicatorView];
  
     self.tmpAddUserId = [NSMutableArray new];
     
@@ -52,6 +53,13 @@
 }
 
 #pragma mark - Setup Methods
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
+}
+
 - (void)gradientViewSetup {
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.gradientView.bounds;
@@ -68,6 +76,9 @@
     
     columnCount = 2;
     miniInteriorSpacing = 16;
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.nextBtn.titleLabel content: self.nextBtn.titleLabel.text];
 }
 
 #pragma mark <UICollectionViewDataSource>
@@ -117,6 +128,7 @@
     
     if ([wTools objectExists: name]) {
         nameLabel.text = name;
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: nameLabel content: nameLabel.text];
     }
     UIButton *followSwitchButton = (UIButton *)[cell viewWithTag: 102];
     followSwitchButton.layer.masksToBounds = YES;
@@ -133,6 +145,8 @@
         followSwitchButton.backgroundColor = [UIColor firstMain];
         [followSwitchButton setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: followSwitchButton.titleLabel content: followSwitchButton.titleLabel.text];
+    
     return cell;
 }
 
@@ -187,7 +201,7 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"callChangeFollowStatus: userId: %@", userId);
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [self.activityIndicatorView startAnimating];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -201,7 +215,7 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [self.activityIndicatorView stopAnimating];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -363,7 +377,7 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
                         userId: (NSString *)userId {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
@@ -393,80 +407,6 @@ shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     }];
     [alertTimeOutView setUseMotionEffects: YES];
     [alertTimeOutView show];
-}
-
-- (UIView *)createTimeOutContainerView:(NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
 }
 
 /*

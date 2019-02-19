@@ -9,6 +9,8 @@
 #import "YAlbumDetailContainerViewController.h"
 #import "YAlbumDetailViewController.h"
 #import "AppDelegate.h"
+#import "SwitchButtonView.h"
+#import "wTools.h"
 
 
 // VC transition animation controller
@@ -16,7 +18,7 @@
 @property(weak, nonatomic) id<ZoomTransitionDelegate> fromDelegate;
 @property(weak, nonatomic) id<ZoomTransitionDelegate> toDelegate;
 //  temp cell image
-@property(nonatomic) UIImageView *transitionImageView;
+@property(nonatomic) /*UIImageView*/ UIImageViewAligned *transitionImageView;
 @property(nonatomic) BOOL isPresenting;
 - (void)animateZoomInTransition:(id<UIViewControllerContextTransitioning>) transitionContext;
 - (void)animateZoomOutTransition:(id<UIViewControllerContextTransitioning>) transitionContext;
@@ -50,10 +52,15 @@
 @implementation ZoomAnimator
 - (CGRect)calculateZoomedFrame:(UIImage *)sourceimage forView:(UIView *)view {
     if (sourceimage) {
-        CGFloat viewratio = view.frame.size.width/sourceimage.size.width;
+        CGFloat w = view.frame.size.width;
+        if (w <  [UIScreen mainScreen].bounds.size.width)
+            w =  [UIScreen mainScreen].bounds.size.width;
+        CGFloat viewratio =w/sourceimage.size.width;
         CGFloat h = sourceimage.size.height*viewratio;
-        
-        return CGRectMake(0, 0, view.frame.size.width, h);
+        CGFloat sh = [UIScreen mainScreen].bounds.size.height;
+        if (h > sh*0.67)
+            h = sh*0.67;
+        return CGRectMake(0, 0, w, h);
         
     }
     
@@ -77,6 +84,7 @@
     //  VC transition without source image //
     if (sourceImageView == nil) {
         self.transitionImageView = nil;
+        
         toVC.view.transform = CGAffineTransformMakeTranslation(0, toVC.view.frame.size.height);
         toVC.view.alpha = 1;
         [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0
@@ -100,24 +108,28 @@
         toVC.view.alpha = 0;
         // but it might be nil (remote loading failure...)
         UIImage *img = sourceImageView.image;
+        
         if (!self.transitionImageView) {
-            if (img)
-                self.transitionImageView = [[UIImageView alloc] initWithImage:img];
-            else
-                self.transitionImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_2_0_0_no_image"]];
+            
+            if (img) {
+                self.transitionImageView = [[UIImageViewAligned  alloc]initWithImage:img];//[[UIImageView alloc] initWithImage:img];
+            } else {
+                self.transitionImageView = [[UIImageViewAligned  alloc]initWithImage:[UIImage imageNamed:@"bg_2_0_0_no_image"]];
+            }
             self.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
             self.transitionImageView.clipsToBounds = YES;
             self.transitionImageView.frame = source;
+    
         }
         [v addSubview : self.transitionImageView];
         sourceImageView.hidden = YES;
-        
         CGRect finalresult =[self calculateZoomedFrame:img forView:destImageView];
         
         [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0
              usingSpringWithDamping:0.8 initialSpringVelocity:0
                             options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                                 self.transitionImageView.frame = finalresult;
+                                
                                 toVC.view.alpha = 1.0;
                                 
                             } completion:^(BOOL finished) {
@@ -140,22 +152,30 @@
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIImageView *sourceImageView = [self.fromDelegate referenceImageView:self];
+    UIImageView *destImageView = [self.fromDelegate sourceImageView:self];
     CGRect source = [self.fromDelegate referenceImageViewFrameInTransitioningView:self];
     CGRect dest = [self.fromDelegate sourceImageViewFrameInTransitioningView:self];
     
     UIImage *referenceImage = sourceImageView.image;
     
     if (self.transitionImageView == nil) {
-        self.transitionImageView = [[UIImageView alloc] initWithImage:referenceImage];
+        self.transitionImageView = [[UIImageViewAligned alloc] initWithImage:referenceImage];
         self.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
         self.transitionImageView.clipsToBounds = YES;
         self.transitionImageView.frame = source;
+        
+    } else {
+        
+        CGFloat sh = (referenceImage.size.height*source.size.width)/referenceImage.size.width;
+        self.transitionImageView.frame = CGRectMake(source.origin.x, source.origin.y, source.size.width, sh);//source;
+        [self.transitionImageView setImage:referenceImage];
+        
     }
     self.transitionImageView.alpha = 1;
     [v addSubview : self.transitionImageView];
     
     [v insertSubview:toVC.view belowSubview:fromVC.view];
-    
+    destImageView.hidden = YES;
     sourceImageView.hidden = YES;
     [v bringSubviewToFront:self.transitionImageView];
     [UIView animateWithDuration:0.3 delay:0 options:0 animations:^{
@@ -164,6 +184,8 @@
         toVC.view.alpha = 1.0;
         
     } completion:^(BOOL finished) {
+        destImageView.alpha = 1;
+        destImageView.hidden = NO;
         [self.transitionImageView removeFromSuperview];
         [transitionContext completeTransition:YES];
         [self.toDelegate transitionDidEndWith:self];
@@ -212,15 +234,15 @@
     UIImage *reference = fromImage.image;
     
     if (animator.transitionImageView == nil) {
-        animator.transitionImageView = [[UIImageView alloc] initWithImage:reference];
-        animator.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
+        animator.transitionImageView = [[UIImageViewAligned alloc] initWithImage:reference];
     } else {
         animator.transitionImageView.image = reference;
     }
     animator.transitionImageView.transform = CGAffineTransformIdentity;
+    animator.transitionImageView.contentMode = UIViewContentModeScaleAspectFill;
     animator.transitionImageView.clipsToBounds = YES;
     animator.transitionImageView.frame = self.fromReferenceImageViewFrame;
-    
+    fromImage.alpha = 0;
     [containerView addSubview : animator.transitionImageView];
     
 }
@@ -261,6 +283,11 @@
     
     fromVC.view.transform = CGAffineTransformMakeTranslation(delta,0);//translatedPoint.x, 0);
     
+    UIImageView *fromImage = [animator.fromDelegate referenceImageView:animator];
+    UIImageView *sourceImage = [animator.fromDelegate sourceImageView:animator];
+    fromImage.alpha = 1.0;
+    sourceImage.alpha = 1;
+    sourceImage.hidden = NO;
     [self.transitionContext updateInteractiveTransition:(1-alpha) ];
     CGFloat dx = fabs(translatedPoint.x);
     switch(gestureRecognizer.state ) {
@@ -294,7 +321,7 @@
                     fromVC.view.transform = CGAffineTransformIdentity;
                     
                 } completion:^(BOOL finished) {
-                    
+                    fromImage.alpha = 1;
                     [animator.transitionImageView removeFromSuperview];
                     toVC.view.alpha = 1;
                     self.isEasyOut = NO;
@@ -312,7 +339,8 @@
                 fromVC.view.transform = CGAffineTransformMakeTranslation(-width, 0);
                 toVC.view.alpha = 1.0;
             } completion:^(BOOL finished) {
-                
+                sourceImage.alpha = 1;
+                sourceImage.hidden = NO;
                 [animator.transitionImageView removeFromSuperview];
                 //animator.transitionImageView = nil;
                 [self.transitionContext finishInteractiveTransition];
@@ -343,7 +371,8 @@
     UIImageView *fromImage = [animator.fromDelegate referenceImageView:animator];
     UIImageView *sourceImage = [animator.fromDelegate sourceImageView:animator];
     
-    sourceImage.hidden = YES;
+    fromImage.alpha = 0;
+    sourceImage.alpha = 0;
     
     CGPoint anchor = CGPointMake(CGRectGetMidX(sourceFrame),CGRectGetMidY(sourceFrame) );
     CGPoint translatedPoint = [gestureRecognizer translationInView:sourceImage];
@@ -360,7 +389,7 @@
     CGPoint newCenter = CGPointMake(anchor.x+translatedPoint.x, anchor.y+translatedPoint.y - transitionImageView.frame.size.height*(1-scale)/2.0);
     transitionImageView.center = newCenter;
     
-    sourceImage.hidden = YES;
+    
     [self.transitionContext updateInteractiveTransition:(1-scale) ];
     
     switch(gestureRecognizer.state ) {
@@ -371,8 +400,11 @@
                 [UIView animateWithDuration:[self.animator transitionDuration:self.transitionContext] delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                     transitionImageView.frame = sourceFrame;
                     fromVC.view.alpha = 1.0;
-                    
+            
                 } completion:^(BOOL finished) {
+                    
+                    fromImage.alpha = 1;
+                    sourceImage.alpha = 1.0;
                     sourceImage.hidden = NO;
                     fromImage.hidden = NO;
                     [animator.transitionImageView removeFromSuperview];
@@ -385,16 +417,21 @@
                 return;
             }
             
-            
-            [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-                fromVC.view.alpha = 0;
+            fromImage.alpha = 0;
+            sourceImage.alpha = 0.0;
+            [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.7 initialSpringVelocity:0.5 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+                
+                transitionImageView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeScale(scale, scale);
                 transitionImageView.frame = destFrame;
+                fromVC.view.alpha = 0;
                 transitionImageView.layer.cornerRadius = 6;
                 transitionImageView.alpha = 0.8;
                 toVC.view.alpha = 1.0;
+                sourceImage.alpha = 0;
             } completion:^(BOOL finished) {
                 sourceImage.hidden = NO;
                 fromImage.hidden = NO;
+                sourceImage.alpha = 1.0;
                 [animator.transitionImageView removeFromSuperview];
                 //animator.transitionImageView = nil;
                 [self.transitionContext finishInteractiveTransition];
@@ -747,11 +784,15 @@
 }
 - (CGRect)referenceImageViewFrameInTransitioningView:(ZoomAnimator *)zoomAnimator {
     UIImageView *v =  [self.currentDetailVC albumCoverView];
+    
     if (v) {
-        CGRect dest = [self.currentDetailVC.view convertRect:v.frame fromView:v];
+        UIView *sv = v.superview;
+        CGRect dest = [self.currentDetailVC.view convertRect:sv.frame fromView:sv];
+        if (v.frame.size.height > dest.size.height) {
+            dest = CGRectMake(dest.origin.x, dest.origin.y, v.frame.size.width, v.frame.size.height);
+        }
         return dest;
     }
     return self.currentDetailVC.view.frame;
 }
-
 @end

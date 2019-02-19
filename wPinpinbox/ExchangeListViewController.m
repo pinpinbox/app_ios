@@ -8,7 +8,6 @@
 
 #import "ExchangeListViewController.h"
 #import "wTools.h"
-#import "boxAPI.h"
 #import "UIColor+Extensions.h"
 #import "GlobalVars.h"
 #import "AppDelegate.h"
@@ -81,6 +80,7 @@
     self.titleLabel.text = @"兌換清單";
     self.titleLabel.textColor = [UIColor firstGrey];
     self.titleLabel.font = [UIFont boldSystemFontOfSize: 18];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
 }
 
 - (void)createPageMenu {

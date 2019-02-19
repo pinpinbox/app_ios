@@ -11,7 +11,6 @@
 #import "ChangeInterestsCollectionReusableView.h"
 #import "UIColor+Extensions.h"
 #import "AppDelegate.h"
-#import "MBProgressHUD.h"
 #import "boxAPI.h"
 #import "wTools.h"
 #import "GlobalVars.h"
@@ -45,7 +44,6 @@
     NSLog(@"viewDidLoad");
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.delegate = self;
-    
     [self initialValueSetup];
 }
 
@@ -57,7 +55,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.interactivePopGestureRecognizer.enabled = NO;
 }
@@ -105,7 +102,7 @@
 
 - (void)getHobbyList {
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -119,7 +116,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -347,7 +344,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"selectTag: %@", selectTag);
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -364,7 +361,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught");
@@ -415,7 +412,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"getProfile");
     
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -432,7 +429,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -512,7 +509,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                   protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

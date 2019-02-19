@@ -14,17 +14,18 @@
 #import "GlobalVars.h"
 #import "AppDelegate.h"
 #import "UIViewController+ErrorAlert.h"
-#import "UserInfo.h"
+#import "LabelAttributeStyle.h"
 
 #define kCellHeightForReorder 150
 #define kViewHeightForReorder 568
 
 @interface ReorderViewController ()
-
 @property (weak, nonatomic) IBOutlet UIView *navBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *navBarHeight;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIButton *backButton;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
 @property (nonatomic) UILongPressGestureRecognizer *longPress;
 
 @property (nonatomic) NSMutableArray *labelArray;
@@ -38,10 +39,8 @@ static NSString * const reuseIdentifier = @"Cell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     // Register cell classes
     //[self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
-    
     NSLog(@"ReorderViewController");
     NSLog(@"imageArray number: %lu", (unsigned long)_imageArray.count);
     //NSLog(@"imageArray: %@", _imageArray);
@@ -54,7 +53,9 @@ static NSString * const reuseIdentifier = @"Cell";
     lpgr.delaysTouchesBegan = YES;
     [self.collectionView addGestureRecognizer: lpgr];
     self.collectionView.showsVerticalScrollIndicator = NO;
-    //NSLog(@"self.imageArray: %@", self.imageArray);
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.titleLabel content: self.titleLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.backButton.titleLabel content: self.backButton.titleLabel.text];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -199,7 +200,7 @@ static NSString * const reuseIdentifier = @"Cell";
     }
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -216,7 +217,7 @@ static NSString * const reuseIdentifier = @"Cell";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -292,6 +293,7 @@ static NSString * const reuseIdentifier = @"Cell";
     // Set up the label text
     UILabel *lab = (UILabel *)[cell viewWithTag: 200];
     lab.text = self.labelArray[indexPath.row];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: lab content: lab.text];
     
     /*
     if (indexPath.item == 0) {
@@ -472,7 +474,7 @@ targetIndexPathForMoveFromItemAtIndexPath:(NSIndexPath *)originalIndexPath
                   protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

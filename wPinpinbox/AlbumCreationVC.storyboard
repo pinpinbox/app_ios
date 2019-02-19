@@ -487,7 +487,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="cnr-ZN-IhS"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <state key="normal" title="保存">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -552,8 +552,11 @@
                     <connections>
                         <outlet property="baseView" destination="e04-Ej-ER1" id="Ovb-kE-qqi"/>
                         <outlet property="locSearch" destination="0g1-hn-Xj7" id="if7-gj-15U"/>
+                        <outlet property="locationInputTitleLabel" destination="fe1-CT-Ks1" id="13v-WH-JTS"/>
                         <outlet property="locationName" destination="kf3-fG-bYb" id="aHp-nW-26P"/>
                         <outlet property="map" destination="0A2-La-gFy" id="ngr-bu-xiL"/>
+                        <outlet property="saveBtn" destination="Nay-BW-UXg" id="6Te-Nz-YOg"/>
+                        <outlet property="titleLabel" destination="qzb-PJ-D4d" id="dJe-PS-k6G"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xnj-Tw-KwK" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -651,7 +654,9 @@
                                                 </tableViewCellContentView>
                                                 <connections>
                                                     <outlet property="descTextField" destination="fiX-BQ-Xfo" id="B1g-Lv-Bcc"/>
+                                                    <outlet property="linkNameLabel" destination="zDQ-X5-HPz" id="NlI-07-eqf"/>
                                                     <outlet property="urlTextField" destination="F6P-h0-tWE" id="nKT-Sn-N6j"/>
+                                                    <outlet property="websiteLabel" destination="4GO-tg-z2v" id="dyd-Ks-bf0"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
@@ -675,7 +680,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="hA1-8W-pxR"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <state key="normal" title="保存">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -809,7 +814,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="lok-dT-dQO"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <state key="normal" title="保存">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -877,9 +882,12 @@
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="baseView" destination="o5e-Hw-kMX" id="B56-eD-MVz"/>
+                        <outlet property="descriptionTitleLabel" destination="Bg9-pR-SHw" id="vca-Rx-KnI"/>
                         <outlet property="itemDesc" destination="dpB-w6-UqL" id="avt-Ws-AMj"/>
                         <outlet property="placeholder" destination="Ru3-lL-wgH" id="qLg-tB-Ct1"/>
+                        <outlet property="saveBtn" destination="r9j-yA-ZeU" id="ceb-6u-wfM"/>
                         <outlet property="textViewHeight" destination="ZU1-JT-bDh" id="551-Ij-76W"/>
+                        <outlet property="titleLabel" destination="B7l-Ke-mbB" id="G5P-s6-5zQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JHm-9a-bV6" userLabel="First Responder" sceneMemberID="firstResponder"/>

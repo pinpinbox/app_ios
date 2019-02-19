@@ -45,7 +45,7 @@
 #import "GlobalVars.h"
 #import "DDAUIActionSheetViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 
 #import "UIViewController+ErrorAlert.h"
 
@@ -63,9 +63,11 @@
 #import "HudIndicatorView.h"
 #import "AlbumCreationIntroViewController.h"
 #import "UserInfo.h"
-//#import "YAlbumDetailContainerViewController.h"
+#import "LabelAttributeStyle.h"
+#import "AudioUploader.h"
 
 #pragma mark - Photo Editor SDK
+//  DSPhotoEditorSDK.framework archive之前必須先移除i386, x86_64 才能上傳app store connect //
 #if TARGET_OS_SIMULATOR
 #else
 #import <DSPhotoEditorSDK/DSPhotoEditorSDK.h>
@@ -93,10 +95,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 
 #if TARGET_OS_SIMULATOR
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate,PDFUploaderDelegate>
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UIDocumentPickerDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate>
 
 #else
-@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate,PDFUploaderDelegate,
+@interface AlbumCreationViewController () <UICollectionViewDataSource, UICollectionViewDelegate, PhotosViewDelegate, UIGestureRecognizerDelegate, AVAudioRecorderDelegate, ChooseVideoViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UIDocumentPickerDelegate, ReorderViewControllerDelegate, PreviewPageSetupViewControllerDelegate, SetupMusicViewControllerDelegate, SFSafariViewControllerDelegate, TemplateViewControllerDelegate, DDAUIActionSheetViewControllerDelegate, NSURLSessionDelegate,SwitchButtonViewDelegate,AddLocationDelegate,URLSAddDelegate,
+
 DSPhotoEditorViewControllerDelegate>
 
 #endif
@@ -159,7 +162,6 @@ DSPhotoEditorViewControllerDelegate>
     NSInteger previewPageStrToInt;
     BOOL isPreviewPageModified;
 }
-
 @property (strong, nonatomic) AVPlayer *avPlayer;
 @property (strong, nonatomic) AVPlayerItem *avPlayerItem;
 @property (assign, nonatomic) BOOL isReadyToPlay;
@@ -186,6 +188,8 @@ DSPhotoEditorViewControllerDelegate>
 @property (nonatomic) DDAUIActionSheetViewController *customAddActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customVideoActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customSettingActionSheet;
+@property (nonatomic) DDAUIActionSheetViewController *customAudioUploadActionSheet;
+
 @property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) MBProgressHUD *vidHud;
 
@@ -220,6 +224,8 @@ DSPhotoEditorViewControllerDelegate>
 
 @property (weak, nonatomic)  IBOutlet UIView *audioBgView;
 
+@property (nonatomic) AudioUploader *audioUploader;
+@property (nonatomic) MBProgressHUD *uploadProgress;
 @end
 
 @implementation AlbumCreationViewController
@@ -281,10 +287,9 @@ DSPhotoEditorViewControllerDelegate>
     [st layoutIfNeeded];
 }
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.    
+    // Do any additional setup after loading the view.
     isPreviewPageModified = NO;
     
     [wTools sendScreenTrackingWithScreenName:@"編輯器"];
@@ -342,7 +347,9 @@ DSPhotoEditorViewControllerDelegate>
             [_nextBtn setTitle: @"下一步" forState: UIControlStateNormal];
         }
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.nextBtn.titleLabel content: self.nextBtn.titleLabel.text];
     //[[_ShowView layer] setMasksToBounds:YES];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.addTextBtn.titleLabel content: self.addTextBtn.titleLabel.text];
     
     if (_imagedata == nil) {
         ImageDataArr=[NSMutableArray new];
@@ -389,6 +396,11 @@ DSPhotoEditorViewControllerDelegate>
     self.customSettingActionSheet = [[DDAUIActionSheetViewController alloc] init];
     self.customSettingActionSheet.delegate = self;
     self.customSettingActionSheet.topicStr = @"作品設定";
+    
+    
+    self.customAudioUploadActionSheet = [[DDAUIActionSheetViewController alloc] init];
+    self.customAudioUploadActionSheet.delegate = self;
+    self.customAudioUploadActionSheet.topicStr = @"上傳音訊檔";
     
     // Add Long Press Gesture to collecitonView
     UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc] initWithTarget: self action: @selector(handleLongPress:)];
@@ -444,7 +456,6 @@ DSPhotoEditorViewControllerDelegate>
         }
     }
 }
-
 #pragma mark - handleEnteredBackground
 - (void)handleEnteredBackground {
     NSLog(@"handleEnteredBackground");
@@ -548,6 +559,7 @@ DSPhotoEditorViewControllerDelegate>
     [self.customSettingActionSheet addSelectItem: @"" title: @"排序作品" btnStr: @"" tagInt: 1 identifierStr: @"reorder"];
     [self.customSettingActionSheet addSelectItem: @"" title: @"設定音樂" btnStr: @"" tagInt: 2 identifierStr: @"setupMusic"];
     [self.customSettingActionSheet addSelectItemForPreviewPage: @"" title: @"設定預覽頁" horzLine: YES btnStr: @"保存" tagInt: 999 identifierStr: @"setupPreview"];
+    [self.customSettingActionSheet addSafeArea];
     NSLog(@"ImageDataArr.count: %lu", (unsigned long)ImageDataArr.count);
     NSLog(@"previewPageNum: %ld", (long)previewPageNum);
     
@@ -798,7 +810,7 @@ DSPhotoEditorViewControllerDelegate>
 
 - (void)callAlbumSettingsForPreviewPage:(NSString *)jsonStr {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -816,7 +828,7 @@ DSPhotoEditorViewControllerDelegate>
                                           settings: jsonStr];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -862,7 +874,7 @@ DSPhotoEditorViewControllerDelegate>
 
 - (void)callUpdatePhotoOfDiyWithoutPhoto: (NSString *)textStr {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -885,7 +897,7 @@ DSPhotoEditorViewControllerDelegate>
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 
@@ -893,12 +905,8 @@ DSPhotoEditorViewControllerDelegate>
                 NSLog( @"Reason: %@", exception.reason );
                 return;
             }
-            
             if (response != nil) {
-                
-                
                 if ([response isEqualToString: timeOutErrorCode]) {
-                    
                     [self showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
                                     protocolName: @"callUpdatePhotoOfDiyWithoutPhoto"
                                          textStr: textStr
@@ -908,7 +916,6 @@ DSPhotoEditorViewControllerDelegate>
                                        audioMode: @""
                                           option: @""];
                 } else {
-                    
                     NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:[response dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
                     
                     if ([dic[@"result"] intValue] == 1) {
@@ -1013,68 +1020,110 @@ shouldChangeTextInRange:(NSRange)range
     
     self.isReadyToPlay = NO;
 }
-
-- (IBAction)recordPausePlayTapped:(id)sender {
-    NSLog(@"");
-    NSLog(@"recordPausePlayTapped");
+- (void)processAudioUploadSheet {
     
-    NSLog(@"selectItem: %ld", (long)selectItem);
+    NSLog(@"showPhotoAndVideoActionSheet");
+    [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
+    
+    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+    
+    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+    }];
+    
+    self.effectView.frame = self.view.frame;
+    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+    self.effectView.alpha = 0.8;
+    
+    [self.view addSubview: self.effectView];
+    
+    // CustomActionSheet Setting
+    [self.view addSubview: self.customAudioUploadActionSheet.view];
+    [self.customAudioUploadActionSheet viewWillAppear: NO];
+    
+    [self.customAudioUploadActionSheet addSelectItem:@"" title: @"錄音" btnStr: @"" tagInt: 1 identifierStr: @"record"];
+    [self.customAudioUploadActionSheet addSelectItem:@""  title: @"選擇檔案" btnStr: @"" tagInt: 2 identifierStr: @"audioupload"];
+    
+    
+    [self.customAudioUploadActionSheet addSafeArea];
+    __weak typeof(self) weakSelf = self;
+    self.customAudioUploadActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
+        
+        if ([identifierStr isEqualToString: @"audioupload"]) {
+            ///[PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf openAudioFileBrowser];
+                });
+            //}];
+        } else if ([identifierStr isEqualToString: @"record"]) {
+            [weakSelf recordingAudio];
+        }
+        
+        [weakSelf enableRecordAndPlayBtn];
+        
+    };
+    
+}
+- (void) openAudioFileBrowser {
+    if (@available(iOS 11.0, *)) {
+        
+        //UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes: @[(__bridge NSString * )kUTTypeMP3,(__bridge NSString * )kUTTypeWaveformAudio,(__bridge NSString * )kUTTypeMPEG4, (__bridge NSString *)kUTTypeMPEG4Audio] inMode:UIDocumentPickerModeImport];
+        UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initWithDocumentTypes: @[(__bridge NSString * )kUTTypeMP3, (__bridge NSString *)kUTTypeMPEG4Audio] inMode:UIDocumentPickerModeImport];
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+}
+- (IBAction)recordPausePlayTapped:(id)sender {
+    
     NSString *userIdStr = ImageDataArr[selectItem][@"user_id"];
     
-    // If user doesn't have permission, they still can play audio, but can't modfity it.
-    
-    if ([wTools objectExists:audio_url]) { //![audio_url isKindOfClass: [NSNull class]]) {
-        if (![audio_url isEqualToString: @""]) {
-            NSLog(@"audio_url is not empty");
-            NSLog(@"play stream audio");
-            [self checkAudioStatus];
-        } else {
-            if (![userIdStr isEqual: [NSNull null]]) {
-                NSLog(@"userId is not null");
-                if (![self.userIdentity isEqual: [NSNull null]]) {
-                    NSLog(@"self.userIdentity is not null");
-                    if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
-                        [self checkAudioStatus];
-                    } else {
-                        [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
-                        
-                        return;
-                    }
-                }
-            }
-        }
-    } else {
-        if ([wTools objectExists:userIdStr] && [wTools objectExists:self.userIdentity]) { //![userIdStr isEqual: [NSNull null]]) {
-            NSLog(@"userId is not null");
-            //if (![self.userIdentity isEqual: [NSNull null]]) {
-            NSLog(@"self.userIdentity is not null");
-            if ([self.userIdentity isEqualToString: @"admin"] || [userIdStr integerValue] == [[wTools getUserID] integerValue]) {
-                [self checkAudioStatus];
-            } else {
-                [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
-                return;
-            }
-            //}
-        }
+    //  check permission first
+    if (![self.userIdentity isEqualToString: @"admin"] && [userIdStr integerValue] != [[wTools getUserID] integerValue]) {
+        [self showErrorToastWithMessage:@"只能操作你上傳的項目" duration:1.0];
+        return;
     }
+    
+    [self checkAudioStatus];
+    
 }
 
 - (void)checkAudioStatus {
-    [self disableRecordAndPlayBtn];
     
-    NSLog(@"self.audioMode: %@", self.audioMode);
+    if (isRecordingAudio || isRecorded) {
+        [self recordingAudio];
+        return;
+    }
+    
+    
+    [self disableRecordAndPlayBtn];
     
     if ([self.audioMode isEqualToString: @"singular"]) {
         NSLog(@"self.audioMode isEqualToString singular");
+        //  check audio mode        
+        //if (![audio_url isEqualToString: @""]) {
+            NSString *msg = @"當 前 播 放 模 式 為 作 品 單 一 的 背 景 音 樂 ， 確 定 要 切 換 成 每 頁 的 錄 音 嗎 ？ (此動作會移除背景音樂唷)";
+            [self showCustomAudioModeCheckAlert: msg];
+        //}
         
-        NSString *msg = @"當 前 播 放 模 式 為 作 品 單 一 的 背 景 音 樂 ， 確 定 要 切 換 成 每 頁 的 錄 音 嗎 ？ (此動作會移除背景音樂唷)";
-        [self showCustomAudioModeCheckAlert: msg];
     } else if ([self.audioMode isEqualToString: @"plural"] || [self.audioMode isEqualToString: @"none"]) {
         NSLog(@"self.audioMode isEqualToString plural or none");
-        [self recordingAudio];
+        [self processAudioOption];
     }
 }
-
+- (void)processAudioOption {
+    //  Show customAudioUploadActionSheet for showing sound-recording and music-uploading options //
+    if (@available(iOS 11.0, *) ) {
+        [self processAudioUploadSheet];
+    } else {
+        // go recording
+        [self recordingAudio];
+    }
+    NSLog(@"self.audioMode: %@", self.audioMode);
+    
+}
 - (void)disableRecordAndPlayBtn {
     NSLog(@"disableRecordAndPlayBtn");
     self.recordPausePlayBtn.userInteractionEnabled = NO;
@@ -1180,6 +1229,80 @@ shouldChangeTextInRange:(NSRange)range
             [self avPlayerSetUp: audio_url];
         }
     }
+}
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray <NSURL *>*)urls {
+    
+//    if (self.avPlayer)
+//        [self.avPlayer pause];
+//
+    if (self.audioUploader) {
+        [self.audioUploader cacenlCurrentWork];
+        self.audioUploader = nil;
+    }
+//
+    [self disableRecordAndPlayBtn];
+    
+    NSString *photo_id = [ImageDataArr [selectItem][@"photo_id"] stringValue];
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param setObject:[wTools getUserID] forKey:@"id"];
+    [param setObject:[wTools getUserToken] forKey:@"token"];
+    [param setObject:self.albumid forKey:@"album_id"];
+    [param setObject: photo_id forKey: @"photo_id"];
+    
+    
+    //NSString *path = [[urls firstObject] path];
+    self.audioUploader = [[AudioUploader alloc] initWithAudio:[urls firstObject]  albumID:self.albumid];
+    __block typeof(self) wself = self;
+    
+    self.uploadProgress =  [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+    self.uploadProgress.mode =  MBProgressHUDModeDeterminateHorizontalBar;
+    self.uploadProgress.label.text = @"音訊上傳中";
+    
+    [self.audioUploader startUpload:param path:@"/updateaudioofdiy/1.2" uploadblock:^(NSUInteger currentUploaded, NSUInteger totalSize, NSString * _Nonnull desc) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            wself.uploadProgress.progress = (float)currentUploaded/(float)totalSize;
+        });
+    } uploadResultBlock:^(NSDictionary * _Nullable result,  NSError * _Nullable error) {
+        if (!error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself.uploadProgress hideAnimated:YES];
+                [wself.audioSwitchView switchOnWithAnimation];
+                [wself updateAlbumData: result];
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [wself.uploadProgress hideAnimated:YES];
+                [wself.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_micro_white"] forState: UIControlStateNormal];
+                [wself.audioSwitchView switchOffWithAnimation];
+                
+                wself->isRecorded = NO;
+                [wself showCustomErrorAlert:[error localizedDescription]];
+            });
+            
+        }
+        [wself enableRecordAndPlayBtn];
+    }];
+}
+- (void)updateAlbumData:(NSDictionary *)data {
+    // Update audio_url for just finish recording
+    audio_url = data[@"data"][@"photo"][selectItem][@"audio_url"];
+    NSLog(@"audio_url: %@", audio_url);
+    
+    // Update ImageDataArr
+    ImageDataArr = [NSMutableArray arrayWithArray:data[@"data"][@"photo"]];
+    
+    //[mycollection reloadData];
+    [self.dataCollectionView reloadData];
+    
+    // Is Recorded
+    [self.recordPausePlayBtn setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+    [self.audioSwitchView switchOnWithAnimation];
+    
+    isRecorded = YES;
+}
+- (void)documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
+    
 }
 
 // Check Audio Access Permission
@@ -1503,7 +1626,7 @@ shouldChangeTextInRange:(NSRange)range
 - (void)updateAudio {
     NSLog(@"updateAudio");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1531,7 +1654,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1608,7 +1731,7 @@ shouldChangeTextInRange:(NSRange)range
 
 - (void)deleteAudioOfDiy {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1631,7 +1754,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1762,7 +1885,7 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"reload");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1780,7 +1903,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught %@", exception );
@@ -1859,7 +1982,7 @@ shouldChangeTextInRange:(NSRange)range
 
 - (void)getCooperation {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1880,7 +2003,7 @@ shouldChangeTextInRange:(NSRange)range
                                                data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1949,7 +2072,7 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"updateAlbumOfDiy");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1966,7 +2089,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2018,7 +2141,7 @@ shouldChangeTextInRange:(NSRange)range
                             [appDelegate.myNav pushViewController: aSVC animated: NO];
                         } else if ([option isEqualToString: @"back"]) {
                             
-                            if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {
+                            /*if ([stSelf.fromVC isEqualToString: @"AlbumDetailVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 
                                 for (UIViewController *vc in appDelegate.myNav.viewControllers) {
@@ -2030,7 +2153,7 @@ shouldChangeTextInRange:(NSRange)range
                                         break;
                                     }
                                 }
-                            } else if ([stSelf.fromVC isEqualToString: @"YAlbumDetailVC"]) {
+                            } else */if ([stSelf.fromVC isEqualToString: @"YAlbumDetailVC"]) {
                                 AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                                 [appDelegate.myNav popViewControllerAnimated:YES];
                             } else if ([stSelf.fromVC isEqualToString: @"AlbumCollectionVC"]) {
@@ -2127,7 +2250,7 @@ shouldChangeTextInRange:(NSRange)range
     NSString *pid = [ImageDataArr[selectItem][@"photo_id"] stringValue];
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2145,7 +2268,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2194,7 +2317,7 @@ shouldChangeTextInRange:(NSRange)range
     NSString *pid = [ImageDataArr[selectItem][@"photo_id"] stringValue];
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2213,7 +2336,7 @@ shouldChangeTextInRange:(NSRange)range
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2822,7 +2945,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     NSLog(@"selectItem: %ld", (long)selectItem);
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2849,7 +2972,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -3173,8 +3296,6 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         //[audioButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
     }
     
-    
-    
     UILabel *lab = (UILabel *)[myCell viewWithTag:1111];
     
     if (indexPath.item - 1 == 0) {
@@ -3186,6 +3307,7 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
         NSLog(@"else");
         NSLog(@"lab.text: %@", lab.text);
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: lab content: lab.text];
     NSString *userIdStr = ImageDataArr[indexPath.item - 1][@"user_id"];
     
     UIImageView *privateImageView = (UIImageView *)[myCell viewWithTag: 6666];
@@ -3350,6 +3472,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     if (@available(iOS 11.0, *)) {
         [self.customAddActionSheet addSelectItem: @"ic200_pdf_dark" title: @"PDF" btnStr: @"" tagInt: 2 identifierStr: @"pdf"];
     }
+    [self.customAddActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
     self.customAddActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         NSLog(@"");
@@ -3412,7 +3535,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [self.customVideoActionSheet addSelectItem: @"" title: @"錄影" btnStr: @"" tagInt: 1 identifierStr: @"recordingVideo"];
     [self.customVideoActionSheet addSelectItem: @"" title: @"選擇現有影片" btnStr: @"" tagInt: 2 identifierStr: @"chooseExistingVideo"];
-    
+    [self.customVideoActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
     self.customVideoActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
         NSLog(@"customVideoActionSheet.customViewBlock");
@@ -3518,6 +3641,10 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
     [self.effectView removeFromSuperview];
     self.effectView = nil;
+    
+    if (controller == self.customAudioUploadActionSheet) {
+        [self enableRecordAndPlayBtn];
+    }
 }
 
 #pragma mark -
@@ -3888,7 +4015,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                                  encoding: NSUTF8StringEncoding];
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -3904,7 +4031,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                                           settings: jsonString];
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -4706,7 +4833,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -4865,7 +4992,6 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - MBProgressHUD
 - (void)showHUDWithMessage:(NSString *)message {
-    
     self.hud = [MBProgressHUD showHUDAddedTo: self.view animated: YES];
     self.hud.mode = MBProgressHUDModeIndeterminate;
     self.hud.label.text = message;
@@ -4917,21 +5043,17 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 #pragma mark -
 - (void)didSelectLocation:(NSString *)location {
-    
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         
     }
-    
-    
-    
     NSString *pid = [ImageDataArr [selectItem][@"photo_id"] stringValue];
     __block typeof(self) wself = self;
     [boxAPI updatephotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:self.albumid photo_id:pid key:@"location" settingStr:location  completed:^(NSDictionary *result, NSError *error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
         });
         
         if (result) {
@@ -5001,7 +5123,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)addHyperLinks:(NSString *)jsonstr {
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         
     } @finally {
@@ -5014,7 +5136,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     __block typeof(self) wself = self;
     [boxAPI updatephotoofdiy:[wTools getUserID] token:[wTools getUserToken] album_id:self.albumid photo_id:pid key:@"hyperlink" settingStr:jsonstr  completed:^(NSDictionary *result, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
         });
         
         if (result) {

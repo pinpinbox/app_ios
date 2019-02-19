@@ -154,6 +154,8 @@
     self.qrCodeBgView.backgroundColor = [UIColor blackColor];
     self.qrCodeBgView.alpha = 0.7;
     self.qrCodeImageView.backgroundColor = [UIColor whiteColor];
+    
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.qrCodeInfoLabel content: self.qrCodeInfoLabel.text];
     [self hideQRCodeRelatedView];
 }
 
@@ -180,7 +182,7 @@
     self.infoView.backgroundColor = [UIColor thirdGrey];
     self.infoView.layer.cornerRadius = 16;
     self.infoLabel.text = NSLocalizedString(@"GeneralText-DefaultInfo", @"");
-    [LabelAttributeStyle changeGapString: self.infoLabel content: self.infoLabel.text];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.infoLabel content: self.infoLabel.text];
     self.infoLabel.textColor = [UIColor firstGrey];
     self.infoLabel.font = [UIFont systemFontOfSize: 20.0];
     self.infoLabel.numberOfLines = 0;
@@ -234,7 +236,7 @@ replacementString:(NSString *)string {
 
 #pragma mark - Web Service
 - (void)getCooperationList {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -244,7 +246,7 @@ replacementString:(NSString *)string {
                                                   token: [wTools getUserToken]
                                                    data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"getCooperationList response");
@@ -328,7 +330,7 @@ replacementString:(NSString *)string {
 }
 
 - (void)getQRCode {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSMutableDictionary *qrDic = [NSMutableDictionary new];
@@ -343,7 +345,7 @@ replacementString:(NSString *)string {
         NSString *responseQRCode = [boxAPI getQRCode: [wTools getUserID] token: [wTools getUserToken] type: @"album" type_id: self.albumId effect: @"execute" is: jsonStr];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (responseQRCode != nil) {
                 NSLog(@"getQRCode response");
@@ -388,7 +390,7 @@ replacementString:(NSString *)string {
 
 - (void)searchCreator:(NSString *)text {
     NSLog(@"searchCreator");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     NSString *string = text;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -402,7 +404,7 @@ replacementString:(NSString *)string {
                                        data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"searchCreator");
@@ -445,7 +447,7 @@ replacementString:(NSString *)string {
                             if (self.creatorListData.count == 0) {
                                 self.infoLabel.text = NSLocalizedString(@"GeneralText-NoMatchCreator", @"");
                                 self.infoLabel.textAlignment = NSTextAlignmentCenter;
-                                [LabelAttributeStyle changeGapString: self.infoLabel content: self.infoLabel.text];
+                                [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: self.infoLabel content: self.infoLabel.text];
                                 
                                 self.creatorListCollectionView.hidden = YES;;
                                 self.infoView.hidden = NO;
@@ -477,7 +479,7 @@ replacementString:(NSString *)string {
 - (void)updateCooperation:(NSString *)userId
                  identity:(NSString *)identity
                   albumId:(NSString *)albumId {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -491,7 +493,7 @@ replacementString:(NSString *)string {
                                                   data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from updateCooperation");
@@ -546,7 +548,7 @@ replacementString:(NSString *)string {
 - (void)deleteCooperation:(NSString *)userId
                   albumId:(NSString *)albumId
                creatorDic:(NSMutableDictionary *)creatorDic {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -558,7 +560,7 @@ replacementString:(NSString *)string {
                                                  token: [wTools getUserToken]
                                                   data: data];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from deleteCooperation");
@@ -627,7 +629,7 @@ replacementString:(NSString *)string {
 - (void)addCoperation:(NSString *)userId
               albumId:(NSString *)albumId
            creatorDic:(NSMutableDictionary *)creatorDic {
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSMutableDictionary *data = [NSMutableDictionary new];
@@ -639,7 +641,7 @@ replacementString:(NSString *)string {
                                                data: data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [wTools HideMBProgressHUD];
+            [DGHUDView stop];
             
             if (response != nil) {
                 NSLog(@"response from addCoperation");
@@ -731,6 +733,7 @@ replacementString:(NSString *)string {
         }
         if ([wTools objectExists: userDic[@"name"]]) {
             cell.userNameLabel.text = userDic[@"name"];
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
         }
         NSDictionary *cooperationDic = self.cooperationData[indexPath.row][@"cooperation"];
         
@@ -749,14 +752,15 @@ replacementString:(NSString *)string {
         }
         if ([wTools objectExists: userDic[@"name"]]) {
             cell.userNameLabel.text = userDic[@"name"];
+            [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
         }
-        [LabelAttributeStyle changeGapString: cell.userNameLabel content: cell.userNameLabel.text];
         
         if ([self checkUsersInCooperationDataOrNot: [userDic[@"user_id"] intValue]]) {
             [cell setInviteBtnEnabled: NO];
         } else {
             [cell setInviteBtnEnabled: YES];
         }
+        [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.inviteBtn.titleLabel content: cell.inviteBtn.titleLabel.text];
         return cell;
     }
 }
@@ -792,6 +796,7 @@ replacementString:(NSString *)string {
         [btn setTitle: @"瀏覽" forState: UIControlStateNormal];
         [self changeBtnStyle: btn identity: identity];
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: btn.titleLabel content: btn.titleLabel.text];
     return btn;
 }
 
@@ -808,6 +813,7 @@ replacementString:(NSString *)string {
         btn.layer.borderColor = [UIColor clearColor].CGColor;
         btn.layer.borderWidth = 0;
     }
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: btn.titleLabel content: btn.titleLabel.text];
     return btn;
 }
 
@@ -1083,7 +1089,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
                     creatorDic:(NSMutableDictionary *)creatorDic {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
@@ -1131,81 +1137,6 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertTimeOutView setUseMotionEffects: YES];
     [alertTimeOutView show];
 }
-
-- (UIView *)createTimeOutContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
-}
-
 
 
 /*

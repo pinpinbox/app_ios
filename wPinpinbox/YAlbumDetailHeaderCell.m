@@ -12,25 +12,13 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "LabelAttributeStyle.h"
 #import "UIColor+Extensions.h"
-
-@implementation YAlbumDetailHeaderCell
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    // Configure the view for the selected state
-}
-
-@end
+#import "UIColor+HexString.h"
 
 @implementation YAlbumTitleCell : UITableViewCell
 - (void)loadData:(NSDictionary *)data {
     if ([wTools objectExists:data[@"name"]]) {
-        _titleLabel.attributedText = [[NSAttributedString alloc] initWithString:data[@"name"] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSForegroundColorAttributeName:[UIColor firstGrey],NSKernAttributeName:@1} ];//text = data[@"name"];
+        [_titleLabel setText: data[@"name"]];
+
     }
 }
 
@@ -41,11 +29,14 @@
         NSString *t = @"";
         t = data[@"name"];
         if (t.length) {
-            NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
-            CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1} context:ctx];
-            
-            ctx = nil;
-            return ss.size.height+32;
+            //NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
+            NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
+            s.lineBreakMode = NSLineBreakByWordWrapping;
+            s.lineSpacing = 3;
+            CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading|NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28 weight:UIFontWeightMedium],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:nil];
+                        
+            CGFloat height = (ceilf(ss.size.height/2))*2;
+            return height+64;
         }
     }
     
@@ -69,27 +60,29 @@
         NSInteger viewed = [data[@"albumstatistics"][@"viewed"] integerValue];
         if (viewed >= 100000) {
             viewed /= 10000;
-            [LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat: @"%ldM次瀏覽", (long)viewed]];
+            [_viewedCountLabel setText:[NSString stringWithFormat: @"%ldM次瀏覽", (long)viewed]];
+            //[LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat: @"%ldM次瀏覽", (long)viewed]];
         } else if (viewed >= 10000) {
             viewed /= 1000;
-            [LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat:  @"%ldK次瀏覽", (long)viewed]];
+            [_viewedCountLabel setText:[NSString stringWithFormat: @"%ldK次瀏覽", (long)viewed]];
+            //[LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat:  @"%ldK次瀏覽", (long)viewed]];
         } else {
-            
-            [LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat: @"%ld次瀏覽", (long)viewed]];
+            [_viewedCountLabel setText:[NSString stringWithFormat: @"%ld次瀏覽", (long)viewed]];
+            //[LabelAttributeStyle changeGapString: _viewedCountLabel content: [NSString stringWithFormat: @"%ld次瀏覽", (long)viewed]];
         }
         
     }
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
-    return 36;
+    return 52;
 }
 @end
 @implementation YAlbumContentTypeCell : UITableViewCell
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
     if ([YAlbumContentTypeCell ifVisible:data[@"usefor"]])
-        return 36;
+        return 32;
     return 0;
 }
 + (BOOL)ifVisible:(NSDictionary *)data {
@@ -145,8 +138,8 @@
     } else if (gotExchange || gotSlot) {
         _giftIcon.hidden = NO;
     }
-    self.audioLeading.constant = ((_vidIcon.hidden)?-_vidIcon.frame.size.width-8:8);//);
-    self.giftLeading.constant = ((_vidIcon.hidden)?8:0)+((_audIcon.hidden)?-_audIcon.frame.size.width:0);
+    self.audioLeading.constant = ((_vidIcon.hidden)?-_vidIcon.frame.size.width:8);//);
+    self.giftLeading.constant = ((_audIcon.hidden)?-_audIcon.frame.size.width:0);
 }
 
 @end
@@ -168,16 +161,16 @@
     if (![data[@"description"] isKindOfClass:[NSNull class]])
         t = data[@"description"];
     if (t.length) {
-        NSStringDrawingContext *ctx = [[NSStringDrawingContext alloc] init];
         NSMutableParagraphStyle *s = [[NSMutableParagraphStyle alloc] init];
         s.lineSpacing = 3;
-        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1,NSParagraphStyleAttributeName:s} context:ctx];
+        s.lineBreakMode = NSLineBreakByWordWrapping;
+        CGRect ss = [t boundingRectWithSize:est.size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18],NSKernAttributeName:@1.5,NSParagraphStyleAttributeName:s} context:nil];
         s = nil;
-        ctx = nil;
-        return ss.size.height+72;
+        CGFloat height = (ceilf(ss.size.height/2))*2;
+        return height+64;
     }
     
-    return 0;
+    return 32;
 }
 @end
 @implementation YAlbumFollowerCell : UITableViewCell
@@ -185,7 +178,19 @@
     int c = 0;
     if (data[@"likes"])
         c = (int)[data[@"likes"] integerValue];
-    [LabelAttributeStyle changeGapString: self.followerCount content: [NSString stringWithFormat:@"%d人釘過", c]];
+    self.followerCount.text = [NSString stringWithFormat:@"%d人釘過", c];
+    //[LabelAttributeStyle changeGapString: self.followerCount content: [NSString stringWithFormat:@"%d人釘過", c]];
+}
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if (rect.size.height < 1) return;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+    
+    
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -197,8 +202,19 @@
     int c = 0;
     if (data[@"exchange"])
         c = (int)[data[@"exchange"] integerValue];
-    [LabelAttributeStyle changeGapString: self.pointCount content: [NSString stringWithFormat:@"%d次贊助", c]];
+    self.pointCount.text = [NSString stringWithFormat:@"%d次贊助", c];
+    //[LabelAttributeStyle changeGapString: self.pointCount content: [NSString stringWithFormat:@"%d次贊助", c]];
     
+}
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if (rect.size.height < 1) return;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx,  [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     NSInteger i = [[wTools getUserID] intValue];
@@ -211,7 +227,17 @@
     int c = 0;
     if (data[@"messageboard"])
         c = (int)[data[@"messageboard"] integerValue];
-    [LabelAttributeStyle changeGapString: self.messageCount content: [NSString stringWithFormat:@"%d則留言", c]];
+    self.messageCount.text = [NSString stringWithFormat:@"%d則留言", c];
+    //[LabelAttributeStyle changeGapString: self.messageCount content: [NSString stringWithFormat:@"%d則留言", c]];
+}
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    if (rect.size.height < 1) return;
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx,  [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -229,11 +255,20 @@
         NSInteger i1 = [u[@"user_id"] intValue];
         self.creatorWorks.hidden = (i == i1);
     }
-    
-    [LabelAttributeStyle changeGapString: _creatorName content: u[@"name"]];
-    _creatorName.textAlignment = NSTextAlignmentJustified;
+    _creatorName.text = u[@"name"];
+    //[LabelAttributeStyle changeGapString: _creatorName content: u[@"name"]];
+    //_creatorName.textAlignment = NSTextAlignmentJustified;
     if ([wTools objectExists:u[@"picture"]])
         [_creatorAvatar sd_setImageWithURL:[NSURL URLWithString:u[@"picture"]] placeholderImage:[UIImage imageNamed:@"member_back_head"]];
+}
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+    
 }
 + (CGFloat)estimatedHeight:(NSDictionary *)data {
     
@@ -248,8 +283,8 @@
     self.eventDesc.text = @"";
     if ([wTools objectExists: ev] && [wTools objectExists: ev[@"name"]]) {
         NSString *evs = ev[@"name"];
-        
-        [LabelAttributeStyle changeGapString: _eventDesc content: evs];
+        _eventDesc.text = evs;
+        //[LabelAttributeStyle changeGapString: _eventDesc content: evs];
         _eventDesc.textAlignment = NSTextAlignmentJustified;
         _eventDesc.lineBreakMode = NSLineBreakByTruncatingTail;
     }
@@ -258,8 +293,19 @@
     
     if ([wTools objectExists:data])
         return 180;
-    return 0;
+    return 2;
 }
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
+    CGFloat sc = 1 / [UIScreen mainScreen].scale;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(ctx,  [UIColor clearColor].CGColor);
+    CGContextSetFillColorWithColor(ctx, [UIColor secondGrey].CGColor);
+    CGContextFillRect(ctx, CGRectMake(0, 0, self.frame.size.width, sc));
+    
+    
+}
+
 @end
 
 

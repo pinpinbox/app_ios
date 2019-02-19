@@ -100,6 +100,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     BOOL isMessageShowing;
 }
+@property (nonatomic) DGActivityIndicatorView *activityIndicatorView;
 
 @property (weak, nonatomic) IBOutlet UIView *toolBarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolBarViewHeight;
@@ -176,6 +177,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // Do any additional setup after loading the view.
     NSLog(@"AlbumDetailViewController");
     NSLog(@"viewDidLoad");
+    [self initActivityIndicatorView];
+    
     if (self.navigationController)
         self.navigationController.delegate = self;
     
@@ -212,6 +215,13 @@ static NSString *autoPlayStr = @"&autoplay=1";
     self.sponsorView.hidden = YES;
     self.messageTrail.constant = -16;
     //[self retrieveAlbum];
+}
+
+- (void)initActivityIndicatorView {
+    self.activityIndicatorView = [[DGActivityIndicatorView alloc] initWithType: DGActivityIndicatorAnimationTypeDoubleBounce tintColor: [UIColor secondMain] size: kActivityIndicatorViewSize];
+    self.activityIndicatorView.frame = CGRectMake(0.0f, 0.0f, 50.0f, 50.0f);
+    self.activityIndicatorView.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+    [self.view addSubview: self.activityIndicatorView];
 }
 
 - (void)navigationController:(UINavigationController *)navigationController
@@ -882,7 +892,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)getEventData: (NSString *)eventId {
     NSLog(@"getEventData");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -897,7 +907,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -973,7 +983,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)checkTaskComplete {
     NSLog(@"checkTaskComplete");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -996,7 +1006,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1117,7 +1127,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
                                      if (wself->albumPoint == 0) {
                                          [wself buyAlbum];
                                      } else {
-                                         NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)wself->albumPoint];
+                                         NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP(NTD%ld)?", (long)wself->albumPoint, (long)(wself->albumPoint / 2)];
                                          [wself showCustomAlert: msgStr option: @"buyAlbum"];
                                      }
                                  }];
@@ -1169,7 +1179,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 #pragma mark - Buy Album
 - (void)getPoint {
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1184,7 +1194,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1241,7 +1251,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)buyAlbum {
     NSLog(@"buyAlbum");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1257,7 +1267,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1352,7 +1362,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)checkPoint {
     NSLog(@"checkPoint");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1376,7 +1386,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1466,7 +1476,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)insertReport {
     NSLog(@"insertReport");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1481,7 +1491,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1537,7 +1547,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"SaveDataRow: row: %ld", (long)row);
     NSString *rid = [reportIntentList[row][@"reportintent_id"] stringValue];
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1554,7 +1564,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1651,7 +1661,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (void)retrieveAlbum {
     NSLog(@"retrieveAlbum");
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     __block typeof(isViewed) isv = isViewed;
     __block typeof(self.albumId) aid = self.albumId;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -1664,7 +1674,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1998,7 +2008,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
             if (weakAlbumPoint == 0) {
                 [weakSelf buyAlbum];
             } else {
-                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP?", (long)weakAlbumPoint];
+                NSString *msgStr = [NSString stringWithFormat: @"確定贊助%ldP(NTD%ld)?", (long)weakAlbumPoint, (long)(weakAlbumPoint / 2)];
                 [weakSelf showCustomAlert: msgStr option: @"buyAlbum"];
             }
         } else if ([identifierStr isEqualToString: @"albumEdit"]) {
@@ -2165,7 +2175,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)insertAlbumToLikes {
     NSLog(@"insertAlbumToLikes");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2181,7 +2191,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2214,7 +2224,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)deleteAlbumToLikes {
     NSLog(@"deleteAlbumToLikes");
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -2228,7 +2238,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -2787,7 +2797,7 @@ shouldInteractWithURL:(NSURL *)URL
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

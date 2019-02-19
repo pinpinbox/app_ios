@@ -10,7 +10,7 @@
 #import "InfoEditViewController.h"
 #import "boxAPI.h"
 #import "wTools.h"
-#import "MBProgressHUD.h"
+//#import "MBProgressHUD.h"
 #import "UIColor+Extensions.h"
 
 #import "JCCollectionViewWaterfallLayout.h"
@@ -31,7 +31,7 @@
 #import "CustomIOSAlertView.h"
 #import "OldCustomAlertView.h"
 #import <SafariServices/SafariServices.h>
-#import "AlbumDetailViewController.h"
+//#import "AlbumDetailViewController.h"
 #import "AlbumCollectionViewController.h"
 #import "AppDelegate.h"
 
@@ -79,6 +79,8 @@ static NSString *autoPlayStr = @"&autoplay=1";
     
     CGFloat createNameLabelHeight;
     CGFloat nameLabelHeight;
+    CGFloat userNameLabelHeight;
+
     CGFloat descriptionLabelHeight;
     
     NSInteger socialLinkInt;
@@ -109,7 +111,6 @@ static NSString *autoPlayStr = @"&autoplay=1";
     UIView *noInfoView;
     BOOL isNoInfoViewCreate;
 }
-
 @property (strong, nonatomic) NSDictionary *userDic;
 
 //@property (weak, nonatomic) IBOutlet UIView *navBarView;
@@ -139,7 +140,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"MeTabViewController viewDidLoad");
-    // Do any additional setup after loading the view.            
+    // Do any additional setup after loading the view.
     [self initialValueSetup];
     //[self loadData];        
 }
@@ -260,6 +261,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     self.customActionSheet.delegate = self;
     self.customActionSheet.topicStr = @"要前往哪裡？";
     
+    
     nextId = 0;
     isLoading = NO;
     isReloading = NO;
@@ -317,7 +319,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
 - (void)getCreatorInfo {
     NSLog(@"getCreatorInfo");
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -337,7 +339,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -488,7 +490,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"getProfile");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -502,7 +504,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -640,7 +642,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"checkPoint");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -659,7 +661,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -744,7 +746,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     NSLog(@"getUrPoints");
     NSUserDefaults *userPrefs = [NSUserDefaults standardUserDefaults];
     @try {
-        [MBProgressHUD showHUDAddedTo: self.view animated: YES];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -758,7 +760,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [MBProgressHUD hideHUDForView: self.view animated: YES];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -915,13 +917,19 @@ static NSString *autoPlayStr = @"&autoplay=1";
 
 - (CGFloat)headerHeightCalculation {
     CGFloat headerHeight = 0;
-    //headerHeight += coverImageHeight + 32 * 3 + creativeNameLabelHeight + 32 + 67 + 32;
-    headerHeight += coverImageHeight + 32 + 32 * 2;
+    headerHeight += coverImageHeight + 32 + 96;
     
 //    if (![self.userDic[@"creative_name"] isEqual: [NSNull null]]) {
 //        NSLog(@"creative_name: %@", self.userDic[@"creative_name"]);
 //        headerHeight += creativeNameLabelHeight + 32;
 //    }
+    
+    if (![self.userDic[@"name"] isEqual: [NSNull null]]) {
+        if (![self.userDic[@"name"] isEqualToString: @""]) {
+            headerHeight += userNameLabelHeight + 16 + 32;
+        }
+    }
+    
     if (![self.userDic[@"sociallink"] isEqual: [NSNull null]]) {
         if (socialLinkInt != 0) {
             NSLog(@"socialLinkInt: %ld", (long)socialLinkInt);
@@ -929,7 +937,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
         }
     }
     // linkBgView
-    headerHeight += 67 + 32;
+//    headerHeight += 32;
     
     if (![self.userDic[@"sociallink"] isEqual: [NSNull null]]) {
         if (socialLinkInt != 0) {
@@ -950,8 +958,7 @@ static NSString *autoPlayStr = @"&autoplay=1";
     headerHeight += 1 + 26.5 + 16;
     
     // Add 20 for banner doesn't look to be compressed
-    headerHeight += 20;
-    
+//    headerHeight += 20;
     return headerHeight;
 }
 
@@ -1069,7 +1076,18 @@ static NSString *autoPlayStr = @"&autoplay=1";
     // User Name Label
     if (![self.userDic[@"name"] isEqual: [NSNull null]]) {
         headerView.userNameLabel.text = self.userDic[@"name"];
+        NSLog(@"headerView.userNameLabel.text: %@", headerView.userNameLabel.text);
         [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: headerView.userNameLabel content: headerView.userNameLabel.text];
+        NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        style.lineBreakMode = NSLineBreakByWordWrapping;
+        style.alignment = NSTextAlignmentLeft;
+        NSAttributedString *string = [[NSAttributedString alloc] initWithString: headerView.userNameLabel.text attributes: @{NSFontAttributeName:[UIFont boldSystemFontOfSize: 42.0], NSParagraphStyleAttributeName:style}];
+        CGSize userNameLabelSize = [string boundingRectWithSize: CGSizeMake([UIScreen mainScreen].bounds.size.width - 32 * 2, MAXFLOAT) options: NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context: nil].size;
+        NSLog(@"userNameLabelSize.height: %f", userNameLabelSize.height);
+        
+        // + 10 in order to show real headerView.userNameLabelHeight
+        headerView.userNameLabelHeight.constant = userNameLabelSize.height + 10;
+        userNameLabelHeight = userNameLabelSize.height + 10;
     }
     // Creative Name Label
     if (![self.userDic[@"creative_name"] isEqual: [NSNull null]]) {
@@ -1325,13 +1343,11 @@ shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     MeCollectionViewCell *cell = (MeCollectionViewCell *) [collectionView cellForItemAtIndexPath: indexPath];
-    //NSLog(@"cell.contentView.subviews: %@", cell.contentView.subviews);
-    //cell.contentView.backgroundColor =
-    //cell.contentView.subviews[0].backgroundColor = [UIColor thirdMain];
-    //NSLog(@"cell.contentView.bounds: %@", NSStringFromCGRect(cell.contentView.bounds));
-    //NSLog(@"pictures: %@", pictures[indexPath.row]);
+    
     NSString *albumId = [pictures[indexPath.row][@"album_id"] stringValue];
-    CGRect source = [self.view convertRect:cell.frame fromView:collectionView];
+    CGRect source = [collectionView convertRect:cell.coverImageView.frame fromView:cell];
+    source = [self.view convertRect:source fromView:collectionView];
+    
     YAlbumDetailContainerViewController *aDVC = [YAlbumDetailContainerViewController albumDetailVCWithAlbumID:albumId sourceRect:source sourceImageView:cell.coverImageView noParam:YES];
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -1652,6 +1668,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     [self.customActionSheet addSelectItem: @"ic200_gift_dark" title: @"兌換清單" btnStr: @"" tagInt: 6 identifierStr: @"exchangeList"];
     [self.customActionSheet addSelectItem: @"ic200_setting_dark" title: @"設定" btnStr: @"" tagInt: 71 identifierStr: @"setting"];
     
+    [self.customActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
         
     self.customActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
@@ -1732,7 +1749,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     alertTimeOutView.parentView = self.view;
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];

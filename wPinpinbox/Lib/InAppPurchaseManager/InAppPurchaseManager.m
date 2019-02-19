@@ -14,6 +14,7 @@
 #import "UIColor+Extensions.h"
 
 #import "UIViewController+ErrorAlert.h"
+#import "GlobalVars.h"
 
 #define kIAP_AppleSandbox @"https://sandbox.itunes.apple.com/verifyReceipt"
 #define kIAP_AppleStoreVerify @"https://buy.itunes.apple.com/verfyReceipt"
@@ -35,12 +36,12 @@ static InAppPurchaseManager *instance =nil;
     }
     return self;
 }
-+(void)releaseInstance
++ (void)releaseInstance
 {
     //[instance release];
     instance = nil;
 }
-+(InAppPurchaseManager*)getInstance
++ (InAppPurchaseManager*)getInstance
 {
     if( instance == nil )
     {
@@ -49,7 +50,6 @@ static InAppPurchaseManager *instance =nil;
     return instance;
 }
 
-
 // InAppPurchaseManager.m
 - (void)requestProUpgradeProductData //檢查並取得以下商品apple資訊
 {
@@ -57,7 +57,7 @@ static InAppPurchaseManager *instance =nil;
     
     //[[WTools getInstance]playMBProgress:NSLocalizedString(@"StoreMsg_1", @"讀取商品列表")];
     
-    [wTools ShowMBProgressHUD];
+    [DGHUDView start];
     NSSet *productIdentifiers = [NSSet setWithArray:self.priceid];
     
     //    NSSet *productIdentifiers = [NSSet setWithObjects:
@@ -157,11 +157,11 @@ static InAppPurchaseManager *instance =nil;
 {
     if (isNeed)
     {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     }
     else
     {
-        [wTools HideMBProgressHUD];
+        [DGHUDView stop];
     }
     
 }

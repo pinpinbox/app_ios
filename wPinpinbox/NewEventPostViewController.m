@@ -102,8 +102,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 - (void)prepareData:(NSDictionary *)data eventId:(NSString *)eventId finished:(BOOL)finished{
-    
     self.name = data[@"event"][@"name"];
     self.title = data[@"event"][@"title"];
     self.imageUrl = data[@"event"][@"image"];
@@ -248,7 +248,7 @@
             [exchangeBtn setTitleColor: [UIColor whiteColor] forState: UIControlStateNormal];
             exchangeBtn.backgroundColor = [UIColor colorFromHexString: @"fd9b64"];
             exchangeBtn.titleLabel.font = [UIFont systemFontOfSize: 16];
-            [LabelAttributeStyle changeGapString: exchangeBtn.titleLabel content: @"我要兌換"];
+            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: exchangeBtn.titleLabel content: exchangeBtn.titleLabel.text];
             exchangeBtn.myLeftMargin = 0;
             exchangeBtn.myRightMargin = 0.5;
             exchangeBtn.layer.cornerRadius = kCornerRadius;
@@ -277,7 +277,7 @@
     topicLabel.textColor = [UIColor firstGrey];
     if ([wTools objectExists: self.name]) {
         topicLabel.text = self.name;
-        [LabelAttributeStyle changeGapString: topicLabel content: self.name];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: topicLabel content: topicLabel.text];
     }
     topicLabel.numberOfLines = 0;
     topicLabel.wrapContentHeight = YES;
@@ -290,7 +290,7 @@
     contentLabel.textColor = [UIColor firstGrey];
     if ([wTools objectExists: self.eventTitle]) {
         contentLabel.text = self.eventTitle;
-        [LabelAttributeStyle changeGapString: contentLabel content: self.eventTitle];
+        [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: contentLabel content: contentLabel.text];
     }
     contentLabel.numberOfLines = 0;
     contentLabel.wrapContentHeight = YES;
@@ -300,7 +300,7 @@
     activityLabel.myTopMargin = 16;
     activityLabel.myRightMargin = 16;
     activityLabel.text = @"活動詳情";
-    [LabelAttributeStyle changeGapString: activityLabel content: @"活動詳情"];
+    [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: activityLabel content: activityLabel.text];
     activityLabel.textColor = [UIColor firstMain];
     activityLabel.font = [UIFont systemFontOfSize: 18];
     [activityLabel sizeToFit];
@@ -477,7 +477,7 @@
     NSLog(@"getExistedAlbum");
     existedAlbumArray = [[NSMutableArray alloc] init];
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -495,7 +495,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught");
@@ -652,7 +652,7 @@
     
     [self.customPostActionSheet addSelectItem: @"" title: @"建立新作品" btnStr: @"" tagInt: 1 identifierStr: @"createNewAlbum"];
     [self.customPostActionSheet addSelectItem: @"" title: @"選擇現有作品" btnStr: @"" tagInt: 2 identifierStr: @"chooseExistedAlbum"];
-    
+    [self.customPostActionSheet addSafeArea];
     __weak typeof(self) weakSelf = self;
     
     self.customPostActionSheet.customViewBlock = ^(NSInteger tagId, BOOL isTouchDown, NSString *identifierStr) {
@@ -691,6 +691,57 @@
     newExistingAlbumVC.contributionNumber = self.contributionNumber;
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.myNav pushViewController: newExistingAlbumVC animated: YES];
+}
+
+
+
+- (void)checkPostedAlbum {
+    NSLog(@"checkPostedAlbum");
+    @try {
+        [DGHUDView start];
+    } @catch (NSException *exception) {
+        // Print exception information
+        NSLog( @"NSException caught" );
+        NSLog( @"Name: %@", exception.name);
+        NSLog( @"Reason: %@", exception.reason );
+        return;
+    }
+    
+    NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
+    __block typeof(self) wself = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
+                                             token: [wTools getUserToken]
+                                              rank: @"mine"
+                                             limit: limit];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @try {
+                [DGHUDView stop];
+            } @catch (NSException *exception) {
+                // Print exception information
+                NSLog( @"NSException caught" );
+                NSLog( @"Name: %@", exception.name);
+                NSLog( @"Reason: %@", exception.reason );
+                return;
+            }
+            if (response != nil) {
+                NSLog(@"response from getcalbumlist");
+                
+                if ([response isEqualToString: timeOutErrorCode]) {
+                    NSLog(@"Time Out Message Return");
+                    NSLog(@"NewEventPostViewController");
+                    NSLog(@"checkPostedAlbum");
+                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
+                                    protocolName: @"checkPostedAlbum"];
+                } else {
+                    NSLog(@"Get Real Response");
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    [wself processCheckPosted:dic];
+                }
+            }
+        });
+    });
 }
 
 #pragma mark - Calling API Methods
@@ -779,56 +830,6 @@
     }
 }
 
-- (void)checkPostedAlbum {
-    NSLog(@"checkPostedAlbum");
-    
-    @try {
-        [wTools ShowMBProgressHUD];
-    } @catch (NSException *exception) {
-        // Print exception information
-        NSLog( @"NSException caught" );
-        NSLog( @"Name: %@", exception.name);
-        NSLog( @"Reason: %@", exception.reason );
-        return;
-    }
-    
-    NSString *limit = [NSString stringWithFormat: @"%d, %d", 0, 10000];
-    __block typeof(self) wself = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *response = [boxAPI getcalbumlist: [wTools getUserID]
-                                             token: [wTools getUserToken]
-                                              rank: @"mine"
-                                             limit: limit];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @try {
-                [wTools HideMBProgressHUD];
-            } @catch (NSException *exception) {
-                // Print exception information
-                NSLog( @"NSException caught" );
-                NSLog( @"Name: %@", exception.name);
-                NSLog( @"Reason: %@", exception.reason );
-                return;
-            }
-            if (response != nil) {
-                NSLog(@"response from getcalbumlist");
-                
-                if ([response isEqualToString: timeOutErrorCode]) {
-                    NSLog(@"Time Out Message Return");
-                    NSLog(@"NewEventPostViewController");
-                    NSLog(@"checkPostedAlbum");
-                    [wself showCustomTimeOutAlert: NSLocalizedString(@"Connection-Timeout", @"")
-                                    protocolName: @"checkPostedAlbum"];
-                } else {
-                    NSLog(@"Get Real Response");
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    [wself processCheckPosted:dic];
-                }
-            }
-        });
-    });
-}
-
 - (void)toChooseTempalteVC {
     chooseTemplateVC = [[UIStoryboard storyboardWithName: @"ChooseTemplateVC" bundle: nil] instantiateViewControllerWithIdentifier: @"ChooseTemplateViewController"];
     chooseTemplateVC.rank = @"hot";
@@ -887,7 +888,7 @@
     UILabel *postLabel = [[UILabel alloc] initWithFrame: CGRectMake(8, view.bounds.size.height / 2 + 50,  view.bounds.size.width - 16, 70)];
     postLabel.textColor = [UIColor firstPink];
     postLabel.text = @"投稿作品數量已達上限，是否確認撤下該作品並建立新作品？（若確定，則原作品的投票數將會歸零）";;
-    [LabelAttributeStyle changeGapString: postLabel content: @"投稿作品數量已達上限，是否確認撤下該作品並建立新作品？（若確定，則原作品的投票數將會歸零）"];
+    [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignment: postLabel content: postLabel.text];
     //postLabel.textAlignment = NSTextAlignmentCenter;
     postLabel.font = [UIFont systemFontOfSize: 14.0f];
     postLabel.numberOfLines = 0;
@@ -903,7 +904,7 @@
     NSLog(@"postAlbum");
     
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -921,7 +922,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -995,10 +996,9 @@
 //快速套版
 - (void)addNewFastMod {
     NSLog(@"addNewFastMod");
-    
     //新增相本id
     @try {
-        [wTools ShowMBProgressHUD];
+        [DGHUDView start];
     } @catch (NSException *exception) {
         // Print exception information
         NSLog( @"NSException caught" );
@@ -1013,7 +1013,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
-                [wTools HideMBProgressHUD];
+                [DGHUDView stop];
             } @catch (NSException *exception) {
                 // Print exception information
                 NSLog( @"NSException caught" );
@@ -1069,7 +1069,6 @@
     });
 }
 
-
 /*
 #pragma mark - Navigation
 
@@ -1092,8 +1091,8 @@
 - (void)showCustomTimeOutAlert: (NSString *)msg
                   protocolName: (NSString *)protocolName {
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];    
-    [alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
-    
+    //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
+    [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObject: [UIColor thirdGrey]]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObject: [UIColor secondGrey]]];
@@ -1129,80 +1128,6 @@
     }];
     [alertTimeOutView setUseMotionEffects: YES];
     [alertTimeOutView show];
-}
-
-- (UIView *)createTimeOutContainerView: (NSString *)msg {
-    // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(10, 30, 280, 20)];
-    textView.text = msg;
-    textView.backgroundColor = [UIColor clearColor];
-    textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 16];
-    textView.editable = NO;
-    
-    // Adjust textView frame size for the content
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    
-    NSLog(@"newSize.height: %f", newSize.height);
-    
-    // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
-    if (newSize.height > 300) {
-        newSize.height = 300;
-    }
-    
-    // Adjust textView frame size when the content height reach its maximum
-    newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), newSize.height);
-    textView.frame = newFrame;
-    
-    CGFloat textViewY = textView.frame.origin.y;
-    NSLog(@"textViewY: %f", textViewY);
-    
-    CGFloat textViewHeight = textView.frame.size.height;
-    NSLog(@"textViewHeight: %f", textViewHeight);
-    NSLog(@"textViewY + textViewHeight: %f", textViewY + textViewHeight);
-    
-    
-    // ImageView Setting
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(200, -8, 128, 128)];
-    [imageView setImage:[UIImage imageNamed:@"icon_2_0_0_dialog_pinpin.png"]];
-    
-    CGFloat viewHeight;
-    
-    if ((textViewY + textViewHeight) > 96) {
-        if ((textViewY + textViewHeight) > 450) {
-            viewHeight = 450;
-        } else {
-            viewHeight = textViewY + textViewHeight;
-        }
-    } else {
-        viewHeight = 96;
-    }
-    NSLog(@"demoHeight: %f", viewHeight);
-    
-    
-    // ContentView Setting
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, viewHeight)];
-    //contentView.backgroundColor = [UIColor firstPink];
-    contentView.backgroundColor = [UIColor firstMain];
-    
-    // Set up corner radius for only upper right and upper left corner
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: contentView.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight) cornerRadii:CGSizeMake(13.0, 13.0)];
-    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-    maskLayer.frame = self.view.bounds;
-    maskLayer.path  = maskPath.CGPath;
-    contentView.layer.mask = maskLayer;
-    
-    // Add imageView and textView
-    [contentView addSubview: imageView];
-    [contentView addSubview: textView];
-    
-    NSLog(@"");
-    NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
-    NSLog(@"");
-    
-    return contentView;
 }
 
 #pragma mark - toast message
