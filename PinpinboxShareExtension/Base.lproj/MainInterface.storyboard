@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5eV-4L-oAe">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5eV-4L-oAe">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.43"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -687,13 +687,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CEy-Cv-SGf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <barButtonItem title="取消" id="kes-UH-ibH">
-                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <action selector="cancelAndFinish:" destination="j1y-V4-xli" id="C5t-nZ-fvo"/>
                     </connections>
                 </barButtonItem>
                 <barButtonItem enabled="NO" title="發佈" id="ijQ-Fs-YFc">
-                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
                         <action selector="postShareItem:" destination="j1y-V4-xli" id="r3c-Bs-C3d"/>
                     </connections>
@@ -706,11 +706,9 @@
             <objects>
                 <navigationController id="5eV-4L-oAe" sceneMemberID="viewController">
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="J4s-mD-kDy">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" shadowImage="clearLine.png" id="J4s-mD-kDy">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="barTintColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </navigationBar>
                     <connections>
                         <segue destination="j1y-V4-xli" kind="relationship" relationship="rootViewController" id="RzF-S8-cSm"/>
@@ -1067,7 +1065,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="設定作品資訊" id="2OW-hb-ZdD">
                         <barButtonItem key="leftBarButtonItem" title="取消" id="CQQ-C8-l6K">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="cancelAndDismiss:" destination="dJw-Ol-VML" id="wFv-Ge-PlI"/>
                             </connections>
@@ -1101,6 +1099,7 @@
     <resources>
         <image name="Icon.png" width="180" height="180"/>
         <image name="addIcon.png" width="120" height="120"/>
+        <image name="clearLine.png" width="300" height="2"/>
         <image name="ic200_videomake_white" width="144" height="144"/>
     </resources>
 </document>

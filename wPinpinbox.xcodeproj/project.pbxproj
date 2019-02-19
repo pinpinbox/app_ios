@@ -366,6 +366,7 @@
 		CB7CDFD5221BAB9D001798F0 /* YTVimeoVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7CDFC6221BAB9D001798F0 /* YTVimeoVideo.m */; };
 		CB7CDFD7221BAB9D001798F0 /* Info-tvOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = CB7CDFCB221BAB9D001798F0 /* Info-tvOS.plist */; };
 		CB7CDFD8221BAB9D001798F0 /* YTVimeoExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7CDFCE221BAB9D001798F0 /* YTVimeoExtractor.m */; };
+		CB7CDFDB221BB3EA001798F0 /* clearLine.png in Resources */ = {isa = PBXBuildFile; fileRef = CB7CDFDA221BB3EA001798F0 /* clearLine.png */; };
 		CB7F2E42216C97AA00A3E1AD /* MultipartInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */; };
 		CB8404DA218718DB00E1C2A7 /* InfoTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8404D9218718DB00E1C2A7 /* InfoTextView.m */; };
 		CB84C63321A68903000D348C /* MapHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB84C63221A68903000D348C /* MapHelper.m */; };
@@ -1065,6 +1066,7 @@
 		CB7CDFCC221BAB9D001798F0 /* YTVimeoVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoVideo.h; sourceTree = "<group>"; };
 		CB7CDFCD221BAB9D001798F0 /* YTVimeoURLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTVimeoURLParser.h; sourceTree = "<group>"; };
 		CB7CDFCE221BAB9D001798F0 /* YTVimeoExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTVimeoExtractor.m; sourceTree = "<group>"; };
+		CB7CDFDA221BB3EA001798F0 /* clearLine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clearLine.png; sourceTree = "<group>"; };
 		CB7F2E40216C97AA00A3E1AD /* MultipartInputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MultipartInputStream.h; path = MultipartInputStream/MultipartInputStream.h; sourceTree = "<group>"; };
 		CB7F2E41216C97AA00A3E1AD /* MultipartInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MultipartInputStream.m; path = MultipartInputStream/MultipartInputStream.m; sourceTree = "<group>"; };
 		CB8404D9218718DB00E1C2A7 /* InfoTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InfoTextView.m; sourceTree = "<group>"; };
@@ -2909,6 +2911,7 @@
 		CBE104B621C7490A00E185D3 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				CB7CDFDA221BB3EA001798F0 /* clearLine.png */,
 				CBEB727721D32DB700B22B1C /* addIcon.png */,
 				CB20EB2121CCDA9B0084E640 /* Icon.png */,
 				CBE2AFA521CB437C0032290C /* notavailable.png */,
@@ -3188,6 +3191,7 @@
 				CBE104BD21C7596600E185D3 /* ic200_act_close_white.png in Resources */,
 				CBE104B821C7490A00E185D3 /* videobase.jpg in Resources */,
 				CB20EB2221CCDA9B0084E640 /* Icon.png in Resources */,
+				CB7CDFDB221BB3EA001798F0 /* clearLine.png in Resources */,
 				CBA29A1321C8A989000A37F4 /* ic200_videomake_white.png in Resources */,
 				CBDA227321C3923200706E2C /* MainInterface.storyboard in Resources */,
 				CBEB727821D32DB800B22B1C /* addIcon.png in Resources */,
