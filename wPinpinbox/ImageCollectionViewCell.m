@@ -374,6 +374,26 @@
     self.addressTextView.wrapContentHeight = YES;    
 //    self.addressTextView.inputAccessoryView = toolBarForDoneBtn;
     
+    // MessageLabel
+    self.messageLabel.myTopMargin = self.messageLabel.myBottomMargin = 4;
+    self.messageLabel.myLeftMargin = self.messageLabel.myRightMargin = 32;
+    self.messageLabel.numberOfLines = 0;
+    self.messageLabel.font = [UIFont systemFontOfSize: 14.0];
+    self.messageLabel.textColor = [UIColor firstGrey];    
+    [self.messageLabel sizeToFit];
+    self.messageLabel.wrapContentHeight = YES;
+    
+    // MessageTextView
+    self.messageTextView.myTopMargin = 4;
+    self.messageTextView.myBottomMargin = 8;
+    self.messageTextView.myLeftMargin = self.messageTextView.myRightMargin = 32;
+    self.messageTextView.delegate = self;
+    self.messageTextView.textColor = [UIColor firstGrey];
+    self.messageTextView.backgroundColor = [UIColor thirdGrey];
+    self.messageTextView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
+    self.messageTextView.layer.cornerRadius = kCornerRadius;
+    self.messageTextView.wrapContentHeight = YES;
+    
     // RewardDescriptionLabel
     self.rewardDescriptionLabel.myTopMargin = self.rewardDescriptionLabel.myBottomMargin = 8;
     self.rewardDescriptionLabel.myLeftMargin = self.rewardDescriptionLabel.myRightMargin = 32;

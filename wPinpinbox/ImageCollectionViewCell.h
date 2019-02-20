@@ -58,6 +58,8 @@ typedef void(^ButtonTouch)(BOOL selected, NSInteger tag, UIButton *btn);
 //@property (weak, nonatomic) IBOutlet UITextField *phoneTextField;
 @property (weak, nonatomic) IBOutlet UILabel *addressLabel;
 @property (weak, nonatomic) IBOutlet UITextView *addressTextView;
+@property (weak, nonatomic) IBOutlet UILabel *messageLabel;
+@property (weak, nonatomic) IBOutlet UITextView *messageTextView;
 @property (weak, nonatomic) IBOutlet UILabel *rewardDescriptionLabel;
 @property (weak, nonatomic) IBOutlet UIButton *sponsorBtnForBgV3;
 
