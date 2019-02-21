@@ -1729,6 +1729,9 @@ shouldChangeTextInRange:(NSRange)range
 }
 
 - (void)deleteAudioOfDiy {
+    
+    [self stopRipple];
+    
     @try {
         [DGHUDView start];
     } @catch (NSException *exception) {
