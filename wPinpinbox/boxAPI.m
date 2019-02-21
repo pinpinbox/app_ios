@@ -3500,7 +3500,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
 #pragma mark - upload album music
 + (void)uploadMusicWithAlbumSettings:(NSDictionary *)audioSetting path:(NSString *)path  audioUrl:(NSURL *)audioUrl sessionDelegate:(id<NSURLSessionDelegate>)sessionDelegate completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
-    NSData *vidData = [NSData dataWithContentsOfURL:audioUrl];
+    //NSData *vidData = [NSData dataWithContentsOfURL:audioUrl];
     NSString *audiofile = [audioUrl lastPathComponent];
     
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
@@ -3531,8 +3531,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
         NSString *d = _params[e];
         [st addPartWithName:e string:d];
     }
-    if (vidData && vidData.length > 0) {
-        
+    if (audioUrl){
         
         CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[audiofile pathExtension], NULL);
         CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
@@ -3541,7 +3540,13 @@ static NSString *hostURL = @"www.pinpinbox.com";
         if (mimeType) {
             type = (__bridge NSString *)mimeType;
         }
-        [st addPartWithName:FileParamConstant filename:audiofile data:vidData contentType:type];
+        
+        [st addPartWithName:FileParamConstant contentOfPath:[audioUrl path] contentType:type];
+        [NSThread sleepForTimeInterval: 0.5];
+    } else {
+        // audioUrl should not be empty
+        completionBlock(nil,  [NSError errorWithDomain:@"" code:-1009 userInfo:@{NSLocalizedDescriptionKey:@"無法讀取檔案，請重新選擇。"}]);
+        return;
     }
     
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];

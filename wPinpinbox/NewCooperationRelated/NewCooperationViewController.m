@@ -1051,7 +1051,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
 }
 
-- (void)actionSheetViewDidSlideOut:(CooperationInfoViewController *)controller {
+- (void)actionSheetViewDidSlideOut:(UIViewController *)controller {
     [self.effectView removeFromSuperview];
     self.effectView = nil;
 }

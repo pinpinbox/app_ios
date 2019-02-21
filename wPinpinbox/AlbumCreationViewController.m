@@ -3287,9 +3287,11 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     if (![ImageDataArr[indexPath.item - 1][@"audio_url"] isEqual: [NSNull null]]) {
         audioButton.hidden = NO;
-        [audioButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+        //[audioButton setImageEdgeInsets:UIEdgeInsetsMake(6, 6, 6, 6)];
+        //[audioButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
         audioButton.backgroundColor = [UIColor firstMain];
         audioButton.layer.cornerRadius = audioButton.bounds.size.width / 2;
+        
     } else {
         audioButton.hidden = YES;
         //[audioButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];

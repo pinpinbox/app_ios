@@ -47,7 +47,7 @@
 }
 
 - (void)updateLength {
-    self.length = self.headerLength+ self.bodyLength +2;
+    self.length = self.headerLength+ self.bodyLength + ((self.headerLength > 0)? 2: 0);
     [self.body open];
 }
 - (id)initWithName:(NSString *)name boundary:(NSString *)boundary string:(NSString *)string {
@@ -80,26 +80,64 @@
     }
     return self;
 }
-- (id)initWithName:(NSString *)name boundary:(NSString *)boundary filePath:(NSString *)filePath mime:(NSString *)mime {
+- (id)initWithUploadHeader:(NSString *)name boundary:(NSString *)boundary filePath:(NSString *)filePath mime:(NSString *)mime {
     self = [super init];
     if (self) {
         NSString *f = [filePath lastPathComponent];
         NSString *ext = [filePath pathExtension];
+        NSData *HeaderData = nil;
         if (f != nil ) {
             mime = [MultipartInputStreamElement findContenttypeWithExt:ext];
             NSString *he = [NSString stringWithFormat:kMultipartFileData,boundary,name,f,mime];
-            self.header = [he dataUsingEncoding:NSUTF8StringEncoding];
+            HeaderData = [he dataUsingEncoding:NSUTF8StringEncoding];
+            
         } else {
             NSString *he = [NSString stringWithFormat:kMultipartData,boundary,name,mime];
-            self.header = [he dataUsingEncoding:NSUTF8StringEncoding];
+            HeaderData = [he dataUsingEncoding:NSUTF8StringEncoding];
         }
+        self.body = [NSInputStream inputStreamWithData:HeaderData];
+        self.bodyLength = HeaderData.length;
+        self.headerLength = 0;
+        self.length = self.bodyLength + self.headerLength;
+        [self.body open];
+    }
+    
+    return self;
+}
+- (id)initWithUploadFooter {
+    self = [super init];
+    if (self) {
         
-        self.headerLength = self.header.length;
+        
+        self.headerLength = 0;
+        const char footer[] = {'\r','\n'};
+        
+        NSData *HeaderData = [NSData dataWithBytes:footer length:2];
+        
+        self.body = [NSInputStream inputStreamWithData:HeaderData];
+        self.bodyLength = HeaderData.length;
+        
+        self.length = self.bodyLength + self.headerLength;
+        [self.body open];
+    }
+    
+    return self;
+}
+
+- (id)initWithName:(NSString *)name boundary:(NSString *)boundary filePath:(NSString *)filePath mime:(NSString *)mime {
+    //  One file-uploading stream contains three streams : [MultipartHeader data stream, file stream, MultipartFooter data stream ]
+    //  Only open uploading stream after all three are built
+    self = [super init];
+    if (self) {
+        
+        self.header = nil;
+        self.headerLength = 0;
         self.body = [NSInputStream inputStreamWithFileAtPath:filePath];
         NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
         self.bodyLength = [[info objectForKey: NSFileSize] unsignedIntegerValue];
         
-        [self updateLength];
+        self.length = self.bodyLength + self.headerLength;
+        [self.body open];
     }
     return self;
 }
@@ -190,7 +228,9 @@
         sent           += read;
         self.delivered += sent;
     }
-    while (self.delivered >= self.headerLength && self.delivered < (self.length - 2) && sent < len)
+    //  count footer if header != nil //
+    int footer = (self.headerLength > 0)? 2: 0;
+    while (self.delivered >= self.headerLength && self.delivered < (self.length - footer) && sent < len)
     {
         if ((read = [self.body read:buffer + sent maxLength:len - sent]) == 0)
         {
@@ -199,20 +239,35 @@
         sent           += read;
         self.delivered += read;
     }
-    if (self.delivered >= (self.length - 2) && sent < len)
-    {
-        if (self.delivered == (self.length - 2))
+    
+    //  add real footer '\r''\n' when header != nil //
+    if (self.headerLength > 0) {
+        if (self.delivered >= (self.length - 2) && sent < len)
         {
-            *(buffer + sent) = '\r';
+            if (self.delivered == (self.length - 2))
+            {
+                *(buffer + sent) = '\r';
+                sent ++; self.delivered ++;
+            }
+            *(buffer + sent) = '\n';
             sent ++; self.delivered ++;
         }
-        *(buffer + sent) = '\n';
-        sent ++; self.delivered ++;
     }
     return sent;
 }
+- (NSStreamStatus) bodyStatus {
+    if (self.body)
+        return self.body.streamStatus;
+    
+    return NSStreamStatusNotOpen;
+}
 - (BOOL)hasByteAvailable {
     return YES;
+}
+- (void)recheckBodyStreamOpened {
+    if (self.body && self.body.streamStatus != NSStreamStatusOpen) {
+        [self.body open];
+    }
 }
 @end
 
@@ -264,10 +319,17 @@
     [self.parts addObject:[[MultipartInputStreamElement alloc] initWithName:name boundary:self.boundary data:data mime:type filename:filename ]]; //[[MultipartInputStreamElement alloc] initWithName:name boundary:self.boundary data:data contentType:type filename:filename]];
     [self updateLength];
 }
-- (void)addPartWithName:(NSString *)name contentOfPath:(NSString *)contentOfPath
+- (void)addPartWithName:(NSString *)name contentOfPath:(NSString *)contentOfPath contentType:(NSString *)type
 {
-    [self.parts addObject:[[MultipartInputStreamElement alloc] initWithName:name boundary:self.boundary filePath:contentOfPath mime:@""]];//[[MultipartInputStreamElement alloc] initWithName:name filename:nil boundary:self.boundary path:path]];
+    //  multipart Header data stream
+    [self.parts addObject:[[MultipartInputStreamElement alloc] initWithUploadHeader:name boundary:self.boundary filePath:contentOfPath mime:type ]];
+    //  file stream
+    [self.parts addObject:[[MultipartInputStreamElement alloc] initWithName:name boundary:self.boundary filePath:contentOfPath mime:type]];
+    // multipart Footer data stream
+    [self.parts addObject:[[MultipartInputStreamElement alloc] initWithUploadFooter]];
+    
     [self updateLength];
+    
 }
 - (void)addPartWithName:(NSString *)name filename:(NSString *)filename path:(NSString *)path
 {
@@ -304,7 +366,10 @@
     self.status = NSStreamStatusReading;
     while (self.delivered < self.length && sent < len && self.currentPart < self.parts.count)
     {
-        if ((read = [[self.parts objectAtIndex:self.currentPart] read:(buffer + sent) maxLength:(len - sent)]) == 0)
+        MultipartInputStreamElement *ele = [self.parts objectAtIndex:self.currentPart];
+        [ele recheckBodyStreamOpened];
+        
+        if ((read = [ele read:(buffer + sent) maxLength:(len - sent)]) == 0)
         {
             self.currentPart ++;
             continue;

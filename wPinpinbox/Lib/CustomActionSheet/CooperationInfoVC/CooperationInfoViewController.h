@@ -16,7 +16,7 @@ typedef void(^viewTouch)(NSInteger tagId, BOOL isTouchDown, NSString *identifier
 
 @class CooperationViewController;
 @protocol CooperationInfoViewControllerDelegate <NSObject>
-- (void)actionSheetViewDidSlideOut:(CooperationViewController *)controller;
+- (void)actionSheetViewDidSlideOut:(UIViewController *)controller;
 @end
 
 @interface CooperationInfoViewController : UIViewController

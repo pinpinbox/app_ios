@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.43"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -304,11 +304,16 @@
                                                     <color key="textColor" red="0.35614264010000002" green="0.35613197089999998" blue="0.35613799099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" tag="3333" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bL6-3d-3KJ">
+                                                <button hidden="YES" opaque="NO" tag="3333" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bL6-3d-3KJ">
                                                     <rect key="frame" x="30" y="0.0" width="22" height="22"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.67450980390000004" blue="0.75686274509999996" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="22" id="BSp-6x-mbT"/>
+                                                        <constraint firstAttribute="height" constant="22" id="Qad-fc-Zpg"/>
+                                                    </constraints>
                                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <inset key="imageEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
-                                                    <state key="normal">
+                                                    <state key="normal" image="ic200_audio_play_white">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
                                                 </button>
@@ -976,12 +981,13 @@
         <image name="4-08photo-size" width="88" height="132"/>
         <image name="ic200_act_close_pink" width="144" height="144"/>
         <image name="ic200_arrow_left_dark" width="72" height="72"/>
+        <image name="ic200_audio_play_white" width="144" height="144"/>
         <image name="ic200_cancel_dark" width="144" height="144"/>
         <image name="ic200_cooperation_dark" width="144" height="144"/>
         <image name="ic200_delete_white" width="144" height="144"/>
         <image name="ic200_edit_white" width="144" height="144"/>
         <image name="ic200_refresh_dark" width="144" height="144"/>
         <image name="ic200_setting_dark" width="144" height="144"/>
-        <image name="ic200_video_white_1" width="96" height="96"/>
+        <image name="ic200_video_white_1" width="48" height="48"/>
     </resources>
 </document>
