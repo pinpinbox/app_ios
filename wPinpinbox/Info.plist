@@ -60,8 +60,9 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
 		<string>fb-messenger-api</string>
-		<string>fbauth2</string>
+		<string>fbauth2</string>		
 		<string>fbshareextension</string>
 		<string>googlechromes</string>
 		<string>comgooglemaps</string>
