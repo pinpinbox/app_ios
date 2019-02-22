@@ -331,21 +331,11 @@
     [self updateLength];
     
 }
-- (void)addPartWithName:(NSString *)name filename:(NSString *)filename path:(NSString *)path
-{
-    [self.parts addObject:[[MultipartInputStreamElement alloc] initWithName:name boundary:self.boundary filePath:path mime:@""]];//[[MultipartInputStreamElement alloc] initWithName:name filename:filename boundary:self.boundary path:path]];
-    [self updateLength];
-}
 - (void)addPartWithName:(NSString *)name filename:(NSString *)filename path:(NSString *)path contentType:(NSString *)type
 {
     [self.parts addObject:[[MultipartInputStreamElement alloc] initWithName:name boundary:self.boundary filePath:path mime:@""]];//[[MultipartInputStreamElement alloc] initWithName:name filename:filename boundary:self.boundary path:path contentType:type]];
     [self updateLength];
 }
-//- (void)addPartWithName:(NSString *)name filename:(NSString *)filename stream:(NSInputStream *)stream streamLength:(NSUInteger)streamLength
-//{
-//    [self.parts addObject://[[MultipartInputStreamElement alloc] initWithName:name filename:filename boundary:self.boundary stream:stream streamLength:streamLength]];
-//    [self updateLength];
-//}
 
 - (void)addPartWithHeaders:(NSDictionary *)headers string:(NSString *)string
 {

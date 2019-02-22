@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addPartWithName:(NSString *)name string:(NSString *)string;
 - (void)addPartWithName:(NSString *)name filename:(NSString *)filename data:(NSData *)data contentType:(NSString *)contentType;
 - (void)addPartWithName:(NSString *)name contentOfPath:(NSString *)path contentType:(NSString *)contentType;
-- (void)addPartWithName:(NSString *)name filename:(NSString *)filename contentOfStream:(NSInputStream *)stream length:(NSUInteger)length contentType:(NSString *)contentType;
 - (void)addPartWithName:(NSString *)name filename:(NSString *)filename phasset:(PHAsset *)asset length:(NSUInteger)length contentType:(NSString *)contentType;
 - (void)addHeaders:(NSDictionary *)headers;
 
