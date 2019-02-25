@@ -1265,13 +1265,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             NSLog( @"Reason: %@", exception.reason );
             return;
         }
+        
+        // To avoid the syncScrubbing keep calling, so pause avPlayer
+        NSLog(@"self.avPlayer pause");
+        [self.avPlayer pause];
+        //  Replace playerItem instead of reallocating a new AVPlayer
+        NSLog(@"self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem]");
+        [self.avPlayer replaceCurrentItemWithPlayerItem: self.avPlayerItem];//= [AVPlayer playerWithPlayerItem: self.avPlayerItem];
+        
+    } else {
+        self.avPlayer = [AVPlayer playerWithPlayerItem:self.avPlayerItem];
+        
     }
-    // To avoid the syncScrubbing keep calling, so pause avPlayer
-    NSLog(@"self.avPlayer pause");
-    [self.avPlayer pause];
-    
-    NSLog(@"self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem]");
-    self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem];
     
     // This loading audio faster feature is available iOS 10.0 not lower version
     self.avPlayer.automaticallyWaitsToMinimizeStalling = NO;
@@ -1405,9 +1410,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                             
                             if (videoIsPlaying) {
                                 [self.avPlayer pause];
-                            } else {
+                            } else if (self.isPresented){
                                 [self.avPlayer play];
                                 NSLog(@"self.avPlayer play");
+                            } else {
+                                [self.avPlayer pause];
+                                NSLog(@"page closed");
                             }
                         } else {
                             NSLog(@"self.isReadyToPlay is set to NO");
@@ -4422,8 +4430,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     self.videoPlayerViewController.player = nil;
     self.videoPlayerViewController = nil;
     
-    [self removeObserverForPlayerAndItem];
     [[NSNotificationCenter defaultCenter] removeObserver: self];
+    [self removeObserverForPlayerAndItem];
+    
     
     self.isPresented = NO;
     [self changeOrientationToPortrait];
@@ -5329,6 +5338,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             NSLog( @"Reason: %@", exception.reason );
             return;
         }
+        
         self.avPlayerItem = nil;
     }
 }
