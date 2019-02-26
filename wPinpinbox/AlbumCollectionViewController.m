@@ -51,7 +51,7 @@
 @property (nonatomic, strong) UILabel *centerLabel;
 @property (nonatomic, strong) UILabel *rightLabel;
 
-@property (nonatomic) UIVisualEffectView *effectView;
+//@property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) DDAUIActionSheetViewController *customEditActionSheet;
 @property (nonatomic) UIColor *unselectedColor;
 @end
@@ -504,17 +504,17 @@
     NSLog(@"showCustomEditActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//    
+//    [self.view addSubview: self.effectView];
     
     // Custom ActionSheet Setting
     [self.view addSubview: self.customEditActionSheet.view];
@@ -559,8 +559,8 @@
     NSLog(@"actionSheetViewDidSlideOut");
     //[self.fxBlurView removeFromSuperview];
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
 }
 
 #pragma mark - Methods for choosing viewControllers

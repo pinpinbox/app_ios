@@ -197,7 +197,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
 @property (nonatomic) MessageboardViewController *customMessageActionSheet;
 @property (nonatomic) MapShowingViewController *mapShowingActionSheet;
-@property (nonatomic) UIVisualEffectView *effectView;
+//@property (nonatomic) UIVisualEffectView *effectView;
 
 @property (strong, nonatomic) AVPlayer *avPlayer;
 @property (strong, nonatomic) AVPlayerItem *avPlayerItem;
@@ -4454,20 +4454,20 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)showMapViewActionSheet {
     NSLog(@"");
     NSLog(@"showMapViewActionSheet");
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//
+//    [self.view addSubview: self.effectView];
     
     // Custom ActionSheet Setting
     NSInteger page = [self getCurrentPage];
@@ -4541,17 +4541,17 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)showCustomMessageActionSheet {
     NSLog(@"showCustomMessageActionSheet");
     self.messageBtn.backgroundColor = [UIColor clearColor];
-    
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.9;
+//
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.9;
     
     // Call customMessageActionSheet methods first
     [self.customMessageActionSheet initialValueSetup];
@@ -4600,20 +4600,20 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"");
     NSLog(@"showCustomMoreActionSheet");
     // Blur View Setting
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
-    
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//
+//    [self.view addSubview: self.effectView];
+
     // Custom ActionSheet Setting
     [self.view addSubview: self.customMoreActionSheet.view];
     [self.customMoreActionSheet viewWillAppear: NO];
@@ -4717,20 +4717,20 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)showCustomShareActionSheet {
-    // Blur View Setting
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
-    
+//    // Blur View Setting
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//
+//    [self.view addSubview: self.effectView];
+//
     // Custom ActionSheet Setting
     [self.view addSubview: self.customShareActionSheet.view];
     [self.customShareActionSheet viewWillAppear: NO];
@@ -4807,15 +4807,15 @@ didFailWithError:(NSError *)error {
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     NSLog(@"DDAUIActionSheetViewController");
     NSLog(@"actionSheetViewDidSlideOut");
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
 }
 
 #pragma mark - MapShowingViewControllerDelegate Method
 - (void)mapShowingActionSheetDidSlideOut:(MapShowingViewController *)controller {
     NSLog(@"mapShowingActionSheetDidSlideOut");
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
     
 }
 
@@ -4823,8 +4823,8 @@ didFailWithError:(NSError *)error {
     NSLog(@"gotMessageData");
     // CustomActionSheet Setting
     // Below method will call viewDidLoad
-    [self.view addSubview: self.effectView];
-    [self.view addSubview: self.customMessageActionSheet.view];
+//    [self.view addSubview: self.effectView];
+//    [self.view addSubview: self.customMessageActionSheet.view];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer

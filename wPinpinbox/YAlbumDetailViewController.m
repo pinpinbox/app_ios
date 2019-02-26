@@ -148,7 +148,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     }
 }
 - (BOOL)isPanValid {
-    
+
     return self.effectView == nil;
 }
 - (void)setIsCollected:(BOOL)isCollected {
@@ -1344,33 +1344,35 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 #pragma mark -
 - (void)actionSheetViewDidSlideOut:(UIViewController *)controller {
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
-        
+    if (self.effectView) {
+        [self.effectView removeFromSuperview];
+        self.effectView = nil;
+    }
+    
     [self retrieveAlbum:self.album_id silence:YES];
     if (_isMessageShowing)
         _isMessageShowing = NO;
 }
 #pragma mark -
 - (void)gotMessageData {
-    //self.effectView.tag = 100;
+    self.effectView.tag = 100;
     [self.view addSubview: self.effectView];
     [self.view addSubview: self.customMessageActionSheet.view];
 }
 #pragma mark -
 - (void)showCustomShareActionSheet {
     if (self.albumInfo.allKeys.count < 1) return;
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.alpha = 0.8;
-    [self.view addSubview: self.effectView];
-    
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.alpha = 0.8;
+//    [self.view addSubview: self.effectView];
+//
     [self.view addSubview: self.customShareActionSheet.view];
     [self.customShareActionSheet viewWillAppear: NO];
     [self.customShareActionSheet addSelectItem: @"" title: @"獎勵分享(facebook)" btnStr: @"" tagInt: 1 identifierStr: @"fbSharing"];
@@ -1422,7 +1424,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     self.messageBtn.backgroundColor = [UIColor clearColor];
     
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
+
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
@@ -1431,7 +1433,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     //self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
     //self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
     self.effectView.alpha = 0.9;
-    
+
     // Call customMessageActionSheet methods first
     [self.customMessageActionSheet initialValueSetup];
     [self.customMessageActionSheet getMessage];
@@ -1439,15 +1441,15 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 
 - (void)showCustomMoreActionSheet {
     if (self.albumInfo.allKeys.count < 1) return;
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.alpha = 0.8;
-    [self.view addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.alpha = 0.8;
+//    [self.view addSubview: self.effectView];
     
     // CustomActionSheet Setting
     [self.view addSubview: self.customMoreActionSheet.view];

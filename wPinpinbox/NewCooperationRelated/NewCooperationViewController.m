@@ -47,7 +47,7 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *identityCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *creatorListCollectionView;
 
-@property (nonatomic) UIVisualEffectView *effectView;
+//@property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) CooperationInfoViewController *customActionSheet;
 
 @property (nonatomic) BOOL firstTimeLoadingData;
@@ -996,18 +996,18 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 #pragma mark - Show actionsheet
 - (void)showManagementActionSheet:(NSString *)userId {
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.alpha = 0.8;
-    
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.alpha = 0.8;
+//
     self.customActionSheet = [[CooperationInfoViewController alloc] init];
 //    self.customActionSheet.infoStr = NSLocalizedString(@"GeneralText-IdentityInfo", @"");
     self.customActionSheet.topicStr = @"變更權限";
     self.customActionSheet.hideQuestionBtn = NO;
     self.customActionSheet.delegate = self;
-    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
+//    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
     [[UIApplication sharedApplication].keyWindow addSubview: self.customActionSheet.view];
     [self.customActionSheet viewWillAppear: NO];
     
@@ -1052,8 +1052,8 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)actionSheetViewDidSlideOut:(UIViewController *)controller {
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
 }
 
 #pragma mark - Touches Detection

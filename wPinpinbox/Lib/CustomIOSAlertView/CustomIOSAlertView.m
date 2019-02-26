@@ -143,7 +143,11 @@ CGFloat buttonSpacerHeight = 0;
     __block typeof(dialogView) dview = dialogView;
     [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
 					 animations:^{
-						 self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.78f];
+                         self.backgroundColor = [UIColor colorWithRed: 77.0/255.0
+                                                                green: 77.0/255.0
+                                                                 blue: 77.0/255.0
+                                                                alpha: 0.78];
+                         
                          dview.layer.opacity = 1.0f;
                          dview.layer.transform = CATransform3DMakeScale(1, 1, 1);
 					 }
