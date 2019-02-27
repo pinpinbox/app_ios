@@ -1562,7 +1562,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 #pragma mark - Custom AlertView for Yes and No
 - (void)showCustomAlertForOptions: (NSString *)msg {
     NSLog(@"showCustomAlert: Msg: %@", msg);
-    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
+    
     CustomIOSAlertView *alertViewForOptions = [[CustomIOSAlertView alloc] init];
     //[alertViewForOptions setContainerView: [self createContainerViewForOptions: msg]];
     [alertViewForOptions setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1577,7 +1577,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [alertViewForOptions setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertViewForOptions setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
-    
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     __weak CustomIOSAlertView *weakAlertViewForOptions = alertViewForOptions;
     [alertViewForOptions setOnButtonTouchUpInside:^(CustomIOSAlertView *alertViewForOptions, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForOptions tag]);
