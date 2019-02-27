@@ -75,6 +75,7 @@ CGFloat buttonSpacerHeight = 0;
 // Create the dialog view, and animate opening the dialog
 - (void)show
 {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     dialogView = [self createContainerView];
   
     dialogView.layer.shouldRasterize = YES;

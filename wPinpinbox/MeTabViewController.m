@@ -1714,8 +1714,10 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
 #pragma mark - Call Protocol
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         [customAlertView close];
     }];
 }
@@ -1743,10 +1745,11 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         [weakAlertTimeOutView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {            
         } else {
             if ([protocolName isEqualToString: @"getcreative"]) {

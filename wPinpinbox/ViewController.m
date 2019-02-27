@@ -1562,6 +1562,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
 #pragma mark - Custom AlertView for Yes and No
 - (void)showCustomAlertForOptions: (NSString *)msg {
     NSLog(@"showCustomAlert: Msg: %@", msg);
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     CustomIOSAlertView *alertViewForOptions = [[CustomIOSAlertView alloc] init];
     //[alertViewForOptions setContainerView: [self createContainerViewForOptions: msg]];
     [alertViewForOptions setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1581,7 +1582,7 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     [alertViewForOptions setOnButtonTouchUpInside:^(CustomIOSAlertView *alertViewForOptions, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertViewForOptions tag]);
         [weakAlertViewForOptions close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             exit(0);
         } else {
@@ -1620,10 +1621,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
         [alertUpdateView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     }
     __weak CustomIOSAlertView *weakAlertUpdateView = alertUpdateView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertUpdateView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertUpdateView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertUpdateView tag]);
         [weakAlertUpdateView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if ([option isEqualToString: @"mustUpdate"]) {
             if (buttonIndex == 0) {
                 [[UIApplication sharedApplication] openURL: [NSURL URLWithString: appStoreUrl] options:@{} completionHandler:nil];
@@ -1673,10 +1675,11 @@ typedef void (^FBBlock)(void);typedef void (^FBBlock)(void);
     
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         [weakAlertTimeOutView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             NSLog(@"protocolName: %@", protocolName);
             if ([protocolName isEqualToString: @"checkToken"] || [protocolName isEqualToString: @"getprofile"] || [protocolName isEqualToString: @"geturpoints"]) {
