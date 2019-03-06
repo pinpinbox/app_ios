@@ -48,7 +48,7 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *identityCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *creatorListCollectionView;
 
-@property (nonatomic) UIVisualEffectView *effectView;
+//@property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) CooperationInfoViewController *customActionSheet;
 
 @property (nonatomic) BOOL firstTimeLoadingData;
@@ -999,18 +999,18 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 
 #pragma mark - Show actionsheet
 - (void)showManagementActionSheet:(NSString *)userId {
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.alpha = 0.8;
-    
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.alpha = 0.8;
+//
     self.customActionSheet = [[CooperationInfoViewController alloc] init];
 //    self.customActionSheet.infoStr = NSLocalizedString(@"GeneralText-IdentityInfo", @"");
     self.customActionSheet.topicStr = @"變更權限";
     self.customActionSheet.hideQuestionBtn = NO;
     self.customActionSheet.delegate = self;
-    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
+//    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
     [[UIApplication sharedApplication].keyWindow addSubview: self.customActionSheet.view];
     [self.customActionSheet viewWillAppear: NO];
     
@@ -1054,9 +1054,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     }
 }
 
-- (void)actionSheetViewDidSlideOut:(CooperationInfoViewController *)controller {
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+- (void)actionSheetViewDidSlideOut:(UIViewController *)controller {
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
 }
 
 #pragma mark - Touches Detection
@@ -1103,13 +1103,13 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     [alertTimeOutView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
-    
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         [weakAlertTimeOutView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {

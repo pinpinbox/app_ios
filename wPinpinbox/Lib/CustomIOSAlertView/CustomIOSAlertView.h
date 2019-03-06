@@ -11,9 +11,9 @@
 
 #import <UIKit/UIKit.h>
 
-#define kMinAlertViewContentHeight 74
-#define kMinAlertViewActionHeight 74
-#define kAlertContentBackgroundImageSize 96
+#define kMinAlertViewContentHeight 96
+#define kMinAlertViewActionHeight 72
+#define kAlertContentBackgroundImageSize 128
 #define kAlertContentBackgroundImageInset 16
 extern const CGFloat kCustomIOSAlertViewDefaultButtonSpacerHeight;
 

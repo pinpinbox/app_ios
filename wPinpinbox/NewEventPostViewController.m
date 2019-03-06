@@ -49,7 +49,7 @@
 @property (weak, nonatomic) IBOutlet MyLinearLayout *vertLayout;
 
 @property (nonatomic) DDAUIActionSheetViewController *customPostActionSheet;
-@property (nonatomic) UIVisualEffectView *effectView;
+//@property (nonatomic) UIVisualEffectView *effectView;
 
 @property (weak, nonatomic) IBOutlet UIView *goVotingView;
 @property (weak, nonatomic) IBOutlet UIImageView *arrowVoteImage;
@@ -634,19 +634,19 @@
 #pragma mark - CustomActionSheet
 - (void)showPostMode {
     NSLog(@"showPostMode");
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: 0.5 animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: 0.5 animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
     
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//    
+//    [self.view addSubview: self.effectView];
     [self.view addSubview: self.customPostActionSheet.view];
     [self.customPostActionSheet viewWillAppear: NO];
     
@@ -674,8 +674,8 @@
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     NSLog(@"actionSheetViewDidSlideOut");
     //[self.fxBlurView removeFromSuperview];
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
 }
 
 #pragma mark -

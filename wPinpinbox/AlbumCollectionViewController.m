@@ -53,7 +53,7 @@
 @property (nonatomic, strong) UILabel *centerLabel;
 @property (nonatomic, strong) UILabel *rightLabel;
 
-@property (nonatomic) UIVisualEffectView *effectView;
+//@property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) DDAUIActionSheetViewController *customEditActionSheet;
 @property (nonatomic) UIColor *unselectedColor;
 @end
@@ -506,17 +506,17 @@
     NSLog(@"showCustomEditActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//    
+//    [self.view addSubview: self.effectView];
     
     // Custom ActionSheet Setting
     [self.view addSubview: self.customEditActionSheet.view];
@@ -561,8 +561,8 @@
     NSLog(@"actionSheetViewDidSlideOut");
     //[self.fxBlurView removeFromSuperview];
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
 }
 
 #pragma mark - Methods for choosing viewControllers
@@ -711,9 +711,11 @@
 
 #pragma mark - Custom Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
     }];
 }
 
@@ -739,10 +741,11 @@
     
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         [weakAlertTimeOutView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {

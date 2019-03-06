@@ -3501,7 +3501,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
 #pragma mark - upload album music
 + (void)uploadMusicWithAlbumSettings:(NSDictionary *)audioSetting path:(NSString *)path  audioUrl:(NSURL *)audioUrl sessionDelegate:(id<NSURLSessionDelegate>)sessionDelegate completionBlock:(void(^)(NSDictionary *result, NSError *error))completionBlock {
     
-    NSData *vidData = [NSData dataWithContentsOfURL:audioUrl];
+    //NSData *vidData = [NSData dataWithContentsOfURL:audioUrl];
     NSString *audiofile = [audioUrl lastPathComponent];
     
     NSMutableDictionary* _params = [[NSMutableDictionary alloc] init];
@@ -3532,8 +3532,7 @@ static NSString *hostURL = @"www.pinpinbox.com";
         NSString *d = _params[e];
         [st addPartWithName:e string:d];
     }
-    if (vidData && vidData.length > 0) {
-        
+    if (audioUrl){
         
         CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[audiofile pathExtension], NULL);
         CFStringRef mimeType = UTTypeCopyPreferredTagWithClass (UTI, kUTTagClassMIMEType);
@@ -3542,7 +3541,14 @@ static NSString *hostURL = @"www.pinpinbox.com";
         if (mimeType) {
             type = (__bridge NSString *)mimeType;
         }
-        [st addPartWithName:FileParamConstant filename:audiofile data:vidData contentType:type];
+        
+        [st addPartWithName:FileParamConstant contentOfPath:[audioUrl path] contentType:type];
+        // MARK:  a short suspension to wait for file stream ready
+        [NSThread sleepForTimeInterval: 0.5];
+    } else {
+        // audioUrl should not be empty
+        completionBlock(nil,  [NSError errorWithDomain:@"" code:-1009 userInfo:@{NSLocalizedDescriptionKey:@"無法讀取檔案，請重新選擇。"}]);
+        return;
     }
     
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
@@ -3561,7 +3567,9 @@ static NSString *hostURL = @"www.pinpinbox.com";
     config.timeoutIntervalForRequest = [kTimeOutForVideo floatValue];
     NSURLSession *session = [NSURLSession sessionWithConfiguration: config delegate:sessionDelegate delegateQueue:nil];
     
-    //__block NSString *desc = [[NSUUID UUID] UUIDString];
+    // Test with 1-hour long MP3 (192kb/s, 86.4Mb)
+    // 4G : 1 min 40 sec
+    // Wifi : 1 min 10 sec
     NSURLSessionDataTask *task = [session dataTaskWithRequest: request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{

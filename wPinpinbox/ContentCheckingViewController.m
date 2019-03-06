@@ -88,6 +88,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UITextView *nameTextView;
     UITextView *phoneTextView;
     UITextView *addressTextView;
+    UITextView *messageTextView;
     UITextField *inputTextField;
     
 //    UITextField *inputField;
@@ -197,7 +198,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @property (nonatomic) DDAUIActionSheetViewController *customShareActionSheet;
 @property (nonatomic) MessageboardViewController *customMessageActionSheet;
 @property (nonatomic) MapShowingViewController *mapShowingActionSheet;
-@property (nonatomic) UIVisualEffectView *effectView;
+//@property (nonatomic) UIVisualEffectView *effectView;
 
 @property (strong, nonatomic) AVPlayer *avPlayer;
 @property (strong, nonatomic) AVPlayerItem *avPlayerItem;
@@ -1265,13 +1266,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             NSLog( @"Reason: %@", exception.reason );
             return;
         }
+        
+        // To avoid the syncScrubbing keep calling, so pause avPlayer
+        NSLog(@"self.avPlayer pause");
+        [self.avPlayer pause];
+        //  Replace playerItem instead of reallocating a new AVPlayer
+        NSLog(@"self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem]");
+        [self.avPlayer replaceCurrentItemWithPlayerItem: self.avPlayerItem];//= [AVPlayer playerWithPlayerItem: self.avPlayerItem];
+        
+    } else {
+        self.avPlayer = [AVPlayer playerWithPlayerItem:self.avPlayerItem];
+        
     }
-    // To avoid the syncScrubbing keep calling, so pause avPlayer
-    NSLog(@"self.avPlayer pause");
-    [self.avPlayer pause];
-    
-    NSLog(@"self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem]");
-    self.avPlayer = [AVPlayer playerWithPlayerItem: self.avPlayerItem];
     
     // This loading audio faster feature is available iOS 10.0 not lower version
     self.avPlayer.automaticallyWaitsToMinimizeStalling = NO;
@@ -1405,9 +1411,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                             
                             if (videoIsPlaying) {
                                 [self.avPlayer pause];
-                            } else {
+                            } else if (self.isPresented){
                                 [self.avPlayer play];
                                 NSLog(@"self.avPlayer play");
+                            } else {
+                                [self.avPlayer pause];
+                                NSLog(@"page closed");
                             }
                         } else {
                             NSLog(@"self.isReadyToPlay is set to NO");
@@ -2259,6 +2268,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [rewardDic setObject: nameTextView.text forKey: @"recipient"];
         [rewardDic setObject: phoneTextView.text forKey: @"recipient_tel"];
         [rewardDic setObject: addressTextView.text forKey: @"recipient_address"];
+        if ([wTools objectExists: messageTextView.text]) {
+            [rewardDic setObject: messageTextView.text forKey: @"recipient_text"];
+        } else {
+            [rewardDic setObject: @"" forKey: @"recipient_text"];
+        }
+        NSLog(@"rewardDic: %@", rewardDic);
         jsonData = [NSJSONSerialization dataWithJSONObject: rewardDic options: 0 error: nil];
         jsonStr = [[NSString alloc] initWithData: jsonData encoding: NSUTF8StringEncoding];
     } else {
@@ -3906,11 +3921,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         nameTextView = cell.nameTextView;
                         phoneTextView = cell.phoneTextView;
                         addressTextView = cell.addressTextView;
+                        messageTextView = cell.messageTextView;
                         
                         inputTextField.delegate = self;
                         nameTextView.delegate = self;
                         phoneTextView.delegate = self;
                         addressTextView.delegate = self;
+                        messageTextView.delegate = self;
+                        
+                        if ([wTools objectExists: self.bookdata[@"user"][@"name"]]) {
+                            cell.messageLabel.text = [NSString stringWithFormat: @"給%@的留言 (非必填)", self.bookdata[@"user"][@"name"]];
+                        }
                         
                         if ([wTools objectExists: rewardDescription]) {
                             cell.rewardDescriptionLabel.text = rewardDescription;
@@ -3928,11 +3949,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         nameTextView = cell.nameTextView;
                         phoneTextView = cell.phoneTextView;
                         addressTextView = cell.addressTextView;
+                        messageTextView = cell.messageTextView;
                         
                         inputTextField.delegate = self;
                         nameTextView.delegate = self;
                         phoneTextView.delegate = self;
                         addressTextView.delegate = self;
+                        messageTextView.delegate = self;
+                        
+                        if ([wTools objectExists: self.bookdata[@"user"][@"name"]]) {
+                            cell.messageLabel.text = [NSString stringWithFormat: @"給%@的留言 (非必填)", self.bookdata[@"user"][@"name"]];
+                        }
                         
                         if ([wTools objectExists: rewardDescription]) {
                             cell.rewardDescriptionLabel.text = rewardDescription;
@@ -4406,8 +4433,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     self.videoPlayerViewController.player = nil;
     self.videoPlayerViewController = nil;
     
-    [self removeObserverForPlayerAndItem];
     [[NSNotificationCenter defaultCenter] removeObserver: self];
+    [self removeObserverForPlayerAndItem];
+    
     
     self.isPresented = NO;
     [self changeOrientationToPortrait];
@@ -4429,20 +4457,20 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)showMapViewActionSheet {
     NSLog(@"");
     NSLog(@"showMapViewActionSheet");
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//
+//    [self.view addSubview: self.effectView];
     
     // Custom ActionSheet Setting
     NSInteger page = [self getCurrentPage];
@@ -4516,17 +4544,17 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)showCustomMessageActionSheet {
     NSLog(@"showCustomMessageActionSheet");
     self.messageBtn.backgroundColor = [UIColor clearColor];
-    
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.9;
+//
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.9;
     
     // Call customMessageActionSheet methods first
     [self.customMessageActionSheet initialValueSetup];
@@ -4575,20 +4603,20 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     NSLog(@"");
     NSLog(@"showCustomMoreActionSheet");
     // Blur View Setting
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
-    
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//
+//    [self.view addSubview: self.effectView];
+
     // Custom ActionSheet Setting
     [self.view addSubview: self.customMoreActionSheet.view];
     [self.customMoreActionSheet viewWillAppear: NO];
@@ -4692,20 +4720,20 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)showCustomShareActionSheet {
-    // Blur View Setting
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
-    
+//    // Blur View Setting
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//
+//    [self.view addSubview: self.effectView];
+//
     // Custom ActionSheet Setting
     [self.view addSubview: self.customShareActionSheet.view];
     [self.customShareActionSheet viewWillAppear: NO];
@@ -4782,15 +4810,15 @@ didFailWithError:(NSError *)error {
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     NSLog(@"DDAUIActionSheetViewController");
     NSLog(@"actionSheetViewDidSlideOut");
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
 }
 
 #pragma mark - MapShowingViewControllerDelegate Method
 - (void)mapShowingActionSheetDidSlideOut:(MapShowingViewController *)controller {
     NSLog(@"mapShowingActionSheetDidSlideOut");
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
     
 }
 
@@ -4798,8 +4826,8 @@ didFailWithError:(NSError *)error {
     NSLog(@"gotMessageData");
     // CustomActionSheet Setting
     // Below method will call viewDidLoad
-    [self.view addSubview: self.effectView];
-    [self.view addSubview: self.customMessageActionSheet.view];
+//    [self.view addSubview: self.effectView];
+//    [self.view addSubview: self.customMessageActionSheet.view];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
@@ -5313,6 +5341,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
             NSLog( @"Reason: %@", exception.reason );
             return;
         }
+        
         self.avPlayerItem = nil;
     }
 }

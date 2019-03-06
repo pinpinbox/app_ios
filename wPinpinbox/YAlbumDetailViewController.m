@@ -148,7 +148,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     }
 }
 - (BOOL)isPanValid {
-    
+
     return self.effectView == nil;
 }
 - (void)setIsCollected:(BOOL)isCollected {
@@ -1281,9 +1281,11 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 
 #pragma mark - Custom Method for TimeOut
 - (void)showCustomErrorAlert: (NSString *)msg {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
     }];
 }
 
@@ -1305,11 +1307,12 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     [alertTimeOutView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         
         [weakAlertTimeOutView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
         } else {
             if ([protocolName isEqualToString: @"checkTaskCompleted"]) {
@@ -1344,33 +1347,35 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 }
 #pragma mark -
 - (void)actionSheetViewDidSlideOut:(UIViewController *)controller {
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
-        
+    if (self.effectView) {
+        [self.effectView removeFromSuperview];
+        self.effectView = nil;
+    }
+    
     [self retrieveAlbum:self.album_id silence:YES];
     if (_isMessageShowing)
         _isMessageShowing = NO;
 }
 #pragma mark -
 - (void)gotMessageData {
-    //self.effectView.tag = 100;
+    self.effectView.tag = 100;
     [self.view addSubview: self.effectView];
     [self.view addSubview: self.customMessageActionSheet.view];
 }
 #pragma mark -
 - (void)showCustomShareActionSheet {
     if (self.albumInfo.allKeys.count < 1) return;
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.alpha = 0.8;
-    [self.view addSubview: self.effectView];
-    
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.alpha = 0.8;
+//    [self.view addSubview: self.effectView];
+//
     [self.view addSubview: self.customShareActionSheet.view];
     [self.customShareActionSheet viewWillAppear: NO];
     [self.customShareActionSheet addSelectItem: @"" title: @"獎勵分享(facebook)" btnStr: @"" tagInt: 1 identifierStr: @"fbSharing"];
@@ -1422,7 +1427,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     self.messageBtn.backgroundColor = [UIColor clearColor];
     
     UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
+
     [UIView animateWithDuration: kAnimateActionSheet animations:^{
         self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
     }];
@@ -1431,7 +1436,7 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
     //self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
     //self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
     self.effectView.alpha = 0.9;
-    
+
     // Call customMessageActionSheet methods first
     [self.customMessageActionSheet initialValueSetup];
     [self.customMessageActionSheet getMessage];
@@ -1439,15 +1444,15 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 
 - (void)showCustomMoreActionSheet {
     if (self.albumInfo.allKeys.count < 1) return;
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.alpha = 0.8;
-    [self.view addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.alpha = 0.8;
+//    [self.view addSubview: self.effectView];
     
     // CustomActionSheet Setting
     [self.view addSubview: self.customMoreActionSheet.view];
@@ -1522,9 +1527,11 @@ AlbumCreationViewControllerDelegate,AlbumSettingViewControllerDelegate,FBSDKShar
 alertView.arrangeStyle = @"Horizontal";
     
     __weak CustomIOSAlertView *weakAlertView = alertView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
         [weakAlertView close];
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
     }];
     [alertView setUseMotionEffects: YES];
     [alertView show];
@@ -1545,12 +1552,12 @@ alertView.arrangeStyle = @"Horizontal";
     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     alertView.arrangeStyle = @"Horizontal";
-    
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     __weak CustomIOSAlertView *weakAlertView = alertView;
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
         [weakAlertView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {

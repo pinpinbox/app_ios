@@ -60,7 +60,7 @@
    didSendBodyData:(int64_t)bytesSent
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
-    NSLog(@"AudioUploader : %lld/%lld (%f)",totalBytesSent,totalBytesExpectedToSend,(double)totalBytesSent/(double)totalBytesExpectedToSend);
+    //NSLog(@"AudioUploader : %lld/%lld (%f)",totalBytesSent,totalBytesExpectedToSend,(double)totalBytesSent/(double)totalBytesExpectedToSend);
     if (self.uploadProgress) {
         self.uploadProgress((NSUInteger)totalBytesSent, (NSUInteger)totalBytesExpectedToSend, @"");
     }

@@ -102,7 +102,7 @@
 //  contextmenu selection index (-1,0,1,2)
 //@property (nonatomic) NSInteger contextMenuIndex;
 @property (nonatomic, strong) DDAUIActionSheetViewController *customEditActionSheet;
-@property (nonatomic) UIVisualEffectView *effectView;
+//@property (nonatomic) UIVisualEffectView *effectView;
 
 @property (nonatomic) NSString *albumId;
 @end
@@ -1552,15 +1552,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                         cellIndex:(NSInteger) index {
     NSLog(@"showCustomEditActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.alpha = 0.8;
-    
-    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.alpha = 0.8;
+//
+//    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
     [[UIApplication sharedApplication].keyWindow addSubview: self.customEditActionSheet.view];
     [self.customEditActionSheet viewWillAppear: NO];
     
@@ -1759,16 +1759,16 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                            albumid:(NSString *)albumid
                        autoplayStr:(NSString *)autoplayStr {
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.alpha = 0.8;
-    
-    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
-    [[UIApplication sharedApplication].keyWindow addSubview: self.customEditActionSheet.view];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    self.effectView.frame = CGRectMake(0, 0, self.view.frame.size.width, [UIApplication sharedApplication].keyWindow.bounds.size.height);//self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.alpha = 0.8;
+//
+//    [[UIApplication sharedApplication].keyWindow addSubview: self.effectView];
+//    [[UIApplication sharedApplication].keyWindow addSubview: self.customEditActionSheet.view];
     [self.customEditActionSheet viewWillAppear: NO];
     
     [self.customEditActionSheet addSelectItem: @"" title: @"獎勵分享(facebook)" btnStr: @"" tagInt: 1 identifierStr: @"fbSharing"];
@@ -1873,8 +1873,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+    //[self.effectView removeFromSuperview];
+    //self.effectView = nil;
 }
 
 #pragma mark - FB share SDK
@@ -2105,9 +2105,11 @@ didCompleteWithResults:(NSDictionary *)results {
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
     }];
 }
 
@@ -2137,11 +2139,12 @@ didCompleteWithResults:(NSDictionary *)results {
     
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         
         [weakAlertTimeOutView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {

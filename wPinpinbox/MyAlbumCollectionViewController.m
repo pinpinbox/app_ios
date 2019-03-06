@@ -108,7 +108,7 @@
                                              token: [wTools getUserToken]
                                               rank: @"mine"
                                              limit: limit];
-        
+        response = timeOutErrorCode;
         dispatch_async(dispatch_get_main_queue(), ^{
             @try {
                 [MBProgressHUD hideHUDForView: self.view animated: YES];
@@ -285,9 +285,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - Custom Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
     }];
 }
 
@@ -313,11 +315,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         
         [weakAlertTimeOutView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {            

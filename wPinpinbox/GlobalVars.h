@@ -56,6 +56,8 @@ extern CGFloat kToolBarViewHeightForX;
 
 extern CGFloat kActivityIndicatorViewSize;
 
+extern CGFloat kIconForInfoViewWidth;
+
 @interface GlobalVars : NSObject
 
 @end

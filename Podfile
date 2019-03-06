@@ -16,9 +16,9 @@ target 'wPinpinbox' do
   pod 'FLAnimatedImage', '~> 1.0'
   pod 'Fabric'
   pod 'Crashlytics'
-  pod 'FBSDKShareKit', '~> 4.38.1'
-  pod 'FBSDKCoreKit', '~> 4.38.1'
-  pod 'FBSDKLoginKit', '~> 4.38.1'
+  pod 'FBSDKShareKit'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
   pod 'GoogleAnalytics'
 
   pod 'DGActivityIndicatorView'

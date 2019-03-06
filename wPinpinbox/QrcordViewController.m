@@ -659,11 +659,12 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg
 {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     CustomIOSAlertView *errorAlertView = [UIViewController getCustomErrorAlert:msg];
     __weak CustomIOSAlertView *weakErrorAlertView = errorAlertView;
     [errorAlertView setOnButtonTouchUpInside:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         [weakErrorAlertView close];
         
         NSLog(@"buttonIndex: %d", buttonIndex);
@@ -771,14 +772,16 @@ didOutputMetadataObjects:(NSArray *)metadataObjects
     
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         
         if (buttonIndex == 0) {
             [weakAlertTimeOutView close];
+            [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         } else {
             [weakAlertTimeOutView close];
-            
+            [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
             if ([protocolName isEqualToString: @"retrievealbump"]) {
                 [weakSelf ToRetrievealbumpViewControlleralbumid: albumId];
             } else if ([protocolName isEqualToString: @"retrievealbumpbypn"]) {

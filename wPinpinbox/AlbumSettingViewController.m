@@ -1938,15 +1938,17 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - Custom Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
     }];
 }
 
 - (void)showCustomAlertForEditing: (NSString *)msg {
     [self.view endEditing: YES];
-    
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     CustomIOSAlertView *alertView = [[CustomIOSAlertView alloc] init];
     //[alertView setContainerView: [self createContainerViewForEditing: msg]];
     [alertView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -1967,7 +1969,7 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
         
         [weakAlertView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {
@@ -1997,11 +1999,12 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     //alertView.arrangeStyle = @"Vertical";
     
     __weak CustomIOSAlertView *weakAlertView = alertView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
         
         [weakAlertView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {
@@ -2029,13 +2032,13 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     //[alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor whiteColor], nil]];
     //[alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
-    
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     __weak CustomIOSAlertView *weakAlertView = alertView;
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
         
         [weakAlertView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {
@@ -2398,13 +2401,13 @@ replacementString:(NSString *)string {
     [alertView setButtonColors: [NSMutableArray arrayWithObjects: [UIColor whiteColor], [UIColor whiteColor],nil]];
     [alertView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
-    
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     __weak CustomIOSAlertView *weakAlertView = alertView;
     __block typeof(self) wself = self;
     [alertView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertView tag]);
         [weakAlertView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 1) {
             [wself deleteAlbumIndexWithfield:field.text];
         }
@@ -2459,10 +2462,11 @@ replacementString:(NSString *)string {
     
     __weak typeof(self) weakSelf = self;
     __weak CustomIOSAlertView *weakAlertTimeOutView = alertTimeOutView;
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [alertTimeOutView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertTimeOutView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         [weakAlertTimeOutView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {            

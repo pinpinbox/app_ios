@@ -60,6 +60,7 @@
 @property (weak, nonatomic) IBOutlet AsyncImageView *headshotImageView;
 @property (weak, nonatomic) IBOutlet UIButton *headshotImgBtn;
 
+@property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
 @property (weak, nonatomic) IBOutlet UITextView *nameTextView;
 @property (weak, nonatomic) IBOutlet UITextView *descriptionTextView;
 @property (weak, nonatomic) IBOutlet UILabel *creatorNameLabel;
@@ -78,6 +79,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *interestChangeBtn;
 
 @property (weak, nonatomic) IBOutlet UILabel *genderLabel;
+@property (weak, nonatomic) IBOutlet MyLinearLayout *genderLayout;
 @property (weak, nonatomic) IBOutlet UIButton *maleBtn;
 @property (weak, nonatomic) IBOutlet UIButton *femaleBtn;
 @property (weak, nonatomic) IBOutlet UIButton *privateBtn;
@@ -121,6 +123,8 @@
 
 @property (weak, nonatomic) IBOutlet MyLinearLayout *newsLetterCheckView;
 @property (weak, nonatomic) IBOutlet UIView *newsLetterCheckSelectionView;
+@property (weak, nonatomic) IBOutlet UILabel *newsLetterLabel;
+
 //@property (weak, nonatomic) IBOutlet MyLinearLayout *infoGettingCheckView;
 //@property (weak, nonatomic) IBOutlet UIView *infoGettingCheckSelectionView;
 @property (weak, nonatomic) IBOutlet UIButton *saveBtn;
@@ -451,11 +455,13 @@
                                [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemFlexibleSpace target: nil action: nil],
                                [[UIBarButtonItem alloc] initWithTitle: @"完成" style: UIBarButtonItemStyleDone target: self action: @selector(dismissKeyboard)], nil];
     
+    self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 32, 0);
+    
+    self.nickNameLabel.textColor = [UIColor firstGrey];
+    
     self.nameTextView.tag = 100;
-    self.nameTextView.myLeftMargin = 0;
-    self.nameTextView.myRightMargin = 13;
-    self.nameTextView.myTopMargin = 5;
-    self.nameTextView.myBottomMargin = 0;
+//    self.nameTextView.myLeftMargin = 0;
+//    self.nameTextView.myRightMargin = 13;
     self.nameTextView.myCenterYOffset = 0;
     self.nameTextView.wrapContentHeight = YES;
     self.nameTextView.heightDime.max(300).min(30);
@@ -487,17 +493,13 @@
     }
     
     // descriptionTextView Setting
+    self.descriptionTextView.myTopMargin = 8;
     self.descriptionTextView.hidden = YES;
     self.descriptionTextView.textColor = [UIColor firstGrey];
     self.descriptionTextView.backgroundColor = [UIColor thirdGrey];
     self.descriptionTextView.wrapContentHeight = YES;
     self.descriptionTextView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
     self.descriptionTextView.layer.cornerRadius = kCornerRadius;
-    
-    self.descriptionTextView.myTopMargin = 5;
-    self.descriptionTextView.myLeftMargin = 16;
-    self.descriptionTextView.myRightMargin = 16;
-    
     self.descriptionTextView.inputAccessoryView = toolBarForDoneBtn;
     
     placeHolderDescriptionLabel = [[UILabel alloc] initWithFrame: CGRectMake(13, 10, 0, 0)];
@@ -533,6 +535,9 @@
         self.pwdChangeBtn.hidden = NO;
     }
     
+    // CreatorNameLabel
+    self.creatorNameLabel.textColor = [UIColor firstGrey];
+    
     // CreatorNameTextView Setting
     if ([wTools objectExists: myData[@"creative_name"]]) {
         self.CreatorNameTextView.text = myData[@"creative_name"];
@@ -542,36 +547,46 @@
     self.CreatorNameTextView.wrapContentHeight = YES;
     self.CreatorNameTextView.textContainerInset = UIEdgeInsetsMake(10, 5, 10, 5);
     self.CreatorNameTextView.layer.cornerRadius = kCornerRadius;
-    self.CreatorNameTextView.myTopMargin = 5;
-    self.CreatorNameTextView.myLeftMargin = 16;
-    self.CreatorNameTextView.myRightMargin = 16;
-    
     self.CreatorNameTextView.inputAccessoryView = toolBarForDoneBtn;
     
     // Email Setting
+    self.emailLabel.textColor = [UIColor firstGrey];
+    self.emailView.layer.cornerRadius = kCornerRadius;
+    self.emailView.clipsToBounds = YES;
+    self.emailView.backgroundColor = [UIColor thirdGrey];
+    
     if ([wTools objectExists: myData[@"email"]]) {
         self.emailTextField.text = myData[@"email"];
     }
     self.emailTextField.textColor = [UIColor firstGrey];
     self.emailTextField.inputAccessoryView = toolBarForDoneBtn;
-    self.emailView.layer.cornerRadius = kCornerRadius;
-    self.emailView.clipsToBounds = YES;
-    self.emailView.backgroundColor = [UIColor thirdGrey];
+    
+    // Pwd Label Setting
+    self.pwdLabel.textColor = [UIColor firstGrey];
     
     // PWD Change Button Setting
     self.pwdChangeBtn.backgroundColor = [UIColor thirdGrey];
     self.pwdChangeBtn.layer.cornerRadius = kCornerRadius;
     self.pwdChangeBtn.clipsToBounds = YES;
     
+    // Mobile Label Setting
+    self.mobileLabel.textColor = [UIColor firstGrey];
+    
     // Mobile Change Button Setting
     self.mobileChangeBtn.backgroundColor = [UIColor thirdGrey];
     self.mobileChangeBtn.layer.cornerRadius = kCornerRadius;
     self.mobileChangeBtn.clipsToBounds = YES;
     
-    // Interest Change Button Setting
+    // Interest Label
+    self.interestLabel.textColor = [UIColor firstGrey];
+    
+    // Interest Change Button Setting    
     self.interestChangeBtn.backgroundColor = [UIColor thirdGrey];
     self.interestChangeBtn.layer.cornerRadius = kCornerRadius;
     self.interestChangeBtn.clipsToBounds = YES;
+    
+    // Gender Label Setting
+    self.genderLabel.textColor = [UIColor firstGrey];
     
     // Sex Gender Button Setting
     self.maleBtn.backgroundColor = [UIColor thirdGrey];
@@ -644,6 +659,8 @@
     }
     
     // Birthday Setting
+    self.birthdayLabel.textColor = [UIColor firstGrey];
+    
     self.birthdayView.layer.cornerRadius = kCornerRadius;
     self.birthdayView.backgroundColor = [UIColor thirdGrey];
     
@@ -669,6 +686,11 @@
     
     self.birthdayTextField.inputAccessoryView = toolBar;
     
+    // Community Setting
+    self.communityLabel.textColor = [UIColor firstGrey];
+    
+    // News Letter Setting
+    self.newsLetterLabel.textColor = [UIColor firstGrey];
     // SaveBtn Setting
     self.saveBtn.layer.cornerRadius = kCornerRadius;    
 }
@@ -1268,7 +1290,9 @@ shouldChangeTextInRange:(NSRange)range
 
 // Called when the UIKeyboardWillHideNotification is sent
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification {
-    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+//    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+//    self.scrollView.contentInset = contentInsets;
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0, 0, 32, 0);
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
 }

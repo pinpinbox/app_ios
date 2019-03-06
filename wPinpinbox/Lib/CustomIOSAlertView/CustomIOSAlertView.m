@@ -74,7 +74,7 @@ CGFloat buttonSpacerHeight = 0;
 
 // Create the dialog view, and animate opening the dialog
 - (void)show
-{
+{    
     dialogView = [self createContainerView];
   
     dialogView.layer.shouldRasterize = YES;
@@ -134,7 +134,7 @@ CGFloat buttonSpacerHeight = 0;
             dialogView.frame = CGRectMake((screenSize.width - dialogSize.width) / 2, (screenSize.height - keyboardSize.height - dialogSize.height) / 2, dialogSize.width, dialogSize.height);
 
         }
-
+        
         [[[[UIApplication sharedApplication] windows] firstObject] addSubview:self];
     }
 
@@ -143,9 +143,14 @@ CGFloat buttonSpacerHeight = 0;
     __block typeof(dialogView) dview = dialogView;
     [UIView animateWithDuration:0.2f delay:0.0 options:UIViewAnimationOptionCurveEaseInOut
 					 animations:^{
-						 self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4f];
+                         self.backgroundColor = [UIColor colorWithRed: 0.0/255.0
+                                                                green: 0.0/255.0
+                                                                 blue: 0.0/255.0
+                                                                alpha: 0.78];
+                         
                          dview.layer.opacity = 1.0f;
                          dview.layer.transform = CATransform3DMakeScale(1, 1, 1);
+                         self.opaque = NO;
 					 }
 					 completion:NULL
      ];
@@ -362,14 +367,15 @@ CGFloat buttonSpacerHeight = 0;
         
         //[closeButton setTitleColor:[UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f] forState:UIControlStateNormal];
         //[closeButton setTitleColor:[UIColor colorWithRed:0.2f green:0.2f blue:0.2f alpha:0.5f] forState:UIControlStateHighlighted];
-        [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16.0f]];
+        [closeButton.titleLabel setFont:[UIFont systemFontOfSize:16.0f]];
         closeButton.titleLabel.numberOfLines = 0;
         closeButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [closeButton.layer setCornerRadius:kCustomIOSAlertViewCornerRadius];
+        //[closeButton.layer setCornerRadius:kCustomIOSAlertViewCornerRadius];
         
         [container addSubview:closeButton];
     } else if ([buttonTitles count] > 1) {
         if ([self.arrangeStyle isEqualToString: @"Horizontal"]) {
+            buttonWidth = (container.bounds.size.width - 32)/[buttonTitles count];
             for (int i=0; i<[buttonTitles count]; i++) {
                 
                 UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -399,11 +405,11 @@ CGFloat buttonSpacerHeight = 0;
                 
                 //[closeButton setTitleColor:[UIColor colorWithRed:0.0f green:0.5f blue:1.0f alpha:1.0f] forState:UIControlStateNormal];
                 //[closeButton setTitleColor:[UIColor colorWithRed:0.2f green:0.2f blue:0.2f alpha:0.5f] forState:UIControlStateHighlighted];
-                [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0f]];
+                [closeButton.titleLabel setFont:[UIFont systemFontOfSize:16.0f]];
                 closeButton.titleLabel.numberOfLines = 0;
                 closeButton.titleLabel.textAlignment = NSTextAlignmentCenter;
                 //[closeButton.layer setCornerRadius:kCustomIOSAlertViewCornerRadius];
-                [closeButton.layer setCornerRadius: 8];
+                //[closeButton.layer setCornerRadius: 8];
                 
                 [container addSubview:closeButton];
             }
@@ -437,7 +443,7 @@ CGFloat buttonSpacerHeight = 0;
                 
                 //[closeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                 //[closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
-                [closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16.0f]];
+                [closeButton.titleLabel setFont:[UIFont systemFontOfSize:16.0f]];
                 [closeButton.layer setCornerRadius:kCustomIOS7AlertViewCornerRadius];
                 
                 [container addSubview:closeButton];
@@ -688,14 +694,16 @@ CGFloat buttonSpacerHeight = 0;
        contentBackgroundColor:(UIColor *)cntBackgroundColor
                     badgeName:(NSString *)badgeName {
     // TextView Setting
-    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(16, 16, 268, 22)];
+    UITextView *textView = [[UITextView alloc] initWithFrame: CGRectMake(14, 16, 272, 22)];
     //textView.text = @"帳號已經存在，請使用另一個";
     textView.text = message;
     [LabelAttributeStyle changeGapStringAndLineSpacingLeftAlignmentForTextView: textView content: textView.text];
     textView.backgroundColor = [UIColor clearColor];
     textView.textColor = [UIColor whiteColor];
-    textView.font = [UIFont systemFontOfSize: 18];
+    textView.font = [UIFont systemFontOfSize: 16];
     textView.editable = NO;
+    textView.textAlignment = NSTextAlignmentJustified;
+    
 //    textView.textAlignment = NSTextAlignmentJustified;
 
     // Adjust textView frame size for the content
@@ -703,6 +711,7 @@ CGFloat buttonSpacerHeight = 0;
     CGSize newSize = [textView sizeThatFits: CGSizeMake(fixedWidth, MAXFLOAT)];
     CGRect newFrame = textView.frame;
 
+    
     NSLog(@"newSize.height: %f", newSize.height);
 
     // Set the maximum value for newSize.height less than 400, otherwise, users can see the content by scrolling
@@ -765,7 +774,9 @@ CGFloat buttonSpacerHeight = 0;
     // Add imageView and textView
     [contentView addSubview: imageView];
     [contentView addSubview: textView];
-
+    CGRect r0 = textView.frame;
+    CGFloat h0 = contentView.frame.size.height;
+    textView.frame = CGRectMake(r0.origin.x,(h0-r0.size.height)/2 , r0.size.width, r0.size.height);
     NSLog(@"");
     NSLog(@"contentView: %@", NSStringFromCGRect(contentView.frame));
     NSLog(@"");

@@ -190,7 +190,7 @@ DSPhotoEditorViewControllerDelegate>
 @property (nonatomic) DDAUIActionSheetViewController *customSettingActionSheet;
 @property (nonatomic) DDAUIActionSheetViewController *customAudioUploadActionSheet;
 
-@property (nonatomic) UIVisualEffectView *effectView;
+//@property (nonatomic) UIVisualEffectView *effectView;
 @property (nonatomic) MBProgressHUD *vidHud;
 
 @property (nonatomic) IBOutlet SwitchButtonView *audioSwitchView;
@@ -540,17 +540,17 @@ DSPhotoEditorViewControllerDelegate>
         }
     }
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//
+//    [self.view addSubview: self.effectView];
     
     // CustomActionSheet Setting
     [self.view addSubview: self.customSettingActionSheet.view];
@@ -1025,21 +1025,21 @@ shouldChangeTextInRange:(NSRange)range
     NSLog(@"showPhotoAndVideoActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
-    
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//
+//    [self.view addSubview: self.effectView];
+//
     // CustomActionSheet Setting
     [self.view addSubview: self.customAudioUploadActionSheet.view];
     [self.customAudioUploadActionSheet viewWillAppear: NO];
@@ -1730,6 +1730,9 @@ shouldChangeTextInRange:(NSRange)range
 }
 
 - (void)deleteAudioOfDiy {
+    
+    [self stopRipple];
+    
     @try {
         [DGHUDView start];
     } @catch (NSException *exception) {
@@ -3288,9 +3291,11 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     
     if (![ImageDataArr[indexPath.item - 1][@"audio_url"] isEqual: [NSNull null]]) {
         audioButton.hidden = NO;
-        [audioButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
+        //[audioButton setImageEdgeInsets:UIEdgeInsetsMake(6, 6, 6, 6)];
+        //[audioButton setImage: [UIImage imageNamed: @"ic200_audio_play_white"] forState: UIControlStateNormal];
         audioButton.backgroundColor = [UIColor firstMain];
         audioButton.layer.cornerRadius = audioButton.bounds.size.width / 2;
+        
     } else {
         audioButton.hidden = YES;
         //[audioButton setImage: [UIImage imageNamed: @""] forState: UIControlStateNormal];
@@ -3446,20 +3451,20 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"showPhotoAndVideoActionSheet");
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//
+//    [self.view addSubview: self.effectView];
     
     // CustomActionSheet Setting
     [self.view addSubview: self.customAddActionSheet.view];
@@ -3515,20 +3520,20 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showVideoMode {
     [wTools setStatusBarBackgroundColor: [UIColor clearColor]];
     
-    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
-    
-    [UIView animateWithDuration: kAnimateActionSheet animations:^{
-        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
-    }];
-    
-    self.effectView.frame = self.view.frame;
-    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
-    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
-    self.effectView.alpha = 0.8;
-    
-    [self.view addSubview: self.effectView];
+//    UIVisualEffect *blurEffect = [UIBlurEffect effectWithStyle: UIBlurEffectStyleDark];
+//    
+//    [UIView animateWithDuration: kAnimateActionSheet animations:^{
+//        self.effectView = [[UIVisualEffectView alloc] initWithEffect: blurEffect];
+//    }];
+//    
+//    self.effectView.frame = self.view.frame;
+//    self.effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    
+//    self.effectView.myLeftMargin = self.effectView.myRightMargin = 0;
+//    self.effectView.myTopMargin = self.effectView.myBottomMargin = 0;
+//    self.effectView.alpha = 0.8;
+//    
+//    [self.view addSubview: self.effectView];
     
     [self.view addSubview: self.customVideoActionSheet.view];
     [self.customVideoActionSheet viewWillAppear: NO];
@@ -3639,8 +3644,8 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)actionSheetViewDidSlideOut:(DDAUIActionSheetViewController *)controller {
     NSLog(@"actionSheetViewDidSlideOut");
     [wTools setStatusBarBackgroundColor: [UIColor whiteColor]];
-    [self.effectView removeFromSuperview];
-    self.effectView = nil;
+//    [self.effectView removeFromSuperview];
+//    self.effectView = nil;
     
     if (controller == self.customAudioUploadActionSheet) {
         [self enableRecordAndPlayBtn];
@@ -4109,13 +4114,15 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     
     __weak CustomIOSAlertView *weakAlertBackView = alertBackView;
     __weak typeof(self) weakSelf = self;
+    
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
+    
     [alertBackView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertBackView, int buttonIndex) {
         __strong typeof(weakSelf) stSelf = weakSelf;
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertBackView tag]);
         [weakAlertBackView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
-            
         } else {
             // When pressing back button, the audio should be stopped
             [stSelf setupWhenViewWillDisappear];
@@ -4226,13 +4233,13 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
     [alertPermissionView setButtonTitlesColor: [NSMutableArray arrayWithObjects: [UIColor secondGrey], [UIColor firstGrey], nil]];
     [alertPermissionView setButtonTitlesHighlightColor: [NSMutableArray arrayWithObjects: [UIColor thirdMain], [UIColor darkMain], nil]];
     //alertView.arrangeStyle = @"Vertical";
-    
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     __weak CustomIOSAlertView *weakAlertPermissionView = alertPermissionView;
     [alertPermissionView setOnButtonTouchUpInside:^(CustomIOSAlertView *alertPermissionView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertPermissionView tag]);
         
         [weakAlertPermissionView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {
@@ -4321,6 +4328,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 - (void)showCustomAlertForDeletingImageOrVideo: (NSString *)msg
                                           type: (NSString *)type {
     CustomIOSAlertView *alertDeletingImageView = [[CustomIOSAlertView alloc] init];
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     //[alertDeletingImageView setContainerView: [self createContainerViewForDeletingImageOrVideo: msg]];
     [alertDeletingImageView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     //[alertView setButtonTitles: [NSMutableArray arrayWithObject: @"關 閉"]];
@@ -4340,7 +4348,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertDeletingImageView tag]);
         
         [weakAlertDeletingImageView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {
@@ -4530,6 +4538,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - CustomAlertForText
 - (void)showCustomAlertForText: (NSString *)msg {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     CustomIOSAlertView *alertTextView = [[CustomIOSAlertView alloc] init];
     //[alertTextView setContainerView: [self createContainerViewForText: msg]];
     [alertTextView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -4550,7 +4559,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTextView tag]);
         
         [weakAlertTextView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {
@@ -4637,6 +4646,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - CustomAlertForAudio
 - (void)showCustomAlertForAudio: (NSString *)msg {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     CustomIOSAlertView *alertAudioView = [[CustomIOSAlertView alloc] init];
     //[alertAudioView setContainerView: [self createContainerViewForAudio: msg]];
     [alertAudioView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -4657,7 +4667,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertAudioView tag]);
         
         [weakAlertAudioView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             
         } else {
@@ -4745,6 +4755,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - showCustomAudioModeCheckAlert
 - (void)showCustomAudioModeCheckAlert: (NSString *)msg
 {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     CustomIOSAlertView *alertAudioModeView = [[CustomIOSAlertView alloc] init];
     [alertAudioModeView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
     alertAudioModeView.arrangeStyle = @"Horizontal";
@@ -4761,7 +4772,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertAudioModeView tag]);
         
         [weakAlertAudioModeView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             [self enableRecordAndPlayBtn];
         } else {
@@ -4773,6 +4784,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)showCustomOptionAlert: (NSString *)msg cancelblock:(void(^)()) cancelblock confirmBlock:(void(^)())confirmblock {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     
     CustomIOSAlertView *alertAudioModeView = [[CustomIOSAlertView alloc] init];
     [alertAudioModeView setContentViewWithMsg:msg contentBackgroundColor:[UIColor firstMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -4789,7 +4801,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertAudioModeView tag]);
         
         [weakAlertAudioModeView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             if (cancelblock)
                 cancelblock();
@@ -4804,9 +4816,11 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - Custom Error Alert Method
 - (void)showCustomErrorAlert: (NSString *)msg {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     [UIViewController showCustomErrorAlertWithMessage:msg onButtonTouchUpBlock:^(CustomIOSAlertView *customAlertView, int buttonIndex) {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[customAlertView tag]);
         [customAlertView close];
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
     }];
     
 }
@@ -4831,6 +4845,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
                      audioMode:(NSString *)audioMode
                         option:(NSString *)option
 {
+    [wTools setStatusBarBackgroundColor:[UIColor clearColor]];
     CustomIOSAlertView *alertTimeOutView = [[CustomIOSAlertView alloc] init];
     //[alertTimeOutView setContainerView: [self createTimeOutContainerView: msg]];
     [alertTimeOutView setContentViewWithMsg:msg contentBackgroundColor:[UIColor darkMain] badgeName:@"icon_2_0_0_dialog_pinpin.png"];
@@ -4853,7 +4868,7 @@ didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"Block: Button at position %d is clicked on alertView %d.", buttonIndex, (int)[alertTimeOutView tag]);
         
         [weakAlertTimeOutView close];
-        
+        [wTools setStatusBarBackgroundColor:[UIColor whiteColor]];
         if (buttonIndex == 0) {
             if ([protocolName isEqualToString: @"updateAudioOfDiy"]) {
                 [weakSelf processUpdate];
