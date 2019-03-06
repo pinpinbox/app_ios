@@ -106,7 +106,7 @@
     isReloading = NO;
     
     albumSponsorArray = [[NSMutableArray alloc] init];
-    self.titleLabel.text = @"贊助你的人";
+    self.titleLabel.text = @"贊助我的人";
     
     self.navBarView.backgroundColor = [UIColor barColor];
     

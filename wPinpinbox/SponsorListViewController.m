@@ -109,7 +109,7 @@
     isReloading = NO;
     
     sponsorArray = [[NSMutableArray alloc] init];
-    self.titleLabel.text = @"贊助你的人";
+    self.titleLabel.text = @"贊助我的人";
     [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: self.titleLabel content: self.titleLabel.text];
     self.navBarView.backgroundColor = [UIColor barColor];
     
