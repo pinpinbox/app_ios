@@ -1727,6 +1727,8 @@
         
         return headerView;
     } else if (collectionView.tag == 3) {
+        return nil;
+        /*
         HomeCategoryCollectionHeader *header = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"CategoryHeader" forIndexPath: indexPath];
         header.backgroundColor = UIColor.clearColor;
         if (categoryArray && categoryArray.count) {
@@ -1744,7 +1746,7 @@
                     categoryNameStr: top[@"name"]];
             };
         }
-        return header;
+        return header;*/
     } else {
         NSLog(@"SearchTabCollectionReusableView *headerView");
         SearchTabCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind: kind withReuseIdentifier: @"SearchHeaderId" forIndexPath: indexPath];
@@ -2658,7 +2660,7 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
  heightForHeaderInSection:(NSInteger)section {
     if (collectionView.tag == 1) {
         return self.jccLayout.headerHeight;
-    } else if (collectionView.tag == 2) {
+    } else if (collectionView.tag == 2 || collectionView.tag == 3) {
         return 0;
     } else {
         return self.jccLayout1.headerHeight;
