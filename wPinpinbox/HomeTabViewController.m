@@ -2627,6 +2627,9 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section {
+    if (collectionView.tag == 3) {
+        return UIEdgeInsetsMake(16, 16, 0, 16);
+    }
     UIEdgeInsets itemInset = UIEdgeInsetsMake(0, 16, 0, 16);
     return itemInset;
 }
