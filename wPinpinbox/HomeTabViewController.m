@@ -871,7 +871,9 @@
         
         //[self.categoryCollectionView reloadData];
         
-        [self getTheMeArea];
+        //[self getTheMeArea];
+        [self.categoryCollectionView reloadData];
+        [self showUserRecommendedList];
     } else if ([dic[@"result"] intValue] == 0) {
         NSLog(@"失敗：%@",dic[@"message"]);
         if ([wTools objectExists: dic[@"message"]]) {
@@ -1675,7 +1677,7 @@
     } else if (collectionView.tag == 2) {
         return adArray.count;
     } else if (collectionView.tag == 3) {
-        return categoryArray.count-1;
+        return categoryArray.count;//-1;
     } else if (collectionView.tag == 4) {
         return self.justJoinedListArray.count;
     } else if (collectionView.tag == 5) {
@@ -1903,8 +1905,8 @@
         HomeCategoryCollectionViewCell *cell = nil;
         cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"CategoryCell" forIndexPath: indexPath];
         
-        if (indexPath.row + 1 < categoryArray.count) {
-            NSDictionary *dic = categoryArray[indexPath.row+1][@"categoryarea"];
+        if (indexPath.row < categoryArray.count) {
+            NSDictionary *dic = categoryArray[indexPath.row][@"categoryarea"];
             NSLog(@"dic name: %@", dic[@"name"]);
             NSLog(@"dic image_360x360: %@", dic[@"image_360x360"]);
             
@@ -2157,8 +2159,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
         source = [self.view convertRect:source fromView:collectionView];
         [self tapDetectedForURL:indexPath.row source:source sourceImageView:cell.bannerImageView];
     } else if (collectionView.tag == 3) {
-        if (indexPath.row + 1 < categoryArray.count) {
-            NSDictionary *data = categoryArray[indexPath.row+1];
+        if (indexPath.row  < categoryArray.count) {
+            NSDictionary *data = categoryArray[indexPath.row];
             //NSLog(@"data: %@", data);
             NSLog(@"categoryarea: %@", data[@"categoryarea"]);
             NSLog(@"categoryarea_id: %@", [data[@"categoryarea"][@"categoryarea_id"] stringValue]);
