@@ -193,7 +193,7 @@
             if ([styleDic1[@"banner_type"] isEqualToString: @"creative"]) {
                 NSLog(@"styleDic1 banner_type_data: %@", styleDic1[@"banner_type_data"]);
                 
-                if (styleDic1[@"banner_type"] != nil) {
+                if (styleDic1[@"banner_type"] != nil && [wTools objectExists: styleDic1[@"banner_type_data"]]) {
                     self.categoryAreaArray = [NSMutableArray arrayWithArray: styleDic1[@"banner_type_data"]];
                 }
                 if (self.categoryAreaArray.count != 0) {
