@@ -12,6 +12,9 @@
 #import "SwitchButtonView.h"
 #import "wTools.h"
 
+#import "boxAPI.h"
+#import "GlobalVars.h"
+
 
 // VC transition animation controller
 @interface ZoomAnimator : NSObject <UIViewControllerAnimatedTransitioning>
@@ -616,6 +619,39 @@
     }
     
     YAlbumDetailContainerViewController *aDVC = [[UIStoryboard storyboardWithName: @"AlbumDetailVC" bundle: nil] instantiateViewControllerWithIdentifier: @"YAlbumDetailContainerViewController"];
+
+    //  try loading albuminfo before VC transitioning animation
+    BOOL viewed = [wTools checkAlbumId:albumid];
+    NSString *viewedString = [NSString stringWithFormat: @"%d", viewed];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSString *response = nil;
+        if (noParam)
+            response = [boxAPI retrievealbump: albumid
+                                          uid: [wTools getUserID]
+                                        token: [wTools getUserToken]];
+        else
+            response = [boxAPI retrievealbump: albumid
+                                          uid: [wTools getUserID]
+                                        token: [wTools getUserToken]
+                                       viewed: viewedString];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if (response != nil) {
+                NSLog(@"YAAlbumDetailContainer");
+                if (![response isEqualToString: timeOutErrorCode]) {
+                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+                    
+                    if ([dic[@"result"] intValue] == 1) {
+                        aDVC.info = dic[@"data"];
+                    }
+                }
+            }
+            
+            
+        });
+    });
+    
     
     aDVC.sourceRect = sourceRect;
     aDVC.album_id = albumid;
@@ -626,6 +662,7 @@
     
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.myNav.delegate = aDVC.zoomTransitionController;
+    
     
     return aDVC;
     

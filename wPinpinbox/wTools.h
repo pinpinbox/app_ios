@@ -93,4 +93,6 @@
 //  處理AWSSNS
 +(void)processAWSResponse:(NSString *)res;
 +(BOOL)isRegisterAWSNeeded;
+
++(BOOL) checkAlbumId:(NSString *)albumId;
 @end
