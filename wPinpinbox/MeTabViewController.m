@@ -1646,7 +1646,7 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
     
 //    [self.customActionSheet addSelectItem: @"ic200_chart_dark" title: @"積分統計" btnStr: @"" tagInt: 1 identifierStr: @"pointCalculation"];
     
-    [self.customActionSheet addSelectItem: @"ic200_edit_dark" title: @"資訊編輯" btnStr: @"" tagInt: 1 identifierStr: @"infoEdit"];
+    [self.customActionSheet addSelectItem: @"ic200_edit_dark" title: @"編輯資訊" btnStr: @"" tagInt: 1 identifierStr: @"infoEdit"];
     [self.customActionSheet addSelectItem: @"ic200_manage_dark" title: @"作品管理" btnStr: @"" tagInt: 2 identifierStr: @"albumManagement"];
     [self.customActionSheet addSelectItem: @"ic200_myattention_dark" title: @"關注清單" btnStr: @"" tagInt: 3 identifierStr: @"followList"];
     [self.customActionSheet addSelectItem: @"ic200_recent_dark" title: @"最近瀏覽" btnStr: @"" tagInt: 4 identifierStr: @"recentBrowsing"];
