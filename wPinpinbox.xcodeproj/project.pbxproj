@@ -401,6 +401,9 @@
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBE2AFA621CB437C0032290C /* notavailable.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE2AFA521CB437C0032290C /* notavailable.png */; };
 		CBE785B321DDF7E800107146 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 630544091E5FE5E200B0CB6D /* UIView+Toast.m */; };
+		CBE9C7132240D60D00BAFE35 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE9C7122240D60D00BAFE35 /* ShareViewController.swift */; };
+		CBE9C7152240DBAA00BAFE35 /* ShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE9C7142240DBAA00BAFE35 /* ShareItem.swift */; };
+		CBE9C7182240FA5300BAFE35 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE9C7172240FA5300BAFE35 /* Protocols.swift */; };
 		CBEB727821D32DB800B22B1C /* addIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = CBEB727721D32DB700B22B1C /* addIcon.png */; };
 		CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
@@ -1112,6 +1115,10 @@
 		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
 		CBE2773921A8045600A6E80D /* HudIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudIndicatorView.m; sourceTree = "<group>"; };
 		CBE2AFA521CB437C0032290C /* notavailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notavailable.png; sourceTree = "<group>"; };
+		CBE9C7112240D60C00BAFE35 /* PinpinboxShareExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PinpinboxShareExtension-Bridging-Header.h"; sourceTree = "<group>"; };
+		CBE9C7122240D60D00BAFE35 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		CBE9C7142240DBAA00BAFE35 /* ShareItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareItem.swift; sourceTree = "<group>"; };
+		CBE9C7172240FA5300BAFE35 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		CBEB727721D32DB700B22B1C /* addIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addIcon.png; sourceTree = "<group>"; };
 		CBF138E921C24FD80070EBB8 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
 		CBF138EA21C24FD80070EBB8 /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
@@ -2904,6 +2911,10 @@
 				CBE104C021C78ACF00E185D3 /* ShareItem.m */,
 				CBD90A8521D6218C000F66B9 /* EditNewAlbumViewController.h */,
 				CBD90A8621D6218C000F66B9 /* EditNewAlbumViewController.m */,
+				CBE9C7122240D60D00BAFE35 /* ShareViewController.swift */,
+				CBE9C7142240DBAA00BAFE35 /* ShareItem.swift */,
+				CBE9C7112240D60C00BAFE35 /* PinpinboxShareExtension-Bridging-Header.h */,
+				CBE9C7172240FA5300BAFE35 /* Protocols.swift */,
 			);
 			path = PinpinboxShareExtension;
 			sourceTree = "<group>";
@@ -3030,6 +3041,7 @@
 					};
 					CBDA226B21C3923200706E2C = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -3044,6 +3056,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				"zh-Hant",
@@ -3496,6 +3509,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBE9C7132240D60D00BAFE35 /* ShareViewController.swift in Sources */,
 				CBE785B321DDF7E800107146 /* UIView+Toast.m in Sources */,
 				CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */,
 				CBF7F42A21D0E18000951608 /* PDFUploader.m in Sources */,
@@ -3504,11 +3518,13 @@
 				CBE104BE21C75A4600E185D3 /* UIColor+Extensions.m in Sources */,
 				CBE104B921C74C1200E185D3 /* MultipartInputStream.m in Sources */,
 				CBDA228421C3B4BA00706E2C /* NSString+MD5.m in Sources */,
+				CBE9C7152240DBAA00BAFE35 /* ShareItem.swift in Sources */,
 				CBDA228321C3B39E00706E2C /* UserAPI.m in Sources */,
 				CBDA227C21C3929B00706E2C /* GlobalVars.m in Sources */,
 				CBD90A8721D6218C000F66B9 /* EditNewAlbumViewController.m in Sources */,
 				CBDA227B21C3929500706E2C /* UserInfo.m in Sources */,
 				CBDA227021C3923200706E2C /* ShareViewController.m in Sources */,
+				CBE9C7182240FA5300BAFE35 /* Protocols.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3756,6 +3772,7 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
@@ -3775,6 +3792,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PinpinboxShareExtension/PinpinboxShareExtension-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -3785,6 +3805,7 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
@@ -3802,6 +3823,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PinpinboxShareExtension/PinpinboxShareExtension-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
