@@ -274,7 +274,7 @@ extension ShareViewController : UITableViewDelegate{
 }
 extension ShareViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -288,7 +288,7 @@ extension ShareViewController : UICollectionViewDelegateFlowLayout {
 }
 extension ShareViewController : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -305,6 +305,18 @@ extension ShareViewController : UploadProgressDelegate {
     
 }
 extension ShareViewController : PDFUploaderDelegate {
+    func userInfo() -> [AnyHashable : Any] {
+        return [:]
+    }
+    
+    func retrieveSign(_ param: [AnyHashable : Any]) -> String {
+        return ""
+    }
+    
+    func isExporter() -> Bool {
+        return false
+    }
+    
     
 }
 
