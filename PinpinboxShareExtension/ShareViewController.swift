@@ -135,125 +135,102 @@ class AlbumCellView : UITableViewCell {
     @IBOutlet weak var albumStatus: UIImageView?
     @IBOutlet weak var accessCover: UIView?
     
-    func loadAlbumWith(_ dictionary: [String: Any]) {
+    func loadAlbumWith(_ data: [String: Any]) {
+        guard let albumInfo = data["album"] as? [String: Any],
+        let name = albumInfo["name"] as? String,
+        let insertdate = albumInfo["insertdate"] as? String,
+            let act = albumInfo["act"] as? String else {
+                self.album?.image = UIImage(named: "Icon.png")
+                self.album?.alpha = 0.5
+                return
+        }
+        
+        albumName?.text = name
+        albumDate?.text = insertdate
+        
+        if act == "open" {
+            let image = UIImage(named: "ic200_act_open_white.png")
+            albumStatus?.image = image?.withRenderingMode(.alwaysTemplate)
+        } else {
+            let image = UIImage(named: "ic200_act_close_white.png")
+            albumStatus?.image = image?.withRenderingMode(.alwaysTemplate)
+        }
+        albumStatus?.tintColor = UIColor.orange
+        albumOwner?.text = ""
+        
+        if let cover = albumInfo["cover"] as? String {
+            self.album?.alpha = 1.0
+            if let url = URL(string: cover) {
+                do {
+                    let data = try Data(contentsOf: url)
+                    if let image = UIImage(data: data) {
+                        self.album?.image = image
+                        return
+                    }
+                } catch {
+                    
+                }
+                
+            }
+        }
+        
+        self.album?.image = UIImage(named: "Icon.png")
+        self.album?.alpha = 0.5
+        
+        self.albumOwner?.text = "";
+        self.accessCover?.isHidden = true;
+        self.isUserInteractionEnabled = true;
+        guard let cdict = data["cooperation"] as? [String : Any] else {
+            return
+        }
+        if let i = cdict["identity"] as? String {
+            if i == "viewer" {
+                self.albumOwner?.text = "無上傳權限"
+                self.accessCover?.isHidden = false;
+                self.isUserInteractionEnabled = false;
+                
+            }
+        }
+        
         
     }
-    /*
-     array(
-     obj(
-     album (相本) => obj(
-     act (string, 動作, close: 關閉 / open: 開啟),
-     album_id (int, id),
-     count_photo (int, 相片數量),
-     cover (string, 封面, 200x200),
-     cover_width (int, 封面寬度),
-     cover_height (int, 封面高度),
-     description (string, 描述),
-     insertdate (string, 建立日期, YYYY-mm-dd),
-     location (string, 地點),
-     name (string, 名稱),
-     usefor => obj(
-     audio (boolean, 是否有音頻),
-     exchange (boolean, 是否有兌換),
-     image (boolean, 是否有圖像),
-     slot (boolean, 是否有拉霸),
-     video (boolean, 是否有影片),
-     ),
-     zipped (int, 是否壓製, 1:是 / 0:否),
-     ),
-     cooperation (共用) => obj(
-     identity (string, 身分, admin<管理者> / approver<副管理者> / editor<共用者> / viewer<瀏覽者>)
-     ),
-     cooperationstatistics (共用統計) => obj(
-     count (int, 人數)
-     ),
-     event (活動) => array(
-     obj(
-     event_id (int, id),
-     name (string, 名稱),
-     contributionstatus (boolean, 投稿狀態 => false: 未投稿, true: 已投稿)
-     )
-     [, obj(...)]
-     ),
-     template (版型) => obj(
-     template_id (int, id),
-     ),
-     user (作者) => obj(
-     user_id (int, id),
-     name (string, 名稱),
-     picture (string, 大頭照, 160x160)
-     ),
-     usergrade => obj(
-     photo_limit_of_album (int, 相本的相片數量上限)
-     )
-     )
-     [, obj(...)]
-     )
-     */
-    /*
-    - (void)loadAlbum:(NSDictionary *)data {
-    NSDictionary *album = data[@"album"];
-    self.album.image = nil;
-    if (![album isKindOfClass:[NSNull class]]) {
-    self.albumName.text = album[@"name"];
-    self.albumDate.text = album[@"insertdate"];
-    NSString *act = album[@"act"];
-    
-    if ([act isEqualToString: @"open"]) {
-    UIImage *i = [UIImage imageNamed:@"ic200_act_open_white.png"];
-    self.albumStatus.image = [i imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    
-    } else {
-    UIImage *i = [UIImage imageNamed:@"ic200_act_close_white.png"];
-    self.albumStatus.image = [i imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    }
-    self.albumStatus.tintColor = [UIColor firstPink];
-    self.albumOwner.text = @"";
-    
-    if (album[@"cover"] && ![album[@"cover"] isKindOfClass:[NSNull class]]) {
-    NSString *c = album[@"cover"];
-    self.album.alpha = 1.0;
-    __block typeof(self) wself = self;
-    NSURL *u = [NSURL URLWithString:c];
-    
-    [UserAPI loadImageWithURL:u completionBlock:^(UIImage * _Nullable image) {
-    if (image) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-    wself.album.image = image;
-    });
-    }
-    }];
-    
-    } else {
-    self.album.image = [UIImage imageNamed:@"Icon.png"];
-    self.album.alpha = 0.5;
-    }
-    }
-    
-    NSDictionary *c = data[@"cooperation"];
-    if (c && ![c[@"identity"] isKindOfClass:[NSNull class]]) {
-    NSString *i = c[@"identity"];
-    if (i.length && [i isEqualToString:@"viewer"]) {
-    self.albumOwner.text = @"無上傳權限";
-    self.accessCover.hidden = NO;
-    self.userInteractionEnabled = NO;
-    } else {
-    self.albumOwner.text = @"";
-    self.accessCover.hidden = YES;
-    self.userInteractionEnabled = YES;
-    }
-    } else {
-    self.albumOwner.text = @"";
-    self.accessCover.hidden = YES;
-    self.userInteractionEnabled = YES;
-    }
-    
-    }
-    */
 }
 
 class UIListButton : UIButton {
     var border: CAShapeLayer?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        createBorder()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        createBorder()
+    }
+    override var isSelected: Bool {
+        didSet {
+            if self.isSelected {
+                self.alpha = 1.0
+                self.border?.backgroundColor = UIColor.gray.cgColor
+            } else {
+                self.alpha = 0.25
+                self.border?.backgroundColor = UIColor.clear.cgColor
+            }
+        }
+    }
+    private func createBorder() {
+        self.border = CAShapeLayer()
+        if let b = self.border {
+            b.frame = CGRect(x: 0, y: self.frame.height-3, width: self.frame.width, height: 3)
+            self.layer.addSublayer(b)
+        }
+    }
+    
 }
 
 class ShareViewController: UIViewController, UINavigationControllerDelegate {
@@ -321,6 +298,10 @@ extension ShareViewController : UICollectionViewDataSource {
     
 }
 extension ShareViewController : UploadProgressDelegate {
+    func uploadProgress(_ taskUUID: String?, _ progress: Float) {
+        
+    }
+    
     
 }
 extension ShareViewController : PDFUploaderDelegate {
@@ -328,6 +309,10 @@ extension ShareViewController : PDFUploaderDelegate {
 }
 
 extension ShareViewController : ItemContentDelegate {
+    func processInvalidItem(_ item: ShareItem?) {
+        
+    }
+    
     
 }
 extension ShareViewController : AlbumSettingsDelegate {
