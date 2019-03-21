@@ -377,6 +377,7 @@
 		CBA29A1321C8A989000A37F4 /* ic200_videomake_white.png in Resources */ = {isa = PBXBuildFile; fileRef = CBA29A1221C8A988000A37F4 /* ic200_videomake_white.png */; };
 		CBAD7DE621AE50090084682B /* 3rdPartyVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */; };
 		CBAD7DE821AE50DD0084682B /* 3rdPartyVideoPlayerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */; };
+		CBB88C3322434F8400DBD1C1 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB88C3222434F8400DBD1C1 /* UIHelper.swift */; };
 		CBCDB5FE21E4544200C82939 /* YAlbumDetailContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5FD21E4544200C82939 /* YAlbumDetailContainerViewController.m */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
 		CBD42CF021E2EF5F0046C1A9 /* YAlbumDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD42CEF21E2EF5F0046C1A9 /* YAlbumDetailViewController.m */; };
@@ -401,6 +402,9 @@
 		CBE2773A21A8045600A6E80D /* HudIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE2773921A8045600A6E80D /* HudIndicatorView.m */; };
 		CBE2AFA621CB437C0032290C /* notavailable.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE2AFA521CB437C0032290C /* notavailable.png */; };
 		CBE785B321DDF7E800107146 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 630544091E5FE5E200B0CB6D /* UIView+Toast.m */; };
+		CBE9C7132240D60D00BAFE35 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE9C7122240D60D00BAFE35 /* ShareViewController.swift */; };
+		CBE9C7152240DBAA00BAFE35 /* ShareItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE9C7142240DBAA00BAFE35 /* ShareItem.swift */; };
+		CBE9C7182240FA5300BAFE35 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE9C7172240FA5300BAFE35 /* Protocols.swift */; };
 		CBEB727821D32DB800B22B1C /* addIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = CBEB727721D32DB700B22B1C /* addIcon.png */; };
 		CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0CA8E0219AC5A800B5018B /* SwitchButtonView.m */; };
 		CBF138EB21C24FD80070EBB8 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF138EA21C24FD80070EBB8 /* UserInfo.m */; };
@@ -1082,6 +1086,7 @@
 		CBAD7DE421AE50090084682B /* 3rdPartyVideoPlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 3rdPartyVideoPlayerViewController.h; sourceTree = "<group>"; };
 		CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = 3rdPartyVideoPlayerViewController.m; sourceTree = "<group>"; };
 		CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = 3rdPartyVideoPlayerVC.storyboard; sourceTree = "<group>"; };
+		CBB88C3222434F8400DBD1C1 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIHelper.swift; path = Swift/UIHelper.swift; sourceTree = "<group>"; };
 		CBCDB5FC21E4544200C82939 /* YAlbumDetailContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YAlbumDetailContainerViewController.h; sourceTree = "<group>"; };
 		CBCDB5FD21E4544200C82939 /* YAlbumDetailContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YAlbumDetailContainerViewController.m; sourceTree = "<group>"; };
 		CBCE8572219C074600ED185D /* LocationMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationMapViewController.h; sourceTree = "<group>"; };
@@ -1112,6 +1117,10 @@
 		CBE2773821A8045600A6E80D /* HudIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HudIndicatorView.h; sourceTree = "<group>"; };
 		CBE2773921A8045600A6E80D /* HudIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HudIndicatorView.m; sourceTree = "<group>"; };
 		CBE2AFA521CB437C0032290C /* notavailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notavailable.png; sourceTree = "<group>"; };
+		CBE9C7112240D60C00BAFE35 /* PinpinboxShareExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PinpinboxShareExtension-Bridging-Header.h"; sourceTree = "<group>"; };
+		CBE9C7122240D60D00BAFE35 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		CBE9C7142240DBAA00BAFE35 /* ShareItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareItem.swift; sourceTree = "<group>"; };
+		CBE9C7172240FA5300BAFE35 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		CBEB727721D32DB700B22B1C /* addIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addIcon.png; sourceTree = "<group>"; };
 		CBF138E921C24FD80070EBB8 /* UserInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
 		CBF138EA21C24FD80070EBB8 /* UserInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
@@ -2904,6 +2913,11 @@
 				CBE104C021C78ACF00E185D3 /* ShareItem.m */,
 				CBD90A8521D6218C000F66B9 /* EditNewAlbumViewController.h */,
 				CBD90A8621D6218C000F66B9 /* EditNewAlbumViewController.m */,
+				CBE9C7122240D60D00BAFE35 /* ShareViewController.swift */,
+				CBE9C7142240DBAA00BAFE35 /* ShareItem.swift */,
+				CBE9C7112240D60C00BAFE35 /* PinpinboxShareExtension-Bridging-Header.h */,
+				CBE9C7172240FA5300BAFE35 /* Protocols.swift */,
+				CBB88C3222434F8400DBD1C1 /* UIHelper.swift */,
 			);
 			path = PinpinboxShareExtension;
 			sourceTree = "<group>";
@@ -3030,6 +3044,7 @@
 					};
 					CBDA226B21C3923200706E2C = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -3044,6 +3059,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				"zh-Hant",
@@ -3496,19 +3512,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBE9C7132240D60D00BAFE35 /* ShareViewController.swift in Sources */,
 				CBE785B321DDF7E800107146 /* UIView+Toast.m in Sources */,
 				CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */,
 				CBF7F42A21D0E18000951608 /* PDFUploader.m in Sources */,
 				CB9B297F21C7B31200D87505 /* NSURL+Param.m in Sources */,
+				CBB88C3322434F8400DBD1C1 /* UIHelper.swift in Sources */,
 				CBE104C121C78ACF00E185D3 /* ShareItem.m in Sources */,
 				CBE104BE21C75A4600E185D3 /* UIColor+Extensions.m in Sources */,
 				CBE104B921C74C1200E185D3 /* MultipartInputStream.m in Sources */,
 				CBDA228421C3B4BA00706E2C /* NSString+MD5.m in Sources */,
+				CBE9C7152240DBAA00BAFE35 /* ShareItem.swift in Sources */,
 				CBDA228321C3B39E00706E2C /* UserAPI.m in Sources */,
 				CBDA227C21C3929B00706E2C /* GlobalVars.m in Sources */,
 				CBD90A8721D6218C000F66B9 /* EditNewAlbumViewController.m in Sources */,
 				CBDA227B21C3929500706E2C /* UserInfo.m in Sources */,
 				CBDA227021C3923200706E2C /* ShareViewController.m in Sources */,
+				CBE9C7182240FA5300BAFE35 /* Protocols.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3756,6 +3776,7 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
@@ -3775,6 +3796,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PinpinboxShareExtension/PinpinboxShareExtension-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -3785,6 +3809,7 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
@@ -3802,6 +3827,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PinpinboxShareExtension/PinpinboxShareExtension-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
