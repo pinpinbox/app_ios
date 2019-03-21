@@ -964,4 +964,41 @@ static wTools *instance =nil;
     return true;
 }
 
+
++(BOOL) checkAlbumId:(NSString *)albumId {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSArray *array = [defaults objectForKey: @"albumIdArray"];
+    
+    
+    // Get the albumIdArray from Device
+    if (array != nil) {
+        
+        NSMutableArray *albumIdArray  = [NSMutableArray arrayWithArray: array];
+        
+        if ([albumIdArray containsObject: albumId]) {
+            return NO;
+        } else {
+            
+            [albumIdArray addObject: albumId];
+            
+            return YES;
+            
+            [defaults setObject: albumIdArray forKey: @"albumIdArray"];
+            [defaults synchronize];
+        }
+    } else {
+        
+        NSMutableArray *albumIdArray = [NSMutableArray new];
+        [albumIdArray addObject: albumId];
+        
+        
+        [defaults setObject: albumIdArray forKey: @"albumIdArray"];
+        [defaults synchronize];
+        
+        return YES;
+    }
+}
+
 @end

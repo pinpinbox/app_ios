@@ -165,7 +165,7 @@
     
     // InfoEdit
     MyLinearLayout *infoEditLayout = [self createHorzLayout: 1];
-    UILabel *infoEditLabel = [self createLabel: @"資訊編輯"];
+    UILabel *infoEditLabel = [self createLabel: @"編輯資訊"];
     [infoEditLayout addSubview: infoEditLabel];
     [self.vertLayout addSubview: infoEditLayout];
     
