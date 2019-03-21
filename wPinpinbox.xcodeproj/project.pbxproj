@@ -377,7 +377,7 @@
 		CBA29A1321C8A989000A37F4 /* ic200_videomake_white.png in Resources */ = {isa = PBXBuildFile; fileRef = CBA29A1221C8A988000A37F4 /* ic200_videomake_white.png */; };
 		CBAD7DE621AE50090084682B /* 3rdPartyVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */; };
 		CBAD7DE821AE50DD0084682B /* 3rdPartyVideoPlayerVC.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */; };
-		CBB88C2F2243402300DBD1C1 /* Creator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB88C2E2243402300DBD1C1 /* Creator.swift */; };
+		CBB88C3322434F8400DBD1C1 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB88C3222434F8400DBD1C1 /* UIHelper.swift */; };
 		CBCDB5FE21E4544200C82939 /* YAlbumDetailContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5FD21E4544200C82939 /* YAlbumDetailContainerViewController.m */; };
 		CBCE8574219C074600ED185D /* LocationMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE8573219C074600ED185D /* LocationMapViewController.m */; };
 		CBD42CF021E2EF5F0046C1A9 /* YAlbumDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD42CEF21E2EF5F0046C1A9 /* YAlbumDetailViewController.m */; };
@@ -1086,7 +1086,7 @@
 		CBAD7DE421AE50090084682B /* 3rdPartyVideoPlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 3rdPartyVideoPlayerViewController.h; sourceTree = "<group>"; };
 		CBAD7DE521AE50090084682B /* 3rdPartyVideoPlayerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = 3rdPartyVideoPlayerViewController.m; sourceTree = "<group>"; };
 		CBAD7DE721AE50DC0084682B /* 3rdPartyVideoPlayerVC.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = 3rdPartyVideoPlayerVC.storyboard; sourceTree = "<group>"; };
-		CBB88C2E2243402300DBD1C1 /* Creator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Creator.swift; path = Swift/Creator.swift; sourceTree = "<group>"; };
+		CBB88C3222434F8400DBD1C1 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIHelper.swift; path = Swift/UIHelper.swift; sourceTree = "<group>"; };
 		CBCDB5FC21E4544200C82939 /* YAlbumDetailContainerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YAlbumDetailContainerViewController.h; sourceTree = "<group>"; };
 		CBCDB5FD21E4544200C82939 /* YAlbumDetailContainerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YAlbumDetailContainerViewController.m; sourceTree = "<group>"; };
 		CBCE8572219C074600ED185D /* LocationMapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationMapViewController.h; sourceTree = "<group>"; };
@@ -2917,7 +2917,7 @@
 				CBE9C7142240DBAA00BAFE35 /* ShareItem.swift */,
 				CBE9C7112240D60C00BAFE35 /* PinpinboxShareExtension-Bridging-Header.h */,
 				CBE9C7172240FA5300BAFE35 /* Protocols.swift */,
-				CBB88C2E2243402300DBD1C1 /* Creator.swift */,
+				CBB88C3222434F8400DBD1C1 /* UIHelper.swift */,
 			);
 			path = PinpinboxShareExtension;
 			sourceTree = "<group>";
@@ -3517,6 +3517,7 @@
 				CBF12C9021DC7CB700015B32 /* SwitchButtonView.m in Sources */,
 				CBF7F42A21D0E18000951608 /* PDFUploader.m in Sources */,
 				CB9B297F21C7B31200D87505 /* NSURL+Param.m in Sources */,
+				CBB88C3322434F8400DBD1C1 /* UIHelper.swift in Sources */,
 				CBE104C121C78ACF00E185D3 /* ShareItem.m in Sources */,
 				CBE104BE21C75A4600E185D3 /* UIColor+Extensions.m in Sources */,
 				CBE104B921C74C1200E185D3 /* MultipartInputStream.m in Sources */,
@@ -3525,7 +3526,6 @@
 				CBDA228321C3B39E00706E2C /* UserAPI.m in Sources */,
 				CBDA227C21C3929B00706E2C /* GlobalVars.m in Sources */,
 				CBD90A8721D6218C000F66B9 /* EditNewAlbumViewController.m in Sources */,
-				CBB88C2F2243402300DBD1C1 /* Creator.swift in Sources */,
 				CBDA227B21C3929500706E2C /* UserInfo.m in Sources */,
 				CBDA227021C3923200706E2C /* ShareViewController.m in Sources */,
 				CBE9C7182240FA5300BAFE35 /* Protocols.swift in Sources */,

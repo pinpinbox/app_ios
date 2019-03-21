@@ -9,11 +9,11 @@ PODS:
     - Fabric (~> 1.9.0)
   - DGActivityIndicatorView (2.1.1)
   - Fabric (1.9.0)
-  - FBSDKCoreKit (4.41.2):
+  - FBSDKCoreKit (4.42.0):
     - Bolts (~> 1.9)
-  - FBSDKLoginKit (4.41.2):
+  - FBSDKLoginKit (4.42.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.41.2):
+  - FBSDKShareKit (4.42.0):
     - FBSDKCoreKit
   - FLAnimatedImage (1.0.12)
   - Flurry-iOS-SDK/FlurryAds (9.3.1):
@@ -65,9 +65,9 @@ SPEC CHECKSUMS:
   Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
   DGActivityIndicatorView: ff2c76073d79692f724863c8dd38685866a03cb6
   Fabric: f988e33c97f08930a413e08123064d2e5f68d655
-  FBSDKCoreKit: 559246ca24848bf7254695476df425b88651dcb3
-  FBSDKLoginKit: 48f1758be0779ac5d2ef1b50ddfa75f8ad683180
-  FBSDKShareKit: 96723a1d2e68f732385ec9ca74ae5d1bdba3c473
+  FBSDKCoreKit: aa42f1c384775f8b075f53a43080474278e9701d
+  FBSDKLoginKit: 373830c68aa48c9e8f0bfed93a3e32d2ca8963a0
+  FBSDKShareKit: 387749259d79e4070ebb304b3fd256e4b4bc4298
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flurry-iOS-SDK: 5d782d740c5e95389c327d38245b3db4bb471fd7
   GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
