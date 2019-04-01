@@ -200,7 +200,7 @@
 @property (nonatomic) UITableView *recommandListView;
 
 @property (nonatomic, strong) NSMutableArray *hotListArray;
-@property (nonatomic, strong) NSMutableArray *justJoinedListArray;
+//@property (nonatomic, strong) NSMutableArray *justJoinedListArray;
 
 @end
 
@@ -316,7 +316,7 @@
 - (void)settingSizeBasedOnDevice {
     self.navBarHeight.constant = 48;
     topContentOffset = self.navBarView.frame.size.height;
-    headerHeight = 982;//871;
+    headerHeight = 821;//871;
     self.homeCollectionView.contentInset = UIEdgeInsetsMake(topContentOffset, 0, 0, 0);
     
     self.jccLayout = (JCCollectionViewWaterfallLayout *)self.homeCollectionView.collectionViewLayout;
@@ -989,52 +989,53 @@
 }
 #pragma mark - Get Newly joined user list (116)
 - (void)showNewJoinUsersList {
-    NSLog(@"showNewJoinUsersList");
-    [DGHUDView start];
-    __block typeof(self) wself = self;
-    NSUInteger count = _justJoinedListArray? _justJoinedListArray.count:0;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *response = @"";
-        response = [boxAPI getNewJoinList:[NSString stringWithFormat:@"%lu, 16",(unsigned long)count]
-                                    token:[wTools getUserToken]
-                                   userId:[wTools getUserID]];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [DGHUDView stop];
-            if (response) {
-                NSLog(@"Response from showNewJoinUsersList");
-                if (![wself checkTimedOut:response api:@"getNewJoinList" eventId:@"" text:@""]){
-                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
-                    
-                    if (![dic[@"result"] isEqualToString:@"SYSTEM_OK"]) {
-                        NSLog(@"showHotList result: %@", dic[@"result"]);
-                        if (dic[@"message"])
-                            [wself showCustomErrorAlert: dic[@"message"]];
-                        else
-                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
-                        
-                        return ;
-                    }
-                    [wself processNewJoinedList:dic];
-                }
-            }
-        });
-    });
+    
+//    NSLog(@"showNewJoinUsersList");
+//    [DGHUDView start];
+//    __block typeof(self) wself = self;
+//    NSUInteger count = _justJoinedListArray? _justJoinedListArray.count:0;
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+//        NSString *response = @"";
+//        response = [boxAPI getNewJoinList:[NSString stringWithFormat:@"%lu, 16",(unsigned long)count]
+//                                    token:[wTools getUserToken]
+//                                   userId:[wTools getUserID]];
+//
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [DGHUDView stop];
+//            if (response) {
+//                NSLog(@"Response from showNewJoinUsersList");
+//                if (![wself checkTimedOut:response api:@"getNewJoinList" eventId:@"" text:@""]){
+//                    NSDictionary *dic = (NSDictionary *)[NSJSONSerialization JSONObjectWithData: [response dataUsingEncoding: NSUTF8StringEncoding] options: NSJSONReadingMutableContainers error: nil];
+//
+//                    if (![dic[@"result"] isEqualToString:@"SYSTEM_OK"]) {
+//                        NSLog(@"showHotList result: %@", dic[@"result"]);
+//                        if (dic[@"message"])
+//                            [wself showCustomErrorAlert: dic[@"message"]];
+//                        else
+//                            [wself showCustomErrorAlert: NSLocalizedString(@"Host-NotAvailable", @"")];
+//
+//                        return ;
+//                    }
+//                    [wself processNewJoinedList:dic];
+//                }
+//            }
+//        });
+//    });
 }
 
 - (void)processNewJoinedList:(NSDictionary *)dict {
-    if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]){
-        NSArray *users = dict[@"data"];
-        if (users && users.count ) {
-            if (!self.justJoinedListArray)
-                self.justJoinedListArray = [NSMutableArray array];
-            
-            [self.justJoinedListArray addObjectsFromArray:users];
-            
-            [self.followUserCollectionView reloadData];
-            [self showAlbumRecommendedList];
-        }
-    }
+//    if ([dict[@"result"] isEqualToString:@"SYSTEM_OK"]){
+//        NSArray *users = dict[@"data"];
+//        if (users && users.count ) {
+//            if (!self.justJoinedListArray)
+//                self.justJoinedListArray = [NSMutableArray array];
+//
+//            [self.justJoinedListArray addObjectsFromArray:users];
+//
+//            [self.followUserCollectionView reloadData];
+//            [self showAlbumRecommendedList];
+//        }
+//    }
 }
 #pragma mark - Get hotlist (115)
 - (void)showHotList {
@@ -1091,7 +1092,7 @@
             if (count <= 0) {
                 [self.recommandListView reloadSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationMiddle];
                 //  get new joined list
-                [self showNewJoinUsersList];
+//                [self showNewJoinUsersList];
             } else {
                 for (NSUInteger i = 0;i < users.count; i++ ){
                     [index addObject:[NSIndexPath indexPathForItem:i+count inSection:0]];
@@ -1678,8 +1679,8 @@
         return adArray.count;
     } else if (collectionView.tag == 3) {
         return categoryArray.count;//-1;
-    } else if (collectionView.tag == 4) {
-        return self.justJoinedListArray.count;
+    //} else if (collectionView.tag == 4) {
+        //return self.justJoinedListArray.count;
     } else if (collectionView.tag == 5) {
         return followAlbumData.count;
     } else if (collectionView.tag == 6) {
@@ -1921,26 +1922,26 @@
             }
         }
         return cell;
-    } else if (collectionView.tag == 4) {
-        //NSLog(@"collectionView.tag == 4");
-        NSDictionary *userDic = self.justJoinedListArray[indexPath.row][@"user"];
-        
-        SearchTabHorizontalCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"horizontalCell" forIndexPath: indexPath];
-        
-        if (![userDic isKindOfClass: [NSNull class]]) {
-            if ([userDic[@"picture"] isEqual: [NSNull null]]) {
-                cell.userPictureImageView.image = [UIImage imageNamed: @"member_back_head.png"];
-            } else {
-                [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"picture"]]
-                                             placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
-            }
-            cell.userNameLabel.text = userDic[@"name"];
-            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
-
-        } else {
-            NSLog(@"userData is nil");
-        }
-        return cell;
+//    } else if (collectionView.tag == 4) {
+//        //NSLog(@"collectionView.tag == 4");
+//        NSDictionary *userDic = self.justJoinedListArray[indexPath.row][@"user"];
+//
+//        SearchTabHorizontalCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: @"horizontalCell" forIndexPath: indexPath];
+//
+//        if (![userDic isKindOfClass: [NSNull class]]) {
+//            if ([userDic[@"picture"] isEqual: [NSNull null]]) {
+//                cell.userPictureImageView.image = [UIImage imageNamed: @"member_back_head.png"];
+//            } else {
+//                [cell.userPictureImageView sd_setImageWithURL: [NSURL URLWithString: userDic[@"picture"]]
+//                                             placeholderImage: [UIImage imageNamed: @"member_back_head.png"]];
+//            }
+//            cell.userNameLabel.text = userDic[@"name"];
+//            [LabelAttributeStyle changeGapStringAndLineSpacingCenterAlignment: cell.userNameLabel content: cell.userNameLabel.text];
+//
+//        } else {
+//            NSLog(@"userData is nil");
+//        }
+//        return cell;
     } else if (collectionView.tag == 5) {
         //NSLog(@"collectionView.tag == 5");
         RecommandCollectionViewCell *cell =  [collectionView dequeueReusableCellWithReuseIdentifier: @"RecommandCollectionViewCell" forIndexPath: indexPath];
@@ -2170,9 +2171,9 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
             [self toCategoryVC: [categoryareaDic[@"categoryarea_id"] stringValue]
                categoryNameStr: categoryareaDic[@"name"]];
         }
-    } else if (collectionView.tag == 4) {
-        NSDictionary *userDic = self.justJoinedListArray[indexPath.row][@"user"];
-        [self toCreatorVC: userDic[@"user_id"]];
+//    } else if (collectionView.tag == 4) {
+//        NSDictionary *userDic = self.justJoinedListArray[indexPath.row][@"user"];
+//        [self toCreatorVC: userDic[@"user_id"]];
     } else if (collectionView.tag == 5) {
         
     } else if (collectionView.tag == 6) {
@@ -2677,9 +2678,10 @@ minimumLineSpacingForSectionAtIndex:(NSInteger)section {
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.x;
     if (offset+self.view.frame.size.width >= scrollView.contentSize.width) {
-        if (scrollView.tag == 4) {
-            [self showNewJoinUsersList];
-        } else if (scrollView.tag == 72) {
+//        if (scrollView.tag == 4) {
+//            [self showNewJoinUsersList];
+//        } else
+        if (scrollView.tag == 72) {
             //[self showHotList];
         } else if (scrollView.tag == 71) {
             //[self showUserRecommendedList];
@@ -3430,8 +3432,8 @@ replacementString:(NSString *)string {
                 [weakSelf updateUser];
             } else if ([protocolName isEqualToString:@"getHotList"]) {
                 [weakSelf showHotList];
-            } else if ([protocolName isEqualToString:@"getNewJoinList"]) {
-                [weakSelf showNewJoinUsersList];
+//            } else if ([protocolName isEqualToString:@"getNewJoinList"]) {
+//                [weakSelf showNewJoinUsersList];
             }
         }
     }];
